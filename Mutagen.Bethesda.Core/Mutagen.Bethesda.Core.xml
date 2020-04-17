@@ -725,10 +725,123 @@
             <returns>ModKey to use</returns>
             <exception cref="T:System.ArgumentException">If misaligned and set to ThrowIfMisaligned</exception>
         </member>
+        <member name="T:Mutagen.Bethesda.Internals.MajorRecordInstantiator`1">
+            <summary>
+            A static class encapsulating the job of creating a new Major Record in a generic context
+            </summary>
+            <typeparam name="T">
+            Type of Major Record to instantiate.  Can be the direct class, or one of its interfaces.
+            </typeparam>
+        </member>
+        <member name="F:Mutagen.Bethesda.Internals.MajorRecordInstantiator`1.Activator">
+            <summary>
+            Function to call to retrieve a new Major Record of type T
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Internals.MajorRecordInstantiator`1.MajorRecordActivator`1">
+            <summary>
+            Constructs a new Major Record of type T with the given FormKey
+            </summary>
+            <param name="formKey">FormKey to give the new Major Record</param>
+            <returns>New Major Record of type T with given FormKey</returns>
+        </member>
         <member name="T:Mutagen.Bethesda.Internals.CompositeReadStream">
             <summary>
             Class for reading through several streams.
             Minimal implementation, but can be fleshed out eventually
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Internals.MasterReferenceReader">
+            <summary>
+            A registry of master listings.
+            Generally used for reference when converting FormIDs to FormKeys
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Internals.MasterReferenceReader.Empty">
+            <summary>
+            A static singleton that is an empty registry containing no masters
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Internals.MasterReferenceReader.Masters">
+            <summary>
+            List of masters in the registry
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.Internals.MasterReferenceReader.CurrentMod">
+            <summary>
+            ModKey that should be considered to be the current mod
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Internals.MasterReferenceReader.#ctor(Mutagen.Bethesda.ModKey)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="modKey">Mod to associate as the "current" mod</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.Internals.MasterReferenceReader.#ctor(Mutagen.Bethesda.ModKey,System.Collections.Generic.IEnumerable{Mutagen.Bethesda.IMasterReferenceGetter})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="modKey">Mod to associate as the "current" mod</param>
+            <param name="masters">Masters to add to the registrar</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.Internals.MasterReferenceReader.SetTo(System.Collections.Generic.IEnumerable{Mutagen.Bethesda.IMasterReferenceGetter})">
+            <summary>
+            Clears and sets contained masters to given enumerable's contents
+            </summary>
+            <param name="masters">Masters to set to</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.Internals.MasterReferenceReader.GetFormID(Mutagen.Bethesda.FormKey)">
+            <summary>
+            Converts a FormKey to a FormID representation, with its mod index calibrated
+            against the contents of the registrar.
+            </summary>
+            <param name="key">FormKey to convert</param>
+            <returns>FormID calibrated to registrar contents</returns>
+            <exception cref="T:System.ArgumentException">If FormKey's ModKey is not present in registrar</exception>
+        </member>
+        <member name="T:Mutagen.Bethesda.Internals.RecordTypeConverter">
+            <summary>
+            Tracks custom mappings of one record type to another.
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.Internals.RecordTypeConverter.FromConversions">
+            <summary>
+            Tracks standard record types to their custom record type counterparts
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.Internals.RecordTypeConverter.ToConversions">
+            <summary>
+            Tracks custom record types to their standard record type counterparts
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Internals.RecordTypeConverter.#ctor(System.Collections.Generic.KeyValuePair{Mutagen.Bethesda.RecordType,Mutagen.Bethesda.RecordType}[])">
+            <summary>
+            Constructor
+            </summary>
+            <param name="conversions">Array of mappings, with standard as the key, and custom as the value</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.Internals.RecordTypeConverterExt.ConvertToCustom(Mutagen.Bethesda.Internals.RecordTypeConverter,Mutagen.Bethesda.RecordType)">
+            <summary>
+            Extension method to retrieve the record type to use in a custom context.
+            If the converter is null, or a custom alternative is not registered, the input record type is returned.
+            </summary>
+            <param name="converter">Optional record type mapping</param>
+            <param name="rec">Standard RecordType to query</param>
+            <returns>Custom RecordType if one is registered in converter.  Otherwise the input RecordType.</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.Internals.RecordTypeConverterExt.ConvertToStandard(Mutagen.Bethesda.Internals.RecordTypeConverter,Mutagen.Bethesda.RecordType)">
+            <summary>
+            Extension method to retrieve the record type to use in a standard context.
+            If the converter is null, or a standard alternative is not registered, the input record type is returned.
+            </summary>
+            <param name="converter">Optional record type mapping</param>
+            <param name="rec">Custom RecordType to query</param>
+            <returns>Standard RecordType if one is registered in converter.  Otherwise the input RecordType.</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.Internals.RecordTypeConverterExt.Combine(Mutagen.Bethesda.Internals.RecordTypeConverter,Mutagen.Bethesda.Internals.RecordTypeConverter)">
+            <summary>
+            Merges two converter mappings into a single one
             </summary>
         </member>
         <member name="T:Mutagen.Bethesda.LoadOrderIndex">
@@ -2366,6 +2479,31 @@
             </summary>
             <param name="group">Group to add record to</param>
             <returns>New record already added to the Group</returns>
+        </member>
+        <member name="T:Mutagen.Bethesda.Preprocessing.BinaryFileProcessor">
+            <summary>
+            Processing stream that modifies input according to explicit instructions
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Preprocessing.BinaryFileProcessor.Config.HasProcessing">
+            <summary>
+            True if config contains any instructions that would modify the stream
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Preprocessing.ModDecompressor">
+            <summary>
+            A static class with logic on how to decompress mod bytes without leveraging autogenerated records
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Preprocessing.ModDecompressor.Decompress(System.Func{System.IO.Stream},System.IO.Stream,Mutagen.Bethesda.GameMode,Mutagen.Bethesda.RecordInterest)">
+            <summary>
+            Decompresses mod stream into an output.
+            Will open up two input streams, so a Func factory is given as input.
+            </summary>
+            <param name="streamCreator">A func to create an input stream</param>
+            <param name="outputStream">Stream to write output to</param>
+            <param name="gameMode">Type of game the mod stream is reading</param>
+            <param name="interest">Optional specification of which record types to process</param>
         </member>
         <member name="T:Mutagen.Bethesda.GameMode">
             <summary>

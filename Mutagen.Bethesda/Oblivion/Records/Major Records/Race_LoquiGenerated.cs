@@ -99,114 +99,16 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
-        #region SkillBoost0
+        #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private SkillBoost _SkillBoost0 = new SkillBoost();
-        public SkillBoost SkillBoost0
+        private RaceData? _Data;
+        public RaceData? Data
         {
-            get => _SkillBoost0;
-            set => _SkillBoost0 = value ?? new SkillBoost();
+            get => _Data;
+            set => _Data = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISkillBoostGetter IRaceGetter.SkillBoost0 => _SkillBoost0;
-        #endregion
-        #region SkillBoost1
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private SkillBoost _SkillBoost1 = new SkillBoost();
-        public SkillBoost SkillBoost1
-        {
-            get => _SkillBoost1;
-            set => _SkillBoost1 = value ?? new SkillBoost();
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISkillBoostGetter IRaceGetter.SkillBoost1 => _SkillBoost1;
-        #endregion
-        #region SkillBoost2
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private SkillBoost _SkillBoost2 = new SkillBoost();
-        public SkillBoost SkillBoost2
-        {
-            get => _SkillBoost2;
-            set => _SkillBoost2 = value ?? new SkillBoost();
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISkillBoostGetter IRaceGetter.SkillBoost2 => _SkillBoost2;
-        #endregion
-        #region SkillBoost3
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private SkillBoost _SkillBoost3 = new SkillBoost();
-        public SkillBoost SkillBoost3
-        {
-            get => _SkillBoost3;
-            set => _SkillBoost3 = value ?? new SkillBoost();
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISkillBoostGetter IRaceGetter.SkillBoost3 => _SkillBoost3;
-        #endregion
-        #region SkillBoost4
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private SkillBoost _SkillBoost4 = new SkillBoost();
-        public SkillBoost SkillBoost4
-        {
-            get => _SkillBoost4;
-            set => _SkillBoost4 = value ?? new SkillBoost();
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISkillBoostGetter IRaceGetter.SkillBoost4 => _SkillBoost4;
-        #endregion
-        #region SkillBoost5
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private SkillBoost _SkillBoost5 = new SkillBoost();
-        public SkillBoost SkillBoost5
-        {
-            get => _SkillBoost5;
-            set => _SkillBoost5 = value ?? new SkillBoost();
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISkillBoostGetter IRaceGetter.SkillBoost5 => _SkillBoost5;
-        #endregion
-        #region SkillBoost6
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private SkillBoost _SkillBoost6 = new SkillBoost();
-        public SkillBoost SkillBoost6
-        {
-            get => _SkillBoost6;
-            set => _SkillBoost6 = value ?? new SkillBoost();
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISkillBoostGetter IRaceGetter.SkillBoost6 => _SkillBoost6;
-        #endregion
-        #region Fluff
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Fluff = new byte[4];
-        public Byte[] Fluff
-        {
-            get => _Fluff;
-            set => this._Fluff = value ?? new byte[4];
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IRaceGetter.Fluff => this.Fluff;
-        #endregion
-        #region Height
-        public GenderedItem<Single> Height { get; set; } = new GenderedItem<Single>(default, default);
-        IGenderedItemGetter<Single> IRaceGetter.Height => this.Height;
-        #endregion
-        #region Weight
-        public GenderedItem<Single> Weight { get; set; } = new GenderedItem<Single>(default, default);
-        IGenderedItemGetter<Single> IRaceGetter.Weight => this.Weight;
-        #endregion
-        #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Race.Flag _Flags;
-        public Race.Flag Flags
-        {
-            get => this._Flags;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Flags = value;
-            }
-        }
+        IRaceDataGetter? IRaceGetter.Data => this.Data;
         #endregion
         #region Voices
         public GenderedItem<IFormLink<Race>>? Voices { get; set; }
@@ -320,9 +222,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte>? IRaceGetter.Unknown => this.Unknown;
-        #endregion
-        #region DATADataTypeState
-        public Race.DATADataType DATADataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -498,17 +397,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Description = initialValue;
                 this.Spells = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RaceRelation.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RaceRelation.Mask<TItem>?>>());
-                this.SkillBoost0 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
-                this.SkillBoost1 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
-                this.SkillBoost2 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
-                this.SkillBoost3 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
-                this.SkillBoost4 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
-                this.SkillBoost5 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
-                this.SkillBoost6 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
-                this.Fluff = initialValue;
-                this.Height = new GenderedItem<TItem>(initialValue, initialValue);
-                this.Weight = new GenderedItem<TItem>(initialValue, initialValue);
-                this.Flags = initialValue;
+                this.Data = new MaskItem<TItem, RaceData.Mask<TItem>?>(initialValue, new RaceData.Mask<TItem>(initialValue));
                 this.Voices = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
                 this.DefaultHair = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
                 this.DefaultHairColor = initialValue;
@@ -521,7 +410,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Eyes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.FaceGenData = new MaskItem<TItem, FaceGenData.Mask<TItem>?>(initialValue, new FaceGenData.Mask<TItem>(initialValue));
                 this.Unknown = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -534,17 +422,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Description,
                 TItem Spells,
                 TItem Relations,
-                TItem SkillBoost0,
-                TItem SkillBoost1,
-                TItem SkillBoost2,
-                TItem SkillBoost3,
-                TItem SkillBoost4,
-                TItem SkillBoost5,
-                TItem SkillBoost6,
-                TItem Fluff,
-                TItem Height,
-                TItem Weight,
-                TItem Flags,
+                TItem Data,
                 TItem Voices,
                 TItem DefaultHair,
                 TItem DefaultHairColor,
@@ -556,8 +434,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Hairs,
                 TItem Eyes,
                 TItem FaceGenData,
-                TItem Unknown,
-                TItem DATADataTypeState)
+                TItem Unknown)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -569,17 +446,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Description = Description;
                 this.Spells = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Spells, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RaceRelation.Mask<TItem>?>>?>(Relations, Enumerable.Empty<MaskItemIndexed<TItem, RaceRelation.Mask<TItem>?>>());
-                this.SkillBoost0 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost0, new SkillBoost.Mask<TItem>(SkillBoost0));
-                this.SkillBoost1 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost1, new SkillBoost.Mask<TItem>(SkillBoost1));
-                this.SkillBoost2 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost2, new SkillBoost.Mask<TItem>(SkillBoost2));
-                this.SkillBoost3 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost3, new SkillBoost.Mask<TItem>(SkillBoost3));
-                this.SkillBoost4 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost4, new SkillBoost.Mask<TItem>(SkillBoost4));
-                this.SkillBoost5 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost5, new SkillBoost.Mask<TItem>(SkillBoost5));
-                this.SkillBoost6 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost6, new SkillBoost.Mask<TItem>(SkillBoost6));
-                this.Fluff = Fluff;
-                this.Height = new GenderedItem<TItem>(Height, Height);
-                this.Weight = new GenderedItem<TItem>(Weight, Weight);
-                this.Flags = Flags;
+                this.Data = new MaskItem<TItem, RaceData.Mask<TItem>?>(Data, new RaceData.Mask<TItem>(Data));
                 this.Voices = new MaskItem<TItem, GenderedItem<TItem>?>(Voices, default);
                 this.DefaultHair = new MaskItem<TItem, GenderedItem<TItem>?>(DefaultHair, default);
                 this.DefaultHairColor = DefaultHairColor;
@@ -592,7 +459,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Eyes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Eyes, Enumerable.Empty<(int Index, TItem Value)>());
                 this.FaceGenData = new MaskItem<TItem, FaceGenData.Mask<TItem>?>(FaceGenData, new FaceGenData.Mask<TItem>(FaceGenData));
                 this.Unknown = Unknown;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -608,17 +474,7 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem Description;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Spells;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RaceRelation.Mask<TItem>?>>?>? Relations;
-            public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost0 { get; set; }
-            public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost1 { get; set; }
-            public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost2 { get; set; }
-            public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost3 { get; set; }
-            public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost4 { get; set; }
-            public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost5 { get; set; }
-            public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost6 { get; set; }
-            public TItem Fluff;
-            public GenderedItem<TItem> Height;
-            public GenderedItem<TItem> Weight;
-            public TItem Flags;
+            public MaskItem<TItem, RaceData.Mask<TItem>?>? Data { get; set; }
             public MaskItem<TItem, GenderedItem<TItem>?>? Voices;
             public MaskItem<TItem, GenderedItem<TItem>?>? DefaultHair;
             public TItem DefaultHairColor;
@@ -631,7 +487,6 @@ namespace Mutagen.Bethesda.Oblivion
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Eyes;
             public MaskItem<TItem, FaceGenData.Mask<TItem>?>? FaceGenData { get; set; }
             public TItem Unknown;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -649,17 +504,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.Spells, rhs.Spells)) return false;
                 if (!object.Equals(this.Relations, rhs.Relations)) return false;
-                if (!object.Equals(this.SkillBoost0, rhs.SkillBoost0)) return false;
-                if (!object.Equals(this.SkillBoost1, rhs.SkillBoost1)) return false;
-                if (!object.Equals(this.SkillBoost2, rhs.SkillBoost2)) return false;
-                if (!object.Equals(this.SkillBoost3, rhs.SkillBoost3)) return false;
-                if (!object.Equals(this.SkillBoost4, rhs.SkillBoost4)) return false;
-                if (!object.Equals(this.SkillBoost5, rhs.SkillBoost5)) return false;
-                if (!object.Equals(this.SkillBoost6, rhs.SkillBoost6)) return false;
-                if (!object.Equals(this.Fluff, rhs.Fluff)) return false;
-                if (!object.Equals(this.Height, rhs.Height)) return false;
-                if (!object.Equals(this.Weight, rhs.Weight)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
                 if (!object.Equals(this.Voices, rhs.Voices)) return false;
                 if (!object.Equals(this.DefaultHair, rhs.DefaultHair)) return false;
                 if (!object.Equals(this.DefaultHairColor, rhs.DefaultHairColor)) return false;
@@ -672,7 +517,6 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.Eyes, rhs.Eyes)) return false;
                 if (!object.Equals(this.FaceGenData, rhs.FaceGenData)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -682,17 +526,7 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.Description);
                 hash.Add(this.Spells);
                 hash.Add(this.Relations);
-                hash.Add(this.SkillBoost0);
-                hash.Add(this.SkillBoost1);
-                hash.Add(this.SkillBoost2);
-                hash.Add(this.SkillBoost3);
-                hash.Add(this.SkillBoost4);
-                hash.Add(this.SkillBoost5);
-                hash.Add(this.SkillBoost6);
-                hash.Add(this.Fluff);
-                hash.Add(this.Height);
-                hash.Add(this.Weight);
-                hash.Add(this.Flags);
+                hash.Add(this.Data);
                 hash.Add(this.Voices);
                 hash.Add(this.DefaultHair);
                 hash.Add(this.DefaultHairColor);
@@ -705,7 +539,6 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.Eyes);
                 hash.Add(this.FaceGenData);
                 hash.Add(this.Unknown);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -741,45 +574,11 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                 }
-                if (SkillBoost0 != null)
+                if (Data != null)
                 {
-                    if (!eval(this.SkillBoost0.Overall)) return false;
-                    if (this.SkillBoost0.Specific != null && !this.SkillBoost0.Specific.All(eval)) return false;
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
                 }
-                if (SkillBoost1 != null)
-                {
-                    if (!eval(this.SkillBoost1.Overall)) return false;
-                    if (this.SkillBoost1.Specific != null && !this.SkillBoost1.Specific.All(eval)) return false;
-                }
-                if (SkillBoost2 != null)
-                {
-                    if (!eval(this.SkillBoost2.Overall)) return false;
-                    if (this.SkillBoost2.Specific != null && !this.SkillBoost2.Specific.All(eval)) return false;
-                }
-                if (SkillBoost3 != null)
-                {
-                    if (!eval(this.SkillBoost3.Overall)) return false;
-                    if (this.SkillBoost3.Specific != null && !this.SkillBoost3.Specific.All(eval)) return false;
-                }
-                if (SkillBoost4 != null)
-                {
-                    if (!eval(this.SkillBoost4.Overall)) return false;
-                    if (this.SkillBoost4.Specific != null && !this.SkillBoost4.Specific.All(eval)) return false;
-                }
-                if (SkillBoost5 != null)
-                {
-                    if (!eval(this.SkillBoost5.Overall)) return false;
-                    if (this.SkillBoost5.Specific != null && !this.SkillBoost5.Specific.All(eval)) return false;
-                }
-                if (SkillBoost6 != null)
-                {
-                    if (!eval(this.SkillBoost6.Overall)) return false;
-                    if (this.SkillBoost6.Specific != null && !this.SkillBoost6.Specific.All(eval)) return false;
-                }
-                if (!eval(this.Fluff)) return false;
-                if (!eval(this.Height.Male) || !eval(this.Height.Female)) return false;
-                if (!eval(this.Weight.Male) || !eval(this.Weight.Female)) return false;
-                if (!eval(this.Flags)) return false;
                 if (!GenderedItem.All(
                     this.Voices,
                     eval: eval)) return false;
@@ -835,7 +634,6 @@ namespace Mutagen.Bethesda.Oblivion
                     if (this.FaceGenData.Specific != null && !this.FaceGenData.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Unknown)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -869,45 +667,11 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                 }
-                if (SkillBoost0 != null)
+                if (Data != null)
                 {
-                    if (eval(this.SkillBoost0.Overall)) return true;
-                    if (this.SkillBoost0.Specific != null && this.SkillBoost0.Specific.Any(eval)) return true;
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
                 }
-                if (SkillBoost1 != null)
-                {
-                    if (eval(this.SkillBoost1.Overall)) return true;
-                    if (this.SkillBoost1.Specific != null && this.SkillBoost1.Specific.Any(eval)) return true;
-                }
-                if (SkillBoost2 != null)
-                {
-                    if (eval(this.SkillBoost2.Overall)) return true;
-                    if (this.SkillBoost2.Specific != null && this.SkillBoost2.Specific.Any(eval)) return true;
-                }
-                if (SkillBoost3 != null)
-                {
-                    if (eval(this.SkillBoost3.Overall)) return true;
-                    if (this.SkillBoost3.Specific != null && this.SkillBoost3.Specific.Any(eval)) return true;
-                }
-                if (SkillBoost4 != null)
-                {
-                    if (eval(this.SkillBoost4.Overall)) return true;
-                    if (this.SkillBoost4.Specific != null && this.SkillBoost4.Specific.Any(eval)) return true;
-                }
-                if (SkillBoost5 != null)
-                {
-                    if (eval(this.SkillBoost5.Overall)) return true;
-                    if (this.SkillBoost5.Specific != null && this.SkillBoost5.Specific.Any(eval)) return true;
-                }
-                if (SkillBoost6 != null)
-                {
-                    if (eval(this.SkillBoost6.Overall)) return true;
-                    if (this.SkillBoost6.Specific != null && this.SkillBoost6.Specific.Any(eval)) return true;
-                }
-                if (eval(this.Fluff)) return true;
-                if (eval(this.Height.Male) || eval(this.Height.Female)) return true;
-                if (eval(this.Weight.Male) || eval(this.Weight.Female)) return true;
-                if (eval(this.Flags)) return true;
                 if (GenderedItem.Any(
                     this.Voices,
                     eval: eval)) return true;
@@ -963,7 +727,6 @@ namespace Mutagen.Bethesda.Oblivion
                     if (this.FaceGenData.Specific != null && this.FaceGenData.Specific.Any(eval)) return true;
                 }
                 if (eval(this.Unknown)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -1010,21 +773,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                 }
-                obj.SkillBoost0 = this.SkillBoost0 == null ? null : new MaskItem<R, SkillBoost.Mask<R>?>(eval(this.SkillBoost0.Overall), this.SkillBoost0.Specific?.Translate(eval));
-                obj.SkillBoost1 = this.SkillBoost1 == null ? null : new MaskItem<R, SkillBoost.Mask<R>?>(eval(this.SkillBoost1.Overall), this.SkillBoost1.Specific?.Translate(eval));
-                obj.SkillBoost2 = this.SkillBoost2 == null ? null : new MaskItem<R, SkillBoost.Mask<R>?>(eval(this.SkillBoost2.Overall), this.SkillBoost2.Specific?.Translate(eval));
-                obj.SkillBoost3 = this.SkillBoost3 == null ? null : new MaskItem<R, SkillBoost.Mask<R>?>(eval(this.SkillBoost3.Overall), this.SkillBoost3.Specific?.Translate(eval));
-                obj.SkillBoost4 = this.SkillBoost4 == null ? null : new MaskItem<R, SkillBoost.Mask<R>?>(eval(this.SkillBoost4.Overall), this.SkillBoost4.Specific?.Translate(eval));
-                obj.SkillBoost5 = this.SkillBoost5 == null ? null : new MaskItem<R, SkillBoost.Mask<R>?>(eval(this.SkillBoost5.Overall), this.SkillBoost5.Specific?.Translate(eval));
-                obj.SkillBoost6 = this.SkillBoost6 == null ? null : new MaskItem<R, SkillBoost.Mask<R>?>(eval(this.SkillBoost6.Overall), this.SkillBoost6.Specific?.Translate(eval));
-                obj.Fluff = eval(this.Fluff);
-                obj.Height = new GenderedItem<R>(
-                    eval(this.Height.Male),
-                    eval(this.Height.Female));
-                obj.Weight = new GenderedItem<R>(
-                    eval(this.Weight.Male),
-                    eval(this.Weight.Female));
-                obj.Flags = eval(this.Flags);
+                obj.Data = this.Data == null ? null : new MaskItem<R, RaceData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
                 obj.Voices = GenderedItem.TranslateHelper(
                     this.Voices,
                     eval);
@@ -1087,7 +836,6 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 obj.FaceGenData = this.FaceGenData == null ? null : new MaskItem<R, FaceGenData.Mask<R>?>(eval(this.FaceGenData.Overall), this.FaceGenData.Specific?.Translate(eval));
                 obj.Unknown = eval(this.Unknown);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -1164,49 +912,9 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.SkillBoost0?.Overall ?? true)
+                    if (printMask?.Data?.Overall ?? true)
                     {
-                        SkillBoost0?.ToString(fg);
-                    }
-                    if (printMask?.SkillBoost1?.Overall ?? true)
-                    {
-                        SkillBoost1?.ToString(fg);
-                    }
-                    if (printMask?.SkillBoost2?.Overall ?? true)
-                    {
-                        SkillBoost2?.ToString(fg);
-                    }
-                    if (printMask?.SkillBoost3?.Overall ?? true)
-                    {
-                        SkillBoost3?.ToString(fg);
-                    }
-                    if (printMask?.SkillBoost4?.Overall ?? true)
-                    {
-                        SkillBoost4?.ToString(fg);
-                    }
-                    if (printMask?.SkillBoost5?.Overall ?? true)
-                    {
-                        SkillBoost5?.ToString(fg);
-                    }
-                    if (printMask?.SkillBoost6?.Overall ?? true)
-                    {
-                        SkillBoost6?.ToString(fg);
-                    }
-                    if (printMask?.Fluff ?? true)
-                    {
-                        fg.AppendItem(Fluff, "Fluff");
-                    }
-                    if ((true))
-                    {
-                        fg.AppendLine($"Height => {Height}");
-                    }
-                    if ((true))
-                    {
-                        fg.AppendLine($"Weight => {Weight}");
-                    }
-                    if (printMask?.Flags ?? true)
-                    {
-                        fg.AppendItem(Flags, "Flags");
+                        Data?.ToString(fg);
                     }
                     if (Voices != null
                         && (printMask?.Voices?.Overall ?? true))
@@ -1317,10 +1025,6 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendItem(Unknown, "Unknown");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
                 fg.AppendLine("]");
             }
@@ -1337,17 +1041,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Exception? Description;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Spells;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RaceRelation.ErrorMask?>>?>? Relations;
-            public MaskItem<Exception?, SkillBoost.ErrorMask?>? SkillBoost0;
-            public MaskItem<Exception?, SkillBoost.ErrorMask?>? SkillBoost1;
-            public MaskItem<Exception?, SkillBoost.ErrorMask?>? SkillBoost2;
-            public MaskItem<Exception?, SkillBoost.ErrorMask?>? SkillBoost3;
-            public MaskItem<Exception?, SkillBoost.ErrorMask?>? SkillBoost4;
-            public MaskItem<Exception?, SkillBoost.ErrorMask?>? SkillBoost5;
-            public MaskItem<Exception?, SkillBoost.ErrorMask?>? SkillBoost6;
-            public Exception? Fluff;
-            public MaskItem<Exception?, GenderedItem<Exception?>?>? Height;
-            public MaskItem<Exception?, GenderedItem<Exception?>?>? Weight;
-            public Exception? Flags;
+            public MaskItem<Exception?, RaceData.ErrorMask?>? Data;
             public MaskItem<Exception?, GenderedItem<Exception?>?>? Voices;
             public MaskItem<Exception?, GenderedItem<Exception?>?>? DefaultHair;
             public Exception? DefaultHairColor;
@@ -1360,7 +1054,6 @@ namespace Mutagen.Bethesda.Oblivion
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Eyes;
             public MaskItem<Exception?, FaceGenData.ErrorMask?>? FaceGenData;
             public Exception? Unknown;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -1377,28 +1070,8 @@ namespace Mutagen.Bethesda.Oblivion
                         return Spells;
                     case Race_FieldIndex.Relations:
                         return Relations;
-                    case Race_FieldIndex.SkillBoost0:
-                        return SkillBoost0;
-                    case Race_FieldIndex.SkillBoost1:
-                        return SkillBoost1;
-                    case Race_FieldIndex.SkillBoost2:
-                        return SkillBoost2;
-                    case Race_FieldIndex.SkillBoost3:
-                        return SkillBoost3;
-                    case Race_FieldIndex.SkillBoost4:
-                        return SkillBoost4;
-                    case Race_FieldIndex.SkillBoost5:
-                        return SkillBoost5;
-                    case Race_FieldIndex.SkillBoost6:
-                        return SkillBoost6;
-                    case Race_FieldIndex.Fluff:
-                        return Fluff;
-                    case Race_FieldIndex.Height:
-                        return Height;
-                    case Race_FieldIndex.Weight:
-                        return Weight;
-                    case Race_FieldIndex.Flags:
-                        return Flags;
+                    case Race_FieldIndex.Data:
+                        return Data;
                     case Race_FieldIndex.Voices:
                         return Voices;
                     case Race_FieldIndex.DefaultHair:
@@ -1423,8 +1096,6 @@ namespace Mutagen.Bethesda.Oblivion
                         return FaceGenData;
                     case Race_FieldIndex.Unknown:
                         return Unknown;
-                    case Race_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1447,38 +1118,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case Race_FieldIndex.Relations:
                         this.Relations = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RaceRelation.ErrorMask?>>?>(ex, null);
                         break;
-                    case Race_FieldIndex.SkillBoost0:
-                        this.SkillBoost0 = new MaskItem<Exception?, SkillBoost.ErrorMask?>(ex, null);
-                        break;
-                    case Race_FieldIndex.SkillBoost1:
-                        this.SkillBoost1 = new MaskItem<Exception?, SkillBoost.ErrorMask?>(ex, null);
-                        break;
-                    case Race_FieldIndex.SkillBoost2:
-                        this.SkillBoost2 = new MaskItem<Exception?, SkillBoost.ErrorMask?>(ex, null);
-                        break;
-                    case Race_FieldIndex.SkillBoost3:
-                        this.SkillBoost3 = new MaskItem<Exception?, SkillBoost.ErrorMask?>(ex, null);
-                        break;
-                    case Race_FieldIndex.SkillBoost4:
-                        this.SkillBoost4 = new MaskItem<Exception?, SkillBoost.ErrorMask?>(ex, null);
-                        break;
-                    case Race_FieldIndex.SkillBoost5:
-                        this.SkillBoost5 = new MaskItem<Exception?, SkillBoost.ErrorMask?>(ex, null);
-                        break;
-                    case Race_FieldIndex.SkillBoost6:
-                        this.SkillBoost6 = new MaskItem<Exception?, SkillBoost.ErrorMask?>(ex, null);
-                        break;
-                    case Race_FieldIndex.Fluff:
-                        this.Fluff = ex;
-                        break;
-                    case Race_FieldIndex.Height:
-                        this.Height = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
-                        break;
-                    case Race_FieldIndex.Weight:
-                        this.Weight = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
-                        break;
-                    case Race_FieldIndex.Flags:
-                        this.Flags = ex;
+                    case Race_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, RaceData.ErrorMask?>(ex, null);
                         break;
                     case Race_FieldIndex.Voices:
                         this.Voices = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
@@ -1516,9 +1157,6 @@ namespace Mutagen.Bethesda.Oblivion
                     case Race_FieldIndex.Unknown:
                         this.Unknown = ex;
                         break;
-                    case Race_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
-                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -1542,38 +1180,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case Race_FieldIndex.Relations:
                         this.Relations = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RaceRelation.ErrorMask?>>?>)obj;
                         break;
-                    case Race_FieldIndex.SkillBoost0:
-                        this.SkillBoost0 = (MaskItem<Exception?, SkillBoost.ErrorMask?>?)obj;
-                        break;
-                    case Race_FieldIndex.SkillBoost1:
-                        this.SkillBoost1 = (MaskItem<Exception?, SkillBoost.ErrorMask?>?)obj;
-                        break;
-                    case Race_FieldIndex.SkillBoost2:
-                        this.SkillBoost2 = (MaskItem<Exception?, SkillBoost.ErrorMask?>?)obj;
-                        break;
-                    case Race_FieldIndex.SkillBoost3:
-                        this.SkillBoost3 = (MaskItem<Exception?, SkillBoost.ErrorMask?>?)obj;
-                        break;
-                    case Race_FieldIndex.SkillBoost4:
-                        this.SkillBoost4 = (MaskItem<Exception?, SkillBoost.ErrorMask?>?)obj;
-                        break;
-                    case Race_FieldIndex.SkillBoost5:
-                        this.SkillBoost5 = (MaskItem<Exception?, SkillBoost.ErrorMask?>?)obj;
-                        break;
-                    case Race_FieldIndex.SkillBoost6:
-                        this.SkillBoost6 = (MaskItem<Exception?, SkillBoost.ErrorMask?>?)obj;
-                        break;
-                    case Race_FieldIndex.Fluff:
-                        this.Fluff = (Exception?)obj;
-                        break;
-                    case Race_FieldIndex.Height:
-                        this.Height = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
-                        break;
-                    case Race_FieldIndex.Weight:
-                        this.Weight = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
-                        break;
-                    case Race_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
+                    case Race_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, RaceData.ErrorMask?>?)obj;
                         break;
                     case Race_FieldIndex.Voices:
                         this.Voices = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
@@ -1611,9 +1219,6 @@ namespace Mutagen.Bethesda.Oblivion
                     case Race_FieldIndex.Unknown:
                         this.Unknown = (Exception?)obj;
                         break;
-                    case Race_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1627,17 +1232,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Description != null) return true;
                 if (Spells != null) return true;
                 if (Relations != null) return true;
-                if (SkillBoost0 != null) return true;
-                if (SkillBoost1 != null) return true;
-                if (SkillBoost2 != null) return true;
-                if (SkillBoost3 != null) return true;
-                if (SkillBoost4 != null) return true;
-                if (SkillBoost5 != null) return true;
-                if (SkillBoost6 != null) return true;
-                if (Fluff != null) return true;
-                if (Height != null) return true;
-                if (Weight != null) return true;
-                if (Flags != null) return true;
+                if (Data != null) return true;
                 if (Voices != null) return true;
                 if (DefaultHair != null) return true;
                 if (DefaultHairColor != null) return true;
@@ -1650,7 +1245,6 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Eyes != null) return true;
                 if (FaceGenData != null) return true;
                 if (Unknown != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1732,17 +1326,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     fg.AppendLine("]");
                 }
-                SkillBoost0?.ToString(fg);
-                SkillBoost1?.ToString(fg);
-                SkillBoost2?.ToString(fg);
-                SkillBoost3?.ToString(fg);
-                SkillBoost4?.ToString(fg);
-                SkillBoost5?.ToString(fg);
-                SkillBoost6?.ToString(fg);
-                fg.AppendItem(Fluff, "Fluff");
-                fg.AppendLine($"Height => {Height}");
-                fg.AppendLine($"Weight => {Weight}");
-                fg.AppendItem(Flags, "Flags");
+                Data?.ToString(fg);
                 if (Voices != null)
                 {
                     fg.AppendLine($"Voices => {Voices}");
@@ -1830,7 +1414,6 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 FaceGenData?.ToString(fg);
                 fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -1843,17 +1426,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.Spells = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Spells?.Overall, rhs.Spells?.Overall), ExceptionExt.Combine(this.Spells?.Specific, rhs.Spells?.Specific));
                 ret.Relations = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RaceRelation.ErrorMask?>>?>(ExceptionExt.Combine(this.Relations?.Overall, rhs.Relations?.Overall), ExceptionExt.Combine(this.Relations?.Specific, rhs.Relations?.Specific));
-                ret.SkillBoost0 = this.SkillBoost0.Combine(rhs.SkillBoost0, (l, r) => l.Combine(r));
-                ret.SkillBoost1 = this.SkillBoost1.Combine(rhs.SkillBoost1, (l, r) => l.Combine(r));
-                ret.SkillBoost2 = this.SkillBoost2.Combine(rhs.SkillBoost2, (l, r) => l.Combine(r));
-                ret.SkillBoost3 = this.SkillBoost3.Combine(rhs.SkillBoost3, (l, r) => l.Combine(r));
-                ret.SkillBoost4 = this.SkillBoost4.Combine(rhs.SkillBoost4, (l, r) => l.Combine(r));
-                ret.SkillBoost5 = this.SkillBoost5.Combine(rhs.SkillBoost5, (l, r) => l.Combine(r));
-                ret.SkillBoost6 = this.SkillBoost6.Combine(rhs.SkillBoost6, (l, r) => l.Combine(r));
-                ret.Fluff = this.Fluff.Combine(rhs.Fluff);
-                ret.Height = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Height?.Overall, rhs.Height?.Overall), GenderedItem.Combine(this.Height?.Specific, rhs.Height?.Specific));
-                ret.Weight = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Weight?.Overall, rhs.Weight?.Overall), GenderedItem.Combine(this.Weight?.Specific, rhs.Weight?.Specific));
-                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 ret.Voices = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Voices?.Overall, rhs.Voices?.Overall), GenderedItem.Combine(this.Voices?.Specific, rhs.Voices?.Specific));
                 ret.DefaultHair = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.DefaultHair?.Overall, rhs.DefaultHair?.Overall), GenderedItem.Combine(this.DefaultHair?.Specific, rhs.DefaultHair?.Specific));
                 ret.DefaultHairColor = this.DefaultHairColor.Combine(rhs.DefaultHairColor);
@@ -1866,7 +1439,6 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Eyes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Eyes?.Overall, rhs.Eyes?.Overall), ExceptionExt.Combine(this.Eyes?.Specific, rhs.Eyes?.Specific));
                 ret.FaceGenData = this.FaceGenData.Combine(rhs.FaceGenData, (l, r) => l.Combine(r));
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1893,17 +1465,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Description;
             public bool Spells;
             public MaskItem<bool, RaceRelation.TranslationMask?> Relations;
-            public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost0;
-            public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost1;
-            public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost2;
-            public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost3;
-            public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost4;
-            public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost5;
-            public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost6;
-            public bool Fluff;
-            public MaskItem<bool, GenderedItem<bool>?> Height;
-            public MaskItem<bool, GenderedItem<bool>?> Weight;
-            public bool Flags;
+            public MaskItem<bool, RaceData.TranslationMask?> Data;
             public MaskItem<bool, GenderedItem<bool>?> Voices;
             public MaskItem<bool, GenderedItem<bool>?> DefaultHair;
             public bool DefaultHairColor;
@@ -1916,7 +1478,6 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Eyes;
             public MaskItem<bool, FaceGenData.TranslationMask?> FaceGenData;
             public bool Unknown;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -1927,17 +1488,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Description = defaultOn;
                 this.Spells = defaultOn;
                 this.Relations = new MaskItem<bool, RaceRelation.TranslationMask?>(defaultOn, null);
-                this.SkillBoost0 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
-                this.SkillBoost1 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
-                this.SkillBoost2 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
-                this.SkillBoost3 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
-                this.SkillBoost4 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
-                this.SkillBoost5 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
-                this.SkillBoost6 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
-                this.Fluff = defaultOn;
-                this.Height = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
-                this.Weight = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
-                this.Flags = defaultOn;
+                this.Data = new MaskItem<bool, RaceData.TranslationMask?>(defaultOn, null);
                 this.Voices = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
                 this.DefaultHair = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
                 this.DefaultHairColor = defaultOn;
@@ -1950,7 +1501,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Eyes = defaultOn;
                 this.FaceGenData = new MaskItem<bool, FaceGenData.TranslationMask?>(defaultOn, null);
                 this.Unknown = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -1962,17 +1512,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Description, null));
                 ret.Add((Spells, null));
                 ret.Add((Relations?.Overall ?? true, Relations?.Specific?.GetCrystal()));
-                ret.Add((SkillBoost0?.Overall ?? true, SkillBoost0?.Specific?.GetCrystal()));
-                ret.Add((SkillBoost1?.Overall ?? true, SkillBoost1?.Specific?.GetCrystal()));
-                ret.Add((SkillBoost2?.Overall ?? true, SkillBoost2?.Specific?.GetCrystal()));
-                ret.Add((SkillBoost3?.Overall ?? true, SkillBoost3?.Specific?.GetCrystal()));
-                ret.Add((SkillBoost4?.Overall ?? true, SkillBoost4?.Specific?.GetCrystal()));
-                ret.Add((SkillBoost5?.Overall ?? true, SkillBoost5?.Specific?.GetCrystal()));
-                ret.Add((SkillBoost6?.Overall ?? true, SkillBoost6?.Specific?.GetCrystal()));
-                ret.Add((Fluff, null));
-                ret.Add((Height?.Overall ?? true, null));
-                ret.Add((Weight?.Overall ?? true, null));
-                ret.Add((Flags, null));
+                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
                 ret.Add((Voices?.Overall ?? true, null));
                 ret.Add((DefaultHair?.Overall ?? true, null));
                 ret.Add((DefaultHairColor, null));
@@ -1985,18 +1525,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Eyes, null));
                 ret.Add((FaceGenData?.Overall ?? true, FaceGenData?.Specific?.GetCrystal()));
                 ret.Add((Unknown, null));
-                ret.Add((DATADataTypeState, null));
             }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Race_Registration.TriggeringRecordType;
-        [Flags]
-        public enum DATADataType
-        {
-            Has = 1
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => RaceCommon.Instance.GetLinks(this);
         public Race(FormKey formKey)
@@ -2082,17 +1616,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Description { get; set; }
         new ExtendedList<IFormLink<Spell>>? Spells { get; set; }
         new ExtendedList<RaceRelation> Relations { get; }
-        new SkillBoost SkillBoost0 { get; set; }
-        new SkillBoost SkillBoost1 { get; set; }
-        new SkillBoost SkillBoost2 { get; set; }
-        new SkillBoost SkillBoost3 { get; set; }
-        new SkillBoost SkillBoost4 { get; set; }
-        new SkillBoost SkillBoost5 { get; set; }
-        new SkillBoost SkillBoost6 { get; set; }
-        new Byte[] Fluff { get; set; }
-        new GenderedItem<Single> Height { get; set; }
-        new GenderedItem<Single> Weight { get; set; }
-        new Race.Flag Flags { get; set; }
+        new RaceData? Data { get; set; }
         new GenderedItem<IFormLink<Race>>? Voices { get; set; }
         new GenderedItem<IFormLink<Hair>>? DefaultHair { get; set; }
         new Byte? DefaultHairColor { get; set; }
@@ -2105,7 +1629,6 @@ namespace Mutagen.Bethesda.Oblivion
         new ExtendedList<IFormLink<Eye>>? Eyes { get; set; }
         new FaceGenData? FaceGenData { get; set; }
         new Byte[]? Unknown { get; set; }
-        new Race.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IRaceInternal :
@@ -2113,8 +1636,6 @@ namespace Mutagen.Bethesda.Oblivion
         IRace,
         IRaceGetter
     {
-        new GenderedItem<Single> Height { get; set; }
-        new GenderedItem<Single> Weight { get; set; }
         new GenderedItem<IFormLink<Race>>? Voices { get; set; }
         new GenderedItem<IFormLink<Hair>>? DefaultHair { get; set; }
         new GenderedItem<RaceStats>? RaceStats { get; set; }
@@ -2132,17 +1653,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Description { get; }
         IReadOnlyList<IFormLinkGetter<ISpellGetter>>? Spells { get; }
         IReadOnlyList<IRaceRelationGetter> Relations { get; }
-        ISkillBoostGetter SkillBoost0 { get; }
-        ISkillBoostGetter SkillBoost1 { get; }
-        ISkillBoostGetter SkillBoost2 { get; }
-        ISkillBoostGetter SkillBoost3 { get; }
-        ISkillBoostGetter SkillBoost4 { get; }
-        ISkillBoostGetter SkillBoost5 { get; }
-        ISkillBoostGetter SkillBoost6 { get; }
-        ReadOnlyMemorySlice<Byte> Fluff { get; }
-        IGenderedItemGetter<Single> Height { get; }
-        IGenderedItemGetter<Single> Weight { get; }
-        Race.Flag Flags { get; }
+        IRaceDataGetter? Data { get; }
         IGenderedItemGetter<IFormLinkGetter<IRaceGetter>>? Voices { get; }
         IGenderedItemGetter<IFormLinkGetter<IHairGetter>>? DefaultHair { get; }
         Byte? DefaultHairColor { get; }
@@ -2155,7 +1666,6 @@ namespace Mutagen.Bethesda.Oblivion
         IReadOnlyList<IFormLinkGetter<IEyeGetter>>? Eyes { get; }
         IFaceGenDataGetter? FaceGenData { get; }
         ReadOnlyMemorySlice<Byte>? Unknown { get; }
-        Race.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -2459,30 +1969,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Description = 6,
         Spells = 7,
         Relations = 8,
-        SkillBoost0 = 9,
-        SkillBoost1 = 10,
-        SkillBoost2 = 11,
-        SkillBoost3 = 12,
-        SkillBoost4 = 13,
-        SkillBoost5 = 14,
-        SkillBoost6 = 15,
-        Fluff = 16,
-        Height = 17,
-        Weight = 18,
-        Flags = 19,
-        Voices = 20,
-        DefaultHair = 21,
-        DefaultHairColor = 22,
-        FaceGenMainClamp = 23,
-        FaceGenFaceClamp = 24,
-        RaceStats = 25,
-        FaceData = 26,
-        BodyData = 27,
-        Hairs = 28,
-        Eyes = 29,
-        FaceGenData = 30,
-        Unknown = 31,
-        DATADataTypeState = 32,
+        Data = 9,
+        Voices = 10,
+        DefaultHair = 11,
+        DefaultHairColor = 12,
+        FaceGenMainClamp = 13,
+        FaceGenFaceClamp = 14,
+        RaceStats = 15,
+        FaceData = 16,
+        BodyData = 17,
+        Hairs = 18,
+        Eyes = 19,
+        FaceGenData = 20,
+        Unknown = 21,
     }
     #endregion
 
@@ -2500,9 +1999,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "265136e6-60a6-4ade-a7c4-b31197fb95e5";
 
-        public const ushort AdditionalFieldCount = 28;
+        public const ushort AdditionalFieldCount = 17;
 
-        public const ushort FieldCount = 33;
+        public const ushort FieldCount = 22;
 
         public static readonly Type MaskType = typeof(Race.Mask<>);
 
@@ -2540,28 +2039,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Race_FieldIndex.Spells;
                 case "RELATIONS":
                     return (ushort)Race_FieldIndex.Relations;
-                case "SKILLBOOST0":
-                    return (ushort)Race_FieldIndex.SkillBoost0;
-                case "SKILLBOOST1":
-                    return (ushort)Race_FieldIndex.SkillBoost1;
-                case "SKILLBOOST2":
-                    return (ushort)Race_FieldIndex.SkillBoost2;
-                case "SKILLBOOST3":
-                    return (ushort)Race_FieldIndex.SkillBoost3;
-                case "SKILLBOOST4":
-                    return (ushort)Race_FieldIndex.SkillBoost4;
-                case "SKILLBOOST5":
-                    return (ushort)Race_FieldIndex.SkillBoost5;
-                case "SKILLBOOST6":
-                    return (ushort)Race_FieldIndex.SkillBoost6;
-                case "FLUFF":
-                    return (ushort)Race_FieldIndex.Fluff;
-                case "HEIGHT":
-                    return (ushort)Race_FieldIndex.Height;
-                case "WEIGHT":
-                    return (ushort)Race_FieldIndex.Weight;
-                case "FLAGS":
-                    return (ushort)Race_FieldIndex.Flags;
+                case "DATA":
+                    return (ushort)Race_FieldIndex.Data;
                 case "VOICES":
                     return (ushort)Race_FieldIndex.Voices;
                 case "DEFAULTHAIR":
@@ -2586,8 +2065,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Race_FieldIndex.FaceGenData;
                 case "UNKNOWN":
                     return (ushort)Race_FieldIndex.Unknown;
-                case "DATADATATYPESTATE":
-                    return (ushort)Race_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -2606,17 +2083,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return true;
                 case Race_FieldIndex.Name:
                 case Race_FieldIndex.Description:
-                case Race_FieldIndex.SkillBoost0:
-                case Race_FieldIndex.SkillBoost1:
-                case Race_FieldIndex.SkillBoost2:
-                case Race_FieldIndex.SkillBoost3:
-                case Race_FieldIndex.SkillBoost4:
-                case Race_FieldIndex.SkillBoost5:
-                case Race_FieldIndex.SkillBoost6:
-                case Race_FieldIndex.Fluff:
-                case Race_FieldIndex.Height:
-                case Race_FieldIndex.Weight:
-                case Race_FieldIndex.Flags:
+                case Race_FieldIndex.Data:
                 case Race_FieldIndex.Voices:
                 case Race_FieldIndex.DefaultHair:
                 case Race_FieldIndex.DefaultHairColor:
@@ -2626,7 +2093,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.BodyData:
                 case Race_FieldIndex.FaceGenData:
                 case Race_FieldIndex.Unknown:
-                case Race_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -2639,13 +2105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Race_FieldIndex.Relations:
-                case Race_FieldIndex.SkillBoost0:
-                case Race_FieldIndex.SkillBoost1:
-                case Race_FieldIndex.SkillBoost2:
-                case Race_FieldIndex.SkillBoost3:
-                case Race_FieldIndex.SkillBoost4:
-                case Race_FieldIndex.SkillBoost5:
-                case Race_FieldIndex.SkillBoost6:
+                case Race_FieldIndex.Data:
                 case Race_FieldIndex.RaceStats:
                 case Race_FieldIndex.FaceData:
                 case Race_FieldIndex.BodyData:
@@ -2654,10 +2114,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Name:
                 case Race_FieldIndex.Description:
                 case Race_FieldIndex.Spells:
-                case Race_FieldIndex.Fluff:
-                case Race_FieldIndex.Height:
-                case Race_FieldIndex.Weight:
-                case Race_FieldIndex.Flags:
                 case Race_FieldIndex.Voices:
                 case Race_FieldIndex.DefaultHair:
                 case Race_FieldIndex.DefaultHairColor:
@@ -2666,7 +2122,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Hairs:
                 case Race_FieldIndex.Eyes:
                 case Race_FieldIndex.Unknown:
-                case Race_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
@@ -2682,17 +2137,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Description:
                 case Race_FieldIndex.Spells:
                 case Race_FieldIndex.Relations:
-                case Race_FieldIndex.SkillBoost0:
-                case Race_FieldIndex.SkillBoost1:
-                case Race_FieldIndex.SkillBoost2:
-                case Race_FieldIndex.SkillBoost3:
-                case Race_FieldIndex.SkillBoost4:
-                case Race_FieldIndex.SkillBoost5:
-                case Race_FieldIndex.SkillBoost6:
-                case Race_FieldIndex.Fluff:
-                case Race_FieldIndex.Height:
-                case Race_FieldIndex.Weight:
-                case Race_FieldIndex.Flags:
+                case Race_FieldIndex.Data:
                 case Race_FieldIndex.Voices:
                 case Race_FieldIndex.DefaultHair:
                 case Race_FieldIndex.DefaultHairColor:
@@ -2705,7 +2150,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Eyes:
                 case Race_FieldIndex.FaceGenData:
                 case Race_FieldIndex.Unknown:
-                case Race_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
@@ -2725,28 +2169,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Spells";
                 case Race_FieldIndex.Relations:
                     return "Relations";
-                case Race_FieldIndex.SkillBoost0:
-                    return "SkillBoost0";
-                case Race_FieldIndex.SkillBoost1:
-                    return "SkillBoost1";
-                case Race_FieldIndex.SkillBoost2:
-                    return "SkillBoost2";
-                case Race_FieldIndex.SkillBoost3:
-                    return "SkillBoost3";
-                case Race_FieldIndex.SkillBoost4:
-                    return "SkillBoost4";
-                case Race_FieldIndex.SkillBoost5:
-                    return "SkillBoost5";
-                case Race_FieldIndex.SkillBoost6:
-                    return "SkillBoost6";
-                case Race_FieldIndex.Fluff:
-                    return "Fluff";
-                case Race_FieldIndex.Height:
-                    return "Height";
-                case Race_FieldIndex.Weight:
-                    return "Weight";
-                case Race_FieldIndex.Flags:
-                    return "Flags";
+                case Race_FieldIndex.Data:
+                    return "Data";
                 case Race_FieldIndex.Voices:
                     return "Voices";
                 case Race_FieldIndex.DefaultHair:
@@ -2771,8 +2195,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "FaceGenData";
                 case Race_FieldIndex.Unknown:
                     return "Unknown";
-                case Race_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
                 default:
                     return OblivionMajorRecord_Registration.GetNthName(index);
             }
@@ -2787,17 +2209,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Description:
                 case Race_FieldIndex.Spells:
                 case Race_FieldIndex.Relations:
-                case Race_FieldIndex.SkillBoost0:
-                case Race_FieldIndex.SkillBoost1:
-                case Race_FieldIndex.SkillBoost2:
-                case Race_FieldIndex.SkillBoost3:
-                case Race_FieldIndex.SkillBoost4:
-                case Race_FieldIndex.SkillBoost5:
-                case Race_FieldIndex.SkillBoost6:
-                case Race_FieldIndex.Fluff:
-                case Race_FieldIndex.Height:
-                case Race_FieldIndex.Weight:
-                case Race_FieldIndex.Flags:
+                case Race_FieldIndex.Data:
                 case Race_FieldIndex.Voices:
                 case Race_FieldIndex.DefaultHair:
                 case Race_FieldIndex.DefaultHairColor:
@@ -2810,7 +2222,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Eyes:
                 case Race_FieldIndex.FaceGenData:
                 case Race_FieldIndex.Unknown:
-                case Race_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsNthDerivative(index);
@@ -2826,17 +2237,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Description:
                 case Race_FieldIndex.Spells:
                 case Race_FieldIndex.Relations:
-                case Race_FieldIndex.SkillBoost0:
-                case Race_FieldIndex.SkillBoost1:
-                case Race_FieldIndex.SkillBoost2:
-                case Race_FieldIndex.SkillBoost3:
-                case Race_FieldIndex.SkillBoost4:
-                case Race_FieldIndex.SkillBoost5:
-                case Race_FieldIndex.SkillBoost6:
-                case Race_FieldIndex.Fluff:
-                case Race_FieldIndex.Height:
-                case Race_FieldIndex.Weight:
-                case Race_FieldIndex.Flags:
+                case Race_FieldIndex.Data:
                 case Race_FieldIndex.Voices:
                 case Race_FieldIndex.DefaultHair:
                 case Race_FieldIndex.DefaultHairColor:
@@ -2849,7 +2250,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Eyes:
                 case Race_FieldIndex.FaceGenData:
                 case Race_FieldIndex.Unknown:
-                case Race_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsProtected(index);
@@ -2869,28 +2269,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(ExtendedList<IFormLink<Spell>>);
                 case Race_FieldIndex.Relations:
                     return typeof(ExtendedList<RaceRelation>);
-                case Race_FieldIndex.SkillBoost0:
-                    return typeof(SkillBoost);
-                case Race_FieldIndex.SkillBoost1:
-                    return typeof(SkillBoost);
-                case Race_FieldIndex.SkillBoost2:
-                    return typeof(SkillBoost);
-                case Race_FieldIndex.SkillBoost3:
-                    return typeof(SkillBoost);
-                case Race_FieldIndex.SkillBoost4:
-                    return typeof(SkillBoost);
-                case Race_FieldIndex.SkillBoost5:
-                    return typeof(SkillBoost);
-                case Race_FieldIndex.SkillBoost6:
-                    return typeof(SkillBoost);
-                case Race_FieldIndex.Fluff:
-                    return typeof(Byte[]);
-                case Race_FieldIndex.Height:
-                    return typeof(GenderedItem<Single>);
-                case Race_FieldIndex.Weight:
-                    return typeof(GenderedItem<Single>);
-                case Race_FieldIndex.Flags:
-                    return typeof(Race.Flag);
+                case Race_FieldIndex.Data:
+                    return typeof(RaceData);
                 case Race_FieldIndex.Voices:
                     return typeof(GenderedItem<IFormLink<Race>>);
                 case Race_FieldIndex.DefaultHair:
@@ -2915,8 +2295,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(FaceGenData);
                 case Race_FieldIndex.Unknown:
                     return typeof(Byte[]);
-                case Race_FieldIndex.DATADataTypeState:
-                    return typeof(Race.DATADataType);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -2950,7 +2328,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
         public static readonly RecordType TriggeringRecordType = RACE_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 16;
+        public const int NumTypedFields = 17;
         public static readonly Type BinaryWriteTranslation = typeof(RaceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2997,19 +2375,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Description = default;
             item.Spells = null;
             item.Relations.Clear();
-            item.SkillBoost0 = new SkillBoost();
-            item.SkillBoost1 = new SkillBoost();
-            item.SkillBoost2 = new SkillBoost();
-            item.SkillBoost3 = new SkillBoost();
-            item.SkillBoost4 = new SkillBoost();
-            item.SkillBoost5 = new SkillBoost();
-            item.SkillBoost6 = new SkillBoost();
-            item.Fluff = new byte[4];
-            item.Height.Male = default;
-            item.Height.Female = default;
-            item.Weight.Male = default;
-            item.Weight.Female = default;
-            item.Flags = default;
+            item.Data = null;
             item.Voices = null;
             item.DefaultHair = null;
             item.DefaultHairColor = default;
@@ -3022,7 +2388,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Eyes = null;
             item.FaceGenData = null;
             item.Unknown = default;
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -3046,9 +2411,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "HasDATADataType":
-                    item.DATADataTypeState |= Race.DATADataType.Has;
-                    break;
                 default:
                     OblivionMajorRecordSetterCommon.FillPrivateElementXml(
                         item: item,
@@ -3185,28 +2547,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.DATADataTypeState = Race.DATADataType.Has;
-                    }
-                    item.SkillBoost0 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: dataFrame);
-                    item.SkillBoost1 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: dataFrame);
-                    item.SkillBoost2 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: dataFrame);
-                    item.SkillBoost3 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: dataFrame);
-                    item.SkillBoost4 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: dataFrame);
-                    item.SkillBoost5 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: dataFrame);
-                    item.SkillBoost6 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: dataFrame);
-                    item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.Height = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<Single>(
-                        frame: frame,
-                        transl: FloatBinaryTranslation.Instance.Parse);
-                    item.Weight = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<Single>(
-                        frame: frame,
-                        transl: FloatBinaryTranslation.Instance.Parse);
-                    item.Flags = EnumBinaryTranslation<Race.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(2));
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Flags);
+                    item.Data = Mutagen.Bethesda.Oblivion.RaceData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Data);
                 }
                 case 0x4D414E56: // VNAM
                 {
@@ -3396,21 +2738,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Relations,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.SkillBoost0 = MaskItemExt.Factory(item.SkillBoost0.GetEqualsMask(rhs.SkillBoost0, include), include);
-            ret.SkillBoost1 = MaskItemExt.Factory(item.SkillBoost1.GetEqualsMask(rhs.SkillBoost1, include), include);
-            ret.SkillBoost2 = MaskItemExt.Factory(item.SkillBoost2.GetEqualsMask(rhs.SkillBoost2, include), include);
-            ret.SkillBoost3 = MaskItemExt.Factory(item.SkillBoost3.GetEqualsMask(rhs.SkillBoost3, include), include);
-            ret.SkillBoost4 = MaskItemExt.Factory(item.SkillBoost4.GetEqualsMask(rhs.SkillBoost4, include), include);
-            ret.SkillBoost5 = MaskItemExt.Factory(item.SkillBoost5.GetEqualsMask(rhs.SkillBoost5, include), include);
-            ret.SkillBoost6 = MaskItemExt.Factory(item.SkillBoost6.GetEqualsMask(rhs.SkillBoost6, include), include);
-            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff.Span, rhs.Fluff.Span);
-            ret.Height = new GenderedItem<bool>(
-                male: item.Height.Male.EqualsWithin(rhs.Height.Male),
-                female: item.Height.Female.EqualsWithin(rhs.Height.Female));
-            ret.Weight = new GenderedItem<bool>(
-                male: item.Weight.Male.EqualsWithin(rhs.Weight.Male),
-                female: item.Weight.Female.EqualsWithin(rhs.Weight.Female));
-            ret.Flags = item.Flags == rhs.Flags;
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Voices = GenderedItem.EqualityMaskHelper(
                 lhs: item.Voices,
                 rhs: rhs.Voices,
@@ -3452,7 +2784,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Unknown = MemorySliceExt.Equal(item.Unknown, rhs.Unknown);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -3551,49 +2882,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.SkillBoost0?.Overall ?? true)
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data.TryGet(out var DataItem))
             {
-                item.SkillBoost0?.ToString(fg, "SkillBoost0");
-            }
-            if (printMask?.SkillBoost1?.Overall ?? true)
-            {
-                item.SkillBoost1?.ToString(fg, "SkillBoost1");
-            }
-            if (printMask?.SkillBoost2?.Overall ?? true)
-            {
-                item.SkillBoost2?.ToString(fg, "SkillBoost2");
-            }
-            if (printMask?.SkillBoost3?.Overall ?? true)
-            {
-                item.SkillBoost3?.ToString(fg, "SkillBoost3");
-            }
-            if (printMask?.SkillBoost4?.Overall ?? true)
-            {
-                item.SkillBoost4?.ToString(fg, "SkillBoost4");
-            }
-            if (printMask?.SkillBoost5?.Overall ?? true)
-            {
-                item.SkillBoost5?.ToString(fg, "SkillBoost5");
-            }
-            if (printMask?.SkillBoost6?.Overall ?? true)
-            {
-                item.SkillBoost6?.ToString(fg, "SkillBoost6");
-            }
-            if (printMask?.Fluff ?? true)
-            {
-                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
-            }
-            if (true)
-            {
-                item.Height.ToString(fg, "Height");
-            }
-            if (true)
-            {
-                item.Weight.ToString(fg, "Weight");
-            }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendItem(item.Flags, "Flags");
+                DataItem?.ToString(fg, "Data");
             }
             if ((printMask?.Voices?.Overall ?? true)
                 && item.Voices.TryGet(out var VoicesItem))
@@ -3696,10 +2988,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendLine($"Unknown => {SpanExt.ToHexString(UnknownItem)}");
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         public bool HasBeenSet(
@@ -3709,6 +2997,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
             if (checkMask.Spells?.Overall.HasValue ?? false && checkMask.Spells!.Overall.Value != (item.Spells != null)) return false;
+            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
+            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
             if (checkMask.Voices?.Overall ?? false) return false;
             if (checkMask.DefaultHair?.Overall ?? false) return false;
             if (checkMask.DefaultHairColor.HasValue && checkMask.DefaultHairColor.Value != (item.DefaultHairColor != null)) return false;
@@ -3735,17 +3025,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Spells = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Spells != null), default);
             var RelationsItem = item.Relations;
             mask.Relations = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RaceRelation.Mask<bool>?>>?>(true, RelationsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RaceRelation.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.SkillBoost0 = new MaskItem<bool, SkillBoost.Mask<bool>?>(true, item.SkillBoost0?.GetHasBeenSetMask());
-            mask.SkillBoost1 = new MaskItem<bool, SkillBoost.Mask<bool>?>(true, item.SkillBoost1?.GetHasBeenSetMask());
-            mask.SkillBoost2 = new MaskItem<bool, SkillBoost.Mask<bool>?>(true, item.SkillBoost2?.GetHasBeenSetMask());
-            mask.SkillBoost3 = new MaskItem<bool, SkillBoost.Mask<bool>?>(true, item.SkillBoost3?.GetHasBeenSetMask());
-            mask.SkillBoost4 = new MaskItem<bool, SkillBoost.Mask<bool>?>(true, item.SkillBoost4?.GetHasBeenSetMask());
-            mask.SkillBoost5 = new MaskItem<bool, SkillBoost.Mask<bool>?>(true, item.SkillBoost5?.GetHasBeenSetMask());
-            mask.SkillBoost6 = new MaskItem<bool, SkillBoost.Mask<bool>?>(true, item.SkillBoost6?.GetHasBeenSetMask());
-            mask.Fluff = true;
-            mask.Height = new GenderedItem<bool>(true, true);
-            mask.Weight = new GenderedItem<bool>(true, true);
-            mask.Flags = true;
+            var itemData = item.Data;
+            mask.Data = new MaskItem<bool, RaceData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
             mask.Voices = item.Voices == null ? null : new MaskItem<bool, GenderedItem<bool>?>(true, default);
             mask.DefaultHair = item.DefaultHair == null ? null : new MaskItem<bool, GenderedItem<bool>?>(true, default);
             mask.DefaultHairColor = (item.DefaultHairColor != null);
@@ -3764,7 +3045,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var itemFaceGenData = item.FaceGenData;
             mask.FaceGenData = new MaskItem<bool, FaceGenData.Mask<bool>?>(itemFaceGenData != null, itemFaceGenData?.GetHasBeenSetMask());
             mask.Unknown = (item.Unknown != null);
-            mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -3818,17 +3098,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
             if (!lhs.Spells.SequenceEqual(rhs.Spells)) return false;
             if (!lhs.Relations.SequenceEqual(rhs.Relations)) return false;
-            if (!object.Equals(lhs.SkillBoost0, rhs.SkillBoost0)) return false;
-            if (!object.Equals(lhs.SkillBoost1, rhs.SkillBoost1)) return false;
-            if (!object.Equals(lhs.SkillBoost2, rhs.SkillBoost2)) return false;
-            if (!object.Equals(lhs.SkillBoost3, rhs.SkillBoost3)) return false;
-            if (!object.Equals(lhs.SkillBoost4, rhs.SkillBoost4)) return false;
-            if (!object.Equals(lhs.SkillBoost5, rhs.SkillBoost5)) return false;
-            if (!object.Equals(lhs.SkillBoost6, rhs.SkillBoost6)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff.Span, rhs.Fluff.Span)) return false;
-            if (!Equals(lhs.Height, rhs.Height)) return false;
-            if (!Equals(lhs.Weight, rhs.Weight)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
+            if (!object.Equals(lhs.Data, rhs.Data)) return false;
             if (!Equals(lhs.Voices, rhs.Voices)) return false;
             if (!Equals(lhs.DefaultHair, rhs.DefaultHair)) return false;
             if (lhs.DefaultHairColor != rhs.DefaultHairColor) return false;
@@ -3841,7 +3111,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!lhs.Eyes.SequenceEqual(rhs.Eyes)) return false;
             if (!object.Equals(lhs.FaceGenData, rhs.FaceGenData)) return false;
             if (!MemorySliceExt.Equal(lhs.Unknown, rhs.Unknown)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
         
@@ -3876,17 +3145,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             hash.Add(item.Spells);
             hash.Add(item.Relations);
-            hash.Add(item.SkillBoost0);
-            hash.Add(item.SkillBoost1);
-            hash.Add(item.SkillBoost2);
-            hash.Add(item.SkillBoost3);
-            hash.Add(item.SkillBoost4);
-            hash.Add(item.SkillBoost5);
-            hash.Add(item.SkillBoost6);
-            hash.Add(item.Fluff);
-            hash.Add(HashCode.Combine(item.Height.Male, item.Height.Female));
-            hash.Add(HashCode.Combine(item.Weight.Male, item.Weight.Female));
-            hash.Add(item.Flags);
+            if (item.Data.TryGet(out var Dataitem))
+            {
+                hash.Add(Dataitem);
+            }
             if (item.Voices.TryGet(out var Voicesitem))
             {
                 hash.Add(HashCode.Combine(Voicesitem.Male, Voicesitem.Female));
@@ -3926,7 +3188,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(UnknownItem);
             }
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -4086,16 +3347,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost0) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Data) ?? true))
             {
-                errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost0);
+                errorMask?.PushIndex((int)Race_FieldIndex.Data);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost0) ?? true))
+                    if(rhs.Data.TryGet(out var rhsData))
                     {
-                        item.SkillBoost0 = rhs.SkillBoost0.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost0),
-                            errorMask: errorMask);
+                        item.Data = rhsData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Race_FieldIndex.Data));
+                    }
+                    else
+                    {
+                        item.Data = default;
                     }
                 }
                 catch (Exception ex)
@@ -4107,184 +3372,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     errorMask?.PopIndex();
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost1) ?? true))
-            {
-                errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost1);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost1) ?? true))
-                    {
-                        item.SkillBoost1 = rhs.SkillBoost1.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost1),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost2) ?? true))
-            {
-                errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost2);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost2) ?? true))
-                    {
-                        item.SkillBoost2 = rhs.SkillBoost2.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost2),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost3) ?? true))
-            {
-                errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost3);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost3) ?? true))
-                    {
-                        item.SkillBoost3 = rhs.SkillBoost3.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost3),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost4) ?? true))
-            {
-                errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost4);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost4) ?? true))
-                    {
-                        item.SkillBoost4 = rhs.SkillBoost4.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost4),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost5) ?? true))
-            {
-                errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost5);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost5) ?? true))
-                    {
-                        item.SkillBoost5 = rhs.SkillBoost5.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost5),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost6) ?? true))
-            {
-                errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost6);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost6) ?? true))
-                    {
-                        item.SkillBoost6 = rhs.SkillBoost6.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost6),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Fluff) ?? true))
-            {
-                item.Fluff = rhs.Fluff.ToArray();
-            }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Height) ?? true))
-            {
-                errorMask?.PushIndex((int)Race_FieldIndex.Height);
-                try
-                {
-                    item.Height = new GenderedItem<Single>(
-                        male: rhs.Height.Male,
-                        female: rhs.Height.Female);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Weight) ?? true))
-            {
-                errorMask?.PushIndex((int)Race_FieldIndex.Weight);
-                try
-                {
-                    item.Weight = new GenderedItem<Single>(
-                        male: rhs.Weight.Male,
-                        female: rhs.Weight.Female);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Flags) ?? true))
-            {
-                item.Flags = rhs.Flags;
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Voices) ?? true))
             {
@@ -4525,10 +3612,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Unknown = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
-            }
         }
         
         public override void DeepCopyIn(
@@ -4732,136 +3815,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                     });
             }
-            if (item.DATADataTypeState.HasFlag(Race.DATADataType.Has))
+            if ((item.Data != null)
+                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Data) ?? true))
             {
-                if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost0) ?? true))
+                if (item.Data.TryGet(out var DataItem))
                 {
-                    var SkillBoost0Item = item.SkillBoost0;
-                    ((SkillBoostXmlWriteTranslation)((IXmlItem)SkillBoost0Item).XmlWriteTranslator).Write(
-                        item: SkillBoost0Item,
+                    ((RaceDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                        item: DataItem,
                         node: node,
-                        name: nameof(item.SkillBoost0),
-                        fieldIndex: (int)Race_FieldIndex.SkillBoost0,
+                        name: nameof(item.Data),
+                        fieldIndex: (int)Race_FieldIndex.Data,
                         errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost0));
-                }
-                if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost1) ?? true))
-                {
-                    var SkillBoost1Item = item.SkillBoost1;
-                    ((SkillBoostXmlWriteTranslation)((IXmlItem)SkillBoost1Item).XmlWriteTranslator).Write(
-                        item: SkillBoost1Item,
-                        node: node,
-                        name: nameof(item.SkillBoost1),
-                        fieldIndex: (int)Race_FieldIndex.SkillBoost1,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost1));
-                }
-                if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost2) ?? true))
-                {
-                    var SkillBoost2Item = item.SkillBoost2;
-                    ((SkillBoostXmlWriteTranslation)((IXmlItem)SkillBoost2Item).XmlWriteTranslator).Write(
-                        item: SkillBoost2Item,
-                        node: node,
-                        name: nameof(item.SkillBoost2),
-                        fieldIndex: (int)Race_FieldIndex.SkillBoost2,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost2));
-                }
-                if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost3) ?? true))
-                {
-                    var SkillBoost3Item = item.SkillBoost3;
-                    ((SkillBoostXmlWriteTranslation)((IXmlItem)SkillBoost3Item).XmlWriteTranslator).Write(
-                        item: SkillBoost3Item,
-                        node: node,
-                        name: nameof(item.SkillBoost3),
-                        fieldIndex: (int)Race_FieldIndex.SkillBoost3,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost3));
-                }
-                if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost4) ?? true))
-                {
-                    var SkillBoost4Item = item.SkillBoost4;
-                    ((SkillBoostXmlWriteTranslation)((IXmlItem)SkillBoost4Item).XmlWriteTranslator).Write(
-                        item: SkillBoost4Item,
-                        node: node,
-                        name: nameof(item.SkillBoost4),
-                        fieldIndex: (int)Race_FieldIndex.SkillBoost4,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost4));
-                }
-                if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost5) ?? true))
-                {
-                    var SkillBoost5Item = item.SkillBoost5;
-                    ((SkillBoostXmlWriteTranslation)((IXmlItem)SkillBoost5Item).XmlWriteTranslator).Write(
-                        item: SkillBoost5Item,
-                        node: node,
-                        name: nameof(item.SkillBoost5),
-                        fieldIndex: (int)Race_FieldIndex.SkillBoost5,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost5));
-                }
-                if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost6) ?? true))
-                {
-                    var SkillBoost6Item = item.SkillBoost6;
-                    ((SkillBoostXmlWriteTranslation)((IXmlItem)SkillBoost6Item).XmlWriteTranslator).Write(
-                        item: SkillBoost6Item,
-                        node: node,
-                        name: nameof(item.SkillBoost6),
-                        fieldIndex: (int)Race_FieldIndex.SkillBoost6,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost6));
-                }
-                if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Fluff) ?? true))
-                {
-                    ByteArrayXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Fluff),
-                        item: item.Fluff,
-                        fieldIndex: (int)Race_FieldIndex.Fluff,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Height) ?? true))
-                {
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.Height),
-                            item: item.Height.Male,
-                            errorMask: errorMask);
-                    }
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.Height),
-                            item: item.Height.Female,
-                            errorMask: errorMask);
-                    }
-                }
-                if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Weight) ?? true))
-                {
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.Weight),
-                            item: item.Weight.Male,
-                            errorMask: errorMask);
-                    }
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.Weight),
-                            item: item.Weight.Female,
-                            errorMask: errorMask);
-                    }
-                }
-                if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Flags) ?? true))
-                {
-                    EnumXmlTranslation<Race.Flag>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Flags),
-                        item: item.Flags,
-                        fieldIndex: (int)Race_FieldIndex.Flags,
-                        errorMask: errorMask);
+                        translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Data));
                 }
             }
             if ((item.Voices != null)
@@ -5060,15 +4025,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Unknown),
                     item: item.Unknown.Value,
                     fieldIndex: (int)Race_FieldIndex.Unknown,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Race.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)Race_FieldIndex.DATADataTypeState,
                     errorMask: errorMask);
             }
         }
@@ -5270,210 +4226,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "SkillBoost0":
-                    errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost0);
+                case "Data":
+                    errorMask?.PushIndex((int)Race_FieldIndex.Data);
                     try
                     {
-                        item.SkillBoost0 = LoquiXmlTranslation<SkillBoost>.Instance.Parse(
+                        item.Data = LoquiXmlTranslation<RaceData>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost0));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.DATADataTypeState |= Race.DATADataType.Has;
-                    break;
-                case "SkillBoost1":
-                    errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost1);
-                    try
-                    {
-                        item.SkillBoost1 = LoquiXmlTranslation<SkillBoost>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost1));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SkillBoost2":
-                    errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost2);
-                    try
-                    {
-                        item.SkillBoost2 = LoquiXmlTranslation<SkillBoost>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost2));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SkillBoost3":
-                    errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost3);
-                    try
-                    {
-                        item.SkillBoost3 = LoquiXmlTranslation<SkillBoost>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost3));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SkillBoost4":
-                    errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost4);
-                    try
-                    {
-                        item.SkillBoost4 = LoquiXmlTranslation<SkillBoost>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost4));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SkillBoost5":
-                    errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost5);
-                    try
-                    {
-                        item.SkillBoost5 = LoquiXmlTranslation<SkillBoost>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost5));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SkillBoost6":
-                    errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost6);
-                    try
-                    {
-                        item.SkillBoost6 = LoquiXmlTranslation<SkillBoost>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost6));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Fluff":
-                    errorMask?.PushIndex((int)Race_FieldIndex.Fluff);
-                    try
-                    {
-                        item.Fluff = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            fallbackLength: 4,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Height":
-                    errorMask?.PushIndex((int)Race_FieldIndex.Height);
-                    try
-                    {
-                        item.Height = new GenderedItem<Single>(
-                            male: FloatXmlTranslation.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask),
-                            female: FloatXmlTranslation.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Weight":
-                    errorMask?.PushIndex((int)Race_FieldIndex.Weight);
-                    try
-                    {
-                        item.Weight = new GenderedItem<Single>(
-                            male: FloatXmlTranslation.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask),
-                            female: FloatXmlTranslation.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)Race_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<Race.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Data));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -5753,24 +4513,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "DATADataTypeState":
-                    errorMask?.PushIndex((int)Race_FieldIndex.DATADataTypeState);
-                    try
-                    {
-                        item.DATADataTypeState = EnumXmlTranslation<Race.DATADataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
                     OblivionMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -5857,15 +4599,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static RaceBinaryWriteTranslation Instance = new RaceBinaryWriteTranslation();
 
-        public static void WriteEmbedded(
-            IRaceGetter item,
-            MutagenWriter writer)
-        {
-            OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IRaceGetter item,
             MutagenWriter writer,
@@ -5908,61 +4641,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             recordTypeConverter: conv);
                     }
                 });
-            if (item.DATADataTypeState.HasFlag(Race.DATADataType.Has))
+            if (item.Data.TryGet(out var DataItem))
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Race_Registration.DATA_HEADER)))
-                {
-                    var SkillBoost0Item = item.SkillBoost0;
-                    ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost0Item).BinaryWriteTranslator).Write(
-                        item: SkillBoost0Item,
-                        writer: writer,
-                        recordTypeConverter: recordTypeConverter);
-                    var SkillBoost1Item = item.SkillBoost1;
-                    ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost1Item).BinaryWriteTranslator).Write(
-                        item: SkillBoost1Item,
-                        writer: writer,
-                        recordTypeConverter: recordTypeConverter);
-                    var SkillBoost2Item = item.SkillBoost2;
-                    ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost2Item).BinaryWriteTranslator).Write(
-                        item: SkillBoost2Item,
-                        writer: writer,
-                        recordTypeConverter: recordTypeConverter);
-                    var SkillBoost3Item = item.SkillBoost3;
-                    ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost3Item).BinaryWriteTranslator).Write(
-                        item: SkillBoost3Item,
-                        writer: writer,
-                        recordTypeConverter: recordTypeConverter);
-                    var SkillBoost4Item = item.SkillBoost4;
-                    ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost4Item).BinaryWriteTranslator).Write(
-                        item: SkillBoost4Item,
-                        writer: writer,
-                        recordTypeConverter: recordTypeConverter);
-                    var SkillBoost5Item = item.SkillBoost5;
-                    ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost5Item).BinaryWriteTranslator).Write(
-                        item: SkillBoost5Item,
-                        writer: writer,
-                        recordTypeConverter: recordTypeConverter);
-                    var SkillBoost6Item = item.SkillBoost6;
-                    ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost6Item).BinaryWriteTranslator).Write(
-                        item: SkillBoost6Item,
-                        writer: writer,
-                        recordTypeConverter: recordTypeConverter);
-                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Fluff);
-                    GenderedItemBinaryTranslation.Write(
-                        writer: writer,
-                        item: item.Height,
-                        transl: FloatBinaryTranslation.Instance.Write);
-                    GenderedItemBinaryTranslation.Write(
-                        writer: writer,
-                        item: item.Weight,
-                        transl: FloatBinaryTranslation.Instance.Write);
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.Flag>.Instance.Write(
-                        writer,
-                        item.Flags,
-                        length: 2);
-                }
+                ((RaceDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                    item: DataItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             GenderedItemBinaryTranslation.Write(
                 writer: writer,
@@ -6082,7 +4766,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: recordTypeConverter.ConvertToCustom(Race_Registration.RACE_HEADER),
                 type: ObjectType.Record))
             {
-                WriteEmbedded(
+                OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -6203,89 +4887,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         public IReadOnlyList<IFormLinkGetter<ISpellGetter>>? Spells { get; private set; }
         public IReadOnlyList<IRaceRelationGetter> Relations { get; private set; } = ListExt.Empty<RaceRelationBinaryOverlay>();
-        private int? _DATALocation;
-        public Race.DATADataType DATADataTypeState { get; private set; }
-        #region SkillBoost0
-        private int _SkillBoost0Location => _DATALocation!.Value + 0x0;
-        private bool _SkillBoost0_IsSet => _DATALocation.HasValue;
-        private ISkillBoostGetter? _SkillBoost0 => _SkillBoost0_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(_SkillBoost0Location)), _package) : default;
-        public ISkillBoostGetter SkillBoost0 => _SkillBoost0 ?? new SkillBoost();
-        #endregion
-        #region SkillBoost1
-        private int _SkillBoost1Location => _DATALocation!.Value + 0x2;
-        private bool _SkillBoost1_IsSet => _DATALocation.HasValue;
-        private ISkillBoostGetter? _SkillBoost1 => _SkillBoost1_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(_SkillBoost1Location)), _package) : default;
-        public ISkillBoostGetter SkillBoost1 => _SkillBoost1 ?? new SkillBoost();
-        #endregion
-        #region SkillBoost2
-        private int _SkillBoost2Location => _DATALocation!.Value + 0x4;
-        private bool _SkillBoost2_IsSet => _DATALocation.HasValue;
-        private ISkillBoostGetter? _SkillBoost2 => _SkillBoost2_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(_SkillBoost2Location)), _package) : default;
-        public ISkillBoostGetter SkillBoost2 => _SkillBoost2 ?? new SkillBoost();
-        #endregion
-        #region SkillBoost3
-        private int _SkillBoost3Location => _DATALocation!.Value + 0x6;
-        private bool _SkillBoost3_IsSet => _DATALocation.HasValue;
-        private ISkillBoostGetter? _SkillBoost3 => _SkillBoost3_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(_SkillBoost3Location)), _package) : default;
-        public ISkillBoostGetter SkillBoost3 => _SkillBoost3 ?? new SkillBoost();
-        #endregion
-        #region SkillBoost4
-        private int _SkillBoost4Location => _DATALocation!.Value + 0x8;
-        private bool _SkillBoost4_IsSet => _DATALocation.HasValue;
-        private ISkillBoostGetter? _SkillBoost4 => _SkillBoost4_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(_SkillBoost4Location)), _package) : default;
-        public ISkillBoostGetter SkillBoost4 => _SkillBoost4 ?? new SkillBoost();
-        #endregion
-        #region SkillBoost5
-        private int _SkillBoost5Location => _DATALocation!.Value + 0xA;
-        private bool _SkillBoost5_IsSet => _DATALocation.HasValue;
-        private ISkillBoostGetter? _SkillBoost5 => _SkillBoost5_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(_SkillBoost5Location)), _package) : default;
-        public ISkillBoostGetter SkillBoost5 => _SkillBoost5 ?? new SkillBoost();
-        #endregion
-        #region SkillBoost6
-        private int _SkillBoost6Location => _DATALocation!.Value + 0xC;
-        private bool _SkillBoost6_IsSet => _DATALocation.HasValue;
-        private ISkillBoostGetter? _SkillBoost6 => _SkillBoost6_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(_SkillBoost6Location)), _package) : default;
-        public ISkillBoostGetter SkillBoost6 => _SkillBoost6 ?? new SkillBoost();
-        #endregion
-        #region Fluff
-        private int _FluffLocation => _DATALocation!.Value + 0xE;
-        private bool _Fluff_IsSet => _DATALocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Fluff => _Fluff_IsSet ? _data.Span.Slice(_FluffLocation, 4).ToArray() : default(ReadOnlyMemorySlice<byte>);
-        #endregion
-        #region Height
-        private int _HeightLocation => _DATALocation!.Value + 0x12;
-        private bool _Height_IsSet => _DATALocation.HasValue;
-        public IGenderedItemGetter<Single> Height
-        {
-            get
-            {
-                if (!_Height_IsSet) return new GenderedItem<Single>(default, default);
-                var data = _data.Span.Slice(_HeightLocation);
-                return new GenderedItem<Single>(
-                    SpanExt.GetFloat(data),
-                    SpanExt.GetFloat(data.Slice(4)));
-            }
-        }
-        #endregion
-        #region Weight
-        private int _WeightLocation => _DATALocation!.Value + 0x1A;
-        private bool _Weight_IsSet => _DATALocation.HasValue;
-        public IGenderedItemGetter<Single> Weight
-        {
-            get
-            {
-                if (!_Weight_IsSet) return new GenderedItem<Single>(default, default);
-                var data = _data.Span.Slice(_WeightLocation);
-                return new GenderedItem<Single>(
-                    SpanExt.GetFloat(data),
-                    SpanExt.GetFloat(data.Slice(4)));
-            }
-        }
-        #endregion
-        #region Flags
-        private int _FlagsLocation => _DATALocation!.Value + 0x22;
-        private bool _Flags_IsSet => _DATALocation.HasValue;
-        public Race.Flag Flags => _Flags_IsSet ? (Race.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_FlagsLocation, 2)) : default;
+        #region Data
+        private RangeInt32? _DataLocation;
+        private bool _Data_IsSet => _DataLocation.HasValue;
+        public IRaceDataGetter? Data => _Data_IsSet ? RaceDataBinaryOverlay.RaceDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region Voices
         private int? _VoicesLocation;
@@ -6448,9 +5054,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
-                    this.DATADataTypeState = Race.DATADataType.Has;
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Flags);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Data);
                 }
                 case 0x4D414E56: // VNAM
                 {

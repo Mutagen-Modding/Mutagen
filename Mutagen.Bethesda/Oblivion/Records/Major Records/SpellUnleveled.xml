@@ -2,15 +2,16 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="SpellUnleveled" objType="Record" recordType="SPEL" baseClass="Spell" GUID="6e7673df-39d3-4704-b1ef-ac774f9d01c3" ID="28">
     <Fields>
-      <Data recordType="SPIT">
-        <Fields>
-          <Enum name="Type" enumName="Spell.SpellType" byteLength="4" />
-          <UInt32 name="Cost" />
-          <Enum name="Level" enumName="Spell.SpellLevel" byteLength="4" />
-          <Enum name="Flag" enumName="Spell.SpellFlag" byteLength="4" />
-        </Fields>
-      </Data>
+      <RefDirect name="Data" refName="SpellData" />
       <RefList name="Effects" refName="Effect" />
+    </Fields>
+  </Object>
+  <Object name="SpellData" objType="Subrecord" recordType="SPIT" GUID="c86b5362-efcd-44e9-b6f4-85a6b0759f63" ID="211">
+    <Fields>
+      <Enum name="Type" enumName="Spell.SpellType" byteLength="4" />
+      <UInt32 name="Cost" />
+      <Enum name="Level" enumName="Spell.SpellLevel" byteLength="4" />
+      <Enum name="Flag" enumName="Spell.SpellFlag" byteLength="4" />
     </Fields>
   </Object>
 </Loqui>

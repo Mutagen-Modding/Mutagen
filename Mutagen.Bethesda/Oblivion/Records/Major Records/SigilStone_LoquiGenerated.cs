@@ -103,47 +103,16 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
-        #region Uses
+        #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Uses;
-        public Byte Uses
+        private SigilStoneData? _Data;
+        public SigilStoneData? Data
         {
-            get => this._Uses;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Uses = value;
-            }
+            get => _Data;
+            set => _Data = value;
         }
-        #endregion
-        #region Value
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt32 _Value;
-        public UInt32 Value
-        {
-            get => this._Value;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Value = value;
-            }
-        }
-        #endregion
-        #region Weight
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _Weight;
-        public Single Weight
-        {
-            get => this._Weight;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Weight = value;
-            }
-        }
-        #endregion
-        #region DATADataTypeState
-        public SigilStone.DATADataType DATADataTypeState { get; set; } = default;
+        ISigilStoneDataGetter? ISigilStoneGetter.Data => this.Data;
         #endregion
 
         #region To String
@@ -320,10 +289,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Icon = initialValue;
                 this.Script = initialValue;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
-                this.Uses = initialValue;
-                this.Value = initialValue;
-                this.Weight = initialValue;
-                this.DATADataTypeState = initialValue;
+                this.Data = new MaskItem<TItem, SigilStoneData.Mask<TItem>?>(initialValue, new SigilStoneData.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -337,10 +303,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Icon,
                 TItem Script,
                 TItem Effects,
-                TItem Uses,
-                TItem Value,
-                TItem Weight,
-                TItem DATADataTypeState)
+                TItem Data)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -353,10 +316,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Icon = Icon;
                 this.Script = Script;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
-                this.Uses = Uses;
-                this.Value = Value;
-                this.Weight = Weight;
-                this.DATADataTypeState = DATADataTypeState;
+                this.Data = new MaskItem<TItem, SigilStoneData.Mask<TItem>?>(Data, new SigilStoneData.Mask<TItem>(Data));
             }
 
             #pragma warning disable CS8618
@@ -373,10 +333,7 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem Icon;
             public TItem Script;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>? Effects;
-            public TItem Uses;
-            public TItem Value;
-            public TItem Weight;
-            public TItem DATADataTypeState;
+            public MaskItem<TItem, SigilStoneData.Mask<TItem>?>? Data { get; set; }
             #endregion
 
             #region Equals
@@ -395,10 +352,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.Icon, rhs.Icon)) return false;
                 if (!object.Equals(this.Script, rhs.Script)) return false;
                 if (!object.Equals(this.Effects, rhs.Effects)) return false;
-                if (!object.Equals(this.Uses, rhs.Uses)) return false;
-                if (!object.Equals(this.Value, rhs.Value)) return false;
-                if (!object.Equals(this.Weight, rhs.Weight)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -409,10 +363,7 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.Icon);
                 hash.Add(this.Script);
                 hash.Add(this.Effects);
-                hash.Add(this.Uses);
-                hash.Add(this.Value);
-                hash.Add(this.Weight);
-                hash.Add(this.DATADataTypeState);
+                hash.Add(this.Data);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -443,10 +394,11 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                 }
-                if (!eval(this.Uses)) return false;
-                if (!eval(this.Value)) return false;
-                if (!eval(this.Weight)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -475,10 +427,11 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                 }
-                if (eval(this.Uses)) return true;
-                if (eval(this.Value)) return true;
-                if (eval(this.Weight)) return true;
-                if (eval(this.DATADataTypeState)) return true;
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -513,10 +466,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                 }
-                obj.Uses = eval(this.Uses);
-                obj.Value = eval(this.Value);
-                obj.Weight = eval(this.Weight);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
+                obj.Data = this.Data == null ? null : new MaskItem<R, SigilStoneData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
             }
             #endregion
 
@@ -578,21 +528,9 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.Uses ?? true)
+                    if (printMask?.Data?.Overall ?? true)
                     {
-                        fg.AppendItem(Uses, "Uses");
-                    }
-                    if (printMask?.Value ?? true)
-                    {
-                        fg.AppendItem(Value, "Value");
-                    }
-                    if (printMask?.Weight ?? true)
-                    {
-                        fg.AppendItem(Weight, "Weight");
-                    }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        Data?.ToString(fg);
                     }
                 }
                 fg.AppendLine("]");
@@ -611,10 +549,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Exception? Icon;
             public Exception? Script;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>? Effects;
-            public Exception? Uses;
-            public Exception? Value;
-            public Exception? Weight;
-            public Exception? DATADataTypeState;
+            public MaskItem<Exception?, SigilStoneData.ErrorMask?>? Data;
             #endregion
 
             #region IErrorMask
@@ -633,14 +568,8 @@ namespace Mutagen.Bethesda.Oblivion
                         return Script;
                     case SigilStone_FieldIndex.Effects:
                         return Effects;
-                    case SigilStone_FieldIndex.Uses:
-                        return Uses;
-                    case SigilStone_FieldIndex.Value:
-                        return Value;
-                    case SigilStone_FieldIndex.Weight:
-                        return Weight;
-                    case SigilStone_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
+                    case SigilStone_FieldIndex.Data:
+                        return Data;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -666,17 +595,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case SigilStone_FieldIndex.Effects:
                         this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ex, null);
                         break;
-                    case SigilStone_FieldIndex.Uses:
-                        this.Uses = ex;
-                        break;
-                    case SigilStone_FieldIndex.Value:
-                        this.Value = ex;
-                        break;
-                    case SigilStone_FieldIndex.Weight:
-                        this.Weight = ex;
-                        break;
-                    case SigilStone_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
+                    case SigilStone_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, SigilStoneData.ErrorMask?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -704,17 +624,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case SigilStone_FieldIndex.Effects:
                         this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>)obj;
                         break;
-                    case SigilStone_FieldIndex.Uses:
-                        this.Uses = (Exception?)obj;
-                        break;
-                    case SigilStone_FieldIndex.Value:
-                        this.Value = (Exception?)obj;
-                        break;
-                    case SigilStone_FieldIndex.Weight:
-                        this.Weight = (Exception?)obj;
-                        break;
-                    case SigilStone_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
+                    case SigilStone_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, SigilStoneData.ErrorMask?>?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -730,10 +641,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Icon != null) return true;
                 if (Script != null) return true;
                 if (Effects != null) return true;
-                if (Uses != null) return true;
-                if (Value != null) return true;
-                if (Weight != null) return true;
-                if (DATADataTypeState != null) return true;
+                if (Data != null) return true;
                 return false;
             }
             #endregion
@@ -795,10 +703,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     fg.AppendLine("]");
                 }
-                fg.AppendItem(Uses, "Uses");
-                fg.AppendItem(Value, "Value");
-                fg.AppendItem(Weight, "Weight");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                Data?.ToString(fg);
             }
             #endregion
 
@@ -812,10 +717,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Icon = this.Icon.Combine(rhs.Icon);
                 ret.Script = this.Script.Combine(rhs.Script);
                 ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
-                ret.Uses = this.Uses.Combine(rhs.Uses);
-                ret.Value = this.Value.Combine(rhs.Value);
-                ret.Weight = this.Weight.Combine(rhs.Weight);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -843,10 +745,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Icon;
             public bool Script;
             public MaskItem<bool, Effect.TranslationMask?> Effects;
-            public bool Uses;
-            public bool Value;
-            public bool Weight;
-            public bool DATADataTypeState;
+            public MaskItem<bool, SigilStoneData.TranslationMask?> Data;
             #endregion
 
             #region Ctors
@@ -858,10 +757,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Icon = defaultOn;
                 this.Script = defaultOn;
                 this.Effects = new MaskItem<bool, Effect.TranslationMask?>(defaultOn, null);
-                this.Uses = defaultOn;
-                this.Value = defaultOn;
-                this.Weight = defaultOn;
-                this.DATADataTypeState = defaultOn;
+                this.Data = new MaskItem<bool, SigilStoneData.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -874,21 +770,13 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Icon, null));
                 ret.Add((Script, null));
                 ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
-                ret.Add((Uses, null));
-                ret.Add((Value, null));
-                ret.Add((Weight, null));
-                ret.Add((DATADataTypeState, null));
+                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
             }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = SigilStone_Registration.TriggeringRecordType;
-        [Flags]
-        public enum DATADataType
-        {
-            Has = 1
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => SigilStoneCommon.Instance.GetLinks(this);
         public SigilStone(FormKey formKey)
@@ -975,10 +863,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Icon { get; set; }
         new IFormLinkNullable<Script> Script { get; }
         new ExtendedList<Effect> Effects { get; }
-        new Byte Uses { get; set; }
-        new UInt32 Value { get; set; }
-        new Single Weight { get; set; }
-        new SigilStone.DATADataType DATADataTypeState { get; set; }
+        new SigilStoneData? Data { get; set; }
     }
 
     public partial interface ISigilStoneInternal :
@@ -1000,10 +885,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Icon { get; }
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
-        Byte Uses { get; }
-        UInt32 Value { get; }
-        Single Weight { get; }
-        SigilStone.DATADataType DATADataTypeState { get; }
+        ISigilStoneDataGetter? Data { get; }
 
     }
 
@@ -1308,10 +1190,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Icon = 7,
         Script = 8,
         Effects = 9,
-        Uses = 10,
-        Value = 11,
-        Weight = 12,
-        DATADataTypeState = 13,
+        Data = 10,
     }
     #endregion
 
@@ -1329,9 +1208,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "d27f128d-626e-408b-8f0f-3a59bd8a588b";
 
-        public const ushort AdditionalFieldCount = 9;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(SigilStone.Mask<>);
 
@@ -1371,14 +1250,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)SigilStone_FieldIndex.Script;
                 case "EFFECTS":
                     return (ushort)SigilStone_FieldIndex.Effects;
-                case "USES":
-                    return (ushort)SigilStone_FieldIndex.Uses;
-                case "VALUE":
-                    return (ushort)SigilStone_FieldIndex.Value;
-                case "WEIGHT":
-                    return (ushort)SigilStone_FieldIndex.Weight;
-                case "DATADATATYPESTATE":
-                    return (ushort)SigilStone_FieldIndex.DATADataTypeState;
+                case "DATA":
+                    return (ushort)SigilStone_FieldIndex.Data;
                 default:
                     return null;
             }
@@ -1395,10 +1268,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SigilStone_FieldIndex.Model:
                 case SigilStone_FieldIndex.Icon:
                 case SigilStone_FieldIndex.Script:
-                case SigilStone_FieldIndex.Uses:
-                case SigilStone_FieldIndex.Value:
-                case SigilStone_FieldIndex.Weight:
-                case SigilStone_FieldIndex.DATADataTypeState:
+                case SigilStone_FieldIndex.Data:
                     return false;
                 default:
                     return AItem_Registration.GetNthIsEnumerable(index);
@@ -1412,14 +1282,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case SigilStone_FieldIndex.Model:
                 case SigilStone_FieldIndex.Effects:
+                case SigilStone_FieldIndex.Data:
                     return true;
                 case SigilStone_FieldIndex.Name:
                 case SigilStone_FieldIndex.Icon:
                 case SigilStone_FieldIndex.Script:
-                case SigilStone_FieldIndex.Uses:
-                case SigilStone_FieldIndex.Value:
-                case SigilStone_FieldIndex.Weight:
-                case SigilStone_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return AItem_Registration.GetNthIsLoqui(index);
@@ -1436,10 +1303,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SigilStone_FieldIndex.Icon:
                 case SigilStone_FieldIndex.Script:
                 case SigilStone_FieldIndex.Effects:
-                case SigilStone_FieldIndex.Uses:
-                case SigilStone_FieldIndex.Value:
-                case SigilStone_FieldIndex.Weight:
-                case SigilStone_FieldIndex.DATADataTypeState:
+                case SigilStone_FieldIndex.Data:
                     return false;
                 default:
                     return AItem_Registration.GetNthIsSingleton(index);
@@ -1461,14 +1325,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Script";
                 case SigilStone_FieldIndex.Effects:
                     return "Effects";
-                case SigilStone_FieldIndex.Uses:
-                    return "Uses";
-                case SigilStone_FieldIndex.Value:
-                    return "Value";
-                case SigilStone_FieldIndex.Weight:
-                    return "Weight";
-                case SigilStone_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
+                case SigilStone_FieldIndex.Data:
+                    return "Data";
                 default:
                     return AItem_Registration.GetNthName(index);
             }
@@ -1484,10 +1342,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SigilStone_FieldIndex.Icon:
                 case SigilStone_FieldIndex.Script:
                 case SigilStone_FieldIndex.Effects:
-                case SigilStone_FieldIndex.Uses:
-                case SigilStone_FieldIndex.Value:
-                case SigilStone_FieldIndex.Weight:
-                case SigilStone_FieldIndex.DATADataTypeState:
+                case SigilStone_FieldIndex.Data:
                     return false;
                 default:
                     return AItem_Registration.IsNthDerivative(index);
@@ -1504,10 +1359,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SigilStone_FieldIndex.Icon:
                 case SigilStone_FieldIndex.Script:
                 case SigilStone_FieldIndex.Effects:
-                case SigilStone_FieldIndex.Uses:
-                case SigilStone_FieldIndex.Value:
-                case SigilStone_FieldIndex.Weight:
-                case SigilStone_FieldIndex.DATADataTypeState:
+                case SigilStone_FieldIndex.Data:
                     return false;
                 default:
                     return AItem_Registration.IsProtected(index);
@@ -1529,14 +1381,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(IFormLinkNullable<Script>);
                 case SigilStone_FieldIndex.Effects:
                     return typeof(ExtendedList<Effect>);
-                case SigilStone_FieldIndex.Uses:
-                    return typeof(Byte);
-                case SigilStone_FieldIndex.Value:
-                    return typeof(UInt32);
-                case SigilStone_FieldIndex.Weight:
-                    return typeof(Single);
-                case SigilStone_FieldIndex.DATADataTypeState:
-                    return typeof(SigilStone.DATADataType);
+                case SigilStone_FieldIndex.Data:
+                    return typeof(SigilStoneData);
                 default:
                     return AItem_Registration.GetNthType(index);
             }
@@ -1553,7 +1399,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = SGST_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 5;
+        public const int NumTypedFields = 6;
         public static readonly Type BinaryWriteTranslation = typeof(SigilStoneBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1601,10 +1447,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Icon = default;
             item.Script.FormKey = null;
             item.Effects.Clear();
-            item.Uses = default;
-            item.Value = default;
-            item.Weight = default;
-            item.DATADataTypeState = default;
+            item.Data = null;
             base.Clear(item);
         }
         
@@ -1633,9 +1476,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "HasDATADataType":
-                    item.DATADataTypeState |= SigilStone.DATADataType.Has;
-                    break;
                 default:
                     AItemSetterCommon.FillPrivateElementXml(
                         item: item,
@@ -1788,16 +1628,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.DATADataTypeState = SigilStone.DATADataType.Has;
-                    }
-                    item.Uses = dataFrame.ReadUInt8();
-                    item.Value = dataFrame.ReadUInt32();
-                    item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)SigilStone_FieldIndex.Weight);
+                    item.Data = Mutagen.Bethesda.Oblivion.SigilStoneData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)SigilStone_FieldIndex.Data);
                 }
                 default:
                     return AItemSetterCommon.FillBinaryRecordTypes(
@@ -1896,10 +1728,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Effects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.Uses = item.Uses == rhs.Uses;
-            ret.Value = item.Value == rhs.Value;
-            ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1989,21 +1822,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.Uses ?? true)
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data.TryGet(out var DataItem))
             {
-                fg.AppendItem(item.Uses, "Uses");
-            }
-            if (printMask?.Value ?? true)
-            {
-                fg.AppendItem(item.Value, "Value");
-            }
-            if (printMask?.Weight ?? true)
-            {
-                fg.AppendItem(item.Weight, "Weight");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                DataItem?.ToString(fg, "Data");
             }
         }
         
@@ -2016,6 +1838,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
             if (checkMask.Script.HasValue && checkMask.Script.Value != (item.Script.FormKey != null)) return false;
+            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
+            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -2032,10 +1856,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Script = (item.Script.FormKey != null);
             var EffectsItem = item.Effects;
             mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect.Mask<bool>?>>?>(true, EffectsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.Uses = true;
-            mask.Value = true;
-            mask.Weight = true;
-            mask.DATADataTypeState = true;
+            var itemData = item.Data;
+            mask.Data = new MaskItem<bool, SigilStoneData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -2109,10 +1931,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
             if (!lhs.Script.Equals(rhs.Script)) return false;
             if (!lhs.Effects.SequenceEqual(rhs.Effects)) return false;
-            if (lhs.Uses != rhs.Uses) return false;
-            if (lhs.Value != rhs.Value) return false;
-            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!object.Equals(lhs.Data, rhs.Data)) return false;
             return true;
         }
         
@@ -2163,10 +1982,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 hash.Add(Scriptitem);
             }
             hash.Add(item.Effects);
-            hash.Add(item.Uses);
-            hash.Add(item.Value);
-            hash.Add(item.Weight);
-            hash.Add(item.DATADataTypeState);
+            if (item.Data.TryGet(out var Dataitem))
+            {
+                hash.Add(Dataitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2314,21 +2133,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Uses) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Data) ?? true))
             {
-                item.Uses = rhs.Uses;
-            }
-            if ((copyMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Value) ?? true))
-            {
-                item.Value = rhs.Value;
-            }
-            if ((copyMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Weight) ?? true))
-            {
-                item.Weight = rhs.Weight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)SigilStone_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
+                errorMask?.PushIndex((int)SigilStone_FieldIndex.Data);
+                try
+                {
+                    if(rhs.Data.TryGet(out var rhsData))
+                    {
+                        item.Data = rhsData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)SigilStone_FieldIndex.Data));
+                    }
+                    else
+                    {
+                        item.Data = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
         }
         
@@ -2564,44 +2393,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                     });
             }
-            if (item.DATADataTypeState.HasFlag(SigilStone.DATADataType.Has))
+            if ((item.Data != null)
+                && (translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Data) ?? true))
             {
-                if ((translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Uses) ?? true))
+                if (item.Data.TryGet(out var DataItem))
                 {
-                    ByteXmlTranslation.Instance.Write(
+                    ((SigilStoneDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                        item: DataItem,
                         node: node,
-                        name: nameof(item.Uses),
-                        item: item.Uses,
-                        fieldIndex: (int)SigilStone_FieldIndex.Uses,
-                        errorMask: errorMask);
+                        name: nameof(item.Data),
+                        fieldIndex: (int)SigilStone_FieldIndex.Data,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)SigilStone_FieldIndex.Data));
                 }
-                if ((translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Value) ?? true))
-                {
-                    UInt32XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Value),
-                        item: item.Value,
-                        fieldIndex: (int)SigilStone_FieldIndex.Value,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Weight) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Weight),
-                        item: item.Weight,
-                        fieldIndex: (int)SigilStone_FieldIndex.Weight,
-                        errorMask: errorMask);
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)SigilStone_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<SigilStone.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)SigilStone_FieldIndex.DATADataTypeState,
-                    errorMask: errorMask);
             }
         }
 
@@ -2826,68 +2630,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Uses":
-                    errorMask?.PushIndex((int)SigilStone_FieldIndex.Uses);
+                case "Data":
+                    errorMask?.PushIndex((int)SigilStone_FieldIndex.Data);
                     try
                     {
-                        item.Uses = ByteXmlTranslation.Instance.Parse(
+                        item.Data = LoquiXmlTranslation<SigilStoneData>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.DATADataTypeState |= SigilStone.DATADataType.Has;
-                    break;
-                case "Value":
-                    errorMask?.PushIndex((int)SigilStone_FieldIndex.Value);
-                    try
-                    {
-                        item.Value = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Weight":
-                    errorMask?.PushIndex((int)SigilStone_FieldIndex.Weight);
-                    try
-                    {
-                        item.Weight = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DATADataTypeState":
-                    errorMask?.PushIndex((int)SigilStone_FieldIndex.DATADataTypeState);
-                    try
-                    {
-                        item.DATADataTypeState = EnumXmlTranslation<SigilStone.DATADataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)SigilStone_FieldIndex.Data));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2985,15 +2735,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static SigilStoneBinaryWriteTranslation Instance = new SigilStoneBinaryWriteTranslation();
 
-        public static void WriteEmbedded(
-            ISigilStoneGetter item,
-            MutagenWriter writer)
-        {
-            OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             ISigilStoneGetter item,
             MutagenWriter writer,
@@ -3037,16 +2778,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             recordTypeConverter: conv);
                     }
                 });
-            if (item.DATADataTypeState.HasFlag(SigilStone.DATADataType.Has))
+            if (item.Data.TryGet(out var DataItem))
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(SigilStone_Registration.DATA_HEADER)))
-                {
-                    writer.Write(item.Uses);
-                    writer.Write(item.Value);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Weight);
-                }
+                ((SigilStoneDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                    item: DataItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
         }
 
@@ -3060,7 +2797,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: recordTypeConverter.ConvertToCustom(SigilStone_Registration.SGST_HEADER),
                 type: ObjectType.Record))
             {
-                WriteEmbedded(
+                OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -3200,22 +2937,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormLinkNullable<IScriptGetter>.Empty;
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = ListExt.Empty<EffectBinaryOverlay>();
-        private int? _DATALocation;
-        public SigilStone.DATADataType DATADataTypeState { get; private set; }
-        #region Uses
-        private int _UsesLocation => _DATALocation!.Value + 0x0;
-        private bool _Uses_IsSet => _DATALocation.HasValue;
-        public Byte Uses => _Uses_IsSet ? _data.Span[_UsesLocation] : default;
-        #endregion
-        #region Value
-        private int _ValueLocation => _DATALocation!.Value + 0x1;
-        private bool _Value_IsSet => _DATALocation.HasValue;
-        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ValueLocation, 4)) : default;
-        #endregion
-        #region Weight
-        private int _WeightLocation => _DATALocation!.Value + 0x5;
-        private bool _Weight_IsSet => _DATALocation.HasValue;
-        public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Slice(_WeightLocation, 4)) : default;
+        #region Data
+        private RangeInt32? _DataLocation;
+        private bool _Data_IsSet => _DataLocation.HasValue;
+        public ISigilStoneDataGetter? Data => _Data_IsSet ? SigilStoneDataBinaryOverlay.SigilStoneDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
@@ -3302,9 +3028,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
-                    this.DATADataTypeState = SigilStone.DATADataType.Has;
-                    return TryGet<int?>.Succeed((int)SigilStone_FieldIndex.Weight);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SigilStone_FieldIndex.Data);
                 }
                 default:
                     return base.FillRecordType(

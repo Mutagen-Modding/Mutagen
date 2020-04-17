@@ -15,7 +15,6 @@ using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -32,41 +31,34 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class LocalVariable :
-        ILocalVariable,
-        ILoquiObjectSetter<LocalVariable>,
-        IEquatable<LocalVariable>,
+    public partial class SkillData :
+        ISkillData,
+        ILoquiObjectSetter<SkillData>,
+        IEquatable<SkillData>,
         IEqualsMask
     {
         #region Ctor
-        public LocalVariable()
+        public SkillData()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Data
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private LocalVariableData? _Data;
-        public LocalVariableData? Data
-        {
-            get => _Data;
-            set => _Data = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILocalVariableDataGetter? ILocalVariableGetter.Data => this.Data;
+        #region Action
+        public ActorValue Action { get; set; } = default;
         #endregion
-        #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ILocalVariableGetter.Name => this.Name;
+        #region Attribute
+        public ActorValue Attribute { get; set; } = default;
+        #endregion
+        #region Specialization
+        public Specialization Specialization { get; set; } = default;
+        #endregion
+        #region UseValueFirst
+        public Single UseValueFirst { get; set; } = default;
+        #endregion
+        #region UseValueSecond
+        public Single UseValueSecond { get; set; } = default;
         #endregion
 
         #region To String
@@ -75,7 +67,7 @@ namespace Mutagen.Bethesda.Oblivion
             FileGeneration fg,
             string? name = null)
         {
-            LocalVariableMixIn.ToString(
+            SkillDataMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -85,22 +77,22 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILocalVariableGetter rhs)) return false;
-            return ((LocalVariableCommon)((ILocalVariableGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is ISkillDataGetter rhs)) return false;
+            return ((SkillDataCommon)((ISkillDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LocalVariable obj)
+        public bool Equals(SkillData obj)
         {
-            return ((LocalVariableCommon)((ILocalVariableGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SkillDataCommon)((ISkillDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((LocalVariableCommon)((ILocalVariableGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((SkillDataCommon)((ISkillDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => LocalVariableXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => SkillDataXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -109,7 +101,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((LocalVariableXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((SkillDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -118,9 +110,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static LocalVariable CreateFromXml(
+        public static SkillData CreateFromXml(
             XElement node,
-            LocalVariable.TranslationMask? translationMask = null)
+            SkillData.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -129,27 +121,27 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static LocalVariable CreateFromXml(
+        public static SkillData CreateFromXml(
             XElement node,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            out SkillData.ErrorMask errorMask,
+            SkillData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LocalVariable.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SkillData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public static LocalVariable CreateFromXml(
+        public static SkillData CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new LocalVariable();
-            ((LocalVariableSetterCommon)((ILocalVariableGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new SkillData();
+            ((SkillDataSetterCommon)((ISkillDataGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -157,9 +149,9 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LocalVariable CreateFromXml(
+        public static SkillData CreateFromXml(
             string path,
-            LocalVariable.TranslationMask? translationMask = null)
+            SkillData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -167,10 +159,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static LocalVariable CreateFromXml(
+        public static SkillData CreateFromXml(
             string path,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            out SkillData.ErrorMask errorMask,
+            SkillData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -179,10 +171,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static LocalVariable CreateFromXml(
+        public static SkillData CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            SkillData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -191,9 +183,9 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static LocalVariable CreateFromXml(
+        public static SkillData CreateFromXml(
             Stream stream,
-            LocalVariable.TranslationMask? translationMask = null)
+            SkillData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -201,10 +193,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static LocalVariable CreateFromXml(
+        public static SkillData CreateFromXml(
             Stream stream,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            out SkillData.ErrorMask errorMask,
+            SkillData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -213,10 +205,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static LocalVariable CreateFromXml(
+        public static SkillData CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            SkillData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -238,16 +230,25 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Data = new MaskItem<TItem, LocalVariableData.Mask<TItem>?>(initialValue, new LocalVariableData.Mask<TItem>(initialValue));
-                this.Name = initialValue;
+                this.Action = initialValue;
+                this.Attribute = initialValue;
+                this.Specialization = initialValue;
+                this.UseValueFirst = initialValue;
+                this.UseValueSecond = initialValue;
             }
 
             public Mask(
-                TItem Data,
-                TItem Name)
+                TItem Action,
+                TItem Attribute,
+                TItem Specialization,
+                TItem UseValueFirst,
+                TItem UseValueSecond)
             {
-                this.Data = new MaskItem<TItem, LocalVariableData.Mask<TItem>?>(Data, new LocalVariableData.Mask<TItem>(Data));
-                this.Name = Name;
+                this.Action = Action;
+                this.Attribute = Attribute;
+                this.Specialization = Specialization;
+                this.UseValueFirst = UseValueFirst;
+                this.UseValueSecond = UseValueSecond;
             }
 
             #pragma warning disable CS8618
@@ -259,8 +260,11 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public MaskItem<TItem, LocalVariableData.Mask<TItem>?>? Data { get; set; }
-            public TItem Name;
+            public TItem Action;
+            public TItem Attribute;
+            public TItem Specialization;
+            public TItem UseValueFirst;
+            public TItem UseValueSecond;
             #endregion
 
             #region Equals
@@ -273,15 +277,21 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Data, rhs.Data)) return false;
-                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Action, rhs.Action)) return false;
+                if (!object.Equals(this.Attribute, rhs.Attribute)) return false;
+                if (!object.Equals(this.Specialization, rhs.Specialization)) return false;
+                if (!object.Equals(this.UseValueFirst, rhs.UseValueFirst)) return false;
+                if (!object.Equals(this.UseValueSecond, rhs.UseValueSecond)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Data);
-                hash.Add(this.Name);
+                hash.Add(this.Action);
+                hash.Add(this.Attribute);
+                hash.Add(this.Specialization);
+                hash.Add(this.UseValueFirst);
+                hash.Add(this.UseValueSecond);
                 return hash.ToHashCode();
             }
 
@@ -290,12 +300,11 @@ namespace Mutagen.Bethesda.Oblivion
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (Data != null)
-                {
-                    if (!eval(this.Data.Overall)) return false;
-                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
-                }
-                if (!eval(this.Name)) return false;
+                if (!eval(this.Action)) return false;
+                if (!eval(this.Attribute)) return false;
+                if (!eval(this.Specialization)) return false;
+                if (!eval(this.UseValueFirst)) return false;
+                if (!eval(this.UseValueSecond)) return false;
                 return true;
             }
             #endregion
@@ -303,12 +312,11 @@ namespace Mutagen.Bethesda.Oblivion
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (Data != null)
-                {
-                    if (eval(this.Data.Overall)) return true;
-                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
-                }
-                if (eval(this.Name)) return true;
+                if (eval(this.Action)) return true;
+                if (eval(this.Attribute)) return true;
+                if (eval(this.Specialization)) return true;
+                if (eval(this.UseValueFirst)) return true;
+                if (eval(this.UseValueSecond)) return true;
                 return false;
             }
             #endregion
@@ -316,15 +324,18 @@ namespace Mutagen.Bethesda.Oblivion
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new LocalVariable.Mask<R>();
+                var ret = new SkillData.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Data = this.Data == null ? null : new MaskItem<R, LocalVariableData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
-                obj.Name = eval(this.Name);
+                obj.Action = eval(this.Action);
+                obj.Attribute = eval(this.Attribute);
+                obj.Specialization = eval(this.Specialization);
+                obj.UseValueFirst = eval(this.UseValueFirst);
+                obj.UseValueSecond = eval(this.UseValueSecond);
             }
             #endregion
 
@@ -334,26 +345,38 @@ namespace Mutagen.Bethesda.Oblivion
                 return ToString(printMask: null);
             }
 
-            public string ToString(LocalVariable.Mask<bool>? printMask = null)
+            public string ToString(SkillData.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, LocalVariable.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, SkillData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(LocalVariable.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(SkillData.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Data?.Overall ?? true)
+                    if (printMask?.Action ?? true)
                     {
-                        Data?.ToString(fg);
+                        fg.AppendItem(Action, "Action");
                     }
-                    if (printMask?.Name ?? true)
+                    if (printMask?.Attribute ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        fg.AppendItem(Attribute, "Attribute");
+                    }
+                    if (printMask?.Specialization ?? true)
+                    {
+                        fg.AppendItem(Specialization, "Specialization");
+                    }
+                    if (printMask?.UseValueFirst ?? true)
+                    {
+                        fg.AppendItem(UseValueFirst, "UseValueFirst");
+                    }
+                    if (printMask?.UseValueSecond ?? true)
+                    {
+                        fg.AppendItem(UseValueSecond, "UseValueSecond");
                     }
                 }
                 fg.AppendLine("]");
@@ -380,20 +403,29 @@ namespace Mutagen.Bethesda.Oblivion
                     return _warnings;
                 }
             }
-            public MaskItem<Exception?, LocalVariableData.ErrorMask?>? Data;
-            public Exception? Name;
+            public Exception? Action;
+            public Exception? Attribute;
+            public Exception? Specialization;
+            public Exception? UseValueFirst;
+            public Exception? UseValueSecond;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+                SkillData_FieldIndex enu = (SkillData_FieldIndex)index;
                 switch (enu)
                 {
-                    case LocalVariable_FieldIndex.Data:
-                        return Data;
-                    case LocalVariable_FieldIndex.Name:
-                        return Name;
+                    case SkillData_FieldIndex.Action:
+                        return Action;
+                    case SkillData_FieldIndex.Attribute:
+                        return Attribute;
+                    case SkillData_FieldIndex.Specialization:
+                        return Specialization;
+                    case SkillData_FieldIndex.UseValueFirst:
+                        return UseValueFirst;
+                    case SkillData_FieldIndex.UseValueSecond:
+                        return UseValueSecond;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -401,14 +433,23 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void SetNthException(int index, Exception ex)
             {
-                LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+                SkillData_FieldIndex enu = (SkillData_FieldIndex)index;
                 switch (enu)
                 {
-                    case LocalVariable_FieldIndex.Data:
-                        this.Data = new MaskItem<Exception?, LocalVariableData.ErrorMask?>(ex, null);
+                    case SkillData_FieldIndex.Action:
+                        this.Action = ex;
                         break;
-                    case LocalVariable_FieldIndex.Name:
-                        this.Name = ex;
+                    case SkillData_FieldIndex.Attribute:
+                        this.Attribute = ex;
+                        break;
+                    case SkillData_FieldIndex.Specialization:
+                        this.Specialization = ex;
+                        break;
+                    case SkillData_FieldIndex.UseValueFirst:
+                        this.UseValueFirst = ex;
+                        break;
+                    case SkillData_FieldIndex.UseValueSecond:
+                        this.UseValueSecond = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -417,14 +458,23 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void SetNthMask(int index, object obj)
             {
-                LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+                SkillData_FieldIndex enu = (SkillData_FieldIndex)index;
                 switch (enu)
                 {
-                    case LocalVariable_FieldIndex.Data:
-                        this.Data = (MaskItem<Exception?, LocalVariableData.ErrorMask?>?)obj;
+                    case SkillData_FieldIndex.Action:
+                        this.Action = (Exception?)obj;
                         break;
-                    case LocalVariable_FieldIndex.Name:
-                        this.Name = (Exception?)obj;
+                    case SkillData_FieldIndex.Attribute:
+                        this.Attribute = (Exception?)obj;
+                        break;
+                    case SkillData_FieldIndex.Specialization:
+                        this.Specialization = (Exception?)obj;
+                        break;
+                    case SkillData_FieldIndex.UseValueFirst:
+                        this.UseValueFirst = (Exception?)obj;
+                        break;
+                    case SkillData_FieldIndex.UseValueSecond:
+                        this.UseValueSecond = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -434,8 +484,11 @@ namespace Mutagen.Bethesda.Oblivion
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Data != null) return true;
-                if (Name != null) return true;
+                if (Action != null) return true;
+                if (Attribute != null) return true;
+                if (Specialization != null) return true;
+                if (UseValueFirst != null) return true;
+                if (UseValueSecond != null) return true;
                 return false;
             }
             #endregion
@@ -470,8 +523,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                Data?.ToString(fg);
-                fg.AppendItem(Name, "Name");
+                fg.AppendItem(Action, "Action");
+                fg.AppendItem(Attribute, "Attribute");
+                fg.AppendItem(Specialization, "Specialization");
+                fg.AppendItem(UseValueFirst, "UseValueFirst");
+                fg.AppendItem(UseValueSecond, "UseValueSecond");
             }
             #endregion
 
@@ -480,8 +536,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
-                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Action = this.Action.Combine(rhs.Action);
+                ret.Attribute = this.Attribute.Combine(rhs.Attribute);
+                ret.Specialization = this.Specialization.Combine(rhs.Specialization);
+                ret.UseValueFirst = this.UseValueFirst.Combine(rhs.UseValueFirst);
+                ret.UseValueSecond = this.UseValueSecond.Combine(rhs.UseValueSecond);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -503,15 +562,21 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public MaskItem<bool, LocalVariableData.TranslationMask?> Data;
-            public bool Name;
+            public bool Action;
+            public bool Attribute;
+            public bool Specialization;
+            public bool UseValueFirst;
+            public bool UseValueSecond;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.Data = new MaskItem<bool, LocalVariableData.TranslationMask?>(defaultOn, null);
-                this.Name = defaultOn;
+                this.Action = defaultOn;
+                this.Attribute = defaultOn;
+                this.Specialization = defaultOn;
+                this.UseValueFirst = defaultOn;
+                this.UseValueSecond = defaultOn;
             }
 
             #endregion
@@ -527,41 +592,48 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
-                ret.Add((Name, null));
+                ret.Add((Action, null));
+                ret.Add((Attribute, null));
+                ret.Add((Specialization, null));
+                ret.Add((UseValueFirst, null));
+                ret.Add((UseValueSecond, null));
             }
         }
         #endregion
 
+        #region Mutagen
+        public new static readonly RecordType GrupRecordType = SkillData_Registration.TriggeringRecordType;
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => LocalVariableBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => SkillDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((LocalVariableBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((SkillDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static LocalVariable CreateFromBinary(MutagenFrame frame)
+        public static SkillData CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public static LocalVariable CreateFromBinary(
+        public static SkillData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new LocalVariable();
-            ((LocalVariableSetterCommon)((ILocalVariableGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new SkillData();
+            ((SkillDataSetterCommon)((ISkillDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -574,33 +646,36 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILocalVariableGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkillDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((LocalVariableSetterCommon)((ILocalVariableGetter)this).CommonSetterInstance()!).Clear(this);
+            ((SkillDataSetterCommon)((ISkillDataGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static LocalVariable GetNew()
+        internal static SkillData GetNew()
         {
-            return new LocalVariable();
+            return new SkillData();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface ILocalVariable :
-        ILocalVariableGetter,
-        ILoquiObjectSetter<ILocalVariable>
+    public partial interface ISkillData :
+        ISkillDataGetter,
+        ILoquiObjectSetter<ISkillData>
     {
-        new LocalVariableData? Data { get; set; }
-        new String? Name { get; set; }
+        new ActorValue Action { get; set; }
+        new ActorValue Attribute { get; set; }
+        new Specialization Specialization { get; set; }
+        new Single UseValueFirst { get; set; }
+        new Single UseValueSecond { get; set; }
     }
 
-    public partial interface ILocalVariableGetter :
+    public partial interface ISkillDataGetter :
         ILoquiObject,
-        ILoquiObject<ILocalVariableGetter>,
+        ILoquiObject<ISkillDataGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -610,50 +685,53 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        ILocalVariableDataGetter? Data { get; }
-        String? Name { get; }
+        ActorValue Action { get; }
+        ActorValue Attribute { get; }
+        Specialization Specialization { get; }
+        Single UseValueFirst { get; }
+        Single UseValueSecond { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class LocalVariableMixIn
+    public static partial class SkillDataMixIn
     {
-        public static void Clear(this ILocalVariable item)
+        public static void Clear(this ISkillData item)
         {
-            ((LocalVariableSetterCommon)((ILocalVariableGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((SkillDataSetterCommon)((ISkillDataGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static LocalVariable.Mask<bool> GetEqualsMask(
-            this ILocalVariableGetter item,
-            ILocalVariableGetter rhs,
+        public static SkillData.Mask<bool> GetEqualsMask(
+            this ISkillDataGetter item,
+            ISkillDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((SkillDataCommon)((ISkillDataGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this ILocalVariableGetter item,
+            this ISkillDataGetter item,
             string? name = null,
-            LocalVariable.Mask<bool>? printMask = null)
+            SkillData.Mask<bool>? printMask = null)
         {
-            return ((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).ToString(
+            return ((SkillDataCommon)((ISkillDataGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this ILocalVariableGetter item,
+            this ISkillDataGetter item,
             FileGeneration fg,
             string? name = null,
-            LocalVariable.Mask<bool>? printMask = null)
+            SkillData.Mask<bool>? printMask = null)
         {
-            ((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).ToString(
+            ((SkillDataCommon)((ISkillDataGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -661,38 +739,38 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this ILocalVariableGetter item,
-            LocalVariable.Mask<bool?> checkMask)
+            this ISkillDataGetter item,
+            SkillData.Mask<bool?> checkMask)
         {
-            return ((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).HasBeenSet(
+            return ((SkillDataCommon)((ISkillDataGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static LocalVariable.Mask<bool> GetHasBeenSetMask(this ILocalVariableGetter item)
+        public static SkillData.Mask<bool> GetHasBeenSetMask(this ISkillDataGetter item)
         {
-            var ret = new LocalVariable.Mask<bool>(false);
-            ((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new SkillData.Mask<bool>(false);
+            ((SkillDataCommon)((ISkillDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this ILocalVariableGetter item,
-            ILocalVariableGetter rhs)
+            this ISkillDataGetter item,
+            ISkillDataGetter rhs)
         {
-            return ((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).Equals(
+            return ((SkillDataCommon)((ISkillDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this ILocalVariable lhs,
-            ILocalVariableGetter rhs,
-            LocalVariable.TranslationMask? copyMask = null)
+            this ISkillData lhs,
+            ISkillDataGetter rhs,
+            SkillData.TranslationMask? copyMask = null)
         {
-            ((LocalVariableSetterTranslationCommon)((ILocalVariableGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((SkillDataSetterTranslationCommon)((ISkillDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -700,59 +778,59 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void DeepCopyIn(
-            this ILocalVariable lhs,
-            ILocalVariableGetter rhs,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? copyMask = null)
+            this ISkillData lhs,
+            ISkillDataGetter rhs,
+            out SkillData.ErrorMask errorMask,
+            SkillData.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((LocalVariableSetterTranslationCommon)((ILocalVariableGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((SkillDataSetterTranslationCommon)((ISkillDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = LocalVariable.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SkillData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this ILocalVariable lhs,
-            ILocalVariableGetter rhs,
+            this ISkillData lhs,
+            ISkillDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((LocalVariableSetterTranslationCommon)((ILocalVariableGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((SkillDataSetterTranslationCommon)((ISkillDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static LocalVariable DeepCopy(
-            this ILocalVariableGetter item,
-            LocalVariable.TranslationMask? copyMask = null)
+        public static SkillData DeepCopy(
+            this ISkillDataGetter item,
+            SkillData.TranslationMask? copyMask = null)
         {
-            return ((LocalVariableSetterTranslationCommon)((ILocalVariableGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((SkillDataSetterTranslationCommon)((ISkillDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static LocalVariable DeepCopy(
-            this ILocalVariableGetter item,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? copyMask = null)
+        public static SkillData DeepCopy(
+            this ISkillDataGetter item,
+            out SkillData.ErrorMask errorMask,
+            SkillData.TranslationMask? copyMask = null)
         {
-            return ((LocalVariableSetterTranslationCommon)((ILocalVariableGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((SkillDataSetterTranslationCommon)((ISkillDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static LocalVariable DeepCopy(
-            this ILocalVariableGetter item,
+        public static SkillData DeepCopy(
+            this ISkillDataGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((LocalVariableSetterTranslationCommon)((ILocalVariableGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((SkillDataSetterTranslationCommon)((ISkillDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -761,9 +839,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this ILocalVariable item,
+            this ISkillData item,
             XElement node,
-            LocalVariable.TranslationMask? translationMask = null)
+            SkillData.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -774,10 +852,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this ILocalVariable item,
+            this ISkillData item,
             XElement node,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            out SkillData.ErrorMask errorMask,
+            SkillData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -785,16 +863,16 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LocalVariable.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SkillData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this ILocalVariable item,
+            this ISkillData item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((LocalVariableSetterCommon)((ILocalVariableGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((SkillDataSetterCommon)((ISkillDataGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -802,9 +880,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this ILocalVariable item,
+            this ISkillData item,
             string path,
-            LocalVariable.TranslationMask? translationMask = null)
+            SkillData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -814,10 +892,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this ILocalVariable item,
+            this ISkillData item,
             string path,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            out SkillData.ErrorMask errorMask,
+            SkillData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -828,10 +906,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this ILocalVariable item,
+            this ISkillData item,
             string path,
             ErrorMaskBuilder? errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            SkillData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -842,9 +920,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this ILocalVariable item,
+            this ISkillData item,
             Stream stream,
-            LocalVariable.TranslationMask? translationMask = null)
+            SkillData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -854,10 +932,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this ILocalVariable item,
+            this ISkillData item,
             Stream stream,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            out SkillData.ErrorMask errorMask,
+            SkillData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -868,10 +946,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this ILocalVariable item,
+            this ISkillData item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            SkillData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -886,7 +964,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this ILocalVariable item,
+            this ISkillData item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -896,11 +974,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromBinary(
-            this ILocalVariable item,
+            this ISkillData item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((LocalVariableSetterCommon)((ILocalVariableGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((SkillDataSetterCommon)((ISkillDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -916,48 +994,51 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     #region Field Index
-    public enum LocalVariable_FieldIndex
+    public enum SkillData_FieldIndex
     {
-        Data = 0,
-        Name = 1,
+        Action = 0,
+        Attribute = 1,
+        Specialization = 2,
+        UseValueFirst = 3,
+        UseValueSecond = 4,
     }
     #endregion
 
     #region Registration
-    public partial class LocalVariable_Registration : ILoquiRegistration
+    public partial class SkillData_Registration : ILoquiRegistration
     {
-        public static readonly LocalVariable_Registration Instance = new LocalVariable_Registration();
+        public static readonly SkillData_Registration Instance = new SkillData_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 48,
+            msgID: 209,
             version: 0);
 
-        public const string GUID = "b77aa416-b182-4265-8276-44b34bace18f";
+        public const string GUID = "7d77fda3-ca94-4126-b35e-52098fb45b40";
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 5;
 
-        public static readonly Type MaskType = typeof(LocalVariable.Mask<>);
+        public static readonly Type MaskType = typeof(SkillData.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(LocalVariable.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(SkillData.ErrorMask);
 
-        public static readonly Type ClassType = typeof(LocalVariable);
+        public static readonly Type ClassType = typeof(SkillData);
 
-        public static readonly Type GetterType = typeof(ILocalVariableGetter);
+        public static readonly Type GetterType = typeof(ISkillDataGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(ILocalVariable);
+        public static readonly Type SetterType = typeof(ISkillData);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Oblivion.LocalVariable";
+        public const string FullName = "Mutagen.Bethesda.Oblivion.SkillData";
 
-        public const string Name = "LocalVariable";
+        public const string Name = "SkillData";
 
         public const string Namespace = "Mutagen.Bethesda.Oblivion";
 
@@ -969,10 +1050,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
-                case "DATA":
-                    return (ushort)LocalVariable_FieldIndex.Data;
-                case "NAME":
-                    return (ushort)LocalVariable_FieldIndex.Name;
+                case "ACTION":
+                    return (ushort)SkillData_FieldIndex.Action;
+                case "ATTRIBUTE":
+                    return (ushort)SkillData_FieldIndex.Attribute;
+                case "SPECIALIZATION":
+                    return (ushort)SkillData_FieldIndex.Specialization;
+                case "USEVALUEFIRST":
+                    return (ushort)SkillData_FieldIndex.UseValueFirst;
+                case "USEVALUESECOND":
+                    return (ushort)SkillData_FieldIndex.UseValueSecond;
                 default:
                     return null;
             }
@@ -980,11 +1067,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+            SkillData_FieldIndex enu = (SkillData_FieldIndex)index;
             switch (enu)
             {
-                case LocalVariable_FieldIndex.Data:
-                case LocalVariable_FieldIndex.Name:
+                case SkillData_FieldIndex.Action:
+                case SkillData_FieldIndex.Attribute:
+                case SkillData_FieldIndex.Specialization:
+                case SkillData_FieldIndex.UseValueFirst:
+                case SkillData_FieldIndex.UseValueSecond:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -993,12 +1083,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+            SkillData_FieldIndex enu = (SkillData_FieldIndex)index;
             switch (enu)
             {
-                case LocalVariable_FieldIndex.Data:
-                    return true;
-                case LocalVariable_FieldIndex.Name:
+                case SkillData_FieldIndex.Action:
+                case SkillData_FieldIndex.Attribute:
+                case SkillData_FieldIndex.Specialization:
+                case SkillData_FieldIndex.UseValueFirst:
+                case SkillData_FieldIndex.UseValueSecond:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1007,11 +1099,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+            SkillData_FieldIndex enu = (SkillData_FieldIndex)index;
             switch (enu)
             {
-                case LocalVariable_FieldIndex.Data:
-                case LocalVariable_FieldIndex.Name:
+                case SkillData_FieldIndex.Action:
+                case SkillData_FieldIndex.Attribute:
+                case SkillData_FieldIndex.Specialization:
+                case SkillData_FieldIndex.UseValueFirst:
+                case SkillData_FieldIndex.UseValueSecond:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1020,13 +1115,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static string GetNthName(ushort index)
         {
-            LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+            SkillData_FieldIndex enu = (SkillData_FieldIndex)index;
             switch (enu)
             {
-                case LocalVariable_FieldIndex.Data:
-                    return "Data";
-                case LocalVariable_FieldIndex.Name:
-                    return "Name";
+                case SkillData_FieldIndex.Action:
+                    return "Action";
+                case SkillData_FieldIndex.Attribute:
+                    return "Attribute";
+                case SkillData_FieldIndex.Specialization:
+                    return "Specialization";
+                case SkillData_FieldIndex.UseValueFirst:
+                    return "UseValueFirst";
+                case SkillData_FieldIndex.UseValueSecond:
+                    return "UseValueSecond";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1034,11 +1135,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+            SkillData_FieldIndex enu = (SkillData_FieldIndex)index;
             switch (enu)
             {
-                case LocalVariable_FieldIndex.Data:
-                case LocalVariable_FieldIndex.Name:
+                case SkillData_FieldIndex.Action:
+                case SkillData_FieldIndex.Attribute:
+                case SkillData_FieldIndex.Specialization:
+                case SkillData_FieldIndex.UseValueFirst:
+                case SkillData_FieldIndex.UseValueSecond:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1047,11 +1151,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsProtected(ushort index)
         {
-            LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+            SkillData_FieldIndex enu = (SkillData_FieldIndex)index;
             switch (enu)
             {
-                case LocalVariable_FieldIndex.Data:
-                case LocalVariable_FieldIndex.Name:
+                case SkillData_FieldIndex.Action:
+                case SkillData_FieldIndex.Attribute:
+                case SkillData_FieldIndex.Specialization:
+                case SkillData_FieldIndex.UseValueFirst:
+                case SkillData_FieldIndex.UseValueSecond:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1060,36 +1167,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Type GetNthType(ushort index)
         {
-            LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+            SkillData_FieldIndex enu = (SkillData_FieldIndex)index;
             switch (enu)
             {
-                case LocalVariable_FieldIndex.Data:
-                    return typeof(LocalVariableData);
-                case LocalVariable_FieldIndex.Name:
-                    return typeof(String);
+                case SkillData_FieldIndex.Action:
+                    return typeof(ActorValue);
+                case SkillData_FieldIndex.Attribute:
+                    return typeof(ActorValue);
+                case SkillData_FieldIndex.Specialization:
+                    return typeof(Specialization);
+                case SkillData_FieldIndex.UseValueFirst:
+                    return typeof(Single);
+                case SkillData_FieldIndex.UseValueSecond:
+                    return typeof(Single);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(LocalVariableXmlWriteTranslation);
-        public static readonly RecordType SLSD_HEADER = new RecordType("SLSD");
-        public static readonly RecordType SCVR_HEADER = new RecordType("SCVR");
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
-        {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        SLSD_HEADER,
-                        SCVR_HEADER
-                    })
-            );
-        });
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 2;
-        public static readonly Type BinaryWriteTranslation = typeof(LocalVariableBinaryWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(SkillDataXmlWriteTranslation);
+        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
+        public static readonly RecordType TriggeringRecordType = DATA_HEADER;
+        public const int NumStructFields = 5;
+        public const int NumTypedFields = 0;
+        public static readonly Type BinaryWriteTranslation = typeof(SkillDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1122,22 +1223,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class LocalVariableSetterCommon
+    public partial class SkillDataSetterCommon
     {
-        public static readonly LocalVariableSetterCommon Instance = new LocalVariableSetterCommon();
+        public static readonly SkillDataSetterCommon Instance = new SkillDataSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(ILocalVariable item)
+        public void Clear(ISkillData item)
         {
             ClearPartial();
-            item.Data = null;
-            item.Name = default;
+            item.Action = default;
+            item.Attribute = default;
+            item.Specialization = default;
+            item.UseValueFirst = default;
+            item.UseValueSecond = default;
         }
         
         #region Xml Translation
         public virtual void CopyInFromXml(
-            ILocalVariable item,
+            ISkillData item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1146,7 +1250,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    LocalVariableXmlCreateTranslation.FillPublicElementXml(
+                    SkillDataXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1165,70 +1269,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Binary Translation
         protected static void FillBinaryStructs(
-            ILocalVariable item,
+            ISkillData item,
             MutagenFrame frame)
         {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ILocalVariable item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x44534C53: // SLSD
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocalVariable_FieldIndex.Data) return TryGet<int?>.Failure;
-                    item.Data = Mutagen.Bethesda.Oblivion.LocalVariableData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)LocalVariable_FieldIndex.Data);
-                }
-                case 0x52564353: // SCVR
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocalVariable_FieldIndex.Name) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)LocalVariable_FieldIndex.Name);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
+            item.Action = EnumBinaryTranslation<ActorValue>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Attribute = EnumBinaryTranslation<ActorValue>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Specialization = EnumBinaryTranslation<Specialization>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.UseValueFirst = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.UseValueSecond = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
         }
         
         public virtual void CopyInFromBinary(
-            ILocalVariable item,
+            ISkillData item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.TypelessRecordParse(
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                recordTypeConverter.ConvertToCustom(SkillData_Registration.DATA_HEADER)));
+            UtilityTranslation.RecordParse(
                 record: item,
                 frame: frame,
-                setFinal: false,
+                setFinal: true,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: FillBinaryStructs);
         }
         
         #endregion
         
     }
-    public partial class LocalVariableCommon
+    public partial class SkillDataCommon
     {
-        public static readonly LocalVariableCommon Instance = new LocalVariableCommon();
+        public static readonly SkillDataCommon Instance = new SkillDataCommon();
 
-        public LocalVariable.Mask<bool> GetEqualsMask(
-            ILocalVariableGetter item,
-            ILocalVariableGetter rhs,
+        public SkillData.Mask<bool> GetEqualsMask(
+            ISkillDataGetter item,
+            ISkillDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new LocalVariable.Mask<bool>(false);
-            ((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new SkillData.Mask<bool>(false);
+            ((SkillDataCommon)((ISkillDataGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1237,24 +1317,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public void FillEqualsMask(
-            ILocalVariableGetter item,
-            ILocalVariableGetter rhs,
-            LocalVariable.Mask<bool> ret,
+            ISkillDataGetter item,
+            ISkillDataGetter rhs,
+            SkillData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Data = EqualsMaskHelper.EqualsHelper(
-                item.Data,
-                rhs.Data,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Action = item.Action == rhs.Action;
+            ret.Attribute = item.Attribute == rhs.Attribute;
+            ret.Specialization = item.Specialization == rhs.Specialization;
+            ret.UseValueFirst = item.UseValueFirst.EqualsWithin(rhs.UseValueFirst);
+            ret.UseValueSecond = item.UseValueSecond.EqualsWithin(rhs.UseValueSecond);
         }
         
         public string ToString(
-            ILocalVariableGetter item,
+            ISkillDataGetter item,
             string? name = null,
-            LocalVariable.Mask<bool>? printMask = null)
+            SkillData.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1266,18 +1345,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public void ToString(
-            ILocalVariableGetter item,
+            ISkillDataGetter item,
             FileGeneration fg,
             string? name = null,
-            LocalVariable.Mask<bool>? printMask = null)
+            SkillData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LocalVariable =>");
+                fg.AppendLine($"SkillData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LocalVariable) =>");
+                fg.AppendLine($"{name} (SkillData) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1291,64 +1370,73 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         protected static void ToStringFields(
-            ILocalVariableGetter item,
+            ISkillDataGetter item,
             FileGeneration fg,
-            LocalVariable.Mask<bool>? printMask = null)
+            SkillData.Mask<bool>? printMask = null)
         {
-            if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+            if (printMask?.Action ?? true)
             {
-                DataItem?.ToString(fg, "Data");
+                fg.AppendItem(item.Action, "Action");
             }
-            if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+            if (printMask?.Attribute ?? true)
             {
-                fg.AppendItem(NameItem, "Name");
+                fg.AppendItem(item.Attribute, "Attribute");
+            }
+            if (printMask?.Specialization ?? true)
+            {
+                fg.AppendItem(item.Specialization, "Specialization");
+            }
+            if (printMask?.UseValueFirst ?? true)
+            {
+                fg.AppendItem(item.UseValueFirst, "UseValueFirst");
+            }
+            if (printMask?.UseValueSecond ?? true)
+            {
+                fg.AppendItem(item.UseValueSecond, "UseValueSecond");
             }
         }
         
         public bool HasBeenSet(
-            ILocalVariableGetter item,
-            LocalVariable.Mask<bool?> checkMask)
+            ISkillDataGetter item,
+            SkillData.Mask<bool?> checkMask)
         {
-            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
-            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             return true;
         }
         
         public void FillHasBeenSetMask(
-            ILocalVariableGetter item,
-            LocalVariable.Mask<bool> mask)
+            ISkillDataGetter item,
+            SkillData.Mask<bool> mask)
         {
-            var itemData = item.Data;
-            mask.Data = new MaskItem<bool, LocalVariableData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
-            mask.Name = (item.Name != null);
+            mask.Action = true;
+            mask.Attribute = true;
+            mask.Specialization = true;
+            mask.UseValueFirst = true;
+            mask.UseValueSecond = true;
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            ILocalVariableGetter? lhs,
-            ILocalVariableGetter? rhs)
+            ISkillDataGetter? lhs,
+            ISkillDataGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (lhs.Action != rhs.Action) return false;
+            if (lhs.Attribute != rhs.Attribute) return false;
+            if (lhs.Specialization != rhs.Specialization) return false;
+            if (!lhs.UseValueFirst.EqualsWithin(rhs.UseValueFirst)) return false;
+            if (!lhs.UseValueSecond.EqualsWithin(rhs.UseValueSecond)) return false;
             return true;
         }
         
-        public virtual int GetHashCode(ILocalVariableGetter item)
+        public virtual int GetHashCode(ISkillDataGetter item)
         {
             var hash = new HashCode();
-            if (item.Data.TryGet(out var Dataitem))
-            {
-                hash.Add(Dataitem);
-            }
-            if (item.Name.TryGet(out var Nameitem))
-            {
-                hash.Add(Nameitem);
-            }
+            hash.Add(item.Action);
+            hash.Add(item.Attribute);
+            hash.Add(item.Specialization);
+            hash.Add(item.UseValueFirst);
+            hash.Add(item.UseValueSecond);
             return hash.ToHashCode();
         }
         
@@ -1357,11 +1445,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public object GetNew()
         {
-            return LocalVariable.GetNew();
+            return SkillData.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(ILocalVariableGetter obj)
+        public IEnumerable<ILinkGetter> GetLinks(ISkillDataGetter obj)
         {
             yield break;
         }
@@ -1369,68 +1457,58 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LocalVariableSetterTranslationCommon
+    public partial class SkillDataSetterTranslationCommon
     {
-        public static readonly LocalVariableSetterTranslationCommon Instance = new LocalVariableSetterTranslationCommon();
+        public static readonly SkillDataSetterTranslationCommon Instance = new SkillDataSetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            ILocalVariable item,
-            ILocalVariableGetter rhs,
+            ISkillData item,
+            ISkillDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.Data) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SkillData_FieldIndex.Action) ?? true))
             {
-                errorMask?.PushIndex((int)LocalVariable_FieldIndex.Data);
-                try
-                {
-                    if(rhs.Data.TryGet(out var rhsData))
-                    {
-                        item.Data = rhsData.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)LocalVariable_FieldIndex.Data));
-                    }
-                    else
-                    {
-                        item.Data = default;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Action = rhs.Action;
             }
-            if ((copyMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.Name) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SkillData_FieldIndex.Attribute) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Attribute = rhs.Attribute;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkillData_FieldIndex.Specialization) ?? true))
+            {
+                item.Specialization = rhs.Specialization;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkillData_FieldIndex.UseValueFirst) ?? true))
+            {
+                item.UseValueFirst = rhs.UseValueFirst;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkillData_FieldIndex.UseValueSecond) ?? true))
+            {
+                item.UseValueSecond = rhs.UseValueSecond;
             }
         }
         
         #endregion
         
-        public LocalVariable DeepCopy(
-            ILocalVariableGetter item,
-            LocalVariable.TranslationMask? copyMask = null)
+        public SkillData DeepCopy(
+            ISkillDataGetter item,
+            SkillData.TranslationMask? copyMask = null)
         {
-            LocalVariable ret = (LocalVariable)((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).GetNew();
+            SkillData ret = (SkillData)((SkillDataCommon)((ISkillDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public LocalVariable DeepCopy(
-            ILocalVariableGetter item,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? copyMask = null)
+        public SkillData DeepCopy(
+            ISkillDataGetter item,
+            out SkillData.ErrorMask errorMask,
+            SkillData.TranslationMask? copyMask = null)
         {
-            LocalVariable ret = (LocalVariable)((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).GetNew();
+            SkillData ret = (SkillData)((SkillDataCommon)((ISkillDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1438,12 +1516,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
-        public LocalVariable DeepCopy(
-            ILocalVariableGetter item,
+        public SkillData DeepCopy(
+            ISkillDataGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            LocalVariable ret = (LocalVariable)((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).GetNew();
+            SkillData ret = (SkillData)((SkillDataCommon)((ISkillDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1458,27 +1536,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class LocalVariable
+    public partial class SkillData
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LocalVariable_Registration.Instance;
-        public static LocalVariable_Registration Registration => LocalVariable_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => SkillData_Registration.Instance;
+        public static SkillData_Registration Registration => SkillData_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => LocalVariableCommon.Instance;
+        protected object CommonInstance() => SkillDataCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return LocalVariableSetterCommon.Instance;
+            return SkillDataSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => LocalVariableSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => SkillDataSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ILocalVariableGetter.CommonInstance() => this.CommonInstance();
+        object ISkillDataGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object ILocalVariableGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object ISkillDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object ILocalVariableGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object ISkillDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1489,54 +1567,75 @@ namespace Mutagen.Bethesda.Oblivion
 #region Xml Translation
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class LocalVariableXmlWriteTranslation : IXmlWriteTranslator
+    public partial class SkillDataXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static LocalVariableXmlWriteTranslation Instance = new LocalVariableXmlWriteTranslation();
+        public readonly static SkillDataXmlWriteTranslation Instance = new SkillDataXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            ILocalVariableGetter item,
+            ISkillDataGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((item.Data != null)
-                && (translationMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.Data) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)SkillData_FieldIndex.Action) ?? true))
             {
-                if (item.Data.TryGet(out var DataItem))
-                {
-                    ((LocalVariableDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
-                        item: DataItem,
-                        node: node,
-                        name: nameof(item.Data),
-                        fieldIndex: (int)LocalVariable_FieldIndex.Data,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)LocalVariable_FieldIndex.Data));
-                }
-            }
-            if ((item.Name != null)
-                && (translationMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.Name) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
+                EnumXmlTranslation<ActorValue>.Instance.Write(
                     node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)LocalVariable_FieldIndex.Name,
+                    name: nameof(item.Action),
+                    item: item.Action,
+                    fieldIndex: (int)SkillData_FieldIndex.Action,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkillData_FieldIndex.Attribute) ?? true))
+            {
+                EnumXmlTranslation<ActorValue>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Attribute),
+                    item: item.Attribute,
+                    fieldIndex: (int)SkillData_FieldIndex.Attribute,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkillData_FieldIndex.Specialization) ?? true))
+            {
+                EnumXmlTranslation<Specialization>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Specialization),
+                    item: item.Specialization,
+                    fieldIndex: (int)SkillData_FieldIndex.Specialization,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkillData_FieldIndex.UseValueFirst) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.UseValueFirst),
+                    item: item.UseValueFirst,
+                    fieldIndex: (int)SkillData_FieldIndex.UseValueFirst,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkillData_FieldIndex.UseValueSecond) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.UseValueSecond),
+                    item: item.UseValueSecond,
+                    fieldIndex: (int)SkillData_FieldIndex.UseValueSecond,
                     errorMask: errorMask);
             }
         }
 
         public void Write(
             XElement node,
-            ILocalVariableGetter item,
+            ISkillDataGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.LocalVariable");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.SkillData");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LocalVariable");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.SkillData");
             }
             WriteToNodeXml(
                 item: item,
@@ -1553,7 +1652,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string? name = null)
         {
             Write(
-                item: (ILocalVariableGetter)item,
+                item: (ISkillDataGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1562,7 +1661,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            ILocalVariableGetter item,
+            ISkillDataGetter item,
             ErrorMaskBuilder? errorMask,
             int fieldIndex,
             TranslationCrystal? translationMask,
@@ -1572,7 +1671,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             try
             {
                 Write(
-                    item: (ILocalVariableGetter)item,
+                    item: (ISkillDataGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1591,12 +1690,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class LocalVariableXmlCreateTranslation
+    public partial class SkillDataXmlCreateTranslation
     {
-        public readonly static LocalVariableXmlCreateTranslation Instance = new LocalVariableXmlCreateTranslation();
+        public readonly static SkillDataXmlCreateTranslation Instance = new SkillDataXmlCreateTranslation();
 
         public static void FillPublicXml(
-            ILocalVariable item,
+            ISkillData item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1605,7 +1704,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    LocalVariableXmlCreateTranslation.FillPublicElementXml(
+                    SkillDataXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1621,7 +1720,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            ILocalVariable item,
+            ISkillData item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1629,14 +1728,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "Data":
-                    errorMask?.PushIndex((int)LocalVariable_FieldIndex.Data);
+                case "Action":
+                    errorMask?.PushIndex((int)SkillData_FieldIndex.Action);
                     try
                     {
-                        item.Data = LoquiXmlTranslation<LocalVariableData>.Instance.Parse(
+                        item.Action = EnumXmlTranslation<ActorValue>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)LocalVariable_FieldIndex.Data));
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1648,11 +1746,65 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Name":
-                    errorMask?.PushIndex((int)LocalVariable_FieldIndex.Name);
+                case "Attribute":
+                    errorMask?.PushIndex((int)SkillData_FieldIndex.Attribute);
                     try
                     {
-                        item.Name = StringXmlTranslation.Instance.Parse(
+                        item.Attribute = EnumXmlTranslation<ActorValue>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Specialization":
+                    errorMask?.PushIndex((int)SkillData_FieldIndex.Specialization);
+                    try
+                    {
+                        item.Specialization = EnumXmlTranslation<Specialization>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "UseValueFirst":
+                    errorMask?.PushIndex((int)SkillData_FieldIndex.UseValueFirst);
+                    try
+                    {
+                        item.UseValueFirst = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "UseValueSecond":
+                    errorMask?.PushIndex((int)SkillData_FieldIndex.UseValueSecond);
+                    try
+                    {
+                        item.UseValueSecond = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1677,30 +1829,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Xml Write Mixins
-    public static class LocalVariableXmlTranslationMixIn
+    public static class SkillDataXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this ILocalVariableGetter item,
+            this ISkillDataGetter item,
             XElement node,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? translationMask = null,
+            out SkillData.ErrorMask errorMask,
+            SkillData.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((LocalVariableXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((SkillDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LocalVariable.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SkillData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this ILocalVariableGetter item,
+            this ISkillDataGetter item,
             string path,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? translationMask = null,
+            out SkillData.ErrorMask errorMask,
+            SkillData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1714,7 +1866,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this ILocalVariableGetter item,
+            this ISkillDataGetter item,
             string path,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1731,10 +1883,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this ILocalVariableGetter item,
+            this ISkillDataGetter item,
             Stream stream,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? translationMask = null,
+            out SkillData.ErrorMask errorMask,
+            SkillData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1748,7 +1900,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this ILocalVariableGetter item,
+            this ISkillDataGetter item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1765,13 +1917,13 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this ILocalVariableGetter item,
+            this ISkillDataGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
             string? name = null)
         {
-            ((LocalVariableXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((SkillDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1780,12 +1932,12 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this ILocalVariableGetter item,
+            this ISkillDataGetter item,
             XElement node,
             string? name = null,
-            LocalVariable.TranslationMask? translationMask = null)
+            SkillData.TranslationMask? translationMask = null)
         {
-            ((LocalVariableXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((SkillDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1794,12 +1946,12 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this ILocalVariableGetter item,
+            this ISkillDataGetter item,
             string path,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((LocalVariableXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((SkillDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1809,12 +1961,12 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this ILocalVariableGetter item,
+            this ISkillDataGetter item,
             Stream stream,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((LocalVariableXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((SkillDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1833,38 +1985,48 @@ namespace Mutagen.Bethesda.Oblivion
 #region Binary Translation
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class LocalVariableBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class SkillDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LocalVariableBinaryWriteTranslation Instance = new LocalVariableBinaryWriteTranslation();
+        public readonly static SkillDataBinaryWriteTranslation Instance = new SkillDataBinaryWriteTranslation();
 
-        public static void WriteRecordTypes(
-            ILocalVariableGetter item,
-            MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+        public static void WriteEmbedded(
+            ISkillDataGetter item,
+            MutagenWriter writer)
         {
-            if (item.Data.TryGet(out var DataItem))
-            {
-                ((LocalVariableDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
-                    item: DataItem,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
-            }
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
+                writer,
+                item.Action,
+                length: 4);
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
+                writer,
+                item.Attribute,
+                length: 4);
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Specialization>.Instance.Write(
+                writer,
+                item.Specialization,
+                length: 4);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(LocalVariable_Registration.SCVR_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
+                item: item.UseValueFirst);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.UseValueSecond);
         }
 
         public void Write(
             MutagenWriter writer,
-            ILocalVariableGetter item,
+            ISkillDataGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            WriteRecordTypes(
-                item: item,
+            using (HeaderExport.ExportHeader(
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                record: recordTypeConverter.ConvertToCustom(SkillData_Registration.DATA_HEADER),
+                type: ObjectType.Subrecord))
+            {
+                WriteEmbedded(
+                    item: item,
+                    writer: writer);
+            }
         }
 
         public void Write(
@@ -1873,16 +2035,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (ILocalVariableGetter)item,
+                item: (ISkillDataGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class LocalVariableBinaryCreateTranslation
+    public partial class SkillDataBinaryCreateTranslation
     {
-        public readonly static LocalVariableBinaryCreateTranslation Instance = new LocalVariableBinaryCreateTranslation();
+        public readonly static SkillDataBinaryCreateTranslation Instance = new SkillDataBinaryCreateTranslation();
 
     }
 
@@ -1890,13 +2052,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Binary Write Mixins
-    public static class LocalVariableBinaryTranslationMixIn
+    public static class SkillDataBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this ILocalVariableGetter item,
+            this ISkillDataGetter item,
             MutagenWriter writer)
         {
-            ((LocalVariableBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((SkillDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 recordTypeConverter: null);
@@ -1909,33 +2071,33 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class LocalVariableBinaryOverlay :
+    public partial class SkillDataBinaryOverlay :
         BinaryOverlay,
-        ILocalVariableGetter
+        ISkillDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LocalVariable_Registration.Instance;
-        public static LocalVariable_Registration Registration => LocalVariable_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => SkillData_Registration.Instance;
+        public static SkillData_Registration Registration => SkillData_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => LocalVariableCommon.Instance;
+        protected object CommonInstance() => SkillDataCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => LocalVariableSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => SkillDataSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ILocalVariableGetter.CommonInstance() => this.CommonInstance();
+        object ISkillDataGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? ILocalVariableGetter.CommonSetterInstance() => null;
+        object? ISkillDataGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object ILocalVariableGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object ISkillDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILocalVariableGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkillDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => LocalVariableXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => SkillDataXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -1944,7 +2106,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((LocalVariableXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((SkillDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -1952,35 +2114,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => LocalVariableBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => SkillDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((LocalVariableBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((SkillDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
-        #region Data
-        private RangeInt32? _DataLocation;
-        private bool _Data_IsSet => _DataLocation.HasValue;
-        public ILocalVariableDataGetter? Data => _Data_IsSet ? LocalVariableDataBinaryOverlay.LocalVariableDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
-        public bool Data_IsSet => _DataLocation.HasValue;
-        #endregion
-        #region Name
-        private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
-        #endregion
+        public ActorValue Action => (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
+        public ActorValue Attribute => (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
+        public Specialization Specialization => (Specialization)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(8, 4));
+        public Single UseValueFirst => SpanExt.GetFloat(_data.Slice(12, 4));
+        public Single UseValueSecond => SpanExt.GetFloat(_data.Slice(16, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected LocalVariableBinaryOverlay(
+        protected SkillDataBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1989,55 +2146,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
 
-        public static LocalVariableBinaryOverlay LocalVariableFactory(
+        public static SkillDataBinaryOverlay SkillDataFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new LocalVariableBinaryOverlay(
-                bytes: stream.RemainingMemory,
+            var ret = new SkillDataBinaryOverlay(
+                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.Meta),
                 package: package);
-            int offset = stream.Position;
+            var finalPos = checked((int)(stream.Position + package.Meta.Subrecord(stream.RemainingSpan).TotalLength));
+            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
+            stream.Position += 0x14 + package.Meta.SubConstants.HeaderLength;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,
-                offset: 0);
-            ret.FillTypelessSubrecordTypes(
-                stream: stream,
-                finalPos: stream.Length,
-                offset: offset,
-                recordTypeConverter: recordTypeConverter,
-                fill: ret.FillRecordType);
+                offset: offset);
             return ret;
         }
 
-        public TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
-            int finalPos,
-            int offset,
-            RecordType type,
-            int? lastParsed,
-            RecordTypeConverter? recordTypeConverter)
-        {
-            type = recordTypeConverter.ConvertToStandard(type);
-            switch (type.TypeInt)
-            {
-                case 0x44534C53: // SLSD
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocalVariable_FieldIndex.Data) return TryGet<int?>.Failure;
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)LocalVariable_FieldIndex.Data);
-                }
-                case 0x52564353: // SCVR
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocalVariable_FieldIndex.Name) return TryGet<int?>.Failure;
-                    _NameLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LocalVariable_FieldIndex.Name);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
     }
 
 }

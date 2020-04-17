@@ -127,140 +127,16 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IOutfitGetter> IFactionGetter.JailOutfit => this.JailOutfit;
         #endregion
-        #region ArrestCrimeValue
+        #region CrimeValues
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Boolean _ArrestCrimeValue;
-        public Boolean ArrestCrimeValue
+        private CrimeValues? _CrimeValues;
+        public CrimeValues? CrimeValues
         {
-            get => this._ArrestCrimeValue;
-            set
-            {
-                this.CRVADataTypeState |= CRVADataType.Has;
-                this._ArrestCrimeValue = value;
-            }
+            get => _CrimeValues;
+            set => _CrimeValues = value;
         }
-        #endregion
-        #region AttackOnSightCrimeValue
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Boolean _AttackOnSightCrimeValue;
-        public Boolean AttackOnSightCrimeValue
-        {
-            get => this._AttackOnSightCrimeValue;
-            set
-            {
-                this.CRVADataTypeState |= CRVADataType.Has;
-                this._AttackOnSightCrimeValue = value;
-            }
-        }
-        #endregion
-        #region MurderCrimeValue
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt16 _MurderCrimeValue;
-        public UInt16 MurderCrimeValue
-        {
-            get => this._MurderCrimeValue;
-            set
-            {
-                this.CRVADataTypeState |= CRVADataType.Has;
-                this._MurderCrimeValue = value;
-            }
-        }
-        #endregion
-        #region AssaultCrimeValue
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt16 _AssaultCrimeValue;
-        public UInt16 AssaultCrimeValue
-        {
-            get => this._AssaultCrimeValue;
-            set
-            {
-                this.CRVADataTypeState |= CRVADataType.Has;
-                this._AssaultCrimeValue = value;
-            }
-        }
-        #endregion
-        #region TrespassCrimeValue
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt16 _TrespassCrimeValue;
-        public UInt16 TrespassCrimeValue
-        {
-            get => this._TrespassCrimeValue;
-            set
-            {
-                this.CRVADataTypeState |= CRVADataType.Has;
-                this._TrespassCrimeValue = value;
-            }
-        }
-        #endregion
-        #region PickpocketCrimeValue
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt16 _PickpocketCrimeValue;
-        public UInt16 PickpocketCrimeValue
-        {
-            get => this._PickpocketCrimeValue;
-            set
-            {
-                this.CRVADataTypeState |= CRVADataType.Has;
-                this._PickpocketCrimeValue = value;
-            }
-        }
-        #endregion
-        #region UnknownCrimeValue
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt16 _UnknownCrimeValue;
-        public UInt16 UnknownCrimeValue
-        {
-            get => this._UnknownCrimeValue;
-            set
-            {
-                this.CRVADataTypeState |= CRVADataType.Has;
-                this._UnknownCrimeValue = value;
-            }
-        }
-        #endregion
-        #region StealMultCrimeValue
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _StealMultCrimeValue;
-        public Single StealMultCrimeValue
-        {
-            get => this._StealMultCrimeValue;
-            set
-            {
-                this.CRVADataTypeState |= CRVADataType.Has;
-                this.CRVADataTypeState &= ~CRVADataType.Break0;
-                this._StealMultCrimeValue = value;
-            }
-        }
-        #endregion
-        #region EscapeCrimeValue
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt16 _EscapeCrimeValue;
-        public UInt16 EscapeCrimeValue
-        {
-            get => this._EscapeCrimeValue;
-            set
-            {
-                this.CRVADataTypeState |= CRVADataType.Has;
-                this.CRVADataTypeState &= ~CRVADataType.Break0;
-                this.CRVADataTypeState &= ~CRVADataType.Break1;
-                this._EscapeCrimeValue = value;
-            }
-        }
-        #endregion
-        #region WerewolfCrimeValue
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt16 _WerewolfCrimeValue;
-        public UInt16 WerewolfCrimeValue
-        {
-            get => this._WerewolfCrimeValue;
-            set
-            {
-                this.CRVADataTypeState |= CRVADataType.Has;
-                this.CRVADataTypeState &= ~CRVADataType.Break0;
-                this.CRVADataTypeState &= ~CRVADataType.Break1;
-                this._WerewolfCrimeValue = value;
-            }
-        }
+        ICrimeValuesGetter? IFactionGetter.CrimeValues => this.CrimeValues;
         #endregion
         #region Ranks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -325,9 +201,6 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IConditionGetter>? IFactionGetter.Conditions => _Conditions;
         #endregion
 
-        #endregion
-        #region CRVADataTypeState
-        public Faction.CRVADataType CRVADataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -508,23 +381,13 @@ namespace Mutagen.Bethesda.Skyrim
                 this.PlayerBelongingsChest = initialValue;
                 this.CrimeGroup = initialValue;
                 this.JailOutfit = initialValue;
-                this.ArrestCrimeValue = initialValue;
-                this.AttackOnSightCrimeValue = initialValue;
-                this.MurderCrimeValue = initialValue;
-                this.AssaultCrimeValue = initialValue;
-                this.TrespassCrimeValue = initialValue;
-                this.PickpocketCrimeValue = initialValue;
-                this.UnknownCrimeValue = initialValue;
-                this.StealMultCrimeValue = initialValue;
-                this.EscapeCrimeValue = initialValue;
-                this.WerewolfCrimeValue = initialValue;
+                this.CrimeValues = new MaskItem<TItem, CrimeValues.Mask<TItem>?>(initialValue, new CrimeValues.Mask<TItem>(initialValue));
                 this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>());
                 this.VendorList = initialValue;
                 this.VendorChest = initialValue;
                 this.VendorValues = new MaskItem<TItem, VendorValues.Mask<TItem>?>(initialValue, new VendorValues.Mask<TItem>(initialValue));
                 this.VendorLocation = new MaskItem<TItem, VendorLocation.Mask<TItem>?>(initialValue, new VendorLocation.Mask<TItem>(initialValue));
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.CRVADataTypeState = initialValue;
             }
 
             public Mask(
@@ -544,23 +407,13 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem PlayerBelongingsChest,
                 TItem CrimeGroup,
                 TItem JailOutfit,
-                TItem ArrestCrimeValue,
-                TItem AttackOnSightCrimeValue,
-                TItem MurderCrimeValue,
-                TItem AssaultCrimeValue,
-                TItem TrespassCrimeValue,
-                TItem PickpocketCrimeValue,
-                TItem UnknownCrimeValue,
-                TItem StealMultCrimeValue,
-                TItem EscapeCrimeValue,
-                TItem WerewolfCrimeValue,
+                TItem CrimeValues,
                 TItem Ranks,
                 TItem VendorList,
                 TItem VendorChest,
                 TItem VendorValues,
                 TItem VendorLocation,
-                TItem Conditions,
-                TItem CRVADataTypeState)
+                TItem Conditions)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -579,23 +432,13 @@ namespace Mutagen.Bethesda.Skyrim
                 this.PlayerBelongingsChest = PlayerBelongingsChest;
                 this.CrimeGroup = CrimeGroup;
                 this.JailOutfit = JailOutfit;
-                this.ArrestCrimeValue = ArrestCrimeValue;
-                this.AttackOnSightCrimeValue = AttackOnSightCrimeValue;
-                this.MurderCrimeValue = MurderCrimeValue;
-                this.AssaultCrimeValue = AssaultCrimeValue;
-                this.TrespassCrimeValue = TrespassCrimeValue;
-                this.PickpocketCrimeValue = PickpocketCrimeValue;
-                this.UnknownCrimeValue = UnknownCrimeValue;
-                this.StealMultCrimeValue = StealMultCrimeValue;
-                this.EscapeCrimeValue = EscapeCrimeValue;
-                this.WerewolfCrimeValue = WerewolfCrimeValue;
+                this.CrimeValues = new MaskItem<TItem, CrimeValues.Mask<TItem>?>(CrimeValues, new CrimeValues.Mask<TItem>(CrimeValues));
                 this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>(Ranks, Enumerable.Empty<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>());
                 this.VendorList = VendorList;
                 this.VendorChest = VendorChest;
                 this.VendorValues = new MaskItem<TItem, VendorValues.Mask<TItem>?>(VendorValues, new VendorValues.Mask<TItem>(VendorValues));
                 this.VendorLocation = new MaskItem<TItem, VendorLocation.Mask<TItem>?>(VendorLocation, new VendorLocation.Mask<TItem>(VendorLocation));
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.CRVADataTypeState = CRVADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -616,23 +459,13 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem PlayerBelongingsChest;
             public TItem CrimeGroup;
             public TItem JailOutfit;
-            public TItem ArrestCrimeValue;
-            public TItem AttackOnSightCrimeValue;
-            public TItem MurderCrimeValue;
-            public TItem AssaultCrimeValue;
-            public TItem TrespassCrimeValue;
-            public TItem PickpocketCrimeValue;
-            public TItem UnknownCrimeValue;
-            public TItem StealMultCrimeValue;
-            public TItem EscapeCrimeValue;
-            public TItem WerewolfCrimeValue;
+            public MaskItem<TItem, CrimeValues.Mask<TItem>?>? CrimeValues { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>? Ranks;
             public TItem VendorList;
             public TItem VendorChest;
             public MaskItem<TItem, VendorValues.Mask<TItem>?>? VendorValues { get; set; }
             public MaskItem<TItem, VendorLocation.Mask<TItem>?>? VendorLocation { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
-            public TItem CRVADataTypeState;
             #endregion
 
             #region Equals
@@ -655,23 +488,13 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.PlayerBelongingsChest, rhs.PlayerBelongingsChest)) return false;
                 if (!object.Equals(this.CrimeGroup, rhs.CrimeGroup)) return false;
                 if (!object.Equals(this.JailOutfit, rhs.JailOutfit)) return false;
-                if (!object.Equals(this.ArrestCrimeValue, rhs.ArrestCrimeValue)) return false;
-                if (!object.Equals(this.AttackOnSightCrimeValue, rhs.AttackOnSightCrimeValue)) return false;
-                if (!object.Equals(this.MurderCrimeValue, rhs.MurderCrimeValue)) return false;
-                if (!object.Equals(this.AssaultCrimeValue, rhs.AssaultCrimeValue)) return false;
-                if (!object.Equals(this.TrespassCrimeValue, rhs.TrespassCrimeValue)) return false;
-                if (!object.Equals(this.PickpocketCrimeValue, rhs.PickpocketCrimeValue)) return false;
-                if (!object.Equals(this.UnknownCrimeValue, rhs.UnknownCrimeValue)) return false;
-                if (!object.Equals(this.StealMultCrimeValue, rhs.StealMultCrimeValue)) return false;
-                if (!object.Equals(this.EscapeCrimeValue, rhs.EscapeCrimeValue)) return false;
-                if (!object.Equals(this.WerewolfCrimeValue, rhs.WerewolfCrimeValue)) return false;
+                if (!object.Equals(this.CrimeValues, rhs.CrimeValues)) return false;
                 if (!object.Equals(this.Ranks, rhs.Ranks)) return false;
                 if (!object.Equals(this.VendorList, rhs.VendorList)) return false;
                 if (!object.Equals(this.VendorChest, rhs.VendorChest)) return false;
                 if (!object.Equals(this.VendorValues, rhs.VendorValues)) return false;
                 if (!object.Equals(this.VendorLocation, rhs.VendorLocation)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
-                if (!object.Equals(this.CRVADataTypeState, rhs.CRVADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -686,23 +509,13 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.PlayerBelongingsChest);
                 hash.Add(this.CrimeGroup);
                 hash.Add(this.JailOutfit);
-                hash.Add(this.ArrestCrimeValue);
-                hash.Add(this.AttackOnSightCrimeValue);
-                hash.Add(this.MurderCrimeValue);
-                hash.Add(this.AssaultCrimeValue);
-                hash.Add(this.TrespassCrimeValue);
-                hash.Add(this.PickpocketCrimeValue);
-                hash.Add(this.UnknownCrimeValue);
-                hash.Add(this.StealMultCrimeValue);
-                hash.Add(this.EscapeCrimeValue);
-                hash.Add(this.WerewolfCrimeValue);
+                hash.Add(this.CrimeValues);
                 hash.Add(this.Ranks);
                 hash.Add(this.VendorList);
                 hash.Add(this.VendorChest);
                 hash.Add(this.VendorValues);
                 hash.Add(this.VendorLocation);
                 hash.Add(this.Conditions);
-                hash.Add(this.CRVADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -733,16 +546,11 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.PlayerBelongingsChest)) return false;
                 if (!eval(this.CrimeGroup)) return false;
                 if (!eval(this.JailOutfit)) return false;
-                if (!eval(this.ArrestCrimeValue)) return false;
-                if (!eval(this.AttackOnSightCrimeValue)) return false;
-                if (!eval(this.MurderCrimeValue)) return false;
-                if (!eval(this.AssaultCrimeValue)) return false;
-                if (!eval(this.TrespassCrimeValue)) return false;
-                if (!eval(this.PickpocketCrimeValue)) return false;
-                if (!eval(this.UnknownCrimeValue)) return false;
-                if (!eval(this.StealMultCrimeValue)) return false;
-                if (!eval(this.EscapeCrimeValue)) return false;
-                if (!eval(this.WerewolfCrimeValue)) return false;
+                if (CrimeValues != null)
+                {
+                    if (!eval(this.CrimeValues.Overall)) return false;
+                    if (this.CrimeValues.Specific != null && !this.CrimeValues.Specific.All(eval)) return false;
+                }
                 if (this.Ranks != null)
                 {
                     if (!eval(this.Ranks.Overall)) return false;
@@ -779,7 +587,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (!eval(this.CRVADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -808,16 +615,11 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.PlayerBelongingsChest)) return true;
                 if (eval(this.CrimeGroup)) return true;
                 if (eval(this.JailOutfit)) return true;
-                if (eval(this.ArrestCrimeValue)) return true;
-                if (eval(this.AttackOnSightCrimeValue)) return true;
-                if (eval(this.MurderCrimeValue)) return true;
-                if (eval(this.AssaultCrimeValue)) return true;
-                if (eval(this.TrespassCrimeValue)) return true;
-                if (eval(this.PickpocketCrimeValue)) return true;
-                if (eval(this.UnknownCrimeValue)) return true;
-                if (eval(this.StealMultCrimeValue)) return true;
-                if (eval(this.EscapeCrimeValue)) return true;
-                if (eval(this.WerewolfCrimeValue)) return true;
+                if (CrimeValues != null)
+                {
+                    if (eval(this.CrimeValues.Overall)) return true;
+                    if (this.CrimeValues.Specific != null && this.CrimeValues.Specific.Any(eval)) return true;
+                }
                 if (this.Ranks != null)
                 {
                     if (eval(this.Ranks.Overall)) return true;
@@ -854,7 +656,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (eval(this.CRVADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -893,16 +694,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.PlayerBelongingsChest = eval(this.PlayerBelongingsChest);
                 obj.CrimeGroup = eval(this.CrimeGroup);
                 obj.JailOutfit = eval(this.JailOutfit);
-                obj.ArrestCrimeValue = eval(this.ArrestCrimeValue);
-                obj.AttackOnSightCrimeValue = eval(this.AttackOnSightCrimeValue);
-                obj.MurderCrimeValue = eval(this.MurderCrimeValue);
-                obj.AssaultCrimeValue = eval(this.AssaultCrimeValue);
-                obj.TrespassCrimeValue = eval(this.TrespassCrimeValue);
-                obj.PickpocketCrimeValue = eval(this.PickpocketCrimeValue);
-                obj.UnknownCrimeValue = eval(this.UnknownCrimeValue);
-                obj.StealMultCrimeValue = eval(this.StealMultCrimeValue);
-                obj.EscapeCrimeValue = eval(this.EscapeCrimeValue);
-                obj.WerewolfCrimeValue = eval(this.WerewolfCrimeValue);
+                obj.CrimeValues = this.CrimeValues == null ? null : new MaskItem<R, CrimeValues.Mask<R>?>(eval(this.CrimeValues.Overall), this.CrimeValues.Specific?.Translate(eval));
                 if (Ranks != null)
                 {
                     obj.Ranks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Rank.Mask<R>?>>?>(eval(this.Ranks.Overall), Enumerable.Empty<MaskItemIndexed<R, Rank.Mask<R>?>>());
@@ -937,7 +729,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                obj.CRVADataTypeState = eval(this.CRVADataTypeState);
             }
             #endregion
 
@@ -1015,45 +806,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(JailOutfit, "JailOutfit");
                     }
-                    if (printMask?.ArrestCrimeValue ?? true)
+                    if (printMask?.CrimeValues?.Overall ?? true)
                     {
-                        fg.AppendItem(ArrestCrimeValue, "ArrestCrimeValue");
-                    }
-                    if (printMask?.AttackOnSightCrimeValue ?? true)
-                    {
-                        fg.AppendItem(AttackOnSightCrimeValue, "AttackOnSightCrimeValue");
-                    }
-                    if (printMask?.MurderCrimeValue ?? true)
-                    {
-                        fg.AppendItem(MurderCrimeValue, "MurderCrimeValue");
-                    }
-                    if (printMask?.AssaultCrimeValue ?? true)
-                    {
-                        fg.AppendItem(AssaultCrimeValue, "AssaultCrimeValue");
-                    }
-                    if (printMask?.TrespassCrimeValue ?? true)
-                    {
-                        fg.AppendItem(TrespassCrimeValue, "TrespassCrimeValue");
-                    }
-                    if (printMask?.PickpocketCrimeValue ?? true)
-                    {
-                        fg.AppendItem(PickpocketCrimeValue, "PickpocketCrimeValue");
-                    }
-                    if (printMask?.UnknownCrimeValue ?? true)
-                    {
-                        fg.AppendItem(UnknownCrimeValue, "UnknownCrimeValue");
-                    }
-                    if (printMask?.StealMultCrimeValue ?? true)
-                    {
-                        fg.AppendItem(StealMultCrimeValue, "StealMultCrimeValue");
-                    }
-                    if (printMask?.EscapeCrimeValue ?? true)
-                    {
-                        fg.AppendItem(EscapeCrimeValue, "EscapeCrimeValue");
-                    }
-                    if (printMask?.WerewolfCrimeValue ?? true)
-                    {
-                        fg.AppendItem(WerewolfCrimeValue, "WerewolfCrimeValue");
+                        CrimeValues?.ToString(fg);
                     }
                     if ((printMask?.Ranks?.Overall ?? true)
                         && Ranks.TryGet(out var RanksItem))
@@ -1117,10 +872,6 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.CRVADataTypeState ?? true)
-                    {
-                        fg.AppendItem(CRVADataTypeState, "CRVADataTypeState");
-                    }
                 }
                 fg.AppendLine("]");
             }
@@ -1142,23 +893,13 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? PlayerBelongingsChest;
             public Exception? CrimeGroup;
             public Exception? JailOutfit;
-            public Exception? ArrestCrimeValue;
-            public Exception? AttackOnSightCrimeValue;
-            public Exception? MurderCrimeValue;
-            public Exception? AssaultCrimeValue;
-            public Exception? TrespassCrimeValue;
-            public Exception? PickpocketCrimeValue;
-            public Exception? UnknownCrimeValue;
-            public Exception? StealMultCrimeValue;
-            public Exception? EscapeCrimeValue;
-            public Exception? WerewolfCrimeValue;
+            public MaskItem<Exception?, CrimeValues.ErrorMask?>? CrimeValues;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>? Ranks;
             public Exception? VendorList;
             public Exception? VendorChest;
             public MaskItem<Exception?, VendorValues.ErrorMask?>? VendorValues;
             public MaskItem<Exception?, VendorLocation.ErrorMask?>? VendorLocation;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
-            public Exception? CRVADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -1185,26 +926,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return CrimeGroup;
                     case Faction_FieldIndex.JailOutfit:
                         return JailOutfit;
-                    case Faction_FieldIndex.ArrestCrimeValue:
-                        return ArrestCrimeValue;
-                    case Faction_FieldIndex.AttackOnSightCrimeValue:
-                        return AttackOnSightCrimeValue;
-                    case Faction_FieldIndex.MurderCrimeValue:
-                        return MurderCrimeValue;
-                    case Faction_FieldIndex.AssaultCrimeValue:
-                        return AssaultCrimeValue;
-                    case Faction_FieldIndex.TrespassCrimeValue:
-                        return TrespassCrimeValue;
-                    case Faction_FieldIndex.PickpocketCrimeValue:
-                        return PickpocketCrimeValue;
-                    case Faction_FieldIndex.UnknownCrimeValue:
-                        return UnknownCrimeValue;
-                    case Faction_FieldIndex.StealMultCrimeValue:
-                        return StealMultCrimeValue;
-                    case Faction_FieldIndex.EscapeCrimeValue:
-                        return EscapeCrimeValue;
-                    case Faction_FieldIndex.WerewolfCrimeValue:
-                        return WerewolfCrimeValue;
+                    case Faction_FieldIndex.CrimeValues:
+                        return CrimeValues;
                     case Faction_FieldIndex.Ranks:
                         return Ranks;
                     case Faction_FieldIndex.VendorList:
@@ -1217,8 +940,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return VendorLocation;
                     case Faction_FieldIndex.Conditions:
                         return Conditions;
-                    case Faction_FieldIndex.CRVADataTypeState:
-                        return CRVADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1256,35 +977,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Faction_FieldIndex.JailOutfit:
                         this.JailOutfit = ex;
                         break;
-                    case Faction_FieldIndex.ArrestCrimeValue:
-                        this.ArrestCrimeValue = ex;
-                        break;
-                    case Faction_FieldIndex.AttackOnSightCrimeValue:
-                        this.AttackOnSightCrimeValue = ex;
-                        break;
-                    case Faction_FieldIndex.MurderCrimeValue:
-                        this.MurderCrimeValue = ex;
-                        break;
-                    case Faction_FieldIndex.AssaultCrimeValue:
-                        this.AssaultCrimeValue = ex;
-                        break;
-                    case Faction_FieldIndex.TrespassCrimeValue:
-                        this.TrespassCrimeValue = ex;
-                        break;
-                    case Faction_FieldIndex.PickpocketCrimeValue:
-                        this.PickpocketCrimeValue = ex;
-                        break;
-                    case Faction_FieldIndex.UnknownCrimeValue:
-                        this.UnknownCrimeValue = ex;
-                        break;
-                    case Faction_FieldIndex.StealMultCrimeValue:
-                        this.StealMultCrimeValue = ex;
-                        break;
-                    case Faction_FieldIndex.EscapeCrimeValue:
-                        this.EscapeCrimeValue = ex;
-                        break;
-                    case Faction_FieldIndex.WerewolfCrimeValue:
-                        this.WerewolfCrimeValue = ex;
+                    case Faction_FieldIndex.CrimeValues:
+                        this.CrimeValues = new MaskItem<Exception?, CrimeValues.ErrorMask?>(ex, null);
                         break;
                     case Faction_FieldIndex.Ranks:
                         this.Ranks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>(ex, null);
@@ -1303,9 +997,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Faction_FieldIndex.Conditions:
                         this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
-                        break;
-                    case Faction_FieldIndex.CRVADataTypeState:
-                        this.CRVADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1345,35 +1036,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Faction_FieldIndex.JailOutfit:
                         this.JailOutfit = (Exception?)obj;
                         break;
-                    case Faction_FieldIndex.ArrestCrimeValue:
-                        this.ArrestCrimeValue = (Exception?)obj;
-                        break;
-                    case Faction_FieldIndex.AttackOnSightCrimeValue:
-                        this.AttackOnSightCrimeValue = (Exception?)obj;
-                        break;
-                    case Faction_FieldIndex.MurderCrimeValue:
-                        this.MurderCrimeValue = (Exception?)obj;
-                        break;
-                    case Faction_FieldIndex.AssaultCrimeValue:
-                        this.AssaultCrimeValue = (Exception?)obj;
-                        break;
-                    case Faction_FieldIndex.TrespassCrimeValue:
-                        this.TrespassCrimeValue = (Exception?)obj;
-                        break;
-                    case Faction_FieldIndex.PickpocketCrimeValue:
-                        this.PickpocketCrimeValue = (Exception?)obj;
-                        break;
-                    case Faction_FieldIndex.UnknownCrimeValue:
-                        this.UnknownCrimeValue = (Exception?)obj;
-                        break;
-                    case Faction_FieldIndex.StealMultCrimeValue:
-                        this.StealMultCrimeValue = (Exception?)obj;
-                        break;
-                    case Faction_FieldIndex.EscapeCrimeValue:
-                        this.EscapeCrimeValue = (Exception?)obj;
-                        break;
-                    case Faction_FieldIndex.WerewolfCrimeValue:
-                        this.WerewolfCrimeValue = (Exception?)obj;
+                    case Faction_FieldIndex.CrimeValues:
+                        this.CrimeValues = (MaskItem<Exception?, CrimeValues.ErrorMask?>?)obj;
                         break;
                     case Faction_FieldIndex.Ranks:
                         this.Ranks = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>)obj;
@@ -1393,9 +1057,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case Faction_FieldIndex.Conditions:
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
                         break;
-                    case Faction_FieldIndex.CRVADataTypeState:
-                        this.CRVADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1414,23 +1075,13 @@ namespace Mutagen.Bethesda.Skyrim
                 if (PlayerBelongingsChest != null) return true;
                 if (CrimeGroup != null) return true;
                 if (JailOutfit != null) return true;
-                if (ArrestCrimeValue != null) return true;
-                if (AttackOnSightCrimeValue != null) return true;
-                if (MurderCrimeValue != null) return true;
-                if (AssaultCrimeValue != null) return true;
-                if (TrespassCrimeValue != null) return true;
-                if (PickpocketCrimeValue != null) return true;
-                if (UnknownCrimeValue != null) return true;
-                if (StealMultCrimeValue != null) return true;
-                if (EscapeCrimeValue != null) return true;
-                if (WerewolfCrimeValue != null) return true;
+                if (CrimeValues != null) return true;
                 if (Ranks != null) return true;
                 if (VendorList != null) return true;
                 if (VendorChest != null) return true;
                 if (VendorValues != null) return true;
                 if (VendorLocation != null) return true;
                 if (Conditions != null) return true;
-                if (CRVADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1496,16 +1147,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(PlayerBelongingsChest, "PlayerBelongingsChest");
                 fg.AppendItem(CrimeGroup, "CrimeGroup");
                 fg.AppendItem(JailOutfit, "JailOutfit");
-                fg.AppendItem(ArrestCrimeValue, "ArrestCrimeValue");
-                fg.AppendItem(AttackOnSightCrimeValue, "AttackOnSightCrimeValue");
-                fg.AppendItem(MurderCrimeValue, "MurderCrimeValue");
-                fg.AppendItem(AssaultCrimeValue, "AssaultCrimeValue");
-                fg.AppendItem(TrespassCrimeValue, "TrespassCrimeValue");
-                fg.AppendItem(PickpocketCrimeValue, "PickpocketCrimeValue");
-                fg.AppendItem(UnknownCrimeValue, "UnknownCrimeValue");
-                fg.AppendItem(StealMultCrimeValue, "StealMultCrimeValue");
-                fg.AppendItem(EscapeCrimeValue, "EscapeCrimeValue");
-                fg.AppendItem(WerewolfCrimeValue, "WerewolfCrimeValue");
+                CrimeValues?.ToString(fg);
                 if (Ranks.TryGet(out var RanksItem))
                 {
                     fg.AppendLine("Ranks =>");
@@ -1554,7 +1196,6 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                fg.AppendItem(CRVADataTypeState, "CRVADataTypeState");
             }
             #endregion
 
@@ -1572,23 +1213,13 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.PlayerBelongingsChest = this.PlayerBelongingsChest.Combine(rhs.PlayerBelongingsChest);
                 ret.CrimeGroup = this.CrimeGroup.Combine(rhs.CrimeGroup);
                 ret.JailOutfit = this.JailOutfit.Combine(rhs.JailOutfit);
-                ret.ArrestCrimeValue = this.ArrestCrimeValue.Combine(rhs.ArrestCrimeValue);
-                ret.AttackOnSightCrimeValue = this.AttackOnSightCrimeValue.Combine(rhs.AttackOnSightCrimeValue);
-                ret.MurderCrimeValue = this.MurderCrimeValue.Combine(rhs.MurderCrimeValue);
-                ret.AssaultCrimeValue = this.AssaultCrimeValue.Combine(rhs.AssaultCrimeValue);
-                ret.TrespassCrimeValue = this.TrespassCrimeValue.Combine(rhs.TrespassCrimeValue);
-                ret.PickpocketCrimeValue = this.PickpocketCrimeValue.Combine(rhs.PickpocketCrimeValue);
-                ret.UnknownCrimeValue = this.UnknownCrimeValue.Combine(rhs.UnknownCrimeValue);
-                ret.StealMultCrimeValue = this.StealMultCrimeValue.Combine(rhs.StealMultCrimeValue);
-                ret.EscapeCrimeValue = this.EscapeCrimeValue.Combine(rhs.EscapeCrimeValue);
-                ret.WerewolfCrimeValue = this.WerewolfCrimeValue.Combine(rhs.WerewolfCrimeValue);
+                ret.CrimeValues = this.CrimeValues.Combine(rhs.CrimeValues, (l, r) => l.Combine(r));
                 ret.Ranks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>(ExceptionExt.Combine(this.Ranks?.Overall, rhs.Ranks?.Overall), ExceptionExt.Combine(this.Ranks?.Specific, rhs.Ranks?.Specific));
                 ret.VendorList = this.VendorList.Combine(rhs.VendorList);
                 ret.VendorChest = this.VendorChest.Combine(rhs.VendorChest);
                 ret.VendorValues = this.VendorValues.Combine(rhs.VendorValues, (l, r) => l.Combine(r));
                 ret.VendorLocation = this.VendorLocation.Combine(rhs.VendorLocation, (l, r) => l.Combine(r));
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
-                ret.CRVADataTypeState = this.CRVADataTypeState.Combine(rhs.CRVADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1620,23 +1251,13 @@ namespace Mutagen.Bethesda.Skyrim
             public bool PlayerBelongingsChest;
             public bool CrimeGroup;
             public bool JailOutfit;
-            public bool ArrestCrimeValue;
-            public bool AttackOnSightCrimeValue;
-            public bool MurderCrimeValue;
-            public bool AssaultCrimeValue;
-            public bool TrespassCrimeValue;
-            public bool PickpocketCrimeValue;
-            public bool UnknownCrimeValue;
-            public bool StealMultCrimeValue;
-            public bool EscapeCrimeValue;
-            public bool WerewolfCrimeValue;
+            public MaskItem<bool, CrimeValues.TranslationMask?> CrimeValues;
             public MaskItem<bool, Rank.TranslationMask?> Ranks;
             public bool VendorList;
             public bool VendorChest;
             public MaskItem<bool, VendorValues.TranslationMask?> VendorValues;
             public MaskItem<bool, VendorLocation.TranslationMask?> VendorLocation;
             public MaskItem<bool, Condition.TranslationMask?> Conditions;
-            public bool CRVADataTypeState;
             #endregion
 
             #region Ctors
@@ -1652,23 +1273,13 @@ namespace Mutagen.Bethesda.Skyrim
                 this.PlayerBelongingsChest = defaultOn;
                 this.CrimeGroup = defaultOn;
                 this.JailOutfit = defaultOn;
-                this.ArrestCrimeValue = defaultOn;
-                this.AttackOnSightCrimeValue = defaultOn;
-                this.MurderCrimeValue = defaultOn;
-                this.AssaultCrimeValue = defaultOn;
-                this.TrespassCrimeValue = defaultOn;
-                this.PickpocketCrimeValue = defaultOn;
-                this.UnknownCrimeValue = defaultOn;
-                this.StealMultCrimeValue = defaultOn;
-                this.EscapeCrimeValue = defaultOn;
-                this.WerewolfCrimeValue = defaultOn;
+                this.CrimeValues = new MaskItem<bool, CrimeValues.TranslationMask?>(defaultOn, null);
                 this.Ranks = new MaskItem<bool, Rank.TranslationMask?>(defaultOn, null);
                 this.VendorList = defaultOn;
                 this.VendorChest = defaultOn;
                 this.VendorValues = new MaskItem<bool, VendorValues.TranslationMask?>(defaultOn, null);
                 this.VendorLocation = new MaskItem<bool, VendorLocation.TranslationMask?>(defaultOn, null);
                 this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
-                this.CRVADataTypeState = defaultOn;
             }
 
             #endregion
@@ -1685,36 +1296,19 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((PlayerBelongingsChest, null));
                 ret.Add((CrimeGroup, null));
                 ret.Add((JailOutfit, null));
-                ret.Add((ArrestCrimeValue, null));
-                ret.Add((AttackOnSightCrimeValue, null));
-                ret.Add((MurderCrimeValue, null));
-                ret.Add((AssaultCrimeValue, null));
-                ret.Add((TrespassCrimeValue, null));
-                ret.Add((PickpocketCrimeValue, null));
-                ret.Add((UnknownCrimeValue, null));
-                ret.Add((StealMultCrimeValue, null));
-                ret.Add((EscapeCrimeValue, null));
-                ret.Add((WerewolfCrimeValue, null));
+                ret.Add((CrimeValues?.Overall ?? true, CrimeValues?.Specific?.GetCrystal()));
                 ret.Add((Ranks?.Overall ?? true, Ranks?.Specific?.GetCrystal()));
                 ret.Add((VendorList, null));
                 ret.Add((VendorChest, null));
                 ret.Add((VendorValues?.Overall ?? true, VendorValues?.Specific?.GetCrystal()));
                 ret.Add((VendorLocation?.Overall ?? true, VendorLocation?.Specific?.GetCrystal()));
                 ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
-                ret.Add((CRVADataTypeState, null));
             }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Faction_Registration.TriggeringRecordType;
-        [Flags]
-        public enum CRVADataType
-        {
-            Has = 1,
-            Break0 = 2,
-            Break1 = 4
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => FactionCommon.Instance.GetLinks(this);
         public Faction(FormKey formKey)
@@ -1805,23 +1399,13 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLinkNullable<PlacedObject> PlayerBelongingsChest { get; }
         new IFormLinkNullable<FormList> CrimeGroup { get; }
         new IFormLinkNullable<Outfit> JailOutfit { get; }
-        new Boolean ArrestCrimeValue { get; set; }
-        new Boolean AttackOnSightCrimeValue { get; set; }
-        new UInt16 MurderCrimeValue { get; set; }
-        new UInt16 AssaultCrimeValue { get; set; }
-        new UInt16 TrespassCrimeValue { get; set; }
-        new UInt16 PickpocketCrimeValue { get; set; }
-        new UInt16 UnknownCrimeValue { get; set; }
-        new Single StealMultCrimeValue { get; set; }
-        new UInt16 EscapeCrimeValue { get; set; }
-        new UInt16 WerewolfCrimeValue { get; set; }
+        new CrimeValues? CrimeValues { get; set; }
         new ExtendedList<Rank> Ranks { get; }
         new IFormLinkNullable<FormList> VendorList { get; }
         new IFormLinkNullable<PlacedObject> VendorChest { get; }
         new VendorValues? VendorValues { get; set; }
         new VendorLocation? VendorLocation { get; set; }
         new ExtendedList<Condition>? Conditions { get; set; }
-        new Faction.CRVADataType CRVADataTypeState { get; set; }
     }
 
     public partial interface IFactionInternal :
@@ -1847,23 +1431,13 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IPlacedObjectGetter> PlayerBelongingsChest { get; }
         IFormLinkNullableGetter<IFormListGetter> CrimeGroup { get; }
         IFormLinkNullableGetter<IOutfitGetter> JailOutfit { get; }
-        Boolean ArrestCrimeValue { get; }
-        Boolean AttackOnSightCrimeValue { get; }
-        UInt16 MurderCrimeValue { get; }
-        UInt16 AssaultCrimeValue { get; }
-        UInt16 TrespassCrimeValue { get; }
-        UInt16 PickpocketCrimeValue { get; }
-        UInt16 UnknownCrimeValue { get; }
-        Single StealMultCrimeValue { get; }
-        UInt16 EscapeCrimeValue { get; }
-        UInt16 WerewolfCrimeValue { get; }
+        ICrimeValuesGetter? CrimeValues { get; }
         IReadOnlyList<IRankGetter> Ranks { get; }
         IFormLinkNullableGetter<IFormListGetter> VendorList { get; }
         IFormLinkNullableGetter<IPlacedObjectGetter> VendorChest { get; }
         IVendorValuesGetter? VendorValues { get; }
         IVendorLocationGetter? VendorLocation { get; }
         IReadOnlyList<IConditionGetter>? Conditions { get; }
-        Faction.CRVADataType CRVADataTypeState { get; }
 
     }
 
@@ -2174,23 +1748,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         PlayerBelongingsChest = 13,
         CrimeGroup = 14,
         JailOutfit = 15,
-        ArrestCrimeValue = 16,
-        AttackOnSightCrimeValue = 17,
-        MurderCrimeValue = 18,
-        AssaultCrimeValue = 19,
-        TrespassCrimeValue = 20,
-        PickpocketCrimeValue = 21,
-        UnknownCrimeValue = 22,
-        StealMultCrimeValue = 23,
-        EscapeCrimeValue = 24,
-        WerewolfCrimeValue = 25,
-        Ranks = 26,
-        VendorList = 27,
-        VendorChest = 28,
-        VendorValues = 29,
-        VendorLocation = 30,
-        Conditions = 31,
-        CRVADataTypeState = 32,
+        CrimeValues = 16,
+        Ranks = 17,
+        VendorList = 18,
+        VendorChest = 19,
+        VendorValues = 20,
+        VendorLocation = 21,
+        Conditions = 22,
     }
     #endregion
 
@@ -2208,9 +1772,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "db110917-5be4-4ea2-b679-55c8ac5b6179";
 
-        public const ushort AdditionalFieldCount = 26;
+        public const ushort AdditionalFieldCount = 16;
 
-        public const ushort FieldCount = 33;
+        public const ushort FieldCount = 23;
 
         public static readonly Type MaskType = typeof(Faction.Mask<>);
 
@@ -2258,26 +1822,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Faction_FieldIndex.CrimeGroup;
                 case "JAILOUTFIT":
                     return (ushort)Faction_FieldIndex.JailOutfit;
-                case "ARRESTCRIMEVALUE":
-                    return (ushort)Faction_FieldIndex.ArrestCrimeValue;
-                case "ATTACKONSIGHTCRIMEVALUE":
-                    return (ushort)Faction_FieldIndex.AttackOnSightCrimeValue;
-                case "MURDERCRIMEVALUE":
-                    return (ushort)Faction_FieldIndex.MurderCrimeValue;
-                case "ASSAULTCRIMEVALUE":
-                    return (ushort)Faction_FieldIndex.AssaultCrimeValue;
-                case "TRESPASSCRIMEVALUE":
-                    return (ushort)Faction_FieldIndex.TrespassCrimeValue;
-                case "PICKPOCKETCRIMEVALUE":
-                    return (ushort)Faction_FieldIndex.PickpocketCrimeValue;
-                case "UNKNOWNCRIMEVALUE":
-                    return (ushort)Faction_FieldIndex.UnknownCrimeValue;
-                case "STEALMULTCRIMEVALUE":
-                    return (ushort)Faction_FieldIndex.StealMultCrimeValue;
-                case "ESCAPECRIMEVALUE":
-                    return (ushort)Faction_FieldIndex.EscapeCrimeValue;
-                case "WEREWOLFCRIMEVALUE":
-                    return (ushort)Faction_FieldIndex.WerewolfCrimeValue;
+                case "CRIMEVALUES":
+                    return (ushort)Faction_FieldIndex.CrimeValues;
                 case "RANKS":
                     return (ushort)Faction_FieldIndex.Ranks;
                 case "VENDORLIST":
@@ -2290,8 +1836,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Faction_FieldIndex.VendorLocation;
                 case "CONDITIONS":
                     return (ushort)Faction_FieldIndex.Conditions;
-                case "CRVADATATYPESTATE":
-                    return (ushort)Faction_FieldIndex.CRVADataTypeState;
                 default:
                     return null;
             }
@@ -2314,21 +1858,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Faction_FieldIndex.PlayerBelongingsChest:
                 case Faction_FieldIndex.CrimeGroup:
                 case Faction_FieldIndex.JailOutfit:
-                case Faction_FieldIndex.ArrestCrimeValue:
-                case Faction_FieldIndex.AttackOnSightCrimeValue:
-                case Faction_FieldIndex.MurderCrimeValue:
-                case Faction_FieldIndex.AssaultCrimeValue:
-                case Faction_FieldIndex.TrespassCrimeValue:
-                case Faction_FieldIndex.PickpocketCrimeValue:
-                case Faction_FieldIndex.UnknownCrimeValue:
-                case Faction_FieldIndex.StealMultCrimeValue:
-                case Faction_FieldIndex.EscapeCrimeValue:
-                case Faction_FieldIndex.WerewolfCrimeValue:
+                case Faction_FieldIndex.CrimeValues:
                 case Faction_FieldIndex.VendorList:
                 case Faction_FieldIndex.VendorChest:
                 case Faction_FieldIndex.VendorValues:
                 case Faction_FieldIndex.VendorLocation:
-                case Faction_FieldIndex.CRVADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -2341,6 +1875,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case Faction_FieldIndex.Relations:
+                case Faction_FieldIndex.CrimeValues:
                 case Faction_FieldIndex.Ranks:
                 case Faction_FieldIndex.VendorValues:
                 case Faction_FieldIndex.VendorLocation:
@@ -2354,19 +1889,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Faction_FieldIndex.PlayerBelongingsChest:
                 case Faction_FieldIndex.CrimeGroup:
                 case Faction_FieldIndex.JailOutfit:
-                case Faction_FieldIndex.ArrestCrimeValue:
-                case Faction_FieldIndex.AttackOnSightCrimeValue:
-                case Faction_FieldIndex.MurderCrimeValue:
-                case Faction_FieldIndex.AssaultCrimeValue:
-                case Faction_FieldIndex.TrespassCrimeValue:
-                case Faction_FieldIndex.PickpocketCrimeValue:
-                case Faction_FieldIndex.UnknownCrimeValue:
-                case Faction_FieldIndex.StealMultCrimeValue:
-                case Faction_FieldIndex.EscapeCrimeValue:
-                case Faction_FieldIndex.WerewolfCrimeValue:
                 case Faction_FieldIndex.VendorList:
                 case Faction_FieldIndex.VendorChest:
-                case Faction_FieldIndex.CRVADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
@@ -2387,23 +1911,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Faction_FieldIndex.PlayerBelongingsChest:
                 case Faction_FieldIndex.CrimeGroup:
                 case Faction_FieldIndex.JailOutfit:
-                case Faction_FieldIndex.ArrestCrimeValue:
-                case Faction_FieldIndex.AttackOnSightCrimeValue:
-                case Faction_FieldIndex.MurderCrimeValue:
-                case Faction_FieldIndex.AssaultCrimeValue:
-                case Faction_FieldIndex.TrespassCrimeValue:
-                case Faction_FieldIndex.PickpocketCrimeValue:
-                case Faction_FieldIndex.UnknownCrimeValue:
-                case Faction_FieldIndex.StealMultCrimeValue:
-                case Faction_FieldIndex.EscapeCrimeValue:
-                case Faction_FieldIndex.WerewolfCrimeValue:
+                case Faction_FieldIndex.CrimeValues:
                 case Faction_FieldIndex.Ranks:
                 case Faction_FieldIndex.VendorList:
                 case Faction_FieldIndex.VendorChest:
                 case Faction_FieldIndex.VendorValues:
                 case Faction_FieldIndex.VendorLocation:
                 case Faction_FieldIndex.Conditions:
-                case Faction_FieldIndex.CRVADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
@@ -2433,26 +1947,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "CrimeGroup";
                 case Faction_FieldIndex.JailOutfit:
                     return "JailOutfit";
-                case Faction_FieldIndex.ArrestCrimeValue:
-                    return "ArrestCrimeValue";
-                case Faction_FieldIndex.AttackOnSightCrimeValue:
-                    return "AttackOnSightCrimeValue";
-                case Faction_FieldIndex.MurderCrimeValue:
-                    return "MurderCrimeValue";
-                case Faction_FieldIndex.AssaultCrimeValue:
-                    return "AssaultCrimeValue";
-                case Faction_FieldIndex.TrespassCrimeValue:
-                    return "TrespassCrimeValue";
-                case Faction_FieldIndex.PickpocketCrimeValue:
-                    return "PickpocketCrimeValue";
-                case Faction_FieldIndex.UnknownCrimeValue:
-                    return "UnknownCrimeValue";
-                case Faction_FieldIndex.StealMultCrimeValue:
-                    return "StealMultCrimeValue";
-                case Faction_FieldIndex.EscapeCrimeValue:
-                    return "EscapeCrimeValue";
-                case Faction_FieldIndex.WerewolfCrimeValue:
-                    return "WerewolfCrimeValue";
+                case Faction_FieldIndex.CrimeValues:
+                    return "CrimeValues";
                 case Faction_FieldIndex.Ranks:
                     return "Ranks";
                 case Faction_FieldIndex.VendorList:
@@ -2465,8 +1961,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "VendorLocation";
                 case Faction_FieldIndex.Conditions:
                     return "Conditions";
-                case Faction_FieldIndex.CRVADataTypeState:
-                    return "CRVADataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -2486,23 +1980,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Faction_FieldIndex.PlayerBelongingsChest:
                 case Faction_FieldIndex.CrimeGroup:
                 case Faction_FieldIndex.JailOutfit:
-                case Faction_FieldIndex.ArrestCrimeValue:
-                case Faction_FieldIndex.AttackOnSightCrimeValue:
-                case Faction_FieldIndex.MurderCrimeValue:
-                case Faction_FieldIndex.AssaultCrimeValue:
-                case Faction_FieldIndex.TrespassCrimeValue:
-                case Faction_FieldIndex.PickpocketCrimeValue:
-                case Faction_FieldIndex.UnknownCrimeValue:
-                case Faction_FieldIndex.StealMultCrimeValue:
-                case Faction_FieldIndex.EscapeCrimeValue:
-                case Faction_FieldIndex.WerewolfCrimeValue:
+                case Faction_FieldIndex.CrimeValues:
                 case Faction_FieldIndex.Ranks:
                 case Faction_FieldIndex.VendorList:
                 case Faction_FieldIndex.VendorChest:
                 case Faction_FieldIndex.VendorValues:
                 case Faction_FieldIndex.VendorLocation:
                 case Faction_FieldIndex.Conditions:
-                case Faction_FieldIndex.CRVADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
@@ -2523,23 +2007,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Faction_FieldIndex.PlayerBelongingsChest:
                 case Faction_FieldIndex.CrimeGroup:
                 case Faction_FieldIndex.JailOutfit:
-                case Faction_FieldIndex.ArrestCrimeValue:
-                case Faction_FieldIndex.AttackOnSightCrimeValue:
-                case Faction_FieldIndex.MurderCrimeValue:
-                case Faction_FieldIndex.AssaultCrimeValue:
-                case Faction_FieldIndex.TrespassCrimeValue:
-                case Faction_FieldIndex.PickpocketCrimeValue:
-                case Faction_FieldIndex.UnknownCrimeValue:
-                case Faction_FieldIndex.StealMultCrimeValue:
-                case Faction_FieldIndex.EscapeCrimeValue:
-                case Faction_FieldIndex.WerewolfCrimeValue:
+                case Faction_FieldIndex.CrimeValues:
                 case Faction_FieldIndex.Ranks:
                 case Faction_FieldIndex.VendorList:
                 case Faction_FieldIndex.VendorChest:
                 case Faction_FieldIndex.VendorValues:
                 case Faction_FieldIndex.VendorLocation:
                 case Faction_FieldIndex.Conditions:
-                case Faction_FieldIndex.CRVADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
@@ -2569,26 +2043,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(IFormLinkNullable<FormList>);
                 case Faction_FieldIndex.JailOutfit:
                     return typeof(IFormLinkNullable<Outfit>);
-                case Faction_FieldIndex.ArrestCrimeValue:
-                    return typeof(Boolean);
-                case Faction_FieldIndex.AttackOnSightCrimeValue:
-                    return typeof(Boolean);
-                case Faction_FieldIndex.MurderCrimeValue:
-                    return typeof(UInt16);
-                case Faction_FieldIndex.AssaultCrimeValue:
-                    return typeof(UInt16);
-                case Faction_FieldIndex.TrespassCrimeValue:
-                    return typeof(UInt16);
-                case Faction_FieldIndex.PickpocketCrimeValue:
-                    return typeof(UInt16);
-                case Faction_FieldIndex.UnknownCrimeValue:
-                    return typeof(UInt16);
-                case Faction_FieldIndex.StealMultCrimeValue:
-                    return typeof(Single);
-                case Faction_FieldIndex.EscapeCrimeValue:
-                    return typeof(UInt16);
-                case Faction_FieldIndex.WerewolfCrimeValue:
-                    return typeof(UInt16);
+                case Faction_FieldIndex.CrimeValues:
+                    return typeof(CrimeValues);
                 case Faction_FieldIndex.Ranks:
                     return typeof(ExtendedList<Rank>);
                 case Faction_FieldIndex.VendorList:
@@ -2601,8 +2057,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(VendorLocation);
                 case Faction_FieldIndex.Conditions:
                     return typeof(ExtendedList<Condition>);
-                case Faction_FieldIndex.CRVADataTypeState:
-                    return typeof(Faction.CRVADataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -2631,7 +2085,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
         public static readonly RecordType TriggeringRecordType = FACT_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 15;
+        public const int NumTypedFields = 16;
         public static readonly Type BinaryWriteTranslation = typeof(FactionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2683,23 +2137,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.PlayerBelongingsChest.FormKey = null;
             item.CrimeGroup.FormKey = null;
             item.JailOutfit.FormKey = null;
-            item.ArrestCrimeValue = default;
-            item.AttackOnSightCrimeValue = default;
-            item.MurderCrimeValue = default;
-            item.AssaultCrimeValue = default;
-            item.TrespassCrimeValue = default;
-            item.PickpocketCrimeValue = default;
-            item.UnknownCrimeValue = default;
-            item.StealMultCrimeValue = default;
-            item.EscapeCrimeValue = default;
-            item.WerewolfCrimeValue = default;
+            item.CrimeValues = null;
             item.Ranks.Clear();
             item.VendorList.FormKey = null;
             item.VendorChest.FormKey = null;
             item.VendorValues = null;
             item.VendorLocation = null;
             item.Conditions = null;
-            item.CRVADataTypeState = default;
             base.Clear(item);
         }
         
@@ -2723,9 +2167,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
-                case "HasCRVADataType":
-                    item.CRVADataTypeState |= Faction.CRVADataType.Has;
-                    break;
                 default:
                     SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
                         item: item,
@@ -2745,8 +2186,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             try
             {
-                item.CRVADataTypeState |= Faction.CRVADataType.Break0;
-                item.CRVADataTypeState |= Faction.CRVADataType.Break1;
                 foreach (var elem in node.Elements())
                 {
                     FillPrivateElementXml(
@@ -2899,33 +2338,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41565243: // CRVA
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.CRVADataTypeState = Faction.CRVADataType.Has;
-                    }
-                    item.ArrestCrimeValue = dataFrame.ReadBoolean();
-                    item.AttackOnSightCrimeValue = dataFrame.ReadBoolean();
-                    item.MurderCrimeValue = dataFrame.ReadUInt16();
-                    item.AssaultCrimeValue = dataFrame.ReadUInt16();
-                    item.TrespassCrimeValue = dataFrame.ReadUInt16();
-                    item.PickpocketCrimeValue = dataFrame.ReadUInt16();
-                    item.UnknownCrimeValue = dataFrame.ReadUInt16();
-                    if (dataFrame.Complete)
-                    {
-                        item.CRVADataTypeState |= Faction.CRVADataType.Break0;
-                        return TryGet<int?>.Succeed((int)Faction_FieldIndex.UnknownCrimeValue);
-                    }
-                    item.StealMultCrimeValue = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    if (dataFrame.Complete)
-                    {
-                        item.CRVADataTypeState |= Faction.CRVADataType.Break1;
-                        return TryGet<int?>.Succeed((int)Faction_FieldIndex.StealMultCrimeValue);
-                    }
-                    item.EscapeCrimeValue = dataFrame.ReadUInt16();
-                    item.WerewolfCrimeValue = dataFrame.ReadUInt16();
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.WerewolfCrimeValue);
+                    item.CrimeValues = Mutagen.Bethesda.Skyrim.CrimeValues.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.CrimeValues);
                 }
                 case 0x4D414E52: // RNAM
                 case 0x4D414E4D: // MNAM
@@ -3064,16 +2478,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.PlayerBelongingsChest = object.Equals(item.PlayerBelongingsChest, rhs.PlayerBelongingsChest);
             ret.CrimeGroup = object.Equals(item.CrimeGroup, rhs.CrimeGroup);
             ret.JailOutfit = object.Equals(item.JailOutfit, rhs.JailOutfit);
-            ret.ArrestCrimeValue = item.ArrestCrimeValue == rhs.ArrestCrimeValue;
-            ret.AttackOnSightCrimeValue = item.AttackOnSightCrimeValue == rhs.AttackOnSightCrimeValue;
-            ret.MurderCrimeValue = item.MurderCrimeValue == rhs.MurderCrimeValue;
-            ret.AssaultCrimeValue = item.AssaultCrimeValue == rhs.AssaultCrimeValue;
-            ret.TrespassCrimeValue = item.TrespassCrimeValue == rhs.TrespassCrimeValue;
-            ret.PickpocketCrimeValue = item.PickpocketCrimeValue == rhs.PickpocketCrimeValue;
-            ret.UnknownCrimeValue = item.UnknownCrimeValue == rhs.UnknownCrimeValue;
-            ret.StealMultCrimeValue = item.StealMultCrimeValue.EqualsWithin(rhs.StealMultCrimeValue);
-            ret.EscapeCrimeValue = item.EscapeCrimeValue == rhs.EscapeCrimeValue;
-            ret.WerewolfCrimeValue = item.WerewolfCrimeValue == rhs.WerewolfCrimeValue;
+            ret.CrimeValues = EqualsMaskHelper.EqualsHelper(
+                item.CrimeValues,
+                rhs.CrimeValues,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Ranks = item.Ranks.CollectionEqualsHelper(
                 rhs.Ranks,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -3094,7 +2503,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.CRVADataTypeState = item.CRVADataTypeState == rhs.CRVADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -3204,45 +2612,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(JailOutfitItem, "JailOutfit");
             }
-            if (printMask?.ArrestCrimeValue ?? true)
+            if ((printMask?.CrimeValues?.Overall ?? true)
+                && item.CrimeValues.TryGet(out var CrimeValuesItem))
             {
-                fg.AppendItem(item.ArrestCrimeValue, "ArrestCrimeValue");
-            }
-            if (printMask?.AttackOnSightCrimeValue ?? true)
-            {
-                fg.AppendItem(item.AttackOnSightCrimeValue, "AttackOnSightCrimeValue");
-            }
-            if (printMask?.MurderCrimeValue ?? true)
-            {
-                fg.AppendItem(item.MurderCrimeValue, "MurderCrimeValue");
-            }
-            if (printMask?.AssaultCrimeValue ?? true)
-            {
-                fg.AppendItem(item.AssaultCrimeValue, "AssaultCrimeValue");
-            }
-            if (printMask?.TrespassCrimeValue ?? true)
-            {
-                fg.AppendItem(item.TrespassCrimeValue, "TrespassCrimeValue");
-            }
-            if (printMask?.PickpocketCrimeValue ?? true)
-            {
-                fg.AppendItem(item.PickpocketCrimeValue, "PickpocketCrimeValue");
-            }
-            if (printMask?.UnknownCrimeValue ?? true)
-            {
-                fg.AppendItem(item.UnknownCrimeValue, "UnknownCrimeValue");
-            }
-            if (printMask?.StealMultCrimeValue ?? true)
-            {
-                fg.AppendItem(item.StealMultCrimeValue, "StealMultCrimeValue");
-            }
-            if (printMask?.EscapeCrimeValue ?? true)
-            {
-                fg.AppendItem(item.EscapeCrimeValue, "EscapeCrimeValue");
-            }
-            if (printMask?.WerewolfCrimeValue ?? true)
-            {
-                fg.AppendItem(item.WerewolfCrimeValue, "WerewolfCrimeValue");
+                CrimeValuesItem?.ToString(fg, "CrimeValues");
             }
             if (printMask?.Ranks?.Overall ?? true)
             {
@@ -3301,10 +2674,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.CRVADataTypeState ?? true)
-            {
-                fg.AppendItem(item.CRVADataTypeState, "CRVADataTypeState");
-            }
         }
         
         public bool HasBeenSet(
@@ -3319,6 +2688,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.PlayerBelongingsChest.HasValue && checkMask.PlayerBelongingsChest.Value != (item.PlayerBelongingsChest.FormKey != null)) return false;
             if (checkMask.CrimeGroup.HasValue && checkMask.CrimeGroup.Value != (item.CrimeGroup.FormKey != null)) return false;
             if (checkMask.JailOutfit.HasValue && checkMask.JailOutfit.Value != (item.JailOutfit.FormKey != null)) return false;
+            if (checkMask.CrimeValues?.Overall.HasValue ?? false && checkMask.CrimeValues.Overall.Value != (item.CrimeValues != null)) return false;
+            if (checkMask.CrimeValues?.Specific != null && (item.CrimeValues == null || !item.CrimeValues.HasBeenSet(checkMask.CrimeValues.Specific))) return false;
             if (checkMask.VendorList.HasValue && checkMask.VendorList.Value != (item.VendorList.FormKey != null)) return false;
             if (checkMask.VendorChest.HasValue && checkMask.VendorChest.Value != (item.VendorChest.FormKey != null)) return false;
             if (checkMask.VendorValues?.Overall.HasValue ?? false && checkMask.VendorValues.Overall.Value != (item.VendorValues != null)) return false;
@@ -3345,16 +2716,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.PlayerBelongingsChest = (item.PlayerBelongingsChest.FormKey != null);
             mask.CrimeGroup = (item.CrimeGroup.FormKey != null);
             mask.JailOutfit = (item.JailOutfit.FormKey != null);
-            mask.ArrestCrimeValue = true;
-            mask.AttackOnSightCrimeValue = true;
-            mask.MurderCrimeValue = true;
-            mask.AssaultCrimeValue = true;
-            mask.TrespassCrimeValue = true;
-            mask.PickpocketCrimeValue = true;
-            mask.UnknownCrimeValue = true;
-            mask.StealMultCrimeValue = true;
-            mask.EscapeCrimeValue = true;
-            mask.WerewolfCrimeValue = true;
+            var itemCrimeValues = item.CrimeValues;
+            mask.CrimeValues = new MaskItem<bool, CrimeValues.Mask<bool>?>(itemCrimeValues != null, itemCrimeValues?.GetHasBeenSetMask());
             var RanksItem = item.Ranks;
             mask.Ranks = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Rank.Mask<bool>?>>?>(true, RanksItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Rank.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.VendorList = (item.VendorList.FormKey != null);
@@ -3367,7 +2730,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             }
-            mask.CRVADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -3430,23 +2792,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.PlayerBelongingsChest.Equals(rhs.PlayerBelongingsChest)) return false;
             if (!lhs.CrimeGroup.Equals(rhs.CrimeGroup)) return false;
             if (!lhs.JailOutfit.Equals(rhs.JailOutfit)) return false;
-            if (lhs.ArrestCrimeValue != rhs.ArrestCrimeValue) return false;
-            if (lhs.AttackOnSightCrimeValue != rhs.AttackOnSightCrimeValue) return false;
-            if (lhs.MurderCrimeValue != rhs.MurderCrimeValue) return false;
-            if (lhs.AssaultCrimeValue != rhs.AssaultCrimeValue) return false;
-            if (lhs.TrespassCrimeValue != rhs.TrespassCrimeValue) return false;
-            if (lhs.PickpocketCrimeValue != rhs.PickpocketCrimeValue) return false;
-            if (lhs.UnknownCrimeValue != rhs.UnknownCrimeValue) return false;
-            if (!lhs.StealMultCrimeValue.EqualsWithin(rhs.StealMultCrimeValue)) return false;
-            if (lhs.EscapeCrimeValue != rhs.EscapeCrimeValue) return false;
-            if (lhs.WerewolfCrimeValue != rhs.WerewolfCrimeValue) return false;
+            if (!object.Equals(lhs.CrimeValues, rhs.CrimeValues)) return false;
             if (!lhs.Ranks.SequenceEqual(rhs.Ranks)) return false;
             if (!lhs.VendorList.Equals(rhs.VendorList)) return false;
             if (!lhs.VendorChest.Equals(rhs.VendorChest)) return false;
             if (!object.Equals(lhs.VendorValues, rhs.VendorValues)) return false;
             if (!object.Equals(lhs.VendorLocation, rhs.VendorLocation)) return false;
             if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
-            if (lhs.CRVADataTypeState != rhs.CRVADataTypeState) return false;
             return true;
         }
         
@@ -3504,16 +2856,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(JailOutfititem);
             }
-            hash.Add(item.ArrestCrimeValue);
-            hash.Add(item.AttackOnSightCrimeValue);
-            hash.Add(item.MurderCrimeValue);
-            hash.Add(item.AssaultCrimeValue);
-            hash.Add(item.TrespassCrimeValue);
-            hash.Add(item.PickpocketCrimeValue);
-            hash.Add(item.UnknownCrimeValue);
-            hash.Add(item.StealMultCrimeValue);
-            hash.Add(item.EscapeCrimeValue);
-            hash.Add(item.WerewolfCrimeValue);
+            if (item.CrimeValues.TryGet(out var CrimeValuesitem))
+            {
+                hash.Add(CrimeValuesitem);
+            }
             hash.Add(item.Ranks);
             if (item.VendorList.TryGet(out var VendorListitem))
             {
@@ -3532,7 +2878,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 hash.Add(VendorLocationitem);
             }
             hash.Add(item.Conditions);
-            hash.Add(item.CRVADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -3691,45 +3036,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.JailOutfit.FormKey = rhs.JailOutfit.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.ArrestCrimeValue) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.CrimeValues) ?? true))
             {
-                item.ArrestCrimeValue = rhs.ArrestCrimeValue;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.AttackOnSightCrimeValue) ?? true))
-            {
-                item.AttackOnSightCrimeValue = rhs.AttackOnSightCrimeValue;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.MurderCrimeValue) ?? true))
-            {
-                item.MurderCrimeValue = rhs.MurderCrimeValue;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.AssaultCrimeValue) ?? true))
-            {
-                item.AssaultCrimeValue = rhs.AssaultCrimeValue;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.TrespassCrimeValue) ?? true))
-            {
-                item.TrespassCrimeValue = rhs.TrespassCrimeValue;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.PickpocketCrimeValue) ?? true))
-            {
-                item.PickpocketCrimeValue = rhs.PickpocketCrimeValue;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.UnknownCrimeValue) ?? true))
-            {
-                item.UnknownCrimeValue = rhs.UnknownCrimeValue;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.StealMultCrimeValue) ?? true))
-            {
-                item.StealMultCrimeValue = rhs.StealMultCrimeValue;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.EscapeCrimeValue) ?? true))
-            {
-                item.EscapeCrimeValue = rhs.EscapeCrimeValue;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.WerewolfCrimeValue) ?? true))
-            {
-                item.WerewolfCrimeValue = rhs.WerewolfCrimeValue;
+                errorMask?.PushIndex((int)Faction_FieldIndex.CrimeValues);
+                try
+                {
+                    if(rhs.CrimeValues.TryGet(out var rhsCrimeValues))
+                    {
+                        item.CrimeValues = rhsCrimeValues.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Faction_FieldIndex.CrimeValues));
+                    }
+                    else
+                    {
+                        item.CrimeValues = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.Ranks) ?? true))
             {
@@ -3846,10 +3177,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     errorMask?.PopIndex();
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.CRVADataTypeState) ?? true))
-            {
-                item.CRVADataTypeState = rhs.CRVADataTypeState;
             }
         }
         
@@ -4095,107 +3422,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Faction_FieldIndex.JailOutfit,
                     errorMask: errorMask);
             }
-            if (item.CRVADataTypeState.HasFlag(Faction.CRVADataType.Has))
+            if ((item.CrimeValues != null)
+                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.CrimeValues) ?? true))
             {
-                if ((translationMask?.GetShouldTranslate((int)Faction_FieldIndex.ArrestCrimeValue) ?? true))
+                if (item.CrimeValues.TryGet(out var CrimeValuesItem))
                 {
-                    BooleanXmlTranslation.Instance.Write(
+                    ((CrimeValuesXmlWriteTranslation)((IXmlItem)CrimeValuesItem).XmlWriteTranslator).Write(
+                        item: CrimeValuesItem,
                         node: node,
-                        name: nameof(item.ArrestCrimeValue),
-                        item: item.ArrestCrimeValue,
-                        fieldIndex: (int)Faction_FieldIndex.ArrestCrimeValue,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Faction_FieldIndex.AttackOnSightCrimeValue) ?? true))
-                {
-                    BooleanXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.AttackOnSightCrimeValue),
-                        item: item.AttackOnSightCrimeValue,
-                        fieldIndex: (int)Faction_FieldIndex.AttackOnSightCrimeValue,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Faction_FieldIndex.MurderCrimeValue) ?? true))
-                {
-                    UInt16XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.MurderCrimeValue),
-                        item: item.MurderCrimeValue,
-                        fieldIndex: (int)Faction_FieldIndex.MurderCrimeValue,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Faction_FieldIndex.AssaultCrimeValue) ?? true))
-                {
-                    UInt16XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.AssaultCrimeValue),
-                        item: item.AssaultCrimeValue,
-                        fieldIndex: (int)Faction_FieldIndex.AssaultCrimeValue,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Faction_FieldIndex.TrespassCrimeValue) ?? true))
-                {
-                    UInt16XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.TrespassCrimeValue),
-                        item: item.TrespassCrimeValue,
-                        fieldIndex: (int)Faction_FieldIndex.TrespassCrimeValue,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Faction_FieldIndex.PickpocketCrimeValue) ?? true))
-                {
-                    UInt16XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.PickpocketCrimeValue),
-                        item: item.PickpocketCrimeValue,
-                        fieldIndex: (int)Faction_FieldIndex.PickpocketCrimeValue,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Faction_FieldIndex.UnknownCrimeValue) ?? true))
-                {
-                    UInt16XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.UnknownCrimeValue),
-                        item: item.UnknownCrimeValue,
-                        fieldIndex: (int)Faction_FieldIndex.UnknownCrimeValue,
-                        errorMask: errorMask);
-                }
-                if (!item.CRVADataTypeState.HasFlag(Faction.CRVADataType.Break0))
-                {
-                    if ((translationMask?.GetShouldTranslate((int)Faction_FieldIndex.StealMultCrimeValue) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.StealMultCrimeValue),
-                            item: item.StealMultCrimeValue,
-                            fieldIndex: (int)Faction_FieldIndex.StealMultCrimeValue,
-                            errorMask: errorMask);
-                    }
-                    if (!item.CRVADataTypeState.HasFlag(Faction.CRVADataType.Break1))
-                    {
-                        if ((translationMask?.GetShouldTranslate((int)Faction_FieldIndex.EscapeCrimeValue) ?? true))
-                        {
-                            UInt16XmlTranslation.Instance.Write(
-                                node: node,
-                                name: nameof(item.EscapeCrimeValue),
-                                item: item.EscapeCrimeValue,
-                                fieldIndex: (int)Faction_FieldIndex.EscapeCrimeValue,
-                                errorMask: errorMask);
-                        }
-                        if ((translationMask?.GetShouldTranslate((int)Faction_FieldIndex.WerewolfCrimeValue) ?? true))
-                        {
-                            UInt16XmlTranslation.Instance.Write(
-                                node: node,
-                                name: nameof(item.WerewolfCrimeValue),
-                                item: item.WerewolfCrimeValue,
-                                fieldIndex: (int)Faction_FieldIndex.WerewolfCrimeValue,
-                                errorMask: errorMask);
-                        }
-                    }
-                }
-                else
-                {
-                    node.Add(new XElement("HasCRVADataType"));
+                        name: nameof(item.CrimeValues),
+                        fieldIndex: (int)Faction_FieldIndex.CrimeValues,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.CrimeValues));
                 }
             }
             if ((translationMask?.GetShouldTranslate((int)Faction_FieldIndex.Ranks) ?? true))
@@ -4290,15 +3528,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 translationMask: listTranslMask);
                         }
                     });
-            }
-            if ((translationMask?.GetShouldTranslate((int)Faction_FieldIndex.CRVADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Faction.CRVADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.CRVADataTypeState),
-                    item: item.CRVADataTypeState,
-                    fieldIndex: (int)Faction_FieldIndex.CRVADataTypeState,
-                    errorMask: errorMask);
             }
         }
 
@@ -4579,178 +3808,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "ArrestCrimeValue":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.ArrestCrimeValue);
+                case "CrimeValues":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.CrimeValues);
                     try
                     {
-                        item.ArrestCrimeValue = BooleanXmlTranslation.Instance.Parse(
+                        item.CrimeValues = LoquiXmlTranslation<CrimeValues>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.CRVADataTypeState |= Faction.CRVADataType.Has;
-                    break;
-                case "AttackOnSightCrimeValue":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.AttackOnSightCrimeValue);
-                    try
-                    {
-                        item.AttackOnSightCrimeValue = BooleanXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MurderCrimeValue":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.MurderCrimeValue);
-                    try
-                    {
-                        item.MurderCrimeValue = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AssaultCrimeValue":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.AssaultCrimeValue);
-                    try
-                    {
-                        item.AssaultCrimeValue = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TrespassCrimeValue":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.TrespassCrimeValue);
-                    try
-                    {
-                        item.TrespassCrimeValue = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PickpocketCrimeValue":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.PickpocketCrimeValue);
-                    try
-                    {
-                        item.PickpocketCrimeValue = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "UnknownCrimeValue":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.UnknownCrimeValue);
-                    try
-                    {
-                        item.UnknownCrimeValue = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "StealMultCrimeValue":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.StealMultCrimeValue);
-                    try
-                    {
-                        item.StealMultCrimeValue = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.CRVADataTypeState &= ~Faction.CRVADataType.Break0;
-                    break;
-                case "EscapeCrimeValue":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.EscapeCrimeValue);
-                    try
-                    {
-                        item.EscapeCrimeValue = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.CRVADataTypeState &= ~Faction.CRVADataType.Break1;
-                    break;
-                case "WerewolfCrimeValue":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.WerewolfCrimeValue);
-                    try
-                    {
-                        item.WerewolfCrimeValue = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.CrimeValues));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4892,24 +3957,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "CRVADataTypeState":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.CRVADataTypeState);
-                    try
-                    {
-                        item.CRVADataTypeState = EnumXmlTranslation<Faction.CRVADataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -5009,15 +4056,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        public static void WriteEmbedded(
-            IFactionGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IFactionGetter item,
             MutagenWriter writer,
@@ -5074,29 +4112,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.JailOutfit,
                 header: recordTypeConverter.ConvertToCustom(Faction_Registration.JOUT_HEADER));
-            if (item.CRVADataTypeState.HasFlag(Faction.CRVADataType.Has))
+            if (item.CrimeValues.TryGet(out var CrimeValuesItem))
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Faction_Registration.CRVA_HEADER)))
-                {
-                    writer.Write(item.ArrestCrimeValue);
-                    writer.Write(item.AttackOnSightCrimeValue);
-                    writer.Write(item.MurderCrimeValue);
-                    writer.Write(item.AssaultCrimeValue);
-                    writer.Write(item.TrespassCrimeValue);
-                    writer.Write(item.PickpocketCrimeValue);
-                    writer.Write(item.UnknownCrimeValue);
-                    if (!item.CRVADataTypeState.HasFlag(Faction.CRVADataType.Break0))
-                    {
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.StealMultCrimeValue);
-                        if (!item.CRVADataTypeState.HasFlag(Faction.CRVADataType.Break1))
-                        {
-                            writer.Write(item.EscapeCrimeValue);
-                            writer.Write(item.WerewolfCrimeValue);
-                        }
-                    }
-                }
+                ((CrimeValuesBinaryWriteTranslation)((IBinaryItem)CrimeValuesItem).BinaryWriteTranslator).Write(
+                    item: CrimeValuesItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IRankGetter>.Instance.Write(
                 writer: writer,
@@ -5148,7 +4169,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(Faction_Registration.FACT_HEADER),
                 type: ObjectType.Record))
             {
-                WriteEmbedded(
+                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -5312,57 +4333,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool JailOutfit_IsSet => _JailOutfitLocation.HasValue;
         public IFormLinkNullableGetter<IOutfitGetter> JailOutfit => _JailOutfitLocation.HasValue ? new FormLinkNullable<IOutfitGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _JailOutfitLocation.Value, _package.Meta)))) : FormLinkNullable<IOutfitGetter>.Empty;
         #endregion
-        private int? _CRVALocation;
-        public Faction.CRVADataType CRVADataTypeState { get; private set; }
-        #region ArrestCrimeValue
-        private int _ArrestCrimeValueLocation => _CRVALocation!.Value + 0x0;
-        private bool _ArrestCrimeValue_IsSet => _CRVALocation.HasValue;
-        public Boolean ArrestCrimeValue => _ArrestCrimeValue_IsSet ? _data.Slice(_ArrestCrimeValueLocation, 1)[0] == 1 : default;
-        #endregion
-        #region AttackOnSightCrimeValue
-        private int _AttackOnSightCrimeValueLocation => _CRVALocation!.Value + 0x1;
-        private bool _AttackOnSightCrimeValue_IsSet => _CRVALocation.HasValue;
-        public Boolean AttackOnSightCrimeValue => _AttackOnSightCrimeValue_IsSet ? _data.Slice(_AttackOnSightCrimeValueLocation, 1)[0] == 1 : default;
-        #endregion
-        #region MurderCrimeValue
-        private int _MurderCrimeValueLocation => _CRVALocation!.Value + 0x2;
-        private bool _MurderCrimeValue_IsSet => _CRVALocation.HasValue;
-        public UInt16 MurderCrimeValue => _MurderCrimeValue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_MurderCrimeValueLocation, 2)) : default;
-        #endregion
-        #region AssaultCrimeValue
-        private int _AssaultCrimeValueLocation => _CRVALocation!.Value + 0x4;
-        private bool _AssaultCrimeValue_IsSet => _CRVALocation.HasValue;
-        public UInt16 AssaultCrimeValue => _AssaultCrimeValue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_AssaultCrimeValueLocation, 2)) : default;
-        #endregion
-        #region TrespassCrimeValue
-        private int _TrespassCrimeValueLocation => _CRVALocation!.Value + 0x6;
-        private bool _TrespassCrimeValue_IsSet => _CRVALocation.HasValue;
-        public UInt16 TrespassCrimeValue => _TrespassCrimeValue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_TrespassCrimeValueLocation, 2)) : default;
-        #endregion
-        #region PickpocketCrimeValue
-        private int _PickpocketCrimeValueLocation => _CRVALocation!.Value + 0x8;
-        private bool _PickpocketCrimeValue_IsSet => _CRVALocation.HasValue;
-        public UInt16 PickpocketCrimeValue => _PickpocketCrimeValue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_PickpocketCrimeValueLocation, 2)) : default;
-        #endregion
-        #region UnknownCrimeValue
-        private int _UnknownCrimeValueLocation => _CRVALocation!.Value + 0xA;
-        private bool _UnknownCrimeValue_IsSet => _CRVALocation.HasValue;
-        public UInt16 UnknownCrimeValue => _UnknownCrimeValue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_UnknownCrimeValueLocation, 2)) : default;
-        #endregion
-        #region StealMultCrimeValue
-        private int _StealMultCrimeValueLocation => _CRVALocation!.Value + 0xC;
-        private bool _StealMultCrimeValue_IsSet => _CRVALocation.HasValue && !CRVADataTypeState.HasFlag(Faction.CRVADataType.Break0);
-        public Single StealMultCrimeValue => _StealMultCrimeValue_IsSet ? SpanExt.GetFloat(_data.Slice(_StealMultCrimeValueLocation, 4)) : default;
-        #endregion
-        #region EscapeCrimeValue
-        private int _EscapeCrimeValueLocation => _CRVALocation!.Value + 0x10;
-        private bool _EscapeCrimeValue_IsSet => _CRVALocation.HasValue && !CRVADataTypeState.HasFlag(Faction.CRVADataType.Break1);
-        public UInt16 EscapeCrimeValue => _EscapeCrimeValue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_EscapeCrimeValueLocation, 2)) : default;
-        #endregion
-        #region WerewolfCrimeValue
-        private int _WerewolfCrimeValueLocation => _CRVALocation!.Value + 0x12;
-        private bool _WerewolfCrimeValue_IsSet => _CRVALocation.HasValue && !CRVADataTypeState.HasFlag(Faction.CRVADataType.Break1);
-        public UInt16 WerewolfCrimeValue => _WerewolfCrimeValue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_WerewolfCrimeValueLocation, 2)) : default;
+        #region CrimeValues
+        private RangeInt32? _CrimeValuesLocation;
+        private bool _CrimeValues_IsSet => _CrimeValuesLocation.HasValue;
+        public ICrimeValuesGetter? CrimeValues => _CrimeValues_IsSet ? CrimeValuesBinaryOverlay.CrimeValuesFactory(new BinaryMemoryReadStream(_data.Slice(_CrimeValuesLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool CrimeValues_IsSet => _CrimeValuesLocation.HasValue;
         #endregion
         public IReadOnlyList<IRankGetter> Ranks { get; private set; } = ListExt.Empty<RankBinaryOverlay>();
         #region VendorList
@@ -5502,18 +4477,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41565243: // CRVA
                 {
-                    _CRVALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
-                    this.CRVADataTypeState = Faction.CRVADataType.Has;
-                    var subLen = _package.Meta.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
-                    if (subLen <= 0xC)
-                    {
-                        this.CRVADataTypeState |= Faction.CRVADataType.Break0;
-                    }
-                    if (subLen <= 0x10)
-                    {
-                        this.CRVADataTypeState |= Faction.CRVADataType.Break1;
-                    }
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.WerewolfCrimeValue);
+                    _CrimeValuesLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.CrimeValues);
                 }
                 case 0x4D414E52: // RNAM
                 case 0x4D414E4D: // MNAM

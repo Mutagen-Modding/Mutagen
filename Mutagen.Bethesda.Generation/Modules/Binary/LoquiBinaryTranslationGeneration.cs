@@ -462,6 +462,28 @@ namespace Mutagen.Bethesda.Generation
             Accessor converterAccessor)
         {
             LoquiType loqui = typeGen as LoquiType;
+            var data = loqui.GetFieldData();
+
+            switch (data.BinaryOverlayFallback)
+            {
+                case BinaryGenerationType.Normal:
+                    break;
+                case BinaryGenerationType.DoNothing:
+                case BinaryGenerationType.NoGeneration:
+                    return;
+                case BinaryGenerationType.Custom:
+                    using (var args = new ArgsWrapper(fg,
+                        $"{typeGen.Name}CustomParse"))
+                    {
+                        args.Add("stream");
+                        args.Add("finalPos");
+                        args.Add("offset");
+                    }
+                    return;
+                default:
+                    throw new NotImplementedException();
+            }
+
             string accessor;
             switch (loqui.SingletonType)
             {
@@ -475,7 +497,6 @@ namespace Mutagen.Bethesda.Generation
                 default:
                     throw new NotImplementedException();
             }
-            var data = loqui.GetFieldData();
             if (data.MarkerType.HasValue)
             {
                 fg.AppendLine($"stream.Position += {packageAccessor}.Meta.SubConstants.HeaderLength; // Skip marker");

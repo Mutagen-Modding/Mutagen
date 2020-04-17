@@ -1332,6 +1332,60 @@
     <Compile Include="Oblivion\Records\Major Records\QuestData_LoquiGenerated.cs">
       <DependentUpon>Quest.xml</DependentUpon>
     </Compile>
+    <Compile Include="Oblivion\Records\Major Records\RaceData_LoquiGenerated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\RegionDataHeader_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\LocalVariableData_LoquiGenerated.cs">
+      <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\SigilStoneData_LoquiGenerated.cs">
+      <DependentUpon>SigilStone.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\SkillData_LoquiGenerated.cs">
+      <DependentUpon>SkillRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\SoulGemData_LoquiGenerated.cs">
+      <DependentUpon>SoulGem.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\SpellData_LoquiGenerated.cs">
+      <DependentUpon>SpellUnleveled.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\TreeData_LoquiGenerated.cs">
+      <DependentUpon>Tree.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\Dimensions_LoquiGenerated.cs">
+      <DependentUpon>Tree.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\WaterData_LoquiGenerated.cs">
+      <DependentUpon>Water.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\WeaponData_LoquiGenerated.cs">
+      <DependentUpon>Weapon.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\FogDistance_LoquiGenerated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\HDRData_LoquiGenerated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\WeatherData_LoquiGenerated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\CrimeValues_LoquiGenerated.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Common Subrecords\EffectData_LoquiGenerated.cs">
+      <DependentUpon>Effect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Common Subrecords\ScriptEffectData_LoquiGenerated.cs">
+      <DependentUpon>Effect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ClassData_LoquiGenerated.cs">
+      <DependentUpon>Class.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.13.7" />

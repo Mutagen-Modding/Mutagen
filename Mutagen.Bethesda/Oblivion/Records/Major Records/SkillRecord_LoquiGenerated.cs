@@ -81,70 +81,16 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ISkillRecordGetter.Icon => this.Icon;
         #endregion
-        #region Action
+        #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ActorValue _Action;
-        public ActorValue Action
+        private SkillData? _Data;
+        public SkillData? Data
         {
-            get => this._Action;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Action = value;
-            }
+            get => _Data;
+            set => _Data = value;
         }
-        #endregion
-        #region Attribute
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ActorValue _Attribute;
-        public ActorValue Attribute
-        {
-            get => this._Attribute;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Attribute = value;
-            }
-        }
-        #endregion
-        #region Specialization
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Specialization _Specialization;
-        public Specialization Specialization
-        {
-            get => this._Specialization;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Specialization = value;
-            }
-        }
-        #endregion
-        #region UseValueFirst
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _UseValueFirst;
-        public Single UseValueFirst
-        {
-            get => this._UseValueFirst;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._UseValueFirst = value;
-            }
-        }
-        #endregion
-        #region UseValueSecond
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _UseValueSecond;
-        public Single UseValueSecond
-        {
-            get => this._UseValueSecond;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._UseValueSecond = value;
-            }
-        }
+        ISkillDataGetter? ISkillRecordGetter.Data => this.Data;
         #endregion
         #region ApprenticeText
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -189,9 +135,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ISkillRecordGetter.MasterText => this.MasterText;
-        #endregion
-        #region DATADataTypeState
-        public SkillRecord.DATADataType DATADataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -366,16 +309,11 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Skill = initialValue;
                 this.Description = initialValue;
                 this.Icon = initialValue;
-                this.Action = initialValue;
-                this.Attribute = initialValue;
-                this.Specialization = initialValue;
-                this.UseValueFirst = initialValue;
-                this.UseValueSecond = initialValue;
+                this.Data = new MaskItem<TItem, SkillData.Mask<TItem>?>(initialValue, new SkillData.Mask<TItem>(initialValue));
                 this.ApprenticeText = initialValue;
                 this.JourneymanText = initialValue;
                 this.ExpertText = initialValue;
                 this.MasterText = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -387,16 +325,11 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Skill,
                 TItem Description,
                 TItem Icon,
-                TItem Action,
-                TItem Attribute,
-                TItem Specialization,
-                TItem UseValueFirst,
-                TItem UseValueSecond,
+                TItem Data,
                 TItem ApprenticeText,
                 TItem JourneymanText,
                 TItem ExpertText,
-                TItem MasterText,
-                TItem DATADataTypeState)
+                TItem MasterText)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -407,16 +340,11 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Skill = Skill;
                 this.Description = Description;
                 this.Icon = Icon;
-                this.Action = Action;
-                this.Attribute = Attribute;
-                this.Specialization = Specialization;
-                this.UseValueFirst = UseValueFirst;
-                this.UseValueSecond = UseValueSecond;
+                this.Data = new MaskItem<TItem, SkillData.Mask<TItem>?>(Data, new SkillData.Mask<TItem>(Data));
                 this.ApprenticeText = ApprenticeText;
                 this.JourneymanText = JourneymanText;
                 this.ExpertText = ExpertText;
                 this.MasterText = MasterText;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -431,16 +359,11 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem Skill;
             public TItem Description;
             public TItem Icon;
-            public TItem Action;
-            public TItem Attribute;
-            public TItem Specialization;
-            public TItem UseValueFirst;
-            public TItem UseValueSecond;
+            public MaskItem<TItem, SkillData.Mask<TItem>?>? Data { get; set; }
             public TItem ApprenticeText;
             public TItem JourneymanText;
             public TItem ExpertText;
             public TItem MasterText;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -457,16 +380,11 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.Skill, rhs.Skill)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.Icon, rhs.Icon)) return false;
-                if (!object.Equals(this.Action, rhs.Action)) return false;
-                if (!object.Equals(this.Attribute, rhs.Attribute)) return false;
-                if (!object.Equals(this.Specialization, rhs.Specialization)) return false;
-                if (!object.Equals(this.UseValueFirst, rhs.UseValueFirst)) return false;
-                if (!object.Equals(this.UseValueSecond, rhs.UseValueSecond)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
                 if (!object.Equals(this.ApprenticeText, rhs.ApprenticeText)) return false;
                 if (!object.Equals(this.JourneymanText, rhs.JourneymanText)) return false;
                 if (!object.Equals(this.ExpertText, rhs.ExpertText)) return false;
                 if (!object.Equals(this.MasterText, rhs.MasterText)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -475,16 +393,11 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.Skill);
                 hash.Add(this.Description);
                 hash.Add(this.Icon);
-                hash.Add(this.Action);
-                hash.Add(this.Attribute);
-                hash.Add(this.Specialization);
-                hash.Add(this.UseValueFirst);
-                hash.Add(this.UseValueSecond);
+                hash.Add(this.Data);
                 hash.Add(this.ApprenticeText);
                 hash.Add(this.JourneymanText);
                 hash.Add(this.ExpertText);
                 hash.Add(this.MasterText);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -498,16 +411,15 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.Skill)) return false;
                 if (!eval(this.Description)) return false;
                 if (!eval(this.Icon)) return false;
-                if (!eval(this.Action)) return false;
-                if (!eval(this.Attribute)) return false;
-                if (!eval(this.Specialization)) return false;
-                if (!eval(this.UseValueFirst)) return false;
-                if (!eval(this.UseValueSecond)) return false;
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
                 if (!eval(this.ApprenticeText)) return false;
                 if (!eval(this.JourneymanText)) return false;
                 if (!eval(this.ExpertText)) return false;
                 if (!eval(this.MasterText)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -519,16 +431,15 @@ namespace Mutagen.Bethesda.Oblivion
                 if (eval(this.Skill)) return true;
                 if (eval(this.Description)) return true;
                 if (eval(this.Icon)) return true;
-                if (eval(this.Action)) return true;
-                if (eval(this.Attribute)) return true;
-                if (eval(this.Specialization)) return true;
-                if (eval(this.UseValueFirst)) return true;
-                if (eval(this.UseValueSecond)) return true;
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
                 if (eval(this.ApprenticeText)) return true;
                 if (eval(this.JourneymanText)) return true;
                 if (eval(this.ExpertText)) return true;
                 if (eval(this.MasterText)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -547,16 +458,11 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Skill = eval(this.Skill);
                 obj.Description = eval(this.Description);
                 obj.Icon = eval(this.Icon);
-                obj.Action = eval(this.Action);
-                obj.Attribute = eval(this.Attribute);
-                obj.Specialization = eval(this.Specialization);
-                obj.UseValueFirst = eval(this.UseValueFirst);
-                obj.UseValueSecond = eval(this.UseValueSecond);
+                obj.Data = this.Data == null ? null : new MaskItem<R, SkillData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
                 obj.ApprenticeText = eval(this.ApprenticeText);
                 obj.JourneymanText = eval(this.JourneymanText);
                 obj.ExpertText = eval(this.ExpertText);
                 obj.MasterText = eval(this.MasterText);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -591,25 +497,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendItem(Icon, "Icon");
                     }
-                    if (printMask?.Action ?? true)
+                    if (printMask?.Data?.Overall ?? true)
                     {
-                        fg.AppendItem(Action, "Action");
-                    }
-                    if (printMask?.Attribute ?? true)
-                    {
-                        fg.AppendItem(Attribute, "Attribute");
-                    }
-                    if (printMask?.Specialization ?? true)
-                    {
-                        fg.AppendItem(Specialization, "Specialization");
-                    }
-                    if (printMask?.UseValueFirst ?? true)
-                    {
-                        fg.AppendItem(UseValueFirst, "UseValueFirst");
-                    }
-                    if (printMask?.UseValueSecond ?? true)
-                    {
-                        fg.AppendItem(UseValueSecond, "UseValueSecond");
+                        Data?.ToString(fg);
                     }
                     if (printMask?.ApprenticeText ?? true)
                     {
@@ -627,10 +517,6 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendItem(MasterText, "MasterText");
                     }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
                 fg.AppendLine("]");
             }
@@ -646,16 +532,11 @@ namespace Mutagen.Bethesda.Oblivion
             public Exception? Skill;
             public Exception? Description;
             public Exception? Icon;
-            public Exception? Action;
-            public Exception? Attribute;
-            public Exception? Specialization;
-            public Exception? UseValueFirst;
-            public Exception? UseValueSecond;
+            public MaskItem<Exception?, SkillData.ErrorMask?>? Data;
             public Exception? ApprenticeText;
             public Exception? JourneymanText;
             public Exception? ExpertText;
             public Exception? MasterText;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -670,16 +551,8 @@ namespace Mutagen.Bethesda.Oblivion
                         return Description;
                     case SkillRecord_FieldIndex.Icon:
                         return Icon;
-                    case SkillRecord_FieldIndex.Action:
-                        return Action;
-                    case SkillRecord_FieldIndex.Attribute:
-                        return Attribute;
-                    case SkillRecord_FieldIndex.Specialization:
-                        return Specialization;
-                    case SkillRecord_FieldIndex.UseValueFirst:
-                        return UseValueFirst;
-                    case SkillRecord_FieldIndex.UseValueSecond:
-                        return UseValueSecond;
+                    case SkillRecord_FieldIndex.Data:
+                        return Data;
                     case SkillRecord_FieldIndex.ApprenticeText:
                         return ApprenticeText;
                     case SkillRecord_FieldIndex.JourneymanText:
@@ -688,8 +561,6 @@ namespace Mutagen.Bethesda.Oblivion
                         return ExpertText;
                     case SkillRecord_FieldIndex.MasterText:
                         return MasterText;
-                    case SkillRecord_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -709,20 +580,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case SkillRecord_FieldIndex.Icon:
                         this.Icon = ex;
                         break;
-                    case SkillRecord_FieldIndex.Action:
-                        this.Action = ex;
-                        break;
-                    case SkillRecord_FieldIndex.Attribute:
-                        this.Attribute = ex;
-                        break;
-                    case SkillRecord_FieldIndex.Specialization:
-                        this.Specialization = ex;
-                        break;
-                    case SkillRecord_FieldIndex.UseValueFirst:
-                        this.UseValueFirst = ex;
-                        break;
-                    case SkillRecord_FieldIndex.UseValueSecond:
-                        this.UseValueSecond = ex;
+                    case SkillRecord_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, SkillData.ErrorMask?>(ex, null);
                         break;
                     case SkillRecord_FieldIndex.ApprenticeText:
                         this.ApprenticeText = ex;
@@ -735,9 +594,6 @@ namespace Mutagen.Bethesda.Oblivion
                         break;
                     case SkillRecord_FieldIndex.MasterText:
                         this.MasterText = ex;
-                        break;
-                    case SkillRecord_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -759,20 +615,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case SkillRecord_FieldIndex.Icon:
                         this.Icon = (Exception?)obj;
                         break;
-                    case SkillRecord_FieldIndex.Action:
-                        this.Action = (Exception?)obj;
-                        break;
-                    case SkillRecord_FieldIndex.Attribute:
-                        this.Attribute = (Exception?)obj;
-                        break;
-                    case SkillRecord_FieldIndex.Specialization:
-                        this.Specialization = (Exception?)obj;
-                        break;
-                    case SkillRecord_FieldIndex.UseValueFirst:
-                        this.UseValueFirst = (Exception?)obj;
-                        break;
-                    case SkillRecord_FieldIndex.UseValueSecond:
-                        this.UseValueSecond = (Exception?)obj;
+                    case SkillRecord_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, SkillData.ErrorMask?>?)obj;
                         break;
                     case SkillRecord_FieldIndex.ApprenticeText:
                         this.ApprenticeText = (Exception?)obj;
@@ -786,9 +630,6 @@ namespace Mutagen.Bethesda.Oblivion
                     case SkillRecord_FieldIndex.MasterText:
                         this.MasterText = (Exception?)obj;
                         break;
-                    case SkillRecord_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -801,16 +642,11 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Skill != null) return true;
                 if (Description != null) return true;
                 if (Icon != null) return true;
-                if (Action != null) return true;
-                if (Attribute != null) return true;
-                if (Specialization != null) return true;
-                if (UseValueFirst != null) return true;
-                if (UseValueSecond != null) return true;
+                if (Data != null) return true;
                 if (ApprenticeText != null) return true;
                 if (JourneymanText != null) return true;
                 if (ExpertText != null) return true;
                 if (MasterText != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -849,16 +685,11 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(Skill, "Skill");
                 fg.AppendItem(Description, "Description");
                 fg.AppendItem(Icon, "Icon");
-                fg.AppendItem(Action, "Action");
-                fg.AppendItem(Attribute, "Attribute");
-                fg.AppendItem(Specialization, "Specialization");
-                fg.AppendItem(UseValueFirst, "UseValueFirst");
-                fg.AppendItem(UseValueSecond, "UseValueSecond");
+                Data?.ToString(fg);
                 fg.AppendItem(ApprenticeText, "ApprenticeText");
                 fg.AppendItem(JourneymanText, "JourneymanText");
                 fg.AppendItem(ExpertText, "ExpertText");
                 fg.AppendItem(MasterText, "MasterText");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -870,16 +701,11 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Skill = this.Skill.Combine(rhs.Skill);
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.Icon = this.Icon.Combine(rhs.Icon);
-                ret.Action = this.Action.Combine(rhs.Action);
-                ret.Attribute = this.Attribute.Combine(rhs.Attribute);
-                ret.Specialization = this.Specialization.Combine(rhs.Specialization);
-                ret.UseValueFirst = this.UseValueFirst.Combine(rhs.UseValueFirst);
-                ret.UseValueSecond = this.UseValueSecond.Combine(rhs.UseValueSecond);
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 ret.ApprenticeText = this.ApprenticeText.Combine(rhs.ApprenticeText);
                 ret.JourneymanText = this.JourneymanText.Combine(rhs.JourneymanText);
                 ret.ExpertText = this.ExpertText.Combine(rhs.ExpertText);
                 ret.MasterText = this.MasterText.Combine(rhs.MasterText);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -905,16 +731,11 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Skill;
             public bool Description;
             public bool Icon;
-            public bool Action;
-            public bool Attribute;
-            public bool Specialization;
-            public bool UseValueFirst;
-            public bool UseValueSecond;
+            public MaskItem<bool, SkillData.TranslationMask?> Data;
             public bool ApprenticeText;
             public bool JourneymanText;
             public bool ExpertText;
             public bool MasterText;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -924,16 +745,11 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Skill = defaultOn;
                 this.Description = defaultOn;
                 this.Icon = defaultOn;
-                this.Action = defaultOn;
-                this.Attribute = defaultOn;
-                this.Specialization = defaultOn;
-                this.UseValueFirst = defaultOn;
-                this.UseValueSecond = defaultOn;
+                this.Data = new MaskItem<bool, SkillData.TranslationMask?>(defaultOn, null);
                 this.ApprenticeText = defaultOn;
                 this.JourneymanText = defaultOn;
                 this.ExpertText = defaultOn;
                 this.MasterText = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -944,27 +760,17 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Skill, null));
                 ret.Add((Description, null));
                 ret.Add((Icon, null));
-                ret.Add((Action, null));
-                ret.Add((Attribute, null));
-                ret.Add((Specialization, null));
-                ret.Add((UseValueFirst, null));
-                ret.Add((UseValueSecond, null));
+                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
                 ret.Add((ApprenticeText, null));
                 ret.Add((JourneymanText, null));
                 ret.Add((ExpertText, null));
                 ret.Add((MasterText, null));
-                ret.Add((DATADataTypeState, null));
             }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = SkillRecord_Registration.TriggeringRecordType;
-        [Flags]
-        public enum DATADataType
-        {
-            Has = 1
-        }
         public SkillRecord(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1047,16 +853,11 @@ namespace Mutagen.Bethesda.Oblivion
         new ActorValue? Skill { get; set; }
         new String? Description { get; set; }
         new String? Icon { get; set; }
-        new ActorValue Action { get; set; }
-        new ActorValue Attribute { get; set; }
-        new Specialization Specialization { get; set; }
-        new Single UseValueFirst { get; set; }
-        new Single UseValueSecond { get; set; }
+        new SkillData? Data { get; set; }
         new String? ApprenticeText { get; set; }
         new String? JourneymanText { get; set; }
         new String? ExpertText { get; set; }
         new String? MasterText { get; set; }
-        new SkillRecord.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface ISkillRecordInternal :
@@ -1075,16 +876,11 @@ namespace Mutagen.Bethesda.Oblivion
         ActorValue? Skill { get; }
         String? Description { get; }
         String? Icon { get; }
-        ActorValue Action { get; }
-        ActorValue Attribute { get; }
-        Specialization Specialization { get; }
-        Single UseValueFirst { get; }
-        Single UseValueSecond { get; }
+        ISkillDataGetter? Data { get; }
         String? ApprenticeText { get; }
         String? JourneymanText { get; }
         String? ExpertText { get; }
         String? MasterText { get; }
-        SkillRecord.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -1387,16 +1183,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Skill = 5,
         Description = 6,
         Icon = 7,
-        Action = 8,
-        Attribute = 9,
-        Specialization = 10,
-        UseValueFirst = 11,
-        UseValueSecond = 12,
-        ApprenticeText = 13,
-        JourneymanText = 14,
-        ExpertText = 15,
-        MasterText = 16,
-        DATADataTypeState = 17,
+        Data = 8,
+        ApprenticeText = 9,
+        JourneymanText = 10,
+        ExpertText = 11,
+        MasterText = 12,
     }
     #endregion
 
@@ -1414,9 +1205,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "d6afa219-e0d6-4f44-83d4-2d0298897f4d";
 
-        public const ushort AdditionalFieldCount = 13;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 18;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(SkillRecord.Mask<>);
 
@@ -1452,16 +1243,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)SkillRecord_FieldIndex.Description;
                 case "ICON":
                     return (ushort)SkillRecord_FieldIndex.Icon;
-                case "ACTION":
-                    return (ushort)SkillRecord_FieldIndex.Action;
-                case "ATTRIBUTE":
-                    return (ushort)SkillRecord_FieldIndex.Attribute;
-                case "SPECIALIZATION":
-                    return (ushort)SkillRecord_FieldIndex.Specialization;
-                case "USEVALUEFIRST":
-                    return (ushort)SkillRecord_FieldIndex.UseValueFirst;
-                case "USEVALUESECOND":
-                    return (ushort)SkillRecord_FieldIndex.UseValueSecond;
+                case "DATA":
+                    return (ushort)SkillRecord_FieldIndex.Data;
                 case "APPRENTICETEXT":
                     return (ushort)SkillRecord_FieldIndex.ApprenticeText;
                 case "JOURNEYMANTEXT":
@@ -1470,8 +1253,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)SkillRecord_FieldIndex.ExpertText;
                 case "MASTERTEXT":
                     return (ushort)SkillRecord_FieldIndex.MasterText;
-                case "DATADATATYPESTATE":
-                    return (ushort)SkillRecord_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -1485,16 +1266,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SkillRecord_FieldIndex.Skill:
                 case SkillRecord_FieldIndex.Description:
                 case SkillRecord_FieldIndex.Icon:
-                case SkillRecord_FieldIndex.Action:
-                case SkillRecord_FieldIndex.Attribute:
-                case SkillRecord_FieldIndex.Specialization:
-                case SkillRecord_FieldIndex.UseValueFirst:
-                case SkillRecord_FieldIndex.UseValueSecond:
+                case SkillRecord_FieldIndex.Data:
                 case SkillRecord_FieldIndex.ApprenticeText:
                 case SkillRecord_FieldIndex.JourneymanText:
                 case SkillRecord_FieldIndex.ExpertText:
                 case SkillRecord_FieldIndex.MasterText:
-                case SkillRecord_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1506,19 +1282,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SkillRecord_FieldIndex enu = (SkillRecord_FieldIndex)index;
             switch (enu)
             {
+                case SkillRecord_FieldIndex.Data:
+                    return true;
                 case SkillRecord_FieldIndex.Skill:
                 case SkillRecord_FieldIndex.Description:
                 case SkillRecord_FieldIndex.Icon:
-                case SkillRecord_FieldIndex.Action:
-                case SkillRecord_FieldIndex.Attribute:
-                case SkillRecord_FieldIndex.Specialization:
-                case SkillRecord_FieldIndex.UseValueFirst:
-                case SkillRecord_FieldIndex.UseValueSecond:
                 case SkillRecord_FieldIndex.ApprenticeText:
                 case SkillRecord_FieldIndex.JourneymanText:
                 case SkillRecord_FieldIndex.ExpertText:
                 case SkillRecord_FieldIndex.MasterText:
-                case SkillRecord_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1533,16 +1305,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SkillRecord_FieldIndex.Skill:
                 case SkillRecord_FieldIndex.Description:
                 case SkillRecord_FieldIndex.Icon:
-                case SkillRecord_FieldIndex.Action:
-                case SkillRecord_FieldIndex.Attribute:
-                case SkillRecord_FieldIndex.Specialization:
-                case SkillRecord_FieldIndex.UseValueFirst:
-                case SkillRecord_FieldIndex.UseValueSecond:
+                case SkillRecord_FieldIndex.Data:
                 case SkillRecord_FieldIndex.ApprenticeText:
                 case SkillRecord_FieldIndex.JourneymanText:
                 case SkillRecord_FieldIndex.ExpertText:
                 case SkillRecord_FieldIndex.MasterText:
-                case SkillRecord_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1560,16 +1327,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Description";
                 case SkillRecord_FieldIndex.Icon:
                     return "Icon";
-                case SkillRecord_FieldIndex.Action:
-                    return "Action";
-                case SkillRecord_FieldIndex.Attribute:
-                    return "Attribute";
-                case SkillRecord_FieldIndex.Specialization:
-                    return "Specialization";
-                case SkillRecord_FieldIndex.UseValueFirst:
-                    return "UseValueFirst";
-                case SkillRecord_FieldIndex.UseValueSecond:
-                    return "UseValueSecond";
+                case SkillRecord_FieldIndex.Data:
+                    return "Data";
                 case SkillRecord_FieldIndex.ApprenticeText:
                     return "ApprenticeText";
                 case SkillRecord_FieldIndex.JourneymanText:
@@ -1578,8 +1337,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "ExpertText";
                 case SkillRecord_FieldIndex.MasterText:
                     return "MasterText";
-                case SkillRecord_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
                 default:
                     return OblivionMajorRecord_Registration.GetNthName(index);
             }
@@ -1593,16 +1350,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SkillRecord_FieldIndex.Skill:
                 case SkillRecord_FieldIndex.Description:
                 case SkillRecord_FieldIndex.Icon:
-                case SkillRecord_FieldIndex.Action:
-                case SkillRecord_FieldIndex.Attribute:
-                case SkillRecord_FieldIndex.Specialization:
-                case SkillRecord_FieldIndex.UseValueFirst:
-                case SkillRecord_FieldIndex.UseValueSecond:
+                case SkillRecord_FieldIndex.Data:
                 case SkillRecord_FieldIndex.ApprenticeText:
                 case SkillRecord_FieldIndex.JourneymanText:
                 case SkillRecord_FieldIndex.ExpertText:
                 case SkillRecord_FieldIndex.MasterText:
-                case SkillRecord_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsNthDerivative(index);
@@ -1617,16 +1369,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SkillRecord_FieldIndex.Skill:
                 case SkillRecord_FieldIndex.Description:
                 case SkillRecord_FieldIndex.Icon:
-                case SkillRecord_FieldIndex.Action:
-                case SkillRecord_FieldIndex.Attribute:
-                case SkillRecord_FieldIndex.Specialization:
-                case SkillRecord_FieldIndex.UseValueFirst:
-                case SkillRecord_FieldIndex.UseValueSecond:
+                case SkillRecord_FieldIndex.Data:
                 case SkillRecord_FieldIndex.ApprenticeText:
                 case SkillRecord_FieldIndex.JourneymanText:
                 case SkillRecord_FieldIndex.ExpertText:
                 case SkillRecord_FieldIndex.MasterText:
-                case SkillRecord_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsProtected(index);
@@ -1644,16 +1391,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(String);
                 case SkillRecord_FieldIndex.Icon:
                     return typeof(String);
-                case SkillRecord_FieldIndex.Action:
-                    return typeof(ActorValue);
-                case SkillRecord_FieldIndex.Attribute:
-                    return typeof(ActorValue);
-                case SkillRecord_FieldIndex.Specialization:
-                    return typeof(Specialization);
-                case SkillRecord_FieldIndex.UseValueFirst:
-                    return typeof(Single);
-                case SkillRecord_FieldIndex.UseValueSecond:
-                    return typeof(Single);
+                case SkillRecord_FieldIndex.Data:
+                    return typeof(SkillData);
                 case SkillRecord_FieldIndex.ApprenticeText:
                     return typeof(String);
                 case SkillRecord_FieldIndex.JourneymanText:
@@ -1662,8 +1401,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(String);
                 case SkillRecord_FieldIndex.MasterText:
                     return typeof(String);
-                case SkillRecord_FieldIndex.DATADataTypeState:
-                    return typeof(SkillRecord.DATADataType);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -1681,7 +1418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
         public static readonly RecordType TriggeringRecordType = SKIL_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 7;
+        public const int NumTypedFields = 8;
         public static readonly Type BinaryWriteTranslation = typeof(SkillRecordBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1727,16 +1464,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Skill = default;
             item.Description = default;
             item.Icon = default;
-            item.Action = default;
-            item.Attribute = default;
-            item.Specialization = default;
-            item.UseValueFirst = default;
-            item.UseValueSecond = default;
+            item.Data = null;
             item.ApprenticeText = default;
             item.JourneymanText = default;
             item.ExpertText = default;
             item.MasterText = default;
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1760,9 +1492,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "HasDATADataType":
-                    item.DATADataTypeState |= SkillRecord.DATADataType.Has;
-                    break;
                 default:
                     OblivionMajorRecordSetterCommon.FillPrivateElementXml(
                         item: item,
@@ -1878,18 +1607,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.DATADataTypeState = SkillRecord.DATADataType.Has;
-                    }
-                    item.Action = EnumBinaryTranslation<ActorValue>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.Attribute = EnumBinaryTranslation<ActorValue>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.Specialization = EnumBinaryTranslation<Specialization>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.UseValueFirst = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.UseValueSecond = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.UseValueSecond);
+                    item.Data = Mutagen.Bethesda.Oblivion.SkillData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Data);
                 }
                 case 0x4D414E41: // ANAM
                 {
@@ -2000,16 +1719,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Skill = item.Skill == rhs.Skill;
             ret.Description = string.Equals(item.Description, rhs.Description);
             ret.Icon = string.Equals(item.Icon, rhs.Icon);
-            ret.Action = item.Action == rhs.Action;
-            ret.Attribute = item.Attribute == rhs.Attribute;
-            ret.Specialization = item.Specialization == rhs.Specialization;
-            ret.UseValueFirst = item.UseValueFirst.EqualsWithin(rhs.UseValueFirst);
-            ret.UseValueSecond = item.UseValueSecond.EqualsWithin(rhs.UseValueSecond);
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.ApprenticeText = string.Equals(item.ApprenticeText, rhs.ApprenticeText);
             ret.JourneymanText = string.Equals(item.JourneymanText, rhs.JourneymanText);
             ret.ExpertText = string.Equals(item.ExpertText, rhs.ExpertText);
             ret.MasterText = string.Equals(item.MasterText, rhs.MasterText);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2076,25 +1794,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(IconItem, "Icon");
             }
-            if (printMask?.Action ?? true)
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data.TryGet(out var DataItem))
             {
-                fg.AppendItem(item.Action, "Action");
-            }
-            if (printMask?.Attribute ?? true)
-            {
-                fg.AppendItem(item.Attribute, "Attribute");
-            }
-            if (printMask?.Specialization ?? true)
-            {
-                fg.AppendItem(item.Specialization, "Specialization");
-            }
-            if (printMask?.UseValueFirst ?? true)
-            {
-                fg.AppendItem(item.UseValueFirst, "UseValueFirst");
-            }
-            if (printMask?.UseValueSecond ?? true)
-            {
-                fg.AppendItem(item.UseValueSecond, "UseValueSecond");
+                DataItem?.ToString(fg, "Data");
             }
             if ((printMask?.ApprenticeText ?? true)
                 && item.ApprenticeText.TryGet(out var ApprenticeTextItem))
@@ -2116,10 +1819,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(MasterTextItem, "MasterText");
             }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         public bool HasBeenSet(
@@ -2129,6 +1828,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Skill.HasValue && checkMask.Skill.Value != (item.Skill != null)) return false;
             if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
+            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
+            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
             if (checkMask.ApprenticeText.HasValue && checkMask.ApprenticeText.Value != (item.ApprenticeText != null)) return false;
             if (checkMask.JourneymanText.HasValue && checkMask.JourneymanText.Value != (item.JourneymanText != null)) return false;
             if (checkMask.ExpertText.HasValue && checkMask.ExpertText.Value != (item.ExpertText != null)) return false;
@@ -2145,16 +1846,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Skill = (item.Skill != null);
             mask.Description = (item.Description != null);
             mask.Icon = (item.Icon != null);
-            mask.Action = true;
-            mask.Attribute = true;
-            mask.Specialization = true;
-            mask.UseValueFirst = true;
-            mask.UseValueSecond = true;
+            var itemData = item.Data;
+            mask.Data = new MaskItem<bool, SkillData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
             mask.ApprenticeText = (item.ApprenticeText != null);
             mask.JourneymanText = (item.JourneymanText != null);
             mask.ExpertText = (item.ExpertText != null);
             mask.MasterText = (item.MasterText != null);
-            mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -2207,16 +1904,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs.Skill != rhs.Skill) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
             if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
-            if (lhs.Action != rhs.Action) return false;
-            if (lhs.Attribute != rhs.Attribute) return false;
-            if (lhs.Specialization != rhs.Specialization) return false;
-            if (!lhs.UseValueFirst.EqualsWithin(rhs.UseValueFirst)) return false;
-            if (!lhs.UseValueSecond.EqualsWithin(rhs.UseValueSecond)) return false;
+            if (!object.Equals(lhs.Data, rhs.Data)) return false;
             if (!string.Equals(lhs.ApprenticeText, rhs.ApprenticeText)) return false;
             if (!string.Equals(lhs.JourneymanText, rhs.JourneymanText)) return false;
             if (!string.Equals(lhs.ExpertText, rhs.ExpertText)) return false;
             if (!string.Equals(lhs.MasterText, rhs.MasterText)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
         
@@ -2253,11 +1945,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(Iconitem);
             }
-            hash.Add(item.Action);
-            hash.Add(item.Attribute);
-            hash.Add(item.Specialization);
-            hash.Add(item.UseValueFirst);
-            hash.Add(item.UseValueSecond);
+            if (item.Data.TryGet(out var Dataitem))
+            {
+                hash.Add(Dataitem);
+            }
             if (item.ApprenticeText.TryGet(out var ApprenticeTextitem))
             {
                 hash.Add(ApprenticeTextitem);
@@ -2274,7 +1965,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(MasterTextitem);
             }
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2362,25 +2052,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.Icon = rhs.Icon;
             }
-            if ((copyMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Action) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Data) ?? true))
             {
-                item.Action = rhs.Action;
-            }
-            if ((copyMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Attribute) ?? true))
-            {
-                item.Attribute = rhs.Attribute;
-            }
-            if ((copyMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Specialization) ?? true))
-            {
-                item.Specialization = rhs.Specialization;
-            }
-            if ((copyMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.UseValueFirst) ?? true))
-            {
-                item.UseValueFirst = rhs.UseValueFirst;
-            }
-            if ((copyMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.UseValueSecond) ?? true))
-            {
-                item.UseValueSecond = rhs.UseValueSecond;
+                errorMask?.PushIndex((int)SkillRecord_FieldIndex.Data);
+                try
+                {
+                    if(rhs.Data.TryGet(out var rhsData))
+                    {
+                        item.Data = rhsData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)SkillRecord_FieldIndex.Data));
+                    }
+                    else
+                    {
+                        item.Data = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.ApprenticeText) ?? true))
             {
@@ -2397,10 +2093,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((copyMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.MasterText) ?? true))
             {
                 item.MasterText = rhs.MasterText;
-            }
-            if ((copyMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
             }
         }
         
@@ -2574,52 +2266,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)SkillRecord_FieldIndex.Icon,
                     errorMask: errorMask);
             }
-            if (item.DATADataTypeState.HasFlag(SkillRecord.DATADataType.Has))
+            if ((item.Data != null)
+                && (translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Data) ?? true))
             {
-                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Action) ?? true))
+                if (item.Data.TryGet(out var DataItem))
                 {
-                    EnumXmlTranslation<ActorValue>.Instance.Write(
+                    ((SkillDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                        item: DataItem,
                         node: node,
-                        name: nameof(item.Action),
-                        item: item.Action,
-                        fieldIndex: (int)SkillRecord_FieldIndex.Action,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Attribute) ?? true))
-                {
-                    EnumXmlTranslation<ActorValue>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Attribute),
-                        item: item.Attribute,
-                        fieldIndex: (int)SkillRecord_FieldIndex.Attribute,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.Specialization) ?? true))
-                {
-                    EnumXmlTranslation<Specialization>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Specialization),
-                        item: item.Specialization,
-                        fieldIndex: (int)SkillRecord_FieldIndex.Specialization,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.UseValueFirst) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.UseValueFirst),
-                        item: item.UseValueFirst,
-                        fieldIndex: (int)SkillRecord_FieldIndex.UseValueFirst,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.UseValueSecond) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.UseValueSecond),
-                        item: item.UseValueSecond,
-                        fieldIndex: (int)SkillRecord_FieldIndex.UseValueSecond,
-                        errorMask: errorMask);
+                        name: nameof(item.Data),
+                        fieldIndex: (int)SkillRecord_FieldIndex.Data,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)SkillRecord_FieldIndex.Data));
                 }
             }
             if ((item.ApprenticeText != null)
@@ -2660,15 +2318,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.MasterText),
                     item: item.MasterText,
                     fieldIndex: (int)SkillRecord_FieldIndex.MasterText,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkillRecord_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<SkillRecord.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)SkillRecord_FieldIndex.DATADataTypeState,
                     errorMask: errorMask);
             }
         }
@@ -2832,86 +2481,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Action":
-                    errorMask?.PushIndex((int)SkillRecord_FieldIndex.Action);
+                case "Data":
+                    errorMask?.PushIndex((int)SkillRecord_FieldIndex.Data);
                     try
                     {
-                        item.Action = EnumXmlTranslation<ActorValue>.Instance.Parse(
+                        item.Data = LoquiXmlTranslation<SkillData>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.DATADataTypeState |= SkillRecord.DATADataType.Has;
-                    break;
-                case "Attribute":
-                    errorMask?.PushIndex((int)SkillRecord_FieldIndex.Attribute);
-                    try
-                    {
-                        item.Attribute = EnumXmlTranslation<ActorValue>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Specialization":
-                    errorMask?.PushIndex((int)SkillRecord_FieldIndex.Specialization);
-                    try
-                    {
-                        item.Specialization = EnumXmlTranslation<Specialization>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "UseValueFirst":
-                    errorMask?.PushIndex((int)SkillRecord_FieldIndex.UseValueFirst);
-                    try
-                    {
-                        item.UseValueFirst = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "UseValueSecond":
-                    errorMask?.PushIndex((int)SkillRecord_FieldIndex.UseValueSecond);
-                    try
-                    {
-                        item.UseValueSecond = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)SkillRecord_FieldIndex.Data));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2982,24 +2559,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         item.MasterText = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DATADataTypeState":
-                    errorMask?.PushIndex((int)SkillRecord_FieldIndex.DATADataTypeState);
-                    try
-                    {
-                        item.DATADataTypeState = EnumXmlTranslation<SkillRecord.DATADataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3099,15 +2658,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static SkillRecordBinaryWriteTranslation Instance = new SkillRecordBinaryWriteTranslation();
 
-        public static void WriteEmbedded(
-            ISkillRecordGetter item,
-            MutagenWriter writer)
-        {
-            OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             ISkillRecordGetter item,
             MutagenWriter writer,
@@ -3132,29 +2682,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Icon,
                 header: recordTypeConverter.ConvertToCustom(SkillRecord_Registration.ICON_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.DATADataTypeState.HasFlag(SkillRecord.DATADataType.Has))
+            if (item.Data.TryGet(out var DataItem))
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(SkillRecord_Registration.DATA_HEADER)))
-                {
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
-                        writer,
-                        item.Action,
-                        length: 4);
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
-                        writer,
-                        item.Attribute,
-                        length: 4);
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Specialization>.Instance.Write(
-                        writer,
-                        item.Specialization,
-                        length: 4);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.UseValueFirst);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.UseValueSecond);
-                }
+                ((SkillDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                    item: DataItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -3188,7 +2721,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: recordTypeConverter.ConvertToCustom(SkillRecord_Registration.SKIL_HEADER),
                 type: ObjectType.Record))
             {
-                WriteEmbedded(
+                OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -3311,32 +2844,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _IconLocation;
         public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _IconLocation.Value, _package.Meta)) : default(string?);
         #endregion
-        private int? _DATALocation;
-        public SkillRecord.DATADataType DATADataTypeState { get; private set; }
-        #region Action
-        private int _ActionLocation => _DATALocation!.Value + 0x0;
-        private bool _Action_IsSet => _DATALocation.HasValue;
-        public ActorValue Action => _Action_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ActionLocation, 4)) : default;
-        #endregion
-        #region Attribute
-        private int _AttributeLocation => _DATALocation!.Value + 0x4;
-        private bool _Attribute_IsSet => _DATALocation.HasValue;
-        public ActorValue Attribute => _Attribute_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_AttributeLocation, 4)) : default;
-        #endregion
-        #region Specialization
-        private int _SpecializationLocation => _DATALocation!.Value + 0x8;
-        private bool _Specialization_IsSet => _DATALocation.HasValue;
-        public Specialization Specialization => _Specialization_IsSet ? (Specialization)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_SpecializationLocation, 4)) : default;
-        #endregion
-        #region UseValueFirst
-        private int _UseValueFirstLocation => _DATALocation!.Value + 0xC;
-        private bool _UseValueFirst_IsSet => _DATALocation.HasValue;
-        public Single UseValueFirst => _UseValueFirst_IsSet ? SpanExt.GetFloat(_data.Slice(_UseValueFirstLocation, 4)) : default;
-        #endregion
-        #region UseValueSecond
-        private int _UseValueSecondLocation => _DATALocation!.Value + 0x10;
-        private bool _UseValueSecond_IsSet => _DATALocation.HasValue;
-        public Single UseValueSecond => _UseValueSecond_IsSet ? SpanExt.GetFloat(_data.Slice(_UseValueSecondLocation, 4)) : default;
+        #region Data
+        private RangeInt32? _DataLocation;
+        private bool _Data_IsSet => _DataLocation.HasValue;
+        public ISkillDataGetter? Data => _Data_IsSet ? SkillDataBinaryOverlay.SkillDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region ApprenticeText
         private int? _ApprenticeTextLocation;
@@ -3421,9 +2933,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
-                    this.DATADataTypeState = SkillRecord.DATADataType.Has;
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.UseValueSecond);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Data);
                 }
                 case 0x4D414E41: // ANAM
                 {

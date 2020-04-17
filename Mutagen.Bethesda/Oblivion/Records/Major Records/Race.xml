@@ -9,29 +9,7 @@
         <FormLink recordType="SPLO" refName="Spell" />
       </List>
       <RefList name="Relations" refName="RaceRelation" />
-      <Data>
-        <Fields>
-          <RefDirect name="SkillBoost0" refName="SkillBoost" />
-          <RefDirect name="SkillBoost1" refName="SkillBoost" />
-          <RefDirect name="SkillBoost2" refName="SkillBoost" />
-          <RefDirect name="SkillBoost3" refName="SkillBoost" />
-          <RefDirect name="SkillBoost4" refName="SkillBoost" />
-          <RefDirect name="SkillBoost5" refName="SkillBoost" />
-          <RefDirect name="SkillBoost6" refName="SkillBoost" />
-          <ByteArray name="Fluff" byteLength="4" nullable="NotNull" />
-          <Gendered name="Height" >
-            <Fields>
-              <Float />
-            </Fields>
-          </Gendered>
-          <Gendered name="Weight" >
-            <Fields>
-              <Float />
-            </Fields>
-          </Gendered>
-          <Enum name="Flags" enumName="Race.Flag" byteLength="2" />
-        </Fields>
-      </Data>
+      <RefDirect name="Data" refName="RaceData" />
       <Gendered name="Voices" recordType="VNAM">
         <Fields>
           <FormLink refName="Race" />
@@ -45,7 +23,7 @@
       <UInt8 name="DefaultHairColor" recordType="CNAM" />
       <Int32 name="FaceGenMainClamp" recordType="PNAM" hasBeenSet="True" />
       <Int32 name="FaceGenFaceClamp" recordType="UNAM" hasBeenSet="True" />
-      <Gendered name="RaceStats" recordType="ATTR" >
+      <Gendered name="RaceStats" recordType="ATTR">
         <Fields>
           <RefDirect refName="RaceStats" />
         </Fields>
@@ -64,6 +42,29 @@
       </List>
       <RefDirect name="FaceGenData" refName="FaceGenData" />
       <ByteArray name="Unknown" recordType="SNAM" byteLength="2" nullable="NotNull" />
+    </Fields>
+  </Object>
+  <Object name="RaceData" objType="Subrecord" recordType="DATA" GUID="a601027e-c79b-4987-bfae-8c172c8b13e5" ID="205">
+    <Fields>
+      <RefDirect name="SkillBoost0" refName="SkillBoost" />
+      <RefDirect name="SkillBoost1" refName="SkillBoost" />
+      <RefDirect name="SkillBoost2" refName="SkillBoost" />
+      <RefDirect name="SkillBoost3" refName="SkillBoost" />
+      <RefDirect name="SkillBoost4" refName="SkillBoost" />
+      <RefDirect name="SkillBoost5" refName="SkillBoost" />
+      <RefDirect name="SkillBoost6" refName="SkillBoost" />
+      <ByteArray name="Fluff" byteLength="4" nullable="NotNull" />
+      <Gendered name="Height">
+        <Fields>
+          <Float />
+        </Fields>
+      </Gendered>
+      <Gendered name="Weight">
+        <Fields>
+          <Float />
+        </Fields>
+      </Gendered>
+      <Enum name="Flags" enumName="Race.Flag" byteLength="2" />
     </Fields>
   </Object>
   <Object name="SkillBoost" objType="Subrecord" GUID="5b28ecc2-3bf5-495e-9f6f-db9ce344e94e" ID="27">

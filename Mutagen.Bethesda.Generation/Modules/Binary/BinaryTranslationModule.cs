@@ -1499,10 +1499,12 @@ namespace Mutagen.Bethesda.Generation
 
         protected async Task GenerateImportWrapper(ObjectGeneration obj, FileGeneration fg)
         {
+            var objData = obj.GetObjectData();
+            if (objData.BinaryOverlay != BinaryGenerationType.Normal) return;
+
             var dataAccessor = new Accessor("_data");
             var packageAccessor = new Accessor("_package");
             var metaAccessor = new Accessor("_package.Meta");
-            var objData = obj.GetObjectData();
             var needsMasters = await obj.GetNeedsMasters();
             var anyHasRecordTypes = (await obj.EntireClassTree()).Any(c => HasRecordTypeFields(c));
 
@@ -2113,7 +2115,7 @@ namespace Mutagen.Bethesda.Generation
                                     if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
                                     foreach (var trigger in gen.Key)
                                     {
-                                        fg.AppendLine($"case 0x{trigger.TypeInt.ToString("X")}: // {trigger.Type}");
+                                        fg.AppendLine($"case 0x{trigger.TypeInt:X}: // {trigger.Type}");
                                     }
                                     using (new BraceWrapper(fg))
                                     {

@@ -5,19 +5,20 @@
       <Enum name="Skill" enumName="ActorValue" byteLength="4" recordType="INDX" />
       <String name="Description" recordType="DESC" hasBeenSet="True" />
       <String name="Icon" recordType="ICON" hasBeenSet="True" />
-      <Data>
-        <Fields>
-          <Enum name="Action" enumName="ActorValue" byteLength="4" />
-          <Enum name="Attribute" enumName="ActorValue" byteLength="4" />
-          <Enum name="Specialization" enumName="Specialization" byteLength="4" />
-          <Float name="UseValueFirst" />
-          <Float name="UseValueSecond" />
-        </Fields>
-      </Data>
+      <RefDirect name="Data" refName="SkillData" />
       <String name="ApprenticeText" recordType="ANAM" />
       <String name="JourneymanText" recordType="JNAM" />
       <String name="ExpertText" recordType="ENAM" />
       <String name="MasterText" recordType="MNAM" />
+    </Fields>
+  </Object>
+  <Object name="SkillData" objType="Subrecord" recordType="DATA" GUID="7d77fda3-ca94-4126-b35e-52098fb45b40" ID="209">
+    <Fields>
+      <Enum name="Action" enumName="ActorValue" byteLength="4" />
+      <Enum name="Attribute" enumName="ActorValue" byteLength="4" />
+      <Enum name="Specialization" enumName="Specialization" byteLength="4" />
+      <Float name="UseValueFirst" />
+      <Float name="UseValueSecond" />
     </Fields>
   </Object>
 </Loqui>

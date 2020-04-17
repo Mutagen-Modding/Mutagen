@@ -16,7 +16,6 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
-using System.Drawing;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -96,408 +95,38 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
-        #region FogDayNear
+        #region FogDistance
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _FogDayNear;
-        public Single FogDayNear
+        private FogDistance? _FogDistance;
+        public FogDistance? FogDistance
         {
-            get => this._FogDayNear;
-            set
-            {
-                this.FNAMDataTypeState |= FNAMDataType.Has;
-                this._FogDayNear = value;
-            }
+            get => _FogDistance;
+            set => _FogDistance = value;
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFogDistanceGetter? IWeatherGetter.FogDistance => this.FogDistance;
         #endregion
-        #region FogDayFar
+        #region HDRData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _FogDayFar;
-        public Single FogDayFar
+        private HDRData? _HDRData;
+        public HDRData? HDRData
         {
-            get => this._FogDayFar;
-            set
-            {
-                this.FNAMDataTypeState |= FNAMDataType.Has;
-                this._FogDayFar = value;
-            }
+            get => _HDRData;
+            set => _HDRData = value;
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IHDRDataGetter? IWeatherGetter.HDRData => this.HDRData;
         #endregion
-        #region FogNightNear
+        #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _FogNightNear;
-        public Single FogNightNear
+        private WeatherData? _Data;
+        public WeatherData? Data
         {
-            get => this._FogNightNear;
-            set
-            {
-                this.FNAMDataTypeState |= FNAMDataType.Has;
-                this._FogNightNear = value;
-            }
+            get => _Data;
+            set => _Data = value;
         }
-        #endregion
-        #region FogNightFar
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _FogNightFar;
-        public Single FogNightFar
-        {
-            get => this._FogNightFar;
-            set
-            {
-                this.FNAMDataTypeState |= FNAMDataType.Has;
-                this._FogNightFar = value;
-            }
-        }
-        #endregion
-        #region HdrEyeAdaptSpeed
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _HdrEyeAdaptSpeed;
-        public Single HdrEyeAdaptSpeed
-        {
-            get => this._HdrEyeAdaptSpeed;
-            set
-            {
-                this.HNAMDataTypeState |= HNAMDataType.Has;
-                this._HdrEyeAdaptSpeed = value;
-            }
-        }
-        #endregion
-        #region HdrBlurRadius
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _HdrBlurRadius;
-        public Single HdrBlurRadius
-        {
-            get => this._HdrBlurRadius;
-            set
-            {
-                this.HNAMDataTypeState |= HNAMDataType.Has;
-                this._HdrBlurRadius = value;
-            }
-        }
-        #endregion
-        #region HdrBlurPasses
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _HdrBlurPasses;
-        public Single HdrBlurPasses
-        {
-            get => this._HdrBlurPasses;
-            set
-            {
-                this.HNAMDataTypeState |= HNAMDataType.Has;
-                this._HdrBlurPasses = value;
-            }
-        }
-        #endregion
-        #region HdrEmissiveMult
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _HdrEmissiveMult;
-        public Single HdrEmissiveMult
-        {
-            get => this._HdrEmissiveMult;
-            set
-            {
-                this.HNAMDataTypeState |= HNAMDataType.Has;
-                this._HdrEmissiveMult = value;
-            }
-        }
-        #endregion
-        #region HdrTargetLum
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _HdrTargetLum;
-        public Single HdrTargetLum
-        {
-            get => this._HdrTargetLum;
-            set
-            {
-                this.HNAMDataTypeState |= HNAMDataType.Has;
-                this._HdrTargetLum = value;
-            }
-        }
-        #endregion
-        #region HdrUpperLumClamp
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _HdrUpperLumClamp;
-        public Single HdrUpperLumClamp
-        {
-            get => this._HdrUpperLumClamp;
-            set
-            {
-                this.HNAMDataTypeState |= HNAMDataType.Has;
-                this._HdrUpperLumClamp = value;
-            }
-        }
-        #endregion
-        #region HdrBrightScale
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _HdrBrightScale;
-        public Single HdrBrightScale
-        {
-            get => this._HdrBrightScale;
-            set
-            {
-                this.HNAMDataTypeState |= HNAMDataType.Has;
-                this._HdrBrightScale = value;
-            }
-        }
-        #endregion
-        #region HdrBrightClamp
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _HdrBrightClamp;
-        public Single HdrBrightClamp
-        {
-            get => this._HdrBrightClamp;
-            set
-            {
-                this.HNAMDataTypeState |= HNAMDataType.Has;
-                this._HdrBrightClamp = value;
-            }
-        }
-        #endregion
-        #region HdrLumRampNoTex
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _HdrLumRampNoTex;
-        public Single HdrLumRampNoTex
-        {
-            get => this._HdrLumRampNoTex;
-            set
-            {
-                this.HNAMDataTypeState |= HNAMDataType.Has;
-                this._HdrLumRampNoTex = value;
-            }
-        }
-        #endregion
-        #region HdrLumRampMin
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _HdrLumRampMin;
-        public Single HdrLumRampMin
-        {
-            get => this._HdrLumRampMin;
-            set
-            {
-                this.HNAMDataTypeState |= HNAMDataType.Has;
-                this._HdrLumRampMin = value;
-            }
-        }
-        #endregion
-        #region HdrLumRampMax
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _HdrLumRampMax;
-        public Single HdrLumRampMax
-        {
-            get => this._HdrLumRampMax;
-            set
-            {
-                this.HNAMDataTypeState |= HNAMDataType.Has;
-                this._HdrLumRampMax = value;
-            }
-        }
-        #endregion
-        #region HdrSunlightDimmer
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _HdrSunlightDimmer;
-        public Single HdrSunlightDimmer
-        {
-            get => this._HdrSunlightDimmer;
-            set
-            {
-                this.HNAMDataTypeState |= HNAMDataType.Has;
-                this._HdrSunlightDimmer = value;
-            }
-        }
-        #endregion
-        #region HdrGrassDimmer
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _HdrGrassDimmer;
-        public Single HdrGrassDimmer
-        {
-            get => this._HdrGrassDimmer;
-            set
-            {
-                this.HNAMDataTypeState |= HNAMDataType.Has;
-                this._HdrGrassDimmer = value;
-            }
-        }
-        #endregion
-        #region HdrTreeDimmer
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _HdrTreeDimmer;
-        public Single HdrTreeDimmer
-        {
-            get => this._HdrTreeDimmer;
-            set
-            {
-                this.HNAMDataTypeState |= HNAMDataType.Has;
-                this._HdrTreeDimmer = value;
-            }
-        }
-        #endregion
-        #region WindSpeed
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _WindSpeed;
-        public Byte WindSpeed
-        {
-            get => this._WindSpeed;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._WindSpeed = value;
-            }
-        }
-        #endregion
-        #region CloudSpeedLower
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _CloudSpeedLower;
-        public Byte CloudSpeedLower
-        {
-            get => this._CloudSpeedLower;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._CloudSpeedLower = value;
-            }
-        }
-        #endregion
-        #region CloudSpeedUpper
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _CloudSpeedUpper;
-        public Byte CloudSpeedUpper
-        {
-            get => this._CloudSpeedUpper;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._CloudSpeedUpper = value;
-            }
-        }
-        #endregion
-        #region TransDelta
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _TransDelta;
-        public Byte TransDelta
-        {
-            get => this._TransDelta;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._TransDelta = value;
-            }
-        }
-        #endregion
-        #region SunGlare
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _SunGlare;
-        public Byte SunGlare
-        {
-            get => this._SunGlare;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._SunGlare = value;
-            }
-        }
-        #endregion
-        #region SunDamage
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _SunDamage;
-        public Byte SunDamage
-        {
-            get => this._SunDamage;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._SunDamage = value;
-            }
-        }
-        #endregion
-        #region PrecipitationBeginFadeIn
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _PrecipitationBeginFadeIn;
-        public Byte PrecipitationBeginFadeIn
-        {
-            get => this._PrecipitationBeginFadeIn;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._PrecipitationBeginFadeIn = value;
-            }
-        }
-        #endregion
-        #region PrecipitationEndFadeOut
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _PrecipitationEndFadeOut;
-        public Byte PrecipitationEndFadeOut
-        {
-            get => this._PrecipitationEndFadeOut;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._PrecipitationEndFadeOut = value;
-            }
-        }
-        #endregion
-        #region ThunderLightningBeginFadeIn
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _ThunderLightningBeginFadeIn;
-        public Byte ThunderLightningBeginFadeIn
-        {
-            get => this._ThunderLightningBeginFadeIn;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._ThunderLightningBeginFadeIn = value;
-            }
-        }
-        #endregion
-        #region ThunderLightningEndFadeOut
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _ThunderLightningEndFadeOut;
-        public Byte ThunderLightningEndFadeOut
-        {
-            get => this._ThunderLightningEndFadeOut;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._ThunderLightningEndFadeOut = value;
-            }
-        }
-        #endregion
-        #region ThunderLightningFrequency
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _ThunderLightningFrequency;
-        public Byte ThunderLightningFrequency
-        {
-            get => this._ThunderLightningFrequency;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._ThunderLightningFrequency = value;
-            }
-        }
-        #endregion
-        #region Classification
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Weather.WeatherClassification _Classification;
-        public Weather.WeatherClassification Classification
-        {
-            get => this._Classification;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Classification = value;
-            }
-        }
-        #endregion
-        #region LightningColor
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Color _LightningColor;
-        public Color LightningColor
-        {
-            get => this._LightningColor;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._LightningColor = value;
-            }
-        }
+        IWeatherDataGetter? IWeatherGetter.Data => this.Data;
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -512,15 +141,6 @@ namespace Mutagen.Bethesda.Oblivion
         IReadOnlyList<IWeatherSoundGetter> IWeatherGetter.Sounds => _Sounds;
         #endregion
 
-        #endregion
-        #region FNAMDataTypeState
-        public Weather.FNAMDataType FNAMDataTypeState { get; set; } = default;
-        #endregion
-        #region HNAMDataTypeState
-        public Weather.HNAMDataType HNAMDataTypeState { get; set; } = default;
-        #endregion
-        #region DATADataTypeState
-        public Weather.DATADataType DATADataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -696,41 +316,10 @@ namespace Mutagen.Bethesda.Oblivion
                 this.TextureUpperLayer = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.WeatherTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>());
-                this.FogDayNear = initialValue;
-                this.FogDayFar = initialValue;
-                this.FogNightNear = initialValue;
-                this.FogNightFar = initialValue;
-                this.HdrEyeAdaptSpeed = initialValue;
-                this.HdrBlurRadius = initialValue;
-                this.HdrBlurPasses = initialValue;
-                this.HdrEmissiveMult = initialValue;
-                this.HdrTargetLum = initialValue;
-                this.HdrUpperLumClamp = initialValue;
-                this.HdrBrightScale = initialValue;
-                this.HdrBrightClamp = initialValue;
-                this.HdrLumRampNoTex = initialValue;
-                this.HdrLumRampMin = initialValue;
-                this.HdrLumRampMax = initialValue;
-                this.HdrSunlightDimmer = initialValue;
-                this.HdrGrassDimmer = initialValue;
-                this.HdrTreeDimmer = initialValue;
-                this.WindSpeed = initialValue;
-                this.CloudSpeedLower = initialValue;
-                this.CloudSpeedUpper = initialValue;
-                this.TransDelta = initialValue;
-                this.SunGlare = initialValue;
-                this.SunDamage = initialValue;
-                this.PrecipitationBeginFadeIn = initialValue;
-                this.PrecipitationEndFadeOut = initialValue;
-                this.ThunderLightningBeginFadeIn = initialValue;
-                this.ThunderLightningEndFadeOut = initialValue;
-                this.ThunderLightningFrequency = initialValue;
-                this.Classification = initialValue;
-                this.LightningColor = initialValue;
+                this.FogDistance = new MaskItem<TItem, FogDistance.Mask<TItem>?>(initialValue, new FogDistance.Mask<TItem>(initialValue));
+                this.HDRData = new MaskItem<TItem, HDRData.Mask<TItem>?>(initialValue, new HDRData.Mask<TItem>(initialValue));
+                this.Data = new MaskItem<TItem, WeatherData.Mask<TItem>?>(initialValue, new WeatherData.Mask<TItem>(initialValue));
                 this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>());
-                this.FNAMDataTypeState = initialValue;
-                this.HNAMDataTypeState = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -743,41 +332,10 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem TextureUpperLayer,
                 TItem Model,
                 TItem WeatherTypes,
-                TItem FogDayNear,
-                TItem FogDayFar,
-                TItem FogNightNear,
-                TItem FogNightFar,
-                TItem HdrEyeAdaptSpeed,
-                TItem HdrBlurRadius,
-                TItem HdrBlurPasses,
-                TItem HdrEmissiveMult,
-                TItem HdrTargetLum,
-                TItem HdrUpperLumClamp,
-                TItem HdrBrightScale,
-                TItem HdrBrightClamp,
-                TItem HdrLumRampNoTex,
-                TItem HdrLumRampMin,
-                TItem HdrLumRampMax,
-                TItem HdrSunlightDimmer,
-                TItem HdrGrassDimmer,
-                TItem HdrTreeDimmer,
-                TItem WindSpeed,
-                TItem CloudSpeedLower,
-                TItem CloudSpeedUpper,
-                TItem TransDelta,
-                TItem SunGlare,
-                TItem SunDamage,
-                TItem PrecipitationBeginFadeIn,
-                TItem PrecipitationEndFadeOut,
-                TItem ThunderLightningBeginFadeIn,
-                TItem ThunderLightningEndFadeOut,
-                TItem ThunderLightningFrequency,
-                TItem Classification,
-                TItem LightningColor,
-                TItem Sounds,
-                TItem FNAMDataTypeState,
-                TItem HNAMDataTypeState,
-                TItem DATADataTypeState)
+                TItem FogDistance,
+                TItem HDRData,
+                TItem Data,
+                TItem Sounds)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -789,41 +347,10 @@ namespace Mutagen.Bethesda.Oblivion
                 this.TextureUpperLayer = TextureUpperLayer;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.WeatherTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>(WeatherTypes, Enumerable.Empty<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>());
-                this.FogDayNear = FogDayNear;
-                this.FogDayFar = FogDayFar;
-                this.FogNightNear = FogNightNear;
-                this.FogNightFar = FogNightFar;
-                this.HdrEyeAdaptSpeed = HdrEyeAdaptSpeed;
-                this.HdrBlurRadius = HdrBlurRadius;
-                this.HdrBlurPasses = HdrBlurPasses;
-                this.HdrEmissiveMult = HdrEmissiveMult;
-                this.HdrTargetLum = HdrTargetLum;
-                this.HdrUpperLumClamp = HdrUpperLumClamp;
-                this.HdrBrightScale = HdrBrightScale;
-                this.HdrBrightClamp = HdrBrightClamp;
-                this.HdrLumRampNoTex = HdrLumRampNoTex;
-                this.HdrLumRampMin = HdrLumRampMin;
-                this.HdrLumRampMax = HdrLumRampMax;
-                this.HdrSunlightDimmer = HdrSunlightDimmer;
-                this.HdrGrassDimmer = HdrGrassDimmer;
-                this.HdrTreeDimmer = HdrTreeDimmer;
-                this.WindSpeed = WindSpeed;
-                this.CloudSpeedLower = CloudSpeedLower;
-                this.CloudSpeedUpper = CloudSpeedUpper;
-                this.TransDelta = TransDelta;
-                this.SunGlare = SunGlare;
-                this.SunDamage = SunDamage;
-                this.PrecipitationBeginFadeIn = PrecipitationBeginFadeIn;
-                this.PrecipitationEndFadeOut = PrecipitationEndFadeOut;
-                this.ThunderLightningBeginFadeIn = ThunderLightningBeginFadeIn;
-                this.ThunderLightningEndFadeOut = ThunderLightningEndFadeOut;
-                this.ThunderLightningFrequency = ThunderLightningFrequency;
-                this.Classification = Classification;
-                this.LightningColor = LightningColor;
+                this.FogDistance = new MaskItem<TItem, FogDistance.Mask<TItem>?>(FogDistance, new FogDistance.Mask<TItem>(FogDistance));
+                this.HDRData = new MaskItem<TItem, HDRData.Mask<TItem>?>(HDRData, new HDRData.Mask<TItem>(HDRData));
+                this.Data = new MaskItem<TItem, WeatherData.Mask<TItem>?>(Data, new WeatherData.Mask<TItem>(Data));
                 this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>?>(Sounds, Enumerable.Empty<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>());
-                this.FNAMDataTypeState = FNAMDataTypeState;
-                this.HNAMDataTypeState = HNAMDataTypeState;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -839,41 +366,10 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem TextureUpperLayer;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherType.Mask<TItem>?>>?>? WeatherTypes;
-            public TItem FogDayNear;
-            public TItem FogDayFar;
-            public TItem FogNightNear;
-            public TItem FogNightFar;
-            public TItem HdrEyeAdaptSpeed;
-            public TItem HdrBlurRadius;
-            public TItem HdrBlurPasses;
-            public TItem HdrEmissiveMult;
-            public TItem HdrTargetLum;
-            public TItem HdrUpperLumClamp;
-            public TItem HdrBrightScale;
-            public TItem HdrBrightClamp;
-            public TItem HdrLumRampNoTex;
-            public TItem HdrLumRampMin;
-            public TItem HdrLumRampMax;
-            public TItem HdrSunlightDimmer;
-            public TItem HdrGrassDimmer;
-            public TItem HdrTreeDimmer;
-            public TItem WindSpeed;
-            public TItem CloudSpeedLower;
-            public TItem CloudSpeedUpper;
-            public TItem TransDelta;
-            public TItem SunGlare;
-            public TItem SunDamage;
-            public TItem PrecipitationBeginFadeIn;
-            public TItem PrecipitationEndFadeOut;
-            public TItem ThunderLightningBeginFadeIn;
-            public TItem ThunderLightningEndFadeOut;
-            public TItem ThunderLightningFrequency;
-            public TItem Classification;
-            public TItem LightningColor;
+            public MaskItem<TItem, FogDistance.Mask<TItem>?>? FogDistance { get; set; }
+            public MaskItem<TItem, HDRData.Mask<TItem>?>? HDRData { get; set; }
+            public MaskItem<TItem, WeatherData.Mask<TItem>?>? Data { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>?>? Sounds;
-            public TItem FNAMDataTypeState;
-            public TItem HNAMDataTypeState;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -891,41 +387,10 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.TextureUpperLayer, rhs.TextureUpperLayer)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
                 if (!object.Equals(this.WeatherTypes, rhs.WeatherTypes)) return false;
-                if (!object.Equals(this.FogDayNear, rhs.FogDayNear)) return false;
-                if (!object.Equals(this.FogDayFar, rhs.FogDayFar)) return false;
-                if (!object.Equals(this.FogNightNear, rhs.FogNightNear)) return false;
-                if (!object.Equals(this.FogNightFar, rhs.FogNightFar)) return false;
-                if (!object.Equals(this.HdrEyeAdaptSpeed, rhs.HdrEyeAdaptSpeed)) return false;
-                if (!object.Equals(this.HdrBlurRadius, rhs.HdrBlurRadius)) return false;
-                if (!object.Equals(this.HdrBlurPasses, rhs.HdrBlurPasses)) return false;
-                if (!object.Equals(this.HdrEmissiveMult, rhs.HdrEmissiveMult)) return false;
-                if (!object.Equals(this.HdrTargetLum, rhs.HdrTargetLum)) return false;
-                if (!object.Equals(this.HdrUpperLumClamp, rhs.HdrUpperLumClamp)) return false;
-                if (!object.Equals(this.HdrBrightScale, rhs.HdrBrightScale)) return false;
-                if (!object.Equals(this.HdrBrightClamp, rhs.HdrBrightClamp)) return false;
-                if (!object.Equals(this.HdrLumRampNoTex, rhs.HdrLumRampNoTex)) return false;
-                if (!object.Equals(this.HdrLumRampMin, rhs.HdrLumRampMin)) return false;
-                if (!object.Equals(this.HdrLumRampMax, rhs.HdrLumRampMax)) return false;
-                if (!object.Equals(this.HdrSunlightDimmer, rhs.HdrSunlightDimmer)) return false;
-                if (!object.Equals(this.HdrGrassDimmer, rhs.HdrGrassDimmer)) return false;
-                if (!object.Equals(this.HdrTreeDimmer, rhs.HdrTreeDimmer)) return false;
-                if (!object.Equals(this.WindSpeed, rhs.WindSpeed)) return false;
-                if (!object.Equals(this.CloudSpeedLower, rhs.CloudSpeedLower)) return false;
-                if (!object.Equals(this.CloudSpeedUpper, rhs.CloudSpeedUpper)) return false;
-                if (!object.Equals(this.TransDelta, rhs.TransDelta)) return false;
-                if (!object.Equals(this.SunGlare, rhs.SunGlare)) return false;
-                if (!object.Equals(this.SunDamage, rhs.SunDamage)) return false;
-                if (!object.Equals(this.PrecipitationBeginFadeIn, rhs.PrecipitationBeginFadeIn)) return false;
-                if (!object.Equals(this.PrecipitationEndFadeOut, rhs.PrecipitationEndFadeOut)) return false;
-                if (!object.Equals(this.ThunderLightningBeginFadeIn, rhs.ThunderLightningBeginFadeIn)) return false;
-                if (!object.Equals(this.ThunderLightningEndFadeOut, rhs.ThunderLightningEndFadeOut)) return false;
-                if (!object.Equals(this.ThunderLightningFrequency, rhs.ThunderLightningFrequency)) return false;
-                if (!object.Equals(this.Classification, rhs.Classification)) return false;
-                if (!object.Equals(this.LightningColor, rhs.LightningColor)) return false;
+                if (!object.Equals(this.FogDistance, rhs.FogDistance)) return false;
+                if (!object.Equals(this.HDRData, rhs.HDRData)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
                 if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
-                if (!object.Equals(this.FNAMDataTypeState, rhs.FNAMDataTypeState)) return false;
-                if (!object.Equals(this.HNAMDataTypeState, rhs.HNAMDataTypeState)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -935,41 +400,10 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.TextureUpperLayer);
                 hash.Add(this.Model);
                 hash.Add(this.WeatherTypes);
-                hash.Add(this.FogDayNear);
-                hash.Add(this.FogDayFar);
-                hash.Add(this.FogNightNear);
-                hash.Add(this.FogNightFar);
-                hash.Add(this.HdrEyeAdaptSpeed);
-                hash.Add(this.HdrBlurRadius);
-                hash.Add(this.HdrBlurPasses);
-                hash.Add(this.HdrEmissiveMult);
-                hash.Add(this.HdrTargetLum);
-                hash.Add(this.HdrUpperLumClamp);
-                hash.Add(this.HdrBrightScale);
-                hash.Add(this.HdrBrightClamp);
-                hash.Add(this.HdrLumRampNoTex);
-                hash.Add(this.HdrLumRampMin);
-                hash.Add(this.HdrLumRampMax);
-                hash.Add(this.HdrSunlightDimmer);
-                hash.Add(this.HdrGrassDimmer);
-                hash.Add(this.HdrTreeDimmer);
-                hash.Add(this.WindSpeed);
-                hash.Add(this.CloudSpeedLower);
-                hash.Add(this.CloudSpeedUpper);
-                hash.Add(this.TransDelta);
-                hash.Add(this.SunGlare);
-                hash.Add(this.SunDamage);
-                hash.Add(this.PrecipitationBeginFadeIn);
-                hash.Add(this.PrecipitationEndFadeOut);
-                hash.Add(this.ThunderLightningBeginFadeIn);
-                hash.Add(this.ThunderLightningEndFadeOut);
-                hash.Add(this.ThunderLightningFrequency);
-                hash.Add(this.Classification);
-                hash.Add(this.LightningColor);
+                hash.Add(this.FogDistance);
+                hash.Add(this.HDRData);
+                hash.Add(this.Data);
                 hash.Add(this.Sounds);
-                hash.Add(this.FNAMDataTypeState);
-                hash.Add(this.HNAMDataTypeState);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -999,37 +433,21 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                 }
-                if (!eval(this.FogDayNear)) return false;
-                if (!eval(this.FogDayFar)) return false;
-                if (!eval(this.FogNightNear)) return false;
-                if (!eval(this.FogNightFar)) return false;
-                if (!eval(this.HdrEyeAdaptSpeed)) return false;
-                if (!eval(this.HdrBlurRadius)) return false;
-                if (!eval(this.HdrBlurPasses)) return false;
-                if (!eval(this.HdrEmissiveMult)) return false;
-                if (!eval(this.HdrTargetLum)) return false;
-                if (!eval(this.HdrUpperLumClamp)) return false;
-                if (!eval(this.HdrBrightScale)) return false;
-                if (!eval(this.HdrBrightClamp)) return false;
-                if (!eval(this.HdrLumRampNoTex)) return false;
-                if (!eval(this.HdrLumRampMin)) return false;
-                if (!eval(this.HdrLumRampMax)) return false;
-                if (!eval(this.HdrSunlightDimmer)) return false;
-                if (!eval(this.HdrGrassDimmer)) return false;
-                if (!eval(this.HdrTreeDimmer)) return false;
-                if (!eval(this.WindSpeed)) return false;
-                if (!eval(this.CloudSpeedLower)) return false;
-                if (!eval(this.CloudSpeedUpper)) return false;
-                if (!eval(this.TransDelta)) return false;
-                if (!eval(this.SunGlare)) return false;
-                if (!eval(this.SunDamage)) return false;
-                if (!eval(this.PrecipitationBeginFadeIn)) return false;
-                if (!eval(this.PrecipitationEndFadeOut)) return false;
-                if (!eval(this.ThunderLightningBeginFadeIn)) return false;
-                if (!eval(this.ThunderLightningEndFadeOut)) return false;
-                if (!eval(this.ThunderLightningFrequency)) return false;
-                if (!eval(this.Classification)) return false;
-                if (!eval(this.LightningColor)) return false;
+                if (FogDistance != null)
+                {
+                    if (!eval(this.FogDistance.Overall)) return false;
+                    if (this.FogDistance.Specific != null && !this.FogDistance.Specific.All(eval)) return false;
+                }
+                if (HDRData != null)
+                {
+                    if (!eval(this.HDRData.Overall)) return false;
+                    if (this.HDRData.Specific != null && !this.HDRData.Specific.All(eval)) return false;
+                }
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
                 if (this.Sounds != null)
                 {
                     if (!eval(this.Sounds.Overall)) return false;
@@ -1042,9 +460,6 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                 }
-                if (!eval(this.FNAMDataTypeState)) return false;
-                if (!eval(this.HNAMDataTypeState)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -1072,37 +487,21 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                 }
-                if (eval(this.FogDayNear)) return true;
-                if (eval(this.FogDayFar)) return true;
-                if (eval(this.FogNightNear)) return true;
-                if (eval(this.FogNightFar)) return true;
-                if (eval(this.HdrEyeAdaptSpeed)) return true;
-                if (eval(this.HdrBlurRadius)) return true;
-                if (eval(this.HdrBlurPasses)) return true;
-                if (eval(this.HdrEmissiveMult)) return true;
-                if (eval(this.HdrTargetLum)) return true;
-                if (eval(this.HdrUpperLumClamp)) return true;
-                if (eval(this.HdrBrightScale)) return true;
-                if (eval(this.HdrBrightClamp)) return true;
-                if (eval(this.HdrLumRampNoTex)) return true;
-                if (eval(this.HdrLumRampMin)) return true;
-                if (eval(this.HdrLumRampMax)) return true;
-                if (eval(this.HdrSunlightDimmer)) return true;
-                if (eval(this.HdrGrassDimmer)) return true;
-                if (eval(this.HdrTreeDimmer)) return true;
-                if (eval(this.WindSpeed)) return true;
-                if (eval(this.CloudSpeedLower)) return true;
-                if (eval(this.CloudSpeedUpper)) return true;
-                if (eval(this.TransDelta)) return true;
-                if (eval(this.SunGlare)) return true;
-                if (eval(this.SunDamage)) return true;
-                if (eval(this.PrecipitationBeginFadeIn)) return true;
-                if (eval(this.PrecipitationEndFadeOut)) return true;
-                if (eval(this.ThunderLightningBeginFadeIn)) return true;
-                if (eval(this.ThunderLightningEndFadeOut)) return true;
-                if (eval(this.ThunderLightningFrequency)) return true;
-                if (eval(this.Classification)) return true;
-                if (eval(this.LightningColor)) return true;
+                if (FogDistance != null)
+                {
+                    if (eval(this.FogDistance.Overall)) return true;
+                    if (this.FogDistance.Specific != null && this.FogDistance.Specific.Any(eval)) return true;
+                }
+                if (HDRData != null)
+                {
+                    if (eval(this.HDRData.Overall)) return true;
+                    if (this.HDRData.Specific != null && this.HDRData.Specific.Any(eval)) return true;
+                }
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
                 if (this.Sounds != null)
                 {
                     if (eval(this.Sounds.Overall)) return true;
@@ -1115,9 +514,6 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                 }
-                if (eval(this.FNAMDataTypeState)) return true;
-                if (eval(this.HNAMDataTypeState)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -1151,37 +547,9 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                 }
-                obj.FogDayNear = eval(this.FogDayNear);
-                obj.FogDayFar = eval(this.FogDayFar);
-                obj.FogNightNear = eval(this.FogNightNear);
-                obj.FogNightFar = eval(this.FogNightFar);
-                obj.HdrEyeAdaptSpeed = eval(this.HdrEyeAdaptSpeed);
-                obj.HdrBlurRadius = eval(this.HdrBlurRadius);
-                obj.HdrBlurPasses = eval(this.HdrBlurPasses);
-                obj.HdrEmissiveMult = eval(this.HdrEmissiveMult);
-                obj.HdrTargetLum = eval(this.HdrTargetLum);
-                obj.HdrUpperLumClamp = eval(this.HdrUpperLumClamp);
-                obj.HdrBrightScale = eval(this.HdrBrightScale);
-                obj.HdrBrightClamp = eval(this.HdrBrightClamp);
-                obj.HdrLumRampNoTex = eval(this.HdrLumRampNoTex);
-                obj.HdrLumRampMin = eval(this.HdrLumRampMin);
-                obj.HdrLumRampMax = eval(this.HdrLumRampMax);
-                obj.HdrSunlightDimmer = eval(this.HdrSunlightDimmer);
-                obj.HdrGrassDimmer = eval(this.HdrGrassDimmer);
-                obj.HdrTreeDimmer = eval(this.HdrTreeDimmer);
-                obj.WindSpeed = eval(this.WindSpeed);
-                obj.CloudSpeedLower = eval(this.CloudSpeedLower);
-                obj.CloudSpeedUpper = eval(this.CloudSpeedUpper);
-                obj.TransDelta = eval(this.TransDelta);
-                obj.SunGlare = eval(this.SunGlare);
-                obj.SunDamage = eval(this.SunDamage);
-                obj.PrecipitationBeginFadeIn = eval(this.PrecipitationBeginFadeIn);
-                obj.PrecipitationEndFadeOut = eval(this.PrecipitationEndFadeOut);
-                obj.ThunderLightningBeginFadeIn = eval(this.ThunderLightningBeginFadeIn);
-                obj.ThunderLightningEndFadeOut = eval(this.ThunderLightningEndFadeOut);
-                obj.ThunderLightningFrequency = eval(this.ThunderLightningFrequency);
-                obj.Classification = eval(this.Classification);
-                obj.LightningColor = eval(this.LightningColor);
+                obj.FogDistance = this.FogDistance == null ? null : new MaskItem<R, FogDistance.Mask<R>?>(eval(this.FogDistance.Overall), this.FogDistance.Specific?.Translate(eval));
+                obj.HDRData = this.HDRData == null ? null : new MaskItem<R, HDRData.Mask<R>?>(eval(this.HDRData.Overall), this.HDRData.Specific?.Translate(eval));
+                obj.Data = this.Data == null ? null : new MaskItem<R, WeatherData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
                 if (Sounds != null)
                 {
                     obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, WeatherSound.Mask<R>?>>?>(eval(this.Sounds.Overall), Enumerable.Empty<MaskItemIndexed<R, WeatherSound.Mask<R>?>>());
@@ -1197,9 +565,6 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                 }
-                obj.FNAMDataTypeState = eval(this.FNAMDataTypeState);
-                obj.HNAMDataTypeState = eval(this.HNAMDataTypeState);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -1257,129 +622,17 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.FogDayNear ?? true)
+                    if (printMask?.FogDistance?.Overall ?? true)
                     {
-                        fg.AppendItem(FogDayNear, "FogDayNear");
+                        FogDistance?.ToString(fg);
                     }
-                    if (printMask?.FogDayFar ?? true)
+                    if (printMask?.HDRData?.Overall ?? true)
                     {
-                        fg.AppendItem(FogDayFar, "FogDayFar");
+                        HDRData?.ToString(fg);
                     }
-                    if (printMask?.FogNightNear ?? true)
+                    if (printMask?.Data?.Overall ?? true)
                     {
-                        fg.AppendItem(FogNightNear, "FogNightNear");
-                    }
-                    if (printMask?.FogNightFar ?? true)
-                    {
-                        fg.AppendItem(FogNightFar, "FogNightFar");
-                    }
-                    if (printMask?.HdrEyeAdaptSpeed ?? true)
-                    {
-                        fg.AppendItem(HdrEyeAdaptSpeed, "HdrEyeAdaptSpeed");
-                    }
-                    if (printMask?.HdrBlurRadius ?? true)
-                    {
-                        fg.AppendItem(HdrBlurRadius, "HdrBlurRadius");
-                    }
-                    if (printMask?.HdrBlurPasses ?? true)
-                    {
-                        fg.AppendItem(HdrBlurPasses, "HdrBlurPasses");
-                    }
-                    if (printMask?.HdrEmissiveMult ?? true)
-                    {
-                        fg.AppendItem(HdrEmissiveMult, "HdrEmissiveMult");
-                    }
-                    if (printMask?.HdrTargetLum ?? true)
-                    {
-                        fg.AppendItem(HdrTargetLum, "HdrTargetLum");
-                    }
-                    if (printMask?.HdrUpperLumClamp ?? true)
-                    {
-                        fg.AppendItem(HdrUpperLumClamp, "HdrUpperLumClamp");
-                    }
-                    if (printMask?.HdrBrightScale ?? true)
-                    {
-                        fg.AppendItem(HdrBrightScale, "HdrBrightScale");
-                    }
-                    if (printMask?.HdrBrightClamp ?? true)
-                    {
-                        fg.AppendItem(HdrBrightClamp, "HdrBrightClamp");
-                    }
-                    if (printMask?.HdrLumRampNoTex ?? true)
-                    {
-                        fg.AppendItem(HdrLumRampNoTex, "HdrLumRampNoTex");
-                    }
-                    if (printMask?.HdrLumRampMin ?? true)
-                    {
-                        fg.AppendItem(HdrLumRampMin, "HdrLumRampMin");
-                    }
-                    if (printMask?.HdrLumRampMax ?? true)
-                    {
-                        fg.AppendItem(HdrLumRampMax, "HdrLumRampMax");
-                    }
-                    if (printMask?.HdrSunlightDimmer ?? true)
-                    {
-                        fg.AppendItem(HdrSunlightDimmer, "HdrSunlightDimmer");
-                    }
-                    if (printMask?.HdrGrassDimmer ?? true)
-                    {
-                        fg.AppendItem(HdrGrassDimmer, "HdrGrassDimmer");
-                    }
-                    if (printMask?.HdrTreeDimmer ?? true)
-                    {
-                        fg.AppendItem(HdrTreeDimmer, "HdrTreeDimmer");
-                    }
-                    if (printMask?.WindSpeed ?? true)
-                    {
-                        fg.AppendItem(WindSpeed, "WindSpeed");
-                    }
-                    if (printMask?.CloudSpeedLower ?? true)
-                    {
-                        fg.AppendItem(CloudSpeedLower, "CloudSpeedLower");
-                    }
-                    if (printMask?.CloudSpeedUpper ?? true)
-                    {
-                        fg.AppendItem(CloudSpeedUpper, "CloudSpeedUpper");
-                    }
-                    if (printMask?.TransDelta ?? true)
-                    {
-                        fg.AppendItem(TransDelta, "TransDelta");
-                    }
-                    if (printMask?.SunGlare ?? true)
-                    {
-                        fg.AppendItem(SunGlare, "SunGlare");
-                    }
-                    if (printMask?.SunDamage ?? true)
-                    {
-                        fg.AppendItem(SunDamage, "SunDamage");
-                    }
-                    if (printMask?.PrecipitationBeginFadeIn ?? true)
-                    {
-                        fg.AppendItem(PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
-                    }
-                    if (printMask?.PrecipitationEndFadeOut ?? true)
-                    {
-                        fg.AppendItem(PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
-                    }
-                    if (printMask?.ThunderLightningBeginFadeIn ?? true)
-                    {
-                        fg.AppendItem(ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
-                    }
-                    if (printMask?.ThunderLightningEndFadeOut ?? true)
-                    {
-                        fg.AppendItem(ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
-                    }
-                    if (printMask?.ThunderLightningFrequency ?? true)
-                    {
-                        fg.AppendItem(ThunderLightningFrequency, "ThunderLightningFrequency");
-                    }
-                    if (printMask?.Classification ?? true)
-                    {
-                        fg.AppendItem(Classification, "Classification");
-                    }
-                    if (printMask?.LightningColor ?? true)
-                    {
-                        fg.AppendItem(LightningColor, "LightningColor");
+                        Data?.ToString(fg);
                     }
                     if ((printMask?.Sounds?.Overall ?? true)
                         && Sounds.TryGet(out var SoundsItem))
@@ -1404,18 +657,6 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.FNAMDataTypeState ?? true)
-                    {
-                        fg.AppendItem(FNAMDataTypeState, "FNAMDataTypeState");
-                    }
-                    if (printMask?.HNAMDataTypeState ?? true)
-                    {
-                        fg.AppendItem(HNAMDataTypeState, "HNAMDataTypeState");
-                    }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
                 fg.AppendLine("]");
             }
@@ -1432,41 +673,10 @@ namespace Mutagen.Bethesda.Oblivion
             public Exception? TextureUpperLayer;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherType.ErrorMask?>>?>? WeatherTypes;
-            public Exception? FogDayNear;
-            public Exception? FogDayFar;
-            public Exception? FogNightNear;
-            public Exception? FogNightFar;
-            public Exception? HdrEyeAdaptSpeed;
-            public Exception? HdrBlurRadius;
-            public Exception? HdrBlurPasses;
-            public Exception? HdrEmissiveMult;
-            public Exception? HdrTargetLum;
-            public Exception? HdrUpperLumClamp;
-            public Exception? HdrBrightScale;
-            public Exception? HdrBrightClamp;
-            public Exception? HdrLumRampNoTex;
-            public Exception? HdrLumRampMin;
-            public Exception? HdrLumRampMax;
-            public Exception? HdrSunlightDimmer;
-            public Exception? HdrGrassDimmer;
-            public Exception? HdrTreeDimmer;
-            public Exception? WindSpeed;
-            public Exception? CloudSpeedLower;
-            public Exception? CloudSpeedUpper;
-            public Exception? TransDelta;
-            public Exception? SunGlare;
-            public Exception? SunDamage;
-            public Exception? PrecipitationBeginFadeIn;
-            public Exception? PrecipitationEndFadeOut;
-            public Exception? ThunderLightningBeginFadeIn;
-            public Exception? ThunderLightningEndFadeOut;
-            public Exception? ThunderLightningFrequency;
-            public Exception? Classification;
-            public Exception? LightningColor;
+            public MaskItem<Exception?, FogDistance.ErrorMask?>? FogDistance;
+            public MaskItem<Exception?, HDRData.ErrorMask?>? HDRData;
+            public MaskItem<Exception?, WeatherData.ErrorMask?>? Data;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherSound.ErrorMask?>>?>? Sounds;
-            public Exception? FNAMDataTypeState;
-            public Exception? HNAMDataTypeState;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -1483,76 +693,14 @@ namespace Mutagen.Bethesda.Oblivion
                         return Model;
                     case Weather_FieldIndex.WeatherTypes:
                         return WeatherTypes;
-                    case Weather_FieldIndex.FogDayNear:
-                        return FogDayNear;
-                    case Weather_FieldIndex.FogDayFar:
-                        return FogDayFar;
-                    case Weather_FieldIndex.FogNightNear:
-                        return FogNightNear;
-                    case Weather_FieldIndex.FogNightFar:
-                        return FogNightFar;
-                    case Weather_FieldIndex.HdrEyeAdaptSpeed:
-                        return HdrEyeAdaptSpeed;
-                    case Weather_FieldIndex.HdrBlurRadius:
-                        return HdrBlurRadius;
-                    case Weather_FieldIndex.HdrBlurPasses:
-                        return HdrBlurPasses;
-                    case Weather_FieldIndex.HdrEmissiveMult:
-                        return HdrEmissiveMult;
-                    case Weather_FieldIndex.HdrTargetLum:
-                        return HdrTargetLum;
-                    case Weather_FieldIndex.HdrUpperLumClamp:
-                        return HdrUpperLumClamp;
-                    case Weather_FieldIndex.HdrBrightScale:
-                        return HdrBrightScale;
-                    case Weather_FieldIndex.HdrBrightClamp:
-                        return HdrBrightClamp;
-                    case Weather_FieldIndex.HdrLumRampNoTex:
-                        return HdrLumRampNoTex;
-                    case Weather_FieldIndex.HdrLumRampMin:
-                        return HdrLumRampMin;
-                    case Weather_FieldIndex.HdrLumRampMax:
-                        return HdrLumRampMax;
-                    case Weather_FieldIndex.HdrSunlightDimmer:
-                        return HdrSunlightDimmer;
-                    case Weather_FieldIndex.HdrGrassDimmer:
-                        return HdrGrassDimmer;
-                    case Weather_FieldIndex.HdrTreeDimmer:
-                        return HdrTreeDimmer;
-                    case Weather_FieldIndex.WindSpeed:
-                        return WindSpeed;
-                    case Weather_FieldIndex.CloudSpeedLower:
-                        return CloudSpeedLower;
-                    case Weather_FieldIndex.CloudSpeedUpper:
-                        return CloudSpeedUpper;
-                    case Weather_FieldIndex.TransDelta:
-                        return TransDelta;
-                    case Weather_FieldIndex.SunGlare:
-                        return SunGlare;
-                    case Weather_FieldIndex.SunDamage:
-                        return SunDamage;
-                    case Weather_FieldIndex.PrecipitationBeginFadeIn:
-                        return PrecipitationBeginFadeIn;
-                    case Weather_FieldIndex.PrecipitationEndFadeOut:
-                        return PrecipitationEndFadeOut;
-                    case Weather_FieldIndex.ThunderLightningBeginFadeIn:
-                        return ThunderLightningBeginFadeIn;
-                    case Weather_FieldIndex.ThunderLightningEndFadeOut:
-                        return ThunderLightningEndFadeOut;
-                    case Weather_FieldIndex.ThunderLightningFrequency:
-                        return ThunderLightningFrequency;
-                    case Weather_FieldIndex.Classification:
-                        return Classification;
-                    case Weather_FieldIndex.LightningColor:
-                        return LightningColor;
+                    case Weather_FieldIndex.FogDistance:
+                        return FogDistance;
+                    case Weather_FieldIndex.HDRData:
+                        return HDRData;
+                    case Weather_FieldIndex.Data:
+                        return Data;
                     case Weather_FieldIndex.Sounds:
                         return Sounds;
-                    case Weather_FieldIndex.FNAMDataTypeState:
-                        return FNAMDataTypeState;
-                    case Weather_FieldIndex.HNAMDataTypeState:
-                        return HNAMDataTypeState;
-                    case Weather_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1575,110 +723,17 @@ namespace Mutagen.Bethesda.Oblivion
                     case Weather_FieldIndex.WeatherTypes:
                         this.WeatherTypes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherType.ErrorMask?>>?>(ex, null);
                         break;
-                    case Weather_FieldIndex.FogDayNear:
-                        this.FogDayNear = ex;
+                    case Weather_FieldIndex.FogDistance:
+                        this.FogDistance = new MaskItem<Exception?, FogDistance.ErrorMask?>(ex, null);
                         break;
-                    case Weather_FieldIndex.FogDayFar:
-                        this.FogDayFar = ex;
+                    case Weather_FieldIndex.HDRData:
+                        this.HDRData = new MaskItem<Exception?, HDRData.ErrorMask?>(ex, null);
                         break;
-                    case Weather_FieldIndex.FogNightNear:
-                        this.FogNightNear = ex;
-                        break;
-                    case Weather_FieldIndex.FogNightFar:
-                        this.FogNightFar = ex;
-                        break;
-                    case Weather_FieldIndex.HdrEyeAdaptSpeed:
-                        this.HdrEyeAdaptSpeed = ex;
-                        break;
-                    case Weather_FieldIndex.HdrBlurRadius:
-                        this.HdrBlurRadius = ex;
-                        break;
-                    case Weather_FieldIndex.HdrBlurPasses:
-                        this.HdrBlurPasses = ex;
-                        break;
-                    case Weather_FieldIndex.HdrEmissiveMult:
-                        this.HdrEmissiveMult = ex;
-                        break;
-                    case Weather_FieldIndex.HdrTargetLum:
-                        this.HdrTargetLum = ex;
-                        break;
-                    case Weather_FieldIndex.HdrUpperLumClamp:
-                        this.HdrUpperLumClamp = ex;
-                        break;
-                    case Weather_FieldIndex.HdrBrightScale:
-                        this.HdrBrightScale = ex;
-                        break;
-                    case Weather_FieldIndex.HdrBrightClamp:
-                        this.HdrBrightClamp = ex;
-                        break;
-                    case Weather_FieldIndex.HdrLumRampNoTex:
-                        this.HdrLumRampNoTex = ex;
-                        break;
-                    case Weather_FieldIndex.HdrLumRampMin:
-                        this.HdrLumRampMin = ex;
-                        break;
-                    case Weather_FieldIndex.HdrLumRampMax:
-                        this.HdrLumRampMax = ex;
-                        break;
-                    case Weather_FieldIndex.HdrSunlightDimmer:
-                        this.HdrSunlightDimmer = ex;
-                        break;
-                    case Weather_FieldIndex.HdrGrassDimmer:
-                        this.HdrGrassDimmer = ex;
-                        break;
-                    case Weather_FieldIndex.HdrTreeDimmer:
-                        this.HdrTreeDimmer = ex;
-                        break;
-                    case Weather_FieldIndex.WindSpeed:
-                        this.WindSpeed = ex;
-                        break;
-                    case Weather_FieldIndex.CloudSpeedLower:
-                        this.CloudSpeedLower = ex;
-                        break;
-                    case Weather_FieldIndex.CloudSpeedUpper:
-                        this.CloudSpeedUpper = ex;
-                        break;
-                    case Weather_FieldIndex.TransDelta:
-                        this.TransDelta = ex;
-                        break;
-                    case Weather_FieldIndex.SunGlare:
-                        this.SunGlare = ex;
-                        break;
-                    case Weather_FieldIndex.SunDamage:
-                        this.SunDamage = ex;
-                        break;
-                    case Weather_FieldIndex.PrecipitationBeginFadeIn:
-                        this.PrecipitationBeginFadeIn = ex;
-                        break;
-                    case Weather_FieldIndex.PrecipitationEndFadeOut:
-                        this.PrecipitationEndFadeOut = ex;
-                        break;
-                    case Weather_FieldIndex.ThunderLightningBeginFadeIn:
-                        this.ThunderLightningBeginFadeIn = ex;
-                        break;
-                    case Weather_FieldIndex.ThunderLightningEndFadeOut:
-                        this.ThunderLightningEndFadeOut = ex;
-                        break;
-                    case Weather_FieldIndex.ThunderLightningFrequency:
-                        this.ThunderLightningFrequency = ex;
-                        break;
-                    case Weather_FieldIndex.Classification:
-                        this.Classification = ex;
-                        break;
-                    case Weather_FieldIndex.LightningColor:
-                        this.LightningColor = ex;
+                    case Weather_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, WeatherData.ErrorMask?>(ex, null);
                         break;
                     case Weather_FieldIndex.Sounds:
                         this.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherSound.ErrorMask?>>?>(ex, null);
-                        break;
-                    case Weather_FieldIndex.FNAMDataTypeState:
-                        this.FNAMDataTypeState = ex;
-                        break;
-                    case Weather_FieldIndex.HNAMDataTypeState:
-                        this.HNAMDataTypeState = ex;
-                        break;
-                    case Weather_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1703,110 +758,17 @@ namespace Mutagen.Bethesda.Oblivion
                     case Weather_FieldIndex.WeatherTypes:
                         this.WeatherTypes = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherType.ErrorMask?>>?>)obj;
                         break;
-                    case Weather_FieldIndex.FogDayNear:
-                        this.FogDayNear = (Exception?)obj;
+                    case Weather_FieldIndex.FogDistance:
+                        this.FogDistance = (MaskItem<Exception?, FogDistance.ErrorMask?>?)obj;
                         break;
-                    case Weather_FieldIndex.FogDayFar:
-                        this.FogDayFar = (Exception?)obj;
+                    case Weather_FieldIndex.HDRData:
+                        this.HDRData = (MaskItem<Exception?, HDRData.ErrorMask?>?)obj;
                         break;
-                    case Weather_FieldIndex.FogNightNear:
-                        this.FogNightNear = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.FogNightFar:
-                        this.FogNightFar = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.HdrEyeAdaptSpeed:
-                        this.HdrEyeAdaptSpeed = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.HdrBlurRadius:
-                        this.HdrBlurRadius = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.HdrBlurPasses:
-                        this.HdrBlurPasses = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.HdrEmissiveMult:
-                        this.HdrEmissiveMult = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.HdrTargetLum:
-                        this.HdrTargetLum = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.HdrUpperLumClamp:
-                        this.HdrUpperLumClamp = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.HdrBrightScale:
-                        this.HdrBrightScale = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.HdrBrightClamp:
-                        this.HdrBrightClamp = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.HdrLumRampNoTex:
-                        this.HdrLumRampNoTex = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.HdrLumRampMin:
-                        this.HdrLumRampMin = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.HdrLumRampMax:
-                        this.HdrLumRampMax = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.HdrSunlightDimmer:
-                        this.HdrSunlightDimmer = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.HdrGrassDimmer:
-                        this.HdrGrassDimmer = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.HdrTreeDimmer:
-                        this.HdrTreeDimmer = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.WindSpeed:
-                        this.WindSpeed = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.CloudSpeedLower:
-                        this.CloudSpeedLower = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.CloudSpeedUpper:
-                        this.CloudSpeedUpper = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.TransDelta:
-                        this.TransDelta = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.SunGlare:
-                        this.SunGlare = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.SunDamage:
-                        this.SunDamage = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.PrecipitationBeginFadeIn:
-                        this.PrecipitationBeginFadeIn = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.PrecipitationEndFadeOut:
-                        this.PrecipitationEndFadeOut = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.ThunderLightningBeginFadeIn:
-                        this.ThunderLightningBeginFadeIn = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.ThunderLightningEndFadeOut:
-                        this.ThunderLightningEndFadeOut = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.ThunderLightningFrequency:
-                        this.ThunderLightningFrequency = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.Classification:
-                        this.Classification = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.LightningColor:
-                        this.LightningColor = (Exception?)obj;
+                    case Weather_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, WeatherData.ErrorMask?>?)obj;
                         break;
                     case Weather_FieldIndex.Sounds:
                         this.Sounds = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherSound.ErrorMask?>>?>)obj;
-                        break;
-                    case Weather_FieldIndex.FNAMDataTypeState:
-                        this.FNAMDataTypeState = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.HNAMDataTypeState:
-                        this.HNAMDataTypeState = (Exception?)obj;
-                        break;
-                    case Weather_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -1821,41 +783,10 @@ namespace Mutagen.Bethesda.Oblivion
                 if (TextureUpperLayer != null) return true;
                 if (Model != null) return true;
                 if (WeatherTypes != null) return true;
-                if (FogDayNear != null) return true;
-                if (FogDayFar != null) return true;
-                if (FogNightNear != null) return true;
-                if (FogNightFar != null) return true;
-                if (HdrEyeAdaptSpeed != null) return true;
-                if (HdrBlurRadius != null) return true;
-                if (HdrBlurPasses != null) return true;
-                if (HdrEmissiveMult != null) return true;
-                if (HdrTargetLum != null) return true;
-                if (HdrUpperLumClamp != null) return true;
-                if (HdrBrightScale != null) return true;
-                if (HdrBrightClamp != null) return true;
-                if (HdrLumRampNoTex != null) return true;
-                if (HdrLumRampMin != null) return true;
-                if (HdrLumRampMax != null) return true;
-                if (HdrSunlightDimmer != null) return true;
-                if (HdrGrassDimmer != null) return true;
-                if (HdrTreeDimmer != null) return true;
-                if (WindSpeed != null) return true;
-                if (CloudSpeedLower != null) return true;
-                if (CloudSpeedUpper != null) return true;
-                if (TransDelta != null) return true;
-                if (SunGlare != null) return true;
-                if (SunDamage != null) return true;
-                if (PrecipitationBeginFadeIn != null) return true;
-                if (PrecipitationEndFadeOut != null) return true;
-                if (ThunderLightningBeginFadeIn != null) return true;
-                if (ThunderLightningEndFadeOut != null) return true;
-                if (ThunderLightningFrequency != null) return true;
-                if (Classification != null) return true;
-                if (LightningColor != null) return true;
+                if (FogDistance != null) return true;
+                if (HDRData != null) return true;
+                if (Data != null) return true;
                 if (Sounds != null) return true;
-                if (FNAMDataTypeState != null) return true;
-                if (HNAMDataTypeState != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1916,37 +847,9 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     fg.AppendLine("]");
                 }
-                fg.AppendItem(FogDayNear, "FogDayNear");
-                fg.AppendItem(FogDayFar, "FogDayFar");
-                fg.AppendItem(FogNightNear, "FogNightNear");
-                fg.AppendItem(FogNightFar, "FogNightFar");
-                fg.AppendItem(HdrEyeAdaptSpeed, "HdrEyeAdaptSpeed");
-                fg.AppendItem(HdrBlurRadius, "HdrBlurRadius");
-                fg.AppendItem(HdrBlurPasses, "HdrBlurPasses");
-                fg.AppendItem(HdrEmissiveMult, "HdrEmissiveMult");
-                fg.AppendItem(HdrTargetLum, "HdrTargetLum");
-                fg.AppendItem(HdrUpperLumClamp, "HdrUpperLumClamp");
-                fg.AppendItem(HdrBrightScale, "HdrBrightScale");
-                fg.AppendItem(HdrBrightClamp, "HdrBrightClamp");
-                fg.AppendItem(HdrLumRampNoTex, "HdrLumRampNoTex");
-                fg.AppendItem(HdrLumRampMin, "HdrLumRampMin");
-                fg.AppendItem(HdrLumRampMax, "HdrLumRampMax");
-                fg.AppendItem(HdrSunlightDimmer, "HdrSunlightDimmer");
-                fg.AppendItem(HdrGrassDimmer, "HdrGrassDimmer");
-                fg.AppendItem(HdrTreeDimmer, "HdrTreeDimmer");
-                fg.AppendItem(WindSpeed, "WindSpeed");
-                fg.AppendItem(CloudSpeedLower, "CloudSpeedLower");
-                fg.AppendItem(CloudSpeedUpper, "CloudSpeedUpper");
-                fg.AppendItem(TransDelta, "TransDelta");
-                fg.AppendItem(SunGlare, "SunGlare");
-                fg.AppendItem(SunDamage, "SunDamage");
-                fg.AppendItem(PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
-                fg.AppendItem(PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
-                fg.AppendItem(ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
-                fg.AppendItem(ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
-                fg.AppendItem(ThunderLightningFrequency, "ThunderLightningFrequency");
-                fg.AppendItem(Classification, "Classification");
-                fg.AppendItem(LightningColor, "LightningColor");
+                FogDistance?.ToString(fg);
+                HDRData?.ToString(fg);
+                Data?.ToString(fg);
                 if (Sounds.TryGet(out var SoundsItem))
                 {
                     fg.AppendLine("Sounds =>");
@@ -1969,9 +872,6 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     fg.AppendLine("]");
                 }
-                fg.AppendItem(FNAMDataTypeState, "FNAMDataTypeState");
-                fg.AppendItem(HNAMDataTypeState, "HNAMDataTypeState");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -1984,41 +884,10 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.TextureUpperLayer = this.TextureUpperLayer.Combine(rhs.TextureUpperLayer);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.WeatherTypes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherType.ErrorMask?>>?>(ExceptionExt.Combine(this.WeatherTypes?.Overall, rhs.WeatherTypes?.Overall), ExceptionExt.Combine(this.WeatherTypes?.Specific, rhs.WeatherTypes?.Specific));
-                ret.FogDayNear = this.FogDayNear.Combine(rhs.FogDayNear);
-                ret.FogDayFar = this.FogDayFar.Combine(rhs.FogDayFar);
-                ret.FogNightNear = this.FogNightNear.Combine(rhs.FogNightNear);
-                ret.FogNightFar = this.FogNightFar.Combine(rhs.FogNightFar);
-                ret.HdrEyeAdaptSpeed = this.HdrEyeAdaptSpeed.Combine(rhs.HdrEyeAdaptSpeed);
-                ret.HdrBlurRadius = this.HdrBlurRadius.Combine(rhs.HdrBlurRadius);
-                ret.HdrBlurPasses = this.HdrBlurPasses.Combine(rhs.HdrBlurPasses);
-                ret.HdrEmissiveMult = this.HdrEmissiveMult.Combine(rhs.HdrEmissiveMult);
-                ret.HdrTargetLum = this.HdrTargetLum.Combine(rhs.HdrTargetLum);
-                ret.HdrUpperLumClamp = this.HdrUpperLumClamp.Combine(rhs.HdrUpperLumClamp);
-                ret.HdrBrightScale = this.HdrBrightScale.Combine(rhs.HdrBrightScale);
-                ret.HdrBrightClamp = this.HdrBrightClamp.Combine(rhs.HdrBrightClamp);
-                ret.HdrLumRampNoTex = this.HdrLumRampNoTex.Combine(rhs.HdrLumRampNoTex);
-                ret.HdrLumRampMin = this.HdrLumRampMin.Combine(rhs.HdrLumRampMin);
-                ret.HdrLumRampMax = this.HdrLumRampMax.Combine(rhs.HdrLumRampMax);
-                ret.HdrSunlightDimmer = this.HdrSunlightDimmer.Combine(rhs.HdrSunlightDimmer);
-                ret.HdrGrassDimmer = this.HdrGrassDimmer.Combine(rhs.HdrGrassDimmer);
-                ret.HdrTreeDimmer = this.HdrTreeDimmer.Combine(rhs.HdrTreeDimmer);
-                ret.WindSpeed = this.WindSpeed.Combine(rhs.WindSpeed);
-                ret.CloudSpeedLower = this.CloudSpeedLower.Combine(rhs.CloudSpeedLower);
-                ret.CloudSpeedUpper = this.CloudSpeedUpper.Combine(rhs.CloudSpeedUpper);
-                ret.TransDelta = this.TransDelta.Combine(rhs.TransDelta);
-                ret.SunGlare = this.SunGlare.Combine(rhs.SunGlare);
-                ret.SunDamage = this.SunDamage.Combine(rhs.SunDamage);
-                ret.PrecipitationBeginFadeIn = this.PrecipitationBeginFadeIn.Combine(rhs.PrecipitationBeginFadeIn);
-                ret.PrecipitationEndFadeOut = this.PrecipitationEndFadeOut.Combine(rhs.PrecipitationEndFadeOut);
-                ret.ThunderLightningBeginFadeIn = this.ThunderLightningBeginFadeIn.Combine(rhs.ThunderLightningBeginFadeIn);
-                ret.ThunderLightningEndFadeOut = this.ThunderLightningEndFadeOut.Combine(rhs.ThunderLightningEndFadeOut);
-                ret.ThunderLightningFrequency = this.ThunderLightningFrequency.Combine(rhs.ThunderLightningFrequency);
-                ret.Classification = this.Classification.Combine(rhs.Classification);
-                ret.LightningColor = this.LightningColor.Combine(rhs.LightningColor);
+                ret.FogDistance = this.FogDistance.Combine(rhs.FogDistance, (l, r) => l.Combine(r));
+                ret.HDRData = this.HDRData.Combine(rhs.HDRData, (l, r) => l.Combine(r));
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherSound.ErrorMask?>>?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
-                ret.FNAMDataTypeState = this.FNAMDataTypeState.Combine(rhs.FNAMDataTypeState);
-                ret.HNAMDataTypeState = this.HNAMDataTypeState.Combine(rhs.HNAMDataTypeState);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2045,41 +914,10 @@ namespace Mutagen.Bethesda.Oblivion
             public bool TextureUpperLayer;
             public MaskItem<bool, Model.TranslationMask?> Model;
             public MaskItem<bool, WeatherType.TranslationMask?> WeatherTypes;
-            public bool FogDayNear;
-            public bool FogDayFar;
-            public bool FogNightNear;
-            public bool FogNightFar;
-            public bool HdrEyeAdaptSpeed;
-            public bool HdrBlurRadius;
-            public bool HdrBlurPasses;
-            public bool HdrEmissiveMult;
-            public bool HdrTargetLum;
-            public bool HdrUpperLumClamp;
-            public bool HdrBrightScale;
-            public bool HdrBrightClamp;
-            public bool HdrLumRampNoTex;
-            public bool HdrLumRampMin;
-            public bool HdrLumRampMax;
-            public bool HdrSunlightDimmer;
-            public bool HdrGrassDimmer;
-            public bool HdrTreeDimmer;
-            public bool WindSpeed;
-            public bool CloudSpeedLower;
-            public bool CloudSpeedUpper;
-            public bool TransDelta;
-            public bool SunGlare;
-            public bool SunDamage;
-            public bool PrecipitationBeginFadeIn;
-            public bool PrecipitationEndFadeOut;
-            public bool ThunderLightningBeginFadeIn;
-            public bool ThunderLightningEndFadeOut;
-            public bool ThunderLightningFrequency;
-            public bool Classification;
-            public bool LightningColor;
+            public MaskItem<bool, FogDistance.TranslationMask?> FogDistance;
+            public MaskItem<bool, HDRData.TranslationMask?> HDRData;
+            public MaskItem<bool, WeatherData.TranslationMask?> Data;
             public MaskItem<bool, WeatherSound.TranslationMask?> Sounds;
-            public bool FNAMDataTypeState;
-            public bool HNAMDataTypeState;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -2090,41 +928,10 @@ namespace Mutagen.Bethesda.Oblivion
                 this.TextureUpperLayer = defaultOn;
                 this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.WeatherTypes = new MaskItem<bool, WeatherType.TranslationMask?>(defaultOn, null);
-                this.FogDayNear = defaultOn;
-                this.FogDayFar = defaultOn;
-                this.FogNightNear = defaultOn;
-                this.FogNightFar = defaultOn;
-                this.HdrEyeAdaptSpeed = defaultOn;
-                this.HdrBlurRadius = defaultOn;
-                this.HdrBlurPasses = defaultOn;
-                this.HdrEmissiveMult = defaultOn;
-                this.HdrTargetLum = defaultOn;
-                this.HdrUpperLumClamp = defaultOn;
-                this.HdrBrightScale = defaultOn;
-                this.HdrBrightClamp = defaultOn;
-                this.HdrLumRampNoTex = defaultOn;
-                this.HdrLumRampMin = defaultOn;
-                this.HdrLumRampMax = defaultOn;
-                this.HdrSunlightDimmer = defaultOn;
-                this.HdrGrassDimmer = defaultOn;
-                this.HdrTreeDimmer = defaultOn;
-                this.WindSpeed = defaultOn;
-                this.CloudSpeedLower = defaultOn;
-                this.CloudSpeedUpper = defaultOn;
-                this.TransDelta = defaultOn;
-                this.SunGlare = defaultOn;
-                this.SunDamage = defaultOn;
-                this.PrecipitationBeginFadeIn = defaultOn;
-                this.PrecipitationEndFadeOut = defaultOn;
-                this.ThunderLightningBeginFadeIn = defaultOn;
-                this.ThunderLightningEndFadeOut = defaultOn;
-                this.ThunderLightningFrequency = defaultOn;
-                this.Classification = defaultOn;
-                this.LightningColor = defaultOn;
+                this.FogDistance = new MaskItem<bool, FogDistance.TranslationMask?>(defaultOn, null);
+                this.HDRData = new MaskItem<bool, HDRData.TranslationMask?>(defaultOn, null);
+                this.Data = new MaskItem<bool, WeatherData.TranslationMask?>(defaultOn, null);
                 this.Sounds = new MaskItem<bool, WeatherSound.TranslationMask?>(defaultOn, null);
-                this.FNAMDataTypeState = defaultOn;
-                this.HNAMDataTypeState = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -2136,62 +943,16 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((TextureUpperLayer, null));
                 ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
                 ret.Add((WeatherTypes?.Overall ?? true, WeatherTypes?.Specific?.GetCrystal()));
-                ret.Add((FogDayNear, null));
-                ret.Add((FogDayFar, null));
-                ret.Add((FogNightNear, null));
-                ret.Add((FogNightFar, null));
-                ret.Add((HdrEyeAdaptSpeed, null));
-                ret.Add((HdrBlurRadius, null));
-                ret.Add((HdrBlurPasses, null));
-                ret.Add((HdrEmissiveMult, null));
-                ret.Add((HdrTargetLum, null));
-                ret.Add((HdrUpperLumClamp, null));
-                ret.Add((HdrBrightScale, null));
-                ret.Add((HdrBrightClamp, null));
-                ret.Add((HdrLumRampNoTex, null));
-                ret.Add((HdrLumRampMin, null));
-                ret.Add((HdrLumRampMax, null));
-                ret.Add((HdrSunlightDimmer, null));
-                ret.Add((HdrGrassDimmer, null));
-                ret.Add((HdrTreeDimmer, null));
-                ret.Add((WindSpeed, null));
-                ret.Add((CloudSpeedLower, null));
-                ret.Add((CloudSpeedUpper, null));
-                ret.Add((TransDelta, null));
-                ret.Add((SunGlare, null));
-                ret.Add((SunDamage, null));
-                ret.Add((PrecipitationBeginFadeIn, null));
-                ret.Add((PrecipitationEndFadeOut, null));
-                ret.Add((ThunderLightningBeginFadeIn, null));
-                ret.Add((ThunderLightningEndFadeOut, null));
-                ret.Add((ThunderLightningFrequency, null));
-                ret.Add((Classification, null));
-                ret.Add((LightningColor, null));
+                ret.Add((FogDistance?.Overall ?? true, FogDistance?.Specific?.GetCrystal()));
+                ret.Add((HDRData?.Overall ?? true, HDRData?.Specific?.GetCrystal()));
+                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
                 ret.Add((Sounds?.Overall ?? true, Sounds?.Specific?.GetCrystal()));
-                ret.Add((FNAMDataTypeState, null));
-                ret.Add((HNAMDataTypeState, null));
-                ret.Add((DATADataTypeState, null));
             }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Weather_Registration.TriggeringRecordType;
-        [Flags]
-        public enum FNAMDataType
-        {
-            Has = 1
-        }
-        [Flags]
-        public enum HNAMDataType
-        {
-            Has = 1
-        }
-        [Flags]
-        public enum DATADataType
-        {
-            Has = 1
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => WeatherCommon.Instance.GetLinks(this);
         public Weather(FormKey formKey)
@@ -2277,41 +1038,10 @@ namespace Mutagen.Bethesda.Oblivion
         new String? TextureUpperLayer { get; set; }
         new Model? Model { get; set; }
         new ExtendedList<WeatherType>? WeatherTypes { get; set; }
-        new Single FogDayNear { get; set; }
-        new Single FogDayFar { get; set; }
-        new Single FogNightNear { get; set; }
-        new Single FogNightFar { get; set; }
-        new Single HdrEyeAdaptSpeed { get; set; }
-        new Single HdrBlurRadius { get; set; }
-        new Single HdrBlurPasses { get; set; }
-        new Single HdrEmissiveMult { get; set; }
-        new Single HdrTargetLum { get; set; }
-        new Single HdrUpperLumClamp { get; set; }
-        new Single HdrBrightScale { get; set; }
-        new Single HdrBrightClamp { get; set; }
-        new Single HdrLumRampNoTex { get; set; }
-        new Single HdrLumRampMin { get; set; }
-        new Single HdrLumRampMax { get; set; }
-        new Single HdrSunlightDimmer { get; set; }
-        new Single HdrGrassDimmer { get; set; }
-        new Single HdrTreeDimmer { get; set; }
-        new Byte WindSpeed { get; set; }
-        new Byte CloudSpeedLower { get; set; }
-        new Byte CloudSpeedUpper { get; set; }
-        new Byte TransDelta { get; set; }
-        new Byte SunGlare { get; set; }
-        new Byte SunDamage { get; set; }
-        new Byte PrecipitationBeginFadeIn { get; set; }
-        new Byte PrecipitationEndFadeOut { get; set; }
-        new Byte ThunderLightningBeginFadeIn { get; set; }
-        new Byte ThunderLightningEndFadeOut { get; set; }
-        new Byte ThunderLightningFrequency { get; set; }
-        new Weather.WeatherClassification Classification { get; set; }
-        new Color LightningColor { get; set; }
+        new FogDistance? FogDistance { get; set; }
+        new HDRData? HDRData { get; set; }
+        new WeatherData? Data { get; set; }
         new ExtendedList<WeatherSound> Sounds { get; }
-        new Weather.FNAMDataType FNAMDataTypeState { get; set; }
-        new Weather.HNAMDataType HNAMDataTypeState { get; set; }
-        new Weather.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IWeatherInternal :
@@ -2332,41 +1062,10 @@ namespace Mutagen.Bethesda.Oblivion
         String? TextureUpperLayer { get; }
         IModelGetter? Model { get; }
         IReadOnlyList<IWeatherTypeGetter>? WeatherTypes { get; }
-        Single FogDayNear { get; }
-        Single FogDayFar { get; }
-        Single FogNightNear { get; }
-        Single FogNightFar { get; }
-        Single HdrEyeAdaptSpeed { get; }
-        Single HdrBlurRadius { get; }
-        Single HdrBlurPasses { get; }
-        Single HdrEmissiveMult { get; }
-        Single HdrTargetLum { get; }
-        Single HdrUpperLumClamp { get; }
-        Single HdrBrightScale { get; }
-        Single HdrBrightClamp { get; }
-        Single HdrLumRampNoTex { get; }
-        Single HdrLumRampMin { get; }
-        Single HdrLumRampMax { get; }
-        Single HdrSunlightDimmer { get; }
-        Single HdrGrassDimmer { get; }
-        Single HdrTreeDimmer { get; }
-        Byte WindSpeed { get; }
-        Byte CloudSpeedLower { get; }
-        Byte CloudSpeedUpper { get; }
-        Byte TransDelta { get; }
-        Byte SunGlare { get; }
-        Byte SunDamage { get; }
-        Byte PrecipitationBeginFadeIn { get; }
-        Byte PrecipitationEndFadeOut { get; }
-        Byte ThunderLightningBeginFadeIn { get; }
-        Byte ThunderLightningEndFadeOut { get; }
-        Byte ThunderLightningFrequency { get; }
-        Weather.WeatherClassification Classification { get; }
-        Color LightningColor { get; }
+        IFogDistanceGetter? FogDistance { get; }
+        IHDRDataGetter? HDRData { get; }
+        IWeatherDataGetter? Data { get; }
         IReadOnlyList<IWeatherSoundGetter> Sounds { get; }
-        Weather.FNAMDataType FNAMDataTypeState { get; }
-        Weather.HNAMDataType HNAMDataTypeState { get; }
-        Weather.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -2670,41 +1369,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         TextureUpperLayer = 6,
         Model = 7,
         WeatherTypes = 8,
-        FogDayNear = 9,
-        FogDayFar = 10,
-        FogNightNear = 11,
-        FogNightFar = 12,
-        HdrEyeAdaptSpeed = 13,
-        HdrBlurRadius = 14,
-        HdrBlurPasses = 15,
-        HdrEmissiveMult = 16,
-        HdrTargetLum = 17,
-        HdrUpperLumClamp = 18,
-        HdrBrightScale = 19,
-        HdrBrightClamp = 20,
-        HdrLumRampNoTex = 21,
-        HdrLumRampMin = 22,
-        HdrLumRampMax = 23,
-        HdrSunlightDimmer = 24,
-        HdrGrassDimmer = 25,
-        HdrTreeDimmer = 26,
-        WindSpeed = 27,
-        CloudSpeedLower = 28,
-        CloudSpeedUpper = 29,
-        TransDelta = 30,
-        SunGlare = 31,
-        SunDamage = 32,
-        PrecipitationBeginFadeIn = 33,
-        PrecipitationEndFadeOut = 34,
-        ThunderLightningBeginFadeIn = 35,
-        ThunderLightningEndFadeOut = 36,
-        ThunderLightningFrequency = 37,
-        Classification = 38,
-        LightningColor = 39,
-        Sounds = 40,
-        FNAMDataTypeState = 41,
-        HNAMDataTypeState = 42,
-        DATADataTypeState = 43,
+        FogDistance = 9,
+        HDRData = 10,
+        Data = 11,
+        Sounds = 12,
     }
     #endregion
 
@@ -2722,9 +1390,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "c7183e23-4f2c-43f7-adcf-6c56458c94af";
 
-        public const ushort AdditionalFieldCount = 39;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 44;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(Weather.Mask<>);
 
@@ -2762,76 +1430,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Weather_FieldIndex.Model;
                 case "WEATHERTYPES":
                     return (ushort)Weather_FieldIndex.WeatherTypes;
-                case "FOGDAYNEAR":
-                    return (ushort)Weather_FieldIndex.FogDayNear;
-                case "FOGDAYFAR":
-                    return (ushort)Weather_FieldIndex.FogDayFar;
-                case "FOGNIGHTNEAR":
-                    return (ushort)Weather_FieldIndex.FogNightNear;
-                case "FOGNIGHTFAR":
-                    return (ushort)Weather_FieldIndex.FogNightFar;
-                case "HDREYEADAPTSPEED":
-                    return (ushort)Weather_FieldIndex.HdrEyeAdaptSpeed;
-                case "HDRBLURRADIUS":
-                    return (ushort)Weather_FieldIndex.HdrBlurRadius;
-                case "HDRBLURPASSES":
-                    return (ushort)Weather_FieldIndex.HdrBlurPasses;
-                case "HDREMISSIVEMULT":
-                    return (ushort)Weather_FieldIndex.HdrEmissiveMult;
-                case "HDRTARGETLUM":
-                    return (ushort)Weather_FieldIndex.HdrTargetLum;
-                case "HDRUPPERLUMCLAMP":
-                    return (ushort)Weather_FieldIndex.HdrUpperLumClamp;
-                case "HDRBRIGHTSCALE":
-                    return (ushort)Weather_FieldIndex.HdrBrightScale;
-                case "HDRBRIGHTCLAMP":
-                    return (ushort)Weather_FieldIndex.HdrBrightClamp;
-                case "HDRLUMRAMPNOTEX":
-                    return (ushort)Weather_FieldIndex.HdrLumRampNoTex;
-                case "HDRLUMRAMPMIN":
-                    return (ushort)Weather_FieldIndex.HdrLumRampMin;
-                case "HDRLUMRAMPMAX":
-                    return (ushort)Weather_FieldIndex.HdrLumRampMax;
-                case "HDRSUNLIGHTDIMMER":
-                    return (ushort)Weather_FieldIndex.HdrSunlightDimmer;
-                case "HDRGRASSDIMMER":
-                    return (ushort)Weather_FieldIndex.HdrGrassDimmer;
-                case "HDRTREEDIMMER":
-                    return (ushort)Weather_FieldIndex.HdrTreeDimmer;
-                case "WINDSPEED":
-                    return (ushort)Weather_FieldIndex.WindSpeed;
-                case "CLOUDSPEEDLOWER":
-                    return (ushort)Weather_FieldIndex.CloudSpeedLower;
-                case "CLOUDSPEEDUPPER":
-                    return (ushort)Weather_FieldIndex.CloudSpeedUpper;
-                case "TRANSDELTA":
-                    return (ushort)Weather_FieldIndex.TransDelta;
-                case "SUNGLARE":
-                    return (ushort)Weather_FieldIndex.SunGlare;
-                case "SUNDAMAGE":
-                    return (ushort)Weather_FieldIndex.SunDamage;
-                case "PRECIPITATIONBEGINFADEIN":
-                    return (ushort)Weather_FieldIndex.PrecipitationBeginFadeIn;
-                case "PRECIPITATIONENDFADEOUT":
-                    return (ushort)Weather_FieldIndex.PrecipitationEndFadeOut;
-                case "THUNDERLIGHTNINGBEGINFADEIN":
-                    return (ushort)Weather_FieldIndex.ThunderLightningBeginFadeIn;
-                case "THUNDERLIGHTNINGENDFADEOUT":
-                    return (ushort)Weather_FieldIndex.ThunderLightningEndFadeOut;
-                case "THUNDERLIGHTNINGFREQUENCY":
-                    return (ushort)Weather_FieldIndex.ThunderLightningFrequency;
-                case "CLASSIFICATION":
-                    return (ushort)Weather_FieldIndex.Classification;
-                case "LIGHTNINGCOLOR":
-                    return (ushort)Weather_FieldIndex.LightningColor;
+                case "FOGDISTANCE":
+                    return (ushort)Weather_FieldIndex.FogDistance;
+                case "HDRDATA":
+                    return (ushort)Weather_FieldIndex.HDRData;
+                case "DATA":
+                    return (ushort)Weather_FieldIndex.Data;
                 case "SOUNDS":
                     return (ushort)Weather_FieldIndex.Sounds;
-                case "FNAMDATATYPESTATE":
-                    return (ushort)Weather_FieldIndex.FNAMDataTypeState;
-                case "HNAMDATATYPESTATE":
-                    return (ushort)Weather_FieldIndex.HNAMDataTypeState;
-                case "DATADATATYPESTATE":
-                    return (ushort)Weather_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -2848,40 +1454,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Weather_FieldIndex.TextureLowerLayer:
                 case Weather_FieldIndex.TextureUpperLayer:
                 case Weather_FieldIndex.Model:
-                case Weather_FieldIndex.FogDayNear:
-                case Weather_FieldIndex.FogDayFar:
-                case Weather_FieldIndex.FogNightNear:
-                case Weather_FieldIndex.FogNightFar:
-                case Weather_FieldIndex.HdrEyeAdaptSpeed:
-                case Weather_FieldIndex.HdrBlurRadius:
-                case Weather_FieldIndex.HdrBlurPasses:
-                case Weather_FieldIndex.HdrEmissiveMult:
-                case Weather_FieldIndex.HdrTargetLum:
-                case Weather_FieldIndex.HdrUpperLumClamp:
-                case Weather_FieldIndex.HdrBrightScale:
-                case Weather_FieldIndex.HdrBrightClamp:
-                case Weather_FieldIndex.HdrLumRampNoTex:
-                case Weather_FieldIndex.HdrLumRampMin:
-                case Weather_FieldIndex.HdrLumRampMax:
-                case Weather_FieldIndex.HdrSunlightDimmer:
-                case Weather_FieldIndex.HdrGrassDimmer:
-                case Weather_FieldIndex.HdrTreeDimmer:
-                case Weather_FieldIndex.WindSpeed:
-                case Weather_FieldIndex.CloudSpeedLower:
-                case Weather_FieldIndex.CloudSpeedUpper:
-                case Weather_FieldIndex.TransDelta:
-                case Weather_FieldIndex.SunGlare:
-                case Weather_FieldIndex.SunDamage:
-                case Weather_FieldIndex.PrecipitationBeginFadeIn:
-                case Weather_FieldIndex.PrecipitationEndFadeOut:
-                case Weather_FieldIndex.ThunderLightningBeginFadeIn:
-                case Weather_FieldIndex.ThunderLightningEndFadeOut:
-                case Weather_FieldIndex.ThunderLightningFrequency:
-                case Weather_FieldIndex.Classification:
-                case Weather_FieldIndex.LightningColor:
-                case Weather_FieldIndex.FNAMDataTypeState:
-                case Weather_FieldIndex.HNAMDataTypeState:
-                case Weather_FieldIndex.DATADataTypeState:
+                case Weather_FieldIndex.FogDistance:
+                case Weather_FieldIndex.HDRData:
+                case Weather_FieldIndex.Data:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -2895,44 +1470,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Weather_FieldIndex.Model:
                 case Weather_FieldIndex.WeatherTypes:
+                case Weather_FieldIndex.FogDistance:
+                case Weather_FieldIndex.HDRData:
+                case Weather_FieldIndex.Data:
                 case Weather_FieldIndex.Sounds:
                     return true;
                 case Weather_FieldIndex.TextureLowerLayer:
                 case Weather_FieldIndex.TextureUpperLayer:
-                case Weather_FieldIndex.FogDayNear:
-                case Weather_FieldIndex.FogDayFar:
-                case Weather_FieldIndex.FogNightNear:
-                case Weather_FieldIndex.FogNightFar:
-                case Weather_FieldIndex.HdrEyeAdaptSpeed:
-                case Weather_FieldIndex.HdrBlurRadius:
-                case Weather_FieldIndex.HdrBlurPasses:
-                case Weather_FieldIndex.HdrEmissiveMult:
-                case Weather_FieldIndex.HdrTargetLum:
-                case Weather_FieldIndex.HdrUpperLumClamp:
-                case Weather_FieldIndex.HdrBrightScale:
-                case Weather_FieldIndex.HdrBrightClamp:
-                case Weather_FieldIndex.HdrLumRampNoTex:
-                case Weather_FieldIndex.HdrLumRampMin:
-                case Weather_FieldIndex.HdrLumRampMax:
-                case Weather_FieldIndex.HdrSunlightDimmer:
-                case Weather_FieldIndex.HdrGrassDimmer:
-                case Weather_FieldIndex.HdrTreeDimmer:
-                case Weather_FieldIndex.WindSpeed:
-                case Weather_FieldIndex.CloudSpeedLower:
-                case Weather_FieldIndex.CloudSpeedUpper:
-                case Weather_FieldIndex.TransDelta:
-                case Weather_FieldIndex.SunGlare:
-                case Weather_FieldIndex.SunDamage:
-                case Weather_FieldIndex.PrecipitationBeginFadeIn:
-                case Weather_FieldIndex.PrecipitationEndFadeOut:
-                case Weather_FieldIndex.ThunderLightningBeginFadeIn:
-                case Weather_FieldIndex.ThunderLightningEndFadeOut:
-                case Weather_FieldIndex.ThunderLightningFrequency:
-                case Weather_FieldIndex.Classification:
-                case Weather_FieldIndex.LightningColor:
-                case Weather_FieldIndex.FNAMDataTypeState:
-                case Weather_FieldIndex.HNAMDataTypeState:
-                case Weather_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
@@ -2948,41 +1492,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Weather_FieldIndex.TextureUpperLayer:
                 case Weather_FieldIndex.Model:
                 case Weather_FieldIndex.WeatherTypes:
-                case Weather_FieldIndex.FogDayNear:
-                case Weather_FieldIndex.FogDayFar:
-                case Weather_FieldIndex.FogNightNear:
-                case Weather_FieldIndex.FogNightFar:
-                case Weather_FieldIndex.HdrEyeAdaptSpeed:
-                case Weather_FieldIndex.HdrBlurRadius:
-                case Weather_FieldIndex.HdrBlurPasses:
-                case Weather_FieldIndex.HdrEmissiveMult:
-                case Weather_FieldIndex.HdrTargetLum:
-                case Weather_FieldIndex.HdrUpperLumClamp:
-                case Weather_FieldIndex.HdrBrightScale:
-                case Weather_FieldIndex.HdrBrightClamp:
-                case Weather_FieldIndex.HdrLumRampNoTex:
-                case Weather_FieldIndex.HdrLumRampMin:
-                case Weather_FieldIndex.HdrLumRampMax:
-                case Weather_FieldIndex.HdrSunlightDimmer:
-                case Weather_FieldIndex.HdrGrassDimmer:
-                case Weather_FieldIndex.HdrTreeDimmer:
-                case Weather_FieldIndex.WindSpeed:
-                case Weather_FieldIndex.CloudSpeedLower:
-                case Weather_FieldIndex.CloudSpeedUpper:
-                case Weather_FieldIndex.TransDelta:
-                case Weather_FieldIndex.SunGlare:
-                case Weather_FieldIndex.SunDamage:
-                case Weather_FieldIndex.PrecipitationBeginFadeIn:
-                case Weather_FieldIndex.PrecipitationEndFadeOut:
-                case Weather_FieldIndex.ThunderLightningBeginFadeIn:
-                case Weather_FieldIndex.ThunderLightningEndFadeOut:
-                case Weather_FieldIndex.ThunderLightningFrequency:
-                case Weather_FieldIndex.Classification:
-                case Weather_FieldIndex.LightningColor:
+                case Weather_FieldIndex.FogDistance:
+                case Weather_FieldIndex.HDRData:
+                case Weather_FieldIndex.Data:
                 case Weather_FieldIndex.Sounds:
-                case Weather_FieldIndex.FNAMDataTypeState:
-                case Weather_FieldIndex.HNAMDataTypeState:
-                case Weather_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
@@ -3002,76 +1515,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Model";
                 case Weather_FieldIndex.WeatherTypes:
                     return "WeatherTypes";
-                case Weather_FieldIndex.FogDayNear:
-                    return "FogDayNear";
-                case Weather_FieldIndex.FogDayFar:
-                    return "FogDayFar";
-                case Weather_FieldIndex.FogNightNear:
-                    return "FogNightNear";
-                case Weather_FieldIndex.FogNightFar:
-                    return "FogNightFar";
-                case Weather_FieldIndex.HdrEyeAdaptSpeed:
-                    return "HdrEyeAdaptSpeed";
-                case Weather_FieldIndex.HdrBlurRadius:
-                    return "HdrBlurRadius";
-                case Weather_FieldIndex.HdrBlurPasses:
-                    return "HdrBlurPasses";
-                case Weather_FieldIndex.HdrEmissiveMult:
-                    return "HdrEmissiveMult";
-                case Weather_FieldIndex.HdrTargetLum:
-                    return "HdrTargetLum";
-                case Weather_FieldIndex.HdrUpperLumClamp:
-                    return "HdrUpperLumClamp";
-                case Weather_FieldIndex.HdrBrightScale:
-                    return "HdrBrightScale";
-                case Weather_FieldIndex.HdrBrightClamp:
-                    return "HdrBrightClamp";
-                case Weather_FieldIndex.HdrLumRampNoTex:
-                    return "HdrLumRampNoTex";
-                case Weather_FieldIndex.HdrLumRampMin:
-                    return "HdrLumRampMin";
-                case Weather_FieldIndex.HdrLumRampMax:
-                    return "HdrLumRampMax";
-                case Weather_FieldIndex.HdrSunlightDimmer:
-                    return "HdrSunlightDimmer";
-                case Weather_FieldIndex.HdrGrassDimmer:
-                    return "HdrGrassDimmer";
-                case Weather_FieldIndex.HdrTreeDimmer:
-                    return "HdrTreeDimmer";
-                case Weather_FieldIndex.WindSpeed:
-                    return "WindSpeed";
-                case Weather_FieldIndex.CloudSpeedLower:
-                    return "CloudSpeedLower";
-                case Weather_FieldIndex.CloudSpeedUpper:
-                    return "CloudSpeedUpper";
-                case Weather_FieldIndex.TransDelta:
-                    return "TransDelta";
-                case Weather_FieldIndex.SunGlare:
-                    return "SunGlare";
-                case Weather_FieldIndex.SunDamage:
-                    return "SunDamage";
-                case Weather_FieldIndex.PrecipitationBeginFadeIn:
-                    return "PrecipitationBeginFadeIn";
-                case Weather_FieldIndex.PrecipitationEndFadeOut:
-                    return "PrecipitationEndFadeOut";
-                case Weather_FieldIndex.ThunderLightningBeginFadeIn:
-                    return "ThunderLightningBeginFadeIn";
-                case Weather_FieldIndex.ThunderLightningEndFadeOut:
-                    return "ThunderLightningEndFadeOut";
-                case Weather_FieldIndex.ThunderLightningFrequency:
-                    return "ThunderLightningFrequency";
-                case Weather_FieldIndex.Classification:
-                    return "Classification";
-                case Weather_FieldIndex.LightningColor:
-                    return "LightningColor";
+                case Weather_FieldIndex.FogDistance:
+                    return "FogDistance";
+                case Weather_FieldIndex.HDRData:
+                    return "HDRData";
+                case Weather_FieldIndex.Data:
+                    return "Data";
                 case Weather_FieldIndex.Sounds:
                     return "Sounds";
-                case Weather_FieldIndex.FNAMDataTypeState:
-                    return "FNAMDataTypeState";
-                case Weather_FieldIndex.HNAMDataTypeState:
-                    return "HNAMDataTypeState";
-                case Weather_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
                 default:
                     return OblivionMajorRecord_Registration.GetNthName(index);
             }
@@ -3086,41 +1537,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Weather_FieldIndex.TextureUpperLayer:
                 case Weather_FieldIndex.Model:
                 case Weather_FieldIndex.WeatherTypes:
-                case Weather_FieldIndex.FogDayNear:
-                case Weather_FieldIndex.FogDayFar:
-                case Weather_FieldIndex.FogNightNear:
-                case Weather_FieldIndex.FogNightFar:
-                case Weather_FieldIndex.HdrEyeAdaptSpeed:
-                case Weather_FieldIndex.HdrBlurRadius:
-                case Weather_FieldIndex.HdrBlurPasses:
-                case Weather_FieldIndex.HdrEmissiveMult:
-                case Weather_FieldIndex.HdrTargetLum:
-                case Weather_FieldIndex.HdrUpperLumClamp:
-                case Weather_FieldIndex.HdrBrightScale:
-                case Weather_FieldIndex.HdrBrightClamp:
-                case Weather_FieldIndex.HdrLumRampNoTex:
-                case Weather_FieldIndex.HdrLumRampMin:
-                case Weather_FieldIndex.HdrLumRampMax:
-                case Weather_FieldIndex.HdrSunlightDimmer:
-                case Weather_FieldIndex.HdrGrassDimmer:
-                case Weather_FieldIndex.HdrTreeDimmer:
-                case Weather_FieldIndex.WindSpeed:
-                case Weather_FieldIndex.CloudSpeedLower:
-                case Weather_FieldIndex.CloudSpeedUpper:
-                case Weather_FieldIndex.TransDelta:
-                case Weather_FieldIndex.SunGlare:
-                case Weather_FieldIndex.SunDamage:
-                case Weather_FieldIndex.PrecipitationBeginFadeIn:
-                case Weather_FieldIndex.PrecipitationEndFadeOut:
-                case Weather_FieldIndex.ThunderLightningBeginFadeIn:
-                case Weather_FieldIndex.ThunderLightningEndFadeOut:
-                case Weather_FieldIndex.ThunderLightningFrequency:
-                case Weather_FieldIndex.Classification:
-                case Weather_FieldIndex.LightningColor:
+                case Weather_FieldIndex.FogDistance:
+                case Weather_FieldIndex.HDRData:
+                case Weather_FieldIndex.Data:
                 case Weather_FieldIndex.Sounds:
-                case Weather_FieldIndex.FNAMDataTypeState:
-                case Weather_FieldIndex.HNAMDataTypeState:
-                case Weather_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsNthDerivative(index);
@@ -3136,41 +1556,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Weather_FieldIndex.TextureUpperLayer:
                 case Weather_FieldIndex.Model:
                 case Weather_FieldIndex.WeatherTypes:
-                case Weather_FieldIndex.FogDayNear:
-                case Weather_FieldIndex.FogDayFar:
-                case Weather_FieldIndex.FogNightNear:
-                case Weather_FieldIndex.FogNightFar:
-                case Weather_FieldIndex.HdrEyeAdaptSpeed:
-                case Weather_FieldIndex.HdrBlurRadius:
-                case Weather_FieldIndex.HdrBlurPasses:
-                case Weather_FieldIndex.HdrEmissiveMult:
-                case Weather_FieldIndex.HdrTargetLum:
-                case Weather_FieldIndex.HdrUpperLumClamp:
-                case Weather_FieldIndex.HdrBrightScale:
-                case Weather_FieldIndex.HdrBrightClamp:
-                case Weather_FieldIndex.HdrLumRampNoTex:
-                case Weather_FieldIndex.HdrLumRampMin:
-                case Weather_FieldIndex.HdrLumRampMax:
-                case Weather_FieldIndex.HdrSunlightDimmer:
-                case Weather_FieldIndex.HdrGrassDimmer:
-                case Weather_FieldIndex.HdrTreeDimmer:
-                case Weather_FieldIndex.WindSpeed:
-                case Weather_FieldIndex.CloudSpeedLower:
-                case Weather_FieldIndex.CloudSpeedUpper:
-                case Weather_FieldIndex.TransDelta:
-                case Weather_FieldIndex.SunGlare:
-                case Weather_FieldIndex.SunDamage:
-                case Weather_FieldIndex.PrecipitationBeginFadeIn:
-                case Weather_FieldIndex.PrecipitationEndFadeOut:
-                case Weather_FieldIndex.ThunderLightningBeginFadeIn:
-                case Weather_FieldIndex.ThunderLightningEndFadeOut:
-                case Weather_FieldIndex.ThunderLightningFrequency:
-                case Weather_FieldIndex.Classification:
-                case Weather_FieldIndex.LightningColor:
+                case Weather_FieldIndex.FogDistance:
+                case Weather_FieldIndex.HDRData:
+                case Weather_FieldIndex.Data:
                 case Weather_FieldIndex.Sounds:
-                case Weather_FieldIndex.FNAMDataTypeState:
-                case Weather_FieldIndex.HNAMDataTypeState:
-                case Weather_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsProtected(index);
@@ -3190,76 +1579,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Model);
                 case Weather_FieldIndex.WeatherTypes:
                     return typeof(ExtendedList<WeatherType>);
-                case Weather_FieldIndex.FogDayNear:
-                    return typeof(Single);
-                case Weather_FieldIndex.FogDayFar:
-                    return typeof(Single);
-                case Weather_FieldIndex.FogNightNear:
-                    return typeof(Single);
-                case Weather_FieldIndex.FogNightFar:
-                    return typeof(Single);
-                case Weather_FieldIndex.HdrEyeAdaptSpeed:
-                    return typeof(Single);
-                case Weather_FieldIndex.HdrBlurRadius:
-                    return typeof(Single);
-                case Weather_FieldIndex.HdrBlurPasses:
-                    return typeof(Single);
-                case Weather_FieldIndex.HdrEmissiveMult:
-                    return typeof(Single);
-                case Weather_FieldIndex.HdrTargetLum:
-                    return typeof(Single);
-                case Weather_FieldIndex.HdrUpperLumClamp:
-                    return typeof(Single);
-                case Weather_FieldIndex.HdrBrightScale:
-                    return typeof(Single);
-                case Weather_FieldIndex.HdrBrightClamp:
-                    return typeof(Single);
-                case Weather_FieldIndex.HdrLumRampNoTex:
-                    return typeof(Single);
-                case Weather_FieldIndex.HdrLumRampMin:
-                    return typeof(Single);
-                case Weather_FieldIndex.HdrLumRampMax:
-                    return typeof(Single);
-                case Weather_FieldIndex.HdrSunlightDimmer:
-                    return typeof(Single);
-                case Weather_FieldIndex.HdrGrassDimmer:
-                    return typeof(Single);
-                case Weather_FieldIndex.HdrTreeDimmer:
-                    return typeof(Single);
-                case Weather_FieldIndex.WindSpeed:
-                    return typeof(Byte);
-                case Weather_FieldIndex.CloudSpeedLower:
-                    return typeof(Byte);
-                case Weather_FieldIndex.CloudSpeedUpper:
-                    return typeof(Byte);
-                case Weather_FieldIndex.TransDelta:
-                    return typeof(Byte);
-                case Weather_FieldIndex.SunGlare:
-                    return typeof(Byte);
-                case Weather_FieldIndex.SunDamage:
-                    return typeof(Byte);
-                case Weather_FieldIndex.PrecipitationBeginFadeIn:
-                    return typeof(Byte);
-                case Weather_FieldIndex.PrecipitationEndFadeOut:
-                    return typeof(Byte);
-                case Weather_FieldIndex.ThunderLightningBeginFadeIn:
-                    return typeof(Byte);
-                case Weather_FieldIndex.ThunderLightningEndFadeOut:
-                    return typeof(Byte);
-                case Weather_FieldIndex.ThunderLightningFrequency:
-                    return typeof(Byte);
-                case Weather_FieldIndex.Classification:
-                    return typeof(Weather.WeatherClassification);
-                case Weather_FieldIndex.LightningColor:
-                    return typeof(Color);
+                case Weather_FieldIndex.FogDistance:
+                    return typeof(FogDistance);
+                case Weather_FieldIndex.HDRData:
+                    return typeof(HDRData);
+                case Weather_FieldIndex.Data:
+                    return typeof(WeatherData);
                 case Weather_FieldIndex.Sounds:
                     return typeof(ExtendedList<WeatherSound>);
-                case Weather_FieldIndex.FNAMDataTypeState:
-                    return typeof(Weather.FNAMDataType);
-                case Weather_FieldIndex.HNAMDataTypeState:
-                    return typeof(Weather.HNAMDataType);
-                case Weather_FieldIndex.DATADataTypeState:
-                    return typeof(Weather.DATADataType);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -3277,7 +1604,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
         public static readonly RecordType TriggeringRecordType = WTHR_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 5;
+        public const int NumTypedFields = 8;
         public static readonly Type BinaryWriteTranslation = typeof(WeatherBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -3324,41 +1651,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.TextureUpperLayer = default;
             item.Model = null;
             item.WeatherTypes = null;
-            item.FogDayNear = default;
-            item.FogDayFar = default;
-            item.FogNightNear = default;
-            item.FogNightFar = default;
-            item.HdrEyeAdaptSpeed = default;
-            item.HdrBlurRadius = default;
-            item.HdrBlurPasses = default;
-            item.HdrEmissiveMult = default;
-            item.HdrTargetLum = default;
-            item.HdrUpperLumClamp = default;
-            item.HdrBrightScale = default;
-            item.HdrBrightClamp = default;
-            item.HdrLumRampNoTex = default;
-            item.HdrLumRampMin = default;
-            item.HdrLumRampMax = default;
-            item.HdrSunlightDimmer = default;
-            item.HdrGrassDimmer = default;
-            item.HdrTreeDimmer = default;
-            item.WindSpeed = default;
-            item.CloudSpeedLower = default;
-            item.CloudSpeedUpper = default;
-            item.TransDelta = default;
-            item.SunGlare = default;
-            item.SunDamage = default;
-            item.PrecipitationBeginFadeIn = default;
-            item.PrecipitationEndFadeOut = default;
-            item.ThunderLightningBeginFadeIn = default;
-            item.ThunderLightningEndFadeOut = default;
-            item.ThunderLightningFrequency = default;
-            item.Classification = default;
-            item.LightningColor = default;
+            item.FogDistance = null;
+            item.HDRData = null;
+            item.Data = null;
             item.Sounds.Clear();
-            item.FNAMDataTypeState = default;
-            item.HNAMDataTypeState = default;
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -3382,15 +1678,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "HasFNAMDataType":
-                    item.FNAMDataTypeState |= Weather.FNAMDataType.Has;
-                    break;
-                case "HasHNAMDataType":
-                    item.HNAMDataTypeState |= Weather.HNAMDataType.Has;
-                    break;
-                case "HasDATADataType":
-                    item.DATADataTypeState |= Weather.DATADataType.Has;
-                    break;
                 default:
                     OblivionMajorRecordSetterCommon.FillPrivateElementXml(
                         item: item,
@@ -3520,64 +1807,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E46: // FNAM
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.FNAMDataTypeState = Weather.FNAMDataType.Has;
-                    }
-                    item.FogDayNear = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.FogDayFar = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.FogNightNear = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.FogNightFar = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.FogNightFar);
+                    item.FogDistance = Mutagen.Bethesda.Oblivion.FogDistance.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.FogDistance);
                 }
                 case 0x4D414E48: // HNAM
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.HNAMDataTypeState = Weather.HNAMDataType.Has;
-                    }
-                    item.HdrEyeAdaptSpeed = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.HdrBlurRadius = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.HdrBlurPasses = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.HdrEmissiveMult = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.HdrTargetLum = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.HdrUpperLumClamp = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.HdrBrightScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.HdrBrightClamp = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.HdrLumRampNoTex = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.HdrLumRampMin = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.HdrLumRampMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.HdrSunlightDimmer = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.HdrGrassDimmer = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.HdrTreeDimmer = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.HdrTreeDimmer);
+                    item.HDRData = Mutagen.Bethesda.Oblivion.HDRData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.HDRData);
                 }
                 case 0x41544144: // DATA
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.DATADataTypeState = Weather.DATADataType.Has;
-                    }
-                    item.WindSpeed = dataFrame.ReadUInt8();
-                    item.CloudSpeedLower = dataFrame.ReadUInt8();
-                    item.CloudSpeedUpper = dataFrame.ReadUInt8();
-                    item.TransDelta = dataFrame.ReadUInt8();
-                    item.SunGlare = dataFrame.ReadUInt8();
-                    item.SunDamage = dataFrame.ReadUInt8();
-                    item.PrecipitationBeginFadeIn = dataFrame.ReadUInt8();
-                    item.PrecipitationEndFadeOut = dataFrame.ReadUInt8();
-                    item.ThunderLightningBeginFadeIn = dataFrame.ReadUInt8();
-                    item.ThunderLightningEndFadeOut = dataFrame.ReadUInt8();
-                    item.ThunderLightningFrequency = dataFrame.ReadUInt8();
-                    item.Classification = EnumBinaryTranslation<Weather.WeatherClassification>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
-                    item.LightningColor = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.LightningColor);
+                    item.Data = Mutagen.Bethesda.Oblivion.WeatherData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Data);
                 }
                 case 0x4D414E53: // SNAM
                 {
@@ -3680,44 +1921,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.WeatherTypes,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.FogDayNear = item.FogDayNear.EqualsWithin(rhs.FogDayNear);
-            ret.FogDayFar = item.FogDayFar.EqualsWithin(rhs.FogDayFar);
-            ret.FogNightNear = item.FogNightNear.EqualsWithin(rhs.FogNightNear);
-            ret.FogNightFar = item.FogNightFar.EqualsWithin(rhs.FogNightFar);
-            ret.HdrEyeAdaptSpeed = item.HdrEyeAdaptSpeed.EqualsWithin(rhs.HdrEyeAdaptSpeed);
-            ret.HdrBlurRadius = item.HdrBlurRadius.EqualsWithin(rhs.HdrBlurRadius);
-            ret.HdrBlurPasses = item.HdrBlurPasses.EqualsWithin(rhs.HdrBlurPasses);
-            ret.HdrEmissiveMult = item.HdrEmissiveMult.EqualsWithin(rhs.HdrEmissiveMult);
-            ret.HdrTargetLum = item.HdrTargetLum.EqualsWithin(rhs.HdrTargetLum);
-            ret.HdrUpperLumClamp = item.HdrUpperLumClamp.EqualsWithin(rhs.HdrUpperLumClamp);
-            ret.HdrBrightScale = item.HdrBrightScale.EqualsWithin(rhs.HdrBrightScale);
-            ret.HdrBrightClamp = item.HdrBrightClamp.EqualsWithin(rhs.HdrBrightClamp);
-            ret.HdrLumRampNoTex = item.HdrLumRampNoTex.EqualsWithin(rhs.HdrLumRampNoTex);
-            ret.HdrLumRampMin = item.HdrLumRampMin.EqualsWithin(rhs.HdrLumRampMin);
-            ret.HdrLumRampMax = item.HdrLumRampMax.EqualsWithin(rhs.HdrLumRampMax);
-            ret.HdrSunlightDimmer = item.HdrSunlightDimmer.EqualsWithin(rhs.HdrSunlightDimmer);
-            ret.HdrGrassDimmer = item.HdrGrassDimmer.EqualsWithin(rhs.HdrGrassDimmer);
-            ret.HdrTreeDimmer = item.HdrTreeDimmer.EqualsWithin(rhs.HdrTreeDimmer);
-            ret.WindSpeed = item.WindSpeed == rhs.WindSpeed;
-            ret.CloudSpeedLower = item.CloudSpeedLower == rhs.CloudSpeedLower;
-            ret.CloudSpeedUpper = item.CloudSpeedUpper == rhs.CloudSpeedUpper;
-            ret.TransDelta = item.TransDelta == rhs.TransDelta;
-            ret.SunGlare = item.SunGlare == rhs.SunGlare;
-            ret.SunDamage = item.SunDamage == rhs.SunDamage;
-            ret.PrecipitationBeginFadeIn = item.PrecipitationBeginFadeIn == rhs.PrecipitationBeginFadeIn;
-            ret.PrecipitationEndFadeOut = item.PrecipitationEndFadeOut == rhs.PrecipitationEndFadeOut;
-            ret.ThunderLightningBeginFadeIn = item.ThunderLightningBeginFadeIn == rhs.ThunderLightningBeginFadeIn;
-            ret.ThunderLightningEndFadeOut = item.ThunderLightningEndFadeOut == rhs.ThunderLightningEndFadeOut;
-            ret.ThunderLightningFrequency = item.ThunderLightningFrequency == rhs.ThunderLightningFrequency;
-            ret.Classification = item.Classification == rhs.Classification;
-            ret.LightningColor = item.LightningColor.ColorOnlyEquals(rhs.LightningColor);
+            ret.FogDistance = EqualsMaskHelper.EqualsHelper(
+                item.FogDistance,
+                rhs.FogDistance,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.HDRData = EqualsMaskHelper.EqualsHelper(
+                item.HDRData,
+                rhs.HDRData,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Sounds = item.Sounds.CollectionEqualsHelper(
                 rhs.Sounds,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.FNAMDataTypeState = item.FNAMDataTypeState == rhs.FNAMDataTypeState;
-            ret.HNAMDataTypeState = item.HNAMDataTypeState == rhs.HNAMDataTypeState;
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -3803,129 +2025,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.FogDayNear ?? true)
+            if ((printMask?.FogDistance?.Overall ?? true)
+                && item.FogDistance.TryGet(out var FogDistanceItem))
             {
-                fg.AppendItem(item.FogDayNear, "FogDayNear");
+                FogDistanceItem?.ToString(fg, "FogDistance");
             }
-            if (printMask?.FogDayFar ?? true)
+            if ((printMask?.HDRData?.Overall ?? true)
+                && item.HDRData.TryGet(out var HDRDataItem))
             {
-                fg.AppendItem(item.FogDayFar, "FogDayFar");
+                HDRDataItem?.ToString(fg, "HDRData");
             }
-            if (printMask?.FogNightNear ?? true)
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data.TryGet(out var DataItem))
             {
-                fg.AppendItem(item.FogNightNear, "FogNightNear");
-            }
-            if (printMask?.FogNightFar ?? true)
-            {
-                fg.AppendItem(item.FogNightFar, "FogNightFar");
-            }
-            if (printMask?.HdrEyeAdaptSpeed ?? true)
-            {
-                fg.AppendItem(item.HdrEyeAdaptSpeed, "HdrEyeAdaptSpeed");
-            }
-            if (printMask?.HdrBlurRadius ?? true)
-            {
-                fg.AppendItem(item.HdrBlurRadius, "HdrBlurRadius");
-            }
-            if (printMask?.HdrBlurPasses ?? true)
-            {
-                fg.AppendItem(item.HdrBlurPasses, "HdrBlurPasses");
-            }
-            if (printMask?.HdrEmissiveMult ?? true)
-            {
-                fg.AppendItem(item.HdrEmissiveMult, "HdrEmissiveMult");
-            }
-            if (printMask?.HdrTargetLum ?? true)
-            {
-                fg.AppendItem(item.HdrTargetLum, "HdrTargetLum");
-            }
-            if (printMask?.HdrUpperLumClamp ?? true)
-            {
-                fg.AppendItem(item.HdrUpperLumClamp, "HdrUpperLumClamp");
-            }
-            if (printMask?.HdrBrightScale ?? true)
-            {
-                fg.AppendItem(item.HdrBrightScale, "HdrBrightScale");
-            }
-            if (printMask?.HdrBrightClamp ?? true)
-            {
-                fg.AppendItem(item.HdrBrightClamp, "HdrBrightClamp");
-            }
-            if (printMask?.HdrLumRampNoTex ?? true)
-            {
-                fg.AppendItem(item.HdrLumRampNoTex, "HdrLumRampNoTex");
-            }
-            if (printMask?.HdrLumRampMin ?? true)
-            {
-                fg.AppendItem(item.HdrLumRampMin, "HdrLumRampMin");
-            }
-            if (printMask?.HdrLumRampMax ?? true)
-            {
-                fg.AppendItem(item.HdrLumRampMax, "HdrLumRampMax");
-            }
-            if (printMask?.HdrSunlightDimmer ?? true)
-            {
-                fg.AppendItem(item.HdrSunlightDimmer, "HdrSunlightDimmer");
-            }
-            if (printMask?.HdrGrassDimmer ?? true)
-            {
-                fg.AppendItem(item.HdrGrassDimmer, "HdrGrassDimmer");
-            }
-            if (printMask?.HdrTreeDimmer ?? true)
-            {
-                fg.AppendItem(item.HdrTreeDimmer, "HdrTreeDimmer");
-            }
-            if (printMask?.WindSpeed ?? true)
-            {
-                fg.AppendItem(item.WindSpeed, "WindSpeed");
-            }
-            if (printMask?.CloudSpeedLower ?? true)
-            {
-                fg.AppendItem(item.CloudSpeedLower, "CloudSpeedLower");
-            }
-            if (printMask?.CloudSpeedUpper ?? true)
-            {
-                fg.AppendItem(item.CloudSpeedUpper, "CloudSpeedUpper");
-            }
-            if (printMask?.TransDelta ?? true)
-            {
-                fg.AppendItem(item.TransDelta, "TransDelta");
-            }
-            if (printMask?.SunGlare ?? true)
-            {
-                fg.AppendItem(item.SunGlare, "SunGlare");
-            }
-            if (printMask?.SunDamage ?? true)
-            {
-                fg.AppendItem(item.SunDamage, "SunDamage");
-            }
-            if (printMask?.PrecipitationBeginFadeIn ?? true)
-            {
-                fg.AppendItem(item.PrecipitationBeginFadeIn, "PrecipitationBeginFadeIn");
-            }
-            if (printMask?.PrecipitationEndFadeOut ?? true)
-            {
-                fg.AppendItem(item.PrecipitationEndFadeOut, "PrecipitationEndFadeOut");
-            }
-            if (printMask?.ThunderLightningBeginFadeIn ?? true)
-            {
-                fg.AppendItem(item.ThunderLightningBeginFadeIn, "ThunderLightningBeginFadeIn");
-            }
-            if (printMask?.ThunderLightningEndFadeOut ?? true)
-            {
-                fg.AppendItem(item.ThunderLightningEndFadeOut, "ThunderLightningEndFadeOut");
-            }
-            if (printMask?.ThunderLightningFrequency ?? true)
-            {
-                fg.AppendItem(item.ThunderLightningFrequency, "ThunderLightningFrequency");
-            }
-            if (printMask?.Classification ?? true)
-            {
-                fg.AppendItem(item.Classification, "Classification");
-            }
-            if (printMask?.LightningColor ?? true)
-            {
-                fg.AppendItem(item.LightningColor, "LightningColor");
+                DataItem?.ToString(fg, "Data");
             }
             if (printMask?.Sounds?.Overall ?? true)
             {
@@ -3945,18 +2058,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.FNAMDataTypeState ?? true)
-            {
-                fg.AppendItem(item.FNAMDataTypeState, "FNAMDataTypeState");
-            }
-            if (printMask?.HNAMDataTypeState ?? true)
-            {
-                fg.AppendItem(item.HNAMDataTypeState, "HNAMDataTypeState");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         public bool HasBeenSet(
@@ -3968,6 +2069,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.WeatherTypes?.Overall.HasValue ?? false && checkMask.WeatherTypes!.Overall.Value != (item.WeatherTypes != null)) return false;
+            if (checkMask.FogDistance?.Overall.HasValue ?? false && checkMask.FogDistance.Overall.Value != (item.FogDistance != null)) return false;
+            if (checkMask.FogDistance?.Specific != null && (item.FogDistance == null || !item.FogDistance.HasBeenSet(checkMask.FogDistance.Specific))) return false;
+            if (checkMask.HDRData?.Overall.HasValue ?? false && checkMask.HDRData.Overall.Value != (item.HDRData != null)) return false;
+            if (checkMask.HDRData?.Specific != null && (item.HDRData == null || !item.HDRData.HasBeenSet(checkMask.HDRData.Specific))) return false;
+            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
+            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -3985,42 +2092,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 mask.WeatherTypes = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherType.Mask<bool>?>>?>(true, WeatherTypesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherType.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             }
-            mask.FogDayNear = true;
-            mask.FogDayFar = true;
-            mask.FogNightNear = true;
-            mask.FogNightFar = true;
-            mask.HdrEyeAdaptSpeed = true;
-            mask.HdrBlurRadius = true;
-            mask.HdrBlurPasses = true;
-            mask.HdrEmissiveMult = true;
-            mask.HdrTargetLum = true;
-            mask.HdrUpperLumClamp = true;
-            mask.HdrBrightScale = true;
-            mask.HdrBrightClamp = true;
-            mask.HdrLumRampNoTex = true;
-            mask.HdrLumRampMin = true;
-            mask.HdrLumRampMax = true;
-            mask.HdrSunlightDimmer = true;
-            mask.HdrGrassDimmer = true;
-            mask.HdrTreeDimmer = true;
-            mask.WindSpeed = true;
-            mask.CloudSpeedLower = true;
-            mask.CloudSpeedUpper = true;
-            mask.TransDelta = true;
-            mask.SunGlare = true;
-            mask.SunDamage = true;
-            mask.PrecipitationBeginFadeIn = true;
-            mask.PrecipitationEndFadeOut = true;
-            mask.ThunderLightningBeginFadeIn = true;
-            mask.ThunderLightningEndFadeOut = true;
-            mask.ThunderLightningFrequency = true;
-            mask.Classification = true;
-            mask.LightningColor = true;
+            var itemFogDistance = item.FogDistance;
+            mask.FogDistance = new MaskItem<bool, FogDistance.Mask<bool>?>(itemFogDistance != null, itemFogDistance?.GetHasBeenSetMask());
+            var itemHDRData = item.HDRData;
+            mask.HDRData = new MaskItem<bool, HDRData.Mask<bool>?>(itemHDRData != null, itemHDRData?.GetHasBeenSetMask());
+            var itemData = item.Data;
+            mask.Data = new MaskItem<bool, WeatherData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
             var SoundsItem = item.Sounds;
             mask.Sounds = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, WeatherSound.Mask<bool>?>>?>(true, SoundsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, WeatherSound.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.FNAMDataTypeState = true;
-            mask.HNAMDataTypeState = true;
-            mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -4074,41 +2153,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!string.Equals(lhs.TextureUpperLayer, rhs.TextureUpperLayer)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!lhs.WeatherTypes.SequenceEqual(rhs.WeatherTypes)) return false;
-            if (!lhs.FogDayNear.EqualsWithin(rhs.FogDayNear)) return false;
-            if (!lhs.FogDayFar.EqualsWithin(rhs.FogDayFar)) return false;
-            if (!lhs.FogNightNear.EqualsWithin(rhs.FogNightNear)) return false;
-            if (!lhs.FogNightFar.EqualsWithin(rhs.FogNightFar)) return false;
-            if (!lhs.HdrEyeAdaptSpeed.EqualsWithin(rhs.HdrEyeAdaptSpeed)) return false;
-            if (!lhs.HdrBlurRadius.EqualsWithin(rhs.HdrBlurRadius)) return false;
-            if (!lhs.HdrBlurPasses.EqualsWithin(rhs.HdrBlurPasses)) return false;
-            if (!lhs.HdrEmissiveMult.EqualsWithin(rhs.HdrEmissiveMult)) return false;
-            if (!lhs.HdrTargetLum.EqualsWithin(rhs.HdrTargetLum)) return false;
-            if (!lhs.HdrUpperLumClamp.EqualsWithin(rhs.HdrUpperLumClamp)) return false;
-            if (!lhs.HdrBrightScale.EqualsWithin(rhs.HdrBrightScale)) return false;
-            if (!lhs.HdrBrightClamp.EqualsWithin(rhs.HdrBrightClamp)) return false;
-            if (!lhs.HdrLumRampNoTex.EqualsWithin(rhs.HdrLumRampNoTex)) return false;
-            if (!lhs.HdrLumRampMin.EqualsWithin(rhs.HdrLumRampMin)) return false;
-            if (!lhs.HdrLumRampMax.EqualsWithin(rhs.HdrLumRampMax)) return false;
-            if (!lhs.HdrSunlightDimmer.EqualsWithin(rhs.HdrSunlightDimmer)) return false;
-            if (!lhs.HdrGrassDimmer.EqualsWithin(rhs.HdrGrassDimmer)) return false;
-            if (!lhs.HdrTreeDimmer.EqualsWithin(rhs.HdrTreeDimmer)) return false;
-            if (lhs.WindSpeed != rhs.WindSpeed) return false;
-            if (lhs.CloudSpeedLower != rhs.CloudSpeedLower) return false;
-            if (lhs.CloudSpeedUpper != rhs.CloudSpeedUpper) return false;
-            if (lhs.TransDelta != rhs.TransDelta) return false;
-            if (lhs.SunGlare != rhs.SunGlare) return false;
-            if (lhs.SunDamage != rhs.SunDamage) return false;
-            if (lhs.PrecipitationBeginFadeIn != rhs.PrecipitationBeginFadeIn) return false;
-            if (lhs.PrecipitationEndFadeOut != rhs.PrecipitationEndFadeOut) return false;
-            if (lhs.ThunderLightningBeginFadeIn != rhs.ThunderLightningBeginFadeIn) return false;
-            if (lhs.ThunderLightningEndFadeOut != rhs.ThunderLightningEndFadeOut) return false;
-            if (lhs.ThunderLightningFrequency != rhs.ThunderLightningFrequency) return false;
-            if (lhs.Classification != rhs.Classification) return false;
-            if (!lhs.LightningColor.ColorOnlyEquals(rhs.LightningColor)) return false;
+            if (!object.Equals(lhs.FogDistance, rhs.FogDistance)) return false;
+            if (!object.Equals(lhs.HDRData, rhs.HDRData)) return false;
+            if (!object.Equals(lhs.Data, rhs.Data)) return false;
             if (!lhs.Sounds.SequenceEqual(rhs.Sounds)) return false;
-            if (lhs.FNAMDataTypeState != rhs.FNAMDataTypeState) return false;
-            if (lhs.HNAMDataTypeState != rhs.HNAMDataTypeState) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
         
@@ -4146,41 +2194,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 hash.Add(Modelitem);
             }
             hash.Add(item.WeatherTypes);
-            hash.Add(item.FogDayNear);
-            hash.Add(item.FogDayFar);
-            hash.Add(item.FogNightNear);
-            hash.Add(item.FogNightFar);
-            hash.Add(item.HdrEyeAdaptSpeed);
-            hash.Add(item.HdrBlurRadius);
-            hash.Add(item.HdrBlurPasses);
-            hash.Add(item.HdrEmissiveMult);
-            hash.Add(item.HdrTargetLum);
-            hash.Add(item.HdrUpperLumClamp);
-            hash.Add(item.HdrBrightScale);
-            hash.Add(item.HdrBrightClamp);
-            hash.Add(item.HdrLumRampNoTex);
-            hash.Add(item.HdrLumRampMin);
-            hash.Add(item.HdrLumRampMax);
-            hash.Add(item.HdrSunlightDimmer);
-            hash.Add(item.HdrGrassDimmer);
-            hash.Add(item.HdrTreeDimmer);
-            hash.Add(item.WindSpeed);
-            hash.Add(item.CloudSpeedLower);
-            hash.Add(item.CloudSpeedUpper);
-            hash.Add(item.TransDelta);
-            hash.Add(item.SunGlare);
-            hash.Add(item.SunDamage);
-            hash.Add(item.PrecipitationBeginFadeIn);
-            hash.Add(item.PrecipitationEndFadeOut);
-            hash.Add(item.ThunderLightningBeginFadeIn);
-            hash.Add(item.ThunderLightningEndFadeOut);
-            hash.Add(item.ThunderLightningFrequency);
-            hash.Add(item.Classification);
-            hash.Add(item.LightningColor);
+            if (item.FogDistance.TryGet(out var FogDistanceitem))
+            {
+                hash.Add(FogDistanceitem);
+            }
+            if (item.HDRData.TryGet(out var HDRDataitem))
+            {
+                hash.Add(HDRDataitem);
+            }
+            if (item.Data.TryGet(out var Dataitem))
+            {
+                hash.Add(Dataitem);
+            }
             hash.Add(item.Sounds);
-            hash.Add(item.FNAMDataTypeState);
-            hash.Add(item.HNAMDataTypeState);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -4326,129 +2352,83 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDayNear) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDistance) ?? true))
             {
-                item.FogDayNear = rhs.FogDayNear;
+                errorMask?.PushIndex((int)Weather_FieldIndex.FogDistance);
+                try
+                {
+                    if(rhs.FogDistance.TryGet(out var rhsFogDistance))
+                    {
+                        item.FogDistance = rhsFogDistance.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Weather_FieldIndex.FogDistance));
+                    }
+                    else
+                    {
+                        item.FogDistance = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDayFar) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HDRData) ?? true))
             {
-                item.FogDayFar = rhs.FogDayFar;
+                errorMask?.PushIndex((int)Weather_FieldIndex.HDRData);
+                try
+                {
+                    if(rhs.HDRData.TryGet(out var rhsHDRData))
+                    {
+                        item.HDRData = rhsHDRData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Weather_FieldIndex.HDRData));
+                    }
+                    else
+                    {
+                        item.HDRData = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.FogNightNear) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.Data) ?? true))
             {
-                item.FogNightNear = rhs.FogNightNear;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.FogNightFar) ?? true))
-            {
-                item.FogNightFar = rhs.FogNightFar;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrEyeAdaptSpeed) ?? true))
-            {
-                item.HdrEyeAdaptSpeed = rhs.HdrEyeAdaptSpeed;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrBlurRadius) ?? true))
-            {
-                item.HdrBlurRadius = rhs.HdrBlurRadius;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrBlurPasses) ?? true))
-            {
-                item.HdrBlurPasses = rhs.HdrBlurPasses;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrEmissiveMult) ?? true))
-            {
-                item.HdrEmissiveMult = rhs.HdrEmissiveMult;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrTargetLum) ?? true))
-            {
-                item.HdrTargetLum = rhs.HdrTargetLum;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrUpperLumClamp) ?? true))
-            {
-                item.HdrUpperLumClamp = rhs.HdrUpperLumClamp;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrBrightScale) ?? true))
-            {
-                item.HdrBrightScale = rhs.HdrBrightScale;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrBrightClamp) ?? true))
-            {
-                item.HdrBrightClamp = rhs.HdrBrightClamp;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrLumRampNoTex) ?? true))
-            {
-                item.HdrLumRampNoTex = rhs.HdrLumRampNoTex;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrLumRampMin) ?? true))
-            {
-                item.HdrLumRampMin = rhs.HdrLumRampMin;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrLumRampMax) ?? true))
-            {
-                item.HdrLumRampMax = rhs.HdrLumRampMax;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrSunlightDimmer) ?? true))
-            {
-                item.HdrSunlightDimmer = rhs.HdrSunlightDimmer;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrGrassDimmer) ?? true))
-            {
-                item.HdrGrassDimmer = rhs.HdrGrassDimmer;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrTreeDimmer) ?? true))
-            {
-                item.HdrTreeDimmer = rhs.HdrTreeDimmer;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.WindSpeed) ?? true))
-            {
-                item.WindSpeed = rhs.WindSpeed;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudSpeedLower) ?? true))
-            {
-                item.CloudSpeedLower = rhs.CloudSpeedLower;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudSpeedUpper) ?? true))
-            {
-                item.CloudSpeedUpper = rhs.CloudSpeedUpper;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.TransDelta) ?? true))
-            {
-                item.TransDelta = rhs.TransDelta;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.SunGlare) ?? true))
-            {
-                item.SunGlare = rhs.SunGlare;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.SunDamage) ?? true))
-            {
-                item.SunDamage = rhs.SunDamage;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.PrecipitationBeginFadeIn) ?? true))
-            {
-                item.PrecipitationBeginFadeIn = rhs.PrecipitationBeginFadeIn;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.PrecipitationEndFadeOut) ?? true))
-            {
-                item.PrecipitationEndFadeOut = rhs.PrecipitationEndFadeOut;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningBeginFadeIn) ?? true))
-            {
-                item.ThunderLightningBeginFadeIn = rhs.ThunderLightningBeginFadeIn;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningEndFadeOut) ?? true))
-            {
-                item.ThunderLightningEndFadeOut = rhs.ThunderLightningEndFadeOut;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningFrequency) ?? true))
-            {
-                item.ThunderLightningFrequency = rhs.ThunderLightningFrequency;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.Classification) ?? true))
-            {
-                item.Classification = rhs.Classification;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.LightningColor) ?? true))
-            {
-                item.LightningColor = rhs.LightningColor;
+                errorMask?.PushIndex((int)Weather_FieldIndex.Data);
+                try
+                {
+                    if(rhs.Data.TryGet(out var rhsData))
+                    {
+                        item.Data = rhsData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Weather_FieldIndex.Data));
+                    }
+                    else
+                    {
+                        item.Data = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.Sounds) ?? true))
             {
@@ -4473,18 +2453,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     errorMask?.PopIndex();
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.FNAMDataTypeState) ?? true))
-            {
-                item.FNAMDataTypeState = rhs.FNAMDataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.HNAMDataTypeState) ?? true))
-            {
-                item.HNAMDataTypeState = rhs.HNAMDataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
             }
         }
         
@@ -4683,292 +2651,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             translationMask: listTranslMask);
                     });
             }
-            if (item.FNAMDataTypeState.HasFlag(Weather.FNAMDataType.Has))
+            if ((item.FogDistance != null)
+                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDistance) ?? true))
             {
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDayNear) ?? true))
+                if (item.FogDistance.TryGet(out var FogDistanceItem))
                 {
-                    FloatXmlTranslation.Instance.Write(
+                    ((FogDistanceXmlWriteTranslation)((IXmlItem)FogDistanceItem).XmlWriteTranslator).Write(
+                        item: FogDistanceItem,
                         node: node,
-                        name: nameof(item.FogDayNear),
-                        item: item.FogDayNear,
-                        fieldIndex: (int)Weather_FieldIndex.FogDayNear,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogDayFar) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.FogDayFar),
-                        item: item.FogDayFar,
-                        fieldIndex: (int)Weather_FieldIndex.FogDayFar,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogNightNear) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.FogNightNear),
-                        item: item.FogNightNear,
-                        fieldIndex: (int)Weather_FieldIndex.FogNightNear,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FogNightFar) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.FogNightFar),
-                        item: item.FogNightFar,
-                        fieldIndex: (int)Weather_FieldIndex.FogNightFar,
-                        errorMask: errorMask);
+                        name: nameof(item.FogDistance),
+                        fieldIndex: (int)Weather_FieldIndex.FogDistance,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.FogDistance));
                 }
             }
-            if (item.HNAMDataTypeState.HasFlag(Weather.HNAMDataType.Has))
+            if ((item.HDRData != null)
+                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HDRData) ?? true))
             {
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrEyeAdaptSpeed) ?? true))
+                if (item.HDRData.TryGet(out var HDRDataItem))
                 {
-                    FloatXmlTranslation.Instance.Write(
+                    ((HDRDataXmlWriteTranslation)((IXmlItem)HDRDataItem).XmlWriteTranslator).Write(
+                        item: HDRDataItem,
                         node: node,
-                        name: nameof(item.HdrEyeAdaptSpeed),
-                        item: item.HdrEyeAdaptSpeed,
-                        fieldIndex: (int)Weather_FieldIndex.HdrEyeAdaptSpeed,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrBlurRadius) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.HdrBlurRadius),
-                        item: item.HdrBlurRadius,
-                        fieldIndex: (int)Weather_FieldIndex.HdrBlurRadius,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrBlurPasses) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.HdrBlurPasses),
-                        item: item.HdrBlurPasses,
-                        fieldIndex: (int)Weather_FieldIndex.HdrBlurPasses,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrEmissiveMult) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.HdrEmissiveMult),
-                        item: item.HdrEmissiveMult,
-                        fieldIndex: (int)Weather_FieldIndex.HdrEmissiveMult,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrTargetLum) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.HdrTargetLum),
-                        item: item.HdrTargetLum,
-                        fieldIndex: (int)Weather_FieldIndex.HdrTargetLum,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrUpperLumClamp) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.HdrUpperLumClamp),
-                        item: item.HdrUpperLumClamp,
-                        fieldIndex: (int)Weather_FieldIndex.HdrUpperLumClamp,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrBrightScale) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.HdrBrightScale),
-                        item: item.HdrBrightScale,
-                        fieldIndex: (int)Weather_FieldIndex.HdrBrightScale,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrBrightClamp) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.HdrBrightClamp),
-                        item: item.HdrBrightClamp,
-                        fieldIndex: (int)Weather_FieldIndex.HdrBrightClamp,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrLumRampNoTex) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.HdrLumRampNoTex),
-                        item: item.HdrLumRampNoTex,
-                        fieldIndex: (int)Weather_FieldIndex.HdrLumRampNoTex,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrLumRampMin) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.HdrLumRampMin),
-                        item: item.HdrLumRampMin,
-                        fieldIndex: (int)Weather_FieldIndex.HdrLumRampMin,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrLumRampMax) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.HdrLumRampMax),
-                        item: item.HdrLumRampMax,
-                        fieldIndex: (int)Weather_FieldIndex.HdrLumRampMax,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrSunlightDimmer) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.HdrSunlightDimmer),
-                        item: item.HdrSunlightDimmer,
-                        fieldIndex: (int)Weather_FieldIndex.HdrSunlightDimmer,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrGrassDimmer) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.HdrGrassDimmer),
-                        item: item.HdrGrassDimmer,
-                        fieldIndex: (int)Weather_FieldIndex.HdrGrassDimmer,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HdrTreeDimmer) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.HdrTreeDimmer),
-                        item: item.HdrTreeDimmer,
-                        fieldIndex: (int)Weather_FieldIndex.HdrTreeDimmer,
-                        errorMask: errorMask);
+                        name: nameof(item.HDRData),
+                        fieldIndex: (int)Weather_FieldIndex.HDRData,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.HDRData));
                 }
             }
-            if (item.DATADataTypeState.HasFlag(Weather.DATADataType.Has))
+            if ((item.Data != null)
+                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Data) ?? true))
             {
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.WindSpeed) ?? true))
+                if (item.Data.TryGet(out var DataItem))
                 {
-                    ByteXmlTranslation.Instance.Write(
+                    ((WeatherDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                        item: DataItem,
                         node: node,
-                        name: nameof(item.WindSpeed),
-                        item: item.WindSpeed,
-                        fieldIndex: (int)Weather_FieldIndex.WindSpeed,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudSpeedLower) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.CloudSpeedLower),
-                        item: item.CloudSpeedLower,
-                        fieldIndex: (int)Weather_FieldIndex.CloudSpeedLower,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudSpeedUpper) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.CloudSpeedUpper),
-                        item: item.CloudSpeedUpper,
-                        fieldIndex: (int)Weather_FieldIndex.CloudSpeedUpper,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.TransDelta) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.TransDelta),
-                        item: item.TransDelta,
-                        fieldIndex: (int)Weather_FieldIndex.TransDelta,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.SunGlare) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.SunGlare),
-                        item: item.SunGlare,
-                        fieldIndex: (int)Weather_FieldIndex.SunGlare,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.SunDamage) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.SunDamage),
-                        item: item.SunDamage,
-                        fieldIndex: (int)Weather_FieldIndex.SunDamage,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.PrecipitationBeginFadeIn) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.PrecipitationBeginFadeIn),
-                        item: item.PrecipitationBeginFadeIn,
-                        fieldIndex: (int)Weather_FieldIndex.PrecipitationBeginFadeIn,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.PrecipitationEndFadeOut) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.PrecipitationEndFadeOut),
-                        item: item.PrecipitationEndFadeOut,
-                        fieldIndex: (int)Weather_FieldIndex.PrecipitationEndFadeOut,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningBeginFadeIn) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.ThunderLightningBeginFadeIn),
-                        item: item.ThunderLightningBeginFadeIn,
-                        fieldIndex: (int)Weather_FieldIndex.ThunderLightningBeginFadeIn,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningEndFadeOut) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.ThunderLightningEndFadeOut),
-                        item: item.ThunderLightningEndFadeOut,
-                        fieldIndex: (int)Weather_FieldIndex.ThunderLightningEndFadeOut,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningFrequency) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.ThunderLightningFrequency),
-                        item: item.ThunderLightningFrequency,
-                        fieldIndex: (int)Weather_FieldIndex.ThunderLightningFrequency,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Classification) ?? true))
-                {
-                    EnumXmlTranslation<Weather.WeatherClassification>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Classification),
-                        item: item.Classification,
-                        fieldIndex: (int)Weather_FieldIndex.Classification,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.LightningColor) ?? true))
-                {
-                    ColorXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.LightningColor),
-                        item: item.LightningColor,
-                        fieldIndex: (int)Weather_FieldIndex.LightningColor,
-                        errorMask: errorMask);
+                        name: nameof(item.Data),
+                        fieldIndex: (int)Weather_FieldIndex.Data,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.Data));
                 }
             }
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.Sounds) ?? true))
@@ -4992,33 +2714,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 translationMask: listTranslMask);
                         }
                     });
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.FNAMDataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Weather.FNAMDataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.FNAMDataTypeState),
-                    item: item.FNAMDataTypeState,
-                    fieldIndex: (int)Weather_FieldIndex.FNAMDataTypeState,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.HNAMDataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Weather.HNAMDataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.HNAMDataTypeState),
-                    item: item.HNAMDataTypeState,
-                    fieldIndex: (int)Weather_FieldIndex.HNAMDataTypeState,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Weather.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)Weather_FieldIndex.DATADataTypeState,
-                    errorMask: errorMask);
             }
         }
 
@@ -5210,32 +2905,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "FogDayNear":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.FogDayNear);
+                case "FogDistance":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.FogDistance);
                     try
                     {
-                        item.FogDayNear = FloatXmlTranslation.Instance.Parse(
+                        item.FogDistance = LoquiXmlTranslation<FogDistance>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.FNAMDataTypeState |= Weather.FNAMDataType.Has;
-                    break;
-                case "FogDayFar":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.FogDayFar);
-                    try
-                    {
-                        item.FogDayFar = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.FogDistance));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -5247,13 +2924,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "FogNightNear":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.FogNightNear);
+                case "HDRData":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.HDRData);
                     try
                     {
-                        item.FogNightNear = FloatXmlTranslation.Instance.Parse(
+                        item.HDRData = LoquiXmlTranslation<HDRData>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.HDRData));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -5265,501 +2943,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "FogNightFar":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.FogNightFar);
+                case "Data":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.Data);
                     try
                     {
-                        item.FogNightFar = FloatXmlTranslation.Instance.Parse(
+                        item.Data = LoquiXmlTranslation<WeatherData>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrEyeAdaptSpeed":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.HdrEyeAdaptSpeed);
-                    try
-                    {
-                        item.HdrEyeAdaptSpeed = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.HNAMDataTypeState |= Weather.HNAMDataType.Has;
-                    break;
-                case "HdrBlurRadius":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.HdrBlurRadius);
-                    try
-                    {
-                        item.HdrBlurRadius = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrBlurPasses":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.HdrBlurPasses);
-                    try
-                    {
-                        item.HdrBlurPasses = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrEmissiveMult":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.HdrEmissiveMult);
-                    try
-                    {
-                        item.HdrEmissiveMult = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrTargetLum":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.HdrTargetLum);
-                    try
-                    {
-                        item.HdrTargetLum = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrUpperLumClamp":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.HdrUpperLumClamp);
-                    try
-                    {
-                        item.HdrUpperLumClamp = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrBrightScale":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.HdrBrightScale);
-                    try
-                    {
-                        item.HdrBrightScale = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrBrightClamp":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.HdrBrightClamp);
-                    try
-                    {
-                        item.HdrBrightClamp = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrLumRampNoTex":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.HdrLumRampNoTex);
-                    try
-                    {
-                        item.HdrLumRampNoTex = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrLumRampMin":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.HdrLumRampMin);
-                    try
-                    {
-                        item.HdrLumRampMin = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrLumRampMax":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.HdrLumRampMax);
-                    try
-                    {
-                        item.HdrLumRampMax = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrSunlightDimmer":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.HdrSunlightDimmer);
-                    try
-                    {
-                        item.HdrSunlightDimmer = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrGrassDimmer":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.HdrGrassDimmer);
-                    try
-                    {
-                        item.HdrGrassDimmer = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HdrTreeDimmer":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.HdrTreeDimmer);
-                    try
-                    {
-                        item.HdrTreeDimmer = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WindSpeed":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.WindSpeed);
-                    try
-                    {
-                        item.WindSpeed = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.DATADataTypeState |= Weather.DATADataType.Has;
-                    break;
-                case "CloudSpeedLower":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.CloudSpeedLower);
-                    try
-                    {
-                        item.CloudSpeedLower = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CloudSpeedUpper":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.CloudSpeedUpper);
-                    try
-                    {
-                        item.CloudSpeedUpper = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TransDelta":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.TransDelta);
-                    try
-                    {
-                        item.TransDelta = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SunGlare":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.SunGlare);
-                    try
-                    {
-                        item.SunGlare = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SunDamage":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.SunDamage);
-                    try
-                    {
-                        item.SunDamage = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PrecipitationBeginFadeIn":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.PrecipitationBeginFadeIn);
-                    try
-                    {
-                        item.PrecipitationBeginFadeIn = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PrecipitationEndFadeOut":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.PrecipitationEndFadeOut);
-                    try
-                    {
-                        item.PrecipitationEndFadeOut = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ThunderLightningBeginFadeIn":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningBeginFadeIn);
-                    try
-                    {
-                        item.ThunderLightningBeginFadeIn = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ThunderLightningEndFadeOut":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningEndFadeOut);
-                    try
-                    {
-                        item.ThunderLightningEndFadeOut = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ThunderLightningFrequency":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.ThunderLightningFrequency);
-                    try
-                    {
-                        item.ThunderLightningFrequency = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Classification":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.Classification);
-                    try
-                    {
-                        item.Classification = EnumXmlTranslation<Weather.WeatherClassification>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LightningColor":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.LightningColor);
-                    try
-                    {
-                        item.LightningColor = ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.Data));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -5788,60 +2979,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         {
                             item.Sounds.Clear();
                         }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FNAMDataTypeState":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.FNAMDataTypeState);
-                    try
-                    {
-                        item.FNAMDataTypeState = EnumXmlTranslation<Weather.FNAMDataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HNAMDataTypeState":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.HNAMDataTypeState);
-                    try
-                    {
-                        item.HNAMDataTypeState = EnumXmlTranslation<Weather.HNAMDataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DATADataTypeState":
-                    errorMask?.PushIndex((int)Weather_FieldIndex.DATADataTypeState);
-                    try
-                    {
-                        item.DATADataTypeState = EnumXmlTranslation<Weather.DATADataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -5939,15 +3076,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static WeatherBinaryWriteTranslation Instance = new WeatherBinaryWriteTranslation();
 
-        public static void WriteEmbedded(
-            IWeatherGetter item,
-            MutagenWriter writer)
-        {
-            OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IWeatherGetter item,
             MutagenWriter writer,
@@ -5986,95 +3114,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            if (item.FNAMDataTypeState.HasFlag(Weather.FNAMDataType.Has))
+            if (item.FogDistance.TryGet(out var FogDistanceItem))
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.FNAM_HEADER)))
-                {
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.FogDayNear);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.FogDayFar);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.FogNightNear);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.FogNightFar);
-                }
+                ((FogDistanceBinaryWriteTranslation)((IBinaryItem)FogDistanceItem).BinaryWriteTranslator).Write(
+                    item: FogDistanceItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
-            if (item.HNAMDataTypeState.HasFlag(Weather.HNAMDataType.Has))
+            if (item.HDRData.TryGet(out var HDRDataItem))
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.HNAM_HEADER)))
-                {
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.HdrEyeAdaptSpeed);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.HdrBlurRadius);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.HdrBlurPasses);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.HdrEmissiveMult);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.HdrTargetLum);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.HdrUpperLumClamp);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.HdrBrightScale);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.HdrBrightClamp);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.HdrLumRampNoTex);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.HdrLumRampMin);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.HdrLumRampMax);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.HdrSunlightDimmer);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.HdrGrassDimmer);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.HdrTreeDimmer);
-                }
+                ((HDRDataBinaryWriteTranslation)((IBinaryItem)HDRDataItem).BinaryWriteTranslator).Write(
+                    item: HDRDataItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
-            if (item.DATADataTypeState.HasFlag(Weather.DATADataType.Has))
+            if (item.Data.TryGet(out var DataItem))
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Weather_Registration.DATA_HEADER)))
-                {
-                    writer.Write(item.WindSpeed);
-                    writer.Write(item.CloudSpeedLower);
-                    writer.Write(item.CloudSpeedUpper);
-                    writer.Write(item.TransDelta);
-                    writer.Write(item.SunGlare);
-                    writer.Write(item.SunDamage);
-                    writer.Write(item.PrecipitationBeginFadeIn);
-                    writer.Write(item.PrecipitationEndFadeOut);
-                    writer.Write(item.ThunderLightningBeginFadeIn);
-                    writer.Write(item.ThunderLightningEndFadeOut);
-                    writer.Write(item.ThunderLightningFrequency);
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Weather.WeatherClassification>.Instance.Write(
-                        writer,
-                        item.Classification,
-                        length: 1);
-                    Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.LightningColor);
-                }
+                ((WeatherDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                    item: DataItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IWeatherSoundGetter>.Instance.Write(
                 writer: writer,
@@ -6101,7 +3160,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: recordTypeConverter.ConvertToCustom(Weather_Registration.WTHR_HEADER),
                 type: ObjectType.Record))
             {
-                WriteEmbedded(
+                OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -6225,166 +3284,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Model_IsSet => Model != null;
         #endregion
         public IReadOnlyList<IWeatherTypeGetter>? WeatherTypes { get; private set; }
-        private int? _FNAMLocation;
-        public Weather.FNAMDataType FNAMDataTypeState { get; private set; }
-        #region FogDayNear
-        private int _FogDayNearLocation => _FNAMLocation!.Value + 0x0;
-        private bool _FogDayNear_IsSet => _FNAMLocation.HasValue;
-        public Single FogDayNear => _FogDayNear_IsSet ? SpanExt.GetFloat(_data.Slice(_FogDayNearLocation, 4)) : default;
+        #region FogDistance
+        private RangeInt32? _FogDistanceLocation;
+        private bool _FogDistance_IsSet => _FogDistanceLocation.HasValue;
+        public IFogDistanceGetter? FogDistance => _FogDistance_IsSet ? FogDistanceBinaryOverlay.FogDistanceFactory(new BinaryMemoryReadStream(_data.Slice(_FogDistanceLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool FogDistance_IsSet => _FogDistanceLocation.HasValue;
         #endregion
-        #region FogDayFar
-        private int _FogDayFarLocation => _FNAMLocation!.Value + 0x4;
-        private bool _FogDayFar_IsSet => _FNAMLocation.HasValue;
-        public Single FogDayFar => _FogDayFar_IsSet ? SpanExt.GetFloat(_data.Slice(_FogDayFarLocation, 4)) : default;
+        #region HDRData
+        private RangeInt32? _HDRDataLocation;
+        private bool _HDRData_IsSet => _HDRDataLocation.HasValue;
+        public IHDRDataGetter? HDRData => _HDRData_IsSet ? HDRDataBinaryOverlay.HDRDataFactory(new BinaryMemoryReadStream(_data.Slice(_HDRDataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool HDRData_IsSet => _HDRDataLocation.HasValue;
         #endregion
-        #region FogNightNear
-        private int _FogNightNearLocation => _FNAMLocation!.Value + 0x8;
-        private bool _FogNightNear_IsSet => _FNAMLocation.HasValue;
-        public Single FogNightNear => _FogNightNear_IsSet ? SpanExt.GetFloat(_data.Slice(_FogNightNearLocation, 4)) : default;
-        #endregion
-        #region FogNightFar
-        private int _FogNightFarLocation => _FNAMLocation!.Value + 0xC;
-        private bool _FogNightFar_IsSet => _FNAMLocation.HasValue;
-        public Single FogNightFar => _FogNightFar_IsSet ? SpanExt.GetFloat(_data.Slice(_FogNightFarLocation, 4)) : default;
-        #endregion
-        private int? _HNAMLocation;
-        public Weather.HNAMDataType HNAMDataTypeState { get; private set; }
-        #region HdrEyeAdaptSpeed
-        private int _HdrEyeAdaptSpeedLocation => _HNAMLocation!.Value + 0x0;
-        private bool _HdrEyeAdaptSpeed_IsSet => _HNAMLocation.HasValue;
-        public Single HdrEyeAdaptSpeed => _HdrEyeAdaptSpeed_IsSet ? SpanExt.GetFloat(_data.Slice(_HdrEyeAdaptSpeedLocation, 4)) : default;
-        #endregion
-        #region HdrBlurRadius
-        private int _HdrBlurRadiusLocation => _HNAMLocation!.Value + 0x4;
-        private bool _HdrBlurRadius_IsSet => _HNAMLocation.HasValue;
-        public Single HdrBlurRadius => _HdrBlurRadius_IsSet ? SpanExt.GetFloat(_data.Slice(_HdrBlurRadiusLocation, 4)) : default;
-        #endregion
-        #region HdrBlurPasses
-        private int _HdrBlurPassesLocation => _HNAMLocation!.Value + 0x8;
-        private bool _HdrBlurPasses_IsSet => _HNAMLocation.HasValue;
-        public Single HdrBlurPasses => _HdrBlurPasses_IsSet ? SpanExt.GetFloat(_data.Slice(_HdrBlurPassesLocation, 4)) : default;
-        #endregion
-        #region HdrEmissiveMult
-        private int _HdrEmissiveMultLocation => _HNAMLocation!.Value + 0xC;
-        private bool _HdrEmissiveMult_IsSet => _HNAMLocation.HasValue;
-        public Single HdrEmissiveMult => _HdrEmissiveMult_IsSet ? SpanExt.GetFloat(_data.Slice(_HdrEmissiveMultLocation, 4)) : default;
-        #endregion
-        #region HdrTargetLum
-        private int _HdrTargetLumLocation => _HNAMLocation!.Value + 0x10;
-        private bool _HdrTargetLum_IsSet => _HNAMLocation.HasValue;
-        public Single HdrTargetLum => _HdrTargetLum_IsSet ? SpanExt.GetFloat(_data.Slice(_HdrTargetLumLocation, 4)) : default;
-        #endregion
-        #region HdrUpperLumClamp
-        private int _HdrUpperLumClampLocation => _HNAMLocation!.Value + 0x14;
-        private bool _HdrUpperLumClamp_IsSet => _HNAMLocation.HasValue;
-        public Single HdrUpperLumClamp => _HdrUpperLumClamp_IsSet ? SpanExt.GetFloat(_data.Slice(_HdrUpperLumClampLocation, 4)) : default;
-        #endregion
-        #region HdrBrightScale
-        private int _HdrBrightScaleLocation => _HNAMLocation!.Value + 0x18;
-        private bool _HdrBrightScale_IsSet => _HNAMLocation.HasValue;
-        public Single HdrBrightScale => _HdrBrightScale_IsSet ? SpanExt.GetFloat(_data.Slice(_HdrBrightScaleLocation, 4)) : default;
-        #endregion
-        #region HdrBrightClamp
-        private int _HdrBrightClampLocation => _HNAMLocation!.Value + 0x1C;
-        private bool _HdrBrightClamp_IsSet => _HNAMLocation.HasValue;
-        public Single HdrBrightClamp => _HdrBrightClamp_IsSet ? SpanExt.GetFloat(_data.Slice(_HdrBrightClampLocation, 4)) : default;
-        #endregion
-        #region HdrLumRampNoTex
-        private int _HdrLumRampNoTexLocation => _HNAMLocation!.Value + 0x20;
-        private bool _HdrLumRampNoTex_IsSet => _HNAMLocation.HasValue;
-        public Single HdrLumRampNoTex => _HdrLumRampNoTex_IsSet ? SpanExt.GetFloat(_data.Slice(_HdrLumRampNoTexLocation, 4)) : default;
-        #endregion
-        #region HdrLumRampMin
-        private int _HdrLumRampMinLocation => _HNAMLocation!.Value + 0x24;
-        private bool _HdrLumRampMin_IsSet => _HNAMLocation.HasValue;
-        public Single HdrLumRampMin => _HdrLumRampMin_IsSet ? SpanExt.GetFloat(_data.Slice(_HdrLumRampMinLocation, 4)) : default;
-        #endregion
-        #region HdrLumRampMax
-        private int _HdrLumRampMaxLocation => _HNAMLocation!.Value + 0x28;
-        private bool _HdrLumRampMax_IsSet => _HNAMLocation.HasValue;
-        public Single HdrLumRampMax => _HdrLumRampMax_IsSet ? SpanExt.GetFloat(_data.Slice(_HdrLumRampMaxLocation, 4)) : default;
-        #endregion
-        #region HdrSunlightDimmer
-        private int _HdrSunlightDimmerLocation => _HNAMLocation!.Value + 0x2C;
-        private bool _HdrSunlightDimmer_IsSet => _HNAMLocation.HasValue;
-        public Single HdrSunlightDimmer => _HdrSunlightDimmer_IsSet ? SpanExt.GetFloat(_data.Slice(_HdrSunlightDimmerLocation, 4)) : default;
-        #endregion
-        #region HdrGrassDimmer
-        private int _HdrGrassDimmerLocation => _HNAMLocation!.Value + 0x30;
-        private bool _HdrGrassDimmer_IsSet => _HNAMLocation.HasValue;
-        public Single HdrGrassDimmer => _HdrGrassDimmer_IsSet ? SpanExt.GetFloat(_data.Slice(_HdrGrassDimmerLocation, 4)) : default;
-        #endregion
-        #region HdrTreeDimmer
-        private int _HdrTreeDimmerLocation => _HNAMLocation!.Value + 0x34;
-        private bool _HdrTreeDimmer_IsSet => _HNAMLocation.HasValue;
-        public Single HdrTreeDimmer => _HdrTreeDimmer_IsSet ? SpanExt.GetFloat(_data.Slice(_HdrTreeDimmerLocation, 4)) : default;
-        #endregion
-        private int? _DATALocation;
-        public Weather.DATADataType DATADataTypeState { get; private set; }
-        #region WindSpeed
-        private int _WindSpeedLocation => _DATALocation!.Value + 0x0;
-        private bool _WindSpeed_IsSet => _DATALocation.HasValue;
-        public Byte WindSpeed => _WindSpeed_IsSet ? _data.Span[_WindSpeedLocation] : default;
-        #endregion
-        #region CloudSpeedLower
-        private int _CloudSpeedLowerLocation => _DATALocation!.Value + 0x1;
-        private bool _CloudSpeedLower_IsSet => _DATALocation.HasValue;
-        public Byte CloudSpeedLower => _CloudSpeedLower_IsSet ? _data.Span[_CloudSpeedLowerLocation] : default;
-        #endregion
-        #region CloudSpeedUpper
-        private int _CloudSpeedUpperLocation => _DATALocation!.Value + 0x2;
-        private bool _CloudSpeedUpper_IsSet => _DATALocation.HasValue;
-        public Byte CloudSpeedUpper => _CloudSpeedUpper_IsSet ? _data.Span[_CloudSpeedUpperLocation] : default;
-        #endregion
-        #region TransDelta
-        private int _TransDeltaLocation => _DATALocation!.Value + 0x3;
-        private bool _TransDelta_IsSet => _DATALocation.HasValue;
-        public Byte TransDelta => _TransDelta_IsSet ? _data.Span[_TransDeltaLocation] : default;
-        #endregion
-        #region SunGlare
-        private int _SunGlareLocation => _DATALocation!.Value + 0x4;
-        private bool _SunGlare_IsSet => _DATALocation.HasValue;
-        public Byte SunGlare => _SunGlare_IsSet ? _data.Span[_SunGlareLocation] : default;
-        #endregion
-        #region SunDamage
-        private int _SunDamageLocation => _DATALocation!.Value + 0x5;
-        private bool _SunDamage_IsSet => _DATALocation.HasValue;
-        public Byte SunDamage => _SunDamage_IsSet ? _data.Span[_SunDamageLocation] : default;
-        #endregion
-        #region PrecipitationBeginFadeIn
-        private int _PrecipitationBeginFadeInLocation => _DATALocation!.Value + 0x6;
-        private bool _PrecipitationBeginFadeIn_IsSet => _DATALocation.HasValue;
-        public Byte PrecipitationBeginFadeIn => _PrecipitationBeginFadeIn_IsSet ? _data.Span[_PrecipitationBeginFadeInLocation] : default;
-        #endregion
-        #region PrecipitationEndFadeOut
-        private int _PrecipitationEndFadeOutLocation => _DATALocation!.Value + 0x7;
-        private bool _PrecipitationEndFadeOut_IsSet => _DATALocation.HasValue;
-        public Byte PrecipitationEndFadeOut => _PrecipitationEndFadeOut_IsSet ? _data.Span[_PrecipitationEndFadeOutLocation] : default;
-        #endregion
-        #region ThunderLightningBeginFadeIn
-        private int _ThunderLightningBeginFadeInLocation => _DATALocation!.Value + 0x8;
-        private bool _ThunderLightningBeginFadeIn_IsSet => _DATALocation.HasValue;
-        public Byte ThunderLightningBeginFadeIn => _ThunderLightningBeginFadeIn_IsSet ? _data.Span[_ThunderLightningBeginFadeInLocation] : default;
-        #endregion
-        #region ThunderLightningEndFadeOut
-        private int _ThunderLightningEndFadeOutLocation => _DATALocation!.Value + 0x9;
-        private bool _ThunderLightningEndFadeOut_IsSet => _DATALocation.HasValue;
-        public Byte ThunderLightningEndFadeOut => _ThunderLightningEndFadeOut_IsSet ? _data.Span[_ThunderLightningEndFadeOutLocation] : default;
-        #endregion
-        #region ThunderLightningFrequency
-        private int _ThunderLightningFrequencyLocation => _DATALocation!.Value + 0xA;
-        private bool _ThunderLightningFrequency_IsSet => _DATALocation.HasValue;
-        public Byte ThunderLightningFrequency => _ThunderLightningFrequency_IsSet ? _data.Span[_ThunderLightningFrequencyLocation] : default;
-        #endregion
-        #region Classification
-        private int _ClassificationLocation => _DATALocation!.Value + 0xB;
-        private bool _Classification_IsSet => _DATALocation.HasValue;
-        public Weather.WeatherClassification Classification => _Classification_IsSet ? (Weather.WeatherClassification)_data.Span.Slice(_ClassificationLocation, 1)[0] : default;
-        #endregion
-        #region LightningColor
-        private int _LightningColorLocation => _DATALocation!.Value + 0xC;
-        private bool _LightningColor_IsSet => _DATALocation.HasValue;
-        public Color LightningColor => _LightningColor_IsSet ? _data.Slice(_LightningColorLocation, 3).ReadColor() : default;
+        #region Data
+        private RangeInt32? _DataLocation;
+        private bool _Data_IsSet => _DataLocation.HasValue;
+        public IWeatherDataGetter? Data => _Data_IsSet ? WeatherDataBinaryOverlay.WeatherDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         public IReadOnlyList<IWeatherSoundGetter> Sounds { get; private set; } = ListExt.Empty<WeatherSoundBinaryOverlay>();
         partial void CustomCtor(
@@ -6469,21 +3385,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E46: // FNAM
                 {
-                    _FNAMLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
-                    this.FNAMDataTypeState = Weather.FNAMDataType.Has;
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.FogNightFar);
+                    _FogDistanceLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.FogDistance);
                 }
                 case 0x4D414E48: // HNAM
                 {
-                    _HNAMLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
-                    this.HNAMDataTypeState = Weather.HNAMDataType.Has;
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.HdrTreeDimmer);
+                    _HDRDataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.HDRData);
                 }
                 case 0x41544144: // DATA
                 {
-                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
-                    this.DATADataTypeState = Weather.DATADataType.Has;
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.LightningColor);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Data);
                 }
                 case 0x4D414E53: // SNAM
                 {

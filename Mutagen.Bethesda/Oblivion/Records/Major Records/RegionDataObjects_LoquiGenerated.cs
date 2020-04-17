@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class RegionDataObjects :
         RegionData,
-        IRegionDataObjectsInternal,
+        IRegionDataObjects,
         ILoquiObjectSetter<RegionDataObjects>,
         IEquatable<RegionDataObjects>,
         IEqualsMask
@@ -235,16 +235,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public Mask(
-                TItem DataType,
-                TItem Flags,
-                TItem Priority,
-                TItem RDATDataTypeState,
+                TItem Header,
                 TItem Objects)
-            : base(
-                DataType: DataType,
-                Flags: Flags,
-                Priority: Priority,
-                RDATDataTypeState: RDATDataTypeState)
+            : base(Header: Header)
             {
                 this.Objects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RegionDataObject.Mask<TItem>?>>?>(Objects, Enumerable.Empty<MaskItemIndexed<TItem, RegionDataObject.Mask<TItem>?>>());
             }
@@ -628,16 +621,9 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRegionDataObjects :
         IRegionDataObjectsGetter,
         IRegionData,
-        ILoquiObjectSetter<IRegionDataObjectsInternal>
+        ILoquiObjectSetter<IRegionDataObjects>
     {
         new ExtendedList<RegionDataObject>? Objects { get; set; }
-    }
-
-    public partial interface IRegionDataObjectsInternal :
-        IRegionDataInternal,
-        IRegionDataObjects,
-        IRegionDataObjectsGetter
-    {
     }
 
     public partial interface IRegionDataObjectsGetter :
@@ -656,7 +642,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Common MixIn
     public static partial class RegionDataObjectsMixIn
     {
-        public static void Clear(this IRegionDataObjectsInternal item)
+        public static void Clear(this IRegionDataObjects item)
         {
             ((RegionDataObjectsSetterCommon)((IRegionDataObjectsGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
@@ -724,7 +710,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void DeepCopyIn(
-            this IRegionDataObjectsInternal lhs,
+            this IRegionDataObjects lhs,
             IRegionDataObjectsGetter rhs,
             out RegionDataObjects.ErrorMask errorMask,
             RegionDataObjects.TranslationMask? copyMask = null)
@@ -739,7 +725,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void DeepCopyIn(
-            this IRegionDataObjectsInternal lhs,
+            this IRegionDataObjects lhs,
             IRegionDataObjectsGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
@@ -785,7 +771,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IRegionDataObjectsInternal item,
+            this IRegionDataObjects item,
             XElement node,
             RegionDataObjects.TranslationMask? translationMask = null)
         {
@@ -798,7 +784,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IRegionDataObjectsInternal item,
+            this IRegionDataObjects item,
             XElement node,
             out RegionDataObjects.ErrorMask errorMask,
             RegionDataObjects.TranslationMask? translationMask = null)
@@ -813,7 +799,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IRegionDataObjectsInternal item,
+            this IRegionDataObjects item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -826,7 +812,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IRegionDataObjectsInternal item,
+            this IRegionDataObjects item,
             string path,
             RegionDataObjects.TranslationMask? translationMask = null)
         {
@@ -838,7 +824,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IRegionDataObjectsInternal item,
+            this IRegionDataObjects item,
             string path,
             out RegionDataObjects.ErrorMask errorMask,
             RegionDataObjects.TranslationMask? translationMask = null)
@@ -852,7 +838,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IRegionDataObjectsInternal item,
+            this IRegionDataObjects item,
             string path,
             ErrorMaskBuilder? errorMask,
             RegionDataObjects.TranslationMask? translationMask = null)
@@ -866,7 +852,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IRegionDataObjectsInternal item,
+            this IRegionDataObjects item,
             Stream stream,
             RegionDataObjects.TranslationMask? translationMask = null)
         {
@@ -878,7 +864,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IRegionDataObjectsInternal item,
+            this IRegionDataObjects item,
             Stream stream,
             out RegionDataObjects.ErrorMask errorMask,
             RegionDataObjects.TranslationMask? translationMask = null)
@@ -892,7 +878,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IRegionDataObjectsInternal item,
+            this IRegionDataObjects item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
             RegionDataObjects.TranslationMask? translationMask = null)
@@ -910,7 +896,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IRegionDataObjectsInternal item,
+            this IRegionDataObjects item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -920,7 +906,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromBinary(
-            this IRegionDataObjectsInternal item,
+            this IRegionDataObjects item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -942,11 +928,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum RegionDataObjects_FieldIndex
     {
-        DataType = 0,
-        Flags = 1,
-        Priority = 2,
-        RDATDataTypeState = 3,
-        Objects = 4,
+        Header = 0,
+        Objects = 1,
     }
     #endregion
 
@@ -966,7 +949,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 2;
 
         public static readonly Type MaskType = typeof(RegionDataObjects.Mask<>);
 
@@ -980,7 +963,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type SetterType = typeof(IRegionDataObjects);
 
-        public static readonly Type? InternalSetterType = typeof(IRegionDataObjectsInternal);
+        public static readonly Type? InternalSetterType = null;
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.RegionDataObjects";
 
@@ -1132,41 +1115,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public void Clear(IRegionDataObjectsInternal item)
+        public void Clear(IRegionDataObjects item)
         {
             ClearPartial();
             item.Objects = null;
             base.Clear(item);
         }
         
-        public override void Clear(IRegionDataInternal item)
+        public override void Clear(IRegionData item)
         {
-            Clear(item: (IRegionDataObjectsInternal)item);
+            Clear(item: (IRegionDataObjects)item);
         }
         
         #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IRegionDataObjectsInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    RegionDataSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
         public virtual void CopyInFromXml(
-            IRegionDataObjectsInternal item,
+            IRegionDataObjects item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1175,12 +1138,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
                     RegionDataObjectsXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
@@ -1197,7 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void CopyInFromXml(
-            IRegionDataInternal item,
+            IRegionData item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1213,16 +1170,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Binary Translation
         protected static void FillBinaryStructs(
-            IRegionDataObjectsInternal item,
+            IRegionDataObjects item,
             MutagenFrame frame)
         {
-            RegionDataSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
         }
         
         protected static TryGet<int?> FillBinaryRecordTypes(
-            IRegionDataObjectsInternal item,
+            IRegionDataObjects item,
             MutagenFrame frame,
             int? lastParsed,
             RecordType nextRecordType,
@@ -1258,7 +1212,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public virtual void CopyInFromBinary(
-            IRegionDataObjectsInternal item,
+            IRegionDataObjects item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1272,7 +1226,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void CopyInFromBinary(
-            IRegionDataInternal item,
+            IRegionData item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1413,13 +1367,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case RegionData_FieldIndex.DataType:
-                    return (RegionDataObjects_FieldIndex)((int)index);
-                case RegionData_FieldIndex.Flags:
-                    return (RegionDataObjects_FieldIndex)((int)index);
-                case RegionData_FieldIndex.Priority:
-                    return (RegionDataObjects_FieldIndex)((int)index);
-                case RegionData_FieldIndex.RDATDataTypeState:
+                case RegionData_FieldIndex.Header:
                     return (RegionDataObjects_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -1494,19 +1442,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            IRegionDataObjectsInternal item,
-            IRegionDataObjectsGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
-        {
-            base.DeepCopyIn(
-                item,
-                rhs,
-                errorMask,
-                copyMask);
-        }
-        
-        public void DeepCopyIn(
             IRegionDataObjects item,
             IRegionDataObjectsGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1551,18 +1486,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public override void DeepCopyIn(
-            IRegionDataInternal item,
-            IRegionDataGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
-        {
-            this.DeepCopyIn(
-                item: (IRegionDataObjectsInternal)item,
-                rhs: (IRegionDataObjectsGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
         
         public override void DeepCopyIn(
             IRegionData item,
@@ -1745,7 +1668,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new readonly static RegionDataObjectsXmlCreateTranslation Instance = new RegionDataObjectsXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IRegionDataObjectsInternal item,
+            IRegionDataObjects item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1770,7 +1693,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IRegionDataObjectsInternal item,
+            IRegionDataObjects item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1920,9 +1843,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataObjectsGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            RegionDataBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,

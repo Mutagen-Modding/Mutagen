@@ -15,7 +15,6 @@ using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -32,41 +31,31 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class LocalVariable :
-        ILocalVariable,
-        ILoquiObjectSetter<LocalVariable>,
-        IEquatable<LocalVariable>,
+    public partial class FogDistance :
+        IFogDistance,
+        ILoquiObjectSetter<FogDistance>,
+        IEquatable<FogDistance>,
         IEqualsMask
     {
         #region Ctor
-        public LocalVariable()
+        public FogDistance()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Data
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private LocalVariableData? _Data;
-        public LocalVariableData? Data
-        {
-            get => _Data;
-            set => _Data = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILocalVariableDataGetter? ILocalVariableGetter.Data => this.Data;
+        #region DayNear
+        public Single DayNear { get; set; } = default;
         #endregion
-        #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ILocalVariableGetter.Name => this.Name;
+        #region DayFar
+        public Single DayFar { get; set; } = default;
+        #endregion
+        #region NightNear
+        public Single NightNear { get; set; } = default;
+        #endregion
+        #region NightFar
+        public Single NightFar { get; set; } = default;
         #endregion
 
         #region To String
@@ -75,7 +64,7 @@ namespace Mutagen.Bethesda.Oblivion
             FileGeneration fg,
             string? name = null)
         {
-            LocalVariableMixIn.ToString(
+            FogDistanceMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -85,22 +74,22 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILocalVariableGetter rhs)) return false;
-            return ((LocalVariableCommon)((ILocalVariableGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IFogDistanceGetter rhs)) return false;
+            return ((FogDistanceCommon)((IFogDistanceGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LocalVariable obj)
+        public bool Equals(FogDistance obj)
         {
-            return ((LocalVariableCommon)((ILocalVariableGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((FogDistanceCommon)((IFogDistanceGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((LocalVariableCommon)((ILocalVariableGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((FogDistanceCommon)((IFogDistanceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => LocalVariableXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => FogDistanceXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -109,7 +98,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((LocalVariableXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((FogDistanceXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -118,9 +107,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static LocalVariable CreateFromXml(
+        public static FogDistance CreateFromXml(
             XElement node,
-            LocalVariable.TranslationMask? translationMask = null)
+            FogDistance.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -129,27 +118,27 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static LocalVariable CreateFromXml(
+        public static FogDistance CreateFromXml(
             XElement node,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            out FogDistance.ErrorMask errorMask,
+            FogDistance.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LocalVariable.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FogDistance.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public static LocalVariable CreateFromXml(
+        public static FogDistance CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new LocalVariable();
-            ((LocalVariableSetterCommon)((ILocalVariableGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new FogDistance();
+            ((FogDistanceSetterCommon)((IFogDistanceGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -157,9 +146,9 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LocalVariable CreateFromXml(
+        public static FogDistance CreateFromXml(
             string path,
-            LocalVariable.TranslationMask? translationMask = null)
+            FogDistance.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -167,10 +156,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static LocalVariable CreateFromXml(
+        public static FogDistance CreateFromXml(
             string path,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            out FogDistance.ErrorMask errorMask,
+            FogDistance.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -179,10 +168,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static LocalVariable CreateFromXml(
+        public static FogDistance CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            FogDistance.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -191,9 +180,9 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static LocalVariable CreateFromXml(
+        public static FogDistance CreateFromXml(
             Stream stream,
-            LocalVariable.TranslationMask? translationMask = null)
+            FogDistance.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -201,10 +190,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static LocalVariable CreateFromXml(
+        public static FogDistance CreateFromXml(
             Stream stream,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            out FogDistance.ErrorMask errorMask,
+            FogDistance.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -213,10 +202,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static LocalVariable CreateFromXml(
+        public static FogDistance CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            FogDistance.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -238,16 +227,22 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Data = new MaskItem<TItem, LocalVariableData.Mask<TItem>?>(initialValue, new LocalVariableData.Mask<TItem>(initialValue));
-                this.Name = initialValue;
+                this.DayNear = initialValue;
+                this.DayFar = initialValue;
+                this.NightNear = initialValue;
+                this.NightFar = initialValue;
             }
 
             public Mask(
-                TItem Data,
-                TItem Name)
+                TItem DayNear,
+                TItem DayFar,
+                TItem NightNear,
+                TItem NightFar)
             {
-                this.Data = new MaskItem<TItem, LocalVariableData.Mask<TItem>?>(Data, new LocalVariableData.Mask<TItem>(Data));
-                this.Name = Name;
+                this.DayNear = DayNear;
+                this.DayFar = DayFar;
+                this.NightNear = NightNear;
+                this.NightFar = NightFar;
             }
 
             #pragma warning disable CS8618
@@ -259,8 +254,10 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public MaskItem<TItem, LocalVariableData.Mask<TItem>?>? Data { get; set; }
-            public TItem Name;
+            public TItem DayNear;
+            public TItem DayFar;
+            public TItem NightNear;
+            public TItem NightFar;
             #endregion
 
             #region Equals
@@ -273,15 +270,19 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Data, rhs.Data)) return false;
-                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.DayNear, rhs.DayNear)) return false;
+                if (!object.Equals(this.DayFar, rhs.DayFar)) return false;
+                if (!object.Equals(this.NightNear, rhs.NightNear)) return false;
+                if (!object.Equals(this.NightFar, rhs.NightFar)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Data);
-                hash.Add(this.Name);
+                hash.Add(this.DayNear);
+                hash.Add(this.DayFar);
+                hash.Add(this.NightNear);
+                hash.Add(this.NightFar);
                 return hash.ToHashCode();
             }
 
@@ -290,12 +291,10 @@ namespace Mutagen.Bethesda.Oblivion
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (Data != null)
-                {
-                    if (!eval(this.Data.Overall)) return false;
-                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
-                }
-                if (!eval(this.Name)) return false;
+                if (!eval(this.DayNear)) return false;
+                if (!eval(this.DayFar)) return false;
+                if (!eval(this.NightNear)) return false;
+                if (!eval(this.NightFar)) return false;
                 return true;
             }
             #endregion
@@ -303,12 +302,10 @@ namespace Mutagen.Bethesda.Oblivion
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (Data != null)
-                {
-                    if (eval(this.Data.Overall)) return true;
-                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
-                }
-                if (eval(this.Name)) return true;
+                if (eval(this.DayNear)) return true;
+                if (eval(this.DayFar)) return true;
+                if (eval(this.NightNear)) return true;
+                if (eval(this.NightFar)) return true;
                 return false;
             }
             #endregion
@@ -316,15 +313,17 @@ namespace Mutagen.Bethesda.Oblivion
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new LocalVariable.Mask<R>();
+                var ret = new FogDistance.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Data = this.Data == null ? null : new MaskItem<R, LocalVariableData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
-                obj.Name = eval(this.Name);
+                obj.DayNear = eval(this.DayNear);
+                obj.DayFar = eval(this.DayFar);
+                obj.NightNear = eval(this.NightNear);
+                obj.NightFar = eval(this.NightFar);
             }
             #endregion
 
@@ -334,26 +333,34 @@ namespace Mutagen.Bethesda.Oblivion
                 return ToString(printMask: null);
             }
 
-            public string ToString(LocalVariable.Mask<bool>? printMask = null)
+            public string ToString(FogDistance.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, LocalVariable.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, FogDistance.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(LocalVariable.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(FogDistance.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Data?.Overall ?? true)
+                    if (printMask?.DayNear ?? true)
                     {
-                        Data?.ToString(fg);
+                        fg.AppendItem(DayNear, "DayNear");
                     }
-                    if (printMask?.Name ?? true)
+                    if (printMask?.DayFar ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        fg.AppendItem(DayFar, "DayFar");
+                    }
+                    if (printMask?.NightNear ?? true)
+                    {
+                        fg.AppendItem(NightNear, "NightNear");
+                    }
+                    if (printMask?.NightFar ?? true)
+                    {
+                        fg.AppendItem(NightFar, "NightFar");
                     }
                 }
                 fg.AppendLine("]");
@@ -380,20 +387,26 @@ namespace Mutagen.Bethesda.Oblivion
                     return _warnings;
                 }
             }
-            public MaskItem<Exception?, LocalVariableData.ErrorMask?>? Data;
-            public Exception? Name;
+            public Exception? DayNear;
+            public Exception? DayFar;
+            public Exception? NightNear;
+            public Exception? NightFar;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+                FogDistance_FieldIndex enu = (FogDistance_FieldIndex)index;
                 switch (enu)
                 {
-                    case LocalVariable_FieldIndex.Data:
-                        return Data;
-                    case LocalVariable_FieldIndex.Name:
-                        return Name;
+                    case FogDistance_FieldIndex.DayNear:
+                        return DayNear;
+                    case FogDistance_FieldIndex.DayFar:
+                        return DayFar;
+                    case FogDistance_FieldIndex.NightNear:
+                        return NightNear;
+                    case FogDistance_FieldIndex.NightFar:
+                        return NightFar;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -401,14 +414,20 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void SetNthException(int index, Exception ex)
             {
-                LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+                FogDistance_FieldIndex enu = (FogDistance_FieldIndex)index;
                 switch (enu)
                 {
-                    case LocalVariable_FieldIndex.Data:
-                        this.Data = new MaskItem<Exception?, LocalVariableData.ErrorMask?>(ex, null);
+                    case FogDistance_FieldIndex.DayNear:
+                        this.DayNear = ex;
                         break;
-                    case LocalVariable_FieldIndex.Name:
-                        this.Name = ex;
+                    case FogDistance_FieldIndex.DayFar:
+                        this.DayFar = ex;
+                        break;
+                    case FogDistance_FieldIndex.NightNear:
+                        this.NightNear = ex;
+                        break;
+                    case FogDistance_FieldIndex.NightFar:
+                        this.NightFar = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -417,14 +436,20 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void SetNthMask(int index, object obj)
             {
-                LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+                FogDistance_FieldIndex enu = (FogDistance_FieldIndex)index;
                 switch (enu)
                 {
-                    case LocalVariable_FieldIndex.Data:
-                        this.Data = (MaskItem<Exception?, LocalVariableData.ErrorMask?>?)obj;
+                    case FogDistance_FieldIndex.DayNear:
+                        this.DayNear = (Exception?)obj;
                         break;
-                    case LocalVariable_FieldIndex.Name:
-                        this.Name = (Exception?)obj;
+                    case FogDistance_FieldIndex.DayFar:
+                        this.DayFar = (Exception?)obj;
+                        break;
+                    case FogDistance_FieldIndex.NightNear:
+                        this.NightNear = (Exception?)obj;
+                        break;
+                    case FogDistance_FieldIndex.NightFar:
+                        this.NightFar = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -434,8 +459,10 @@ namespace Mutagen.Bethesda.Oblivion
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Data != null) return true;
-                if (Name != null) return true;
+                if (DayNear != null) return true;
+                if (DayFar != null) return true;
+                if (NightNear != null) return true;
+                if (NightFar != null) return true;
                 return false;
             }
             #endregion
@@ -470,8 +497,10 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                Data?.ToString(fg);
-                fg.AppendItem(Name, "Name");
+                fg.AppendItem(DayNear, "DayNear");
+                fg.AppendItem(DayFar, "DayFar");
+                fg.AppendItem(NightNear, "NightNear");
+                fg.AppendItem(NightFar, "NightFar");
             }
             #endregion
 
@@ -480,8 +509,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
-                ret.Name = this.Name.Combine(rhs.Name);
+                ret.DayNear = this.DayNear.Combine(rhs.DayNear);
+                ret.DayFar = this.DayFar.Combine(rhs.DayFar);
+                ret.NightNear = this.NightNear.Combine(rhs.NightNear);
+                ret.NightFar = this.NightFar.Combine(rhs.NightFar);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -503,15 +534,19 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public MaskItem<bool, LocalVariableData.TranslationMask?> Data;
-            public bool Name;
+            public bool DayNear;
+            public bool DayFar;
+            public bool NightNear;
+            public bool NightFar;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.Data = new MaskItem<bool, LocalVariableData.TranslationMask?>(defaultOn, null);
-                this.Name = defaultOn;
+                this.DayNear = defaultOn;
+                this.DayFar = defaultOn;
+                this.NightNear = defaultOn;
+                this.NightFar = defaultOn;
             }
 
             #endregion
@@ -527,41 +562,47 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
-                ret.Add((Name, null));
+                ret.Add((DayNear, null));
+                ret.Add((DayFar, null));
+                ret.Add((NightNear, null));
+                ret.Add((NightFar, null));
             }
         }
         #endregion
 
+        #region Mutagen
+        public new static readonly RecordType GrupRecordType = FogDistance_Registration.TriggeringRecordType;
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => LocalVariableBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => FogDistanceBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((LocalVariableBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((FogDistanceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static LocalVariable CreateFromBinary(MutagenFrame frame)
+        public static FogDistance CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public static LocalVariable CreateFromBinary(
+        public static FogDistance CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new LocalVariable();
-            ((LocalVariableSetterCommon)((ILocalVariableGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new FogDistance();
+            ((FogDistanceSetterCommon)((IFogDistanceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -574,33 +615,35 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILocalVariableGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFogDistanceGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((LocalVariableSetterCommon)((ILocalVariableGetter)this).CommonSetterInstance()!).Clear(this);
+            ((FogDistanceSetterCommon)((IFogDistanceGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static LocalVariable GetNew()
+        internal static FogDistance GetNew()
         {
-            return new LocalVariable();
+            return new FogDistance();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface ILocalVariable :
-        ILocalVariableGetter,
-        ILoquiObjectSetter<ILocalVariable>
+    public partial interface IFogDistance :
+        IFogDistanceGetter,
+        ILoquiObjectSetter<IFogDistance>
     {
-        new LocalVariableData? Data { get; set; }
-        new String? Name { get; set; }
+        new Single DayNear { get; set; }
+        new Single DayFar { get; set; }
+        new Single NightNear { get; set; }
+        new Single NightFar { get; set; }
     }
 
-    public partial interface ILocalVariableGetter :
+    public partial interface IFogDistanceGetter :
         ILoquiObject,
-        ILoquiObject<ILocalVariableGetter>,
+        ILoquiObject<IFogDistanceGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -610,50 +653,52 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        ILocalVariableDataGetter? Data { get; }
-        String? Name { get; }
+        Single DayNear { get; }
+        Single DayFar { get; }
+        Single NightNear { get; }
+        Single NightFar { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class LocalVariableMixIn
+    public static partial class FogDistanceMixIn
     {
-        public static void Clear(this ILocalVariable item)
+        public static void Clear(this IFogDistance item)
         {
-            ((LocalVariableSetterCommon)((ILocalVariableGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((FogDistanceSetterCommon)((IFogDistanceGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static LocalVariable.Mask<bool> GetEqualsMask(
-            this ILocalVariableGetter item,
-            ILocalVariableGetter rhs,
+        public static FogDistance.Mask<bool> GetEqualsMask(
+            this IFogDistanceGetter item,
+            IFogDistanceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((FogDistanceCommon)((IFogDistanceGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this ILocalVariableGetter item,
+            this IFogDistanceGetter item,
             string? name = null,
-            LocalVariable.Mask<bool>? printMask = null)
+            FogDistance.Mask<bool>? printMask = null)
         {
-            return ((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).ToString(
+            return ((FogDistanceCommon)((IFogDistanceGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this ILocalVariableGetter item,
+            this IFogDistanceGetter item,
             FileGeneration fg,
             string? name = null,
-            LocalVariable.Mask<bool>? printMask = null)
+            FogDistance.Mask<bool>? printMask = null)
         {
-            ((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).ToString(
+            ((FogDistanceCommon)((IFogDistanceGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -661,38 +706,38 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this ILocalVariableGetter item,
-            LocalVariable.Mask<bool?> checkMask)
+            this IFogDistanceGetter item,
+            FogDistance.Mask<bool?> checkMask)
         {
-            return ((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).HasBeenSet(
+            return ((FogDistanceCommon)((IFogDistanceGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static LocalVariable.Mask<bool> GetHasBeenSetMask(this ILocalVariableGetter item)
+        public static FogDistance.Mask<bool> GetHasBeenSetMask(this IFogDistanceGetter item)
         {
-            var ret = new LocalVariable.Mask<bool>(false);
-            ((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new FogDistance.Mask<bool>(false);
+            ((FogDistanceCommon)((IFogDistanceGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this ILocalVariableGetter item,
-            ILocalVariableGetter rhs)
+            this IFogDistanceGetter item,
+            IFogDistanceGetter rhs)
         {
-            return ((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).Equals(
+            return ((FogDistanceCommon)((IFogDistanceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this ILocalVariable lhs,
-            ILocalVariableGetter rhs,
-            LocalVariable.TranslationMask? copyMask = null)
+            this IFogDistance lhs,
+            IFogDistanceGetter rhs,
+            FogDistance.TranslationMask? copyMask = null)
         {
-            ((LocalVariableSetterTranslationCommon)((ILocalVariableGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((FogDistanceSetterTranslationCommon)((IFogDistanceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -700,59 +745,59 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void DeepCopyIn(
-            this ILocalVariable lhs,
-            ILocalVariableGetter rhs,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? copyMask = null)
+            this IFogDistance lhs,
+            IFogDistanceGetter rhs,
+            out FogDistance.ErrorMask errorMask,
+            FogDistance.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((LocalVariableSetterTranslationCommon)((ILocalVariableGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((FogDistanceSetterTranslationCommon)((IFogDistanceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = LocalVariable.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FogDistance.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this ILocalVariable lhs,
-            ILocalVariableGetter rhs,
+            this IFogDistance lhs,
+            IFogDistanceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((LocalVariableSetterTranslationCommon)((ILocalVariableGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((FogDistanceSetterTranslationCommon)((IFogDistanceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static LocalVariable DeepCopy(
-            this ILocalVariableGetter item,
-            LocalVariable.TranslationMask? copyMask = null)
+        public static FogDistance DeepCopy(
+            this IFogDistanceGetter item,
+            FogDistance.TranslationMask? copyMask = null)
         {
-            return ((LocalVariableSetterTranslationCommon)((ILocalVariableGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((FogDistanceSetterTranslationCommon)((IFogDistanceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static LocalVariable DeepCopy(
-            this ILocalVariableGetter item,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? copyMask = null)
+        public static FogDistance DeepCopy(
+            this IFogDistanceGetter item,
+            out FogDistance.ErrorMask errorMask,
+            FogDistance.TranslationMask? copyMask = null)
         {
-            return ((LocalVariableSetterTranslationCommon)((ILocalVariableGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((FogDistanceSetterTranslationCommon)((IFogDistanceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static LocalVariable DeepCopy(
-            this ILocalVariableGetter item,
+        public static FogDistance DeepCopy(
+            this IFogDistanceGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((LocalVariableSetterTranslationCommon)((ILocalVariableGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((FogDistanceSetterTranslationCommon)((IFogDistanceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -761,9 +806,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this ILocalVariable item,
+            this IFogDistance item,
             XElement node,
-            LocalVariable.TranslationMask? translationMask = null)
+            FogDistance.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -774,10 +819,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this ILocalVariable item,
+            this IFogDistance item,
             XElement node,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            out FogDistance.ErrorMask errorMask,
+            FogDistance.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -785,16 +830,16 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LocalVariable.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FogDistance.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this ILocalVariable item,
+            this IFogDistance item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((LocalVariableSetterCommon)((ILocalVariableGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((FogDistanceSetterCommon)((IFogDistanceGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -802,9 +847,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this ILocalVariable item,
+            this IFogDistance item,
             string path,
-            LocalVariable.TranslationMask? translationMask = null)
+            FogDistance.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -814,10 +859,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this ILocalVariable item,
+            this IFogDistance item,
             string path,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            out FogDistance.ErrorMask errorMask,
+            FogDistance.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -828,10 +873,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this ILocalVariable item,
+            this IFogDistance item,
             string path,
             ErrorMaskBuilder? errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            FogDistance.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -842,9 +887,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this ILocalVariable item,
+            this IFogDistance item,
             Stream stream,
-            LocalVariable.TranslationMask? translationMask = null)
+            FogDistance.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -854,10 +899,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this ILocalVariable item,
+            this IFogDistance item,
             Stream stream,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            out FogDistance.ErrorMask errorMask,
+            FogDistance.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -868,10 +913,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this ILocalVariable item,
+            this IFogDistance item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            FogDistance.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -886,7 +931,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this ILocalVariable item,
+            this IFogDistance item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -896,11 +941,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromBinary(
-            this ILocalVariable item,
+            this IFogDistance item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((LocalVariableSetterCommon)((ILocalVariableGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((FogDistanceSetterCommon)((IFogDistanceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -916,48 +961,50 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     #region Field Index
-    public enum LocalVariable_FieldIndex
+    public enum FogDistance_FieldIndex
     {
-        Data = 0,
-        Name = 1,
+        DayNear = 0,
+        DayFar = 1,
+        NightNear = 2,
+        NightFar = 3,
     }
     #endregion
 
     #region Registration
-    public partial class LocalVariable_Registration : ILoquiRegistration
+    public partial class FogDistance_Registration : ILoquiRegistration
     {
-        public static readonly LocalVariable_Registration Instance = new LocalVariable_Registration();
+        public static readonly FogDistance_Registration Instance = new FogDistance_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 48,
+            msgID: 216,
             version: 0);
 
-        public const string GUID = "b77aa416-b182-4265-8276-44b34bace18f";
+        public const string GUID = "a3f0f446-a754-4889-b7b0-4a5d2d368107";
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 4;
 
-        public static readonly Type MaskType = typeof(LocalVariable.Mask<>);
+        public static readonly Type MaskType = typeof(FogDistance.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(LocalVariable.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(FogDistance.ErrorMask);
 
-        public static readonly Type ClassType = typeof(LocalVariable);
+        public static readonly Type ClassType = typeof(FogDistance);
 
-        public static readonly Type GetterType = typeof(ILocalVariableGetter);
+        public static readonly Type GetterType = typeof(IFogDistanceGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(ILocalVariable);
+        public static readonly Type SetterType = typeof(IFogDistance);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Oblivion.LocalVariable";
+        public const string FullName = "Mutagen.Bethesda.Oblivion.FogDistance";
 
-        public const string Name = "LocalVariable";
+        public const string Name = "FogDistance";
 
         public const string Namespace = "Mutagen.Bethesda.Oblivion";
 
@@ -969,10 +1016,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
-                case "DATA":
-                    return (ushort)LocalVariable_FieldIndex.Data;
-                case "NAME":
-                    return (ushort)LocalVariable_FieldIndex.Name;
+                case "DAYNEAR":
+                    return (ushort)FogDistance_FieldIndex.DayNear;
+                case "DAYFAR":
+                    return (ushort)FogDistance_FieldIndex.DayFar;
+                case "NIGHTNEAR":
+                    return (ushort)FogDistance_FieldIndex.NightNear;
+                case "NIGHTFAR":
+                    return (ushort)FogDistance_FieldIndex.NightFar;
                 default:
                     return null;
             }
@@ -980,11 +1031,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+            FogDistance_FieldIndex enu = (FogDistance_FieldIndex)index;
             switch (enu)
             {
-                case LocalVariable_FieldIndex.Data:
-                case LocalVariable_FieldIndex.Name:
+                case FogDistance_FieldIndex.DayNear:
+                case FogDistance_FieldIndex.DayFar:
+                case FogDistance_FieldIndex.NightNear:
+                case FogDistance_FieldIndex.NightFar:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -993,12 +1046,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+            FogDistance_FieldIndex enu = (FogDistance_FieldIndex)index;
             switch (enu)
             {
-                case LocalVariable_FieldIndex.Data:
-                    return true;
-                case LocalVariable_FieldIndex.Name:
+                case FogDistance_FieldIndex.DayNear:
+                case FogDistance_FieldIndex.DayFar:
+                case FogDistance_FieldIndex.NightNear:
+                case FogDistance_FieldIndex.NightFar:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1007,11 +1061,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+            FogDistance_FieldIndex enu = (FogDistance_FieldIndex)index;
             switch (enu)
             {
-                case LocalVariable_FieldIndex.Data:
-                case LocalVariable_FieldIndex.Name:
+                case FogDistance_FieldIndex.DayNear:
+                case FogDistance_FieldIndex.DayFar:
+                case FogDistance_FieldIndex.NightNear:
+                case FogDistance_FieldIndex.NightFar:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1020,13 +1076,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static string GetNthName(ushort index)
         {
-            LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+            FogDistance_FieldIndex enu = (FogDistance_FieldIndex)index;
             switch (enu)
             {
-                case LocalVariable_FieldIndex.Data:
-                    return "Data";
-                case LocalVariable_FieldIndex.Name:
-                    return "Name";
+                case FogDistance_FieldIndex.DayNear:
+                    return "DayNear";
+                case FogDistance_FieldIndex.DayFar:
+                    return "DayFar";
+                case FogDistance_FieldIndex.NightNear:
+                    return "NightNear";
+                case FogDistance_FieldIndex.NightFar:
+                    return "NightFar";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1034,11 +1094,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+            FogDistance_FieldIndex enu = (FogDistance_FieldIndex)index;
             switch (enu)
             {
-                case LocalVariable_FieldIndex.Data:
-                case LocalVariable_FieldIndex.Name:
+                case FogDistance_FieldIndex.DayNear:
+                case FogDistance_FieldIndex.DayFar:
+                case FogDistance_FieldIndex.NightNear:
+                case FogDistance_FieldIndex.NightFar:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1047,11 +1109,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsProtected(ushort index)
         {
-            LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+            FogDistance_FieldIndex enu = (FogDistance_FieldIndex)index;
             switch (enu)
             {
-                case LocalVariable_FieldIndex.Data:
-                case LocalVariable_FieldIndex.Name:
+                case FogDistance_FieldIndex.DayNear:
+                case FogDistance_FieldIndex.DayFar:
+                case FogDistance_FieldIndex.NightNear:
+                case FogDistance_FieldIndex.NightFar:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1060,36 +1124,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Type GetNthType(ushort index)
         {
-            LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+            FogDistance_FieldIndex enu = (FogDistance_FieldIndex)index;
             switch (enu)
             {
-                case LocalVariable_FieldIndex.Data:
-                    return typeof(LocalVariableData);
-                case LocalVariable_FieldIndex.Name:
-                    return typeof(String);
+                case FogDistance_FieldIndex.DayNear:
+                    return typeof(Single);
+                case FogDistance_FieldIndex.DayFar:
+                    return typeof(Single);
+                case FogDistance_FieldIndex.NightNear:
+                    return typeof(Single);
+                case FogDistance_FieldIndex.NightFar:
+                    return typeof(Single);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(LocalVariableXmlWriteTranslation);
-        public static readonly RecordType SLSD_HEADER = new RecordType("SLSD");
-        public static readonly RecordType SCVR_HEADER = new RecordType("SCVR");
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
-        {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        SLSD_HEADER,
-                        SCVR_HEADER
-                    })
-            );
-        });
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 2;
-        public static readonly Type BinaryWriteTranslation = typeof(LocalVariableBinaryWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(FogDistanceXmlWriteTranslation);
+        public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
+        public static readonly RecordType TriggeringRecordType = FNAM_HEADER;
+        public const int NumStructFields = 4;
+        public const int NumTypedFields = 0;
+        public static readonly Type BinaryWriteTranslation = typeof(FogDistanceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1122,22 +1178,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class LocalVariableSetterCommon
+    public partial class FogDistanceSetterCommon
     {
-        public static readonly LocalVariableSetterCommon Instance = new LocalVariableSetterCommon();
+        public static readonly FogDistanceSetterCommon Instance = new FogDistanceSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(ILocalVariable item)
+        public void Clear(IFogDistance item)
         {
             ClearPartial();
-            item.Data = null;
-            item.Name = default;
+            item.DayNear = default;
+            item.DayFar = default;
+            item.NightNear = default;
+            item.NightFar = default;
         }
         
         #region Xml Translation
         public virtual void CopyInFromXml(
-            ILocalVariable item,
+            IFogDistance item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1146,7 +1204,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    LocalVariableXmlCreateTranslation.FillPublicElementXml(
+                    FogDistanceXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1165,70 +1223,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Binary Translation
         protected static void FillBinaryStructs(
-            ILocalVariable item,
+            IFogDistance item,
             MutagenFrame frame)
         {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ILocalVariable item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x44534C53: // SLSD
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocalVariable_FieldIndex.Data) return TryGet<int?>.Failure;
-                    item.Data = Mutagen.Bethesda.Oblivion.LocalVariableData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)LocalVariable_FieldIndex.Data);
-                }
-                case 0x52564353: // SCVR
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocalVariable_FieldIndex.Name) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)LocalVariable_FieldIndex.Name);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
+            item.DayNear = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.DayFar = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.NightNear = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.NightFar = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
         }
         
         public virtual void CopyInFromBinary(
-            ILocalVariable item,
+            IFogDistance item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.TypelessRecordParse(
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                recordTypeConverter.ConvertToCustom(FogDistance_Registration.FNAM_HEADER)));
+            UtilityTranslation.RecordParse(
                 record: item,
                 frame: frame,
-                setFinal: false,
+                setFinal: true,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: FillBinaryStructs);
         }
         
         #endregion
         
     }
-    public partial class LocalVariableCommon
+    public partial class FogDistanceCommon
     {
-        public static readonly LocalVariableCommon Instance = new LocalVariableCommon();
+        public static readonly FogDistanceCommon Instance = new FogDistanceCommon();
 
-        public LocalVariable.Mask<bool> GetEqualsMask(
-            ILocalVariableGetter item,
-            ILocalVariableGetter rhs,
+        public FogDistance.Mask<bool> GetEqualsMask(
+            IFogDistanceGetter item,
+            IFogDistanceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new LocalVariable.Mask<bool>(false);
-            ((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new FogDistance.Mask<bool>(false);
+            ((FogDistanceCommon)((IFogDistanceGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1237,24 +1270,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public void FillEqualsMask(
-            ILocalVariableGetter item,
-            ILocalVariableGetter rhs,
-            LocalVariable.Mask<bool> ret,
+            IFogDistanceGetter item,
+            IFogDistanceGetter rhs,
+            FogDistance.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Data = EqualsMaskHelper.EqualsHelper(
-                item.Data,
-                rhs.Data,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.DayNear = item.DayNear.EqualsWithin(rhs.DayNear);
+            ret.DayFar = item.DayFar.EqualsWithin(rhs.DayFar);
+            ret.NightNear = item.NightNear.EqualsWithin(rhs.NightNear);
+            ret.NightFar = item.NightFar.EqualsWithin(rhs.NightFar);
         }
         
         public string ToString(
-            ILocalVariableGetter item,
+            IFogDistanceGetter item,
             string? name = null,
-            LocalVariable.Mask<bool>? printMask = null)
+            FogDistance.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1266,18 +1297,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public void ToString(
-            ILocalVariableGetter item,
+            IFogDistanceGetter item,
             FileGeneration fg,
             string? name = null,
-            LocalVariable.Mask<bool>? printMask = null)
+            FogDistance.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LocalVariable =>");
+                fg.AppendLine($"FogDistance =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LocalVariable) =>");
+                fg.AppendLine($"{name} (FogDistance) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1291,64 +1322,66 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         protected static void ToStringFields(
-            ILocalVariableGetter item,
+            IFogDistanceGetter item,
             FileGeneration fg,
-            LocalVariable.Mask<bool>? printMask = null)
+            FogDistance.Mask<bool>? printMask = null)
         {
-            if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+            if (printMask?.DayNear ?? true)
             {
-                DataItem?.ToString(fg, "Data");
+                fg.AppendItem(item.DayNear, "DayNear");
             }
-            if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+            if (printMask?.DayFar ?? true)
             {
-                fg.AppendItem(NameItem, "Name");
+                fg.AppendItem(item.DayFar, "DayFar");
+            }
+            if (printMask?.NightNear ?? true)
+            {
+                fg.AppendItem(item.NightNear, "NightNear");
+            }
+            if (printMask?.NightFar ?? true)
+            {
+                fg.AppendItem(item.NightFar, "NightFar");
             }
         }
         
         public bool HasBeenSet(
-            ILocalVariableGetter item,
-            LocalVariable.Mask<bool?> checkMask)
+            IFogDistanceGetter item,
+            FogDistance.Mask<bool?> checkMask)
         {
-            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
-            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             return true;
         }
         
         public void FillHasBeenSetMask(
-            ILocalVariableGetter item,
-            LocalVariable.Mask<bool> mask)
+            IFogDistanceGetter item,
+            FogDistance.Mask<bool> mask)
         {
-            var itemData = item.Data;
-            mask.Data = new MaskItem<bool, LocalVariableData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
-            mask.Name = (item.Name != null);
+            mask.DayNear = true;
+            mask.DayFar = true;
+            mask.NightNear = true;
+            mask.NightFar = true;
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            ILocalVariableGetter? lhs,
-            ILocalVariableGetter? rhs)
+            IFogDistanceGetter? lhs,
+            IFogDistanceGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!lhs.DayNear.EqualsWithin(rhs.DayNear)) return false;
+            if (!lhs.DayFar.EqualsWithin(rhs.DayFar)) return false;
+            if (!lhs.NightNear.EqualsWithin(rhs.NightNear)) return false;
+            if (!lhs.NightFar.EqualsWithin(rhs.NightFar)) return false;
             return true;
         }
         
-        public virtual int GetHashCode(ILocalVariableGetter item)
+        public virtual int GetHashCode(IFogDistanceGetter item)
         {
             var hash = new HashCode();
-            if (item.Data.TryGet(out var Dataitem))
-            {
-                hash.Add(Dataitem);
-            }
-            if (item.Name.TryGet(out var Nameitem))
-            {
-                hash.Add(Nameitem);
-            }
+            hash.Add(item.DayNear);
+            hash.Add(item.DayFar);
+            hash.Add(item.NightNear);
+            hash.Add(item.NightFar);
             return hash.ToHashCode();
         }
         
@@ -1357,11 +1390,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public object GetNew()
         {
-            return LocalVariable.GetNew();
+            return FogDistance.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(ILocalVariableGetter obj)
+        public IEnumerable<ILinkGetter> GetLinks(IFogDistanceGetter obj)
         {
             yield break;
         }
@@ -1369,68 +1402,54 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LocalVariableSetterTranslationCommon
+    public partial class FogDistanceSetterTranslationCommon
     {
-        public static readonly LocalVariableSetterTranslationCommon Instance = new LocalVariableSetterTranslationCommon();
+        public static readonly FogDistanceSetterTranslationCommon Instance = new FogDistanceSetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            ILocalVariable item,
-            ILocalVariableGetter rhs,
+            IFogDistance item,
+            IFogDistanceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.Data) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FogDistance_FieldIndex.DayNear) ?? true))
             {
-                errorMask?.PushIndex((int)LocalVariable_FieldIndex.Data);
-                try
-                {
-                    if(rhs.Data.TryGet(out var rhsData))
-                    {
-                        item.Data = rhsData.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)LocalVariable_FieldIndex.Data));
-                    }
-                    else
-                    {
-                        item.Data = default;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DayNear = rhs.DayNear;
             }
-            if ((copyMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.Name) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FogDistance_FieldIndex.DayFar) ?? true))
             {
-                item.Name = rhs.Name;
+                item.DayFar = rhs.DayFar;
+            }
+            if ((copyMask?.GetShouldTranslate((int)FogDistance_FieldIndex.NightNear) ?? true))
+            {
+                item.NightNear = rhs.NightNear;
+            }
+            if ((copyMask?.GetShouldTranslate((int)FogDistance_FieldIndex.NightFar) ?? true))
+            {
+                item.NightFar = rhs.NightFar;
             }
         }
         
         #endregion
         
-        public LocalVariable DeepCopy(
-            ILocalVariableGetter item,
-            LocalVariable.TranslationMask? copyMask = null)
+        public FogDistance DeepCopy(
+            IFogDistanceGetter item,
+            FogDistance.TranslationMask? copyMask = null)
         {
-            LocalVariable ret = (LocalVariable)((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).GetNew();
+            FogDistance ret = (FogDistance)((FogDistanceCommon)((IFogDistanceGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public LocalVariable DeepCopy(
-            ILocalVariableGetter item,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? copyMask = null)
+        public FogDistance DeepCopy(
+            IFogDistanceGetter item,
+            out FogDistance.ErrorMask errorMask,
+            FogDistance.TranslationMask? copyMask = null)
         {
-            LocalVariable ret = (LocalVariable)((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).GetNew();
+            FogDistance ret = (FogDistance)((FogDistanceCommon)((IFogDistanceGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1438,12 +1457,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
-        public LocalVariable DeepCopy(
-            ILocalVariableGetter item,
+        public FogDistance DeepCopy(
+            IFogDistanceGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            LocalVariable ret = (LocalVariable)((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).GetNew();
+            FogDistance ret = (FogDistance)((FogDistanceCommon)((IFogDistanceGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1458,27 +1477,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class LocalVariable
+    public partial class FogDistance
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LocalVariable_Registration.Instance;
-        public static LocalVariable_Registration Registration => LocalVariable_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => FogDistance_Registration.Instance;
+        public static FogDistance_Registration Registration => FogDistance_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => LocalVariableCommon.Instance;
+        protected object CommonInstance() => FogDistanceCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return LocalVariableSetterCommon.Instance;
+            return FogDistanceSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => LocalVariableSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => FogDistanceSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ILocalVariableGetter.CommonInstance() => this.CommonInstance();
+        object IFogDistanceGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object ILocalVariableGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IFogDistanceGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object ILocalVariableGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IFogDistanceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1489,54 +1508,66 @@ namespace Mutagen.Bethesda.Oblivion
 #region Xml Translation
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class LocalVariableXmlWriteTranslation : IXmlWriteTranslator
+    public partial class FogDistanceXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static LocalVariableXmlWriteTranslation Instance = new LocalVariableXmlWriteTranslation();
+        public readonly static FogDistanceXmlWriteTranslation Instance = new FogDistanceXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            ILocalVariableGetter item,
+            IFogDistanceGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((item.Data != null)
-                && (translationMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.Data) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)FogDistance_FieldIndex.DayNear) ?? true))
             {
-                if (item.Data.TryGet(out var DataItem))
-                {
-                    ((LocalVariableDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
-                        item: DataItem,
-                        node: node,
-                        name: nameof(item.Data),
-                        fieldIndex: (int)LocalVariable_FieldIndex.Data,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)LocalVariable_FieldIndex.Data));
-                }
-            }
-            if ((item.Name != null)
-                && (translationMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.Name) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
+                FloatXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)LocalVariable_FieldIndex.Name,
+                    name: nameof(item.DayNear),
+                    item: item.DayNear,
+                    fieldIndex: (int)FogDistance_FieldIndex.DayNear,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)FogDistance_FieldIndex.DayFar) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DayFar),
+                    item: item.DayFar,
+                    fieldIndex: (int)FogDistance_FieldIndex.DayFar,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)FogDistance_FieldIndex.NightNear) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NightNear),
+                    item: item.NightNear,
+                    fieldIndex: (int)FogDistance_FieldIndex.NightNear,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)FogDistance_FieldIndex.NightFar) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NightFar),
+                    item: item.NightFar,
+                    fieldIndex: (int)FogDistance_FieldIndex.NightFar,
                     errorMask: errorMask);
             }
         }
 
         public void Write(
             XElement node,
-            ILocalVariableGetter item,
+            IFogDistanceGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.LocalVariable");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.FogDistance");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LocalVariable");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.FogDistance");
             }
             WriteToNodeXml(
                 item: item,
@@ -1553,7 +1584,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string? name = null)
         {
             Write(
-                item: (ILocalVariableGetter)item,
+                item: (IFogDistanceGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1562,7 +1593,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            ILocalVariableGetter item,
+            IFogDistanceGetter item,
             ErrorMaskBuilder? errorMask,
             int fieldIndex,
             TranslationCrystal? translationMask,
@@ -1572,7 +1603,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             try
             {
                 Write(
-                    item: (ILocalVariableGetter)item,
+                    item: (IFogDistanceGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1591,12 +1622,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class LocalVariableXmlCreateTranslation
+    public partial class FogDistanceXmlCreateTranslation
     {
-        public readonly static LocalVariableXmlCreateTranslation Instance = new LocalVariableXmlCreateTranslation();
+        public readonly static FogDistanceXmlCreateTranslation Instance = new FogDistanceXmlCreateTranslation();
 
         public static void FillPublicXml(
-            ILocalVariable item,
+            IFogDistance item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1605,7 +1636,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    LocalVariableXmlCreateTranslation.FillPublicElementXml(
+                    FogDistanceXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1621,7 +1652,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            ILocalVariable item,
+            IFogDistance item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1629,14 +1660,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "Data":
-                    errorMask?.PushIndex((int)LocalVariable_FieldIndex.Data);
+                case "DayNear":
+                    errorMask?.PushIndex((int)FogDistance_FieldIndex.DayNear);
                     try
                     {
-                        item.Data = LoquiXmlTranslation<LocalVariableData>.Instance.Parse(
+                        item.DayNear = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)LocalVariable_FieldIndex.Data));
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1648,11 +1678,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Name":
-                    errorMask?.PushIndex((int)LocalVariable_FieldIndex.Name);
+                case "DayFar":
+                    errorMask?.PushIndex((int)FogDistance_FieldIndex.DayFar);
                     try
                     {
-                        item.Name = StringXmlTranslation.Instance.Parse(
+                        item.DayFar = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NightNear":
+                    errorMask?.PushIndex((int)FogDistance_FieldIndex.NightNear);
+                    try
+                    {
+                        item.NightNear = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NightFar":
+                    errorMask?.PushIndex((int)FogDistance_FieldIndex.NightFar);
+                    try
+                    {
+                        item.NightFar = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1677,30 +1743,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Xml Write Mixins
-    public static class LocalVariableXmlTranslationMixIn
+    public static class FogDistanceXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this ILocalVariableGetter item,
+            this IFogDistanceGetter item,
             XElement node,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? translationMask = null,
+            out FogDistance.ErrorMask errorMask,
+            FogDistance.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((LocalVariableXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((FogDistanceXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LocalVariable.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FogDistance.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this ILocalVariableGetter item,
+            this IFogDistanceGetter item,
             string path,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? translationMask = null,
+            out FogDistance.ErrorMask errorMask,
+            FogDistance.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1714,7 +1780,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this ILocalVariableGetter item,
+            this IFogDistanceGetter item,
             string path,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1731,10 +1797,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this ILocalVariableGetter item,
+            this IFogDistanceGetter item,
             Stream stream,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? translationMask = null,
+            out FogDistance.ErrorMask errorMask,
+            FogDistance.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1748,7 +1814,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this ILocalVariableGetter item,
+            this IFogDistanceGetter item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1765,13 +1831,13 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this ILocalVariableGetter item,
+            this IFogDistanceGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
             string? name = null)
         {
-            ((LocalVariableXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((FogDistanceXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1780,12 +1846,12 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this ILocalVariableGetter item,
+            this IFogDistanceGetter item,
             XElement node,
             string? name = null,
-            LocalVariable.TranslationMask? translationMask = null)
+            FogDistance.TranslationMask? translationMask = null)
         {
-            ((LocalVariableXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((FogDistanceXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1794,12 +1860,12 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this ILocalVariableGetter item,
+            this IFogDistanceGetter item,
             string path,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((LocalVariableXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((FogDistanceXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1809,12 +1875,12 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this ILocalVariableGetter item,
+            this IFogDistanceGetter item,
             Stream stream,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((LocalVariableXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((FogDistanceXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1833,38 +1899,42 @@ namespace Mutagen.Bethesda.Oblivion
 #region Binary Translation
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class LocalVariableBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class FogDistanceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LocalVariableBinaryWriteTranslation Instance = new LocalVariableBinaryWriteTranslation();
+        public readonly static FogDistanceBinaryWriteTranslation Instance = new FogDistanceBinaryWriteTranslation();
 
-        public static void WriteRecordTypes(
-            ILocalVariableGetter item,
-            MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+        public static void WriteEmbedded(
+            IFogDistanceGetter item,
+            MutagenWriter writer)
         {
-            if (item.Data.TryGet(out var DataItem))
-            {
-                ((LocalVariableDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
-                    item: DataItem,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
-            }
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(LocalVariable_Registration.SCVR_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
+                item: item.DayNear);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.DayFar);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.NightNear);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.NightFar);
         }
 
         public void Write(
             MutagenWriter writer,
-            ILocalVariableGetter item,
+            IFogDistanceGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            WriteRecordTypes(
-                item: item,
+            using (HeaderExport.ExportHeader(
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                record: recordTypeConverter.ConvertToCustom(FogDistance_Registration.FNAM_HEADER),
+                type: ObjectType.Subrecord))
+            {
+                WriteEmbedded(
+                    item: item,
+                    writer: writer);
+            }
         }
 
         public void Write(
@@ -1873,16 +1943,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (ILocalVariableGetter)item,
+                item: (IFogDistanceGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class LocalVariableBinaryCreateTranslation
+    public partial class FogDistanceBinaryCreateTranslation
     {
-        public readonly static LocalVariableBinaryCreateTranslation Instance = new LocalVariableBinaryCreateTranslation();
+        public readonly static FogDistanceBinaryCreateTranslation Instance = new FogDistanceBinaryCreateTranslation();
 
     }
 
@@ -1890,13 +1960,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Binary Write Mixins
-    public static class LocalVariableBinaryTranslationMixIn
+    public static class FogDistanceBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this ILocalVariableGetter item,
+            this IFogDistanceGetter item,
             MutagenWriter writer)
         {
-            ((LocalVariableBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((FogDistanceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 recordTypeConverter: null);
@@ -1909,33 +1979,33 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class LocalVariableBinaryOverlay :
+    public partial class FogDistanceBinaryOverlay :
         BinaryOverlay,
-        ILocalVariableGetter
+        IFogDistanceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LocalVariable_Registration.Instance;
-        public static LocalVariable_Registration Registration => LocalVariable_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => FogDistance_Registration.Instance;
+        public static FogDistance_Registration Registration => FogDistance_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => LocalVariableCommon.Instance;
+        protected object CommonInstance() => FogDistanceCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => LocalVariableSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => FogDistanceSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ILocalVariableGetter.CommonInstance() => this.CommonInstance();
+        object IFogDistanceGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? ILocalVariableGetter.CommonSetterInstance() => null;
+        object? IFogDistanceGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object ILocalVariableGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IFogDistanceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILocalVariableGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFogDistanceGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => LocalVariableXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => FogDistanceXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -1944,7 +2014,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((LocalVariableXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((FogDistanceXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -1952,35 +2022,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => LocalVariableBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => FogDistanceBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((LocalVariableBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((FogDistanceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
-        #region Data
-        private RangeInt32? _DataLocation;
-        private bool _Data_IsSet => _DataLocation.HasValue;
-        public ILocalVariableDataGetter? Data => _Data_IsSet ? LocalVariableDataBinaryOverlay.LocalVariableDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
-        public bool Data_IsSet => _DataLocation.HasValue;
-        #endregion
-        #region Name
-        private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
-        #endregion
+        public Single DayNear => SpanExt.GetFloat(_data.Slice(0, 4));
+        public Single DayFar => SpanExt.GetFloat(_data.Slice(4, 4));
+        public Single NightNear => SpanExt.GetFloat(_data.Slice(8, 4));
+        public Single NightFar => SpanExt.GetFloat(_data.Slice(12, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected LocalVariableBinaryOverlay(
+        protected FogDistanceBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1989,55 +2053,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
 
-        public static LocalVariableBinaryOverlay LocalVariableFactory(
+        public static FogDistanceBinaryOverlay FogDistanceFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new LocalVariableBinaryOverlay(
-                bytes: stream.RemainingMemory,
+            var ret = new FogDistanceBinaryOverlay(
+                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.Meta),
                 package: package);
-            int offset = stream.Position;
+            var finalPos = checked((int)(stream.Position + package.Meta.Subrecord(stream.RemainingSpan).TotalLength));
+            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
+            stream.Position += 0x10 + package.Meta.SubConstants.HeaderLength;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,
-                offset: 0);
-            ret.FillTypelessSubrecordTypes(
-                stream: stream,
-                finalPos: stream.Length,
-                offset: offset,
-                recordTypeConverter: recordTypeConverter,
-                fill: ret.FillRecordType);
+                offset: offset);
             return ret;
         }
 
-        public TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
-            int finalPos,
-            int offset,
-            RecordType type,
-            int? lastParsed,
-            RecordTypeConverter? recordTypeConverter)
-        {
-            type = recordTypeConverter.ConvertToStandard(type);
-            switch (type.TypeInt)
-            {
-                case 0x44534C53: // SLSD
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocalVariable_FieldIndex.Data) return TryGet<int?>.Failure;
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)LocalVariable_FieldIndex.Data);
-                }
-                case 0x52564353: // SCVR
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocalVariable_FieldIndex.Name) return TryGet<int?>.Failure;
-                    _NameLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LocalVariable_FieldIndex.Name);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
     }
 
 }

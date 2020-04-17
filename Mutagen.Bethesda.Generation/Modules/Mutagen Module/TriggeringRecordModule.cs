@@ -42,6 +42,7 @@ namespace Mutagen.Bethesda.Generation
             data.FailOnUnknown = obj.Node.GetAttribute<bool>("failOnUnknownType", defaultVal: false);
             data.CustomBinary = obj.Node.GetAttribute<bool>("customBinary", defaultVal: false);
             data.CustomBinaryEnd = obj.Node.GetAttribute<CustomEnd>("customBinaryEnd", defaultVal: CustomEnd.Off);
+            data.BinaryOverlay = obj.Node.GetAttribute<BinaryGenerationType>("binaryOverlay", defaultVal: BinaryGenerationType.Normal);
 
             var objType = obj.Node.GetAttribute(Mutagen.Bethesda.Generation.Constants.ObjectType);
             if (!Enum.TryParse<ObjectType>(objType, out var objTypeEnum))

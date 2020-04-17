@@ -22,9 +22,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     namespace Internals
     {
-        public partial class WaterBinaryCreateTranslation
+        public partial class WaterDataBinaryCreateTranslation
         {
-            static partial void FillBinaryOddExtraBytesCustom(MutagenFrame frame, IWaterInternal item)
+            static partial void FillBinaryOddExtraBytesCustom(MutagenFrame frame, IWaterData item)
             {
                 if (frame.Remaining == 2)
                 {
@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
 
-            static partial void FillBinaryBloodCustomLogicCustom(MutagenFrame frame, IWaterInternal item)
+            static partial void FillBinaryBloodCustomLogicCustom(MutagenFrame frame, IWaterData item)
             {
                 if (frame.Remaining == 2)
                 {
@@ -40,16 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
 
-            static partial void FillBinaryNothingCustomLogicCustom(MutagenFrame frame, IWaterInternal item)
-            {
-                if (frame.Remaining == 2)
-                {
-                    frame.Position += 2;
-                }
-                item.DATADataTypeState |= Water.DATADataType.Has;
-            }
-
-            static partial void FillBinaryOilCustomLogicCustom(MutagenFrame frame, IWaterInternal item)
+            static partial void FillBinaryOilCustomLogicCustom(MutagenFrame frame, IWaterData item)
             {
                 if (frame.Remaining == 2)
                 {
@@ -58,30 +49,50 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public partial class WaterBinaryOverlay
+        public partial class WaterBinaryCreateTranslation
         {
-            partial void DATACustomParse(BinaryMemoryReadStream stream, int offset)
+            public static WaterData CreateCustom(MutagenFrame frame)
             {
-                this._DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
-                this.DATADataTypeState = Water.DATADataType.Has;
-                var subLen = _package.Meta.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
-                if (subLen <= 0x2)
+                var subHeader = frame.GetSubrecord();
+
+                if (subHeader.ContentLength == 2)
                 {
-                    this.DATADataTypeState |= Water.DATADataType.Break0;
+                    return new WaterData()
+                    {
+                        Versioning = WaterData.VersioningBreaks.Break0
+                    };
                 }
-                if (subLen <= 0x2A)
+                else
                 {
-                    this.DATADataTypeState |= Water.DATADataType.Break1;
-                }
-                if (subLen <= 0x3E)
-                {
-                    this.DATADataTypeState |= Water.DATADataType.Break2;
-                }
-                if (subLen <= 0x56)
-                {
-                    this.DATADataTypeState |= Water.DATADataType.Break3;
+                    return WaterData.CreateFromBinary(frame);
                 }
             }
+
+            static partial void FillBinaryDataCustom(MutagenFrame frame, IWaterInternal item)
+            {
+                item.Data = CreateCustom(frame);
+            }
+        }
+
+        partial class WaterBinaryWriteTranslation
+        {
+            static partial void WriteBinaryDataCustom(MutagenWriter writer, IWaterGetter item)
+            {
+                if (!item.Data.TryGet(out var data)) return;
+                data.WriteToBinary(writer);
+            }
+        }
+
+        public partial class WaterBinaryOverlay
+        {
+            private WaterData? _waterData;
+
+            partial void DataCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset)
+            {
+                this._waterData = WaterBinaryCreateTranslation.CreateCustom(new MutagenFrame(new MutagenInterfaceReadStream(stream, _package.Meta, _package.MasterReferences)));
+            }
+
+            WaterData? GetDataCustom() => _waterData;
         }
     }
 }

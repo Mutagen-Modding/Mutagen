@@ -15,7 +15,6 @@ using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -32,41 +31,28 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class LocalVariable :
-        ILocalVariable,
-        ILoquiObjectSetter<LocalVariable>,
-        IEquatable<LocalVariable>,
+    public partial class SigilStoneData :
+        ISigilStoneData,
+        ILoquiObjectSetter<SigilStoneData>,
+        IEquatable<SigilStoneData>,
         IEqualsMask
     {
         #region Ctor
-        public LocalVariable()
+        public SigilStoneData()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Data
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private LocalVariableData? _Data;
-        public LocalVariableData? Data
-        {
-            get => _Data;
-            set => _Data = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILocalVariableDataGetter? ILocalVariableGetter.Data => this.Data;
+        #region Uses
+        public Byte Uses { get; set; } = default;
         #endregion
-        #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ILocalVariableGetter.Name => this.Name;
+        #region Value
+        public UInt32 Value { get; set; } = default;
+        #endregion
+        #region Weight
+        public Single Weight { get; set; } = default;
         #endregion
 
         #region To String
@@ -75,7 +61,7 @@ namespace Mutagen.Bethesda.Oblivion
             FileGeneration fg,
             string? name = null)
         {
-            LocalVariableMixIn.ToString(
+            SigilStoneDataMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -85,22 +71,22 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILocalVariableGetter rhs)) return false;
-            return ((LocalVariableCommon)((ILocalVariableGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is ISigilStoneDataGetter rhs)) return false;
+            return ((SigilStoneDataCommon)((ISigilStoneDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LocalVariable obj)
+        public bool Equals(SigilStoneData obj)
         {
-            return ((LocalVariableCommon)((ILocalVariableGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SigilStoneDataCommon)((ISigilStoneDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((LocalVariableCommon)((ILocalVariableGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((SigilStoneDataCommon)((ISigilStoneDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => LocalVariableXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => SigilStoneDataXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -109,7 +95,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((LocalVariableXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((SigilStoneDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -118,9 +104,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static LocalVariable CreateFromXml(
+        public static SigilStoneData CreateFromXml(
             XElement node,
-            LocalVariable.TranslationMask? translationMask = null)
+            SigilStoneData.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -129,27 +115,27 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static LocalVariable CreateFromXml(
+        public static SigilStoneData CreateFromXml(
             XElement node,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            out SigilStoneData.ErrorMask errorMask,
+            SigilStoneData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LocalVariable.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SigilStoneData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public static LocalVariable CreateFromXml(
+        public static SigilStoneData CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new LocalVariable();
-            ((LocalVariableSetterCommon)((ILocalVariableGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new SigilStoneData();
+            ((SigilStoneDataSetterCommon)((ISigilStoneDataGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -157,9 +143,9 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static LocalVariable CreateFromXml(
+        public static SigilStoneData CreateFromXml(
             string path,
-            LocalVariable.TranslationMask? translationMask = null)
+            SigilStoneData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -167,10 +153,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static LocalVariable CreateFromXml(
+        public static SigilStoneData CreateFromXml(
             string path,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            out SigilStoneData.ErrorMask errorMask,
+            SigilStoneData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -179,10 +165,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static LocalVariable CreateFromXml(
+        public static SigilStoneData CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            SigilStoneData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -191,9 +177,9 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static LocalVariable CreateFromXml(
+        public static SigilStoneData CreateFromXml(
             Stream stream,
-            LocalVariable.TranslationMask? translationMask = null)
+            SigilStoneData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -201,10 +187,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static LocalVariable CreateFromXml(
+        public static SigilStoneData CreateFromXml(
             Stream stream,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            out SigilStoneData.ErrorMask errorMask,
+            SigilStoneData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -213,10 +199,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static LocalVariable CreateFromXml(
+        public static SigilStoneData CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            SigilStoneData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -238,16 +224,19 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Data = new MaskItem<TItem, LocalVariableData.Mask<TItem>?>(initialValue, new LocalVariableData.Mask<TItem>(initialValue));
-                this.Name = initialValue;
+                this.Uses = initialValue;
+                this.Value = initialValue;
+                this.Weight = initialValue;
             }
 
             public Mask(
-                TItem Data,
-                TItem Name)
+                TItem Uses,
+                TItem Value,
+                TItem Weight)
             {
-                this.Data = new MaskItem<TItem, LocalVariableData.Mask<TItem>?>(Data, new LocalVariableData.Mask<TItem>(Data));
-                this.Name = Name;
+                this.Uses = Uses;
+                this.Value = Value;
+                this.Weight = Weight;
             }
 
             #pragma warning disable CS8618
@@ -259,8 +248,9 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public MaskItem<TItem, LocalVariableData.Mask<TItem>?>? Data { get; set; }
-            public TItem Name;
+            public TItem Uses;
+            public TItem Value;
+            public TItem Weight;
             #endregion
 
             #region Equals
@@ -273,15 +263,17 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Data, rhs.Data)) return false;
-                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Uses, rhs.Uses)) return false;
+                if (!object.Equals(this.Value, rhs.Value)) return false;
+                if (!object.Equals(this.Weight, rhs.Weight)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Data);
-                hash.Add(this.Name);
+                hash.Add(this.Uses);
+                hash.Add(this.Value);
+                hash.Add(this.Weight);
                 return hash.ToHashCode();
             }
 
@@ -290,12 +282,9 @@ namespace Mutagen.Bethesda.Oblivion
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (Data != null)
-                {
-                    if (!eval(this.Data.Overall)) return false;
-                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
-                }
-                if (!eval(this.Name)) return false;
+                if (!eval(this.Uses)) return false;
+                if (!eval(this.Value)) return false;
+                if (!eval(this.Weight)) return false;
                 return true;
             }
             #endregion
@@ -303,12 +292,9 @@ namespace Mutagen.Bethesda.Oblivion
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (Data != null)
-                {
-                    if (eval(this.Data.Overall)) return true;
-                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
-                }
-                if (eval(this.Name)) return true;
+                if (eval(this.Uses)) return true;
+                if (eval(this.Value)) return true;
+                if (eval(this.Weight)) return true;
                 return false;
             }
             #endregion
@@ -316,15 +302,16 @@ namespace Mutagen.Bethesda.Oblivion
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new LocalVariable.Mask<R>();
+                var ret = new SigilStoneData.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Data = this.Data == null ? null : new MaskItem<R, LocalVariableData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
-                obj.Name = eval(this.Name);
+                obj.Uses = eval(this.Uses);
+                obj.Value = eval(this.Value);
+                obj.Weight = eval(this.Weight);
             }
             #endregion
 
@@ -334,26 +321,30 @@ namespace Mutagen.Bethesda.Oblivion
                 return ToString(printMask: null);
             }
 
-            public string ToString(LocalVariable.Mask<bool>? printMask = null)
+            public string ToString(SigilStoneData.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, LocalVariable.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, SigilStoneData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(LocalVariable.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(SigilStoneData.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Data?.Overall ?? true)
+                    if (printMask?.Uses ?? true)
                     {
-                        Data?.ToString(fg);
+                        fg.AppendItem(Uses, "Uses");
                     }
-                    if (printMask?.Name ?? true)
+                    if (printMask?.Value ?? true)
                     {
-                        fg.AppendItem(Name, "Name");
+                        fg.AppendItem(Value, "Value");
+                    }
+                    if (printMask?.Weight ?? true)
+                    {
+                        fg.AppendItem(Weight, "Weight");
                     }
                 }
                 fg.AppendLine("]");
@@ -380,20 +371,23 @@ namespace Mutagen.Bethesda.Oblivion
                     return _warnings;
                 }
             }
-            public MaskItem<Exception?, LocalVariableData.ErrorMask?>? Data;
-            public Exception? Name;
+            public Exception? Uses;
+            public Exception? Value;
+            public Exception? Weight;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+                SigilStoneData_FieldIndex enu = (SigilStoneData_FieldIndex)index;
                 switch (enu)
                 {
-                    case LocalVariable_FieldIndex.Data:
-                        return Data;
-                    case LocalVariable_FieldIndex.Name:
-                        return Name;
+                    case SigilStoneData_FieldIndex.Uses:
+                        return Uses;
+                    case SigilStoneData_FieldIndex.Value:
+                        return Value;
+                    case SigilStoneData_FieldIndex.Weight:
+                        return Weight;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -401,14 +395,17 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void SetNthException(int index, Exception ex)
             {
-                LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+                SigilStoneData_FieldIndex enu = (SigilStoneData_FieldIndex)index;
                 switch (enu)
                 {
-                    case LocalVariable_FieldIndex.Data:
-                        this.Data = new MaskItem<Exception?, LocalVariableData.ErrorMask?>(ex, null);
+                    case SigilStoneData_FieldIndex.Uses:
+                        this.Uses = ex;
                         break;
-                    case LocalVariable_FieldIndex.Name:
-                        this.Name = ex;
+                    case SigilStoneData_FieldIndex.Value:
+                        this.Value = ex;
+                        break;
+                    case SigilStoneData_FieldIndex.Weight:
+                        this.Weight = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -417,14 +414,17 @@ namespace Mutagen.Bethesda.Oblivion
 
             public void SetNthMask(int index, object obj)
             {
-                LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+                SigilStoneData_FieldIndex enu = (SigilStoneData_FieldIndex)index;
                 switch (enu)
                 {
-                    case LocalVariable_FieldIndex.Data:
-                        this.Data = (MaskItem<Exception?, LocalVariableData.ErrorMask?>?)obj;
+                    case SigilStoneData_FieldIndex.Uses:
+                        this.Uses = (Exception?)obj;
                         break;
-                    case LocalVariable_FieldIndex.Name:
-                        this.Name = (Exception?)obj;
+                    case SigilStoneData_FieldIndex.Value:
+                        this.Value = (Exception?)obj;
+                        break;
+                    case SigilStoneData_FieldIndex.Weight:
+                        this.Weight = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -434,8 +434,9 @@ namespace Mutagen.Bethesda.Oblivion
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Data != null) return true;
-                if (Name != null) return true;
+                if (Uses != null) return true;
+                if (Value != null) return true;
+                if (Weight != null) return true;
                 return false;
             }
             #endregion
@@ -470,8 +471,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                Data?.ToString(fg);
-                fg.AppendItem(Name, "Name");
+                fg.AppendItem(Uses, "Uses");
+                fg.AppendItem(Value, "Value");
+                fg.AppendItem(Weight, "Weight");
             }
             #endregion
 
@@ -480,8 +482,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
-                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Uses = this.Uses.Combine(rhs.Uses);
+                ret.Value = this.Value.Combine(rhs.Value);
+                ret.Weight = this.Weight.Combine(rhs.Weight);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -503,15 +506,17 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public MaskItem<bool, LocalVariableData.TranslationMask?> Data;
-            public bool Name;
+            public bool Uses;
+            public bool Value;
+            public bool Weight;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.Data = new MaskItem<bool, LocalVariableData.TranslationMask?>(defaultOn, null);
-                this.Name = defaultOn;
+                this.Uses = defaultOn;
+                this.Value = defaultOn;
+                this.Weight = defaultOn;
             }
 
             #endregion
@@ -527,41 +532,46 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
-                ret.Add((Name, null));
+                ret.Add((Uses, null));
+                ret.Add((Value, null));
+                ret.Add((Weight, null));
             }
         }
         #endregion
 
+        #region Mutagen
+        public new static readonly RecordType GrupRecordType = SigilStoneData_Registration.TriggeringRecordType;
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => LocalVariableBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => SigilStoneDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((LocalVariableBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((SigilStoneDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static LocalVariable CreateFromBinary(MutagenFrame frame)
+        public static SigilStoneData CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public static LocalVariable CreateFromBinary(
+        public static SigilStoneData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new LocalVariable();
-            ((LocalVariableSetterCommon)((ILocalVariableGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new SigilStoneData();
+            ((SigilStoneDataSetterCommon)((ISigilStoneDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -574,33 +584,34 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILocalVariableGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISigilStoneDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((LocalVariableSetterCommon)((ILocalVariableGetter)this).CommonSetterInstance()!).Clear(this);
+            ((SigilStoneDataSetterCommon)((ISigilStoneDataGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static LocalVariable GetNew()
+        internal static SigilStoneData GetNew()
         {
-            return new LocalVariable();
+            return new SigilStoneData();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface ILocalVariable :
-        ILocalVariableGetter,
-        ILoquiObjectSetter<ILocalVariable>
+    public partial interface ISigilStoneData :
+        ISigilStoneDataGetter,
+        ILoquiObjectSetter<ISigilStoneData>
     {
-        new LocalVariableData? Data { get; set; }
-        new String? Name { get; set; }
+        new Byte Uses { get; set; }
+        new UInt32 Value { get; set; }
+        new Single Weight { get; set; }
     }
 
-    public partial interface ILocalVariableGetter :
+    public partial interface ISigilStoneDataGetter :
         ILoquiObject,
-        ILoquiObject<ILocalVariableGetter>,
+        ILoquiObject<ISigilStoneDataGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -610,50 +621,51 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        ILocalVariableDataGetter? Data { get; }
-        String? Name { get; }
+        Byte Uses { get; }
+        UInt32 Value { get; }
+        Single Weight { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class LocalVariableMixIn
+    public static partial class SigilStoneDataMixIn
     {
-        public static void Clear(this ILocalVariable item)
+        public static void Clear(this ISigilStoneData item)
         {
-            ((LocalVariableSetterCommon)((ILocalVariableGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((SigilStoneDataSetterCommon)((ISigilStoneDataGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static LocalVariable.Mask<bool> GetEqualsMask(
-            this ILocalVariableGetter item,
-            ILocalVariableGetter rhs,
+        public static SigilStoneData.Mask<bool> GetEqualsMask(
+            this ISigilStoneDataGetter item,
+            ISigilStoneDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((SigilStoneDataCommon)((ISigilStoneDataGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this ILocalVariableGetter item,
+            this ISigilStoneDataGetter item,
             string? name = null,
-            LocalVariable.Mask<bool>? printMask = null)
+            SigilStoneData.Mask<bool>? printMask = null)
         {
-            return ((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).ToString(
+            return ((SigilStoneDataCommon)((ISigilStoneDataGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this ILocalVariableGetter item,
+            this ISigilStoneDataGetter item,
             FileGeneration fg,
             string? name = null,
-            LocalVariable.Mask<bool>? printMask = null)
+            SigilStoneData.Mask<bool>? printMask = null)
         {
-            ((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).ToString(
+            ((SigilStoneDataCommon)((ISigilStoneDataGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -661,38 +673,38 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this ILocalVariableGetter item,
-            LocalVariable.Mask<bool?> checkMask)
+            this ISigilStoneDataGetter item,
+            SigilStoneData.Mask<bool?> checkMask)
         {
-            return ((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).HasBeenSet(
+            return ((SigilStoneDataCommon)((ISigilStoneDataGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static LocalVariable.Mask<bool> GetHasBeenSetMask(this ILocalVariableGetter item)
+        public static SigilStoneData.Mask<bool> GetHasBeenSetMask(this ISigilStoneDataGetter item)
         {
-            var ret = new LocalVariable.Mask<bool>(false);
-            ((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new SigilStoneData.Mask<bool>(false);
+            ((SigilStoneDataCommon)((ISigilStoneDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this ILocalVariableGetter item,
-            ILocalVariableGetter rhs)
+            this ISigilStoneDataGetter item,
+            ISigilStoneDataGetter rhs)
         {
-            return ((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).Equals(
+            return ((SigilStoneDataCommon)((ISigilStoneDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this ILocalVariable lhs,
-            ILocalVariableGetter rhs,
-            LocalVariable.TranslationMask? copyMask = null)
+            this ISigilStoneData lhs,
+            ISigilStoneDataGetter rhs,
+            SigilStoneData.TranslationMask? copyMask = null)
         {
-            ((LocalVariableSetterTranslationCommon)((ILocalVariableGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((SigilStoneDataSetterTranslationCommon)((ISigilStoneDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -700,59 +712,59 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void DeepCopyIn(
-            this ILocalVariable lhs,
-            ILocalVariableGetter rhs,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? copyMask = null)
+            this ISigilStoneData lhs,
+            ISigilStoneDataGetter rhs,
+            out SigilStoneData.ErrorMask errorMask,
+            SigilStoneData.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((LocalVariableSetterTranslationCommon)((ILocalVariableGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((SigilStoneDataSetterTranslationCommon)((ISigilStoneDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = LocalVariable.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SigilStoneData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this ILocalVariable lhs,
-            ILocalVariableGetter rhs,
+            this ISigilStoneData lhs,
+            ISigilStoneDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((LocalVariableSetterTranslationCommon)((ILocalVariableGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((SigilStoneDataSetterTranslationCommon)((ISigilStoneDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static LocalVariable DeepCopy(
-            this ILocalVariableGetter item,
-            LocalVariable.TranslationMask? copyMask = null)
+        public static SigilStoneData DeepCopy(
+            this ISigilStoneDataGetter item,
+            SigilStoneData.TranslationMask? copyMask = null)
         {
-            return ((LocalVariableSetterTranslationCommon)((ILocalVariableGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((SigilStoneDataSetterTranslationCommon)((ISigilStoneDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static LocalVariable DeepCopy(
-            this ILocalVariableGetter item,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? copyMask = null)
+        public static SigilStoneData DeepCopy(
+            this ISigilStoneDataGetter item,
+            out SigilStoneData.ErrorMask errorMask,
+            SigilStoneData.TranslationMask? copyMask = null)
         {
-            return ((LocalVariableSetterTranslationCommon)((ILocalVariableGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((SigilStoneDataSetterTranslationCommon)((ISigilStoneDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static LocalVariable DeepCopy(
-            this ILocalVariableGetter item,
+        public static SigilStoneData DeepCopy(
+            this ISigilStoneDataGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((LocalVariableSetterTranslationCommon)((ILocalVariableGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((SigilStoneDataSetterTranslationCommon)((ISigilStoneDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -761,9 +773,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this ILocalVariable item,
+            this ISigilStoneData item,
             XElement node,
-            LocalVariable.TranslationMask? translationMask = null)
+            SigilStoneData.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -774,10 +786,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this ILocalVariable item,
+            this ISigilStoneData item,
             XElement node,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            out SigilStoneData.ErrorMask errorMask,
+            SigilStoneData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -785,16 +797,16 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LocalVariable.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SigilStoneData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this ILocalVariable item,
+            this ISigilStoneData item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((LocalVariableSetterCommon)((ILocalVariableGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((SigilStoneDataSetterCommon)((ISigilStoneDataGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -802,9 +814,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this ILocalVariable item,
+            this ISigilStoneData item,
             string path,
-            LocalVariable.TranslationMask? translationMask = null)
+            SigilStoneData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -814,10 +826,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this ILocalVariable item,
+            this ISigilStoneData item,
             string path,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            out SigilStoneData.ErrorMask errorMask,
+            SigilStoneData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -828,10 +840,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this ILocalVariable item,
+            this ISigilStoneData item,
             string path,
             ErrorMaskBuilder? errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            SigilStoneData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -842,9 +854,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this ILocalVariable item,
+            this ISigilStoneData item,
             Stream stream,
-            LocalVariable.TranslationMask? translationMask = null)
+            SigilStoneData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -854,10 +866,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this ILocalVariable item,
+            this ISigilStoneData item,
             Stream stream,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            out SigilStoneData.ErrorMask errorMask,
+            SigilStoneData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -868,10 +880,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this ILocalVariable item,
+            this ISigilStoneData item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            LocalVariable.TranslationMask? translationMask = null)
+            SigilStoneData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -886,7 +898,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this ILocalVariable item,
+            this ISigilStoneData item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -896,11 +908,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromBinary(
-            this ILocalVariable item,
+            this ISigilStoneData item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((LocalVariableSetterCommon)((ILocalVariableGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((SigilStoneDataSetterCommon)((ISigilStoneDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -916,48 +928,49 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     #region Field Index
-    public enum LocalVariable_FieldIndex
+    public enum SigilStoneData_FieldIndex
     {
-        Data = 0,
-        Name = 1,
+        Uses = 0,
+        Value = 1,
+        Weight = 2,
     }
     #endregion
 
     #region Registration
-    public partial class LocalVariable_Registration : ILoquiRegistration
+    public partial class SigilStoneData_Registration : ILoquiRegistration
     {
-        public static readonly LocalVariable_Registration Instance = new LocalVariable_Registration();
+        public static readonly SigilStoneData_Registration Instance = new SigilStoneData_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 48,
+            msgID: 208,
             version: 0);
 
-        public const string GUID = "b77aa416-b182-4265-8276-44b34bace18f";
+        public const string GUID = "669714e4-39a0-43c2-a439-e080f8db2fc8";
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(LocalVariable.Mask<>);
+        public static readonly Type MaskType = typeof(SigilStoneData.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(LocalVariable.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(SigilStoneData.ErrorMask);
 
-        public static readonly Type ClassType = typeof(LocalVariable);
+        public static readonly Type ClassType = typeof(SigilStoneData);
 
-        public static readonly Type GetterType = typeof(ILocalVariableGetter);
+        public static readonly Type GetterType = typeof(ISigilStoneDataGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(ILocalVariable);
+        public static readonly Type SetterType = typeof(ISigilStoneData);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Oblivion.LocalVariable";
+        public const string FullName = "Mutagen.Bethesda.Oblivion.SigilStoneData";
 
-        public const string Name = "LocalVariable";
+        public const string Name = "SigilStoneData";
 
         public const string Namespace = "Mutagen.Bethesda.Oblivion";
 
@@ -969,10 +982,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
-                case "DATA":
-                    return (ushort)LocalVariable_FieldIndex.Data;
-                case "NAME":
-                    return (ushort)LocalVariable_FieldIndex.Name;
+                case "USES":
+                    return (ushort)SigilStoneData_FieldIndex.Uses;
+                case "VALUE":
+                    return (ushort)SigilStoneData_FieldIndex.Value;
+                case "WEIGHT":
+                    return (ushort)SigilStoneData_FieldIndex.Weight;
                 default:
                     return null;
             }
@@ -980,11 +995,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+            SigilStoneData_FieldIndex enu = (SigilStoneData_FieldIndex)index;
             switch (enu)
             {
-                case LocalVariable_FieldIndex.Data:
-                case LocalVariable_FieldIndex.Name:
+                case SigilStoneData_FieldIndex.Uses:
+                case SigilStoneData_FieldIndex.Value:
+                case SigilStoneData_FieldIndex.Weight:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -993,12 +1009,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+            SigilStoneData_FieldIndex enu = (SigilStoneData_FieldIndex)index;
             switch (enu)
             {
-                case LocalVariable_FieldIndex.Data:
-                    return true;
-                case LocalVariable_FieldIndex.Name:
+                case SigilStoneData_FieldIndex.Uses:
+                case SigilStoneData_FieldIndex.Value:
+                case SigilStoneData_FieldIndex.Weight:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1007,11 +1023,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+            SigilStoneData_FieldIndex enu = (SigilStoneData_FieldIndex)index;
             switch (enu)
             {
-                case LocalVariable_FieldIndex.Data:
-                case LocalVariable_FieldIndex.Name:
+                case SigilStoneData_FieldIndex.Uses:
+                case SigilStoneData_FieldIndex.Value:
+                case SigilStoneData_FieldIndex.Weight:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1020,13 +1037,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static string GetNthName(ushort index)
         {
-            LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+            SigilStoneData_FieldIndex enu = (SigilStoneData_FieldIndex)index;
             switch (enu)
             {
-                case LocalVariable_FieldIndex.Data:
-                    return "Data";
-                case LocalVariable_FieldIndex.Name:
-                    return "Name";
+                case SigilStoneData_FieldIndex.Uses:
+                    return "Uses";
+                case SigilStoneData_FieldIndex.Value:
+                    return "Value";
+                case SigilStoneData_FieldIndex.Weight:
+                    return "Weight";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1034,11 +1053,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+            SigilStoneData_FieldIndex enu = (SigilStoneData_FieldIndex)index;
             switch (enu)
             {
-                case LocalVariable_FieldIndex.Data:
-                case LocalVariable_FieldIndex.Name:
+                case SigilStoneData_FieldIndex.Uses:
+                case SigilStoneData_FieldIndex.Value:
+                case SigilStoneData_FieldIndex.Weight:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1047,11 +1067,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsProtected(ushort index)
         {
-            LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+            SigilStoneData_FieldIndex enu = (SigilStoneData_FieldIndex)index;
             switch (enu)
             {
-                case LocalVariable_FieldIndex.Data:
-                case LocalVariable_FieldIndex.Name:
+                case SigilStoneData_FieldIndex.Uses:
+                case SigilStoneData_FieldIndex.Value:
+                case SigilStoneData_FieldIndex.Weight:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1060,36 +1081,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Type GetNthType(ushort index)
         {
-            LocalVariable_FieldIndex enu = (LocalVariable_FieldIndex)index;
+            SigilStoneData_FieldIndex enu = (SigilStoneData_FieldIndex)index;
             switch (enu)
             {
-                case LocalVariable_FieldIndex.Data:
-                    return typeof(LocalVariableData);
-                case LocalVariable_FieldIndex.Name:
-                    return typeof(String);
+                case SigilStoneData_FieldIndex.Uses:
+                    return typeof(Byte);
+                case SigilStoneData_FieldIndex.Value:
+                    return typeof(UInt32);
+                case SigilStoneData_FieldIndex.Weight:
+                    return typeof(Single);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(LocalVariableXmlWriteTranslation);
-        public static readonly RecordType SLSD_HEADER = new RecordType("SLSD");
-        public static readonly RecordType SCVR_HEADER = new RecordType("SCVR");
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
-        {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        SLSD_HEADER,
-                        SCVR_HEADER
-                    })
-            );
-        });
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 2;
-        public static readonly Type BinaryWriteTranslation = typeof(LocalVariableBinaryWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(SigilStoneDataXmlWriteTranslation);
+        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
+        public static readonly RecordType TriggeringRecordType = DATA_HEADER;
+        public const int NumStructFields = 3;
+        public const int NumTypedFields = 0;
+        public static readonly Type BinaryWriteTranslation = typeof(SigilStoneDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1122,22 +1133,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class LocalVariableSetterCommon
+    public partial class SigilStoneDataSetterCommon
     {
-        public static readonly LocalVariableSetterCommon Instance = new LocalVariableSetterCommon();
+        public static readonly SigilStoneDataSetterCommon Instance = new SigilStoneDataSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(ILocalVariable item)
+        public void Clear(ISigilStoneData item)
         {
             ClearPartial();
-            item.Data = null;
-            item.Name = default;
+            item.Uses = default;
+            item.Value = default;
+            item.Weight = default;
         }
         
         #region Xml Translation
         public virtual void CopyInFromXml(
-            ILocalVariable item,
+            ISigilStoneData item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1146,7 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    LocalVariableXmlCreateTranslation.FillPublicElementXml(
+                    SigilStoneDataXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1165,70 +1177,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Binary Translation
         protected static void FillBinaryStructs(
-            ILocalVariable item,
+            ISigilStoneData item,
             MutagenFrame frame)
         {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            ILocalVariable item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x44534C53: // SLSD
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocalVariable_FieldIndex.Data) return TryGet<int?>.Failure;
-                    item.Data = Mutagen.Bethesda.Oblivion.LocalVariableData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)LocalVariable_FieldIndex.Data);
-                }
-                case 0x52564353: // SCVR
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocalVariable_FieldIndex.Name) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)LocalVariable_FieldIndex.Name);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
+            item.Uses = frame.ReadUInt8();
+            item.Value = frame.ReadUInt32();
+            item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
         }
         
         public virtual void CopyInFromBinary(
-            ILocalVariable item,
+            ISigilStoneData item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.TypelessRecordParse(
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                recordTypeConverter.ConvertToCustom(SigilStoneData_Registration.DATA_HEADER)));
+            UtilityTranslation.RecordParse(
                 record: item,
                 frame: frame,
-                setFinal: false,
+                setFinal: true,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: FillBinaryStructs);
         }
         
         #endregion
         
     }
-    public partial class LocalVariableCommon
+    public partial class SigilStoneDataCommon
     {
-        public static readonly LocalVariableCommon Instance = new LocalVariableCommon();
+        public static readonly SigilStoneDataCommon Instance = new SigilStoneDataCommon();
 
-        public LocalVariable.Mask<bool> GetEqualsMask(
-            ILocalVariableGetter item,
-            ILocalVariableGetter rhs,
+        public SigilStoneData.Mask<bool> GetEqualsMask(
+            ISigilStoneDataGetter item,
+            ISigilStoneDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new LocalVariable.Mask<bool>(false);
-            ((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new SigilStoneData.Mask<bool>(false);
+            ((SigilStoneDataCommon)((ISigilStoneDataGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1237,24 +1223,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public void FillEqualsMask(
-            ILocalVariableGetter item,
-            ILocalVariableGetter rhs,
-            LocalVariable.Mask<bool> ret,
+            ISigilStoneDataGetter item,
+            ISigilStoneDataGetter rhs,
+            SigilStoneData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Data = EqualsMaskHelper.EqualsHelper(
-                item.Data,
-                rhs.Data,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
-            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Uses = item.Uses == rhs.Uses;
+            ret.Value = item.Value == rhs.Value;
+            ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
         }
         
         public string ToString(
-            ILocalVariableGetter item,
+            ISigilStoneDataGetter item,
             string? name = null,
-            LocalVariable.Mask<bool>? printMask = null)
+            SigilStoneData.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1266,18 +1249,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public void ToString(
-            ILocalVariableGetter item,
+            ISigilStoneDataGetter item,
             FileGeneration fg,
             string? name = null,
-            LocalVariable.Mask<bool>? printMask = null)
+            SigilStoneData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LocalVariable =>");
+                fg.AppendLine($"SigilStoneData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LocalVariable) =>");
+                fg.AppendLine($"{name} (SigilStoneData) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1291,64 +1274,59 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         protected static void ToStringFields(
-            ILocalVariableGetter item,
+            ISigilStoneDataGetter item,
             FileGeneration fg,
-            LocalVariable.Mask<bool>? printMask = null)
+            SigilStoneData.Mask<bool>? printMask = null)
         {
-            if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+            if (printMask?.Uses ?? true)
             {
-                DataItem?.ToString(fg, "Data");
+                fg.AppendItem(item.Uses, "Uses");
             }
-            if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+            if (printMask?.Value ?? true)
             {
-                fg.AppendItem(NameItem, "Name");
+                fg.AppendItem(item.Value, "Value");
+            }
+            if (printMask?.Weight ?? true)
+            {
+                fg.AppendItem(item.Weight, "Weight");
             }
         }
         
         public bool HasBeenSet(
-            ILocalVariableGetter item,
-            LocalVariable.Mask<bool?> checkMask)
+            ISigilStoneDataGetter item,
+            SigilStoneData.Mask<bool?> checkMask)
         {
-            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
-            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             return true;
         }
         
         public void FillHasBeenSetMask(
-            ILocalVariableGetter item,
-            LocalVariable.Mask<bool> mask)
+            ISigilStoneDataGetter item,
+            SigilStoneData.Mask<bool> mask)
         {
-            var itemData = item.Data;
-            mask.Data = new MaskItem<bool, LocalVariableData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
-            mask.Name = (item.Name != null);
+            mask.Uses = true;
+            mask.Value = true;
+            mask.Weight = true;
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            ILocalVariableGetter? lhs,
-            ILocalVariableGetter? rhs)
+            ISigilStoneDataGetter? lhs,
+            ISigilStoneDataGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (lhs.Uses != rhs.Uses) return false;
+            if (lhs.Value != rhs.Value) return false;
+            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             return true;
         }
         
-        public virtual int GetHashCode(ILocalVariableGetter item)
+        public virtual int GetHashCode(ISigilStoneDataGetter item)
         {
             var hash = new HashCode();
-            if (item.Data.TryGet(out var Dataitem))
-            {
-                hash.Add(Dataitem);
-            }
-            if (item.Name.TryGet(out var Nameitem))
-            {
-                hash.Add(Nameitem);
-            }
+            hash.Add(item.Uses);
+            hash.Add(item.Value);
+            hash.Add(item.Weight);
             return hash.ToHashCode();
         }
         
@@ -1357,11 +1335,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public object GetNew()
         {
-            return LocalVariable.GetNew();
+            return SigilStoneData.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(ILocalVariableGetter obj)
+        public IEnumerable<ILinkGetter> GetLinks(ISigilStoneDataGetter obj)
         {
             yield break;
         }
@@ -1369,68 +1347,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LocalVariableSetterTranslationCommon
+    public partial class SigilStoneDataSetterTranslationCommon
     {
-        public static readonly LocalVariableSetterTranslationCommon Instance = new LocalVariableSetterTranslationCommon();
+        public static readonly SigilStoneDataSetterTranslationCommon Instance = new SigilStoneDataSetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            ILocalVariable item,
-            ILocalVariableGetter rhs,
+            ISigilStoneData item,
+            ISigilStoneDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.Data) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SigilStoneData_FieldIndex.Uses) ?? true))
             {
-                errorMask?.PushIndex((int)LocalVariable_FieldIndex.Data);
-                try
-                {
-                    if(rhs.Data.TryGet(out var rhsData))
-                    {
-                        item.Data = rhsData.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)LocalVariable_FieldIndex.Data));
-                    }
-                    else
-                    {
-                        item.Data = default;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Uses = rhs.Uses;
             }
-            if ((copyMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.Name) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SigilStoneData_FieldIndex.Value) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Value = rhs.Value;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SigilStoneData_FieldIndex.Weight) ?? true))
+            {
+                item.Weight = rhs.Weight;
             }
         }
         
         #endregion
         
-        public LocalVariable DeepCopy(
-            ILocalVariableGetter item,
-            LocalVariable.TranslationMask? copyMask = null)
+        public SigilStoneData DeepCopy(
+            ISigilStoneDataGetter item,
+            SigilStoneData.TranslationMask? copyMask = null)
         {
-            LocalVariable ret = (LocalVariable)((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).GetNew();
+            SigilStoneData ret = (SigilStoneData)((SigilStoneDataCommon)((ISigilStoneDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public LocalVariable DeepCopy(
-            ILocalVariableGetter item,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? copyMask = null)
+        public SigilStoneData DeepCopy(
+            ISigilStoneDataGetter item,
+            out SigilStoneData.ErrorMask errorMask,
+            SigilStoneData.TranslationMask? copyMask = null)
         {
-            LocalVariable ret = (LocalVariable)((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).GetNew();
+            SigilStoneData ret = (SigilStoneData)((SigilStoneDataCommon)((ISigilStoneDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1438,12 +1398,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
-        public LocalVariable DeepCopy(
-            ILocalVariableGetter item,
+        public SigilStoneData DeepCopy(
+            ISigilStoneDataGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            LocalVariable ret = (LocalVariable)((LocalVariableCommon)((ILocalVariableGetter)item).CommonInstance()!).GetNew();
+            SigilStoneData ret = (SigilStoneData)((SigilStoneDataCommon)((ISigilStoneDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1458,27 +1418,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class LocalVariable
+    public partial class SigilStoneData
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LocalVariable_Registration.Instance;
-        public static LocalVariable_Registration Registration => LocalVariable_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => SigilStoneData_Registration.Instance;
+        public static SigilStoneData_Registration Registration => SigilStoneData_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => LocalVariableCommon.Instance;
+        protected object CommonInstance() => SigilStoneDataCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return LocalVariableSetterCommon.Instance;
+            return SigilStoneDataSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => LocalVariableSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => SigilStoneDataSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ILocalVariableGetter.CommonInstance() => this.CommonInstance();
+        object ISigilStoneDataGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object ILocalVariableGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object ISigilStoneDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object ILocalVariableGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object ISigilStoneDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1489,54 +1449,57 @@ namespace Mutagen.Bethesda.Oblivion
 #region Xml Translation
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class LocalVariableXmlWriteTranslation : IXmlWriteTranslator
+    public partial class SigilStoneDataXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static LocalVariableXmlWriteTranslation Instance = new LocalVariableXmlWriteTranslation();
+        public readonly static SigilStoneDataXmlWriteTranslation Instance = new SigilStoneDataXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            ILocalVariableGetter item,
+            ISigilStoneDataGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((item.Data != null)
-                && (translationMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.Data) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)SigilStoneData_FieldIndex.Uses) ?? true))
             {
-                if (item.Data.TryGet(out var DataItem))
-                {
-                    ((LocalVariableDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
-                        item: DataItem,
-                        node: node,
-                        name: nameof(item.Data),
-                        fieldIndex: (int)LocalVariable_FieldIndex.Data,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)LocalVariable_FieldIndex.Data));
-                }
-            }
-            if ((item.Name != null)
-                && (translationMask?.GetShouldTranslate((int)LocalVariable_FieldIndex.Name) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
+                ByteXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)LocalVariable_FieldIndex.Name,
+                    name: nameof(item.Uses),
+                    item: item.Uses,
+                    fieldIndex: (int)SigilStoneData_FieldIndex.Uses,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)SigilStoneData_FieldIndex.Value) ?? true))
+            {
+                UInt32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Value),
+                    item: item.Value,
+                    fieldIndex: (int)SigilStoneData_FieldIndex.Value,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)SigilStoneData_FieldIndex.Weight) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Weight),
+                    item: item.Weight,
+                    fieldIndex: (int)SigilStoneData_FieldIndex.Weight,
                     errorMask: errorMask);
             }
         }
 
         public void Write(
             XElement node,
-            ILocalVariableGetter item,
+            ISigilStoneDataGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.LocalVariable");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.SigilStoneData");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.LocalVariable");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.SigilStoneData");
             }
             WriteToNodeXml(
                 item: item,
@@ -1553,7 +1516,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string? name = null)
         {
             Write(
-                item: (ILocalVariableGetter)item,
+                item: (ISigilStoneDataGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1562,7 +1525,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            ILocalVariableGetter item,
+            ISigilStoneDataGetter item,
             ErrorMaskBuilder? errorMask,
             int fieldIndex,
             TranslationCrystal? translationMask,
@@ -1572,7 +1535,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             try
             {
                 Write(
-                    item: (ILocalVariableGetter)item,
+                    item: (ISigilStoneDataGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1591,12 +1554,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class LocalVariableXmlCreateTranslation
+    public partial class SigilStoneDataXmlCreateTranslation
     {
-        public readonly static LocalVariableXmlCreateTranslation Instance = new LocalVariableXmlCreateTranslation();
+        public readonly static SigilStoneDataXmlCreateTranslation Instance = new SigilStoneDataXmlCreateTranslation();
 
         public static void FillPublicXml(
-            ILocalVariable item,
+            ISigilStoneData item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1605,7 +1568,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    LocalVariableXmlCreateTranslation.FillPublicElementXml(
+                    SigilStoneDataXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1621,7 +1584,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            ILocalVariable item,
+            ISigilStoneData item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1629,14 +1592,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "Data":
-                    errorMask?.PushIndex((int)LocalVariable_FieldIndex.Data);
+                case "Uses":
+                    errorMask?.PushIndex((int)SigilStoneData_FieldIndex.Uses);
                     try
                     {
-                        item.Data = LoquiXmlTranslation<LocalVariableData>.Instance.Parse(
+                        item.Uses = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)LocalVariable_FieldIndex.Data));
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1648,11 +1610,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Name":
-                    errorMask?.PushIndex((int)LocalVariable_FieldIndex.Name);
+                case "Value":
+                    errorMask?.PushIndex((int)SigilStoneData_FieldIndex.Value);
                     try
                     {
-                        item.Name = StringXmlTranslation.Instance.Parse(
+                        item.Value = UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Weight":
+                    errorMask?.PushIndex((int)SigilStoneData_FieldIndex.Weight);
+                    try
+                    {
+                        item.Weight = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1677,30 +1657,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Xml Write Mixins
-    public static class LocalVariableXmlTranslationMixIn
+    public static class SigilStoneDataXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this ILocalVariableGetter item,
+            this ISigilStoneDataGetter item,
             XElement node,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? translationMask = null,
+            out SigilStoneData.ErrorMask errorMask,
+            SigilStoneData.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((LocalVariableXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((SigilStoneDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LocalVariable.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SigilStoneData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this ILocalVariableGetter item,
+            this ISigilStoneDataGetter item,
             string path,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? translationMask = null,
+            out SigilStoneData.ErrorMask errorMask,
+            SigilStoneData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1714,7 +1694,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this ILocalVariableGetter item,
+            this ISigilStoneDataGetter item,
             string path,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1731,10 +1711,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this ILocalVariableGetter item,
+            this ISigilStoneDataGetter item,
             Stream stream,
-            out LocalVariable.ErrorMask errorMask,
-            LocalVariable.TranslationMask? translationMask = null,
+            out SigilStoneData.ErrorMask errorMask,
+            SigilStoneData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1748,7 +1728,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this ILocalVariableGetter item,
+            this ISigilStoneDataGetter item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1765,13 +1745,13 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this ILocalVariableGetter item,
+            this ISigilStoneDataGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
             string? name = null)
         {
-            ((LocalVariableXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((SigilStoneDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1780,12 +1760,12 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this ILocalVariableGetter item,
+            this ISigilStoneDataGetter item,
             XElement node,
             string? name = null,
-            LocalVariable.TranslationMask? translationMask = null)
+            SigilStoneData.TranslationMask? translationMask = null)
         {
-            ((LocalVariableXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((SigilStoneDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1794,12 +1774,12 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this ILocalVariableGetter item,
+            this ISigilStoneDataGetter item,
             string path,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((LocalVariableXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((SigilStoneDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1809,12 +1789,12 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this ILocalVariableGetter item,
+            this ISigilStoneDataGetter item,
             Stream stream,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((LocalVariableXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((SigilStoneDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1833,38 +1813,35 @@ namespace Mutagen.Bethesda.Oblivion
 #region Binary Translation
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class LocalVariableBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class SigilStoneDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static LocalVariableBinaryWriteTranslation Instance = new LocalVariableBinaryWriteTranslation();
+        public readonly static SigilStoneDataBinaryWriteTranslation Instance = new SigilStoneDataBinaryWriteTranslation();
 
-        public static void WriteRecordTypes(
-            ILocalVariableGetter item,
-            MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+        public static void WriteEmbedded(
+            ISigilStoneDataGetter item,
+            MutagenWriter writer)
         {
-            if (item.Data.TryGet(out var DataItem))
-            {
-                ((LocalVariableDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
-                    item: DataItem,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
-            }
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            writer.Write(item.Uses);
+            writer.Write(item.Value);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(LocalVariable_Registration.SCVR_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
+                item: item.Weight);
         }
 
         public void Write(
             MutagenWriter writer,
-            ILocalVariableGetter item,
+            ISigilStoneDataGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            WriteRecordTypes(
-                item: item,
+            using (HeaderExport.ExportHeader(
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                record: recordTypeConverter.ConvertToCustom(SigilStoneData_Registration.DATA_HEADER),
+                type: ObjectType.Subrecord))
+            {
+                WriteEmbedded(
+                    item: item,
+                    writer: writer);
+            }
         }
 
         public void Write(
@@ -1873,16 +1850,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (ILocalVariableGetter)item,
+                item: (ISigilStoneDataGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class LocalVariableBinaryCreateTranslation
+    public partial class SigilStoneDataBinaryCreateTranslation
     {
-        public readonly static LocalVariableBinaryCreateTranslation Instance = new LocalVariableBinaryCreateTranslation();
+        public readonly static SigilStoneDataBinaryCreateTranslation Instance = new SigilStoneDataBinaryCreateTranslation();
 
     }
 
@@ -1890,13 +1867,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Binary Write Mixins
-    public static class LocalVariableBinaryTranslationMixIn
+    public static class SigilStoneDataBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this ILocalVariableGetter item,
+            this ISigilStoneDataGetter item,
             MutagenWriter writer)
         {
-            ((LocalVariableBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((SigilStoneDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 recordTypeConverter: null);
@@ -1909,33 +1886,33 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class LocalVariableBinaryOverlay :
+    public partial class SigilStoneDataBinaryOverlay :
         BinaryOverlay,
-        ILocalVariableGetter
+        ISigilStoneDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LocalVariable_Registration.Instance;
-        public static LocalVariable_Registration Registration => LocalVariable_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => SigilStoneData_Registration.Instance;
+        public static SigilStoneData_Registration Registration => SigilStoneData_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => LocalVariableCommon.Instance;
+        protected object CommonInstance() => SigilStoneDataCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => LocalVariableSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => SigilStoneDataSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ILocalVariableGetter.CommonInstance() => this.CommonInstance();
+        object ISigilStoneDataGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? ILocalVariableGetter.CommonSetterInstance() => null;
+        object? ISigilStoneDataGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object ILocalVariableGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object ISigilStoneDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILocalVariableGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISigilStoneDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => LocalVariableXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => SigilStoneDataXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -1944,7 +1921,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((LocalVariableXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((SigilStoneDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -1952,35 +1929,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => LocalVariableBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => SigilStoneDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((LocalVariableBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((SigilStoneDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
-        #region Data
-        private RangeInt32? _DataLocation;
-        private bool _Data_IsSet => _DataLocation.HasValue;
-        public ILocalVariableDataGetter? Data => _Data_IsSet ? LocalVariableDataBinaryOverlay.LocalVariableDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
-        public bool Data_IsSet => _DataLocation.HasValue;
-        #endregion
-        #region Name
-        private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
-        #endregion
+        public Byte Uses => _data.Span[0];
+        public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(1, 4));
+        public Single Weight => SpanExt.GetFloat(_data.Slice(5, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected LocalVariableBinaryOverlay(
+        protected SigilStoneDataBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1989,55 +1959,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
 
-        public static LocalVariableBinaryOverlay LocalVariableFactory(
+        public static SigilStoneDataBinaryOverlay SigilStoneDataFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new LocalVariableBinaryOverlay(
-                bytes: stream.RemainingMemory,
+            var ret = new SigilStoneDataBinaryOverlay(
+                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.Meta),
                 package: package);
-            int offset = stream.Position;
+            var finalPos = checked((int)(stream.Position + package.Meta.Subrecord(stream.RemainingSpan).TotalLength));
+            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
+            stream.Position += 0x9 + package.Meta.SubConstants.HeaderLength;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,
-                offset: 0);
-            ret.FillTypelessSubrecordTypes(
-                stream: stream,
-                finalPos: stream.Length,
-                offset: offset,
-                recordTypeConverter: recordTypeConverter,
-                fill: ret.FillRecordType);
+                offset: offset);
             return ret;
         }
 
-        public TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
-            int finalPos,
-            int offset,
-            RecordType type,
-            int? lastParsed,
-            RecordTypeConverter? recordTypeConverter)
-        {
-            type = recordTypeConverter.ConvertToStandard(type);
-            switch (type.TypeInt)
-            {
-                case 0x44534C53: // SLSD
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocalVariable_FieldIndex.Data) return TryGet<int?>.Failure;
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)LocalVariable_FieldIndex.Data);
-                }
-                case 0x52564353: // SCVR
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocalVariable_FieldIndex.Name) return TryGet<int?>.Failure;
-                    _NameLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LocalVariable_FieldIndex.Name);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
     }
 
 }

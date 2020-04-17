@@ -7,14 +7,15 @@
       <RefDirect name="Model" refName="Model" />
       <String name="Icon" recordType="ICON" />
       <FormLink name="Script" refName="Script" recordType="SCRI" />
-      <Data>
-        <Fields>
-          <UInt32 name="Value" />
-          <Float name="Weight" />
-        </Fields>
-      </Data>
+      <RefDirect name="Data" refName="SoulGemData" />
       <Enum name="ContainedSoul" enumName="SoulLevel" recordType="SOUL" byteLength="1" />
       <Enum name="MaximumCapacity" enumName="SoulLevel" recordType="SLCP" byteLength="1" />
+    </Fields>
+  </Object>
+  <Object name="SoulGemData" objType="Subrecord" recordType="DATA" GUID="fbd6e35a-823a-449e-9f19-64a248547970" ID="210">
+    <Fields>
+      <UInt32 name="Value" />
+      <Float name="Weight" />
     </Fields>
   </Object>
 </Loqui>

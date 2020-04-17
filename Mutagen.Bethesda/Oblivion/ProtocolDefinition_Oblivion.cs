@@ -194,6 +194,22 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.PotionData_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.QuestTargetData_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.QuestData_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.RaceData_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.RegionDataHeader_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.LocalVariableData_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.SigilStoneData_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.SkillData_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.SoulGemData_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.SpellData_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.TreeData_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.Dimensions_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.WaterData_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.WeaponData_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.FogDistance_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.HDRData_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.WeatherData_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.EffectData_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.ScriptEffectData_Registration.Instance);
         }
     }
 }

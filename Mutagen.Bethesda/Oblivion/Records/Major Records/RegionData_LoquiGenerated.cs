@@ -15,6 +15,7 @@ using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -32,7 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public abstract partial class RegionData :
-        IRegionDataInternal,
+        IRegionData,
         ILoquiObjectSetter<RegionData>,
         IEquatable<RegionData>,
         IEqualsMask
@@ -45,53 +46,16 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
-        #region DataType
+        #region Header
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private RegionData.RegionDataType _DataType;
-        public RegionData.RegionDataType DataType
+        private RegionDataHeader? _Header;
+        public RegionDataHeader? Header
         {
-            get => this._DataType;
-            protected set
-            {
-                this.RDATDataTypeState |= RDATDataType.Has;
-                this._DataType = value;
-            }
+            get => _Header;
+            set => _Header = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        RegionData.RegionDataType IRegionDataInternal.DataType
-        {
-            get => this.DataType;
-            set => this.DataType = value;
-        }
-        #endregion
-        #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private RegionData.RegionDataFlag _Flags;
-        public RegionData.RegionDataFlag Flags
-        {
-            get => this._Flags;
-            set
-            {
-                this.RDATDataTypeState |= RDATDataType.Has;
-                this._Flags = value;
-            }
-        }
-        #endregion
-        #region Priority
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Priority;
-        public Byte Priority
-        {
-            get => this._Priority;
-            set
-            {
-                this.RDATDataTypeState |= RDATDataType.Has;
-                this._Priority = value;
-            }
-        }
-        #endregion
-        #region RDATDataTypeState
-        public RegionData.RDATDataType RDATDataTypeState { get; set; } = default;
+        IRegionDataHeaderGetter? IRegionDataGetter.Header => this.Header;
         #endregion
 
         #region To String
@@ -264,24 +228,9 @@ namespace Mutagen.Bethesda.Oblivion
             where TItem : notnull
         {
             #region Ctors
-            public Mask(TItem initialValue)
+            public Mask(TItem Header)
             {
-                this.DataType = initialValue;
-                this.Flags = initialValue;
-                this.Priority = initialValue;
-                this.RDATDataTypeState = initialValue;
-            }
-
-            public Mask(
-                TItem DataType,
-                TItem Flags,
-                TItem Priority,
-                TItem RDATDataTypeState)
-            {
-                this.DataType = DataType;
-                this.Flags = Flags;
-                this.Priority = Priority;
-                this.RDATDataTypeState = RDATDataTypeState;
+                this.Header = new MaskItem<TItem, RegionDataHeader.Mask<TItem>?>(Header, new RegionDataHeader.Mask<TItem>(Header));
             }
 
             #pragma warning disable CS8618
@@ -293,10 +242,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public TItem DataType;
-            public TItem Flags;
-            public TItem Priority;
-            public TItem RDATDataTypeState;
+            public MaskItem<TItem, RegionDataHeader.Mask<TItem>?>? Header { get; set; }
             #endregion
 
             #region Equals
@@ -309,19 +255,13 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.DataType, rhs.DataType)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.Priority, rhs.Priority)) return false;
-                if (!object.Equals(this.RDATDataTypeState, rhs.RDATDataTypeState)) return false;
+                if (!object.Equals(this.Header, rhs.Header)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.DataType);
-                hash.Add(this.Flags);
-                hash.Add(this.Priority);
-                hash.Add(this.RDATDataTypeState);
+                hash.Add(this.Header);
                 return hash.ToHashCode();
             }
 
@@ -330,10 +270,11 @@ namespace Mutagen.Bethesda.Oblivion
             #region All
             public virtual bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.DataType)) return false;
-                if (!eval(this.Flags)) return false;
-                if (!eval(this.Priority)) return false;
-                if (!eval(this.RDATDataTypeState)) return false;
+                if (Header != null)
+                {
+                    if (!eval(this.Header.Overall)) return false;
+                    if (this.Header.Specific != null && !this.Header.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -341,10 +282,11 @@ namespace Mutagen.Bethesda.Oblivion
             #region Any
             public virtual bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.DataType)) return true;
-                if (eval(this.Flags)) return true;
-                if (eval(this.Priority)) return true;
-                if (eval(this.RDATDataTypeState)) return true;
+                if (Header != null)
+                {
+                    if (eval(this.Header.Overall)) return true;
+                    if (this.Header.Specific != null && this.Header.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -359,10 +301,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.DataType = eval(this.DataType);
-                obj.Flags = eval(this.Flags);
-                obj.Priority = eval(this.Priority);
-                obj.RDATDataTypeState = eval(this.RDATDataTypeState);
+                obj.Header = this.Header == null ? null : new MaskItem<R, RegionDataHeader.Mask<R>?>(eval(this.Header.Overall), this.Header.Specific?.Translate(eval));
             }
             #endregion
 
@@ -385,21 +324,9 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.DataType ?? true)
+                    if (printMask?.Header?.Overall ?? true)
                     {
-                        fg.AppendItem(DataType, "DataType");
-                    }
-                    if (printMask?.Flags ?? true)
-                    {
-                        fg.AppendItem(Flags, "Flags");
-                    }
-                    if (printMask?.Priority ?? true)
-                    {
-                        fg.AppendItem(Priority, "Priority");
-                    }
-                    if (printMask?.RDATDataTypeState ?? true)
-                    {
-                        fg.AppendItem(RDATDataTypeState, "RDATDataTypeState");
+                        Header?.ToString(fg);
                     }
                 }
                 fg.AppendLine("]");
@@ -426,10 +353,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return _warnings;
                 }
             }
-            public Exception? DataType;
-            public Exception? Flags;
-            public Exception? Priority;
-            public Exception? RDATDataTypeState;
+            public MaskItem<Exception?, RegionDataHeader.ErrorMask?>? Header;
             #endregion
 
             #region IErrorMask
@@ -438,14 +362,8 @@ namespace Mutagen.Bethesda.Oblivion
                 RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case RegionData_FieldIndex.DataType:
-                        return DataType;
-                    case RegionData_FieldIndex.Flags:
-                        return Flags;
-                    case RegionData_FieldIndex.Priority:
-                        return Priority;
-                    case RegionData_FieldIndex.RDATDataTypeState:
-                        return RDATDataTypeState;
+                    case RegionData_FieldIndex.Header:
+                        return Header;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -456,17 +374,8 @@ namespace Mutagen.Bethesda.Oblivion
                 RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case RegionData_FieldIndex.DataType:
-                        this.DataType = ex;
-                        break;
-                    case RegionData_FieldIndex.Flags:
-                        this.Flags = ex;
-                        break;
-                    case RegionData_FieldIndex.Priority:
-                        this.Priority = ex;
-                        break;
-                    case RegionData_FieldIndex.RDATDataTypeState:
-                        this.RDATDataTypeState = ex;
+                    case RegionData_FieldIndex.Header:
+                        this.Header = new MaskItem<Exception?, RegionDataHeader.ErrorMask?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -478,17 +387,8 @@ namespace Mutagen.Bethesda.Oblivion
                 RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case RegionData_FieldIndex.DataType:
-                        this.DataType = (Exception?)obj;
-                        break;
-                    case RegionData_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
-                        break;
-                    case RegionData_FieldIndex.Priority:
-                        this.Priority = (Exception?)obj;
-                        break;
-                    case RegionData_FieldIndex.RDATDataTypeState:
-                        this.RDATDataTypeState = (Exception?)obj;
+                    case RegionData_FieldIndex.Header:
+                        this.Header = (MaskItem<Exception?, RegionDataHeader.ErrorMask?>?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -498,10 +398,7 @@ namespace Mutagen.Bethesda.Oblivion
             public virtual bool IsInError()
             {
                 if (Overall != null) return true;
-                if (DataType != null) return true;
-                if (Flags != null) return true;
-                if (Priority != null) return true;
-                if (RDATDataTypeState != null) return true;
+                if (Header != null) return true;
                 return false;
             }
             #endregion
@@ -536,10 +433,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected virtual void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendItem(DataType, "DataType");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Priority, "Priority");
-                fg.AppendItem(RDATDataTypeState, "RDATDataTypeState");
+                Header?.ToString(fg);
             }
             #endregion
 
@@ -548,10 +442,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.DataType = this.DataType.Combine(rhs.DataType);
-                ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Priority = this.Priority.Combine(rhs.Priority);
-                ret.RDATDataTypeState = this.RDATDataTypeState.Combine(rhs.RDATDataTypeState);
+                ret.Header = this.Header.Combine(rhs.Header, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -573,19 +464,13 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public bool DataType;
-            public bool Flags;
-            public bool Priority;
-            public bool RDATDataTypeState;
+            public MaskItem<bool, RegionDataHeader.TranslationMask?> Header;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.DataType = defaultOn;
-                this.Flags = defaultOn;
-                this.Priority = defaultOn;
-                this.RDATDataTypeState = defaultOn;
+                this.Header = new MaskItem<bool, RegionDataHeader.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -601,21 +486,13 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((DataType, null));
-                ret.Add((Flags, null));
-                ret.Add((Priority, null));
-                ret.Add((RDATDataTypeState, null));
+                ret.Add((Header?.Overall ?? true, Header?.Specific?.GetCrystal()));
             }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = RegionData_Registration.TriggeringRecordType;
-        [Flags]
-        public enum RDATDataType
-        {
-            Has = 1
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public virtual IEnumerable<ILinkGetter> Links => RegionDataCommon.Instance.GetLinks(this);
         #endregion
@@ -656,18 +533,9 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IRegionData :
         IRegionDataGetter,
-        ILoquiObjectSetter<IRegionDataInternal>
+        ILoquiObjectSetter<IRegionData>
     {
-        new RegionData.RegionDataFlag Flags { get; set; }
-        new Byte Priority { get; set; }
-        new RegionData.RDATDataType RDATDataTypeState { get; set; }
-    }
-
-    public partial interface IRegionDataInternal :
-        IRegionData,
-        IRegionDataGetter
-    {
-        new RegionData.RegionDataType DataType { get; set; }
+        new RegionDataHeader? Header { get; set; }
     }
 
     public partial interface IRegionDataGetter :
@@ -683,10 +551,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        RegionData.RegionDataType DataType { get; }
-        RegionData.RegionDataFlag Flags { get; }
-        Byte Priority { get; }
-        RegionData.RDATDataType RDATDataTypeState { get; }
+        IRegionDataHeaderGetter? Header { get; }
 
     }
 
@@ -695,7 +560,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Common MixIn
     public static partial class RegionDataMixIn
     {
-        public static void Clear(this IRegionDataInternal item)
+        public static void Clear(this IRegionData item)
         {
             ((RegionDataSetterCommon)((IRegionDataGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
@@ -763,7 +628,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void DeepCopyIn(
-            this IRegionDataInternal lhs,
+            this IRegionData lhs,
             IRegionDataGetter rhs,
             RegionData.TranslationMask? copyMask = null)
         {
@@ -775,7 +640,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void DeepCopyIn(
-            this IRegionDataInternal lhs,
+            this IRegionData lhs,
             IRegionDataGetter rhs,
             out RegionData.ErrorMask errorMask,
             RegionData.TranslationMask? copyMask = null)
@@ -790,7 +655,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void DeepCopyIn(
-            this IRegionDataInternal lhs,
+            this IRegionData lhs,
             IRegionDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
@@ -836,7 +701,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IRegionDataInternal item,
+            this IRegionData item,
             XElement node,
             RegionData.TranslationMask? translationMask = null)
         {
@@ -849,7 +714,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IRegionDataInternal item,
+            this IRegionData item,
             XElement node,
             out RegionData.ErrorMask errorMask,
             RegionData.TranslationMask? translationMask = null)
@@ -864,7 +729,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IRegionDataInternal item,
+            this IRegionData item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -877,7 +742,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IRegionDataInternal item,
+            this IRegionData item,
             string path,
             RegionData.TranslationMask? translationMask = null)
         {
@@ -889,7 +754,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IRegionDataInternal item,
+            this IRegionData item,
             string path,
             out RegionData.ErrorMask errorMask,
             RegionData.TranslationMask? translationMask = null)
@@ -903,7 +768,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IRegionDataInternal item,
+            this IRegionData item,
             string path,
             ErrorMaskBuilder? errorMask,
             RegionData.TranslationMask? translationMask = null)
@@ -917,7 +782,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IRegionDataInternal item,
+            this IRegionData item,
             Stream stream,
             RegionData.TranslationMask? translationMask = null)
         {
@@ -929,7 +794,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IRegionDataInternal item,
+            this IRegionData item,
             Stream stream,
             out RegionData.ErrorMask errorMask,
             RegionData.TranslationMask? translationMask = null)
@@ -943,7 +808,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IRegionDataInternal item,
+            this IRegionData item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
             RegionData.TranslationMask? translationMask = null)
@@ -961,7 +826,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IRegionDataInternal item,
+            this IRegionData item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -971,7 +836,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromBinary(
-            this IRegionDataInternal item,
+            this IRegionData item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -993,10 +858,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum RegionData_FieldIndex
     {
-        DataType = 0,
-        Flags = 1,
-        Priority = 2,
-        RDATDataTypeState = 3,
+        Header = 0,
     }
     #endregion
 
@@ -1014,9 +876,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "46664e25-f4ef-428c-b13f-c81ff3127714";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 1;
 
         public static readonly Type MaskType = typeof(RegionData.Mask<>);
 
@@ -1030,7 +892,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type SetterType = typeof(IRegionData);
 
-        public static readonly Type? InternalSetterType = typeof(IRegionDataInternal);
+        public static readonly Type? InternalSetterType = null;
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.RegionData";
 
@@ -1046,14 +908,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
-                case "DATATYPE":
-                    return (ushort)RegionData_FieldIndex.DataType;
-                case "FLAGS":
-                    return (ushort)RegionData_FieldIndex.Flags;
-                case "PRIORITY":
-                    return (ushort)RegionData_FieldIndex.Priority;
-                case "RDATDATATYPESTATE":
-                    return (ushort)RegionData_FieldIndex.RDATDataTypeState;
+                case "HEADER":
+                    return (ushort)RegionData_FieldIndex.Header;
                 default:
                     return null;
             }
@@ -1064,10 +920,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
             switch (enu)
             {
-                case RegionData_FieldIndex.DataType:
-                case RegionData_FieldIndex.Flags:
-                case RegionData_FieldIndex.Priority:
-                case RegionData_FieldIndex.RDATDataTypeState:
+                case RegionData_FieldIndex.Header:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1079,11 +932,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
             switch (enu)
             {
-                case RegionData_FieldIndex.DataType:
-                case RegionData_FieldIndex.Flags:
-                case RegionData_FieldIndex.Priority:
-                case RegionData_FieldIndex.RDATDataTypeState:
-                    return false;
+                case RegionData_FieldIndex.Header:
+                    return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1094,10 +944,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
             switch (enu)
             {
-                case RegionData_FieldIndex.DataType:
-                case RegionData_FieldIndex.Flags:
-                case RegionData_FieldIndex.Priority:
-                case RegionData_FieldIndex.RDATDataTypeState:
+                case RegionData_FieldIndex.Header:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1109,14 +956,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
             switch (enu)
             {
-                case RegionData_FieldIndex.DataType:
-                    return "DataType";
-                case RegionData_FieldIndex.Flags:
-                    return "Flags";
-                case RegionData_FieldIndex.Priority:
-                    return "Priority";
-                case RegionData_FieldIndex.RDATDataTypeState:
-                    return "RDATDataTypeState";
+                case RegionData_FieldIndex.Header:
+                    return "Header";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1127,10 +968,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
             switch (enu)
             {
-                case RegionData_FieldIndex.DataType:
-                case RegionData_FieldIndex.Flags:
-                case RegionData_FieldIndex.Priority:
-                case RegionData_FieldIndex.RDATDataTypeState:
+                case RegionData_FieldIndex.Header:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1142,11 +980,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
             switch (enu)
             {
-                case RegionData_FieldIndex.DataType:
-                    return true;
-                case RegionData_FieldIndex.Flags:
-                case RegionData_FieldIndex.Priority:
-                case RegionData_FieldIndex.RDATDataTypeState:
+                case RegionData_FieldIndex.Header:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1158,14 +992,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RegionData_FieldIndex enu = (RegionData_FieldIndex)index;
             switch (enu)
             {
-                case RegionData_FieldIndex.DataType:
-                    return typeof(RegionData.RegionDataType);
-                case RegionData_FieldIndex.Flags:
-                    return typeof(RegionData.RegionDataFlag);
-                case RegionData_FieldIndex.Priority:
-                    return typeof(Byte);
-                case RegionData_FieldIndex.RDATDataTypeState:
-                    return typeof(RegionData.RDATDataType);
+                case RegionData_FieldIndex.Header:
+                    return typeof(RegionDataHeader);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1175,7 +1003,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType RDAT_HEADER = new RecordType("RDAT");
         public static readonly RecordType TriggeringRecordType = RDAT_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
+        public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(RegionDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1215,53 +1043,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IRegionDataInternal item)
+        public virtual void Clear(IRegionData item)
         {
             ClearPartial();
-            item.Flags = default;
-            item.Priority = default;
-            item.RDATDataTypeState = default;
+            item.Header = null;
         }
         
         #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IRegionDataInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                case "HasRDATDataType":
-                    item.RDATDataTypeState |= RegionData.RDATDataType.Has;
-                    break;
-                case "DataType":
-                    errorMask?.PushIndex((int)RegionData_FieldIndex.DataType);
-                    try
-                    {
-                        item.DataType = EnumXmlTranslation<RegionData.RegionDataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.RDATDataTypeState |= RegionData.RDATDataType.Has;
-                    break;
-                default:
-                    break;
-            }
-        }
-        
         public virtual void CopyInFromXml(
-            IRegionDataInternal item,
+            IRegionData item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1270,12 +1060,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
                     RegionDataXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
@@ -1294,14 +1078,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IRegionDataInternal item,
-            MutagenFrame frame)
-        {
-        }
-        
         protected static TryGet<int?> FillBinaryRecordTypes(
-            IRegionDataInternal item,
+            IRegionData item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
@@ -1312,17 +1090,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x54414452: // RDAT
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.RDATDataTypeState = RegionData.RDATDataType.Has;
-                    }
-                    item.DataType = EnumBinaryTranslation<RegionData.RegionDataType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.Flags = EnumBinaryTranslation<RegionData.RegionDataFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
-                    item.Priority = dataFrame.ReadUInt8();
-                    dataFrame.SetPosition(dataFrame.Position + 2);
-                    return TryGet<int?>.Succeed((int)RegionData_FieldIndex.Priority);
+                    item.Header = Mutagen.Bethesda.Oblivion.RegionDataHeader.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)RegionData_FieldIndex.Header);
                 }
                 default:
                     return TryGet<int?>.Failure;
@@ -1330,7 +1099,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public virtual void CopyInFromBinary(
-            IRegionDataInternal item,
+            IRegionData item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1364,10 +1133,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.DataType = item.DataType == rhs.DataType;
-            ret.Flags = item.Flags == rhs.Flags;
-            ret.Priority = item.Priority == rhs.Priority;
-            ret.RDATDataTypeState = item.RDATDataTypeState == rhs.RDATDataTypeState;
+            ret.Header = EqualsMaskHelper.EqualsHelper(
+                item.Header,
+                rhs.Header,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
         }
         
         public string ToString(
@@ -1414,21 +1184,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             RegionData.Mask<bool>? printMask = null)
         {
-            if (printMask?.DataType ?? true)
+            if ((printMask?.Header?.Overall ?? true)
+                && item.Header.TryGet(out var HeaderItem))
             {
-                fg.AppendItem(item.DataType, "DataType");
-            }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendItem(item.Flags, "Flags");
-            }
-            if (printMask?.Priority ?? true)
-            {
-                fg.AppendItem(item.Priority, "Priority");
-            }
-            if (printMask?.RDATDataTypeState ?? true)
-            {
-                fg.AppendItem(item.RDATDataTypeState, "RDATDataTypeState");
+                HeaderItem?.ToString(fg, "Header");
             }
         }
         
@@ -1436,6 +1195,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataGetter item,
             RegionData.Mask<bool?> checkMask)
         {
+            if (checkMask.Header?.Overall.HasValue ?? false && checkMask.Header.Overall.Value != (item.Header != null)) return false;
+            if (checkMask.Header?.Specific != null && (item.Header == null || !item.Header.HasBeenSet(checkMask.Header.Specific))) return false;
             return true;
         }
         
@@ -1443,10 +1204,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataGetter item,
             RegionData.Mask<bool> mask)
         {
-            mask.DataType = true;
-            mask.Flags = true;
-            mask.Priority = true;
-            mask.RDATDataTypeState = true;
+            var itemHeader = item.Header;
+            mask.Header = new MaskItem<bool, RegionDataHeader.Mask<bool>?>(itemHeader != null, itemHeader?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -1456,20 +1215,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.DataType != rhs.DataType) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.Priority != rhs.Priority) return false;
-            if (lhs.RDATDataTypeState != rhs.RDATDataTypeState) return false;
+            if (!object.Equals(lhs.Header, rhs.Header)) return false;
             return true;
         }
         
         public virtual int GetHashCode(IRegionDataGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.DataType);
-            hash.Add(item.Flags);
-            hash.Add(item.Priority);
-            hash.Add(item.RDATDataTypeState);
+            if (item.Header.TryGet(out var Headeritem))
+            {
+                hash.Add(Headeritem);
+            }
             return hash.ToHashCode();
         }
         
@@ -1496,39 +1252,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Deep Copy Fields From
         public virtual void DeepCopyIn(
-            IRegionDataInternal item,
-            IRegionDataGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
-        {
-            if ((copyMask?.GetShouldTranslate((int)RegionData_FieldIndex.DataType) ?? true))
-            {
-                item.DataType = rhs.DataType;
-            }
-            DeepCopyIn(
-                (IRegionData)item,
-                (IRegionDataGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-        
-        public virtual void DeepCopyIn(
             IRegionData item,
             IRegionDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)RegionData_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)RegionData_FieldIndex.Header) ?? true))
             {
-                item.Flags = rhs.Flags;
-            }
-            if ((copyMask?.GetShouldTranslate((int)RegionData_FieldIndex.Priority) ?? true))
-            {
-                item.Priority = rhs.Priority;
-            }
-            if ((copyMask?.GetShouldTranslate((int)RegionData_FieldIndex.RDATDataTypeState) ?? true))
-            {
-                item.RDATDataTypeState = rhs.RDATDataTypeState;
+                errorMask?.PushIndex((int)RegionData_FieldIndex.Header);
+                try
+                {
+                    if(rhs.Header.TryGet(out var rhsHeader))
+                    {
+                        item.Header = rhsHeader.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)RegionData_FieldIndex.Header));
+                    }
+                    else
+                    {
+                        item.Header = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
         }
         
@@ -1619,44 +1372,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if (item.RDATDataTypeState.HasFlag(RegionData.RDATDataType.Has))
+            if ((item.Header != null)
+                && (translationMask?.GetShouldTranslate((int)RegionData_FieldIndex.Header) ?? true))
             {
-                if ((translationMask?.GetShouldTranslate((int)RegionData_FieldIndex.DataType) ?? true))
+                if (item.Header.TryGet(out var HeaderItem))
                 {
-                    EnumXmlTranslation<RegionData.RegionDataType>.Instance.Write(
+                    ((RegionDataHeaderXmlWriteTranslation)((IXmlItem)HeaderItem).XmlWriteTranslator).Write(
+                        item: HeaderItem,
                         node: node,
-                        name: nameof(item.DataType),
-                        item: item.DataType,
-                        fieldIndex: (int)RegionData_FieldIndex.DataType,
-                        errorMask: errorMask);
+                        name: nameof(item.Header),
+                        fieldIndex: (int)RegionData_FieldIndex.Header,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)RegionData_FieldIndex.Header));
                 }
-                if ((translationMask?.GetShouldTranslate((int)RegionData_FieldIndex.Flags) ?? true))
-                {
-                    EnumXmlTranslation<RegionData.RegionDataFlag>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Flags),
-                        item: item.Flags,
-                        fieldIndex: (int)RegionData_FieldIndex.Flags,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)RegionData_FieldIndex.Priority) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Priority),
-                        item: item.Priority,
-                        fieldIndex: (int)RegionData_FieldIndex.Priority,
-                        errorMask: errorMask);
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)RegionData_FieldIndex.RDATDataTypeState) ?? true))
-            {
-                EnumXmlTranslation<RegionData.RDATDataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.RDATDataTypeState),
-                    item: item.RDATDataTypeState,
-                    fieldIndex: (int)RegionData_FieldIndex.RDATDataTypeState,
-                    errorMask: errorMask);
             }
         }
 
@@ -1731,7 +1459,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public readonly static RegionDataXmlCreateTranslation Instance = new RegionDataXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IRegionDataInternal item,
+            IRegionData item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1756,7 +1484,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IRegionDataInternal item,
+            IRegionData item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1764,49 +1492,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "Flags":
-                    errorMask?.PushIndex((int)RegionData_FieldIndex.Flags);
+                case "Header":
+                    errorMask?.PushIndex((int)RegionData_FieldIndex.Header);
                     try
                     {
-                        item.Flags = EnumXmlTranslation<RegionData.RegionDataFlag>.Instance.Parse(
+                        item.Header = LoquiXmlTranslation<RegionDataHeader>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Priority":
-                    errorMask?.PushIndex((int)RegionData_FieldIndex.Priority);
-                    try
-                    {
-                        item.Priority = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RDATDataTypeState":
-                    errorMask?.PushIndex((int)RegionData_FieldIndex.RDATDataTypeState);
-                    try
-                    {
-                        item.RDATDataTypeState = EnumXmlTranslation<RegionData.RDATDataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)RegionData_FieldIndex.Header));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1989,32 +1682,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static RegionDataBinaryWriteTranslation Instance = new RegionDataBinaryWriteTranslation();
 
-        public static void WriteEmbedded(
-            IRegionDataGetter item,
-            MutagenWriter writer)
-        {
-        }
-
         public static void WriteRecordTypes(
             IRegionDataGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            if (item.RDATDataTypeState.HasFlag(RegionData.RDATDataType.Has))
+            if (item.Header.TryGet(out var HeaderItem))
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(RegionData_Registration.RDAT_HEADER)))
-                {
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionData.RegionDataType>.Instance.Write(
-                        writer,
-                        item.DataType,
-                        length: 4);
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionData.RegionDataFlag>.Instance.Write(
-                        writer,
-                        item.Flags,
-                        length: 1);
-                    writer.Write(item.Priority);
-                    writer.WriteZeros(2);
-                }
+                ((RegionDataHeaderBinaryWriteTranslation)((IBinaryItem)HeaderItem).BinaryWriteTranslator).Write(
+                    item: HeaderItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
         }
 
@@ -2028,9 +1706,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: recordTypeConverter.ConvertToCustom(RegionData_Registration.RDAT_HEADER),
                 type: ObjectType.Subrecord))
             {
-                WriteEmbedded(
-                    item: item,
-                    writer: writer);
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
@@ -2137,22 +1812,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        private int? _RDATLocation;
-        public RegionData.RDATDataType RDATDataTypeState { get; private set; }
-        #region DataType
-        private int _DataTypeLocation => _RDATLocation!.Value + 0x0;
-        private bool _DataType_IsSet => _RDATLocation.HasValue;
-        public RegionData.RegionDataType DataType => _DataType_IsSet ? (RegionData.RegionDataType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_DataTypeLocation, 4)) : default;
-        #endregion
-        #region Flags
-        private int _FlagsLocation => _RDATLocation!.Value + 0x4;
-        private bool _Flags_IsSet => _RDATLocation.HasValue;
-        public RegionData.RegionDataFlag Flags => _Flags_IsSet ? (RegionData.RegionDataFlag)_data.Span.Slice(_FlagsLocation, 1)[0] : default;
-        #endregion
-        #region Priority
-        private int _PriorityLocation => _RDATLocation!.Value + 0x5;
-        private bool _Priority_IsSet => _RDATLocation.HasValue;
-        public Byte Priority => _Priority_IsSet ? _data.Span[_PriorityLocation] : default;
+        #region Header
+        private RangeInt32? _HeaderLocation;
+        private bool _Header_IsSet => _HeaderLocation.HasValue;
+        public IRegionDataHeaderGetter? Header => _Header_IsSet ? RegionDataHeaderBinaryOverlay.RegionDataHeaderFactory(new BinaryMemoryReadStream(_data.Slice(_HeaderLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Header_IsSet => _HeaderLocation.HasValue;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
@@ -2181,9 +1845,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x54414452: // RDAT
                 {
-                    _RDATLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
-                    this.RDATDataTypeState = RegionData.RDATDataType.Has;
-                    return TryGet<int?>.Succeed((int)RegionData_FieldIndex.Priority);
+                    _HeaderLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)RegionData_FieldIndex.Header);
                 }
                 default:
                     return TryGet<int?>.Failure;

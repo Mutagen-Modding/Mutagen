@@ -84,141 +84,27 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
-        #region LeafCurvature
+        #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _LeafCurvature;
-        public Single LeafCurvature
+        private TreeData? _Data;
+        public TreeData? Data
         {
-            get => this._LeafCurvature;
-            set
-            {
-                this.CNAMDataTypeState |= CNAMDataType.Has;
-                this._LeafCurvature = value;
-            }
+            get => _Data;
+            set => _Data = value;
         }
-        #endregion
-        #region MinimumLeafAngle
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _MinimumLeafAngle;
-        public Single MinimumLeafAngle
-        {
-            get => this._MinimumLeafAngle;
-            set
-            {
-                this.CNAMDataTypeState |= CNAMDataType.Has;
-                this._MinimumLeafAngle = value;
-            }
-        }
+        ITreeDataGetter? ITreeGetter.Data => this.Data;
         #endregion
-        #region MaximumLeafAngle
+        #region BillboardDimensions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _MaximumLeafAngle;
-        public Single MaximumLeafAngle
+        private Dimensions? _BillboardDimensions;
+        public Dimensions? BillboardDimensions
         {
-            get => this._MaximumLeafAngle;
-            set
-            {
-                this.CNAMDataTypeState |= CNAMDataType.Has;
-                this._MaximumLeafAngle = value;
-            }
+            get => _BillboardDimensions;
+            set => _BillboardDimensions = value;
         }
-        #endregion
-        #region BranchDimmingValue
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _BranchDimmingValue;
-        public Single BranchDimmingValue
-        {
-            get => this._BranchDimmingValue;
-            set
-            {
-                this.CNAMDataTypeState |= CNAMDataType.Has;
-                this._BranchDimmingValue = value;
-            }
-        }
-        #endregion
-        #region LeafDimmingValue
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _LeafDimmingValue;
-        public Single LeafDimmingValue
-        {
-            get => this._LeafDimmingValue;
-            set
-            {
-                this.CNAMDataTypeState |= CNAMDataType.Has;
-                this._LeafDimmingValue = value;
-            }
-        }
-        #endregion
-        #region ShadowRadius
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Int32 _ShadowRadius;
-        public Int32 ShadowRadius
-        {
-            get => this._ShadowRadius;
-            set
-            {
-                this.CNAMDataTypeState |= CNAMDataType.Has;
-                this._ShadowRadius = value;
-            }
-        }
-        #endregion
-        #region RockingSpeed
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _RockingSpeed;
-        public Single RockingSpeed
-        {
-            get => this._RockingSpeed;
-            set
-            {
-                this.CNAMDataTypeState |= CNAMDataType.Has;
-                this._RockingSpeed = value;
-            }
-        }
-        #endregion
-        #region RustleSpeed
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _RustleSpeed;
-        public Single RustleSpeed
-        {
-            get => this._RustleSpeed;
-            set
-            {
-                this.CNAMDataTypeState |= CNAMDataType.Has;
-                this._RustleSpeed = value;
-            }
-        }
-        #endregion
-        #region BillboardWidth
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _BillboardWidth;
-        public Single BillboardWidth
-        {
-            get => this._BillboardWidth;
-            set
-            {
-                this.BNAMDataTypeState |= BNAMDataType.Has;
-                this._BillboardWidth = value;
-            }
-        }
-        #endregion
-        #region BillboardHeight
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _BillboardHeight;
-        public Single BillboardHeight
-        {
-            get => this._BillboardHeight;
-            set
-            {
-                this.BNAMDataTypeState |= BNAMDataType.Has;
-                this._BillboardHeight = value;
-            }
-        }
-        #endregion
-        #region CNAMDataTypeState
-        public Tree.CNAMDataType CNAMDataTypeState { get; set; } = default;
-        #endregion
-        #region BNAMDataTypeState
-        public Tree.BNAMDataType BNAMDataTypeState { get; set; } = default;
+        IDimensionsGetter? ITreeGetter.BillboardDimensions => this.BillboardDimensions;
         #endregion
 
         #region To String
@@ -393,18 +279,8 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Icon = initialValue;
                 this.SpeedTreeSeeds = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.LeafCurvature = initialValue;
-                this.MinimumLeafAngle = initialValue;
-                this.MaximumLeafAngle = initialValue;
-                this.BranchDimmingValue = initialValue;
-                this.LeafDimmingValue = initialValue;
-                this.ShadowRadius = initialValue;
-                this.RockingSpeed = initialValue;
-                this.RustleSpeed = initialValue;
-                this.BillboardWidth = initialValue;
-                this.BillboardHeight = initialValue;
-                this.CNAMDataTypeState = initialValue;
-                this.BNAMDataTypeState = initialValue;
+                this.Data = new MaskItem<TItem, TreeData.Mask<TItem>?>(initialValue, new TreeData.Mask<TItem>(initialValue));
+                this.BillboardDimensions = new MaskItem<TItem, Dimensions.Mask<TItem>?>(initialValue, new Dimensions.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -416,18 +292,8 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Model,
                 TItem Icon,
                 TItem SpeedTreeSeeds,
-                TItem LeafCurvature,
-                TItem MinimumLeafAngle,
-                TItem MaximumLeafAngle,
-                TItem BranchDimmingValue,
-                TItem LeafDimmingValue,
-                TItem ShadowRadius,
-                TItem RockingSpeed,
-                TItem RustleSpeed,
-                TItem BillboardWidth,
-                TItem BillboardHeight,
-                TItem CNAMDataTypeState,
-                TItem BNAMDataTypeState)
+                TItem Data,
+                TItem BillboardDimensions)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -438,18 +304,8 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Icon = Icon;
                 this.SpeedTreeSeeds = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SpeedTreeSeeds, Enumerable.Empty<(int Index, TItem Value)>());
-                this.LeafCurvature = LeafCurvature;
-                this.MinimumLeafAngle = MinimumLeafAngle;
-                this.MaximumLeafAngle = MaximumLeafAngle;
-                this.BranchDimmingValue = BranchDimmingValue;
-                this.LeafDimmingValue = LeafDimmingValue;
-                this.ShadowRadius = ShadowRadius;
-                this.RockingSpeed = RockingSpeed;
-                this.RustleSpeed = RustleSpeed;
-                this.BillboardWidth = BillboardWidth;
-                this.BillboardHeight = BillboardHeight;
-                this.CNAMDataTypeState = CNAMDataTypeState;
-                this.BNAMDataTypeState = BNAMDataTypeState;
+                this.Data = new MaskItem<TItem, TreeData.Mask<TItem>?>(Data, new TreeData.Mask<TItem>(Data));
+                this.BillboardDimensions = new MaskItem<TItem, Dimensions.Mask<TItem>?>(BillboardDimensions, new Dimensions.Mask<TItem>(BillboardDimensions));
             }
 
             #pragma warning disable CS8618
@@ -464,18 +320,8 @@ namespace Mutagen.Bethesda.Oblivion
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public TItem Icon;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? SpeedTreeSeeds;
-            public TItem LeafCurvature;
-            public TItem MinimumLeafAngle;
-            public TItem MaximumLeafAngle;
-            public TItem BranchDimmingValue;
-            public TItem LeafDimmingValue;
-            public TItem ShadowRadius;
-            public TItem RockingSpeed;
-            public TItem RustleSpeed;
-            public TItem BillboardWidth;
-            public TItem BillboardHeight;
-            public TItem CNAMDataTypeState;
-            public TItem BNAMDataTypeState;
+            public MaskItem<TItem, TreeData.Mask<TItem>?>? Data { get; set; }
+            public MaskItem<TItem, Dimensions.Mask<TItem>?>? BillboardDimensions { get; set; }
             #endregion
 
             #region Equals
@@ -492,18 +338,8 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.Model, rhs.Model)) return false;
                 if (!object.Equals(this.Icon, rhs.Icon)) return false;
                 if (!object.Equals(this.SpeedTreeSeeds, rhs.SpeedTreeSeeds)) return false;
-                if (!object.Equals(this.LeafCurvature, rhs.LeafCurvature)) return false;
-                if (!object.Equals(this.MinimumLeafAngle, rhs.MinimumLeafAngle)) return false;
-                if (!object.Equals(this.MaximumLeafAngle, rhs.MaximumLeafAngle)) return false;
-                if (!object.Equals(this.BranchDimmingValue, rhs.BranchDimmingValue)) return false;
-                if (!object.Equals(this.LeafDimmingValue, rhs.LeafDimmingValue)) return false;
-                if (!object.Equals(this.ShadowRadius, rhs.ShadowRadius)) return false;
-                if (!object.Equals(this.RockingSpeed, rhs.RockingSpeed)) return false;
-                if (!object.Equals(this.RustleSpeed, rhs.RustleSpeed)) return false;
-                if (!object.Equals(this.BillboardWidth, rhs.BillboardWidth)) return false;
-                if (!object.Equals(this.BillboardHeight, rhs.BillboardHeight)) return false;
-                if (!object.Equals(this.CNAMDataTypeState, rhs.CNAMDataTypeState)) return false;
-                if (!object.Equals(this.BNAMDataTypeState, rhs.BNAMDataTypeState)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.BillboardDimensions, rhs.BillboardDimensions)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -512,18 +348,8 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.Model);
                 hash.Add(this.Icon);
                 hash.Add(this.SpeedTreeSeeds);
-                hash.Add(this.LeafCurvature);
-                hash.Add(this.MinimumLeafAngle);
-                hash.Add(this.MaximumLeafAngle);
-                hash.Add(this.BranchDimmingValue);
-                hash.Add(this.LeafDimmingValue);
-                hash.Add(this.ShadowRadius);
-                hash.Add(this.RockingSpeed);
-                hash.Add(this.RustleSpeed);
-                hash.Add(this.BillboardWidth);
-                hash.Add(this.BillboardHeight);
-                hash.Add(this.CNAMDataTypeState);
-                hash.Add(this.BNAMDataTypeState);
+                hash.Add(this.Data);
+                hash.Add(this.BillboardDimensions);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -551,18 +377,16 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                 }
-                if (!eval(this.LeafCurvature)) return false;
-                if (!eval(this.MinimumLeafAngle)) return false;
-                if (!eval(this.MaximumLeafAngle)) return false;
-                if (!eval(this.BranchDimmingValue)) return false;
-                if (!eval(this.LeafDimmingValue)) return false;
-                if (!eval(this.ShadowRadius)) return false;
-                if (!eval(this.RockingSpeed)) return false;
-                if (!eval(this.RustleSpeed)) return false;
-                if (!eval(this.BillboardWidth)) return false;
-                if (!eval(this.BillboardHeight)) return false;
-                if (!eval(this.CNAMDataTypeState)) return false;
-                if (!eval(this.BNAMDataTypeState)) return false;
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
+                if (BillboardDimensions != null)
+                {
+                    if (!eval(this.BillboardDimensions.Overall)) return false;
+                    if (this.BillboardDimensions.Specific != null && !this.BillboardDimensions.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -588,18 +412,16 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                 }
-                if (eval(this.LeafCurvature)) return true;
-                if (eval(this.MinimumLeafAngle)) return true;
-                if (eval(this.MaximumLeafAngle)) return true;
-                if (eval(this.BranchDimmingValue)) return true;
-                if (eval(this.LeafDimmingValue)) return true;
-                if (eval(this.ShadowRadius)) return true;
-                if (eval(this.RockingSpeed)) return true;
-                if (eval(this.RustleSpeed)) return true;
-                if (eval(this.BillboardWidth)) return true;
-                if (eval(this.BillboardHeight)) return true;
-                if (eval(this.CNAMDataTypeState)) return true;
-                if (eval(this.BNAMDataTypeState)) return true;
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
+                if (BillboardDimensions != null)
+                {
+                    if (eval(this.BillboardDimensions.Overall)) return true;
+                    if (this.BillboardDimensions.Specific != null && this.BillboardDimensions.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -631,18 +453,8 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                 }
-                obj.LeafCurvature = eval(this.LeafCurvature);
-                obj.MinimumLeafAngle = eval(this.MinimumLeafAngle);
-                obj.MaximumLeafAngle = eval(this.MaximumLeafAngle);
-                obj.BranchDimmingValue = eval(this.BranchDimmingValue);
-                obj.LeafDimmingValue = eval(this.LeafDimmingValue);
-                obj.ShadowRadius = eval(this.ShadowRadius);
-                obj.RockingSpeed = eval(this.RockingSpeed);
-                obj.RustleSpeed = eval(this.RustleSpeed);
-                obj.BillboardWidth = eval(this.BillboardWidth);
-                obj.BillboardHeight = eval(this.BillboardHeight);
-                obj.CNAMDataTypeState = eval(this.CNAMDataTypeState);
-                obj.BNAMDataTypeState = eval(this.BNAMDataTypeState);
+                obj.Data = this.Data == null ? null : new MaskItem<R, TreeData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
+                obj.BillboardDimensions = this.BillboardDimensions == null ? null : new MaskItem<R, Dimensions.Mask<R>?>(eval(this.BillboardDimensions.Overall), this.BillboardDimensions.Specific?.Translate(eval));
             }
             #endregion
 
@@ -696,53 +508,13 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.LeafCurvature ?? true)
+                    if (printMask?.Data?.Overall ?? true)
                     {
-                        fg.AppendItem(LeafCurvature, "LeafCurvature");
+                        Data?.ToString(fg);
                     }
-                    if (printMask?.MinimumLeafAngle ?? true)
+                    if (printMask?.BillboardDimensions?.Overall ?? true)
                     {
-                        fg.AppendItem(MinimumLeafAngle, "MinimumLeafAngle");
-                    }
-                    if (printMask?.MaximumLeafAngle ?? true)
-                    {
-                        fg.AppendItem(MaximumLeafAngle, "MaximumLeafAngle");
-                    }
-                    if (printMask?.BranchDimmingValue ?? true)
-                    {
-                        fg.AppendItem(BranchDimmingValue, "BranchDimmingValue");
-                    }
-                    if (printMask?.LeafDimmingValue ?? true)
-                    {
-                        fg.AppendItem(LeafDimmingValue, "LeafDimmingValue");
-                    }
-                    if (printMask?.ShadowRadius ?? true)
-                    {
-                        fg.AppendItem(ShadowRadius, "ShadowRadius");
-                    }
-                    if (printMask?.RockingSpeed ?? true)
-                    {
-                        fg.AppendItem(RockingSpeed, "RockingSpeed");
-                    }
-                    if (printMask?.RustleSpeed ?? true)
-                    {
-                        fg.AppendItem(RustleSpeed, "RustleSpeed");
-                    }
-                    if (printMask?.BillboardWidth ?? true)
-                    {
-                        fg.AppendItem(BillboardWidth, "BillboardWidth");
-                    }
-                    if (printMask?.BillboardHeight ?? true)
-                    {
-                        fg.AppendItem(BillboardHeight, "BillboardHeight");
-                    }
-                    if (printMask?.CNAMDataTypeState ?? true)
-                    {
-                        fg.AppendItem(CNAMDataTypeState, "CNAMDataTypeState");
-                    }
-                    if (printMask?.BNAMDataTypeState ?? true)
-                    {
-                        fg.AppendItem(BNAMDataTypeState, "BNAMDataTypeState");
+                        BillboardDimensions?.ToString(fg);
                     }
                 }
                 fg.AppendLine("]");
@@ -759,18 +531,8 @@ namespace Mutagen.Bethesda.Oblivion
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
             public Exception? Icon;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SpeedTreeSeeds;
-            public Exception? LeafCurvature;
-            public Exception? MinimumLeafAngle;
-            public Exception? MaximumLeafAngle;
-            public Exception? BranchDimmingValue;
-            public Exception? LeafDimmingValue;
-            public Exception? ShadowRadius;
-            public Exception? RockingSpeed;
-            public Exception? RustleSpeed;
-            public Exception? BillboardWidth;
-            public Exception? BillboardHeight;
-            public Exception? CNAMDataTypeState;
-            public Exception? BNAMDataTypeState;
+            public MaskItem<Exception?, TreeData.ErrorMask?>? Data;
+            public MaskItem<Exception?, Dimensions.ErrorMask?>? BillboardDimensions;
             #endregion
 
             #region IErrorMask
@@ -785,30 +547,10 @@ namespace Mutagen.Bethesda.Oblivion
                         return Icon;
                     case Tree_FieldIndex.SpeedTreeSeeds:
                         return SpeedTreeSeeds;
-                    case Tree_FieldIndex.LeafCurvature:
-                        return LeafCurvature;
-                    case Tree_FieldIndex.MinimumLeafAngle:
-                        return MinimumLeafAngle;
-                    case Tree_FieldIndex.MaximumLeafAngle:
-                        return MaximumLeafAngle;
-                    case Tree_FieldIndex.BranchDimmingValue:
-                        return BranchDimmingValue;
-                    case Tree_FieldIndex.LeafDimmingValue:
-                        return LeafDimmingValue;
-                    case Tree_FieldIndex.ShadowRadius:
-                        return ShadowRadius;
-                    case Tree_FieldIndex.RockingSpeed:
-                        return RockingSpeed;
-                    case Tree_FieldIndex.RustleSpeed:
-                        return RustleSpeed;
-                    case Tree_FieldIndex.BillboardWidth:
-                        return BillboardWidth;
-                    case Tree_FieldIndex.BillboardHeight:
-                        return BillboardHeight;
-                    case Tree_FieldIndex.CNAMDataTypeState:
-                        return CNAMDataTypeState;
-                    case Tree_FieldIndex.BNAMDataTypeState:
-                        return BNAMDataTypeState;
+                    case Tree_FieldIndex.Data:
+                        return Data;
+                    case Tree_FieldIndex.BillboardDimensions:
+                        return BillboardDimensions;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -828,41 +570,11 @@ namespace Mutagen.Bethesda.Oblivion
                     case Tree_FieldIndex.SpeedTreeSeeds:
                         this.SpeedTreeSeeds = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case Tree_FieldIndex.LeafCurvature:
-                        this.LeafCurvature = ex;
+                    case Tree_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, TreeData.ErrorMask?>(ex, null);
                         break;
-                    case Tree_FieldIndex.MinimumLeafAngle:
-                        this.MinimumLeafAngle = ex;
-                        break;
-                    case Tree_FieldIndex.MaximumLeafAngle:
-                        this.MaximumLeafAngle = ex;
-                        break;
-                    case Tree_FieldIndex.BranchDimmingValue:
-                        this.BranchDimmingValue = ex;
-                        break;
-                    case Tree_FieldIndex.LeafDimmingValue:
-                        this.LeafDimmingValue = ex;
-                        break;
-                    case Tree_FieldIndex.ShadowRadius:
-                        this.ShadowRadius = ex;
-                        break;
-                    case Tree_FieldIndex.RockingSpeed:
-                        this.RockingSpeed = ex;
-                        break;
-                    case Tree_FieldIndex.RustleSpeed:
-                        this.RustleSpeed = ex;
-                        break;
-                    case Tree_FieldIndex.BillboardWidth:
-                        this.BillboardWidth = ex;
-                        break;
-                    case Tree_FieldIndex.BillboardHeight:
-                        this.BillboardHeight = ex;
-                        break;
-                    case Tree_FieldIndex.CNAMDataTypeState:
-                        this.CNAMDataTypeState = ex;
-                        break;
-                    case Tree_FieldIndex.BNAMDataTypeState:
-                        this.BNAMDataTypeState = ex;
+                    case Tree_FieldIndex.BillboardDimensions:
+                        this.BillboardDimensions = new MaskItem<Exception?, Dimensions.ErrorMask?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -884,41 +596,11 @@ namespace Mutagen.Bethesda.Oblivion
                     case Tree_FieldIndex.SpeedTreeSeeds:
                         this.SpeedTreeSeeds = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case Tree_FieldIndex.LeafCurvature:
-                        this.LeafCurvature = (Exception?)obj;
+                    case Tree_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, TreeData.ErrorMask?>?)obj;
                         break;
-                    case Tree_FieldIndex.MinimumLeafAngle:
-                        this.MinimumLeafAngle = (Exception?)obj;
-                        break;
-                    case Tree_FieldIndex.MaximumLeafAngle:
-                        this.MaximumLeafAngle = (Exception?)obj;
-                        break;
-                    case Tree_FieldIndex.BranchDimmingValue:
-                        this.BranchDimmingValue = (Exception?)obj;
-                        break;
-                    case Tree_FieldIndex.LeafDimmingValue:
-                        this.LeafDimmingValue = (Exception?)obj;
-                        break;
-                    case Tree_FieldIndex.ShadowRadius:
-                        this.ShadowRadius = (Exception?)obj;
-                        break;
-                    case Tree_FieldIndex.RockingSpeed:
-                        this.RockingSpeed = (Exception?)obj;
-                        break;
-                    case Tree_FieldIndex.RustleSpeed:
-                        this.RustleSpeed = (Exception?)obj;
-                        break;
-                    case Tree_FieldIndex.BillboardWidth:
-                        this.BillboardWidth = (Exception?)obj;
-                        break;
-                    case Tree_FieldIndex.BillboardHeight:
-                        this.BillboardHeight = (Exception?)obj;
-                        break;
-                    case Tree_FieldIndex.CNAMDataTypeState:
-                        this.CNAMDataTypeState = (Exception?)obj;
-                        break;
-                    case Tree_FieldIndex.BNAMDataTypeState:
-                        this.BNAMDataTypeState = (Exception?)obj;
+                    case Tree_FieldIndex.BillboardDimensions:
+                        this.BillboardDimensions = (MaskItem<Exception?, Dimensions.ErrorMask?>?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -932,18 +614,8 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Model != null) return true;
                 if (Icon != null) return true;
                 if (SpeedTreeSeeds != null) return true;
-                if (LeafCurvature != null) return true;
-                if (MinimumLeafAngle != null) return true;
-                if (MaximumLeafAngle != null) return true;
-                if (BranchDimmingValue != null) return true;
-                if (LeafDimmingValue != null) return true;
-                if (ShadowRadius != null) return true;
-                if (RockingSpeed != null) return true;
-                if (RustleSpeed != null) return true;
-                if (BillboardWidth != null) return true;
-                if (BillboardHeight != null) return true;
-                if (CNAMDataTypeState != null) return true;
-                if (BNAMDataTypeState != null) return true;
+                if (Data != null) return true;
+                if (BillboardDimensions != null) return true;
                 return false;
             }
             #endregion
@@ -1003,18 +675,8 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     fg.AppendLine("]");
                 }
-                fg.AppendItem(LeafCurvature, "LeafCurvature");
-                fg.AppendItem(MinimumLeafAngle, "MinimumLeafAngle");
-                fg.AppendItem(MaximumLeafAngle, "MaximumLeafAngle");
-                fg.AppendItem(BranchDimmingValue, "BranchDimmingValue");
-                fg.AppendItem(LeafDimmingValue, "LeafDimmingValue");
-                fg.AppendItem(ShadowRadius, "ShadowRadius");
-                fg.AppendItem(RockingSpeed, "RockingSpeed");
-                fg.AppendItem(RustleSpeed, "RustleSpeed");
-                fg.AppendItem(BillboardWidth, "BillboardWidth");
-                fg.AppendItem(BillboardHeight, "BillboardHeight");
-                fg.AppendItem(CNAMDataTypeState, "CNAMDataTypeState");
-                fg.AppendItem(BNAMDataTypeState, "BNAMDataTypeState");
+                Data?.ToString(fg);
+                BillboardDimensions?.ToString(fg);
             }
             #endregion
 
@@ -1026,18 +688,8 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Icon = this.Icon.Combine(rhs.Icon);
                 ret.SpeedTreeSeeds = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SpeedTreeSeeds?.Overall, rhs.SpeedTreeSeeds?.Overall), ExceptionExt.Combine(this.SpeedTreeSeeds?.Specific, rhs.SpeedTreeSeeds?.Specific));
-                ret.LeafCurvature = this.LeafCurvature.Combine(rhs.LeafCurvature);
-                ret.MinimumLeafAngle = this.MinimumLeafAngle.Combine(rhs.MinimumLeafAngle);
-                ret.MaximumLeafAngle = this.MaximumLeafAngle.Combine(rhs.MaximumLeafAngle);
-                ret.BranchDimmingValue = this.BranchDimmingValue.Combine(rhs.BranchDimmingValue);
-                ret.LeafDimmingValue = this.LeafDimmingValue.Combine(rhs.LeafDimmingValue);
-                ret.ShadowRadius = this.ShadowRadius.Combine(rhs.ShadowRadius);
-                ret.RockingSpeed = this.RockingSpeed.Combine(rhs.RockingSpeed);
-                ret.RustleSpeed = this.RustleSpeed.Combine(rhs.RustleSpeed);
-                ret.BillboardWidth = this.BillboardWidth.Combine(rhs.BillboardWidth);
-                ret.BillboardHeight = this.BillboardHeight.Combine(rhs.BillboardHeight);
-                ret.CNAMDataTypeState = this.CNAMDataTypeState.Combine(rhs.CNAMDataTypeState);
-                ret.BNAMDataTypeState = this.BNAMDataTypeState.Combine(rhs.BNAMDataTypeState);
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
+                ret.BillboardDimensions = this.BillboardDimensions.Combine(rhs.BillboardDimensions, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1063,18 +715,8 @@ namespace Mutagen.Bethesda.Oblivion
             public MaskItem<bool, Model.TranslationMask?> Model;
             public bool Icon;
             public bool SpeedTreeSeeds;
-            public bool LeafCurvature;
-            public bool MinimumLeafAngle;
-            public bool MaximumLeafAngle;
-            public bool BranchDimmingValue;
-            public bool LeafDimmingValue;
-            public bool ShadowRadius;
-            public bool RockingSpeed;
-            public bool RustleSpeed;
-            public bool BillboardWidth;
-            public bool BillboardHeight;
-            public bool CNAMDataTypeState;
-            public bool BNAMDataTypeState;
+            public MaskItem<bool, TreeData.TranslationMask?> Data;
+            public MaskItem<bool, Dimensions.TranslationMask?> BillboardDimensions;
             #endregion
 
             #region Ctors
@@ -1084,18 +726,8 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.Icon = defaultOn;
                 this.SpeedTreeSeeds = defaultOn;
-                this.LeafCurvature = defaultOn;
-                this.MinimumLeafAngle = defaultOn;
-                this.MaximumLeafAngle = defaultOn;
-                this.BranchDimmingValue = defaultOn;
-                this.LeafDimmingValue = defaultOn;
-                this.ShadowRadius = defaultOn;
-                this.RockingSpeed = defaultOn;
-                this.RustleSpeed = defaultOn;
-                this.BillboardWidth = defaultOn;
-                this.BillboardHeight = defaultOn;
-                this.CNAMDataTypeState = defaultOn;
-                this.BNAMDataTypeState = defaultOn;
+                this.Data = new MaskItem<bool, TreeData.TranslationMask?>(defaultOn, null);
+                this.BillboardDimensions = new MaskItem<bool, Dimensions.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -1106,34 +738,14 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
                 ret.Add((Icon, null));
                 ret.Add((SpeedTreeSeeds, null));
-                ret.Add((LeafCurvature, null));
-                ret.Add((MinimumLeafAngle, null));
-                ret.Add((MaximumLeafAngle, null));
-                ret.Add((BranchDimmingValue, null));
-                ret.Add((LeafDimmingValue, null));
-                ret.Add((ShadowRadius, null));
-                ret.Add((RockingSpeed, null));
-                ret.Add((RustleSpeed, null));
-                ret.Add((BillboardWidth, null));
-                ret.Add((BillboardHeight, null));
-                ret.Add((CNAMDataTypeState, null));
-                ret.Add((BNAMDataTypeState, null));
+                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((BillboardDimensions?.Overall ?? true, BillboardDimensions?.Specific?.GetCrystal()));
             }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Tree_Registration.TriggeringRecordType;
-        [Flags]
-        public enum CNAMDataType
-        {
-            Has = 1
-        }
-        [Flags]
-        public enum BNAMDataType
-        {
-            Has = 1
-        }
         public Tree(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1216,18 +828,8 @@ namespace Mutagen.Bethesda.Oblivion
         new Model? Model { get; set; }
         new String? Icon { get; set; }
         new ExtendedList<UInt32>? SpeedTreeSeeds { get; set; }
-        new Single LeafCurvature { get; set; }
-        new Single MinimumLeafAngle { get; set; }
-        new Single MaximumLeafAngle { get; set; }
-        new Single BranchDimmingValue { get; set; }
-        new Single LeafDimmingValue { get; set; }
-        new Int32 ShadowRadius { get; set; }
-        new Single RockingSpeed { get; set; }
-        new Single RustleSpeed { get; set; }
-        new Single BillboardWidth { get; set; }
-        new Single BillboardHeight { get; set; }
-        new Tree.CNAMDataType CNAMDataTypeState { get; set; }
-        new Tree.BNAMDataType BNAMDataTypeState { get; set; }
+        new TreeData? Data { get; set; }
+        new Dimensions? BillboardDimensions { get; set; }
     }
 
     public partial interface ITreeInternal :
@@ -1246,18 +848,8 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter? Model { get; }
         String? Icon { get; }
         IReadOnlyList<UInt32>? SpeedTreeSeeds { get; }
-        Single LeafCurvature { get; }
-        Single MinimumLeafAngle { get; }
-        Single MaximumLeafAngle { get; }
-        Single BranchDimmingValue { get; }
-        Single LeafDimmingValue { get; }
-        Int32 ShadowRadius { get; }
-        Single RockingSpeed { get; }
-        Single RustleSpeed { get; }
-        Single BillboardWidth { get; }
-        Single BillboardHeight { get; }
-        Tree.CNAMDataType CNAMDataTypeState { get; }
-        Tree.BNAMDataType BNAMDataTypeState { get; }
+        ITreeDataGetter? Data { get; }
+        IDimensionsGetter? BillboardDimensions { get; }
 
     }
 
@@ -1560,18 +1152,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Model = 5,
         Icon = 6,
         SpeedTreeSeeds = 7,
-        LeafCurvature = 8,
-        MinimumLeafAngle = 9,
-        MaximumLeafAngle = 10,
-        BranchDimmingValue = 11,
-        LeafDimmingValue = 12,
-        ShadowRadius = 13,
-        RockingSpeed = 14,
-        RustleSpeed = 15,
-        BillboardWidth = 16,
-        BillboardHeight = 17,
-        CNAMDataTypeState = 18,
-        BNAMDataTypeState = 19,
+        Data = 8,
+        BillboardDimensions = 9,
     }
     #endregion
 
@@ -1589,9 +1171,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "82606775-b1a1-4c44-9052-b021c5ccc13a";
 
-        public const ushort AdditionalFieldCount = 15;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 20;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(Tree.Mask<>);
 
@@ -1627,30 +1209,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Tree_FieldIndex.Icon;
                 case "SPEEDTREESEEDS":
                     return (ushort)Tree_FieldIndex.SpeedTreeSeeds;
-                case "LEAFCURVATURE":
-                    return (ushort)Tree_FieldIndex.LeafCurvature;
-                case "MINIMUMLEAFANGLE":
-                    return (ushort)Tree_FieldIndex.MinimumLeafAngle;
-                case "MAXIMUMLEAFANGLE":
-                    return (ushort)Tree_FieldIndex.MaximumLeafAngle;
-                case "BRANCHDIMMINGVALUE":
-                    return (ushort)Tree_FieldIndex.BranchDimmingValue;
-                case "LEAFDIMMINGVALUE":
-                    return (ushort)Tree_FieldIndex.LeafDimmingValue;
-                case "SHADOWRADIUS":
-                    return (ushort)Tree_FieldIndex.ShadowRadius;
-                case "ROCKINGSPEED":
-                    return (ushort)Tree_FieldIndex.RockingSpeed;
-                case "RUSTLESPEED":
-                    return (ushort)Tree_FieldIndex.RustleSpeed;
-                case "BILLBOARDWIDTH":
-                    return (ushort)Tree_FieldIndex.BillboardWidth;
-                case "BILLBOARDHEIGHT":
-                    return (ushort)Tree_FieldIndex.BillboardHeight;
-                case "CNAMDATATYPESTATE":
-                    return (ushort)Tree_FieldIndex.CNAMDataTypeState;
-                case "BNAMDATATYPESTATE":
-                    return (ushort)Tree_FieldIndex.BNAMDataTypeState;
+                case "DATA":
+                    return (ushort)Tree_FieldIndex.Data;
+                case "BILLBOARDDIMENSIONS":
+                    return (ushort)Tree_FieldIndex.BillboardDimensions;
                 default:
                     return null;
             }
@@ -1665,18 +1227,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return true;
                 case Tree_FieldIndex.Model:
                 case Tree_FieldIndex.Icon:
-                case Tree_FieldIndex.LeafCurvature:
-                case Tree_FieldIndex.MinimumLeafAngle:
-                case Tree_FieldIndex.MaximumLeafAngle:
-                case Tree_FieldIndex.BranchDimmingValue:
-                case Tree_FieldIndex.LeafDimmingValue:
-                case Tree_FieldIndex.ShadowRadius:
-                case Tree_FieldIndex.RockingSpeed:
-                case Tree_FieldIndex.RustleSpeed:
-                case Tree_FieldIndex.BillboardWidth:
-                case Tree_FieldIndex.BillboardHeight:
-                case Tree_FieldIndex.CNAMDataTypeState:
-                case Tree_FieldIndex.BNAMDataTypeState:
+                case Tree_FieldIndex.Data:
+                case Tree_FieldIndex.BillboardDimensions:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1689,21 +1241,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Tree_FieldIndex.Model:
+                case Tree_FieldIndex.Data:
+                case Tree_FieldIndex.BillboardDimensions:
                     return true;
                 case Tree_FieldIndex.Icon:
                 case Tree_FieldIndex.SpeedTreeSeeds:
-                case Tree_FieldIndex.LeafCurvature:
-                case Tree_FieldIndex.MinimumLeafAngle:
-                case Tree_FieldIndex.MaximumLeafAngle:
-                case Tree_FieldIndex.BranchDimmingValue:
-                case Tree_FieldIndex.LeafDimmingValue:
-                case Tree_FieldIndex.ShadowRadius:
-                case Tree_FieldIndex.RockingSpeed:
-                case Tree_FieldIndex.RustleSpeed:
-                case Tree_FieldIndex.BillboardWidth:
-                case Tree_FieldIndex.BillboardHeight:
-                case Tree_FieldIndex.CNAMDataTypeState:
-                case Tree_FieldIndex.BNAMDataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1718,18 +1260,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Tree_FieldIndex.Model:
                 case Tree_FieldIndex.Icon:
                 case Tree_FieldIndex.SpeedTreeSeeds:
-                case Tree_FieldIndex.LeafCurvature:
-                case Tree_FieldIndex.MinimumLeafAngle:
-                case Tree_FieldIndex.MaximumLeafAngle:
-                case Tree_FieldIndex.BranchDimmingValue:
-                case Tree_FieldIndex.LeafDimmingValue:
-                case Tree_FieldIndex.ShadowRadius:
-                case Tree_FieldIndex.RockingSpeed:
-                case Tree_FieldIndex.RustleSpeed:
-                case Tree_FieldIndex.BillboardWidth:
-                case Tree_FieldIndex.BillboardHeight:
-                case Tree_FieldIndex.CNAMDataTypeState:
-                case Tree_FieldIndex.BNAMDataTypeState:
+                case Tree_FieldIndex.Data:
+                case Tree_FieldIndex.BillboardDimensions:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1747,30 +1279,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Icon";
                 case Tree_FieldIndex.SpeedTreeSeeds:
                     return "SpeedTreeSeeds";
-                case Tree_FieldIndex.LeafCurvature:
-                    return "LeafCurvature";
-                case Tree_FieldIndex.MinimumLeafAngle:
-                    return "MinimumLeafAngle";
-                case Tree_FieldIndex.MaximumLeafAngle:
-                    return "MaximumLeafAngle";
-                case Tree_FieldIndex.BranchDimmingValue:
-                    return "BranchDimmingValue";
-                case Tree_FieldIndex.LeafDimmingValue:
-                    return "LeafDimmingValue";
-                case Tree_FieldIndex.ShadowRadius:
-                    return "ShadowRadius";
-                case Tree_FieldIndex.RockingSpeed:
-                    return "RockingSpeed";
-                case Tree_FieldIndex.RustleSpeed:
-                    return "RustleSpeed";
-                case Tree_FieldIndex.BillboardWidth:
-                    return "BillboardWidth";
-                case Tree_FieldIndex.BillboardHeight:
-                    return "BillboardHeight";
-                case Tree_FieldIndex.CNAMDataTypeState:
-                    return "CNAMDataTypeState";
-                case Tree_FieldIndex.BNAMDataTypeState:
-                    return "BNAMDataTypeState";
+                case Tree_FieldIndex.Data:
+                    return "Data";
+                case Tree_FieldIndex.BillboardDimensions:
+                    return "BillboardDimensions";
                 default:
                     return OblivionMajorRecord_Registration.GetNthName(index);
             }
@@ -1784,18 +1296,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Tree_FieldIndex.Model:
                 case Tree_FieldIndex.Icon:
                 case Tree_FieldIndex.SpeedTreeSeeds:
-                case Tree_FieldIndex.LeafCurvature:
-                case Tree_FieldIndex.MinimumLeafAngle:
-                case Tree_FieldIndex.MaximumLeafAngle:
-                case Tree_FieldIndex.BranchDimmingValue:
-                case Tree_FieldIndex.LeafDimmingValue:
-                case Tree_FieldIndex.ShadowRadius:
-                case Tree_FieldIndex.RockingSpeed:
-                case Tree_FieldIndex.RustleSpeed:
-                case Tree_FieldIndex.BillboardWidth:
-                case Tree_FieldIndex.BillboardHeight:
-                case Tree_FieldIndex.CNAMDataTypeState:
-                case Tree_FieldIndex.BNAMDataTypeState:
+                case Tree_FieldIndex.Data:
+                case Tree_FieldIndex.BillboardDimensions:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsNthDerivative(index);
@@ -1810,18 +1312,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Tree_FieldIndex.Model:
                 case Tree_FieldIndex.Icon:
                 case Tree_FieldIndex.SpeedTreeSeeds:
-                case Tree_FieldIndex.LeafCurvature:
-                case Tree_FieldIndex.MinimumLeafAngle:
-                case Tree_FieldIndex.MaximumLeafAngle:
-                case Tree_FieldIndex.BranchDimmingValue:
-                case Tree_FieldIndex.LeafDimmingValue:
-                case Tree_FieldIndex.ShadowRadius:
-                case Tree_FieldIndex.RockingSpeed:
-                case Tree_FieldIndex.RustleSpeed:
-                case Tree_FieldIndex.BillboardWidth:
-                case Tree_FieldIndex.BillboardHeight:
-                case Tree_FieldIndex.CNAMDataTypeState:
-                case Tree_FieldIndex.BNAMDataTypeState:
+                case Tree_FieldIndex.Data:
+                case Tree_FieldIndex.BillboardDimensions:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsProtected(index);
@@ -1839,30 +1331,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(String);
                 case Tree_FieldIndex.SpeedTreeSeeds:
                     return typeof(ExtendedList<UInt32>);
-                case Tree_FieldIndex.LeafCurvature:
-                    return typeof(Single);
-                case Tree_FieldIndex.MinimumLeafAngle:
-                    return typeof(Single);
-                case Tree_FieldIndex.MaximumLeafAngle:
-                    return typeof(Single);
-                case Tree_FieldIndex.BranchDimmingValue:
-                    return typeof(Single);
-                case Tree_FieldIndex.LeafDimmingValue:
-                    return typeof(Single);
-                case Tree_FieldIndex.ShadowRadius:
-                    return typeof(Int32);
-                case Tree_FieldIndex.RockingSpeed:
-                    return typeof(Single);
-                case Tree_FieldIndex.RustleSpeed:
-                    return typeof(Single);
-                case Tree_FieldIndex.BillboardWidth:
-                    return typeof(Single);
-                case Tree_FieldIndex.BillboardHeight:
-                    return typeof(Single);
-                case Tree_FieldIndex.CNAMDataTypeState:
-                    return typeof(Tree.CNAMDataType);
-                case Tree_FieldIndex.BNAMDataTypeState:
-                    return typeof(Tree.BNAMDataType);
+                case Tree_FieldIndex.Data:
+                    return typeof(TreeData);
+                case Tree_FieldIndex.BillboardDimensions:
+                    return typeof(Dimensions);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -1877,7 +1349,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType BNAM_HEADER = new RecordType("BNAM");
         public static readonly RecordType TriggeringRecordType = TREE_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 3;
+        public const int NumTypedFields = 5;
         public static readonly Type BinaryWriteTranslation = typeof(TreeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1923,18 +1395,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Model = null;
             item.Icon = default;
             item.SpeedTreeSeeds = null;
-            item.LeafCurvature = default;
-            item.MinimumLeafAngle = default;
-            item.MaximumLeafAngle = default;
-            item.BranchDimmingValue = default;
-            item.LeafDimmingValue = default;
-            item.ShadowRadius = default;
-            item.RockingSpeed = default;
-            item.RustleSpeed = default;
-            item.BillboardWidth = default;
-            item.BillboardHeight = default;
-            item.CNAMDataTypeState = default;
-            item.BNAMDataTypeState = default;
+            item.Data = null;
+            item.BillboardDimensions = null;
             base.Clear(item);
         }
         
@@ -1958,12 +1420,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "HasCNAMDataType":
-                    item.CNAMDataTypeState |= Tree.CNAMDataType.Has;
-                    break;
-                case "HasBNAMDataType":
-                    item.BNAMDataTypeState |= Tree.BNAMDataType.Has;
-                    break;
                 default:
                     OblivionMajorRecordSetterCommon.FillPrivateElementXml(
                         item: item,
@@ -2080,33 +1536,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E43: // CNAM
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.CNAMDataTypeState = Tree.CNAMDataType.Has;
-                    }
-                    item.LeafCurvature = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.MinimumLeafAngle = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.MaximumLeafAngle = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.BranchDimmingValue = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.LeafDimmingValue = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.ShadowRadius = dataFrame.ReadInt32();
-                    item.RockingSpeed = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.RustleSpeed = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.RustleSpeed);
+                    item.Data = Mutagen.Bethesda.Oblivion.TreeData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Data);
                 }
                 case 0x4D414E42: // BNAM
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.BNAMDataTypeState = Tree.BNAMDataType.Has;
-                    }
-                    item.BillboardWidth = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.BillboardHeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.BillboardHeight);
+                    item.BillboardDimensions = Mutagen.Bethesda.Oblivion.Dimensions.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.BillboardDimensions);
                 }
                 default:
                     return OblivionMajorRecordSetterCommon.FillBinaryRecordTypes(
@@ -2192,18 +1628,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.SpeedTreeSeeds,
                 (l, r) => l == r,
                 include);
-            ret.LeafCurvature = item.LeafCurvature.EqualsWithin(rhs.LeafCurvature);
-            ret.MinimumLeafAngle = item.MinimumLeafAngle.EqualsWithin(rhs.MinimumLeafAngle);
-            ret.MaximumLeafAngle = item.MaximumLeafAngle.EqualsWithin(rhs.MaximumLeafAngle);
-            ret.BranchDimmingValue = item.BranchDimmingValue.EqualsWithin(rhs.BranchDimmingValue);
-            ret.LeafDimmingValue = item.LeafDimmingValue.EqualsWithin(rhs.LeafDimmingValue);
-            ret.ShadowRadius = item.ShadowRadius == rhs.ShadowRadius;
-            ret.RockingSpeed = item.RockingSpeed.EqualsWithin(rhs.RockingSpeed);
-            ret.RustleSpeed = item.RustleSpeed.EqualsWithin(rhs.RustleSpeed);
-            ret.BillboardWidth = item.BillboardWidth.EqualsWithin(rhs.BillboardWidth);
-            ret.BillboardHeight = item.BillboardHeight.EqualsWithin(rhs.BillboardHeight);
-            ret.CNAMDataTypeState = item.CNAMDataTypeState == rhs.CNAMDataTypeState;
-            ret.BNAMDataTypeState = item.BNAMDataTypeState == rhs.BNAMDataTypeState;
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.BillboardDimensions = EqualsMaskHelper.EqualsHelper(
+                item.BillboardDimensions,
+                rhs.BillboardDimensions,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2284,53 +1718,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.LeafCurvature ?? true)
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data.TryGet(out var DataItem))
             {
-                fg.AppendItem(item.LeafCurvature, "LeafCurvature");
+                DataItem?.ToString(fg, "Data");
             }
-            if (printMask?.MinimumLeafAngle ?? true)
+            if ((printMask?.BillboardDimensions?.Overall ?? true)
+                && item.BillboardDimensions.TryGet(out var BillboardDimensionsItem))
             {
-                fg.AppendItem(item.MinimumLeafAngle, "MinimumLeafAngle");
-            }
-            if (printMask?.MaximumLeafAngle ?? true)
-            {
-                fg.AppendItem(item.MaximumLeafAngle, "MaximumLeafAngle");
-            }
-            if (printMask?.BranchDimmingValue ?? true)
-            {
-                fg.AppendItem(item.BranchDimmingValue, "BranchDimmingValue");
-            }
-            if (printMask?.LeafDimmingValue ?? true)
-            {
-                fg.AppendItem(item.LeafDimmingValue, "LeafDimmingValue");
-            }
-            if (printMask?.ShadowRadius ?? true)
-            {
-                fg.AppendItem(item.ShadowRadius, "ShadowRadius");
-            }
-            if (printMask?.RockingSpeed ?? true)
-            {
-                fg.AppendItem(item.RockingSpeed, "RockingSpeed");
-            }
-            if (printMask?.RustleSpeed ?? true)
-            {
-                fg.AppendItem(item.RustleSpeed, "RustleSpeed");
-            }
-            if (printMask?.BillboardWidth ?? true)
-            {
-                fg.AppendItem(item.BillboardWidth, "BillboardWidth");
-            }
-            if (printMask?.BillboardHeight ?? true)
-            {
-                fg.AppendItem(item.BillboardHeight, "BillboardHeight");
-            }
-            if (printMask?.CNAMDataTypeState ?? true)
-            {
-                fg.AppendItem(item.CNAMDataTypeState, "CNAMDataTypeState");
-            }
-            if (printMask?.BNAMDataTypeState ?? true)
-            {
-                fg.AppendItem(item.BNAMDataTypeState, "BNAMDataTypeState");
+                BillboardDimensionsItem?.ToString(fg, "BillboardDimensions");
             }
         }
         
@@ -2342,6 +1738,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
             if (checkMask.SpeedTreeSeeds?.Overall.HasValue ?? false && checkMask.SpeedTreeSeeds!.Overall.Value != (item.SpeedTreeSeeds != null)) return false;
+            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
+            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
+            if (checkMask.BillboardDimensions?.Overall.HasValue ?? false && checkMask.BillboardDimensions.Overall.Value != (item.BillboardDimensions != null)) return false;
+            if (checkMask.BillboardDimensions?.Specific != null && (item.BillboardDimensions == null || !item.BillboardDimensions.HasBeenSet(checkMask.BillboardDimensions.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -2355,18 +1755,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.Icon = (item.Icon != null);
             mask.SpeedTreeSeeds = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.SpeedTreeSeeds != null), default);
-            mask.LeafCurvature = true;
-            mask.MinimumLeafAngle = true;
-            mask.MaximumLeafAngle = true;
-            mask.BranchDimmingValue = true;
-            mask.LeafDimmingValue = true;
-            mask.ShadowRadius = true;
-            mask.RockingSpeed = true;
-            mask.RustleSpeed = true;
-            mask.BillboardWidth = true;
-            mask.BillboardHeight = true;
-            mask.CNAMDataTypeState = true;
-            mask.BNAMDataTypeState = true;
+            var itemData = item.Data;
+            mask.Data = new MaskItem<bool, TreeData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
+            var itemBillboardDimensions = item.BillboardDimensions;
+            mask.BillboardDimensions = new MaskItem<bool, Dimensions.Mask<bool>?>(itemBillboardDimensions != null, itemBillboardDimensions?.GetHasBeenSetMask());
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -2419,18 +1811,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
             if (!lhs.SpeedTreeSeeds.SequenceEqual(rhs.SpeedTreeSeeds)) return false;
-            if (!lhs.LeafCurvature.EqualsWithin(rhs.LeafCurvature)) return false;
-            if (!lhs.MinimumLeafAngle.EqualsWithin(rhs.MinimumLeafAngle)) return false;
-            if (!lhs.MaximumLeafAngle.EqualsWithin(rhs.MaximumLeafAngle)) return false;
-            if (!lhs.BranchDimmingValue.EqualsWithin(rhs.BranchDimmingValue)) return false;
-            if (!lhs.LeafDimmingValue.EqualsWithin(rhs.LeafDimmingValue)) return false;
-            if (lhs.ShadowRadius != rhs.ShadowRadius) return false;
-            if (!lhs.RockingSpeed.EqualsWithin(rhs.RockingSpeed)) return false;
-            if (!lhs.RustleSpeed.EqualsWithin(rhs.RustleSpeed)) return false;
-            if (!lhs.BillboardWidth.EqualsWithin(rhs.BillboardWidth)) return false;
-            if (!lhs.BillboardHeight.EqualsWithin(rhs.BillboardHeight)) return false;
-            if (lhs.CNAMDataTypeState != rhs.CNAMDataTypeState) return false;
-            if (lhs.BNAMDataTypeState != rhs.BNAMDataTypeState) return false;
+            if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            if (!object.Equals(lhs.BillboardDimensions, rhs.BillboardDimensions)) return false;
             return true;
         }
         
@@ -2464,18 +1846,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 hash.Add(Iconitem);
             }
             hash.Add(item.SpeedTreeSeeds);
-            hash.Add(item.LeafCurvature);
-            hash.Add(item.MinimumLeafAngle);
-            hash.Add(item.MaximumLeafAngle);
-            hash.Add(item.BranchDimmingValue);
-            hash.Add(item.LeafDimmingValue);
-            hash.Add(item.ShadowRadius);
-            hash.Add(item.RockingSpeed);
-            hash.Add(item.RustleSpeed);
-            hash.Add(item.BillboardWidth);
-            hash.Add(item.BillboardHeight);
-            hash.Add(item.CNAMDataTypeState);
-            hash.Add(item.BNAMDataTypeState);
+            if (item.Data.TryGet(out var Dataitem))
+            {
+                hash.Add(Dataitem);
+            }
+            if (item.BillboardDimensions.TryGet(out var BillboardDimensionsitem))
+            {
+                hash.Add(BillboardDimensionsitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2607,53 +1985,57 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafCurvature) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.Data) ?? true))
             {
-                item.LeafCurvature = rhs.LeafCurvature;
+                errorMask?.PushIndex((int)Tree_FieldIndex.Data);
+                try
+                {
+                    if(rhs.Data.TryGet(out var rhsData))
+                    {
+                        item.Data = rhsData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Tree_FieldIndex.Data));
+                    }
+                    else
+                    {
+                        item.Data = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
-            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.MinimumLeafAngle) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.BillboardDimensions) ?? true))
             {
-                item.MinimumLeafAngle = rhs.MinimumLeafAngle;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.MaximumLeafAngle) ?? true))
-            {
-                item.MaximumLeafAngle = rhs.MaximumLeafAngle;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.BranchDimmingValue) ?? true))
-            {
-                item.BranchDimmingValue = rhs.BranchDimmingValue;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafDimmingValue) ?? true))
-            {
-                item.LeafDimmingValue = rhs.LeafDimmingValue;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.ShadowRadius) ?? true))
-            {
-                item.ShadowRadius = rhs.ShadowRadius;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.RockingSpeed) ?? true))
-            {
-                item.RockingSpeed = rhs.RockingSpeed;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.RustleSpeed) ?? true))
-            {
-                item.RustleSpeed = rhs.RustleSpeed;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.BillboardWidth) ?? true))
-            {
-                item.BillboardWidth = rhs.BillboardWidth;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.BillboardHeight) ?? true))
-            {
-                item.BillboardHeight = rhs.BillboardHeight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.CNAMDataTypeState) ?? true))
-            {
-                item.CNAMDataTypeState = rhs.CNAMDataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.BNAMDataTypeState) ?? true))
-            {
-                item.BNAMDataTypeState = rhs.BNAMDataTypeState;
+                errorMask?.PushIndex((int)Tree_FieldIndex.BillboardDimensions);
+                try
+                {
+                    if(rhs.BillboardDimensions.TryGet(out var rhsBillboardDimensions))
+                    {
+                        item.BillboardDimensions = rhsBillboardDimensions.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Tree_FieldIndex.BillboardDimensions));
+                    }
+                    else
+                    {
+                        item.BillboardDimensions = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
         }
         
@@ -2840,119 +2222,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: listSubMask);
                     });
             }
-            if (item.CNAMDataTypeState.HasFlag(Tree.CNAMDataType.Has))
+            if ((item.Data != null)
+                && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.Data) ?? true))
             {
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafCurvature) ?? true))
+                if (item.Data.TryGet(out var DataItem))
                 {
-                    FloatXmlTranslation.Instance.Write(
+                    ((TreeDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                        item: DataItem,
                         node: node,
-                        name: nameof(item.LeafCurvature),
-                        item: item.LeafCurvature,
-                        fieldIndex: (int)Tree_FieldIndex.LeafCurvature,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.MinimumLeafAngle) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.MinimumLeafAngle),
-                        item: item.MinimumLeafAngle,
-                        fieldIndex: (int)Tree_FieldIndex.MinimumLeafAngle,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.MaximumLeafAngle) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.MaximumLeafAngle),
-                        item: item.MaximumLeafAngle,
-                        fieldIndex: (int)Tree_FieldIndex.MaximumLeafAngle,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BranchDimmingValue) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.BranchDimmingValue),
-                        item: item.BranchDimmingValue,
-                        fieldIndex: (int)Tree_FieldIndex.BranchDimmingValue,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafDimmingValue) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.LeafDimmingValue),
-                        item: item.LeafDimmingValue,
-                        fieldIndex: (int)Tree_FieldIndex.LeafDimmingValue,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.ShadowRadius) ?? true))
-                {
-                    Int32XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.ShadowRadius),
-                        item: item.ShadowRadius,
-                        fieldIndex: (int)Tree_FieldIndex.ShadowRadius,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.RockingSpeed) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.RockingSpeed),
-                        item: item.RockingSpeed,
-                        fieldIndex: (int)Tree_FieldIndex.RockingSpeed,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.RustleSpeed) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.RustleSpeed),
-                        item: item.RustleSpeed,
-                        fieldIndex: (int)Tree_FieldIndex.RustleSpeed,
-                        errorMask: errorMask);
+                        name: nameof(item.Data),
+                        fieldIndex: (int)Tree_FieldIndex.Data,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Tree_FieldIndex.Data));
                 }
             }
-            if (item.BNAMDataTypeState.HasFlag(Tree.BNAMDataType.Has))
+            if ((item.BillboardDimensions != null)
+                && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BillboardDimensions) ?? true))
             {
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BillboardWidth) ?? true))
+                if (item.BillboardDimensions.TryGet(out var BillboardDimensionsItem))
                 {
-                    FloatXmlTranslation.Instance.Write(
+                    ((DimensionsXmlWriteTranslation)((IXmlItem)BillboardDimensionsItem).XmlWriteTranslator).Write(
+                        item: BillboardDimensionsItem,
                         node: node,
-                        name: nameof(item.BillboardWidth),
-                        item: item.BillboardWidth,
-                        fieldIndex: (int)Tree_FieldIndex.BillboardWidth,
-                        errorMask: errorMask);
+                        name: nameof(item.BillboardDimensions),
+                        fieldIndex: (int)Tree_FieldIndex.BillboardDimensions,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Tree_FieldIndex.BillboardDimensions));
                 }
-                if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BillboardHeight) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.BillboardHeight),
-                        item: item.BillboardHeight,
-                        fieldIndex: (int)Tree_FieldIndex.BillboardHeight,
-                        errorMask: errorMask);
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.CNAMDataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Tree.CNAMDataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.CNAMDataTypeState),
-                    item: item.CNAMDataTypeState,
-                    fieldIndex: (int)Tree_FieldIndex.CNAMDataTypeState,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BNAMDataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Tree.BNAMDataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.BNAMDataTypeState),
-                    item: item.BNAMDataTypeState,
-                    fieldIndex: (int)Tree_FieldIndex.BNAMDataTypeState,
-                    errorMask: errorMask);
             }
         }
 
@@ -3126,32 +2422,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "LeafCurvature":
-                    errorMask?.PushIndex((int)Tree_FieldIndex.LeafCurvature);
+                case "Data":
+                    errorMask?.PushIndex((int)Tree_FieldIndex.Data);
                     try
                     {
-                        item.LeafCurvature = FloatXmlTranslation.Instance.Parse(
+                        item.Data = LoquiXmlTranslation<TreeData>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.CNAMDataTypeState |= Tree.CNAMDataType.Has;
-                    break;
-                case "MinimumLeafAngle":
-                    errorMask?.PushIndex((int)Tree_FieldIndex.MinimumLeafAngle);
-                    try
-                    {
-                        item.MinimumLeafAngle = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Tree_FieldIndex.Data));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3163,176 +2441,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "MaximumLeafAngle":
-                    errorMask?.PushIndex((int)Tree_FieldIndex.MaximumLeafAngle);
+                case "BillboardDimensions":
+                    errorMask?.PushIndex((int)Tree_FieldIndex.BillboardDimensions);
                     try
                     {
-                        item.MaximumLeafAngle = FloatXmlTranslation.Instance.Parse(
+                        item.BillboardDimensions = LoquiXmlTranslation<Dimensions>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BranchDimmingValue":
-                    errorMask?.PushIndex((int)Tree_FieldIndex.BranchDimmingValue);
-                    try
-                    {
-                        item.BranchDimmingValue = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LeafDimmingValue":
-                    errorMask?.PushIndex((int)Tree_FieldIndex.LeafDimmingValue);
-                    try
-                    {
-                        item.LeafDimmingValue = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ShadowRadius":
-                    errorMask?.PushIndex((int)Tree_FieldIndex.ShadowRadius);
-                    try
-                    {
-                        item.ShadowRadius = Int32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RockingSpeed":
-                    errorMask?.PushIndex((int)Tree_FieldIndex.RockingSpeed);
-                    try
-                    {
-                        item.RockingSpeed = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RustleSpeed":
-                    errorMask?.PushIndex((int)Tree_FieldIndex.RustleSpeed);
-                    try
-                    {
-                        item.RustleSpeed = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BillboardWidth":
-                    errorMask?.PushIndex((int)Tree_FieldIndex.BillboardWidth);
-                    try
-                    {
-                        item.BillboardWidth = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.BNAMDataTypeState |= Tree.BNAMDataType.Has;
-                    break;
-                case "BillboardHeight":
-                    errorMask?.PushIndex((int)Tree_FieldIndex.BillboardHeight);
-                    try
-                    {
-                        item.BillboardHeight = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CNAMDataTypeState":
-                    errorMask?.PushIndex((int)Tree_FieldIndex.CNAMDataTypeState);
-                    try
-                    {
-                        item.CNAMDataTypeState = EnumXmlTranslation<Tree.CNAMDataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BNAMDataTypeState":
-                    errorMask?.PushIndex((int)Tree_FieldIndex.BNAMDataTypeState);
-                    try
-                    {
-                        item.BNAMDataTypeState = EnumXmlTranslation<Tree.BNAMDataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Tree_FieldIndex.BillboardDimensions));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3430,15 +2546,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static TreeBinaryWriteTranslation Instance = new TreeBinaryWriteTranslation();
 
-        public static void WriteEmbedded(
-            ITreeGetter item,
-            MutagenWriter writer)
-        {
-            OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             ITreeGetter item,
             MutagenWriter writer,
@@ -3465,45 +2572,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.SpeedTreeSeeds,
                 recordType: Tree_Registration.SNAM_HEADER,
                 transl: UInt32BinaryTranslation.Instance.Write);
-            if (item.CNAMDataTypeState.HasFlag(Tree.CNAMDataType.Has))
+            if (item.Data.TryGet(out var DataItem))
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Tree_Registration.CNAM_HEADER)))
-                {
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.LeafCurvature);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.MinimumLeafAngle);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.MaximumLeafAngle);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.BranchDimmingValue);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.LeafDimmingValue);
-                    writer.Write(item.ShadowRadius);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.RockingSpeed);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.RustleSpeed);
-                }
+                ((TreeDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                    item: DataItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
-            if (item.BNAMDataTypeState.HasFlag(Tree.BNAMDataType.Has))
+            if (item.BillboardDimensions.TryGet(out var BillboardDimensionsItem))
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Tree_Registration.BNAM_HEADER)))
-                {
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.BillboardWidth);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.BillboardHeight);
-                }
+                ((DimensionsBinaryWriteTranslation)((IBinaryItem)BillboardDimensionsItem).BinaryWriteTranslator).Write(
+                    item: BillboardDimensionsItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
         }
 
@@ -3517,7 +2598,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: recordTypeConverter.ConvertToCustom(Tree_Registration.TREE_HEADER),
                 type: ObjectType.Record))
             {
-                WriteEmbedded(
+                OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -3636,59 +2717,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _IconLocation.Value, _package.Meta)) : default(string?);
         #endregion
         public IReadOnlyList<UInt32>? SpeedTreeSeeds { get; private set; }
-        private int? _CNAMLocation;
-        public Tree.CNAMDataType CNAMDataTypeState { get; private set; }
-        #region LeafCurvature
-        private int _LeafCurvatureLocation => _CNAMLocation!.Value + 0x0;
-        private bool _LeafCurvature_IsSet => _CNAMLocation.HasValue;
-        public Single LeafCurvature => _LeafCurvature_IsSet ? SpanExt.GetFloat(_data.Slice(_LeafCurvatureLocation, 4)) : default;
+        #region Data
+        private RangeInt32? _DataLocation;
+        private bool _Data_IsSet => _DataLocation.HasValue;
+        public ITreeDataGetter? Data => _Data_IsSet ? TreeDataBinaryOverlay.TreeDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
-        #region MinimumLeafAngle
-        private int _MinimumLeafAngleLocation => _CNAMLocation!.Value + 0x4;
-        private bool _MinimumLeafAngle_IsSet => _CNAMLocation.HasValue;
-        public Single MinimumLeafAngle => _MinimumLeafAngle_IsSet ? SpanExt.GetFloat(_data.Slice(_MinimumLeafAngleLocation, 4)) : default;
-        #endregion
-        #region MaximumLeafAngle
-        private int _MaximumLeafAngleLocation => _CNAMLocation!.Value + 0x8;
-        private bool _MaximumLeafAngle_IsSet => _CNAMLocation.HasValue;
-        public Single MaximumLeafAngle => _MaximumLeafAngle_IsSet ? SpanExt.GetFloat(_data.Slice(_MaximumLeafAngleLocation, 4)) : default;
-        #endregion
-        #region BranchDimmingValue
-        private int _BranchDimmingValueLocation => _CNAMLocation!.Value + 0xC;
-        private bool _BranchDimmingValue_IsSet => _CNAMLocation.HasValue;
-        public Single BranchDimmingValue => _BranchDimmingValue_IsSet ? SpanExt.GetFloat(_data.Slice(_BranchDimmingValueLocation, 4)) : default;
-        #endregion
-        #region LeafDimmingValue
-        private int _LeafDimmingValueLocation => _CNAMLocation!.Value + 0x10;
-        private bool _LeafDimmingValue_IsSet => _CNAMLocation.HasValue;
-        public Single LeafDimmingValue => _LeafDimmingValue_IsSet ? SpanExt.GetFloat(_data.Slice(_LeafDimmingValueLocation, 4)) : default;
-        #endregion
-        #region ShadowRadius
-        private int _ShadowRadiusLocation => _CNAMLocation!.Value + 0x14;
-        private bool _ShadowRadius_IsSet => _CNAMLocation.HasValue;
-        public Int32 ShadowRadius => _ShadowRadius_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_ShadowRadiusLocation, 4)) : default;
-        #endregion
-        #region RockingSpeed
-        private int _RockingSpeedLocation => _CNAMLocation!.Value + 0x18;
-        private bool _RockingSpeed_IsSet => _CNAMLocation.HasValue;
-        public Single RockingSpeed => _RockingSpeed_IsSet ? SpanExt.GetFloat(_data.Slice(_RockingSpeedLocation, 4)) : default;
-        #endregion
-        #region RustleSpeed
-        private int _RustleSpeedLocation => _CNAMLocation!.Value + 0x1C;
-        private bool _RustleSpeed_IsSet => _CNAMLocation.HasValue;
-        public Single RustleSpeed => _RustleSpeed_IsSet ? SpanExt.GetFloat(_data.Slice(_RustleSpeedLocation, 4)) : default;
-        #endregion
-        private int? _BNAMLocation;
-        public Tree.BNAMDataType BNAMDataTypeState { get; private set; }
-        #region BillboardWidth
-        private int _BillboardWidthLocation => _BNAMLocation!.Value + 0x0;
-        private bool _BillboardWidth_IsSet => _BNAMLocation.HasValue;
-        public Single BillboardWidth => _BillboardWidth_IsSet ? SpanExt.GetFloat(_data.Slice(_BillboardWidthLocation, 4)) : default;
-        #endregion
-        #region BillboardHeight
-        private int _BillboardHeightLocation => _BNAMLocation!.Value + 0x4;
-        private bool _BillboardHeight_IsSet => _BNAMLocation.HasValue;
-        public Single BillboardHeight => _BillboardHeight_IsSet ? SpanExt.GetFloat(_data.Slice(_BillboardHeightLocation, 4)) : default;
+        #region BillboardDimensions
+        private RangeInt32? _BillboardDimensionsLocation;
+        private bool _BillboardDimensions_IsSet => _BillboardDimensionsLocation.HasValue;
+        public IDimensionsGetter? BillboardDimensions => _BillboardDimensions_IsSet ? DimensionsBinaryOverlay.DimensionsFactory(new BinaryMemoryReadStream(_data.Slice(_BillboardDimensionsLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool BillboardDimensions_IsSet => _BillboardDimensionsLocation.HasValue;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
@@ -3767,15 +2806,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4D414E43: // CNAM
                 {
-                    _CNAMLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
-                    this.CNAMDataTypeState = Tree.CNAMDataType.Has;
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.RustleSpeed);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Data);
                 }
                 case 0x4D414E42: // BNAM
                 {
-                    _BNAMLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
-                    this.BNAMDataTypeState = Tree.BNAMDataType.Has;
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.BillboardHeight);
+                    _BillboardDimensionsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.BillboardDimensions);
                 }
                 default:
                     return base.FillRecordType(

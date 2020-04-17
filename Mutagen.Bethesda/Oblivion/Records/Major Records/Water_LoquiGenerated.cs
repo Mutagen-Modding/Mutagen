@@ -15,7 +15,6 @@ using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Drawing;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -100,401 +99,16 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundGetter> IWaterGetter.Sound => this.Sound;
         #endregion
-        #region WindVelocity
+        #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _WindVelocity;
-        public Single WindVelocity
+        private WaterData? _Data;
+        public WaterData? Data
         {
-            get => this._WindVelocity;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this._WindVelocity = value;
-            }
+            get => _Data;
+            set => _Data = value;
         }
-        #endregion
-        #region WindDirection
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _WindDirection;
-        public Single WindDirection
-        {
-            get => this._WindDirection;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this._WindDirection = value;
-            }
-        }
-        #endregion
-        #region WaveAmplitude
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _WaveAmplitude;
-        public Single WaveAmplitude
-        {
-            get => this._WaveAmplitude;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this._WaveAmplitude = value;
-            }
-        }
-        #endregion
-        #region WaveFrequency
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _WaveFrequency;
-        public Single WaveFrequency
-        {
-            get => this._WaveFrequency;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this._WaveFrequency = value;
-            }
-        }
-        #endregion
-        #region SunPower
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _SunPower;
-        public Single SunPower
-        {
-            get => this._SunPower;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this._SunPower = value;
-            }
-        }
-        #endregion
-        #region ReflectivityAmount
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _ReflectivityAmount;
-        public Single ReflectivityAmount
-        {
-            get => this._ReflectivityAmount;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this._ReflectivityAmount = value;
-            }
-        }
-        #endregion
-        #region FresnelAmount
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _FresnelAmount;
-        public Single FresnelAmount
-        {
-            get => this._FresnelAmount;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this._FresnelAmount = value;
-            }
-        }
-        #endregion
-        #region ScrollXSpeed
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _ScrollXSpeed;
-        public Single ScrollXSpeed
-        {
-            get => this._ScrollXSpeed;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this._ScrollXSpeed = value;
-            }
-        }
-        #endregion
-        #region ScrollYSpeed
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _ScrollYSpeed;
-        public Single ScrollYSpeed
-        {
-            get => this._ScrollYSpeed;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this._ScrollYSpeed = value;
-            }
-        }
-        #endregion
-        #region FogDistanceNearPlane
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _FogDistanceNearPlane;
-        public Single FogDistanceNearPlane
-        {
-            get => this._FogDistanceNearPlane;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this._FogDistanceNearPlane = value;
-            }
-        }
-        #endregion
-        #region FogDistanceFarPlane
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _FogDistanceFarPlane;
-        public Single FogDistanceFarPlane
-        {
-            get => this._FogDistanceFarPlane;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this.DATADataTypeState &= ~DATADataType.Break1;
-                this._FogDistanceFarPlane = value;
-            }
-        }
-        #endregion
-        #region ShallowColor
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Color _ShallowColor;
-        public Color ShallowColor
-        {
-            get => this._ShallowColor;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this.DATADataTypeState &= ~DATADataType.Break1;
-                this._ShallowColor = value;
-            }
-        }
-        #endregion
-        #region DeepColor
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Color _DeepColor;
-        public Color DeepColor
-        {
-            get => this._DeepColor;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this.DATADataTypeState &= ~DATADataType.Break1;
-                this._DeepColor = value;
-            }
-        }
-        #endregion
-        #region ReflectionColor
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Color _ReflectionColor;
-        public Color ReflectionColor
-        {
-            get => this._ReflectionColor;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this.DATADataTypeState &= ~DATADataType.Break1;
-                this._ReflectionColor = value;
-            }
-        }
-        #endregion
-        #region TextureBlend
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _TextureBlend;
-        public Byte TextureBlend
-        {
-            get => this._TextureBlend;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this.DATADataTypeState &= ~DATADataType.Break1;
-                this._TextureBlend = value;
-            }
-        }
-        #endregion
-        #region RainSimulatorForce
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _RainSimulatorForce;
-        public Single RainSimulatorForce
-        {
-            get => this._RainSimulatorForce;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this.DATADataTypeState &= ~DATADataType.Break1;
-                this.DATADataTypeState &= ~DATADataType.Break2;
-                this._RainSimulatorForce = value;
-            }
-        }
-        #endregion
-        #region RainSimulatorVelocity
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _RainSimulatorVelocity;
-        public Single RainSimulatorVelocity
-        {
-            get => this._RainSimulatorVelocity;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this.DATADataTypeState &= ~DATADataType.Break1;
-                this.DATADataTypeState &= ~DATADataType.Break2;
-                this._RainSimulatorVelocity = value;
-            }
-        }
-        #endregion
-        #region RainSimulatorFalloff
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _RainSimulatorFalloff;
-        public Single RainSimulatorFalloff
-        {
-            get => this._RainSimulatorFalloff;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this.DATADataTypeState &= ~DATADataType.Break1;
-                this.DATADataTypeState &= ~DATADataType.Break2;
-                this._RainSimulatorFalloff = value;
-            }
-        }
-        #endregion
-        #region RainSimulatorDampner
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _RainSimulatorDampner;
-        public Single RainSimulatorDampner
-        {
-            get => this._RainSimulatorDampner;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this.DATADataTypeState &= ~DATADataType.Break1;
-                this.DATADataTypeState &= ~DATADataType.Break2;
-                this._RainSimulatorDampner = value;
-            }
-        }
-        #endregion
-        #region RainSimulatorStartingSize
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _RainSimulatorStartingSize;
-        public Single RainSimulatorStartingSize
-        {
-            get => this._RainSimulatorStartingSize;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this.DATADataTypeState &= ~DATADataType.Break1;
-                this.DATADataTypeState &= ~DATADataType.Break2;
-                this._RainSimulatorStartingSize = value;
-            }
-        }
-        #endregion
-        #region DisplacementSimulatorForce
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _DisplacementSimulatorForce;
-        public Single DisplacementSimulatorForce
-        {
-            get => this._DisplacementSimulatorForce;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this.DATADataTypeState &= ~DATADataType.Break1;
-                this.DATADataTypeState &= ~DATADataType.Break2;
-                this._DisplacementSimulatorForce = value;
-            }
-        }
-        #endregion
-        #region DisplacementSimulatorVelocity
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _DisplacementSimulatorVelocity;
-        public Single DisplacementSimulatorVelocity
-        {
-            get => this._DisplacementSimulatorVelocity;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this.DATADataTypeState &= ~DATADataType.Break1;
-                this.DATADataTypeState &= ~DATADataType.Break2;
-                this.DATADataTypeState &= ~DATADataType.Break3;
-                this._DisplacementSimulatorVelocity = value;
-            }
-        }
-        #endregion
-        #region DisplacementSimulatorFalloff
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _DisplacementSimulatorFalloff;
-        public Single DisplacementSimulatorFalloff
-        {
-            get => this._DisplacementSimulatorFalloff;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this.DATADataTypeState &= ~DATADataType.Break1;
-                this.DATADataTypeState &= ~DATADataType.Break2;
-                this.DATADataTypeState &= ~DATADataType.Break3;
-                this._DisplacementSimulatorFalloff = value;
-            }
-        }
-        #endregion
-        #region DisplacementSimulatorDampner
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _DisplacementSimulatorDampner;
-        public Single DisplacementSimulatorDampner
-        {
-            get => this._DisplacementSimulatorDampner;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this.DATADataTypeState &= ~DATADataType.Break1;
-                this.DATADataTypeState &= ~DATADataType.Break2;
-                this.DATADataTypeState &= ~DATADataType.Break3;
-                this._DisplacementSimulatorDampner = value;
-            }
-        }
-        #endregion
-        #region DisplacementSimulatorStartingSize
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _DisplacementSimulatorStartingSize;
-        public Single DisplacementSimulatorStartingSize
-        {
-            get => this._DisplacementSimulatorStartingSize;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this.DATADataTypeState &= ~DATADataType.Break1;
-                this.DATADataTypeState &= ~DATADataType.Break2;
-                this.DATADataTypeState &= ~DATADataType.Break3;
-                this._DisplacementSimulatorStartingSize = value;
-            }
-        }
-        #endregion
-        #region Damage
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt16 _Damage;
-        public UInt16 Damage
-        {
-            get => this._Damage;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this.DATADataTypeState &= ~DATADataType.Break1;
-                this.DATADataTypeState &= ~DATADataType.Break2;
-                this.DATADataTypeState &= ~DATADataType.Break3;
-                this._Damage = value;
-            }
-        }
+        IWaterDataGetter? IWaterGetter.Data => this.Data;
         #endregion
         #region RelatedWaters
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -506,9 +120,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IRelatedWatersGetter? IWaterGetter.RelatedWaters => this.RelatedWaters;
-        #endregion
-        #region DATADataTypeState
-        public Water.DATADataType DATADataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -685,34 +296,8 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Flags = initialValue;
                 this.MaterialID = initialValue;
                 this.Sound = initialValue;
-                this.WindVelocity = initialValue;
-                this.WindDirection = initialValue;
-                this.WaveAmplitude = initialValue;
-                this.WaveFrequency = initialValue;
-                this.SunPower = initialValue;
-                this.ReflectivityAmount = initialValue;
-                this.FresnelAmount = initialValue;
-                this.ScrollXSpeed = initialValue;
-                this.ScrollYSpeed = initialValue;
-                this.FogDistanceNearPlane = initialValue;
-                this.FogDistanceFarPlane = initialValue;
-                this.ShallowColor = initialValue;
-                this.DeepColor = initialValue;
-                this.ReflectionColor = initialValue;
-                this.TextureBlend = initialValue;
-                this.RainSimulatorForce = initialValue;
-                this.RainSimulatorVelocity = initialValue;
-                this.RainSimulatorFalloff = initialValue;
-                this.RainSimulatorDampner = initialValue;
-                this.RainSimulatorStartingSize = initialValue;
-                this.DisplacementSimulatorForce = initialValue;
-                this.DisplacementSimulatorVelocity = initialValue;
-                this.DisplacementSimulatorFalloff = initialValue;
-                this.DisplacementSimulatorDampner = initialValue;
-                this.DisplacementSimulatorStartingSize = initialValue;
-                this.Damage = initialValue;
+                this.Data = new MaskItem<TItem, WaterData.Mask<TItem>?>(initialValue, new WaterData.Mask<TItem>(initialValue));
                 this.RelatedWaters = new MaskItem<TItem, RelatedWaters.Mask<TItem>?>(initialValue, new RelatedWaters.Mask<TItem>(initialValue));
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -726,34 +311,8 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Flags,
                 TItem MaterialID,
                 TItem Sound,
-                TItem WindVelocity,
-                TItem WindDirection,
-                TItem WaveAmplitude,
-                TItem WaveFrequency,
-                TItem SunPower,
-                TItem ReflectivityAmount,
-                TItem FresnelAmount,
-                TItem ScrollXSpeed,
-                TItem ScrollYSpeed,
-                TItem FogDistanceNearPlane,
-                TItem FogDistanceFarPlane,
-                TItem ShallowColor,
-                TItem DeepColor,
-                TItem ReflectionColor,
-                TItem TextureBlend,
-                TItem RainSimulatorForce,
-                TItem RainSimulatorVelocity,
-                TItem RainSimulatorFalloff,
-                TItem RainSimulatorDampner,
-                TItem RainSimulatorStartingSize,
-                TItem DisplacementSimulatorForce,
-                TItem DisplacementSimulatorVelocity,
-                TItem DisplacementSimulatorFalloff,
-                TItem DisplacementSimulatorDampner,
-                TItem DisplacementSimulatorStartingSize,
-                TItem Damage,
-                TItem RelatedWaters,
-                TItem DATADataTypeState)
+                TItem Data,
+                TItem RelatedWaters)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -766,34 +325,8 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Flags = Flags;
                 this.MaterialID = MaterialID;
                 this.Sound = Sound;
-                this.WindVelocity = WindVelocity;
-                this.WindDirection = WindDirection;
-                this.WaveAmplitude = WaveAmplitude;
-                this.WaveFrequency = WaveFrequency;
-                this.SunPower = SunPower;
-                this.ReflectivityAmount = ReflectivityAmount;
-                this.FresnelAmount = FresnelAmount;
-                this.ScrollXSpeed = ScrollXSpeed;
-                this.ScrollYSpeed = ScrollYSpeed;
-                this.FogDistanceNearPlane = FogDistanceNearPlane;
-                this.FogDistanceFarPlane = FogDistanceFarPlane;
-                this.ShallowColor = ShallowColor;
-                this.DeepColor = DeepColor;
-                this.ReflectionColor = ReflectionColor;
-                this.TextureBlend = TextureBlend;
-                this.RainSimulatorForce = RainSimulatorForce;
-                this.RainSimulatorVelocity = RainSimulatorVelocity;
-                this.RainSimulatorFalloff = RainSimulatorFalloff;
-                this.RainSimulatorDampner = RainSimulatorDampner;
-                this.RainSimulatorStartingSize = RainSimulatorStartingSize;
-                this.DisplacementSimulatorForce = DisplacementSimulatorForce;
-                this.DisplacementSimulatorVelocity = DisplacementSimulatorVelocity;
-                this.DisplacementSimulatorFalloff = DisplacementSimulatorFalloff;
-                this.DisplacementSimulatorDampner = DisplacementSimulatorDampner;
-                this.DisplacementSimulatorStartingSize = DisplacementSimulatorStartingSize;
-                this.Damage = Damage;
+                this.Data = new MaskItem<TItem, WaterData.Mask<TItem>?>(Data, new WaterData.Mask<TItem>(Data));
                 this.RelatedWaters = new MaskItem<TItem, RelatedWaters.Mask<TItem>?>(RelatedWaters, new RelatedWaters.Mask<TItem>(RelatedWaters));
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -810,34 +343,8 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem Flags;
             public TItem MaterialID;
             public TItem Sound;
-            public TItem WindVelocity;
-            public TItem WindDirection;
-            public TItem WaveAmplitude;
-            public TItem WaveFrequency;
-            public TItem SunPower;
-            public TItem ReflectivityAmount;
-            public TItem FresnelAmount;
-            public TItem ScrollXSpeed;
-            public TItem ScrollYSpeed;
-            public TItem FogDistanceNearPlane;
-            public TItem FogDistanceFarPlane;
-            public TItem ShallowColor;
-            public TItem DeepColor;
-            public TItem ReflectionColor;
-            public TItem TextureBlend;
-            public TItem RainSimulatorForce;
-            public TItem RainSimulatorVelocity;
-            public TItem RainSimulatorFalloff;
-            public TItem RainSimulatorDampner;
-            public TItem RainSimulatorStartingSize;
-            public TItem DisplacementSimulatorForce;
-            public TItem DisplacementSimulatorVelocity;
-            public TItem DisplacementSimulatorFalloff;
-            public TItem DisplacementSimulatorDampner;
-            public TItem DisplacementSimulatorStartingSize;
-            public TItem Damage;
+            public MaskItem<TItem, WaterData.Mask<TItem>?>? Data { get; set; }
             public MaskItem<TItem, RelatedWaters.Mask<TItem>?>? RelatedWaters { get; set; }
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -856,34 +363,8 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.MaterialID, rhs.MaterialID)) return false;
                 if (!object.Equals(this.Sound, rhs.Sound)) return false;
-                if (!object.Equals(this.WindVelocity, rhs.WindVelocity)) return false;
-                if (!object.Equals(this.WindDirection, rhs.WindDirection)) return false;
-                if (!object.Equals(this.WaveAmplitude, rhs.WaveAmplitude)) return false;
-                if (!object.Equals(this.WaveFrequency, rhs.WaveFrequency)) return false;
-                if (!object.Equals(this.SunPower, rhs.SunPower)) return false;
-                if (!object.Equals(this.ReflectivityAmount, rhs.ReflectivityAmount)) return false;
-                if (!object.Equals(this.FresnelAmount, rhs.FresnelAmount)) return false;
-                if (!object.Equals(this.ScrollXSpeed, rhs.ScrollXSpeed)) return false;
-                if (!object.Equals(this.ScrollYSpeed, rhs.ScrollYSpeed)) return false;
-                if (!object.Equals(this.FogDistanceNearPlane, rhs.FogDistanceNearPlane)) return false;
-                if (!object.Equals(this.FogDistanceFarPlane, rhs.FogDistanceFarPlane)) return false;
-                if (!object.Equals(this.ShallowColor, rhs.ShallowColor)) return false;
-                if (!object.Equals(this.DeepColor, rhs.DeepColor)) return false;
-                if (!object.Equals(this.ReflectionColor, rhs.ReflectionColor)) return false;
-                if (!object.Equals(this.TextureBlend, rhs.TextureBlend)) return false;
-                if (!object.Equals(this.RainSimulatorForce, rhs.RainSimulatorForce)) return false;
-                if (!object.Equals(this.RainSimulatorVelocity, rhs.RainSimulatorVelocity)) return false;
-                if (!object.Equals(this.RainSimulatorFalloff, rhs.RainSimulatorFalloff)) return false;
-                if (!object.Equals(this.RainSimulatorDampner, rhs.RainSimulatorDampner)) return false;
-                if (!object.Equals(this.RainSimulatorStartingSize, rhs.RainSimulatorStartingSize)) return false;
-                if (!object.Equals(this.DisplacementSimulatorForce, rhs.DisplacementSimulatorForce)) return false;
-                if (!object.Equals(this.DisplacementSimulatorVelocity, rhs.DisplacementSimulatorVelocity)) return false;
-                if (!object.Equals(this.DisplacementSimulatorFalloff, rhs.DisplacementSimulatorFalloff)) return false;
-                if (!object.Equals(this.DisplacementSimulatorDampner, rhs.DisplacementSimulatorDampner)) return false;
-                if (!object.Equals(this.DisplacementSimulatorStartingSize, rhs.DisplacementSimulatorStartingSize)) return false;
-                if (!object.Equals(this.Damage, rhs.Damage)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
                 if (!object.Equals(this.RelatedWaters, rhs.RelatedWaters)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -894,34 +375,8 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.Flags);
                 hash.Add(this.MaterialID);
                 hash.Add(this.Sound);
-                hash.Add(this.WindVelocity);
-                hash.Add(this.WindDirection);
-                hash.Add(this.WaveAmplitude);
-                hash.Add(this.WaveFrequency);
-                hash.Add(this.SunPower);
-                hash.Add(this.ReflectivityAmount);
-                hash.Add(this.FresnelAmount);
-                hash.Add(this.ScrollXSpeed);
-                hash.Add(this.ScrollYSpeed);
-                hash.Add(this.FogDistanceNearPlane);
-                hash.Add(this.FogDistanceFarPlane);
-                hash.Add(this.ShallowColor);
-                hash.Add(this.DeepColor);
-                hash.Add(this.ReflectionColor);
-                hash.Add(this.TextureBlend);
-                hash.Add(this.RainSimulatorForce);
-                hash.Add(this.RainSimulatorVelocity);
-                hash.Add(this.RainSimulatorFalloff);
-                hash.Add(this.RainSimulatorDampner);
-                hash.Add(this.RainSimulatorStartingSize);
-                hash.Add(this.DisplacementSimulatorForce);
-                hash.Add(this.DisplacementSimulatorVelocity);
-                hash.Add(this.DisplacementSimulatorFalloff);
-                hash.Add(this.DisplacementSimulatorDampner);
-                hash.Add(this.DisplacementSimulatorStartingSize);
-                hash.Add(this.Damage);
+                hash.Add(this.Data);
                 hash.Add(this.RelatedWaters);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -937,38 +392,16 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.MaterialID)) return false;
                 if (!eval(this.Sound)) return false;
-                if (!eval(this.WindVelocity)) return false;
-                if (!eval(this.WindDirection)) return false;
-                if (!eval(this.WaveAmplitude)) return false;
-                if (!eval(this.WaveFrequency)) return false;
-                if (!eval(this.SunPower)) return false;
-                if (!eval(this.ReflectivityAmount)) return false;
-                if (!eval(this.FresnelAmount)) return false;
-                if (!eval(this.ScrollXSpeed)) return false;
-                if (!eval(this.ScrollYSpeed)) return false;
-                if (!eval(this.FogDistanceNearPlane)) return false;
-                if (!eval(this.FogDistanceFarPlane)) return false;
-                if (!eval(this.ShallowColor)) return false;
-                if (!eval(this.DeepColor)) return false;
-                if (!eval(this.ReflectionColor)) return false;
-                if (!eval(this.TextureBlend)) return false;
-                if (!eval(this.RainSimulatorForce)) return false;
-                if (!eval(this.RainSimulatorVelocity)) return false;
-                if (!eval(this.RainSimulatorFalloff)) return false;
-                if (!eval(this.RainSimulatorDampner)) return false;
-                if (!eval(this.RainSimulatorStartingSize)) return false;
-                if (!eval(this.DisplacementSimulatorForce)) return false;
-                if (!eval(this.DisplacementSimulatorVelocity)) return false;
-                if (!eval(this.DisplacementSimulatorFalloff)) return false;
-                if (!eval(this.DisplacementSimulatorDampner)) return false;
-                if (!eval(this.DisplacementSimulatorStartingSize)) return false;
-                if (!eval(this.Damage)) return false;
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
                 if (RelatedWaters != null)
                 {
                     if (!eval(this.RelatedWaters.Overall)) return false;
                     if (this.RelatedWaters.Specific != null && !this.RelatedWaters.Specific.All(eval)) return false;
                 }
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -982,38 +415,16 @@ namespace Mutagen.Bethesda.Oblivion
                 if (eval(this.Flags)) return true;
                 if (eval(this.MaterialID)) return true;
                 if (eval(this.Sound)) return true;
-                if (eval(this.WindVelocity)) return true;
-                if (eval(this.WindDirection)) return true;
-                if (eval(this.WaveAmplitude)) return true;
-                if (eval(this.WaveFrequency)) return true;
-                if (eval(this.SunPower)) return true;
-                if (eval(this.ReflectivityAmount)) return true;
-                if (eval(this.FresnelAmount)) return true;
-                if (eval(this.ScrollXSpeed)) return true;
-                if (eval(this.ScrollYSpeed)) return true;
-                if (eval(this.FogDistanceNearPlane)) return true;
-                if (eval(this.FogDistanceFarPlane)) return true;
-                if (eval(this.ShallowColor)) return true;
-                if (eval(this.DeepColor)) return true;
-                if (eval(this.ReflectionColor)) return true;
-                if (eval(this.TextureBlend)) return true;
-                if (eval(this.RainSimulatorForce)) return true;
-                if (eval(this.RainSimulatorVelocity)) return true;
-                if (eval(this.RainSimulatorFalloff)) return true;
-                if (eval(this.RainSimulatorDampner)) return true;
-                if (eval(this.RainSimulatorStartingSize)) return true;
-                if (eval(this.DisplacementSimulatorForce)) return true;
-                if (eval(this.DisplacementSimulatorVelocity)) return true;
-                if (eval(this.DisplacementSimulatorFalloff)) return true;
-                if (eval(this.DisplacementSimulatorDampner)) return true;
-                if (eval(this.DisplacementSimulatorStartingSize)) return true;
-                if (eval(this.Damage)) return true;
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
                 if (RelatedWaters != null)
                 {
                     if (eval(this.RelatedWaters.Overall)) return true;
                     if (this.RelatedWaters.Specific != null && this.RelatedWaters.Specific.Any(eval)) return true;
                 }
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -1034,34 +445,8 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Flags = eval(this.Flags);
                 obj.MaterialID = eval(this.MaterialID);
                 obj.Sound = eval(this.Sound);
-                obj.WindVelocity = eval(this.WindVelocity);
-                obj.WindDirection = eval(this.WindDirection);
-                obj.WaveAmplitude = eval(this.WaveAmplitude);
-                obj.WaveFrequency = eval(this.WaveFrequency);
-                obj.SunPower = eval(this.SunPower);
-                obj.ReflectivityAmount = eval(this.ReflectivityAmount);
-                obj.FresnelAmount = eval(this.FresnelAmount);
-                obj.ScrollXSpeed = eval(this.ScrollXSpeed);
-                obj.ScrollYSpeed = eval(this.ScrollYSpeed);
-                obj.FogDistanceNearPlane = eval(this.FogDistanceNearPlane);
-                obj.FogDistanceFarPlane = eval(this.FogDistanceFarPlane);
-                obj.ShallowColor = eval(this.ShallowColor);
-                obj.DeepColor = eval(this.DeepColor);
-                obj.ReflectionColor = eval(this.ReflectionColor);
-                obj.TextureBlend = eval(this.TextureBlend);
-                obj.RainSimulatorForce = eval(this.RainSimulatorForce);
-                obj.RainSimulatorVelocity = eval(this.RainSimulatorVelocity);
-                obj.RainSimulatorFalloff = eval(this.RainSimulatorFalloff);
-                obj.RainSimulatorDampner = eval(this.RainSimulatorDampner);
-                obj.RainSimulatorStartingSize = eval(this.RainSimulatorStartingSize);
-                obj.DisplacementSimulatorForce = eval(this.DisplacementSimulatorForce);
-                obj.DisplacementSimulatorVelocity = eval(this.DisplacementSimulatorVelocity);
-                obj.DisplacementSimulatorFalloff = eval(this.DisplacementSimulatorFalloff);
-                obj.DisplacementSimulatorDampner = eval(this.DisplacementSimulatorDampner);
-                obj.DisplacementSimulatorStartingSize = eval(this.DisplacementSimulatorStartingSize);
-                obj.Damage = eval(this.Damage);
+                obj.Data = this.Data == null ? null : new MaskItem<R, WaterData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
                 obj.RelatedWaters = this.RelatedWaters == null ? null : new MaskItem<R, RelatedWaters.Mask<R>?>(eval(this.RelatedWaters.Overall), this.RelatedWaters.Specific?.Translate(eval));
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -1104,117 +489,13 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendItem(Sound, "Sound");
                     }
-                    if (printMask?.WindVelocity ?? true)
+                    if (printMask?.Data?.Overall ?? true)
                     {
-                        fg.AppendItem(WindVelocity, "WindVelocity");
-                    }
-                    if (printMask?.WindDirection ?? true)
-                    {
-                        fg.AppendItem(WindDirection, "WindDirection");
-                    }
-                    if (printMask?.WaveAmplitude ?? true)
-                    {
-                        fg.AppendItem(WaveAmplitude, "WaveAmplitude");
-                    }
-                    if (printMask?.WaveFrequency ?? true)
-                    {
-                        fg.AppendItem(WaveFrequency, "WaveFrequency");
-                    }
-                    if (printMask?.SunPower ?? true)
-                    {
-                        fg.AppendItem(SunPower, "SunPower");
-                    }
-                    if (printMask?.ReflectivityAmount ?? true)
-                    {
-                        fg.AppendItem(ReflectivityAmount, "ReflectivityAmount");
-                    }
-                    if (printMask?.FresnelAmount ?? true)
-                    {
-                        fg.AppendItem(FresnelAmount, "FresnelAmount");
-                    }
-                    if (printMask?.ScrollXSpeed ?? true)
-                    {
-                        fg.AppendItem(ScrollXSpeed, "ScrollXSpeed");
-                    }
-                    if (printMask?.ScrollYSpeed ?? true)
-                    {
-                        fg.AppendItem(ScrollYSpeed, "ScrollYSpeed");
-                    }
-                    if (printMask?.FogDistanceNearPlane ?? true)
-                    {
-                        fg.AppendItem(FogDistanceNearPlane, "FogDistanceNearPlane");
-                    }
-                    if (printMask?.FogDistanceFarPlane ?? true)
-                    {
-                        fg.AppendItem(FogDistanceFarPlane, "FogDistanceFarPlane");
-                    }
-                    if (printMask?.ShallowColor ?? true)
-                    {
-                        fg.AppendItem(ShallowColor, "ShallowColor");
-                    }
-                    if (printMask?.DeepColor ?? true)
-                    {
-                        fg.AppendItem(DeepColor, "DeepColor");
-                    }
-                    if (printMask?.ReflectionColor ?? true)
-                    {
-                        fg.AppendItem(ReflectionColor, "ReflectionColor");
-                    }
-                    if (printMask?.TextureBlend ?? true)
-                    {
-                        fg.AppendItem(TextureBlend, "TextureBlend");
-                    }
-                    if (printMask?.RainSimulatorForce ?? true)
-                    {
-                        fg.AppendItem(RainSimulatorForce, "RainSimulatorForce");
-                    }
-                    if (printMask?.RainSimulatorVelocity ?? true)
-                    {
-                        fg.AppendItem(RainSimulatorVelocity, "RainSimulatorVelocity");
-                    }
-                    if (printMask?.RainSimulatorFalloff ?? true)
-                    {
-                        fg.AppendItem(RainSimulatorFalloff, "RainSimulatorFalloff");
-                    }
-                    if (printMask?.RainSimulatorDampner ?? true)
-                    {
-                        fg.AppendItem(RainSimulatorDampner, "RainSimulatorDampner");
-                    }
-                    if (printMask?.RainSimulatorStartingSize ?? true)
-                    {
-                        fg.AppendItem(RainSimulatorStartingSize, "RainSimulatorStartingSize");
-                    }
-                    if (printMask?.DisplacementSimulatorForce ?? true)
-                    {
-                        fg.AppendItem(DisplacementSimulatorForce, "DisplacementSimulatorForce");
-                    }
-                    if (printMask?.DisplacementSimulatorVelocity ?? true)
-                    {
-                        fg.AppendItem(DisplacementSimulatorVelocity, "DisplacementSimulatorVelocity");
-                    }
-                    if (printMask?.DisplacementSimulatorFalloff ?? true)
-                    {
-                        fg.AppendItem(DisplacementSimulatorFalloff, "DisplacementSimulatorFalloff");
-                    }
-                    if (printMask?.DisplacementSimulatorDampner ?? true)
-                    {
-                        fg.AppendItem(DisplacementSimulatorDampner, "DisplacementSimulatorDampner");
-                    }
-                    if (printMask?.DisplacementSimulatorStartingSize ?? true)
-                    {
-                        fg.AppendItem(DisplacementSimulatorStartingSize, "DisplacementSimulatorStartingSize");
-                    }
-                    if (printMask?.Damage ?? true)
-                    {
-                        fg.AppendItem(Damage, "Damage");
+                        Data?.ToString(fg);
                     }
                     if (printMask?.RelatedWaters?.Overall ?? true)
                     {
                         RelatedWaters?.ToString(fg);
-                    }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -1233,34 +514,8 @@ namespace Mutagen.Bethesda.Oblivion
             public Exception? Flags;
             public Exception? MaterialID;
             public Exception? Sound;
-            public Exception? WindVelocity;
-            public Exception? WindDirection;
-            public Exception? WaveAmplitude;
-            public Exception? WaveFrequency;
-            public Exception? SunPower;
-            public Exception? ReflectivityAmount;
-            public Exception? FresnelAmount;
-            public Exception? ScrollXSpeed;
-            public Exception? ScrollYSpeed;
-            public Exception? FogDistanceNearPlane;
-            public Exception? FogDistanceFarPlane;
-            public Exception? ShallowColor;
-            public Exception? DeepColor;
-            public Exception? ReflectionColor;
-            public Exception? TextureBlend;
-            public Exception? RainSimulatorForce;
-            public Exception? RainSimulatorVelocity;
-            public Exception? RainSimulatorFalloff;
-            public Exception? RainSimulatorDampner;
-            public Exception? RainSimulatorStartingSize;
-            public Exception? DisplacementSimulatorForce;
-            public Exception? DisplacementSimulatorVelocity;
-            public Exception? DisplacementSimulatorFalloff;
-            public Exception? DisplacementSimulatorDampner;
-            public Exception? DisplacementSimulatorStartingSize;
-            public Exception? Damage;
+            public MaskItem<Exception?, WaterData.ErrorMask?>? Data;
             public MaskItem<Exception?, RelatedWaters.ErrorMask?>? RelatedWaters;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -1279,62 +534,10 @@ namespace Mutagen.Bethesda.Oblivion
                         return MaterialID;
                     case Water_FieldIndex.Sound:
                         return Sound;
-                    case Water_FieldIndex.WindVelocity:
-                        return WindVelocity;
-                    case Water_FieldIndex.WindDirection:
-                        return WindDirection;
-                    case Water_FieldIndex.WaveAmplitude:
-                        return WaveAmplitude;
-                    case Water_FieldIndex.WaveFrequency:
-                        return WaveFrequency;
-                    case Water_FieldIndex.SunPower:
-                        return SunPower;
-                    case Water_FieldIndex.ReflectivityAmount:
-                        return ReflectivityAmount;
-                    case Water_FieldIndex.FresnelAmount:
-                        return FresnelAmount;
-                    case Water_FieldIndex.ScrollXSpeed:
-                        return ScrollXSpeed;
-                    case Water_FieldIndex.ScrollYSpeed:
-                        return ScrollYSpeed;
-                    case Water_FieldIndex.FogDistanceNearPlane:
-                        return FogDistanceNearPlane;
-                    case Water_FieldIndex.FogDistanceFarPlane:
-                        return FogDistanceFarPlane;
-                    case Water_FieldIndex.ShallowColor:
-                        return ShallowColor;
-                    case Water_FieldIndex.DeepColor:
-                        return DeepColor;
-                    case Water_FieldIndex.ReflectionColor:
-                        return ReflectionColor;
-                    case Water_FieldIndex.TextureBlend:
-                        return TextureBlend;
-                    case Water_FieldIndex.RainSimulatorForce:
-                        return RainSimulatorForce;
-                    case Water_FieldIndex.RainSimulatorVelocity:
-                        return RainSimulatorVelocity;
-                    case Water_FieldIndex.RainSimulatorFalloff:
-                        return RainSimulatorFalloff;
-                    case Water_FieldIndex.RainSimulatorDampner:
-                        return RainSimulatorDampner;
-                    case Water_FieldIndex.RainSimulatorStartingSize:
-                        return RainSimulatorStartingSize;
-                    case Water_FieldIndex.DisplacementSimulatorForce:
-                        return DisplacementSimulatorForce;
-                    case Water_FieldIndex.DisplacementSimulatorVelocity:
-                        return DisplacementSimulatorVelocity;
-                    case Water_FieldIndex.DisplacementSimulatorFalloff:
-                        return DisplacementSimulatorFalloff;
-                    case Water_FieldIndex.DisplacementSimulatorDampner:
-                        return DisplacementSimulatorDampner;
-                    case Water_FieldIndex.DisplacementSimulatorStartingSize:
-                        return DisplacementSimulatorStartingSize;
-                    case Water_FieldIndex.Damage:
-                        return Damage;
+                    case Water_FieldIndex.Data:
+                        return Data;
                     case Water_FieldIndex.RelatedWaters:
                         return RelatedWaters;
-                    case Water_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1360,89 +563,11 @@ namespace Mutagen.Bethesda.Oblivion
                     case Water_FieldIndex.Sound:
                         this.Sound = ex;
                         break;
-                    case Water_FieldIndex.WindVelocity:
-                        this.WindVelocity = ex;
-                        break;
-                    case Water_FieldIndex.WindDirection:
-                        this.WindDirection = ex;
-                        break;
-                    case Water_FieldIndex.WaveAmplitude:
-                        this.WaveAmplitude = ex;
-                        break;
-                    case Water_FieldIndex.WaveFrequency:
-                        this.WaveFrequency = ex;
-                        break;
-                    case Water_FieldIndex.SunPower:
-                        this.SunPower = ex;
-                        break;
-                    case Water_FieldIndex.ReflectivityAmount:
-                        this.ReflectivityAmount = ex;
-                        break;
-                    case Water_FieldIndex.FresnelAmount:
-                        this.FresnelAmount = ex;
-                        break;
-                    case Water_FieldIndex.ScrollXSpeed:
-                        this.ScrollXSpeed = ex;
-                        break;
-                    case Water_FieldIndex.ScrollYSpeed:
-                        this.ScrollYSpeed = ex;
-                        break;
-                    case Water_FieldIndex.FogDistanceNearPlane:
-                        this.FogDistanceNearPlane = ex;
-                        break;
-                    case Water_FieldIndex.FogDistanceFarPlane:
-                        this.FogDistanceFarPlane = ex;
-                        break;
-                    case Water_FieldIndex.ShallowColor:
-                        this.ShallowColor = ex;
-                        break;
-                    case Water_FieldIndex.DeepColor:
-                        this.DeepColor = ex;
-                        break;
-                    case Water_FieldIndex.ReflectionColor:
-                        this.ReflectionColor = ex;
-                        break;
-                    case Water_FieldIndex.TextureBlend:
-                        this.TextureBlend = ex;
-                        break;
-                    case Water_FieldIndex.RainSimulatorForce:
-                        this.RainSimulatorForce = ex;
-                        break;
-                    case Water_FieldIndex.RainSimulatorVelocity:
-                        this.RainSimulatorVelocity = ex;
-                        break;
-                    case Water_FieldIndex.RainSimulatorFalloff:
-                        this.RainSimulatorFalloff = ex;
-                        break;
-                    case Water_FieldIndex.RainSimulatorDampner:
-                        this.RainSimulatorDampner = ex;
-                        break;
-                    case Water_FieldIndex.RainSimulatorStartingSize:
-                        this.RainSimulatorStartingSize = ex;
-                        break;
-                    case Water_FieldIndex.DisplacementSimulatorForce:
-                        this.DisplacementSimulatorForce = ex;
-                        break;
-                    case Water_FieldIndex.DisplacementSimulatorVelocity:
-                        this.DisplacementSimulatorVelocity = ex;
-                        break;
-                    case Water_FieldIndex.DisplacementSimulatorFalloff:
-                        this.DisplacementSimulatorFalloff = ex;
-                        break;
-                    case Water_FieldIndex.DisplacementSimulatorDampner:
-                        this.DisplacementSimulatorDampner = ex;
-                        break;
-                    case Water_FieldIndex.DisplacementSimulatorStartingSize:
-                        this.DisplacementSimulatorStartingSize = ex;
-                        break;
-                    case Water_FieldIndex.Damage:
-                        this.Damage = ex;
+                    case Water_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, WaterData.ErrorMask?>(ex, null);
                         break;
                     case Water_FieldIndex.RelatedWaters:
                         this.RelatedWaters = new MaskItem<Exception?, RelatedWaters.ErrorMask?>(ex, null);
-                        break;
-                    case Water_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1470,89 +595,11 @@ namespace Mutagen.Bethesda.Oblivion
                     case Water_FieldIndex.Sound:
                         this.Sound = (Exception?)obj;
                         break;
-                    case Water_FieldIndex.WindVelocity:
-                        this.WindVelocity = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.WindDirection:
-                        this.WindDirection = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.WaveAmplitude:
-                        this.WaveAmplitude = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.WaveFrequency:
-                        this.WaveFrequency = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.SunPower:
-                        this.SunPower = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.ReflectivityAmount:
-                        this.ReflectivityAmount = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.FresnelAmount:
-                        this.FresnelAmount = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.ScrollXSpeed:
-                        this.ScrollXSpeed = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.ScrollYSpeed:
-                        this.ScrollYSpeed = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.FogDistanceNearPlane:
-                        this.FogDistanceNearPlane = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.FogDistanceFarPlane:
-                        this.FogDistanceFarPlane = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.ShallowColor:
-                        this.ShallowColor = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.DeepColor:
-                        this.DeepColor = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.ReflectionColor:
-                        this.ReflectionColor = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.TextureBlend:
-                        this.TextureBlend = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.RainSimulatorForce:
-                        this.RainSimulatorForce = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.RainSimulatorVelocity:
-                        this.RainSimulatorVelocity = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.RainSimulatorFalloff:
-                        this.RainSimulatorFalloff = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.RainSimulatorDampner:
-                        this.RainSimulatorDampner = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.RainSimulatorStartingSize:
-                        this.RainSimulatorStartingSize = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.DisplacementSimulatorForce:
-                        this.DisplacementSimulatorForce = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.DisplacementSimulatorVelocity:
-                        this.DisplacementSimulatorVelocity = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.DisplacementSimulatorFalloff:
-                        this.DisplacementSimulatorFalloff = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.DisplacementSimulatorDampner:
-                        this.DisplacementSimulatorDampner = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.DisplacementSimulatorStartingSize:
-                        this.DisplacementSimulatorStartingSize = (Exception?)obj;
-                        break;
-                    case Water_FieldIndex.Damage:
-                        this.Damage = (Exception?)obj;
+                    case Water_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, WaterData.ErrorMask?>?)obj;
                         break;
                     case Water_FieldIndex.RelatedWaters:
                         this.RelatedWaters = (MaskItem<Exception?, RelatedWaters.ErrorMask?>?)obj;
-                        break;
-                    case Water_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -1568,34 +615,8 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Flags != null) return true;
                 if (MaterialID != null) return true;
                 if (Sound != null) return true;
-                if (WindVelocity != null) return true;
-                if (WindDirection != null) return true;
-                if (WaveAmplitude != null) return true;
-                if (WaveFrequency != null) return true;
-                if (SunPower != null) return true;
-                if (ReflectivityAmount != null) return true;
-                if (FresnelAmount != null) return true;
-                if (ScrollXSpeed != null) return true;
-                if (ScrollYSpeed != null) return true;
-                if (FogDistanceNearPlane != null) return true;
-                if (FogDistanceFarPlane != null) return true;
-                if (ShallowColor != null) return true;
-                if (DeepColor != null) return true;
-                if (ReflectionColor != null) return true;
-                if (TextureBlend != null) return true;
-                if (RainSimulatorForce != null) return true;
-                if (RainSimulatorVelocity != null) return true;
-                if (RainSimulatorFalloff != null) return true;
-                if (RainSimulatorDampner != null) return true;
-                if (RainSimulatorStartingSize != null) return true;
-                if (DisplacementSimulatorForce != null) return true;
-                if (DisplacementSimulatorVelocity != null) return true;
-                if (DisplacementSimulatorFalloff != null) return true;
-                if (DisplacementSimulatorDampner != null) return true;
-                if (DisplacementSimulatorStartingSize != null) return true;
-                if (Damage != null) return true;
+                if (Data != null) return true;
                 if (RelatedWaters != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1636,34 +657,8 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(MaterialID, "MaterialID");
                 fg.AppendItem(Sound, "Sound");
-                fg.AppendItem(WindVelocity, "WindVelocity");
-                fg.AppendItem(WindDirection, "WindDirection");
-                fg.AppendItem(WaveAmplitude, "WaveAmplitude");
-                fg.AppendItem(WaveFrequency, "WaveFrequency");
-                fg.AppendItem(SunPower, "SunPower");
-                fg.AppendItem(ReflectivityAmount, "ReflectivityAmount");
-                fg.AppendItem(FresnelAmount, "FresnelAmount");
-                fg.AppendItem(ScrollXSpeed, "ScrollXSpeed");
-                fg.AppendItem(ScrollYSpeed, "ScrollYSpeed");
-                fg.AppendItem(FogDistanceNearPlane, "FogDistanceNearPlane");
-                fg.AppendItem(FogDistanceFarPlane, "FogDistanceFarPlane");
-                fg.AppendItem(ShallowColor, "ShallowColor");
-                fg.AppendItem(DeepColor, "DeepColor");
-                fg.AppendItem(ReflectionColor, "ReflectionColor");
-                fg.AppendItem(TextureBlend, "TextureBlend");
-                fg.AppendItem(RainSimulatorForce, "RainSimulatorForce");
-                fg.AppendItem(RainSimulatorVelocity, "RainSimulatorVelocity");
-                fg.AppendItem(RainSimulatorFalloff, "RainSimulatorFalloff");
-                fg.AppendItem(RainSimulatorDampner, "RainSimulatorDampner");
-                fg.AppendItem(RainSimulatorStartingSize, "RainSimulatorStartingSize");
-                fg.AppendItem(DisplacementSimulatorForce, "DisplacementSimulatorForce");
-                fg.AppendItem(DisplacementSimulatorVelocity, "DisplacementSimulatorVelocity");
-                fg.AppendItem(DisplacementSimulatorFalloff, "DisplacementSimulatorFalloff");
-                fg.AppendItem(DisplacementSimulatorDampner, "DisplacementSimulatorDampner");
-                fg.AppendItem(DisplacementSimulatorStartingSize, "DisplacementSimulatorStartingSize");
-                fg.AppendItem(Damage, "Damage");
+                Data?.ToString(fg);
                 RelatedWaters?.ToString(fg);
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -1677,34 +672,8 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.MaterialID = this.MaterialID.Combine(rhs.MaterialID);
                 ret.Sound = this.Sound.Combine(rhs.Sound);
-                ret.WindVelocity = this.WindVelocity.Combine(rhs.WindVelocity);
-                ret.WindDirection = this.WindDirection.Combine(rhs.WindDirection);
-                ret.WaveAmplitude = this.WaveAmplitude.Combine(rhs.WaveAmplitude);
-                ret.WaveFrequency = this.WaveFrequency.Combine(rhs.WaveFrequency);
-                ret.SunPower = this.SunPower.Combine(rhs.SunPower);
-                ret.ReflectivityAmount = this.ReflectivityAmount.Combine(rhs.ReflectivityAmount);
-                ret.FresnelAmount = this.FresnelAmount.Combine(rhs.FresnelAmount);
-                ret.ScrollXSpeed = this.ScrollXSpeed.Combine(rhs.ScrollXSpeed);
-                ret.ScrollYSpeed = this.ScrollYSpeed.Combine(rhs.ScrollYSpeed);
-                ret.FogDistanceNearPlane = this.FogDistanceNearPlane.Combine(rhs.FogDistanceNearPlane);
-                ret.FogDistanceFarPlane = this.FogDistanceFarPlane.Combine(rhs.FogDistanceFarPlane);
-                ret.ShallowColor = this.ShallowColor.Combine(rhs.ShallowColor);
-                ret.DeepColor = this.DeepColor.Combine(rhs.DeepColor);
-                ret.ReflectionColor = this.ReflectionColor.Combine(rhs.ReflectionColor);
-                ret.TextureBlend = this.TextureBlend.Combine(rhs.TextureBlend);
-                ret.RainSimulatorForce = this.RainSimulatorForce.Combine(rhs.RainSimulatorForce);
-                ret.RainSimulatorVelocity = this.RainSimulatorVelocity.Combine(rhs.RainSimulatorVelocity);
-                ret.RainSimulatorFalloff = this.RainSimulatorFalloff.Combine(rhs.RainSimulatorFalloff);
-                ret.RainSimulatorDampner = this.RainSimulatorDampner.Combine(rhs.RainSimulatorDampner);
-                ret.RainSimulatorStartingSize = this.RainSimulatorStartingSize.Combine(rhs.RainSimulatorStartingSize);
-                ret.DisplacementSimulatorForce = this.DisplacementSimulatorForce.Combine(rhs.DisplacementSimulatorForce);
-                ret.DisplacementSimulatorVelocity = this.DisplacementSimulatorVelocity.Combine(rhs.DisplacementSimulatorVelocity);
-                ret.DisplacementSimulatorFalloff = this.DisplacementSimulatorFalloff.Combine(rhs.DisplacementSimulatorFalloff);
-                ret.DisplacementSimulatorDampner = this.DisplacementSimulatorDampner.Combine(rhs.DisplacementSimulatorDampner);
-                ret.DisplacementSimulatorStartingSize = this.DisplacementSimulatorStartingSize.Combine(rhs.DisplacementSimulatorStartingSize);
-                ret.Damage = this.Damage.Combine(rhs.Damage);
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 ret.RelatedWaters = this.RelatedWaters.Combine(rhs.RelatedWaters, (l, r) => l.Combine(r));
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1732,34 +701,8 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Flags;
             public bool MaterialID;
             public bool Sound;
-            public bool WindVelocity;
-            public bool WindDirection;
-            public bool WaveAmplitude;
-            public bool WaveFrequency;
-            public bool SunPower;
-            public bool ReflectivityAmount;
-            public bool FresnelAmount;
-            public bool ScrollXSpeed;
-            public bool ScrollYSpeed;
-            public bool FogDistanceNearPlane;
-            public bool FogDistanceFarPlane;
-            public bool ShallowColor;
-            public bool DeepColor;
-            public bool ReflectionColor;
-            public bool TextureBlend;
-            public bool RainSimulatorForce;
-            public bool RainSimulatorVelocity;
-            public bool RainSimulatorFalloff;
-            public bool RainSimulatorDampner;
-            public bool RainSimulatorStartingSize;
-            public bool DisplacementSimulatorForce;
-            public bool DisplacementSimulatorVelocity;
-            public bool DisplacementSimulatorFalloff;
-            public bool DisplacementSimulatorDampner;
-            public bool DisplacementSimulatorStartingSize;
-            public bool Damage;
+            public MaskItem<bool, WaterData.TranslationMask?> Data;
             public MaskItem<bool, RelatedWaters.TranslationMask?> RelatedWaters;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -1771,34 +714,8 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Flags = defaultOn;
                 this.MaterialID = defaultOn;
                 this.Sound = defaultOn;
-                this.WindVelocity = defaultOn;
-                this.WindDirection = defaultOn;
-                this.WaveAmplitude = defaultOn;
-                this.WaveFrequency = defaultOn;
-                this.SunPower = defaultOn;
-                this.ReflectivityAmount = defaultOn;
-                this.FresnelAmount = defaultOn;
-                this.ScrollXSpeed = defaultOn;
-                this.ScrollYSpeed = defaultOn;
-                this.FogDistanceNearPlane = defaultOn;
-                this.FogDistanceFarPlane = defaultOn;
-                this.ShallowColor = defaultOn;
-                this.DeepColor = defaultOn;
-                this.ReflectionColor = defaultOn;
-                this.TextureBlend = defaultOn;
-                this.RainSimulatorForce = defaultOn;
-                this.RainSimulatorVelocity = defaultOn;
-                this.RainSimulatorFalloff = defaultOn;
-                this.RainSimulatorDampner = defaultOn;
-                this.RainSimulatorStartingSize = defaultOn;
-                this.DisplacementSimulatorForce = defaultOn;
-                this.DisplacementSimulatorVelocity = defaultOn;
-                this.DisplacementSimulatorFalloff = defaultOn;
-                this.DisplacementSimulatorDampner = defaultOn;
-                this.DisplacementSimulatorStartingSize = defaultOn;
-                this.Damage = defaultOn;
+                this.Data = new MaskItem<bool, WaterData.TranslationMask?>(defaultOn, null);
                 this.RelatedWaters = new MaskItem<bool, RelatedWaters.TranslationMask?>(defaultOn, null);
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -1811,49 +728,14 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Flags, null));
                 ret.Add((MaterialID, null));
                 ret.Add((Sound, null));
-                ret.Add((WindVelocity, null));
-                ret.Add((WindDirection, null));
-                ret.Add((WaveAmplitude, null));
-                ret.Add((WaveFrequency, null));
-                ret.Add((SunPower, null));
-                ret.Add((ReflectivityAmount, null));
-                ret.Add((FresnelAmount, null));
-                ret.Add((ScrollXSpeed, null));
-                ret.Add((ScrollYSpeed, null));
-                ret.Add((FogDistanceNearPlane, null));
-                ret.Add((FogDistanceFarPlane, null));
-                ret.Add((ShallowColor, null));
-                ret.Add((DeepColor, null));
-                ret.Add((ReflectionColor, null));
-                ret.Add((TextureBlend, null));
-                ret.Add((RainSimulatorForce, null));
-                ret.Add((RainSimulatorVelocity, null));
-                ret.Add((RainSimulatorFalloff, null));
-                ret.Add((RainSimulatorDampner, null));
-                ret.Add((RainSimulatorStartingSize, null));
-                ret.Add((DisplacementSimulatorForce, null));
-                ret.Add((DisplacementSimulatorVelocity, null));
-                ret.Add((DisplacementSimulatorFalloff, null));
-                ret.Add((DisplacementSimulatorDampner, null));
-                ret.Add((DisplacementSimulatorStartingSize, null));
-                ret.Add((Damage, null));
+                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
                 ret.Add((RelatedWaters?.Overall ?? true, RelatedWaters?.Specific?.GetCrystal()));
-                ret.Add((DATADataTypeState, null));
             }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Water_Registration.TriggeringRecordType;
-        [Flags]
-        public enum DATADataType
-        {
-            Has = 1,
-            Break0 = 2,
-            Break1 = 4,
-            Break2 = 8,
-            Break3 = 16
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => WaterCommon.Instance.GetLinks(this);
         public Water(FormKey formKey)
@@ -1940,34 +822,8 @@ namespace Mutagen.Bethesda.Oblivion
         new Water.Flag? Flags { get; set; }
         new String? MaterialID { get; set; }
         new IFormLinkNullable<Sound> Sound { get; }
-        new Single WindVelocity { get; set; }
-        new Single WindDirection { get; set; }
-        new Single WaveAmplitude { get; set; }
-        new Single WaveFrequency { get; set; }
-        new Single SunPower { get; set; }
-        new Single ReflectivityAmount { get; set; }
-        new Single FresnelAmount { get; set; }
-        new Single ScrollXSpeed { get; set; }
-        new Single ScrollYSpeed { get; set; }
-        new Single FogDistanceNearPlane { get; set; }
-        new Single FogDistanceFarPlane { get; set; }
-        new Color ShallowColor { get; set; }
-        new Color DeepColor { get; set; }
-        new Color ReflectionColor { get; set; }
-        new Byte TextureBlend { get; set; }
-        new Single RainSimulatorForce { get; set; }
-        new Single RainSimulatorVelocity { get; set; }
-        new Single RainSimulatorFalloff { get; set; }
-        new Single RainSimulatorDampner { get; set; }
-        new Single RainSimulatorStartingSize { get; set; }
-        new Single DisplacementSimulatorForce { get; set; }
-        new Single DisplacementSimulatorVelocity { get; set; }
-        new Single DisplacementSimulatorFalloff { get; set; }
-        new Single DisplacementSimulatorDampner { get; set; }
-        new Single DisplacementSimulatorStartingSize { get; set; }
-        new UInt16 Damage { get; set; }
+        new WaterData? Data { get; set; }
         new RelatedWaters? RelatedWaters { get; set; }
-        new Water.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IWaterInternal :
@@ -1989,34 +845,8 @@ namespace Mutagen.Bethesda.Oblivion
         Water.Flag? Flags { get; }
         String? MaterialID { get; }
         IFormLinkNullableGetter<ISoundGetter> Sound { get; }
-        Single WindVelocity { get; }
-        Single WindDirection { get; }
-        Single WaveAmplitude { get; }
-        Single WaveFrequency { get; }
-        Single SunPower { get; }
-        Single ReflectivityAmount { get; }
-        Single FresnelAmount { get; }
-        Single ScrollXSpeed { get; }
-        Single ScrollYSpeed { get; }
-        Single FogDistanceNearPlane { get; }
-        Single FogDistanceFarPlane { get; }
-        Color ShallowColor { get; }
-        Color DeepColor { get; }
-        Color ReflectionColor { get; }
-        Byte TextureBlend { get; }
-        Single RainSimulatorForce { get; }
-        Single RainSimulatorVelocity { get; }
-        Single RainSimulatorFalloff { get; }
-        Single RainSimulatorDampner { get; }
-        Single RainSimulatorStartingSize { get; }
-        Single DisplacementSimulatorForce { get; }
-        Single DisplacementSimulatorVelocity { get; }
-        Single DisplacementSimulatorFalloff { get; }
-        Single DisplacementSimulatorDampner { get; }
-        Single DisplacementSimulatorStartingSize { get; }
-        UInt16 Damage { get; }
+        IWaterDataGetter? Data { get; }
         IRelatedWatersGetter? RelatedWaters { get; }
-        Water.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -2321,34 +1151,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Flags = 7,
         MaterialID = 8,
         Sound = 9,
-        WindVelocity = 10,
-        WindDirection = 11,
-        WaveAmplitude = 12,
-        WaveFrequency = 13,
-        SunPower = 14,
-        ReflectivityAmount = 15,
-        FresnelAmount = 16,
-        ScrollXSpeed = 17,
-        ScrollYSpeed = 18,
-        FogDistanceNearPlane = 19,
-        FogDistanceFarPlane = 20,
-        ShallowColor = 21,
-        DeepColor = 22,
-        ReflectionColor = 23,
-        TextureBlend = 24,
-        RainSimulatorForce = 25,
-        RainSimulatorVelocity = 26,
-        RainSimulatorFalloff = 27,
-        RainSimulatorDampner = 28,
-        RainSimulatorStartingSize = 29,
-        DisplacementSimulatorForce = 30,
-        DisplacementSimulatorVelocity = 31,
-        DisplacementSimulatorFalloff = 32,
-        DisplacementSimulatorDampner = 33,
-        DisplacementSimulatorStartingSize = 34,
-        Damage = 35,
-        RelatedWaters = 36,
-        DATADataTypeState = 37,
+        Data = 10,
+        RelatedWaters = 11,
     }
     #endregion
 
@@ -2366,9 +1170,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "31d50641-f6df-4533-89c3-e764dc35a702";
 
-        public const ushort AdditionalFieldCount = 33;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 38;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(Water.Mask<>);
 
@@ -2408,62 +1212,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Water_FieldIndex.MaterialID;
                 case "SOUND":
                     return (ushort)Water_FieldIndex.Sound;
-                case "WINDVELOCITY":
-                    return (ushort)Water_FieldIndex.WindVelocity;
-                case "WINDDIRECTION":
-                    return (ushort)Water_FieldIndex.WindDirection;
-                case "WAVEAMPLITUDE":
-                    return (ushort)Water_FieldIndex.WaveAmplitude;
-                case "WAVEFREQUENCY":
-                    return (ushort)Water_FieldIndex.WaveFrequency;
-                case "SUNPOWER":
-                    return (ushort)Water_FieldIndex.SunPower;
-                case "REFLECTIVITYAMOUNT":
-                    return (ushort)Water_FieldIndex.ReflectivityAmount;
-                case "FRESNELAMOUNT":
-                    return (ushort)Water_FieldIndex.FresnelAmount;
-                case "SCROLLXSPEED":
-                    return (ushort)Water_FieldIndex.ScrollXSpeed;
-                case "SCROLLYSPEED":
-                    return (ushort)Water_FieldIndex.ScrollYSpeed;
-                case "FOGDISTANCENEARPLANE":
-                    return (ushort)Water_FieldIndex.FogDistanceNearPlane;
-                case "FOGDISTANCEFARPLANE":
-                    return (ushort)Water_FieldIndex.FogDistanceFarPlane;
-                case "SHALLOWCOLOR":
-                    return (ushort)Water_FieldIndex.ShallowColor;
-                case "DEEPCOLOR":
-                    return (ushort)Water_FieldIndex.DeepColor;
-                case "REFLECTIONCOLOR":
-                    return (ushort)Water_FieldIndex.ReflectionColor;
-                case "TEXTUREBLEND":
-                    return (ushort)Water_FieldIndex.TextureBlend;
-                case "RAINSIMULATORFORCE":
-                    return (ushort)Water_FieldIndex.RainSimulatorForce;
-                case "RAINSIMULATORVELOCITY":
-                    return (ushort)Water_FieldIndex.RainSimulatorVelocity;
-                case "RAINSIMULATORFALLOFF":
-                    return (ushort)Water_FieldIndex.RainSimulatorFalloff;
-                case "RAINSIMULATORDAMPNER":
-                    return (ushort)Water_FieldIndex.RainSimulatorDampner;
-                case "RAINSIMULATORSTARTINGSIZE":
-                    return (ushort)Water_FieldIndex.RainSimulatorStartingSize;
-                case "DISPLACEMENTSIMULATORFORCE":
-                    return (ushort)Water_FieldIndex.DisplacementSimulatorForce;
-                case "DISPLACEMENTSIMULATORVELOCITY":
-                    return (ushort)Water_FieldIndex.DisplacementSimulatorVelocity;
-                case "DISPLACEMENTSIMULATORFALLOFF":
-                    return (ushort)Water_FieldIndex.DisplacementSimulatorFalloff;
-                case "DISPLACEMENTSIMULATORDAMPNER":
-                    return (ushort)Water_FieldIndex.DisplacementSimulatorDampner;
-                case "DISPLACEMENTSIMULATORSTARTINGSIZE":
-                    return (ushort)Water_FieldIndex.DisplacementSimulatorStartingSize;
-                case "DAMAGE":
-                    return (ushort)Water_FieldIndex.Damage;
+                case "DATA":
+                    return (ushort)Water_FieldIndex.Data;
                 case "RELATEDWATERS":
                     return (ushort)Water_FieldIndex.RelatedWaters;
-                case "DATADATATYPESTATE":
-                    return (ushort)Water_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -2479,34 +1231,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Water_FieldIndex.Flags:
                 case Water_FieldIndex.MaterialID:
                 case Water_FieldIndex.Sound:
-                case Water_FieldIndex.WindVelocity:
-                case Water_FieldIndex.WindDirection:
-                case Water_FieldIndex.WaveAmplitude:
-                case Water_FieldIndex.WaveFrequency:
-                case Water_FieldIndex.SunPower:
-                case Water_FieldIndex.ReflectivityAmount:
-                case Water_FieldIndex.FresnelAmount:
-                case Water_FieldIndex.ScrollXSpeed:
-                case Water_FieldIndex.ScrollYSpeed:
-                case Water_FieldIndex.FogDistanceNearPlane:
-                case Water_FieldIndex.FogDistanceFarPlane:
-                case Water_FieldIndex.ShallowColor:
-                case Water_FieldIndex.DeepColor:
-                case Water_FieldIndex.ReflectionColor:
-                case Water_FieldIndex.TextureBlend:
-                case Water_FieldIndex.RainSimulatorForce:
-                case Water_FieldIndex.RainSimulatorVelocity:
-                case Water_FieldIndex.RainSimulatorFalloff:
-                case Water_FieldIndex.RainSimulatorDampner:
-                case Water_FieldIndex.RainSimulatorStartingSize:
-                case Water_FieldIndex.DisplacementSimulatorForce:
-                case Water_FieldIndex.DisplacementSimulatorVelocity:
-                case Water_FieldIndex.DisplacementSimulatorFalloff:
-                case Water_FieldIndex.DisplacementSimulatorDampner:
-                case Water_FieldIndex.DisplacementSimulatorStartingSize:
-                case Water_FieldIndex.Damage:
+                case Water_FieldIndex.Data:
                 case Water_FieldIndex.RelatedWaters:
-                case Water_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -2518,6 +1244,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
             {
+                case Water_FieldIndex.Data:
                 case Water_FieldIndex.RelatedWaters:
                     return true;
                 case Water_FieldIndex.Texture:
@@ -2525,33 +1252,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Water_FieldIndex.Flags:
                 case Water_FieldIndex.MaterialID:
                 case Water_FieldIndex.Sound:
-                case Water_FieldIndex.WindVelocity:
-                case Water_FieldIndex.WindDirection:
-                case Water_FieldIndex.WaveAmplitude:
-                case Water_FieldIndex.WaveFrequency:
-                case Water_FieldIndex.SunPower:
-                case Water_FieldIndex.ReflectivityAmount:
-                case Water_FieldIndex.FresnelAmount:
-                case Water_FieldIndex.ScrollXSpeed:
-                case Water_FieldIndex.ScrollYSpeed:
-                case Water_FieldIndex.FogDistanceNearPlane:
-                case Water_FieldIndex.FogDistanceFarPlane:
-                case Water_FieldIndex.ShallowColor:
-                case Water_FieldIndex.DeepColor:
-                case Water_FieldIndex.ReflectionColor:
-                case Water_FieldIndex.TextureBlend:
-                case Water_FieldIndex.RainSimulatorForce:
-                case Water_FieldIndex.RainSimulatorVelocity:
-                case Water_FieldIndex.RainSimulatorFalloff:
-                case Water_FieldIndex.RainSimulatorDampner:
-                case Water_FieldIndex.RainSimulatorStartingSize:
-                case Water_FieldIndex.DisplacementSimulatorForce:
-                case Water_FieldIndex.DisplacementSimulatorVelocity:
-                case Water_FieldIndex.DisplacementSimulatorFalloff:
-                case Water_FieldIndex.DisplacementSimulatorDampner:
-                case Water_FieldIndex.DisplacementSimulatorStartingSize:
-                case Water_FieldIndex.Damage:
-                case Water_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
@@ -2568,34 +1268,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Water_FieldIndex.Flags:
                 case Water_FieldIndex.MaterialID:
                 case Water_FieldIndex.Sound:
-                case Water_FieldIndex.WindVelocity:
-                case Water_FieldIndex.WindDirection:
-                case Water_FieldIndex.WaveAmplitude:
-                case Water_FieldIndex.WaveFrequency:
-                case Water_FieldIndex.SunPower:
-                case Water_FieldIndex.ReflectivityAmount:
-                case Water_FieldIndex.FresnelAmount:
-                case Water_FieldIndex.ScrollXSpeed:
-                case Water_FieldIndex.ScrollYSpeed:
-                case Water_FieldIndex.FogDistanceNearPlane:
-                case Water_FieldIndex.FogDistanceFarPlane:
-                case Water_FieldIndex.ShallowColor:
-                case Water_FieldIndex.DeepColor:
-                case Water_FieldIndex.ReflectionColor:
-                case Water_FieldIndex.TextureBlend:
-                case Water_FieldIndex.RainSimulatorForce:
-                case Water_FieldIndex.RainSimulatorVelocity:
-                case Water_FieldIndex.RainSimulatorFalloff:
-                case Water_FieldIndex.RainSimulatorDampner:
-                case Water_FieldIndex.RainSimulatorStartingSize:
-                case Water_FieldIndex.DisplacementSimulatorForce:
-                case Water_FieldIndex.DisplacementSimulatorVelocity:
-                case Water_FieldIndex.DisplacementSimulatorFalloff:
-                case Water_FieldIndex.DisplacementSimulatorDampner:
-                case Water_FieldIndex.DisplacementSimulatorStartingSize:
-                case Water_FieldIndex.Damage:
+                case Water_FieldIndex.Data:
                 case Water_FieldIndex.RelatedWaters:
-                case Water_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
@@ -2617,62 +1291,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "MaterialID";
                 case Water_FieldIndex.Sound:
                     return "Sound";
-                case Water_FieldIndex.WindVelocity:
-                    return "WindVelocity";
-                case Water_FieldIndex.WindDirection:
-                    return "WindDirection";
-                case Water_FieldIndex.WaveAmplitude:
-                    return "WaveAmplitude";
-                case Water_FieldIndex.WaveFrequency:
-                    return "WaveFrequency";
-                case Water_FieldIndex.SunPower:
-                    return "SunPower";
-                case Water_FieldIndex.ReflectivityAmount:
-                    return "ReflectivityAmount";
-                case Water_FieldIndex.FresnelAmount:
-                    return "FresnelAmount";
-                case Water_FieldIndex.ScrollXSpeed:
-                    return "ScrollXSpeed";
-                case Water_FieldIndex.ScrollYSpeed:
-                    return "ScrollYSpeed";
-                case Water_FieldIndex.FogDistanceNearPlane:
-                    return "FogDistanceNearPlane";
-                case Water_FieldIndex.FogDistanceFarPlane:
-                    return "FogDistanceFarPlane";
-                case Water_FieldIndex.ShallowColor:
-                    return "ShallowColor";
-                case Water_FieldIndex.DeepColor:
-                    return "DeepColor";
-                case Water_FieldIndex.ReflectionColor:
-                    return "ReflectionColor";
-                case Water_FieldIndex.TextureBlend:
-                    return "TextureBlend";
-                case Water_FieldIndex.RainSimulatorForce:
-                    return "RainSimulatorForce";
-                case Water_FieldIndex.RainSimulatorVelocity:
-                    return "RainSimulatorVelocity";
-                case Water_FieldIndex.RainSimulatorFalloff:
-                    return "RainSimulatorFalloff";
-                case Water_FieldIndex.RainSimulatorDampner:
-                    return "RainSimulatorDampner";
-                case Water_FieldIndex.RainSimulatorStartingSize:
-                    return "RainSimulatorStartingSize";
-                case Water_FieldIndex.DisplacementSimulatorForce:
-                    return "DisplacementSimulatorForce";
-                case Water_FieldIndex.DisplacementSimulatorVelocity:
-                    return "DisplacementSimulatorVelocity";
-                case Water_FieldIndex.DisplacementSimulatorFalloff:
-                    return "DisplacementSimulatorFalloff";
-                case Water_FieldIndex.DisplacementSimulatorDampner:
-                    return "DisplacementSimulatorDampner";
-                case Water_FieldIndex.DisplacementSimulatorStartingSize:
-                    return "DisplacementSimulatorStartingSize";
-                case Water_FieldIndex.Damage:
-                    return "Damage";
+                case Water_FieldIndex.Data:
+                    return "Data";
                 case Water_FieldIndex.RelatedWaters:
                     return "RelatedWaters";
-                case Water_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
                 default:
                     return OblivionMajorRecord_Registration.GetNthName(index);
             }
@@ -2688,34 +1310,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Water_FieldIndex.Flags:
                 case Water_FieldIndex.MaterialID:
                 case Water_FieldIndex.Sound:
-                case Water_FieldIndex.WindVelocity:
-                case Water_FieldIndex.WindDirection:
-                case Water_FieldIndex.WaveAmplitude:
-                case Water_FieldIndex.WaveFrequency:
-                case Water_FieldIndex.SunPower:
-                case Water_FieldIndex.ReflectivityAmount:
-                case Water_FieldIndex.FresnelAmount:
-                case Water_FieldIndex.ScrollXSpeed:
-                case Water_FieldIndex.ScrollYSpeed:
-                case Water_FieldIndex.FogDistanceNearPlane:
-                case Water_FieldIndex.FogDistanceFarPlane:
-                case Water_FieldIndex.ShallowColor:
-                case Water_FieldIndex.DeepColor:
-                case Water_FieldIndex.ReflectionColor:
-                case Water_FieldIndex.TextureBlend:
-                case Water_FieldIndex.RainSimulatorForce:
-                case Water_FieldIndex.RainSimulatorVelocity:
-                case Water_FieldIndex.RainSimulatorFalloff:
-                case Water_FieldIndex.RainSimulatorDampner:
-                case Water_FieldIndex.RainSimulatorStartingSize:
-                case Water_FieldIndex.DisplacementSimulatorForce:
-                case Water_FieldIndex.DisplacementSimulatorVelocity:
-                case Water_FieldIndex.DisplacementSimulatorFalloff:
-                case Water_FieldIndex.DisplacementSimulatorDampner:
-                case Water_FieldIndex.DisplacementSimulatorStartingSize:
-                case Water_FieldIndex.Damage:
+                case Water_FieldIndex.Data:
                 case Water_FieldIndex.RelatedWaters:
-                case Water_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsNthDerivative(index);
@@ -2732,34 +1328,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Water_FieldIndex.Flags:
                 case Water_FieldIndex.MaterialID:
                 case Water_FieldIndex.Sound:
-                case Water_FieldIndex.WindVelocity:
-                case Water_FieldIndex.WindDirection:
-                case Water_FieldIndex.WaveAmplitude:
-                case Water_FieldIndex.WaveFrequency:
-                case Water_FieldIndex.SunPower:
-                case Water_FieldIndex.ReflectivityAmount:
-                case Water_FieldIndex.FresnelAmount:
-                case Water_FieldIndex.ScrollXSpeed:
-                case Water_FieldIndex.ScrollYSpeed:
-                case Water_FieldIndex.FogDistanceNearPlane:
-                case Water_FieldIndex.FogDistanceFarPlane:
-                case Water_FieldIndex.ShallowColor:
-                case Water_FieldIndex.DeepColor:
-                case Water_FieldIndex.ReflectionColor:
-                case Water_FieldIndex.TextureBlend:
-                case Water_FieldIndex.RainSimulatorForce:
-                case Water_FieldIndex.RainSimulatorVelocity:
-                case Water_FieldIndex.RainSimulatorFalloff:
-                case Water_FieldIndex.RainSimulatorDampner:
-                case Water_FieldIndex.RainSimulatorStartingSize:
-                case Water_FieldIndex.DisplacementSimulatorForce:
-                case Water_FieldIndex.DisplacementSimulatorVelocity:
-                case Water_FieldIndex.DisplacementSimulatorFalloff:
-                case Water_FieldIndex.DisplacementSimulatorDampner:
-                case Water_FieldIndex.DisplacementSimulatorStartingSize:
-                case Water_FieldIndex.Damage:
+                case Water_FieldIndex.Data:
                 case Water_FieldIndex.RelatedWaters:
-                case Water_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsProtected(index);
@@ -2781,62 +1351,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(String);
                 case Water_FieldIndex.Sound:
                     return typeof(IFormLinkNullable<Sound>);
-                case Water_FieldIndex.WindVelocity:
-                    return typeof(Single);
-                case Water_FieldIndex.WindDirection:
-                    return typeof(Single);
-                case Water_FieldIndex.WaveAmplitude:
-                    return typeof(Single);
-                case Water_FieldIndex.WaveFrequency:
-                    return typeof(Single);
-                case Water_FieldIndex.SunPower:
-                    return typeof(Single);
-                case Water_FieldIndex.ReflectivityAmount:
-                    return typeof(Single);
-                case Water_FieldIndex.FresnelAmount:
-                    return typeof(Single);
-                case Water_FieldIndex.ScrollXSpeed:
-                    return typeof(Single);
-                case Water_FieldIndex.ScrollYSpeed:
-                    return typeof(Single);
-                case Water_FieldIndex.FogDistanceNearPlane:
-                    return typeof(Single);
-                case Water_FieldIndex.FogDistanceFarPlane:
-                    return typeof(Single);
-                case Water_FieldIndex.ShallowColor:
-                    return typeof(Color);
-                case Water_FieldIndex.DeepColor:
-                    return typeof(Color);
-                case Water_FieldIndex.ReflectionColor:
-                    return typeof(Color);
-                case Water_FieldIndex.TextureBlend:
-                    return typeof(Byte);
-                case Water_FieldIndex.RainSimulatorForce:
-                    return typeof(Single);
-                case Water_FieldIndex.RainSimulatorVelocity:
-                    return typeof(Single);
-                case Water_FieldIndex.RainSimulatorFalloff:
-                    return typeof(Single);
-                case Water_FieldIndex.RainSimulatorDampner:
-                    return typeof(Single);
-                case Water_FieldIndex.RainSimulatorStartingSize:
-                    return typeof(Single);
-                case Water_FieldIndex.DisplacementSimulatorForce:
-                    return typeof(Single);
-                case Water_FieldIndex.DisplacementSimulatorVelocity:
-                    return typeof(Single);
-                case Water_FieldIndex.DisplacementSimulatorFalloff:
-                    return typeof(Single);
-                case Water_FieldIndex.DisplacementSimulatorDampner:
-                    return typeof(Single);
-                case Water_FieldIndex.DisplacementSimulatorStartingSize:
-                    return typeof(Single);
-                case Water_FieldIndex.Damage:
-                    return typeof(UInt16);
+                case Water_FieldIndex.Data:
+                    return typeof(WaterData);
                 case Water_FieldIndex.RelatedWaters:
                     return typeof(RelatedWaters);
-                case Water_FieldIndex.DATADataTypeState:
-                    return typeof(Water.DATADataType);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -2853,7 +1371,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType GNAM_HEADER = new RecordType("GNAM");
         public static readonly RecordType TriggeringRecordType = WATR_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 6;
+        public const int NumTypedFields = 7;
         public static readonly Type BinaryWriteTranslation = typeof(WaterBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2901,34 +1419,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flags = default;
             item.MaterialID = default;
             item.Sound.FormKey = null;
-            item.WindVelocity = default;
-            item.WindDirection = default;
-            item.WaveAmplitude = default;
-            item.WaveFrequency = default;
-            item.SunPower = default;
-            item.ReflectivityAmount = default;
-            item.FresnelAmount = default;
-            item.ScrollXSpeed = default;
-            item.ScrollYSpeed = default;
-            item.FogDistanceNearPlane = default;
-            item.FogDistanceFarPlane = default;
-            item.ShallowColor = default;
-            item.DeepColor = default;
-            item.ReflectionColor = default;
-            item.TextureBlend = default;
-            item.RainSimulatorForce = default;
-            item.RainSimulatorVelocity = default;
-            item.RainSimulatorFalloff = default;
-            item.RainSimulatorDampner = default;
-            item.RainSimulatorStartingSize = default;
-            item.DisplacementSimulatorForce = default;
-            item.DisplacementSimulatorVelocity = default;
-            item.DisplacementSimulatorFalloff = default;
-            item.DisplacementSimulatorDampner = default;
-            item.DisplacementSimulatorStartingSize = default;
-            item.Damage = default;
+            item.Data = null;
             item.RelatedWaters = null;
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -2952,9 +1444,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "HasDATADataType":
-                    item.DATADataTypeState |= Water.DATADataType.Has;
-                    break;
                 default:
                     OblivionMajorRecordSetterCommon.FillPrivateElementXml(
                         item: item,
@@ -2974,10 +1463,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             try
             {
-                item.DATADataTypeState |= Water.DATADataType.Break0;
-                item.DATADataTypeState |= Water.DATADataType.Break1;
-                item.DATADataTypeState |= Water.DATADataType.Break2;
-                item.DATADataTypeState |= Water.DATADataType.Break3;
                 foreach (var elem in node.Elements())
                 {
                     FillPrivateElementXml(
@@ -3088,78 +1573,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.DATADataTypeState = Water.DATADataType.Has;
-                    }
-                    WaterBinaryCreateTranslation.FillBinaryNothingCustomLogicCustomPublic(
-                        frame: dataFrame,
+                    WaterBinaryCreateTranslation.FillBinaryDataCustomPublic(
+                        frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    if (dataFrame.Complete)
-                    {
-                        item.DATADataTypeState |= Water.DATADataType.Break0;
-                        return TryGet<int?>.Succeed(null);
-                    }
-                    item.WindVelocity = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.WindDirection = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.WaveAmplitude = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.WaveFrequency = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.SunPower = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.ReflectivityAmount = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.FresnelAmount = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.ScrollXSpeed = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.ScrollYSpeed = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.FogDistanceNearPlane = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    WaterBinaryCreateTranslation.FillBinaryBloodCustomLogicCustomPublic(
-                        frame: dataFrame,
-                        item: item);
-                    if (dataFrame.Complete)
-                    {
-                        item.DATADataTypeState |= Water.DATADataType.Break1;
-                        return TryGet<int?>.Succeed((int)Water_FieldIndex.FogDistanceNearPlane);
-                    }
-                    item.FogDistanceFarPlane = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.ShallowColor = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        extraByte: true);
-                    item.DeepColor = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        extraByte: true);
-                    item.ReflectionColor = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        extraByte: true);
-                    item.TextureBlend = dataFrame.ReadUInt8();
-                    dataFrame.SetPosition(dataFrame.Position + 3);
-                    WaterBinaryCreateTranslation.FillBinaryOilCustomLogicCustomPublic(
-                        frame: dataFrame,
-                        item: item);
-                    if (dataFrame.Complete)
-                    {
-                        item.DATADataTypeState |= Water.DATADataType.Break2;
-                        return TryGet<int?>.Succeed((int)Water_FieldIndex.TextureBlend);
-                    }
-                    item.RainSimulatorForce = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.RainSimulatorVelocity = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.RainSimulatorFalloff = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.RainSimulatorDampner = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.RainSimulatorStartingSize = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.DisplacementSimulatorForce = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    WaterBinaryCreateTranslation.FillBinaryOddExtraBytesCustomPublic(
-                        frame: dataFrame,
-                        item: item);
-                    if (dataFrame.Complete)
-                    {
-                        item.DATADataTypeState |= Water.DATADataType.Break3;
-                        return TryGet<int?>.Succeed((int)Water_FieldIndex.DisplacementSimulatorForce);
-                    }
-                    item.DisplacementSimulatorVelocity = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.DisplacementSimulatorFalloff = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.DisplacementSimulatorDampner = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.DisplacementSimulatorStartingSize = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.Damage = dataFrame.ReadUInt16();
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Damage);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Data);
                 }
                 case 0x4D414E47: // GNAM
                 {
@@ -3245,38 +1662,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Flags = item.Flags == rhs.Flags;
             ret.MaterialID = string.Equals(item.MaterialID, rhs.MaterialID);
             ret.Sound = object.Equals(item.Sound, rhs.Sound);
-            ret.WindVelocity = item.WindVelocity.EqualsWithin(rhs.WindVelocity);
-            ret.WindDirection = item.WindDirection.EqualsWithin(rhs.WindDirection);
-            ret.WaveAmplitude = item.WaveAmplitude.EqualsWithin(rhs.WaveAmplitude);
-            ret.WaveFrequency = item.WaveFrequency.EqualsWithin(rhs.WaveFrequency);
-            ret.SunPower = item.SunPower.EqualsWithin(rhs.SunPower);
-            ret.ReflectivityAmount = item.ReflectivityAmount.EqualsWithin(rhs.ReflectivityAmount);
-            ret.FresnelAmount = item.FresnelAmount.EqualsWithin(rhs.FresnelAmount);
-            ret.ScrollXSpeed = item.ScrollXSpeed.EqualsWithin(rhs.ScrollXSpeed);
-            ret.ScrollYSpeed = item.ScrollYSpeed.EqualsWithin(rhs.ScrollYSpeed);
-            ret.FogDistanceNearPlane = item.FogDistanceNearPlane.EqualsWithin(rhs.FogDistanceNearPlane);
-            ret.FogDistanceFarPlane = item.FogDistanceFarPlane.EqualsWithin(rhs.FogDistanceFarPlane);
-            ret.ShallowColor = item.ShallowColor.ColorOnlyEquals(rhs.ShallowColor);
-            ret.DeepColor = item.DeepColor.ColorOnlyEquals(rhs.DeepColor);
-            ret.ReflectionColor = item.ReflectionColor.ColorOnlyEquals(rhs.ReflectionColor);
-            ret.TextureBlend = item.TextureBlend == rhs.TextureBlend;
-            ret.RainSimulatorForce = item.RainSimulatorForce.EqualsWithin(rhs.RainSimulatorForce);
-            ret.RainSimulatorVelocity = item.RainSimulatorVelocity.EqualsWithin(rhs.RainSimulatorVelocity);
-            ret.RainSimulatorFalloff = item.RainSimulatorFalloff.EqualsWithin(rhs.RainSimulatorFalloff);
-            ret.RainSimulatorDampner = item.RainSimulatorDampner.EqualsWithin(rhs.RainSimulatorDampner);
-            ret.RainSimulatorStartingSize = item.RainSimulatorStartingSize.EqualsWithin(rhs.RainSimulatorStartingSize);
-            ret.DisplacementSimulatorForce = item.DisplacementSimulatorForce.EqualsWithin(rhs.DisplacementSimulatorForce);
-            ret.DisplacementSimulatorVelocity = item.DisplacementSimulatorVelocity.EqualsWithin(rhs.DisplacementSimulatorVelocity);
-            ret.DisplacementSimulatorFalloff = item.DisplacementSimulatorFalloff.EqualsWithin(rhs.DisplacementSimulatorFalloff);
-            ret.DisplacementSimulatorDampner = item.DisplacementSimulatorDampner.EqualsWithin(rhs.DisplacementSimulatorDampner);
-            ret.DisplacementSimulatorStartingSize = item.DisplacementSimulatorStartingSize.EqualsWithin(rhs.DisplacementSimulatorStartingSize);
-            ret.Damage = item.Damage == rhs.Damage;
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.RelatedWaters = EqualsMaskHelper.EqualsHelper(
                 item.RelatedWaters,
                 rhs.RelatedWaters,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -3353,118 +1748,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(SoundItem, "Sound");
             }
-            if (printMask?.WindVelocity ?? true)
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data.TryGet(out var DataItem))
             {
-                fg.AppendItem(item.WindVelocity, "WindVelocity");
-            }
-            if (printMask?.WindDirection ?? true)
-            {
-                fg.AppendItem(item.WindDirection, "WindDirection");
-            }
-            if (printMask?.WaveAmplitude ?? true)
-            {
-                fg.AppendItem(item.WaveAmplitude, "WaveAmplitude");
-            }
-            if (printMask?.WaveFrequency ?? true)
-            {
-                fg.AppendItem(item.WaveFrequency, "WaveFrequency");
-            }
-            if (printMask?.SunPower ?? true)
-            {
-                fg.AppendItem(item.SunPower, "SunPower");
-            }
-            if (printMask?.ReflectivityAmount ?? true)
-            {
-                fg.AppendItem(item.ReflectivityAmount, "ReflectivityAmount");
-            }
-            if (printMask?.FresnelAmount ?? true)
-            {
-                fg.AppendItem(item.FresnelAmount, "FresnelAmount");
-            }
-            if (printMask?.ScrollXSpeed ?? true)
-            {
-                fg.AppendItem(item.ScrollXSpeed, "ScrollXSpeed");
-            }
-            if (printMask?.ScrollYSpeed ?? true)
-            {
-                fg.AppendItem(item.ScrollYSpeed, "ScrollYSpeed");
-            }
-            if (printMask?.FogDistanceNearPlane ?? true)
-            {
-                fg.AppendItem(item.FogDistanceNearPlane, "FogDistanceNearPlane");
-            }
-            if (printMask?.FogDistanceFarPlane ?? true)
-            {
-                fg.AppendItem(item.FogDistanceFarPlane, "FogDistanceFarPlane");
-            }
-            if (printMask?.ShallowColor ?? true)
-            {
-                fg.AppendItem(item.ShallowColor, "ShallowColor");
-            }
-            if (printMask?.DeepColor ?? true)
-            {
-                fg.AppendItem(item.DeepColor, "DeepColor");
-            }
-            if (printMask?.ReflectionColor ?? true)
-            {
-                fg.AppendItem(item.ReflectionColor, "ReflectionColor");
-            }
-            if (printMask?.TextureBlend ?? true)
-            {
-                fg.AppendItem(item.TextureBlend, "TextureBlend");
-            }
-            if (printMask?.RainSimulatorForce ?? true)
-            {
-                fg.AppendItem(item.RainSimulatorForce, "RainSimulatorForce");
-            }
-            if (printMask?.RainSimulatorVelocity ?? true)
-            {
-                fg.AppendItem(item.RainSimulatorVelocity, "RainSimulatorVelocity");
-            }
-            if (printMask?.RainSimulatorFalloff ?? true)
-            {
-                fg.AppendItem(item.RainSimulatorFalloff, "RainSimulatorFalloff");
-            }
-            if (printMask?.RainSimulatorDampner ?? true)
-            {
-                fg.AppendItem(item.RainSimulatorDampner, "RainSimulatorDampner");
-            }
-            if (printMask?.RainSimulatorStartingSize ?? true)
-            {
-                fg.AppendItem(item.RainSimulatorStartingSize, "RainSimulatorStartingSize");
-            }
-            if (printMask?.DisplacementSimulatorForce ?? true)
-            {
-                fg.AppendItem(item.DisplacementSimulatorForce, "DisplacementSimulatorForce");
-            }
-            if (printMask?.DisplacementSimulatorVelocity ?? true)
-            {
-                fg.AppendItem(item.DisplacementSimulatorVelocity, "DisplacementSimulatorVelocity");
-            }
-            if (printMask?.DisplacementSimulatorFalloff ?? true)
-            {
-                fg.AppendItem(item.DisplacementSimulatorFalloff, "DisplacementSimulatorFalloff");
-            }
-            if (printMask?.DisplacementSimulatorDampner ?? true)
-            {
-                fg.AppendItem(item.DisplacementSimulatorDampner, "DisplacementSimulatorDampner");
-            }
-            if (printMask?.DisplacementSimulatorStartingSize ?? true)
-            {
-                fg.AppendItem(item.DisplacementSimulatorStartingSize, "DisplacementSimulatorStartingSize");
-            }
-            if (printMask?.Damage ?? true)
-            {
-                fg.AppendItem(item.Damage, "Damage");
+                DataItem?.ToString(fg, "Data");
             }
             if ((printMask?.RelatedWaters?.Overall ?? true)
                 && item.RelatedWaters.TryGet(out var RelatedWatersItem))
             {
                 RelatedWatersItem?.ToString(fg, "RelatedWaters");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -3477,6 +1769,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
             if (checkMask.MaterialID.HasValue && checkMask.MaterialID.Value != (item.MaterialID != null)) return false;
             if (checkMask.Sound.HasValue && checkMask.Sound.Value != (item.Sound.FormKey != null)) return false;
+            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
+            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
             if (checkMask.RelatedWaters?.Overall.HasValue ?? false && checkMask.RelatedWaters.Overall.Value != (item.RelatedWaters != null)) return false;
             if (checkMask.RelatedWaters?.Specific != null && (item.RelatedWaters == null || !item.RelatedWaters.HasBeenSet(checkMask.RelatedWaters.Specific))) return false;
             return base.HasBeenSet(
@@ -3493,35 +1787,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Flags = (item.Flags != null);
             mask.MaterialID = (item.MaterialID != null);
             mask.Sound = (item.Sound.FormKey != null);
-            mask.WindVelocity = true;
-            mask.WindDirection = true;
-            mask.WaveAmplitude = true;
-            mask.WaveFrequency = true;
-            mask.SunPower = true;
-            mask.ReflectivityAmount = true;
-            mask.FresnelAmount = true;
-            mask.ScrollXSpeed = true;
-            mask.ScrollYSpeed = true;
-            mask.FogDistanceNearPlane = true;
-            mask.FogDistanceFarPlane = true;
-            mask.ShallowColor = true;
-            mask.DeepColor = true;
-            mask.ReflectionColor = true;
-            mask.TextureBlend = true;
-            mask.RainSimulatorForce = true;
-            mask.RainSimulatorVelocity = true;
-            mask.RainSimulatorFalloff = true;
-            mask.RainSimulatorDampner = true;
-            mask.RainSimulatorStartingSize = true;
-            mask.DisplacementSimulatorForce = true;
-            mask.DisplacementSimulatorVelocity = true;
-            mask.DisplacementSimulatorFalloff = true;
-            mask.DisplacementSimulatorDampner = true;
-            mask.DisplacementSimulatorStartingSize = true;
-            mask.Damage = true;
+            var itemData = item.Data;
+            mask.Data = new MaskItem<bool, WaterData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
             var itemRelatedWaters = item.RelatedWaters;
             mask.RelatedWaters = new MaskItem<bool, RelatedWaters.Mask<bool>?>(itemRelatedWaters != null, itemRelatedWaters?.GetHasBeenSetMask());
-            mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -3576,34 +1845,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs.Flags != rhs.Flags) return false;
             if (!string.Equals(lhs.MaterialID, rhs.MaterialID)) return false;
             if (!lhs.Sound.Equals(rhs.Sound)) return false;
-            if (!lhs.WindVelocity.EqualsWithin(rhs.WindVelocity)) return false;
-            if (!lhs.WindDirection.EqualsWithin(rhs.WindDirection)) return false;
-            if (!lhs.WaveAmplitude.EqualsWithin(rhs.WaveAmplitude)) return false;
-            if (!lhs.WaveFrequency.EqualsWithin(rhs.WaveFrequency)) return false;
-            if (!lhs.SunPower.EqualsWithin(rhs.SunPower)) return false;
-            if (!lhs.ReflectivityAmount.EqualsWithin(rhs.ReflectivityAmount)) return false;
-            if (!lhs.FresnelAmount.EqualsWithin(rhs.FresnelAmount)) return false;
-            if (!lhs.ScrollXSpeed.EqualsWithin(rhs.ScrollXSpeed)) return false;
-            if (!lhs.ScrollYSpeed.EqualsWithin(rhs.ScrollYSpeed)) return false;
-            if (!lhs.FogDistanceNearPlane.EqualsWithin(rhs.FogDistanceNearPlane)) return false;
-            if (!lhs.FogDistanceFarPlane.EqualsWithin(rhs.FogDistanceFarPlane)) return false;
-            if (!lhs.ShallowColor.ColorOnlyEquals(rhs.ShallowColor)) return false;
-            if (!lhs.DeepColor.ColorOnlyEquals(rhs.DeepColor)) return false;
-            if (!lhs.ReflectionColor.ColorOnlyEquals(rhs.ReflectionColor)) return false;
-            if (lhs.TextureBlend != rhs.TextureBlend) return false;
-            if (!lhs.RainSimulatorForce.EqualsWithin(rhs.RainSimulatorForce)) return false;
-            if (!lhs.RainSimulatorVelocity.EqualsWithin(rhs.RainSimulatorVelocity)) return false;
-            if (!lhs.RainSimulatorFalloff.EqualsWithin(rhs.RainSimulatorFalloff)) return false;
-            if (!lhs.RainSimulatorDampner.EqualsWithin(rhs.RainSimulatorDampner)) return false;
-            if (!lhs.RainSimulatorStartingSize.EqualsWithin(rhs.RainSimulatorStartingSize)) return false;
-            if (!lhs.DisplacementSimulatorForce.EqualsWithin(rhs.DisplacementSimulatorForce)) return false;
-            if (!lhs.DisplacementSimulatorVelocity.EqualsWithin(rhs.DisplacementSimulatorVelocity)) return false;
-            if (!lhs.DisplacementSimulatorFalloff.EqualsWithin(rhs.DisplacementSimulatorFalloff)) return false;
-            if (!lhs.DisplacementSimulatorDampner.EqualsWithin(rhs.DisplacementSimulatorDampner)) return false;
-            if (!lhs.DisplacementSimulatorStartingSize.EqualsWithin(rhs.DisplacementSimulatorStartingSize)) return false;
-            if (lhs.Damage != rhs.Damage) return false;
+            if (!object.Equals(lhs.Data, rhs.Data)) return false;
             if (!object.Equals(lhs.RelatedWaters, rhs.RelatedWaters)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
         
@@ -3648,37 +1891,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(Sounditem);
             }
-            hash.Add(item.WindVelocity);
-            hash.Add(item.WindDirection);
-            hash.Add(item.WaveAmplitude);
-            hash.Add(item.WaveFrequency);
-            hash.Add(item.SunPower);
-            hash.Add(item.ReflectivityAmount);
-            hash.Add(item.FresnelAmount);
-            hash.Add(item.ScrollXSpeed);
-            hash.Add(item.ScrollYSpeed);
-            hash.Add(item.FogDistanceNearPlane);
-            hash.Add(item.FogDistanceFarPlane);
-            hash.Add(item.ShallowColor);
-            hash.Add(item.DeepColor);
-            hash.Add(item.ReflectionColor);
-            hash.Add(item.TextureBlend);
-            hash.Add(item.RainSimulatorForce);
-            hash.Add(item.RainSimulatorVelocity);
-            hash.Add(item.RainSimulatorFalloff);
-            hash.Add(item.RainSimulatorDampner);
-            hash.Add(item.RainSimulatorStartingSize);
-            hash.Add(item.DisplacementSimulatorForce);
-            hash.Add(item.DisplacementSimulatorVelocity);
-            hash.Add(item.DisplacementSimulatorFalloff);
-            hash.Add(item.DisplacementSimulatorDampner);
-            hash.Add(item.DisplacementSimulatorStartingSize);
-            hash.Add(item.Damage);
+            if (item.Data.TryGet(out var Dataitem))
+            {
+                hash.Add(Dataitem);
+            }
             if (item.RelatedWaters.TryGet(out var RelatedWatersitem))
             {
                 hash.Add(RelatedWatersitem);
             }
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -3782,109 +2002,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.Sound.FormKey = rhs.Sound.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.WindVelocity) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Data) ?? true))
             {
-                item.WindVelocity = rhs.WindVelocity;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.WindDirection) ?? true))
-            {
-                item.WindDirection = rhs.WindDirection;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.WaveAmplitude) ?? true))
-            {
-                item.WaveAmplitude = rhs.WaveAmplitude;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.WaveFrequency) ?? true))
-            {
-                item.WaveFrequency = rhs.WaveFrequency;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.SunPower) ?? true))
-            {
-                item.SunPower = rhs.SunPower;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.ReflectivityAmount) ?? true))
-            {
-                item.ReflectivityAmount = rhs.ReflectivityAmount;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FresnelAmount) ?? true))
-            {
-                item.FresnelAmount = rhs.FresnelAmount;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.ScrollXSpeed) ?? true))
-            {
-                item.ScrollXSpeed = rhs.ScrollXSpeed;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.ScrollYSpeed) ?? true))
-            {
-                item.ScrollYSpeed = rhs.ScrollYSpeed;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogDistanceNearPlane) ?? true))
-            {
-                item.FogDistanceNearPlane = rhs.FogDistanceNearPlane;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FogDistanceFarPlane) ?? true))
-            {
-                item.FogDistanceFarPlane = rhs.FogDistanceFarPlane;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.ShallowColor) ?? true))
-            {
-                item.ShallowColor = rhs.ShallowColor;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DeepColor) ?? true))
-            {
-                item.DeepColor = rhs.DeepColor;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.ReflectionColor) ?? true))
-            {
-                item.ReflectionColor = rhs.ReflectionColor;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.TextureBlend) ?? true))
-            {
-                item.TextureBlend = rhs.TextureBlend;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorForce) ?? true))
-            {
-                item.RainSimulatorForce = rhs.RainSimulatorForce;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorVelocity) ?? true))
-            {
-                item.RainSimulatorVelocity = rhs.RainSimulatorVelocity;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorFalloff) ?? true))
-            {
-                item.RainSimulatorFalloff = rhs.RainSimulatorFalloff;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorDampner) ?? true))
-            {
-                item.RainSimulatorDampner = rhs.RainSimulatorDampner;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorStartingSize) ?? true))
-            {
-                item.RainSimulatorStartingSize = rhs.RainSimulatorStartingSize;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorForce) ?? true))
-            {
-                item.DisplacementSimulatorForce = rhs.DisplacementSimulatorForce;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorVelocity) ?? true))
-            {
-                item.DisplacementSimulatorVelocity = rhs.DisplacementSimulatorVelocity;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorFalloff) ?? true))
-            {
-                item.DisplacementSimulatorFalloff = rhs.DisplacementSimulatorFalloff;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorDampner) ?? true))
-            {
-                item.DisplacementSimulatorDampner = rhs.DisplacementSimulatorDampner;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorStartingSize) ?? true))
-            {
-                item.DisplacementSimulatorStartingSize = rhs.DisplacementSimulatorStartingSize;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Damage) ?? true))
-            {
-                item.Damage = rhs.Damage;
+                errorMask?.PushIndex((int)Water_FieldIndex.Data);
+                try
+                {
+                    if(rhs.Data.TryGet(out var rhsData))
+                    {
+                        item.Data = rhsData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Water_FieldIndex.Data));
+                    }
+                    else
+                    {
+                        item.Data = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.RelatedWaters) ?? true))
             {
@@ -3911,10 +2053,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     errorMask?.PopIndex();
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
             }
         }
         
@@ -4108,257 +2246,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Water_FieldIndex.Sound,
                     errorMask: errorMask);
             }
-            if (item.DATADataTypeState.HasFlag(Water.DATADataType.Has))
+            if ((item.Data != null)
+                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.Data) ?? true))
             {
-                if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break0))
+                if (item.Data.TryGet(out var DataItem))
                 {
-                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WindVelocity) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.WindVelocity),
-                            item: item.WindVelocity,
-                            fieldIndex: (int)Water_FieldIndex.WindVelocity,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WindDirection) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.WindDirection),
-                            item: item.WindDirection,
-                            fieldIndex: (int)Water_FieldIndex.WindDirection,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WaveAmplitude) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.WaveAmplitude),
-                            item: item.WaveAmplitude,
-                            fieldIndex: (int)Water_FieldIndex.WaveAmplitude,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.WaveFrequency) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.WaveFrequency),
-                            item: item.WaveFrequency,
-                            fieldIndex: (int)Water_FieldIndex.WaveFrequency,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.SunPower) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.SunPower),
-                            item: item.SunPower,
-                            fieldIndex: (int)Water_FieldIndex.SunPower,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ReflectivityAmount) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ReflectivityAmount),
-                            item: item.ReflectivityAmount,
-                            fieldIndex: (int)Water_FieldIndex.ReflectivityAmount,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FresnelAmount) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.FresnelAmount),
-                            item: item.FresnelAmount,
-                            fieldIndex: (int)Water_FieldIndex.FresnelAmount,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ScrollXSpeed) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ScrollXSpeed),
-                            item: item.ScrollXSpeed,
-                            fieldIndex: (int)Water_FieldIndex.ScrollXSpeed,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ScrollYSpeed) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.ScrollYSpeed),
-                            item: item.ScrollYSpeed,
-                            fieldIndex: (int)Water_FieldIndex.ScrollYSpeed,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FogDistanceNearPlane) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.FogDistanceNearPlane),
-                            item: item.FogDistanceNearPlane,
-                            fieldIndex: (int)Water_FieldIndex.FogDistanceNearPlane,
-                            errorMask: errorMask);
-                    }
-                    if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break1))
-                    {
-                        if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.FogDistanceFarPlane) ?? true))
-                        {
-                            FloatXmlTranslation.Instance.Write(
-                                node: node,
-                                name: nameof(item.FogDistanceFarPlane),
-                                item: item.FogDistanceFarPlane,
-                                fieldIndex: (int)Water_FieldIndex.FogDistanceFarPlane,
-                                errorMask: errorMask);
-                        }
-                        if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ShallowColor) ?? true))
-                        {
-                            ColorXmlTranslation.Instance.Write(
-                                node: node,
-                                name: nameof(item.ShallowColor),
-                                item: item.ShallowColor,
-                                fieldIndex: (int)Water_FieldIndex.ShallowColor,
-                                errorMask: errorMask);
-                        }
-                        if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DeepColor) ?? true))
-                        {
-                            ColorXmlTranslation.Instance.Write(
-                                node: node,
-                                name: nameof(item.DeepColor),
-                                item: item.DeepColor,
-                                fieldIndex: (int)Water_FieldIndex.DeepColor,
-                                errorMask: errorMask);
-                        }
-                        if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.ReflectionColor) ?? true))
-                        {
-                            ColorXmlTranslation.Instance.Write(
-                                node: node,
-                                name: nameof(item.ReflectionColor),
-                                item: item.ReflectionColor,
-                                fieldIndex: (int)Water_FieldIndex.ReflectionColor,
-                                errorMask: errorMask);
-                        }
-                        if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.TextureBlend) ?? true))
-                        {
-                            ByteXmlTranslation.Instance.Write(
-                                node: node,
-                                name: nameof(item.TextureBlend),
-                                item: item.TextureBlend,
-                                fieldIndex: (int)Water_FieldIndex.TextureBlend,
-                                errorMask: errorMask);
-                        }
-                        if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break2))
-                        {
-                            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorForce) ?? true))
-                            {
-                                FloatXmlTranslation.Instance.Write(
-                                    node: node,
-                                    name: nameof(item.RainSimulatorForce),
-                                    item: item.RainSimulatorForce,
-                                    fieldIndex: (int)Water_FieldIndex.RainSimulatorForce,
-                                    errorMask: errorMask);
-                            }
-                            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorVelocity) ?? true))
-                            {
-                                FloatXmlTranslation.Instance.Write(
-                                    node: node,
-                                    name: nameof(item.RainSimulatorVelocity),
-                                    item: item.RainSimulatorVelocity,
-                                    fieldIndex: (int)Water_FieldIndex.RainSimulatorVelocity,
-                                    errorMask: errorMask);
-                            }
-                            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorFalloff) ?? true))
-                            {
-                                FloatXmlTranslation.Instance.Write(
-                                    node: node,
-                                    name: nameof(item.RainSimulatorFalloff),
-                                    item: item.RainSimulatorFalloff,
-                                    fieldIndex: (int)Water_FieldIndex.RainSimulatorFalloff,
-                                    errorMask: errorMask);
-                            }
-                            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorDampner) ?? true))
-                            {
-                                FloatXmlTranslation.Instance.Write(
-                                    node: node,
-                                    name: nameof(item.RainSimulatorDampner),
-                                    item: item.RainSimulatorDampner,
-                                    fieldIndex: (int)Water_FieldIndex.RainSimulatorDampner,
-                                    errorMask: errorMask);
-                            }
-                            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.RainSimulatorStartingSize) ?? true))
-                            {
-                                FloatXmlTranslation.Instance.Write(
-                                    node: node,
-                                    name: nameof(item.RainSimulatorStartingSize),
-                                    item: item.RainSimulatorStartingSize,
-                                    fieldIndex: (int)Water_FieldIndex.RainSimulatorStartingSize,
-                                    errorMask: errorMask);
-                            }
-                            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorForce) ?? true))
-                            {
-                                FloatXmlTranslation.Instance.Write(
-                                    node: node,
-                                    name: nameof(item.DisplacementSimulatorForce),
-                                    item: item.DisplacementSimulatorForce,
-                                    fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorForce,
-                                    errorMask: errorMask);
-                            }
-                            if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break3))
-                            {
-                                if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorVelocity) ?? true))
-                                {
-                                    FloatXmlTranslation.Instance.Write(
-                                        node: node,
-                                        name: nameof(item.DisplacementSimulatorVelocity),
-                                        item: item.DisplacementSimulatorVelocity,
-                                        fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorVelocity,
-                                        errorMask: errorMask);
-                                }
-                                if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorFalloff) ?? true))
-                                {
-                                    FloatXmlTranslation.Instance.Write(
-                                        node: node,
-                                        name: nameof(item.DisplacementSimulatorFalloff),
-                                        item: item.DisplacementSimulatorFalloff,
-                                        fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorFalloff,
-                                        errorMask: errorMask);
-                                }
-                                if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorDampner) ?? true))
-                                {
-                                    FloatXmlTranslation.Instance.Write(
-                                        node: node,
-                                        name: nameof(item.DisplacementSimulatorDampner),
-                                        item: item.DisplacementSimulatorDampner,
-                                        fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorDampner,
-                                        errorMask: errorMask);
-                                }
-                                if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DisplacementSimulatorStartingSize) ?? true))
-                                {
-                                    FloatXmlTranslation.Instance.Write(
-                                        node: node,
-                                        name: nameof(item.DisplacementSimulatorStartingSize),
-                                        item: item.DisplacementSimulatorStartingSize,
-                                        fieldIndex: (int)Water_FieldIndex.DisplacementSimulatorStartingSize,
-                                        errorMask: errorMask);
-                                }
-                                if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.Damage) ?? true))
-                                {
-                                    UInt16XmlTranslation.Instance.Write(
-                                        node: node,
-                                        name: nameof(item.Damage),
-                                        item: item.Damage,
-                                        fieldIndex: (int)Water_FieldIndex.Damage,
-                                        errorMask: errorMask);
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    node.Add(new XElement("HasDATADataType"));
+                    ((WaterDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                        item: DataItem,
+                        node: node,
+                        name: nameof(item.Data),
+                        fieldIndex: (int)Water_FieldIndex.Data,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Water_FieldIndex.Data));
                 }
             }
             if ((item.RelatedWaters != null)
@@ -4374,15 +2273,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask,
                         translationMask: translationMask?.GetSubCrystal((int)Water_FieldIndex.RelatedWaters));
                 }
-            }
-            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Water.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)Water_FieldIndex.DATADataTypeState,
-                    errorMask: errorMask);
             }
         }
 
@@ -4581,467 +2471,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "WindVelocity":
-                    errorMask?.PushIndex((int)Water_FieldIndex.WindVelocity);
+                case "Data":
+                    errorMask?.PushIndex((int)Water_FieldIndex.Data);
                     try
                     {
-                        item.WindVelocity = FloatXmlTranslation.Instance.Parse(
+                        item.Data = LoquiXmlTranslation<WaterData>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.DATADataTypeState &= ~Water.DATADataType.Break0;
-                    break;
-                case "WindDirection":
-                    errorMask?.PushIndex((int)Water_FieldIndex.WindDirection);
-                    try
-                    {
-                        item.WindDirection = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WaveAmplitude":
-                    errorMask?.PushIndex((int)Water_FieldIndex.WaveAmplitude);
-                    try
-                    {
-                        item.WaveAmplitude = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "WaveFrequency":
-                    errorMask?.PushIndex((int)Water_FieldIndex.WaveFrequency);
-                    try
-                    {
-                        item.WaveFrequency = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SunPower":
-                    errorMask?.PushIndex((int)Water_FieldIndex.SunPower);
-                    try
-                    {
-                        item.SunPower = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ReflectivityAmount":
-                    errorMask?.PushIndex((int)Water_FieldIndex.ReflectivityAmount);
-                    try
-                    {
-                        item.ReflectivityAmount = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FresnelAmount":
-                    errorMask?.PushIndex((int)Water_FieldIndex.FresnelAmount);
-                    try
-                    {
-                        item.FresnelAmount = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ScrollXSpeed":
-                    errorMask?.PushIndex((int)Water_FieldIndex.ScrollXSpeed);
-                    try
-                    {
-                        item.ScrollXSpeed = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ScrollYSpeed":
-                    errorMask?.PushIndex((int)Water_FieldIndex.ScrollYSpeed);
-                    try
-                    {
-                        item.ScrollYSpeed = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FogDistanceNearPlane":
-                    errorMask?.PushIndex((int)Water_FieldIndex.FogDistanceNearPlane);
-                    try
-                    {
-                        item.FogDistanceNearPlane = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FogDistanceFarPlane":
-                    errorMask?.PushIndex((int)Water_FieldIndex.FogDistanceFarPlane);
-                    try
-                    {
-                        item.FogDistanceFarPlane = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.DATADataTypeState &= ~Water.DATADataType.Break1;
-                    break;
-                case "ShallowColor":
-                    errorMask?.PushIndex((int)Water_FieldIndex.ShallowColor);
-                    try
-                    {
-                        item.ShallowColor = ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DeepColor":
-                    errorMask?.PushIndex((int)Water_FieldIndex.DeepColor);
-                    try
-                    {
-                        item.DeepColor = ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ReflectionColor":
-                    errorMask?.PushIndex((int)Water_FieldIndex.ReflectionColor);
-                    try
-                    {
-                        item.ReflectionColor = ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TextureBlend":
-                    errorMask?.PushIndex((int)Water_FieldIndex.TextureBlend);
-                    try
-                    {
-                        item.TextureBlend = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RainSimulatorForce":
-                    errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorForce);
-                    try
-                    {
-                        item.RainSimulatorForce = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.DATADataTypeState &= ~Water.DATADataType.Break2;
-                    break;
-                case "RainSimulatorVelocity":
-                    errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorVelocity);
-                    try
-                    {
-                        item.RainSimulatorVelocity = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RainSimulatorFalloff":
-                    errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorFalloff);
-                    try
-                    {
-                        item.RainSimulatorFalloff = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RainSimulatorDampner":
-                    errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorDampner);
-                    try
-                    {
-                        item.RainSimulatorDampner = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RainSimulatorStartingSize":
-                    errorMask?.PushIndex((int)Water_FieldIndex.RainSimulatorStartingSize);
-                    try
-                    {
-                        item.RainSimulatorStartingSize = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DisplacementSimulatorForce":
-                    errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorForce);
-                    try
-                    {
-                        item.DisplacementSimulatorForce = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DisplacementSimulatorVelocity":
-                    errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorVelocity);
-                    try
-                    {
-                        item.DisplacementSimulatorVelocity = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.DATADataTypeState &= ~Water.DATADataType.Break3;
-                    break;
-                case "DisplacementSimulatorFalloff":
-                    errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorFalloff);
-                    try
-                    {
-                        item.DisplacementSimulatorFalloff = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DisplacementSimulatorDampner":
-                    errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorDampner);
-                    try
-                    {
-                        item.DisplacementSimulatorDampner = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DisplacementSimulatorStartingSize":
-                    errorMask?.PushIndex((int)Water_FieldIndex.DisplacementSimulatorStartingSize);
-                    try
-                    {
-                        item.DisplacementSimulatorStartingSize = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Damage":
-                    errorMask?.PushIndex((int)Water_FieldIndex.Damage);
-                    try
-                    {
-                        item.Damage = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Water_FieldIndex.Data));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -5061,24 +2498,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             node: node,
                             errorMask: errorMask,
                             translationMask: translationMask?.GetSubCrystal((int)Water_FieldIndex.RelatedWaters));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DATADataTypeState":
-                    errorMask?.PushIndex((int)Water_FieldIndex.DATADataTypeState);
-                    try
-                    {
-                        item.DATADataTypeState = EnumXmlTranslation<Water.DATADataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -5176,65 +2595,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static WaterBinaryWriteTranslation Instance = new WaterBinaryWriteTranslation();
 
-        static partial void WriteBinaryNothingCustomLogicCustom(
+        static partial void WriteBinaryDataCustom(
             MutagenWriter writer,
             IWaterGetter item);
 
-        public static void WriteBinaryNothingCustomLogic(
+        public static void WriteBinaryData(
             MutagenWriter writer,
             IWaterGetter item)
         {
-            WriteBinaryNothingCustomLogicCustom(
+            WriteBinaryDataCustom(
                 writer: writer,
                 item: item);
-        }
-
-        static partial void WriteBinaryBloodCustomLogicCustom(
-            MutagenWriter writer,
-            IWaterGetter item);
-
-        public static void WriteBinaryBloodCustomLogic(
-            MutagenWriter writer,
-            IWaterGetter item)
-        {
-            WriteBinaryBloodCustomLogicCustom(
-                writer: writer,
-                item: item);
-        }
-
-        static partial void WriteBinaryOilCustomLogicCustom(
-            MutagenWriter writer,
-            IWaterGetter item);
-
-        public static void WriteBinaryOilCustomLogic(
-            MutagenWriter writer,
-            IWaterGetter item)
-        {
-            WriteBinaryOilCustomLogicCustom(
-                writer: writer,
-                item: item);
-        }
-
-        static partial void WriteBinaryOddExtraBytesCustom(
-            MutagenWriter writer,
-            IWaterGetter item);
-
-        public static void WriteBinaryOddExtraBytes(
-            MutagenWriter writer,
-            IWaterGetter item)
-        {
-            WriteBinaryOddExtraBytesCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static void WriteEmbedded(
-            IWaterGetter item,
-            MutagenWriter writer)
-        {
-            OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
         }
 
         public static void WriteRecordTypes(
@@ -5269,114 +2640,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.Sound,
                 header: recordTypeConverter.ConvertToCustom(Water_Registration.SNAM_HEADER));
-            if (item.DATADataTypeState.HasFlag(Water.DATADataType.Has))
-            {
-                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Water_Registration.DATA_HEADER)))
-                {
-                    WaterBinaryWriteTranslation.WriteBinaryNothingCustomLogic(
-                        writer: writer,
-                        item: item);
-                    if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break0))
-                    {
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.WindVelocity);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.WindDirection);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.WaveAmplitude);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.WaveFrequency);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.SunPower);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ReflectivityAmount);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.FresnelAmount);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ScrollXSpeed);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.ScrollYSpeed);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.FogDistanceNearPlane);
-                        WaterBinaryWriteTranslation.WriteBinaryBloodCustomLogic(
-                            writer: writer,
-                            item: item);
-                        if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break1))
-                        {
-                            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                                writer: writer,
-                                item: item.FogDistanceFarPlane);
-                            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
-                                writer: writer,
-                                item: item.ShallowColor,
-                                extraByte: true);
-                            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
-                                writer: writer,
-                                item: item.DeepColor,
-                                extraByte: true);
-                            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
-                                writer: writer,
-                                item: item.ReflectionColor,
-                                extraByte: true);
-                            writer.Write(item.TextureBlend);
-                            writer.WriteZeros(3);
-                            WaterBinaryWriteTranslation.WriteBinaryOilCustomLogic(
-                                writer: writer,
-                                item: item);
-                            if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break2))
-                            {
-                                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                                    writer: writer,
-                                    item: item.RainSimulatorForce);
-                                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                                    writer: writer,
-                                    item: item.RainSimulatorVelocity);
-                                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                                    writer: writer,
-                                    item: item.RainSimulatorFalloff);
-                                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                                    writer: writer,
-                                    item: item.RainSimulatorDampner);
-                                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                                    writer: writer,
-                                    item: item.RainSimulatorStartingSize);
-                                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                                    writer: writer,
-                                    item: item.DisplacementSimulatorForce);
-                                WaterBinaryWriteTranslation.WriteBinaryOddExtraBytes(
-                                    writer: writer,
-                                    item: item);
-                                if (!item.DATADataTypeState.HasFlag(Water.DATADataType.Break3))
-                                {
-                                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                                        writer: writer,
-                                        item: item.DisplacementSimulatorVelocity);
-                                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                                        writer: writer,
-                                        item: item.DisplacementSimulatorFalloff);
-                                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                                        writer: writer,
-                                        item: item.DisplacementSimulatorDampner);
-                                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                                        writer: writer,
-                                        item: item.DisplacementSimulatorStartingSize);
-                                    writer.Write(item.Damage);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            WaterBinaryWriteTranslation.WriteBinaryData(
+                writer: writer,
+                item: item);
             if (item.RelatedWaters.TryGet(out var RelatedWatersItem))
             {
                 ((RelatedWatersBinaryWriteTranslation)((IBinaryItem)RelatedWatersItem).BinaryWriteTranslator).Write(
@@ -5396,7 +2662,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: recordTypeConverter.ConvertToCustom(Water_Registration.WATR_HEADER),
                 type: ObjectType.Record))
             {
-                WriteEmbedded(
+                OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -5445,54 +2711,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static WaterBinaryCreateTranslation Instance = new WaterBinaryCreateTranslation();
 
-        static partial void FillBinaryNothingCustomLogicCustom(
+        static partial void FillBinaryDataCustom(
             MutagenFrame frame,
             IWaterInternal item);
 
-        public static void FillBinaryNothingCustomLogicCustomPublic(
+        public static void FillBinaryDataCustomPublic(
             MutagenFrame frame,
             IWaterInternal item)
         {
-            FillBinaryNothingCustomLogicCustom(
-                frame: frame,
-                item: item);
-        }
-
-        static partial void FillBinaryBloodCustomLogicCustom(
-            MutagenFrame frame,
-            IWaterInternal item);
-
-        public static void FillBinaryBloodCustomLogicCustomPublic(
-            MutagenFrame frame,
-            IWaterInternal item)
-        {
-            FillBinaryBloodCustomLogicCustom(
-                frame: frame,
-                item: item);
-        }
-
-        static partial void FillBinaryOilCustomLogicCustom(
-            MutagenFrame frame,
-            IWaterInternal item);
-
-        public static void FillBinaryOilCustomLogicCustomPublic(
-            MutagenFrame frame,
-            IWaterInternal item)
-        {
-            FillBinaryOilCustomLogicCustom(
-                frame: frame,
-                item: item);
-        }
-
-        static partial void FillBinaryOddExtraBytesCustom(
-            MutagenFrame frame,
-            IWaterInternal item);
-
-        public static void FillBinaryOddExtraBytesCustomPublic(
-            MutagenFrame frame,
-            IWaterInternal item)
-        {
-            FillBinaryOddExtraBytesCustom(
+            FillBinaryDataCustom(
                 frame: frame,
                 item: item);
         }
@@ -5581,160 +2808,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Sound_IsSet => _SoundLocation.HasValue;
         public IFormLinkNullableGetter<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundGetter>.Empty;
         #endregion
-        private int? _DATALocation;
-        public Water.DATADataType DATADataTypeState { get; private set; }
-        partial void DATACustomParse(
+        #region Data
+        partial void DataCustomParse(
             BinaryMemoryReadStream stream,
+            long finalPos,
             int offset);
-        #region NothingCustomLogic
-        partial void NothingCustomLogicCustomParse(
-            BinaryMemoryReadStream stream,
-            int offset);
-        #endregion
-        #region WindVelocity
-        private int _WindVelocityLocation => _DATALocation!.Value + 0x0;
-        private bool _WindVelocity_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
-        public Single WindVelocity => _WindVelocity_IsSet ? SpanExt.GetFloat(_data.Slice(_WindVelocityLocation, 4)) : default;
-        #endregion
-        #region WindDirection
-        private int _WindDirectionLocation => _DATALocation!.Value + 0x4;
-        private bool _WindDirection_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
-        public Single WindDirection => _WindDirection_IsSet ? SpanExt.GetFloat(_data.Slice(_WindDirectionLocation, 4)) : default;
-        #endregion
-        #region WaveAmplitude
-        private int _WaveAmplitudeLocation => _DATALocation!.Value + 0x8;
-        private bool _WaveAmplitude_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
-        public Single WaveAmplitude => _WaveAmplitude_IsSet ? SpanExt.GetFloat(_data.Slice(_WaveAmplitudeLocation, 4)) : default;
-        #endregion
-        #region WaveFrequency
-        private int _WaveFrequencyLocation => _DATALocation!.Value + 0xC;
-        private bool _WaveFrequency_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
-        public Single WaveFrequency => _WaveFrequency_IsSet ? SpanExt.GetFloat(_data.Slice(_WaveFrequencyLocation, 4)) : default;
-        #endregion
-        #region SunPower
-        private int _SunPowerLocation => _DATALocation!.Value + 0x10;
-        private bool _SunPower_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
-        public Single SunPower => _SunPower_IsSet ? SpanExt.GetFloat(_data.Slice(_SunPowerLocation, 4)) : default;
-        #endregion
-        #region ReflectivityAmount
-        private int _ReflectivityAmountLocation => _DATALocation!.Value + 0x14;
-        private bool _ReflectivityAmount_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
-        public Single ReflectivityAmount => _ReflectivityAmount_IsSet ? SpanExt.GetFloat(_data.Slice(_ReflectivityAmountLocation, 4)) : default;
-        #endregion
-        #region FresnelAmount
-        private int _FresnelAmountLocation => _DATALocation!.Value + 0x18;
-        private bool _FresnelAmount_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
-        public Single FresnelAmount => _FresnelAmount_IsSet ? SpanExt.GetFloat(_data.Slice(_FresnelAmountLocation, 4)) : default;
-        #endregion
-        #region ScrollXSpeed
-        private int _ScrollXSpeedLocation => _DATALocation!.Value + 0x1C;
-        private bool _ScrollXSpeed_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
-        public Single ScrollXSpeed => _ScrollXSpeed_IsSet ? SpanExt.GetFloat(_data.Slice(_ScrollXSpeedLocation, 4)) : default;
-        #endregion
-        #region ScrollYSpeed
-        private int _ScrollYSpeedLocation => _DATALocation!.Value + 0x20;
-        private bool _ScrollYSpeed_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
-        public Single ScrollYSpeed => _ScrollYSpeed_IsSet ? SpanExt.GetFloat(_data.Slice(_ScrollYSpeedLocation, 4)) : default;
-        #endregion
-        #region FogDistanceNearPlane
-        private int _FogDistanceNearPlaneLocation => _DATALocation!.Value + 0x24;
-        private bool _FogDistanceNearPlane_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break0);
-        public Single FogDistanceNearPlane => _FogDistanceNearPlane_IsSet ? SpanExt.GetFloat(_data.Slice(_FogDistanceNearPlaneLocation, 4)) : default;
-        #endregion
-        #region BloodCustomLogic
-        partial void BloodCustomLogicCustomParse(
-            BinaryMemoryReadStream stream,
-            int offset);
-        #endregion
-        #region FogDistanceFarPlane
-        private int _FogDistanceFarPlaneLocation => _DATALocation!.Value + 0x28;
-        private bool _FogDistanceFarPlane_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break1);
-        public Single FogDistanceFarPlane => _FogDistanceFarPlane_IsSet ? SpanExt.GetFloat(_data.Slice(_FogDistanceFarPlaneLocation, 4)) : default;
-        #endregion
-        #region ShallowColor
-        private int _ShallowColorLocation => _DATALocation!.Value + 0x2C;
-        private bool _ShallowColor_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break1);
-        public Color ShallowColor => _ShallowColor_IsSet ? _data.Slice(_ShallowColorLocation, 4).ReadColor() : default;
-        #endregion
-        #region DeepColor
-        private int _DeepColorLocation => _DATALocation!.Value + 0x30;
-        private bool _DeepColor_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break1);
-        public Color DeepColor => _DeepColor_IsSet ? _data.Slice(_DeepColorLocation, 4).ReadColor() : default;
-        #endregion
-        #region ReflectionColor
-        private int _ReflectionColorLocation => _DATALocation!.Value + 0x34;
-        private bool _ReflectionColor_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break1);
-        public Color ReflectionColor => _ReflectionColor_IsSet ? _data.Slice(_ReflectionColorLocation, 4).ReadColor() : default;
-        #endregion
-        #region TextureBlend
-        private int _TextureBlendLocation => _DATALocation!.Value + 0x38;
-        private bool _TextureBlend_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break1);
-        public Byte TextureBlend => _TextureBlend_IsSet ? _data.Span[_TextureBlendLocation] : default;
-        #endregion
-        #region OilCustomLogic
-        partial void OilCustomLogicCustomParse(
-            BinaryMemoryReadStream stream,
-            int offset);
-        #endregion
-        #region RainSimulatorForce
-        private int _RainSimulatorForceLocation => _DATALocation!.Value + 0x3C;
-        private bool _RainSimulatorForce_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break2);
-        public Single RainSimulatorForce => _RainSimulatorForce_IsSet ? SpanExt.GetFloat(_data.Slice(_RainSimulatorForceLocation, 4)) : default;
-        #endregion
-        #region RainSimulatorVelocity
-        private int _RainSimulatorVelocityLocation => _DATALocation!.Value + 0x40;
-        private bool _RainSimulatorVelocity_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break2);
-        public Single RainSimulatorVelocity => _RainSimulatorVelocity_IsSet ? SpanExt.GetFloat(_data.Slice(_RainSimulatorVelocityLocation, 4)) : default;
-        #endregion
-        #region RainSimulatorFalloff
-        private int _RainSimulatorFalloffLocation => _DATALocation!.Value + 0x44;
-        private bool _RainSimulatorFalloff_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break2);
-        public Single RainSimulatorFalloff => _RainSimulatorFalloff_IsSet ? SpanExt.GetFloat(_data.Slice(_RainSimulatorFalloffLocation, 4)) : default;
-        #endregion
-        #region RainSimulatorDampner
-        private int _RainSimulatorDampnerLocation => _DATALocation!.Value + 0x48;
-        private bool _RainSimulatorDampner_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break2);
-        public Single RainSimulatorDampner => _RainSimulatorDampner_IsSet ? SpanExt.GetFloat(_data.Slice(_RainSimulatorDampnerLocation, 4)) : default;
-        #endregion
-        #region RainSimulatorStartingSize
-        private int _RainSimulatorStartingSizeLocation => _DATALocation!.Value + 0x4C;
-        private bool _RainSimulatorStartingSize_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break2);
-        public Single RainSimulatorStartingSize => _RainSimulatorStartingSize_IsSet ? SpanExt.GetFloat(_data.Slice(_RainSimulatorStartingSizeLocation, 4)) : default;
-        #endregion
-        #region DisplacementSimulatorForce
-        private int _DisplacementSimulatorForceLocation => _DATALocation!.Value + 0x50;
-        private bool _DisplacementSimulatorForce_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break2);
-        public Single DisplacementSimulatorForce => _DisplacementSimulatorForce_IsSet ? SpanExt.GetFloat(_data.Slice(_DisplacementSimulatorForceLocation, 4)) : default;
-        #endregion
-        #region OddExtraBytes
-        partial void OddExtraBytesCustomParse(
-            BinaryMemoryReadStream stream,
-            int offset);
-        #endregion
-        #region DisplacementSimulatorVelocity
-        private int _DisplacementSimulatorVelocityLocation => _DATALocation!.Value + 0x54;
-        private bool _DisplacementSimulatorVelocity_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break3);
-        public Single DisplacementSimulatorVelocity => _DisplacementSimulatorVelocity_IsSet ? SpanExt.GetFloat(_data.Slice(_DisplacementSimulatorVelocityLocation, 4)) : default;
-        #endregion
-        #region DisplacementSimulatorFalloff
-        private int _DisplacementSimulatorFalloffLocation => _DATALocation!.Value + 0x58;
-        private bool _DisplacementSimulatorFalloff_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break3);
-        public Single DisplacementSimulatorFalloff => _DisplacementSimulatorFalloff_IsSet ? SpanExt.GetFloat(_data.Slice(_DisplacementSimulatorFalloffLocation, 4)) : default;
-        #endregion
-        #region DisplacementSimulatorDampner
-        private int _DisplacementSimulatorDampnerLocation => _DATALocation!.Value + 0x5C;
-        private bool _DisplacementSimulatorDampner_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break3);
-        public Single DisplacementSimulatorDampner => _DisplacementSimulatorDampner_IsSet ? SpanExt.GetFloat(_data.Slice(_DisplacementSimulatorDampnerLocation, 4)) : default;
-        #endregion
-        #region DisplacementSimulatorStartingSize
-        private int _DisplacementSimulatorStartingSizeLocation => _DATALocation!.Value + 0x60;
-        private bool _DisplacementSimulatorStartingSize_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break3);
-        public Single DisplacementSimulatorStartingSize => _DisplacementSimulatorStartingSize_IsSet ? SpanExt.GetFloat(_data.Slice(_DisplacementSimulatorStartingSizeLocation, 4)) : default;
-        #endregion
-        #region Damage
-        private int _DamageLocation => _DATALocation!.Value + 0x64;
-        private bool _Damage_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Water.DATADataType.Break3);
-        public UInt16 Damage => _Damage_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_DamageLocation, 2)) : default;
+        public IWaterDataGetter? Data => GetDataCustom();
         #endregion
         #region RelatedWaters
         private RangeInt32? _RelatedWatersLocation;
@@ -5819,10 +2898,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    DATACustomParse(
+                    DataCustomParse(
                         stream,
+                        finalPos,
                         offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Damage);
+                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Data);
                 }
                 case 0x4D414E47: // GNAM
                 {

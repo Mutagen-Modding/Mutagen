@@ -26,15 +26,16 @@
   </Object>
   <Object name="LocalVariable" objType="Subrecord" GUID="b77aa416-b182-4265-8276-44b34bace18f" ID="48">
     <Fields>
-      <Data recordType="SLSD" >
-        <Fields>
-          <Int32 name="Index" />
-          <ByteArray name="Fluff" byteLength="12" nullable="NotNull" />
-          <Enum name="Flags" enumName="Script.LocalVariableFlag" byteLength="4" />
-          <ByteArray name="Fluff2" byteLength="4" nullable="NotNull" />
-        </Fields>
-      </Data>
+      <RefDirect name="Data" refName="LocalVariableData" />
       <String name="Name" recordType="SCVR" />
+    </Fields>
+  </Object>
+  <Object name="LocalVariableData" objType="Subrecord" recordType="SLSD" GUID="02fb12f0-9bb2-4675-9624-502859e58bd6" ID="207">
+    <Fields>
+      <Int32 name="Index" />
+      <ByteArray name="Fluff" byteLength="12" nullable="NotNull" />
+      <Enum name="Flags" enumName="Script.LocalVariableFlag" byteLength="4" />
+      <ByteArray name="Fluff2" byteLength="4" nullable="NotNull" />
     </Fields>
   </Object>
   <Object name="ScriptReference" abstract="true" objType="Subrecord" GUID="5eb6ddcc-5ba8-4da7-87f5-99b6038a61c7" ID="50">

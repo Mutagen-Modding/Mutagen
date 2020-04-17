@@ -15,6 +15,7 @@ using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -46,48 +47,16 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
-        #region Script
+        #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<Script> _Script = new FormLink<Script>();
-        public IFormLink<Script> Script => this._Script;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IScriptGetter> IScriptEffectGetter.Script => this.Script;
-        #endregion
-        #region MagicSchool
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MagicSchool _MagicSchool;
-        public MagicSchool MagicSchool
+        private ScriptEffectData? _Data;
+        public ScriptEffectData? Data
         {
-            get => this._MagicSchool;
-            set
-            {
-                this.SCITDataTypeState |= SCITDataType.Has;
-                this.SCITDataTypeState &= ~SCITDataType.Break0;
-                this._MagicSchool = value;
-            }
+            get => _Data;
+            set => _Data = value;
         }
-        #endregion
-        #region VisualEffect
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEDIDLink<MagicEffect> _VisualEffect = new EDIDLink<MagicEffect>();
-        public IEDIDLink<MagicEffect> VisualEffect => this._VisualEffect;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEDIDLinkGetter<IMagicEffectGetter> IScriptEffectGetter.VisualEffect => this.VisualEffect;
-        #endregion
-        #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ScriptEffect.Flag _Flags;
-        public ScriptEffect.Flag Flags
-        {
-            get => this._Flags;
-            set
-            {
-                this.SCITDataTypeState |= SCITDataType.Has;
-                this.SCITDataTypeState &= ~SCITDataType.Break0;
-                this.SCITDataTypeState &= ~SCITDataType.Break1;
-                this._Flags = value;
-            }
-        }
+        IScriptEffectDataGetter? IScriptEffectGetter.Data => this.Data;
         #endregion
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -99,9 +68,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IScriptEffectGetter.Name => this.Name;
-        #endregion
-        #region SCITDataTypeState
-        public ScriptEffect.SCITDataType SCITDataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -273,28 +239,16 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Script = initialValue;
-                this.MagicSchool = initialValue;
-                this.VisualEffect = initialValue;
-                this.Flags = initialValue;
+                this.Data = new MaskItem<TItem, ScriptEffectData.Mask<TItem>?>(initialValue, new ScriptEffectData.Mask<TItem>(initialValue));
                 this.Name = initialValue;
-                this.SCITDataTypeState = initialValue;
             }
 
             public Mask(
-                TItem Script,
-                TItem MagicSchool,
-                TItem VisualEffect,
-                TItem Flags,
-                TItem Name,
-                TItem SCITDataTypeState)
+                TItem Data,
+                TItem Name)
             {
-                this.Script = Script;
-                this.MagicSchool = MagicSchool;
-                this.VisualEffect = VisualEffect;
-                this.Flags = Flags;
+                this.Data = new MaskItem<TItem, ScriptEffectData.Mask<TItem>?>(Data, new ScriptEffectData.Mask<TItem>(Data));
                 this.Name = Name;
-                this.SCITDataTypeState = SCITDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -306,12 +260,8 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public TItem Script;
-            public TItem MagicSchool;
-            public TItem VisualEffect;
-            public TItem Flags;
+            public MaskItem<TItem, ScriptEffectData.Mask<TItem>?>? Data { get; set; }
             public TItem Name;
-            public TItem SCITDataTypeState;
             #endregion
 
             #region Equals
@@ -324,23 +274,15 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Script, rhs.Script)) return false;
-                if (!object.Equals(this.MagicSchool, rhs.MagicSchool)) return false;
-                if (!object.Equals(this.VisualEffect, rhs.VisualEffect)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
-                if (!object.Equals(this.SCITDataTypeState, rhs.SCITDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Script);
-                hash.Add(this.MagicSchool);
-                hash.Add(this.VisualEffect);
-                hash.Add(this.Flags);
+                hash.Add(this.Data);
                 hash.Add(this.Name);
-                hash.Add(this.SCITDataTypeState);
                 return hash.ToHashCode();
             }
 
@@ -349,12 +291,12 @@ namespace Mutagen.Bethesda.Oblivion
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Script)) return false;
-                if (!eval(this.MagicSchool)) return false;
-                if (!eval(this.VisualEffect)) return false;
-                if (!eval(this.Flags)) return false;
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
                 if (!eval(this.Name)) return false;
-                if (!eval(this.SCITDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -362,12 +304,12 @@ namespace Mutagen.Bethesda.Oblivion
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Script)) return true;
-                if (eval(this.MagicSchool)) return true;
-                if (eval(this.VisualEffect)) return true;
-                if (eval(this.Flags)) return true;
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
                 if (eval(this.Name)) return true;
-                if (eval(this.SCITDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -382,12 +324,8 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Script = eval(this.Script);
-                obj.MagicSchool = eval(this.MagicSchool);
-                obj.VisualEffect = eval(this.VisualEffect);
-                obj.Flags = eval(this.Flags);
+                obj.Data = this.Data == null ? null : new MaskItem<R, ScriptEffectData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
                 obj.Name = eval(this.Name);
-                obj.SCITDataTypeState = eval(this.SCITDataTypeState);
             }
             #endregion
 
@@ -410,29 +348,13 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Script ?? true)
+                    if (printMask?.Data?.Overall ?? true)
                     {
-                        fg.AppendItem(Script, "Script");
-                    }
-                    if (printMask?.MagicSchool ?? true)
-                    {
-                        fg.AppendItem(MagicSchool, "MagicSchool");
-                    }
-                    if (printMask?.VisualEffect ?? true)
-                    {
-                        fg.AppendItem(VisualEffect, "VisualEffect");
-                    }
-                    if (printMask?.Flags ?? true)
-                    {
-                        fg.AppendItem(Flags, "Flags");
+                        Data?.ToString(fg);
                     }
                     if (printMask?.Name ?? true)
                     {
                         fg.AppendItem(Name, "Name");
-                    }
-                    if (printMask?.SCITDataTypeState ?? true)
-                    {
-                        fg.AppendItem(SCITDataTypeState, "SCITDataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -459,12 +381,8 @@ namespace Mutagen.Bethesda.Oblivion
                     return _warnings;
                 }
             }
-            public Exception? Script;
-            public Exception? MagicSchool;
-            public Exception? VisualEffect;
-            public Exception? Flags;
+            public MaskItem<Exception?, ScriptEffectData.ErrorMask?>? Data;
             public Exception? Name;
-            public Exception? SCITDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -473,18 +391,10 @@ namespace Mutagen.Bethesda.Oblivion
                 ScriptEffect_FieldIndex enu = (ScriptEffect_FieldIndex)index;
                 switch (enu)
                 {
-                    case ScriptEffect_FieldIndex.Script:
-                        return Script;
-                    case ScriptEffect_FieldIndex.MagicSchool:
-                        return MagicSchool;
-                    case ScriptEffect_FieldIndex.VisualEffect:
-                        return VisualEffect;
-                    case ScriptEffect_FieldIndex.Flags:
-                        return Flags;
+                    case ScriptEffect_FieldIndex.Data:
+                        return Data;
                     case ScriptEffect_FieldIndex.Name:
                         return Name;
-                    case ScriptEffect_FieldIndex.SCITDataTypeState:
-                        return SCITDataTypeState;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -495,23 +405,11 @@ namespace Mutagen.Bethesda.Oblivion
                 ScriptEffect_FieldIndex enu = (ScriptEffect_FieldIndex)index;
                 switch (enu)
                 {
-                    case ScriptEffect_FieldIndex.Script:
-                        this.Script = ex;
-                        break;
-                    case ScriptEffect_FieldIndex.MagicSchool:
-                        this.MagicSchool = ex;
-                        break;
-                    case ScriptEffect_FieldIndex.VisualEffect:
-                        this.VisualEffect = ex;
-                        break;
-                    case ScriptEffect_FieldIndex.Flags:
-                        this.Flags = ex;
+                    case ScriptEffect_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, ScriptEffectData.ErrorMask?>(ex, null);
                         break;
                     case ScriptEffect_FieldIndex.Name:
                         this.Name = ex;
-                        break;
-                    case ScriptEffect_FieldIndex.SCITDataTypeState:
-                        this.SCITDataTypeState = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -523,23 +421,11 @@ namespace Mutagen.Bethesda.Oblivion
                 ScriptEffect_FieldIndex enu = (ScriptEffect_FieldIndex)index;
                 switch (enu)
                 {
-                    case ScriptEffect_FieldIndex.Script:
-                        this.Script = (Exception?)obj;
-                        break;
-                    case ScriptEffect_FieldIndex.MagicSchool:
-                        this.MagicSchool = (Exception?)obj;
-                        break;
-                    case ScriptEffect_FieldIndex.VisualEffect:
-                        this.VisualEffect = (Exception?)obj;
-                        break;
-                    case ScriptEffect_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
+                    case ScriptEffect_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, ScriptEffectData.ErrorMask?>?)obj;
                         break;
                     case ScriptEffect_FieldIndex.Name:
                         this.Name = (Exception?)obj;
-                        break;
-                    case ScriptEffect_FieldIndex.SCITDataTypeState:
-                        this.SCITDataTypeState = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -549,12 +435,8 @@ namespace Mutagen.Bethesda.Oblivion
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Script != null) return true;
-                if (MagicSchool != null) return true;
-                if (VisualEffect != null) return true;
-                if (Flags != null) return true;
+                if (Data != null) return true;
                 if (Name != null) return true;
-                if (SCITDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -589,12 +471,8 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendItem(Script, "Script");
-                fg.AppendItem(MagicSchool, "MagicSchool");
-                fg.AppendItem(VisualEffect, "VisualEffect");
-                fg.AppendItem(Flags, "Flags");
+                Data?.ToString(fg);
                 fg.AppendItem(Name, "Name");
-                fg.AppendItem(SCITDataTypeState, "SCITDataTypeState");
             }
             #endregion
 
@@ -603,12 +481,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Script = this.Script.Combine(rhs.Script);
-                ret.MagicSchool = this.MagicSchool.Combine(rhs.MagicSchool);
-                ret.VisualEffect = this.VisualEffect.Combine(rhs.VisualEffect);
-                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.SCITDataTypeState = this.SCITDataTypeState.Combine(rhs.SCITDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -630,23 +504,15 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public bool Script;
-            public bool MagicSchool;
-            public bool VisualEffect;
-            public bool Flags;
+            public MaskItem<bool, ScriptEffectData.TranslationMask?> Data;
             public bool Name;
-            public bool SCITDataTypeState;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.Script = defaultOn;
-                this.MagicSchool = defaultOn;
-                this.VisualEffect = defaultOn;
-                this.Flags = defaultOn;
+                this.Data = new MaskItem<bool, ScriptEffectData.TranslationMask?>(defaultOn, null);
                 this.Name = defaultOn;
-                this.SCITDataTypeState = defaultOn;
             }
 
             #endregion
@@ -662,25 +528,13 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Script, null));
-                ret.Add((MagicSchool, null));
-                ret.Add((VisualEffect, null));
-                ret.Add((Flags, null));
+                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
                 ret.Add((Name, null));
-                ret.Add((SCITDataTypeState, null));
             }
         }
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = ScriptEffect_Registration.TriggeringRecordType;
-        [Flags]
-        public enum SCITDataType
-        {
-            Has = 1,
-            Break0 = 2,
-            Break1 = 4
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ILinkGetter> Links => ScriptEffectCommon.Instance.GetLinks(this);
         #endregion
@@ -746,12 +600,8 @@ namespace Mutagen.Bethesda.Oblivion
         IScriptEffectGetter,
         ILoquiObjectSetter<IScriptEffect>
     {
-        new IFormLink<Script> Script { get; }
-        new MagicSchool MagicSchool { get; set; }
-        new IEDIDLink<MagicEffect> VisualEffect { get; }
-        new ScriptEffect.Flag Flags { get; set; }
+        new ScriptEffectData? Data { get; set; }
         new String? Name { get; set; }
-        new ScriptEffect.SCITDataType SCITDataTypeState { get; set; }
     }
 
     public partial interface IScriptEffectGetter :
@@ -767,12 +617,8 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        IFormLinkGetter<IScriptGetter> Script { get; }
-        MagicSchool MagicSchool { get; }
-        IEDIDLinkGetter<IMagicEffectGetter> VisualEffect { get; }
-        ScriptEffect.Flag Flags { get; }
+        IScriptEffectDataGetter? Data { get; }
         String? Name { get; }
-        ScriptEffect.SCITDataType SCITDataTypeState { get; }
 
     }
 
@@ -1079,12 +925,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum ScriptEffect_FieldIndex
     {
-        Script = 0,
-        MagicSchool = 1,
-        VisualEffect = 2,
-        Flags = 3,
-        Name = 4,
-        SCITDataTypeState = 5,
+        Data = 0,
+        Name = 1,
     }
     #endregion
 
@@ -1102,9 +944,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "52a9e0c6-6771-4b3d-a4e7-a082ff8384a9";
 
-        public const ushort AdditionalFieldCount = 6;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 2;
 
         public static readonly Type MaskType = typeof(ScriptEffect.Mask<>);
 
@@ -1134,18 +976,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
-                case "SCRIPT":
-                    return (ushort)ScriptEffect_FieldIndex.Script;
-                case "MAGICSCHOOL":
-                    return (ushort)ScriptEffect_FieldIndex.MagicSchool;
-                case "VISUALEFFECT":
-                    return (ushort)ScriptEffect_FieldIndex.VisualEffect;
-                case "FLAGS":
-                    return (ushort)ScriptEffect_FieldIndex.Flags;
+                case "DATA":
+                    return (ushort)ScriptEffect_FieldIndex.Data;
                 case "NAME":
                     return (ushort)ScriptEffect_FieldIndex.Name;
-                case "SCITDATATYPESTATE":
-                    return (ushort)ScriptEffect_FieldIndex.SCITDataTypeState;
                 default:
                     return null;
             }
@@ -1156,12 +990,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptEffect_FieldIndex enu = (ScriptEffect_FieldIndex)index;
             switch (enu)
             {
-                case ScriptEffect_FieldIndex.Script:
-                case ScriptEffect_FieldIndex.MagicSchool:
-                case ScriptEffect_FieldIndex.VisualEffect:
-                case ScriptEffect_FieldIndex.Flags:
+                case ScriptEffect_FieldIndex.Data:
                 case ScriptEffect_FieldIndex.Name:
-                case ScriptEffect_FieldIndex.SCITDataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1173,12 +1003,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptEffect_FieldIndex enu = (ScriptEffect_FieldIndex)index;
             switch (enu)
             {
-                case ScriptEffect_FieldIndex.Script:
-                case ScriptEffect_FieldIndex.MagicSchool:
-                case ScriptEffect_FieldIndex.VisualEffect:
-                case ScriptEffect_FieldIndex.Flags:
+                case ScriptEffect_FieldIndex.Data:
+                    return true;
                 case ScriptEffect_FieldIndex.Name:
-                case ScriptEffect_FieldIndex.SCITDataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1190,12 +1017,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptEffect_FieldIndex enu = (ScriptEffect_FieldIndex)index;
             switch (enu)
             {
-                case ScriptEffect_FieldIndex.Script:
-                case ScriptEffect_FieldIndex.MagicSchool:
-                case ScriptEffect_FieldIndex.VisualEffect:
-                case ScriptEffect_FieldIndex.Flags:
+                case ScriptEffect_FieldIndex.Data:
                 case ScriptEffect_FieldIndex.Name:
-                case ScriptEffect_FieldIndex.SCITDataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1207,18 +1030,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptEffect_FieldIndex enu = (ScriptEffect_FieldIndex)index;
             switch (enu)
             {
-                case ScriptEffect_FieldIndex.Script:
-                    return "Script";
-                case ScriptEffect_FieldIndex.MagicSchool:
-                    return "MagicSchool";
-                case ScriptEffect_FieldIndex.VisualEffect:
-                    return "VisualEffect";
-                case ScriptEffect_FieldIndex.Flags:
-                    return "Flags";
+                case ScriptEffect_FieldIndex.Data:
+                    return "Data";
                 case ScriptEffect_FieldIndex.Name:
                     return "Name";
-                case ScriptEffect_FieldIndex.SCITDataTypeState:
-                    return "SCITDataTypeState";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1229,12 +1044,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptEffect_FieldIndex enu = (ScriptEffect_FieldIndex)index;
             switch (enu)
             {
-                case ScriptEffect_FieldIndex.Script:
-                case ScriptEffect_FieldIndex.MagicSchool:
-                case ScriptEffect_FieldIndex.VisualEffect:
-                case ScriptEffect_FieldIndex.Flags:
+                case ScriptEffect_FieldIndex.Data:
                 case ScriptEffect_FieldIndex.Name:
-                case ScriptEffect_FieldIndex.SCITDataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1246,12 +1057,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptEffect_FieldIndex enu = (ScriptEffect_FieldIndex)index;
             switch (enu)
             {
-                case ScriptEffect_FieldIndex.Script:
-                case ScriptEffect_FieldIndex.MagicSchool:
-                case ScriptEffect_FieldIndex.VisualEffect:
-                case ScriptEffect_FieldIndex.Flags:
+                case ScriptEffect_FieldIndex.Data:
                 case ScriptEffect_FieldIndex.Name:
-                case ScriptEffect_FieldIndex.SCITDataTypeState:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1263,18 +1070,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptEffect_FieldIndex enu = (ScriptEffect_FieldIndex)index;
             switch (enu)
             {
-                case ScriptEffect_FieldIndex.Script:
-                    return typeof(IFormLink<Script>);
-                case ScriptEffect_FieldIndex.MagicSchool:
-                    return typeof(MagicSchool);
-                case ScriptEffect_FieldIndex.VisualEffect:
-                    return typeof(IEDIDLink<MagicEffect>);
-                case ScriptEffect_FieldIndex.Flags:
-                    return typeof(ScriptEffect.Flag);
+                case ScriptEffect_FieldIndex.Data:
+                    return typeof(ScriptEffectData);
                 case ScriptEffect_FieldIndex.Name:
                     return typeof(String);
-                case ScriptEffect_FieldIndex.SCITDataTypeState:
-                    return typeof(ScriptEffect.SCITDataType);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1283,9 +1082,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type XmlWriteTranslation = typeof(ScriptEffectXmlWriteTranslation);
         public static readonly RecordType SCIT_HEADER = new RecordType("SCIT");
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType TriggeringRecordType = SCIT_HEADER;
+        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        {
+            return new CollectionGetterWrapper<RecordType>(
+                new HashSet<RecordType>(
+                    new RecordType[]
+                    {
+                        SCIT_HEADER,
+                        FULL_HEADER
+                    })
+            );
+        });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 1;
+        public const int NumTypedFields = 2;
         public static readonly Type BinaryWriteTranslation = typeof(ScriptEffectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1328,12 +1138,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IScriptEffect item)
         {
             ClearPartial();
-            item.Script.FormKey = FormKey.Null;
-            item.MagicSchool = default;
-            item.VisualEffect.EDID = RecordType.Null;
-            item.Flags = default;
+            item.Data = null;
             item.Name = default;
-            item.SCITDataTypeState = default;
         }
         
         #region Xml Translation
@@ -1345,8 +1151,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             try
             {
-                item.SCITDataTypeState |= ScriptEffect.SCITDataType.Break0;
-                item.SCITDataTypeState |= ScriptEffect.SCITDataType.Break1;
                 foreach (var elem in node.Elements())
                 {
                     ScriptEffectXmlCreateTranslation.FillPublicElementXml(
@@ -1386,35 +1190,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x54494353: // SCIT
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptEffect_FieldIndex.Flags) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.SCITDataTypeState = ScriptEffect.SCITDataType.Has;
-                    }
-                    item.Script.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
-                    if (dataFrame.Complete)
-                    {
-                        item.SCITDataTypeState |= ScriptEffect.SCITDataType.Break0;
-                        return TryGet<int?>.Succeed((int)ScriptEffect_FieldIndex.Script);
-                    }
-                    item.MagicSchool = EnumBinaryTranslation<MagicSchool>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.VisualEffect.EDID = Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: RecordType.Null);
-                    if (dataFrame.Complete)
-                    {
-                        item.SCITDataTypeState |= ScriptEffect.SCITDataType.Break1;
-                        return TryGet<int?>.Succeed((int)ScriptEffect_FieldIndex.VisualEffect);
-                    }
-                    item.Flags = EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    return TryGet<int?>.Succeed((int)ScriptEffect_FieldIndex.Flags);
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptEffect_FieldIndex.Data) return TryGet<int?>.Failure;
+                    item.Data = Mutagen.Bethesda.Oblivion.ScriptEffectData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)ScriptEffect_FieldIndex.Data);
                 }
                 case 0x4C4C5546: // FULL
                 {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptEffect_FieldIndex.Name) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
@@ -1468,12 +1250,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Script = object.Equals(item.Script, rhs.Script);
-            ret.MagicSchool = item.MagicSchool == rhs.MagicSchool;
-            ret.VisualEffect = object.Equals(item.VisualEffect, rhs.VisualEffect);
-            ret.Flags = item.Flags == rhs.Flags;
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Name = string.Equals(item.Name, rhs.Name);
-            ret.SCITDataTypeState = item.SCITDataTypeState == rhs.SCITDataTypeState;
         }
         
         public string ToString(
@@ -1520,30 +1302,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             ScriptEffect.Mask<bool>? printMask = null)
         {
-            if (printMask?.Script ?? true)
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data.TryGet(out var DataItem))
             {
-                fg.AppendItem(item.Script, "Script");
-            }
-            if (printMask?.MagicSchool ?? true)
-            {
-                fg.AppendItem(item.MagicSchool, "MagicSchool");
-            }
-            if (printMask?.VisualEffect ?? true)
-            {
-                fg.AppendItem(item.VisualEffect, "VisualEffect");
-            }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendItem(item.Flags, "Flags");
+                DataItem?.ToString(fg, "Data");
             }
             if ((printMask?.Name ?? true)
                 && item.Name.TryGet(out var NameItem))
             {
                 fg.AppendItem(NameItem, "Name");
-            }
-            if (printMask?.SCITDataTypeState ?? true)
-            {
-                fg.AppendItem(item.SCITDataTypeState, "SCITDataTypeState");
             }
         }
         
@@ -1551,6 +1318,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptEffectGetter item,
             ScriptEffect.Mask<bool?> checkMask)
         {
+            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
+            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             return true;
         }
@@ -1559,12 +1328,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptEffectGetter item,
             ScriptEffect.Mask<bool> mask)
         {
-            mask.Script = true;
-            mask.MagicSchool = true;
-            mask.VisualEffect = true;
-            mask.Flags = true;
+            var itemData = item.Data;
+            mask.Data = new MaskItem<bool, ScriptEffectData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
             mask.Name = (item.Name != null);
-            mask.SCITDataTypeState = true;
         }
         
         #region Equals and Hash
@@ -1574,27 +1340,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Script.Equals(rhs.Script)) return false;
-            if (lhs.MagicSchool != rhs.MagicSchool) return false;
-            if (!lhs.VisualEffect.Equals(rhs.VisualEffect)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
+            if (!object.Equals(lhs.Data, rhs.Data)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (lhs.SCITDataTypeState != rhs.SCITDataTypeState) return false;
             return true;
         }
         
         public virtual int GetHashCode(IScriptEffectGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Script);
-            hash.Add(item.MagicSchool);
-            hash.Add(item.VisualEffect);
-            hash.Add(item.Flags);
+            if (item.Data.TryGet(out var Dataitem))
+            {
+                hash.Add(Dataitem);
+            }
             if (item.Name.TryGet(out var Nameitem))
             {
                 hash.Add(Nameitem);
             }
-            hash.Add(item.SCITDataTypeState);
             return hash.ToHashCode();
         }
         
@@ -1609,8 +1370,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         public IEnumerable<ILinkGetter> GetLinks(IScriptEffectGetter obj)
         {
-            yield return obj.Script;
-            yield return obj.VisualEffect;
+            if (obj.Data != null)
+            {
+                foreach (var item in obj.Data.Links)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -1628,29 +1394,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Script) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Data) ?? true))
             {
-                item.Script.FormKey = rhs.Script.FormKey;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.MagicSchool) ?? true))
-            {
-                item.MagicSchool = rhs.MagicSchool;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.VisualEffect) ?? true))
-            {
-                item.VisualEffect.EDID = rhs.VisualEffect.EDID;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Flags) ?? true))
-            {
-                item.Flags = rhs.Flags;
+                errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Data);
+                try
+                {
+                    if(rhs.Data.TryGet(out var rhsData))
+                    {
+                        item.Data = rhsData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)ScriptEffect_FieldIndex.Data));
+                    }
+                    else
+                    {
+                        item.Data = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Name) ?? true))
             {
                 item.Name = rhs.Name;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.SCITDataTypeState) ?? true))
-            {
-                item.SCITDataTypeState = rhs.SCITDataTypeState;
             }
         }
         
@@ -1741,53 +1513,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if (item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Has))
+            if ((item.Data != null)
+                && (translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Data) ?? true))
             {
-                if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Script) ?? true))
+                if (item.Data.TryGet(out var DataItem))
                 {
-                    FormKeyXmlTranslation.Instance.Write(
+                    ((ScriptEffectDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                        item: DataItem,
                         node: node,
-                        name: nameof(item.Script),
-                        item: item.Script.FormKey,
-                        fieldIndex: (int)ScriptEffect_FieldIndex.Script,
-                        errorMask: errorMask);
-                }
-                if (!item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break0))
-                {
-                    if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.MagicSchool) ?? true))
-                    {
-                        EnumXmlTranslation<MagicSchool>.Instance.Write(
-                            node: node,
-                            name: nameof(item.MagicSchool),
-                            item: item.MagicSchool,
-                            fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.VisualEffect) ?? true))
-                    {
-                        RecordTypeXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.VisualEffect),
-                            item: item.VisualEffect.EDID,
-                            fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
-                            errorMask: errorMask);
-                    }
-                    if (!item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break1))
-                    {
-                        if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.Flags) ?? true))
-                        {
-                            EnumXmlTranslation<ScriptEffect.Flag>.Instance.Write(
-                                node: node,
-                                name: nameof(item.Flags),
-                                item: item.Flags,
-                                fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
-                                errorMask: errorMask);
-                        }
-                    }
-                }
-                else
-                {
-                    node.Add(new XElement("HasSCITDataType"));
+                        name: nameof(item.Data),
+                        fieldIndex: (int)ScriptEffect_FieldIndex.Data,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)ScriptEffect_FieldIndex.Data));
                 }
             }
             if ((item.Name != null)
@@ -1798,15 +1535,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Name),
                     item: item.Name,
                     fieldIndex: (int)ScriptEffect_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ScriptEffect_FieldIndex.SCITDataTypeState) ?? true))
-            {
-                EnumXmlTranslation<ScriptEffect.SCITDataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.SCITDataTypeState),
-                    item: item.SCITDataTypeState,
-                    fieldIndex: (int)ScriptEffect_FieldIndex.SCITDataTypeState,
                     errorMask: errorMask);
             }
         }
@@ -1915,13 +1643,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "Script":
-                    errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Script);
+                case "Data":
+                    errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Data);
                     try
                     {
-                        item.Script.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Data = LoquiXmlTranslation<ScriptEffectData>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)ScriptEffect_FieldIndex.Data));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1932,87 +1661,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         errorMask?.PopIndex();
                     }
-                    item.SCITDataTypeState |= ScriptEffect.SCITDataType.Has;
-                    break;
-                case "MagicSchool":
-                    errorMask?.PushIndex((int)ScriptEffect_FieldIndex.MagicSchool);
-                    try
-                    {
-                        item.MagicSchool = EnumXmlTranslation<MagicSchool>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.SCITDataTypeState &= ~ScriptEffect.SCITDataType.Break0;
-                    break;
-                case "VisualEffect":
-                    errorMask?.PushIndex((int)ScriptEffect_FieldIndex.VisualEffect);
-                    try
-                    {
-                        item.VisualEffect.EDID = RecordTypeXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<ScriptEffect.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.SCITDataTypeState &= ~ScriptEffect.SCITDataType.Break1;
                     break;
                 case "Name":
                     errorMask?.PushIndex((int)ScriptEffect_FieldIndex.Name);
                     try
                     {
                         item.Name = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SCITDataTypeState":
-                    errorMask?.PushIndex((int)ScriptEffect_FieldIndex.SCITDataTypeState);
-                    try
-                    {
-                        item.SCITDataTypeState = EnumXmlTranslation<ScriptEffect.SCITDataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2197,42 +1851,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static ScriptEffectBinaryWriteTranslation Instance = new ScriptEffectBinaryWriteTranslation();
 
-        public static void WriteEmbedded(
-            IScriptEffectGetter item,
-            MutagenWriter writer)
-        {
-        }
-
         public static void WriteRecordTypes(
             IScriptEffectGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            if (item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Has))
+            if (item.Data.TryGet(out var DataItem))
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(ScriptEffect_Registration.SCIT_HEADER)))
-                {
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Script);
-                    if (!item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break0))
-                    {
-                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Write(
-                            writer,
-                            item.MagicSchool,
-                            length: 4);
-                        Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.VisualEffect);
-                        if (!item.SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break1))
-                        {
-                            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Write(
-                                writer,
-                                item.Flags,
-                                length: 4);
-                        }
-                    }
-                }
+                ((ScriptEffectDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                    item: DataItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -2246,9 +1875,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptEffectGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,
@@ -2354,27 +1980,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        private int? _SCITLocation;
-        public ScriptEffect.SCITDataType SCITDataTypeState { get; private set; }
-        #region Script
-        private int _ScriptLocation => _SCITLocation!.Value + 0x0;
-        private bool _Script_IsSet => _SCITLocation.HasValue;
-        public IFormLinkGetter<IScriptGetter> Script => _Script_IsSet ? new FormLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ScriptLocation, 4)))) : FormLink<IScriptGetter>.Empty;
-        #endregion
-        #region MagicSchool
-        private int _MagicSchoolLocation => _SCITLocation!.Value + 0x4;
-        private bool _MagicSchool_IsSet => _SCITLocation.HasValue && !SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break0);
-        public MagicSchool MagicSchool => _MagicSchool_IsSet ? (MagicSchool)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_MagicSchoolLocation, 4)) : default;
-        #endregion
-        #region VisualEffect
-        private int _VisualEffectLocation => _SCITLocation!.Value + 0x8;
-        private bool _VisualEffect_IsSet => _SCITLocation.HasValue && !SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break0);
-        public IEDIDLinkGetter<IMagicEffectGetter> VisualEffect => _VisualEffect_IsSet ? new EDIDLink<IMagicEffectGetter>(new RecordType(BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_VisualEffectLocation, 4)))) : EDIDLink<IMagicEffectGetter>.Empty;
-        #endregion
-        #region Flags
-        private int _FlagsLocation => _SCITLocation!.Value + 0xC;
-        private bool _Flags_IsSet => _SCITLocation.HasValue && !SCITDataTypeState.HasFlag(ScriptEffect.SCITDataType.Break1);
-        public ScriptEffect.Flag Flags => _Flags_IsSet ? (ScriptEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
+        #region Data
+        private RangeInt32? _DataLocation;
+        private bool _Data_IsSet => _DataLocation.HasValue;
+        public IScriptEffectDataGetter? Data => _Data_IsSet ? ScriptEffectDataBinaryOverlay.ScriptEffectDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region Name
         private int? _NameLocation;
@@ -2429,22 +2039,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case 0x54494353: // SCIT
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptEffect_FieldIndex.Flags) return TryGet<int?>.Failure;
-                    _SCITLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
-                    this.SCITDataTypeState = ScriptEffect.SCITDataType.Has;
-                    var subLen = _package.Meta.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
-                    if (subLen <= 0x4)
-                    {
-                        this.SCITDataTypeState |= ScriptEffect.SCITDataType.Break0;
-                    }
-                    if (subLen <= 0xC)
-                    {
-                        this.SCITDataTypeState |= ScriptEffect.SCITDataType.Break1;
-                    }
-                    return TryGet<int?>.Succeed((int)ScriptEffect_FieldIndex.Flags);
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptEffect_FieldIndex.Data) return TryGet<int?>.Failure;
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)ScriptEffect_FieldIndex.Data);
                 }
                 case 0x4C4C5546: // FULL
                 {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptEffect_FieldIndex.Name) return TryGet<int?>.Failure;
                     _NameLocation = (ushort)(stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ScriptEffect_FieldIndex.Name);
                 }

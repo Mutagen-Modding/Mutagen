@@ -8,50 +8,10 @@
       <List name="WeatherTypes" recordType="NAM0">
         <RefDirect refName="WeatherType" />
       </List>
-      <Data recordType="FNAM">
-        <Fields>
-          <Float name="FogDayNear" />
-          <Float name="FogDayFar" />
-          <Float name="FogNightNear" />
-          <Float name="FogNightFar" />
-        </Fields>
-      </Data>
-      <Data recordType="HNAM">
-        <Fields>
-          <Float name="HdrEyeAdaptSpeed" />
-          <Float name="HdrBlurRadius" />
-          <Float name="HdrBlurPasses" />
-          <Float name="HdrEmissiveMult" />
-          <Float name="HdrTargetLum" />
-          <Float name="HdrUpperLumClamp" />
-          <Float name="HdrBrightScale" />
-          <Float name="HdrBrightClamp" />
-          <Float name="HdrLumRampNoTex" />
-          <Float name="HdrLumRampMin" />
-          <Float name="HdrLumRampMax" />
-          <Float name="HdrSunlightDimmer" />
-          <Float name="HdrGrassDimmer" />
-          <Float name="HdrTreeDimmer" />
-        </Fields>
-      </Data>
-      <Data>
-        <Fields>
-          <UInt8 name="WindSpeed" />
-          <UInt8 name="CloudSpeedLower" />
-          <UInt8 name="CloudSpeedUpper" />
-          <UInt8 name="TransDelta" />
-          <UInt8 name="SunGlare" />
-          <UInt8 name="SunDamage" />
-          <UInt8 name="PrecipitationBeginFadeIn" />
-          <UInt8 name="PrecipitationEndFadeOut" />
-          <UInt8 name="ThunderLightningBeginFadeIn" />
-          <UInt8 name="ThunderLightningEndFadeOut" />
-          <UInt8 name="ThunderLightningFrequency" />
-          <Enum name="Classification" enumName="Weather.WeatherClassification" byteLength="1" />
-          <Color name="LightningColor" extraByte="false" />
-        </Fields>
-      </Data>
-      <List name="Sounds" >
+      <RefDirect name="FogDistance" refName="FogDistance" />
+      <RefDirect name="HDRData" refName="HDRData" />
+      <RefDirect name="Data" refName="WeatherData" />
+      <List name="Sounds">
         <RefDirect refName="WeatherSound" />
       </List>
     </Fields>
@@ -68,6 +28,49 @@
     <Fields>
       <FormLink name="Sound" refName="Sound" />
       <Enum name="Type" enumName="WeatherSound.SoundType" byteLength="4" />
+    </Fields>
+  </Object>
+  <Object name="FogDistance" objType="Subrecord" recordType="FNAM" GUID="a3f0f446-a754-4889-b7b0-4a5d2d368107" ID="216">
+    <Fields>
+      <Float name="DayNear" />
+      <Float name="DayFar" />
+      <Float name="NightNear" />
+      <Float name="NightFar" />
+    </Fields>
+  </Object>
+  <Object name="HDRData" objType="Subrecord" recordType="HNAM" GUID="4c7c0391-9e6d-4059-9077-52a182a9c366" ID="217">
+    <Fields>
+      <Float name="EyeAdaptSpeed" />
+      <Float name="BlurRadius" />
+      <Float name="BlurPasses" />
+      <Float name="EmissiveMult" />
+      <Float name="TargetLum" />
+      <Float name="UpperLumClamp" />
+      <Float name="BrightScale" />
+      <Float name="BrightClamp" />
+      <Float name="LumRampNoTex" />
+      <Float name="LumRampMin" />
+      <Float name="LumRampMax" />
+      <Float name="SunlightDimmer" />
+      <Float name="GrassDimmer" />
+      <Float name="TreeDimmer" />
+    </Fields>
+  </Object>
+  <Object name="WeatherData" objType="Subrecord" recordType="DATA" GUID="9215f24a-1537-4910-9666-c059ba5560f2" ID="218">
+    <Fields>
+      <UInt8 name="WindSpeed" />
+      <UInt8 name="CloudSpeedLower" />
+      <UInt8 name="CloudSpeedUpper" />
+      <UInt8 name="TransDelta" />
+      <UInt8 name="SunGlare" />
+      <UInt8 name="SunDamage" />
+      <UInt8 name="PrecipitationBeginFadeIn" />
+      <UInt8 name="PrecipitationEndFadeOut" />
+      <UInt8 name="ThunderLightningBeginFadeIn" />
+      <UInt8 name="ThunderLightningEndFadeOut" />
+      <UInt8 name="ThunderLightningFrequency" />
+      <Enum name="Classification" enumName="Weather.WeatherClassification" byteLength="1" />
+      <Color name="LightningColor" extraByte="false" />
     </Fields>
   </Object>
 </Loqui>

@@ -8,13 +8,14 @@
       <String name="Icon" recordType="ICON" />
       <FormLink name="Script" refName="Script" recordType="SCRI" />
       <RefList name="Effects" refName="Effect" />
-      <Data>
-        <Fields>
-          <UInt8 name="Uses" />
-          <UInt32 name="Value" />
-          <Float name="Weight" />
-        </Fields>
-      </Data>
+      <RefDirect name="Data" refName="SigilStoneData" />
+    </Fields>
+  </Object>
+  <Object name="SigilStoneData" objType="Subrecord" recordType="DATA" GUID="669714e4-39a0-43c2-a439-e080f8db2fc8" ID="208">
+    <Fields>
+      <UInt8 name="Uses" />
+      <UInt32 name="Value" />
+      <Float name="Weight" />
     </Fields>
   </Object>
 </Loqui>
