@@ -79,7 +79,16 @@ namespace Mutagen.Bethesda.Generation
             {
                 await Task.WhenAll(
                     obj.IterateFields(expandSets: SetMarkerType.ExpandSets.TrueAndInclude, nonIntegrated: true)
-                        .Select((field) => SetRecordTrigger(obj, field, field.GetFieldData())));
+                        .Select(async (field) =>
+                        {
+                            await SetContainerSubTriggers(obj, field);
+                        }));
+                await Task.WhenAll(
+                    obj.IterateFields(expandSets: SetMarkerType.ExpandSets.TrueAndInclude, nonIntegrated: true)
+                        .Select(async (field) =>
+                        {
+                            await SetRecordTrigger(obj, field, field.GetFieldData());
+                        }));
                 await SetObjectTrigger(obj);
                 obj.GetObjectData().WiringComplete.Complete();
                 await base.LoadWrapup(obj);
@@ -263,8 +272,6 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration field,
             MutagenFieldData data)
         {
-            await SetContainerSubTriggers(obj, field);
-
             if (field is LoquiType loqui
                 && !(field is FormLinkType))
             {
@@ -468,7 +475,13 @@ namespace Mutagen.Bethesda.Generation
                 if (field is SetMarkerType) break;
                 if (field.IsEnumerable && !(field is ByteArrayType)) continue;
                 LoquiType loqui = field as LoquiType;
-                if (!field.HasBeenSet && (loqui == null || loqui.SingletonType == SingletonLevel.None)) break;
+                if (!field.HasBeenSet 
+                    && (loqui == null || loqui.SingletonType == SingletonLevel.None)
+                    && fieldData.Binary != BinaryGenerationType.Custom
+                    && !(field is CustomLogic))
+                {
+                    break;
+                }
             }
             data.TriggeringRecordTypes.Add(recTypes);
         }

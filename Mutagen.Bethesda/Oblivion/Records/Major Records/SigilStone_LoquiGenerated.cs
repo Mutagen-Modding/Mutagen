@@ -1549,6 +1549,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
         public static readonly RecordType EFID_HEADER = new RecordType("EFID");
+        public static readonly RecordType EFIT_HEADER = new RecordType("EFIT");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = SGST_HEADER;
         public const int NumStructFields = 0;
@@ -1769,11 +1770,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return TryGet<int?>.Succeed((int)SigilStone_FieldIndex.Script);
                 }
                 case 0x44494645: // EFID
+                case 0x54494645: // EFIT
                 {
                     item.Effects.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: SigilStone_Registration.EFID_HEADER,
+                            triggeringRecord: Effect_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, out Effect listSubItem, RecordTypeConverter? conv) =>
                             {
@@ -3289,11 +3291,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return TryGet<int?>.Succeed((int)SigilStone_FieldIndex.Script);
                 }
                 case 0x44494645: // EFID
+                case 0x54494645: // EFIT
                 {
                     this.Effects = this.ParseRepeatedTypelessSubrecord<EffectBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: recordTypeConverter,
-                        trigger: SigilStone_Registration.EFID_HEADER,
+                        trigger: Effect_Registration.TriggeringRecordTypes,
                         factory:  EffectBinaryOverlay.EffectFactory);
                     return TryGet<int?>.Succeed((int)SigilStone_FieldIndex.Effects);
                 }

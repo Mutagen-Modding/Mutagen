@@ -1384,8 +1384,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ScriptFieldsXmlWriteTranslation);
-        public static readonly RecordType SCHR_HEADER = new RecordType("SCHR");
         public static readonly RecordType SCHD_HEADER = new RecordType("SCHD");
+        public static readonly RecordType SCHR_HEADER = new RecordType("SCHR");
         public static readonly RecordType SCDA_HEADER = new RecordType("SCDA");
         public static readonly RecordType SCTX_HEADER = new RecordType("SCTX");
         public static readonly RecordType SLSD_HEADER = new RecordType("SLSD");
@@ -1398,8 +1398,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
+                        SCHD_HEADER,
                         SCHR_HEADER,
-                        SCHD_HEADER
+                        SCDA_HEADER,
+                        SCTX_HEADER,
+                        SLSD_HEADER,
+                        SCRV_HEADER,
+                        SCRO_HEADER
                     })
             );
         });
@@ -1538,6 +1543,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case 0x44484353: // SCHD
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return TryGet<int?>.Failure;
+                    ScriptFieldsBinaryCreateTranslation.FillBinaryMetadataSummaryOldCustomPublic(
+                        frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return TryGet<int?>.Succeed(lastParsed);
+                }
                 case 0x52484353: // SCHR
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return TryGet<int?>.Failure;
@@ -1546,22 +1559,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: null);
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.MetadataSummary);
                 }
-                case 0x44484353: // SCHD
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.CompiledScript) return TryGet<int?>.Failure;
-                    ScriptFieldsBinaryCreateTranslation.FillBinaryMetadataSummaryOldCustomPublic(
-                        frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
-                        item: item);
-                    return TryGet<int?>.Succeed(lastParsed);
-                }
                 case 0x41444353: // SCDA
                 {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.CompiledScript) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.CompiledScript = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.CompiledScript);
                 }
                 case 0x58544353: // SCTX
                 {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.SourceCode) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.SourceCode = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
@@ -1570,6 +1577,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x44534C53: // SLSD
                 {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.LocalVariables) return TryGet<int?>.Failure;
                     item.LocalVariables.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LocalVariable>.Instance.Parse(
                             frame: frame,
@@ -1587,6 +1595,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x56524353: // SCRV
                 case 0x4F524353: // SCRO
                 {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.References) return TryGet<int?>.Failure;
                     item.References.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptReference>.Instance.Parse(
                             frame: frame,
@@ -2489,14 +2498,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
+            ScriptFieldsBinaryWriteTranslation.WriteBinaryMetadataSummaryOld(
+                writer: writer,
+                item: item);
             var MetadataSummaryItem = item.MetadataSummary;
             ((ScriptMetaSummaryBinaryWriteTranslation)((IBinaryItem)MetadataSummaryItem).BinaryWriteTranslator).Write(
                 item: MetadataSummaryItem,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            ScriptFieldsBinaryWriteTranslation.WriteBinaryMetadataSummaryOld(
-                writer: writer,
-                item: item);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.CompiledScript,
@@ -2657,16 +2666,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region MetadataSummaryOld
+        partial void MetadataSummaryOldCustomParse(
+            BinaryMemoryReadStream stream,
+            int offset);
+        #endregion
         #region MetadataSummary
         private RangeInt32? _MetadataSummaryLocation;
         private bool _MetadataSummary_IsSet => _MetadataSummaryLocation.HasValue;
         private IScriptMetaSummaryGetter? _MetadataSummary => _MetadataSummary_IsSet ? ScriptMetaSummaryBinaryOverlay.ScriptMetaSummaryFactory(new BinaryMemoryReadStream(_data.Slice(_MetadataSummaryLocation!.Value.Min)), _package) : default;
         public IScriptMetaSummaryGetter MetadataSummary => _MetadataSummary ?? new ScriptMetaSummary();
-        #endregion
-        #region MetadataSummaryOld
-        partial void MetadataSummaryOldCustomParse(
-            BinaryMemoryReadStream stream,
-            int offset);
         #endregion
         #region CompiledScript
         private int? _CompiledScriptLocation;
@@ -2725,32 +2734,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case 0x44484353: // SCHD
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return TryGet<int?>.Failure;
+                    MetadataSummaryOldCustomParse(
+                        stream,
+                        offset);
+                    return TryGet<int?>.Succeed(lastParsed);
+                }
                 case 0x52484353: // SCHR
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.MetadataSummary) return TryGet<int?>.Failure;
                     _MetadataSummaryLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.MetadataSummary);
                 }
-                case 0x44484353: // SCHD
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.CompiledScript) return TryGet<int?>.Failure;
-                    MetadataSummaryOldCustomParse(
-                        stream,
-                        offset);
-                    return TryGet<int?>.Succeed(lastParsed);
-                }
                 case 0x41444353: // SCDA
                 {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.CompiledScript) return TryGet<int?>.Failure;
                     _CompiledScriptLocation = (ushort)(stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.CompiledScript);
                 }
                 case 0x58544353: // SCTX
                 {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.SourceCode) return TryGet<int?>.Failure;
                     _SourceCodeLocation = (ushort)(stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.SourceCode);
                 }
                 case 0x44534C53: // SLSD
                 {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.LocalVariables) return TryGet<int?>.Failure;
                     this.LocalVariables = this.ParseRepeatedTypelessSubrecord<LocalVariableBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: recordTypeConverter,
@@ -2761,6 +2773,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x56524353: // SCRV
                 case 0x4F524353: // SCRO
                 {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.References) return TryGet<int?>.Failure;
                     this.References = this.ParseRepeatedTypelessSubrecord<ScriptReferenceBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: recordTypeConverter,

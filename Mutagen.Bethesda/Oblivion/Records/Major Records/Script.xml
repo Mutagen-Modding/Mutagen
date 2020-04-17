@@ -7,8 +7,8 @@
   </Object>
   <Object name="ScriptFields" objType="Subrecord" GUID="9b6e1edf-a601-4625-be5c-90b106975b45" ID="152">
     <Fields>
-      <RefDirect name="MetadataSummary" recordType="SCHR" refName="ScriptMetaSummary" nullable="Singleton" />
       <CustomLogic name="MetadataSummaryOld" recordType="SCHD" />
+      <RefDirect name="MetadataSummary" recordType="SCHR" refName="ScriptMetaSummary" nullable="Singleton" />
       <ByteArray name="CompiledScript" recordType="SCDA" generateClassMembers="false" />
       <String name="SourceCode" recordType="SCTX" binaryType="Plain" />
       <RefList name="LocalVariables" refName="LocalVariable" />

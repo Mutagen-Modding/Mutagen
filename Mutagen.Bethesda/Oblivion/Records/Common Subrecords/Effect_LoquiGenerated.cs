@@ -766,7 +766,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Effect_Registration.TriggeringRecordType;
         [Flags]
         public enum EFITDataType
         {
@@ -1404,7 +1403,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType EFID_HEADER = new RecordType("EFID");
         public static readonly RecordType EFIT_HEADER = new RecordType("EFIT");
         public static readonly RecordType SCIT_HEADER = new RecordType("SCIT");
-        public static readonly RecordType TriggeringRecordType = EFID_HEADER;
+        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        {
+            return new CollectionGetterWrapper<RecordType>(
+                new HashSet<RecordType>(
+                    new RecordType[]
+                    {
+                        EFID_HEADER,
+                        EFIT_HEADER
+                    })
+            );
+        });
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(EffectBinaryWriteTranslation);
@@ -1515,6 +1525,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x54494645: // EFIT
                 {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.ActorValue) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (!dataFrame.Complete)
@@ -2697,6 +2708,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x54494645: // EFIT
                 {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.ActorValue) return TryGet<int?>.Failure;
                     _EFITLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
                     this.EFITDataTypeState = Effect.EFITDataType.Has;
                     return TryGet<int?>.Succeed((int)Effect_FieldIndex.ActorValue);
