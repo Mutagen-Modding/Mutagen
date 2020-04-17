@@ -6,17 +6,58 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Binary
 {
+    /// <summary>
+    /// Reference for Record alignment and length constants
+    /// </summary>
     public class RecordHeaderConstants
     {
+        /// <summary>
+        /// Type of object the constants are associated with
+        /// </summary>
         public ObjectType ObjectType { get; }
+        
+        /// <summary>
+        /// GameMode associated with the constants
+        /// </summary>
         public GameMode GameMode { get; }
+        
+        /// <summary>
+        /// The length that the header itself takes
+        /// </summary>
         public sbyte HeaderLength { get; }
+        
+        /// <summary>
+        /// Number of bytes that hold length information
+        /// </summary>
         public sbyte LengthLength { get; }
+        
+        /// <summary>
+        /// Number of bytes in the header following the length information
+        /// </summary>
         public sbyte LengthAfterLength { get; }
+        
+        /// <summary>
+        /// Number of bytes in the header following the record type information
+        /// </summary>
         public sbyte LengthAfterType { get; }
+        
+        /// <summary>
+        /// Size of the record type and length bytes
+        /// </summary>
         public sbyte TypeAndLengthLength { get; }
+        
+        /// <summary>
+        /// Whether the size of the header itself is included in the length bytes, in addition to the content length
+        /// </summary>
         public bool HeaderIncludedInLength { get; }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="gameMode">GameMode to associate with the constants</param>
+        /// <param name="type">Type of object to associate the constants with</param>
+        /// <param name="headerLength">Length of the header</param>
+        /// <param name="lengthLength">Number of bytes containing content length information</param>
         public RecordHeaderConstants(
             GameMode gameMode,
             ObjectType type,

@@ -6,12 +6,27 @@ using System.Linq.Expressions;
 using System.Text;
 
 namespace Mutagen.Bethesda.Internals
-{
-    public delegate T MajorRecordActivator<T>(FormKey formKey) where T : IMajorRecordCommon;
+{    
+    /// <summary>
+    /// A static class encapsulating the job of creating a new Major Record in a generic context
+    /// </summary>
+    /// <typeparam name="T">
+    /// Type of Major Record to instantiate.  Can be the direct class, or one of its interfaces.
+    /// </typeparam>
     public static class MajorRecordInstantiator<T>
         where T : IMajorRecordCommon
     {
+        /// <summary>
+        /// Function to call to retrieve a new Major Record of type T
+        /// </summary>
         public static readonly MajorRecordActivator<T> Activator;
+        
+        /// <summary>
+        /// Constructs a new Major Record of type T with the given FormKey
+        /// </summary>
+        /// <param name="formKey">FormKey to give the new Major Record</param>
+        /// <returns>New Major Record of type T with given FormKey</returns>
+        public delegate T MajorRecordActivator<T>(FormKey formKey) where T : IMajorRecordCommon;
 
         static MajorRecordInstantiator()
         {
@@ -31,5 +46,4 @@ namespace Mutagen.Bethesda.Internals
             Activator = (MajorRecordActivator<T>)lambda.Compile();
         }
     }
-
 }

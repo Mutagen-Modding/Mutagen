@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Preprocessing
 {
+    /// <summary>
+    /// Processing stream that modifies input according to explicit instructions
+    /// </summary>
     public class BinaryFileProcessor : Stream
     {
         #region Config
@@ -21,6 +24,10 @@ namespace Mutagen.Bethesda.Preprocessing
             internal readonly RangeCollection _moveRanges = new RangeCollection();
             internal readonly Dictionary<RangeInt64, long> _moves = new Dictionary<RangeInt64, long>();
             internal readonly Dictionary<long, List<RangeInt64>> _sameLocMoves = new Dictionary<long, List<RangeInt64>>();
+            
+            /// <summary>
+            /// True if config contains any instructions that would modify the stream
+            /// </summary>
             public bool HasProcessing => this._moves?.Count > 0
                 || this._substitutions?.Count > 0;
 

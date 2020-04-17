@@ -102,6 +102,9 @@ namespace Mutagen.Bethesda.Binary
         /// True if GroupType is marked as top level. (GroupType == 0)
         /// </summary>
         public bool IsTopLevel => this.GroupType == 0;
+        
+        /// <inheritdoc/>
+        public override string ToString() => $"{RecordType} => {ContentLength}";
     }
 
     /// <summary>
@@ -115,12 +118,12 @@ namespace Mutagen.Bethesda.Binary
         public GroupHeader Header { get; }
         
         /// <summary>
-        /// Raw bytes of both a Group's header and content data
+        /// Raw bytes of both header and content data
         /// </summary>
         public ReadOnlySpan<byte> HeaderAndContentData { get; }
         
         /// <summary>
-        /// Raw bytes of a Group's content data, excluding the header
+        /// Raw bytes of the content data, excluding the header
         /// </summary>
         public ReadOnlySpan<byte> Content => HeaderAndContentData.Slice(this.Header.HeaderLength, checked((int)this.Header.RecordLength));
 
@@ -128,7 +131,7 @@ namespace Mutagen.Bethesda.Binary
         /// Constructor
         /// </summary>
         /// <param name="meta">Game metadata to use as reference for alignment</param>
-        /// <param name="span">Span to overlay on, aligned to the start of the Group's header</param>
+        /// <param name="span">Span to overlay on, aligned to the start of the header</param>
         public GroupFrame(GameConstants meta, ReadOnlySpan<byte> span)
         {
             this.Header = meta.Group(span);
@@ -145,6 +148,9 @@ namespace Mutagen.Bethesda.Binary
             this.Header = header;
             this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
+        
+        /// <inheritdoc/>
+        public override string ToString() => this.Header.ToString();
     }
 
     /// <summary>
@@ -159,12 +165,12 @@ namespace Mutagen.Bethesda.Binary
         public GroupHeader Header { get; }
         
         /// <summary>
-        /// Raw bytes of both a Group's header and content data
+        /// Raw bytes of both header and content data
         /// </summary>
         public ReadOnlyMemorySlice<byte> HeaderAndContentData { get; }
         
         /// <summary>
-        /// Raw bytes of a Group's content data, excluding the header
+        /// Raw bytes of the content data, excluding the header
         /// </summary>
         public ReadOnlySpan<byte> Content => HeaderAndContentData.Slice(this.Header.HeaderLength, checked((int)this.Header.RecordLength));
 
@@ -172,7 +178,7 @@ namespace Mutagen.Bethesda.Binary
         /// Constructor
         /// </summary>
         /// <param name="meta">Game metadata to use as reference for alignment</param>
-        /// <param name="span">Span to overlay on, aligned to the start of the Group's header</param>
+        /// <param name="span">Span to overlay on, aligned to the start of the header</param>
         public GroupMemoryFrame(GameConstants meta, ReadOnlyMemorySlice<byte> span)
         {
             this.Header = meta.Group(span);
@@ -189,5 +195,8 @@ namespace Mutagen.Bethesda.Binary
             this.Header = meta;
             this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
+        
+        /// <inheritdoc/>
+        public override string ToString() => this.Header.ToString();
     }
 }

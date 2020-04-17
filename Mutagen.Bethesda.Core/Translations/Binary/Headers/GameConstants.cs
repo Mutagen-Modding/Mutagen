@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         /// <param name="gameMode">GameMode to associate with the constants</param>
         /// <param name="modHeaderLength">Length of the ModHeader</param>
-        /// <param name="modHeaderLength">Length of the ModHeader excluding initial recordtype and length bytes.</param>
+        /// <param name="modHeaderFluffLength">Length of the ModHeader excluding initial recordtype and length bytes.</param>
         /// <param name="groupConstants">Constants defining Groups</param>
         /// <param name="majorConstants">Constants defining Major Records</param>
         /// <param name="subConstants">Constants defining Sub Records</param>
@@ -81,7 +81,6 @@ namespace Mutagen.Bethesda.Binary
                 lengthLength: 4),
             majorConstants: new MajorRecordConstants(
                 GameMode.Oblivion,
-                ObjectType.Record,
                 headerLength: 20,
                 lengthLength: 4,
                 flagsLoc: 8,
@@ -106,7 +105,6 @@ namespace Mutagen.Bethesda.Binary
                 lengthLength: 4),
             majorConstants: new MajorRecordConstants(
                 GameMode.Skyrim,
-                ObjectType.Record,
                 headerLength: 24,
                 lengthLength: 4,
                 flagsLoc: 8,
