@@ -1197,6 +1197,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
+        public new static readonly RecordType GrupRecordType = SkyrimMod_Registration.TriggeringRecordType;
         public override GameMode GameMode => GameMode.Skyrim;
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
         ICache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
@@ -2446,33 +2447,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType ASPC_HEADER = new RecordType("ASPC");
         public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
         public static readonly RecordType LTEX_HEADER = new RecordType("LTEX");
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
-        {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        TES4_HEADER,
-                        GMST_HEADER,
-                        KYWD_HEADER,
-                        LCRT_HEADER,
-                        AACT_HEADER,
-                        TXST_HEADER,
-                        GLOB_HEADER,
-                        CLAS_HEADER,
-                        FACT_HEADER,
-                        HDPT_HEADER,
-                        HAIR_HEADER,
-                        EYES_HEADER,
-                        RACE_HEADER,
-                        SOUN_HEADER,
-                        ASPC_HEADER,
-                        MGEF_HEADER,
-                        LTEX_HEADER
-                    })
-            );
-        });
+        public static readonly RecordType TriggeringRecordType = TES4_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 17;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);

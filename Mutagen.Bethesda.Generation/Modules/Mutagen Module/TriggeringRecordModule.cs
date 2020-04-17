@@ -476,7 +476,6 @@ namespace Mutagen.Bethesda.Generation
                 if (field.IsEnumerable && !(field is ByteArrayType)) continue;
                 LoquiType loqui = field as LoquiType;
                 if (!field.HasBeenSet 
-                    && (loqui == null || loqui.SingletonType == SingletonLevel.None)
                     && fieldData.Binary != BinaryGenerationType.Custom
                     && !(field is CustomLogic))
                 {

@@ -1399,12 +1399,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     new RecordType[]
                     {
                         SCHD_HEADER,
-                        SCHR_HEADER,
-                        SCDA_HEADER,
-                        SCTX_HEADER,
-                        SLSD_HEADER,
-                        SCRV_HEADER,
-                        SCRO_HEADER
+                        SCHR_HEADER
                     })
             );
         });
@@ -1561,14 +1556,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41444353: // SCDA
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.CompiledScript) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.CompiledScript = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.CompiledScript);
                 }
                 case 0x58544353: // SCTX
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.SourceCode) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.SourceCode = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
@@ -1577,7 +1570,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x44534C53: // SLSD
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.LocalVariables) return TryGet<int?>.Failure;
                     item.LocalVariables.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LocalVariable>.Instance.Parse(
                             frame: frame,
@@ -1595,7 +1587,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x56524353: // SCRV
                 case 0x4F524353: // SCRO
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.References) return TryGet<int?>.Failure;
                     item.References.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptReference>.Instance.Parse(
                             frame: frame,
@@ -2750,19 +2741,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41444353: // SCDA
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.CompiledScript) return TryGet<int?>.Failure;
                     _CompiledScriptLocation = (ushort)(stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.CompiledScript);
                 }
                 case 0x58544353: // SCTX
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.SourceCode) return TryGet<int?>.Failure;
                     _SourceCodeLocation = (ushort)(stream.Position - offset);
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.SourceCode);
                 }
                 case 0x44534C53: // SLSD
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.LocalVariables) return TryGet<int?>.Failure;
                     this.LocalVariables = this.ParseRepeatedTypelessSubrecord<LocalVariableBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: recordTypeConverter,
@@ -2773,7 +2761,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x56524353: // SCRV
                 case 0x4F524353: // SCRO
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptFields_FieldIndex.References) return TryGet<int?>.Failure;
                     this.References = this.ParseRepeatedTypelessSubrecord<ScriptReferenceBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: recordTypeConverter,

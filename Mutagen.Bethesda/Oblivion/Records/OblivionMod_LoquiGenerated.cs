@@ -2956,6 +2956,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
+        public new static readonly RecordType GrupRecordType = OblivionMod_Registration.TriggeringRecordType;
         public override GameMode GameMode => GameMode.Oblivion;
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
         ICache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
@@ -5327,73 +5328,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType ANIO_HEADER = new RecordType("ANIO");
         public static readonly RecordType WATR_HEADER = new RecordType("WATR");
         public static readonly RecordType EFSH_HEADER = new RecordType("EFSH");
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
-        {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        TES4_HEADER,
-                        GMST_HEADER,
-                        GLOB_HEADER,
-                        CLAS_HEADER,
-                        FACT_HEADER,
-                        HAIR_HEADER,
-                        EYES_HEADER,
-                        RACE_HEADER,
-                        SOUN_HEADER,
-                        SKIL_HEADER,
-                        MGEF_HEADER,
-                        SCPT_HEADER,
-                        LTEX_HEADER,
-                        ENCH_HEADER,
-                        SPEL_HEADER,
-                        BSGN_HEADER,
-                        ACTI_HEADER,
-                        APPA_HEADER,
-                        ARMO_HEADER,
-                        BOOK_HEADER,
-                        CLOT_HEADER,
-                        CONT_HEADER,
-                        DOOR_HEADER,
-                        INGR_HEADER,
-                        LIGH_HEADER,
-                        MISC_HEADER,
-                        STAT_HEADER,
-                        GRAS_HEADER,
-                        TREE_HEADER,
-                        FLOR_HEADER,
-                        FURN_HEADER,
-                        WEAP_HEADER,
-                        AMMO_HEADER,
-                        NPC__HEADER,
-                        CREA_HEADER,
-                        LVLC_HEADER,
-                        SLGM_HEADER,
-                        KEYM_HEADER,
-                        ALCH_HEADER,
-                        SBSP_HEADER,
-                        SGST_HEADER,
-                        LVLI_HEADER,
-                        WTHR_HEADER,
-                        CLMT_HEADER,
-                        REGN_HEADER,
-                        CELL_HEADER,
-                        WRLD_HEADER,
-                        DIAL_HEADER,
-                        QUST_HEADER,
-                        IDLE_HEADER,
-                        PACK_HEADER,
-                        CSTY_HEADER,
-                        LSCR_HEADER,
-                        LVSP_HEADER,
-                        ANIO_HEADER,
-                        WATR_HEADER,
-                        EFSH_HEADER
-                    })
-            );
-        });
+        public static readonly RecordType TriggeringRecordType = TES4_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 57;
         public static readonly Type BinaryWriteTranslation = typeof(OblivionModBinaryWriteTranslation);
