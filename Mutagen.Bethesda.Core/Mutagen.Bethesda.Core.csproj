@@ -8,6 +8,7 @@
     <NoWarn>1701;1702; 1998</NoWarn>
     <WarningsAsErrors>NU1605, CS4014</WarningsAsErrors>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>C:\Users\Levia\Documents\Repos\Mutagen\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <WarningsAsErrors>NU1605, CS4014</WarningsAsErrors>
@@ -27,7 +28,7 @@
   </ItemGroup>
   <PropertyGroup>
     <PackageId>Mutagen.Bethesda.Core</PackageId>
-    <Version>0.3.0-dev-4</Version>
+    <Version>0.3.1</Version>
     <Authors>Noggog</Authors>
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>

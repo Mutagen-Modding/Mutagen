@@ -7,21 +7,22 @@
       <FormLink name="Script" refName="Script" recordType="SCRI" />
       <String name="Name" recordType="FULL" />
       <String name="Icon" recordType="ICON" />
-      <Data>
-        <Fields>
-          <Int32 name="Time" default="-1" />
-          <UInt32 name="Radius" />
-          <Color name="Color" extraByte="true" />
-          <Enum name="Flags" enumName="Light.LightFlag" byteLength="4" />
-          <Float name="FalloffExponent" default="1" />
-          <Float name="FOV" default="90" />
-          <Break />
-          <UInt32 name="Value" />
-          <Float name="Weight" />
-        </Fields>
-      </Data>
+      <RefDirect name="Data" refName="LightData" />
       <Float name="Fade" recordType="FNAM" />
       <FormLink name="Sound" recordType="SNAM" refName="Sound" />
+    </Fields>
+  </Object>
+  <Object name="LightData" recordType="DATA" objType="Subrecord" GUID="64493ae8-9647-44e1-bd6d-544b3907b84d" ID="195">
+    <Fields>
+      <Int32 name="Time" default="-1" />
+      <UInt32 name="Radius" />
+      <Color name="Color" extraByte="true" />
+      <Enum name="Flags" enumName="Light.LightFlag" byteLength="4" />
+      <Float name="FalloffExponent" default="1" />
+      <Float name="FOV" default="90" />
+      <Break />
+      <UInt32 name="Value" />
+      <Float name="Weight" />
     </Fields>
   </Object>
 </Loqui>

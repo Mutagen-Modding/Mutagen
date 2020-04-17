@@ -15,7 +15,6 @@ using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -32,39 +31,34 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class BaseLayer :
-        IBaseLayer,
-        ILoquiObjectSetter<BaseLayer>,
-        IEquatable<BaseLayer>,
+    public partial class MiscellaneousData :
+        IMiscellaneousData,
+        ILoquiObjectSetter<MiscellaneousData>,
+        IEquatable<MiscellaneousData>,
         IEqualsMask
     {
         #region Ctor
-        public BaseLayer()
+        public MiscellaneousData()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Header
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private LayerHeader? _Header;
-        public LayerHeader? Header
-        {
-            get => _Header;
-            set => _Header = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILayerHeaderGetter? IBaseLayerGetter.Header => this.Header;
+        #region Value
+        public Int32 Value { get; set; } = default;
+        #endregion
+        #region Weight
+        public Single Weight { get; set; } = default;
         #endregion
 
         #region To String
 
-        public virtual void ToString(
+        public void ToString(
             FileGeneration fg,
             string? name = null)
         {
-            BaseLayerMixIn.ToString(
+            MiscellaneousDataMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -74,22 +68,22 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IBaseLayerGetter rhs)) return false;
-            return ((BaseLayerCommon)((IBaseLayerGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IMiscellaneousDataGetter rhs)) return false;
+            return ((MiscellaneousDataCommon)((IMiscellaneousDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(BaseLayer obj)
+        public bool Equals(MiscellaneousData obj)
         {
-            return ((BaseLayerCommon)((IBaseLayerGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MiscellaneousDataCommon)((IMiscellaneousDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((BaseLayerCommon)((IBaseLayerGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((MiscellaneousDataCommon)((IMiscellaneousDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object XmlWriteTranslator => BaseLayerXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => MiscellaneousDataXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -98,7 +92,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((BaseLayerXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((MiscellaneousDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -107,9 +101,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static BaseLayer CreateFromXml(
+        public static MiscellaneousData CreateFromXml(
             XElement node,
-            BaseLayer.TranslationMask? translationMask = null)
+            MiscellaneousData.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -118,27 +112,27 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static BaseLayer CreateFromXml(
+        public static MiscellaneousData CreateFromXml(
             XElement node,
-            out BaseLayer.ErrorMask errorMask,
-            BaseLayer.TranslationMask? translationMask = null)
+            out MiscellaneousData.ErrorMask errorMask,
+            MiscellaneousData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = BaseLayer.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MiscellaneousData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public static BaseLayer CreateFromXml(
+        public static MiscellaneousData CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new BaseLayer();
-            ((BaseLayerSetterCommon)((IBaseLayerGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new MiscellaneousData();
+            ((MiscellaneousDataSetterCommon)((IMiscellaneousDataGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -146,9 +140,9 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static BaseLayer CreateFromXml(
+        public static MiscellaneousData CreateFromXml(
             string path,
-            BaseLayer.TranslationMask? translationMask = null)
+            MiscellaneousData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -156,10 +150,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static BaseLayer CreateFromXml(
+        public static MiscellaneousData CreateFromXml(
             string path,
-            out BaseLayer.ErrorMask errorMask,
-            BaseLayer.TranslationMask? translationMask = null)
+            out MiscellaneousData.ErrorMask errorMask,
+            MiscellaneousData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -168,10 +162,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static BaseLayer CreateFromXml(
+        public static MiscellaneousData CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            BaseLayer.TranslationMask? translationMask = null)
+            MiscellaneousData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -180,9 +174,9 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static BaseLayer CreateFromXml(
+        public static MiscellaneousData CreateFromXml(
             Stream stream,
-            BaseLayer.TranslationMask? translationMask = null)
+            MiscellaneousData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -190,10 +184,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static BaseLayer CreateFromXml(
+        public static MiscellaneousData CreateFromXml(
             Stream stream,
-            out BaseLayer.ErrorMask errorMask,
-            BaseLayer.TranslationMask? translationMask = null)
+            out MiscellaneousData.ErrorMask errorMask,
+            MiscellaneousData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -202,10 +196,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static BaseLayer CreateFromXml(
+        public static MiscellaneousData CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            BaseLayer.TranslationMask? translationMask = null)
+            MiscellaneousData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -225,9 +219,18 @@ namespace Mutagen.Bethesda.Oblivion
             where TItem : notnull
         {
             #region Ctors
-            public Mask(TItem Header)
+            public Mask(TItem initialValue)
             {
-                this.Header = new MaskItem<TItem, LayerHeader.Mask<TItem>?>(Header, new LayerHeader.Mask<TItem>(Header));
+                this.Value = initialValue;
+                this.Weight = initialValue;
+            }
+
+            public Mask(
+                TItem Value,
+                TItem Weight)
+            {
+                this.Value = Value;
+                this.Weight = Weight;
             }
 
             #pragma warning disable CS8618
@@ -239,7 +242,8 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public MaskItem<TItem, LayerHeader.Mask<TItem>?>? Header { get; set; }
+            public TItem Value;
+            public TItem Weight;
             #endregion
 
             #region Equals
@@ -252,38 +256,34 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Header, rhs.Header)) return false;
+                if (!object.Equals(this.Value, rhs.Value)) return false;
+                if (!object.Equals(this.Weight, rhs.Weight)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Header);
+                hash.Add(this.Value);
+                hash.Add(this.Weight);
                 return hash.ToHashCode();
             }
 
             #endregion
 
             #region All
-            public virtual bool All(Func<TItem, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
-                if (Header != null)
-                {
-                    if (!eval(this.Header.Overall)) return false;
-                    if (this.Header.Specific != null && !this.Header.Specific.All(eval)) return false;
-                }
+                if (!eval(this.Value)) return false;
+                if (!eval(this.Weight)) return false;
                 return true;
             }
             #endregion
 
             #region Any
-            public virtual bool Any(Func<TItem, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
-                if (Header != null)
-                {
-                    if (eval(this.Header.Overall)) return true;
-                    if (this.Header.Specific != null && this.Header.Specific.Any(eval)) return true;
-                }
+                if (eval(this.Value)) return true;
+                if (eval(this.Weight)) return true;
                 return false;
             }
             #endregion
@@ -291,14 +291,15 @@ namespace Mutagen.Bethesda.Oblivion
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new BaseLayer.Mask<R>();
+                var ret = new MiscellaneousData.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Header = this.Header == null ? null : new MaskItem<R, LayerHeader.Mask<R>?>(eval(this.Header.Overall), this.Header.Specific?.Translate(eval));
+                obj.Value = eval(this.Value);
+                obj.Weight = eval(this.Weight);
             }
             #endregion
 
@@ -308,22 +309,26 @@ namespace Mutagen.Bethesda.Oblivion
                 return ToString(printMask: null);
             }
 
-            public string ToString(BaseLayer.Mask<bool>? printMask = null)
+            public string ToString(MiscellaneousData.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, BaseLayer.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, MiscellaneousData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(BaseLayer.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(MiscellaneousData.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Header?.Overall ?? true)
+                    if (printMask?.Value ?? true)
                     {
-                        Header?.ToString(fg);
+                        fg.AppendItem(Value, "Value");
+                    }
+                    if (printMask?.Weight ?? true)
+                    {
+                        fg.AppendItem(Weight, "Weight");
                     }
                 }
                 fg.AppendLine("]");
@@ -350,52 +355,62 @@ namespace Mutagen.Bethesda.Oblivion
                     return _warnings;
                 }
             }
-            public MaskItem<Exception?, LayerHeader.ErrorMask?>? Header;
+            public Exception? Value;
+            public Exception? Weight;
             #endregion
 
             #region IErrorMask
-            public virtual object? GetNthMask(int index)
+            public object? GetNthMask(int index)
             {
-                BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
+                MiscellaneousData_FieldIndex enu = (MiscellaneousData_FieldIndex)index;
                 switch (enu)
                 {
-                    case BaseLayer_FieldIndex.Header:
-                        return Header;
+                    case MiscellaneousData_FieldIndex.Value:
+                        return Value;
+                    case MiscellaneousData_FieldIndex.Weight:
+                        return Weight;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public virtual void SetNthException(int index, Exception ex)
+            public void SetNthException(int index, Exception ex)
             {
-                BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
+                MiscellaneousData_FieldIndex enu = (MiscellaneousData_FieldIndex)index;
                 switch (enu)
                 {
-                    case BaseLayer_FieldIndex.Header:
-                        this.Header = new MaskItem<Exception?, LayerHeader.ErrorMask?>(ex, null);
+                    case MiscellaneousData_FieldIndex.Value:
+                        this.Value = ex;
+                        break;
+                    case MiscellaneousData_FieldIndex.Weight:
+                        this.Weight = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public virtual void SetNthMask(int index, object obj)
+            public void SetNthMask(int index, object obj)
             {
-                BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
+                MiscellaneousData_FieldIndex enu = (MiscellaneousData_FieldIndex)index;
                 switch (enu)
                 {
-                    case BaseLayer_FieldIndex.Header:
-                        this.Header = (MaskItem<Exception?, LayerHeader.ErrorMask?>?)obj;
+                    case MiscellaneousData_FieldIndex.Value:
+                        this.Value = (Exception?)obj;
+                        break;
+                    case MiscellaneousData_FieldIndex.Weight:
+                        this.Weight = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public virtual bool IsInError()
+            public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Header != null) return true;
+                if (Value != null) return true;
+                if (Weight != null) return true;
                 return false;
             }
             #endregion
@@ -408,7 +423,7 @@ namespace Mutagen.Bethesda.Oblivion
                 return fg.ToString();
             }
 
-            public virtual void ToString(FileGeneration fg, string? name = null)
+            public void ToString(FileGeneration fg, string? name = null)
             {
                 fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
@@ -428,9 +443,10 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 fg.AppendLine("]");
             }
-            protected virtual void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(FileGeneration fg)
             {
-                Header?.ToString(fg);
+                fg.AppendItem(Value, "Value");
+                fg.AppendItem(Weight, "Weight");
             }
             #endregion
 
@@ -439,7 +455,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Header = this.Header.Combine(rhs.Header, (l, r) => l.Combine(r));
+                ret.Value = this.Value.Combine(rhs.Value);
+                ret.Weight = this.Weight.Combine(rhs.Weight);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -461,13 +478,15 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public MaskItem<bool, LayerHeader.TranslationMask?> Header;
+            public bool Value;
+            public bool Weight;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.Header = new MaskItem<bool, LayerHeader.TranslationMask?>(defaultOn, null);
+                this.Value = defaultOn;
+                this.Weight = defaultOn;
             }
 
             #endregion
@@ -481,47 +500,47 @@ namespace Mutagen.Bethesda.Oblivion
                 return _crystal;
             }
 
-            protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Header?.Overall ?? true, Header?.Specific?.GetCrystal()));
+                ret.Add((Value, null));
+                ret.Add((Weight, null));
             }
         }
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<ILinkGetter> Links => BaseLayerCommon.Instance.GetLinks(this);
+        public new static readonly RecordType GrupRecordType = MiscellaneousData_Registration.TriggeringRecordType;
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object BinaryWriteTranslator => BaseLayerBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => MiscellaneousDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((BaseLayerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((MiscellaneousDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static BaseLayer CreateFromBinary(MutagenFrame frame)
+        public static MiscellaneousData CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public static BaseLayer CreateFromBinary(
+        public static MiscellaneousData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new BaseLayer();
-            ((BaseLayerSetterCommon)((IBaseLayerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new MiscellaneousData();
+            ((MiscellaneousDataSetterCommon)((IMiscellaneousDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -534,34 +553,34 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBaseLayerGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMiscellaneousDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((BaseLayerSetterCommon)((IBaseLayerGetter)this).CommonSetterInstance()!).Clear(this);
+            ((MiscellaneousDataSetterCommon)((IMiscellaneousDataGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static BaseLayer GetNew()
+        internal static MiscellaneousData GetNew()
         {
-            return new BaseLayer();
+            return new MiscellaneousData();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IBaseLayer :
-        IBaseLayerGetter,
-        ILoquiObjectSetter<IBaseLayer>
+    public partial interface IMiscellaneousData :
+        IMiscellaneousDataGetter,
+        ILoquiObjectSetter<IMiscellaneousData>
     {
-        new LayerHeader? Header { get; set; }
+        new Int32 Value { get; set; }
+        new Single Weight { get; set; }
     }
 
-    public partial interface IBaseLayerGetter :
+    public partial interface IMiscellaneousDataGetter :
         ILoquiObject,
-        ILoquiObject<IBaseLayerGetter>,
+        ILoquiObject<IMiscellaneousDataGetter>,
         IXmlItem,
-        ILinkContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -570,49 +589,50 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        ILayerHeaderGetter? Header { get; }
+        Int32 Value { get; }
+        Single Weight { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class BaseLayerMixIn
+    public static partial class MiscellaneousDataMixIn
     {
-        public static void Clear(this IBaseLayer item)
+        public static void Clear(this IMiscellaneousData item)
         {
-            ((BaseLayerSetterCommon)((IBaseLayerGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((MiscellaneousDataSetterCommon)((IMiscellaneousDataGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static BaseLayer.Mask<bool> GetEqualsMask(
-            this IBaseLayerGetter item,
-            IBaseLayerGetter rhs,
+        public static MiscellaneousData.Mask<bool> GetEqualsMask(
+            this IMiscellaneousDataGetter item,
+            IMiscellaneousDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((MiscellaneousDataCommon)((IMiscellaneousDataGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IBaseLayerGetter item,
+            this IMiscellaneousDataGetter item,
             string? name = null,
-            BaseLayer.Mask<bool>? printMask = null)
+            MiscellaneousData.Mask<bool>? printMask = null)
         {
-            return ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).ToString(
+            return ((MiscellaneousDataCommon)((IMiscellaneousDataGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IBaseLayerGetter item,
+            this IMiscellaneousDataGetter item,
             FileGeneration fg,
             string? name = null,
-            BaseLayer.Mask<bool>? printMask = null)
+            MiscellaneousData.Mask<bool>? printMask = null)
         {
-            ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).ToString(
+            ((MiscellaneousDataCommon)((IMiscellaneousDataGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -620,38 +640,38 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this IBaseLayerGetter item,
-            BaseLayer.Mask<bool?> checkMask)
+            this IMiscellaneousDataGetter item,
+            MiscellaneousData.Mask<bool?> checkMask)
         {
-            return ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).HasBeenSet(
+            return ((MiscellaneousDataCommon)((IMiscellaneousDataGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static BaseLayer.Mask<bool> GetHasBeenSetMask(this IBaseLayerGetter item)
+        public static MiscellaneousData.Mask<bool> GetHasBeenSetMask(this IMiscellaneousDataGetter item)
         {
-            var ret = new BaseLayer.Mask<bool>(false);
-            ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new MiscellaneousData.Mask<bool>(false);
+            ((MiscellaneousDataCommon)((IMiscellaneousDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IBaseLayerGetter item,
-            IBaseLayerGetter rhs)
+            this IMiscellaneousDataGetter item,
+            IMiscellaneousDataGetter rhs)
         {
-            return ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).Equals(
+            return ((MiscellaneousDataCommon)((IMiscellaneousDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this IBaseLayer lhs,
-            IBaseLayerGetter rhs,
-            BaseLayer.TranslationMask? copyMask = null)
+            this IMiscellaneousData lhs,
+            IMiscellaneousDataGetter rhs,
+            MiscellaneousData.TranslationMask? copyMask = null)
         {
-            ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MiscellaneousDataSetterTranslationCommon)((IMiscellaneousDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -659,59 +679,59 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void DeepCopyIn(
-            this IBaseLayer lhs,
-            IBaseLayerGetter rhs,
-            out BaseLayer.ErrorMask errorMask,
-            BaseLayer.TranslationMask? copyMask = null)
+            this IMiscellaneousData lhs,
+            IMiscellaneousDataGetter rhs,
+            out MiscellaneousData.ErrorMask errorMask,
+            MiscellaneousData.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MiscellaneousDataSetterTranslationCommon)((IMiscellaneousDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = BaseLayer.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MiscellaneousData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IBaseLayer lhs,
-            IBaseLayerGetter rhs,
+            this IMiscellaneousData lhs,
+            IMiscellaneousDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MiscellaneousDataSetterTranslationCommon)((IMiscellaneousDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static BaseLayer DeepCopy(
-            this IBaseLayerGetter item,
-            BaseLayer.TranslationMask? copyMask = null)
+        public static MiscellaneousData DeepCopy(
+            this IMiscellaneousDataGetter item,
+            MiscellaneousData.TranslationMask? copyMask = null)
         {
-            return ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MiscellaneousDataSetterTranslationCommon)((IMiscellaneousDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static BaseLayer DeepCopy(
-            this IBaseLayerGetter item,
-            out BaseLayer.ErrorMask errorMask,
-            BaseLayer.TranslationMask? copyMask = null)
+        public static MiscellaneousData DeepCopy(
+            this IMiscellaneousDataGetter item,
+            out MiscellaneousData.ErrorMask errorMask,
+            MiscellaneousData.TranslationMask? copyMask = null)
         {
-            return ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MiscellaneousDataSetterTranslationCommon)((IMiscellaneousDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static BaseLayer DeepCopy(
-            this IBaseLayerGetter item,
+        public static MiscellaneousData DeepCopy(
+            this IMiscellaneousDataGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MiscellaneousDataSetterTranslationCommon)((IMiscellaneousDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -720,9 +740,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IBaseLayer item,
+            this IMiscellaneousData item,
             XElement node,
-            BaseLayer.TranslationMask? translationMask = null)
+            MiscellaneousData.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -733,10 +753,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IBaseLayer item,
+            this IMiscellaneousData item,
             XElement node,
-            out BaseLayer.ErrorMask errorMask,
-            BaseLayer.TranslationMask? translationMask = null)
+            out MiscellaneousData.ErrorMask errorMask,
+            MiscellaneousData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -744,16 +764,16 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = BaseLayer.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MiscellaneousData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this IBaseLayer item,
+            this IMiscellaneousData item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((BaseLayerSetterCommon)((IBaseLayerGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((MiscellaneousDataSetterCommon)((IMiscellaneousDataGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -761,9 +781,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IBaseLayer item,
+            this IMiscellaneousData item,
             string path,
-            BaseLayer.TranslationMask? translationMask = null)
+            MiscellaneousData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -773,10 +793,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IBaseLayer item,
+            this IMiscellaneousData item,
             string path,
-            out BaseLayer.ErrorMask errorMask,
-            BaseLayer.TranslationMask? translationMask = null)
+            out MiscellaneousData.ErrorMask errorMask,
+            MiscellaneousData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -787,10 +807,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IBaseLayer item,
+            this IMiscellaneousData item,
             string path,
             ErrorMaskBuilder? errorMask,
-            BaseLayer.TranslationMask? translationMask = null)
+            MiscellaneousData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -801,9 +821,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IBaseLayer item,
+            this IMiscellaneousData item,
             Stream stream,
-            BaseLayer.TranslationMask? translationMask = null)
+            MiscellaneousData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -813,10 +833,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IBaseLayer item,
+            this IMiscellaneousData item,
             Stream stream,
-            out BaseLayer.ErrorMask errorMask,
-            BaseLayer.TranslationMask? translationMask = null)
+            out MiscellaneousData.ErrorMask errorMask,
+            MiscellaneousData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -827,10 +847,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IBaseLayer item,
+            this IMiscellaneousData item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            BaseLayer.TranslationMask? translationMask = null)
+            MiscellaneousData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -845,7 +865,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IBaseLayer item,
+            this IMiscellaneousData item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -855,11 +875,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromBinary(
-            this IBaseLayer item,
+            this IMiscellaneousData item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((BaseLayerSetterCommon)((IBaseLayerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((MiscellaneousDataSetterCommon)((IMiscellaneousDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -875,47 +895,48 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     #region Field Index
-    public enum BaseLayer_FieldIndex
+    public enum MiscellaneousData_FieldIndex
     {
-        Header = 0,
+        Value = 0,
+        Weight = 1,
     }
     #endregion
 
     #region Registration
-    public partial class BaseLayer_Registration : ILoquiRegistration
+    public partial class MiscellaneousData_Registration : ILoquiRegistration
     {
-        public static readonly BaseLayer_Registration Instance = new BaseLayer_Registration();
+        public static readonly MiscellaneousData_Registration Instance = new MiscellaneousData_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 145,
+            msgID: 197,
             version: 0);
 
-        public const string GUID = "4b14f70e-5702-4ed0-b691-09996696e4d9";
+        public const string GUID = "e7daacc4-40a3-4e42-93ed-69d7e30e0f16";
 
-        public const ushort AdditionalFieldCount = 1;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 1;
+        public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(BaseLayer.Mask<>);
+        public static readonly Type MaskType = typeof(MiscellaneousData.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(BaseLayer.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(MiscellaneousData.ErrorMask);
 
-        public static readonly Type ClassType = typeof(BaseLayer);
+        public static readonly Type ClassType = typeof(MiscellaneousData);
 
-        public static readonly Type GetterType = typeof(IBaseLayerGetter);
+        public static readonly Type GetterType = typeof(IMiscellaneousDataGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IBaseLayer);
+        public static readonly Type SetterType = typeof(IMiscellaneousData);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Oblivion.BaseLayer";
+        public const string FullName = "Mutagen.Bethesda.Oblivion.MiscellaneousData";
 
-        public const string Name = "BaseLayer";
+        public const string Name = "MiscellaneousData";
 
         public const string Namespace = "Mutagen.Bethesda.Oblivion";
 
@@ -927,8 +948,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
-                case "HEADER":
-                    return (ushort)BaseLayer_FieldIndex.Header;
+                case "VALUE":
+                    return (ushort)MiscellaneousData_FieldIndex.Value;
+                case "WEIGHT":
+                    return (ushort)MiscellaneousData_FieldIndex.Weight;
                 default:
                     return null;
             }
@@ -936,10 +959,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
+            MiscellaneousData_FieldIndex enu = (MiscellaneousData_FieldIndex)index;
             switch (enu)
             {
-                case BaseLayer_FieldIndex.Header:
+                case MiscellaneousData_FieldIndex.Value:
+                case MiscellaneousData_FieldIndex.Weight:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -948,11 +972,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
+            MiscellaneousData_FieldIndex enu = (MiscellaneousData_FieldIndex)index;
             switch (enu)
             {
-                case BaseLayer_FieldIndex.Header:
-                    return true;
+                case MiscellaneousData_FieldIndex.Value:
+                case MiscellaneousData_FieldIndex.Weight:
+                    return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -960,10 +985,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
+            MiscellaneousData_FieldIndex enu = (MiscellaneousData_FieldIndex)index;
             switch (enu)
             {
-                case BaseLayer_FieldIndex.Header:
+                case MiscellaneousData_FieldIndex.Value:
+                case MiscellaneousData_FieldIndex.Weight:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -972,11 +998,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static string GetNthName(ushort index)
         {
-            BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
+            MiscellaneousData_FieldIndex enu = (MiscellaneousData_FieldIndex)index;
             switch (enu)
             {
-                case BaseLayer_FieldIndex.Header:
-                    return "Header";
+                case MiscellaneousData_FieldIndex.Value:
+                    return "Value";
+                case MiscellaneousData_FieldIndex.Weight:
+                    return "Weight";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -984,10 +1012,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
+            MiscellaneousData_FieldIndex enu = (MiscellaneousData_FieldIndex)index;
             switch (enu)
             {
-                case BaseLayer_FieldIndex.Header:
+                case MiscellaneousData_FieldIndex.Value:
+                case MiscellaneousData_FieldIndex.Weight:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -996,10 +1025,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsProtected(ushort index)
         {
-            BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
+            MiscellaneousData_FieldIndex enu = (MiscellaneousData_FieldIndex)index;
             switch (enu)
             {
-                case BaseLayer_FieldIndex.Header:
+                case MiscellaneousData_FieldIndex.Value:
+                case MiscellaneousData_FieldIndex.Weight:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1008,34 +1038,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Type GetNthType(ushort index)
         {
-            BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
+            MiscellaneousData_FieldIndex enu = (MiscellaneousData_FieldIndex)index;
             switch (enu)
             {
-                case BaseLayer_FieldIndex.Header:
-                    return typeof(LayerHeader);
+                case MiscellaneousData_FieldIndex.Value:
+                    return typeof(Int32);
+                case MiscellaneousData_FieldIndex.Weight:
+                    return typeof(Single);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(BaseLayerXmlWriteTranslation);
-        public static readonly RecordType BTXT_HEADER = new RecordType("BTXT");
-        public static readonly RecordType ATXT_HEADER = new RecordType("ATXT");
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
-        {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        BTXT_HEADER,
-                        ATXT_HEADER
-                    })
-            );
-        });
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 1;
-        public static readonly Type BinaryWriteTranslation = typeof(BaseLayerBinaryWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(MiscellaneousDataXmlWriteTranslation);
+        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
+        public static readonly RecordType TriggeringRecordType = DATA_HEADER;
+        public const int NumStructFields = 2;
+        public const int NumTypedFields = 0;
+        public static readonly Type BinaryWriteTranslation = typeof(MiscellaneousDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1068,21 +1088,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class BaseLayerSetterCommon
+    public partial class MiscellaneousDataSetterCommon
     {
-        public static readonly BaseLayerSetterCommon Instance = new BaseLayerSetterCommon();
+        public static readonly MiscellaneousDataSetterCommon Instance = new MiscellaneousDataSetterCommon();
 
         partial void ClearPartial();
         
-        public virtual void Clear(IBaseLayer item)
+        public void Clear(IMiscellaneousData item)
         {
             ClearPartial();
-            item.Header = null;
+            item.Value = default;
+            item.Weight = default;
         }
         
         #region Xml Translation
         public virtual void CopyInFromXml(
-            IBaseLayer item,
+            IMiscellaneousData item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1091,7 +1112,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    BaseLayerXmlCreateTranslation.FillPublicElementXml(
+                    MiscellaneousDataXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1110,63 +1131,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Binary Translation
         protected static void FillBinaryStructs(
-            IBaseLayer item,
+            IMiscellaneousData item,
             MutagenFrame frame)
         {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IBaseLayer item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x54585442: // BTXT
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)BaseLayer_FieldIndex.Header) return TryGet<int?>.Failure;
-                    item.Header = Mutagen.Bethesda.Oblivion.LayerHeader.CreateFromBinary(
-                        frame: frame,
-                        recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)BaseLayer_FieldIndex.Header);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
+            item.Value = frame.ReadInt32();
+            item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
         }
         
         public virtual void CopyInFromBinary(
-            IBaseLayer item,
+            IMiscellaneousData item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.TypelessRecordParse(
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                recordTypeConverter.ConvertToCustom(MiscellaneousData_Registration.DATA_HEADER)));
+            UtilityTranslation.RecordParse(
                 record: item,
                 frame: frame,
-                setFinal: false,
+                setFinal: true,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: FillBinaryStructs);
         }
         
         #endregion
         
     }
-    public partial class BaseLayerCommon
+    public partial class MiscellaneousDataCommon
     {
-        public static readonly BaseLayerCommon Instance = new BaseLayerCommon();
+        public static readonly MiscellaneousDataCommon Instance = new MiscellaneousDataCommon();
 
-        public BaseLayer.Mask<bool> GetEqualsMask(
-            IBaseLayerGetter item,
-            IBaseLayerGetter rhs,
+        public MiscellaneousData.Mask<bool> GetEqualsMask(
+            IMiscellaneousDataGetter item,
+            IMiscellaneousDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new BaseLayer.Mask<bool>(false);
-            ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new MiscellaneousData.Mask<bool>(false);
+            ((MiscellaneousDataCommon)((IMiscellaneousDataGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1175,23 +1176,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public void FillEqualsMask(
-            IBaseLayerGetter item,
-            IBaseLayerGetter rhs,
-            BaseLayer.Mask<bool> ret,
+            IMiscellaneousDataGetter item,
+            IMiscellaneousDataGetter rhs,
+            MiscellaneousData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Header = EqualsMaskHelper.EqualsHelper(
-                item.Header,
-                rhs.Header,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.Value = item.Value == rhs.Value;
+            ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
         }
         
         public string ToString(
-            IBaseLayerGetter item,
+            IMiscellaneousDataGetter item,
             string? name = null,
-            BaseLayer.Mask<bool>? printMask = null)
+            MiscellaneousData.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1203,18 +1201,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public void ToString(
-            IBaseLayerGetter item,
+            IMiscellaneousDataGetter item,
             FileGeneration fg,
             string? name = null,
-            BaseLayer.Mask<bool>? printMask = null)
+            MiscellaneousData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"BaseLayer =>");
+                fg.AppendLine($"MiscellaneousData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (BaseLayer) =>");
+                fg.AppendLine($"{name} (MiscellaneousData) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1228,137 +1226,112 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         protected static void ToStringFields(
-            IBaseLayerGetter item,
+            IMiscellaneousDataGetter item,
             FileGeneration fg,
-            BaseLayer.Mask<bool>? printMask = null)
+            MiscellaneousData.Mask<bool>? printMask = null)
         {
-            if ((printMask?.Header?.Overall ?? true)
-                && item.Header.TryGet(out var HeaderItem))
+            if (printMask?.Value ?? true)
             {
-                HeaderItem?.ToString(fg, "Header");
+                fg.AppendItem(item.Value, "Value");
+            }
+            if (printMask?.Weight ?? true)
+            {
+                fg.AppendItem(item.Weight, "Weight");
             }
         }
         
         public bool HasBeenSet(
-            IBaseLayerGetter item,
-            BaseLayer.Mask<bool?> checkMask)
+            IMiscellaneousDataGetter item,
+            MiscellaneousData.Mask<bool?> checkMask)
         {
-            if (checkMask.Header?.Overall.HasValue ?? false && checkMask.Header.Overall.Value != (item.Header != null)) return false;
-            if (checkMask.Header?.Specific != null && (item.Header == null || !item.Header.HasBeenSet(checkMask.Header.Specific))) return false;
             return true;
         }
         
         public void FillHasBeenSetMask(
-            IBaseLayerGetter item,
-            BaseLayer.Mask<bool> mask)
+            IMiscellaneousDataGetter item,
+            MiscellaneousData.Mask<bool> mask)
         {
-            var itemHeader = item.Header;
-            mask.Header = new MaskItem<bool, LayerHeader.Mask<bool>?>(itemHeader != null, itemHeader?.GetHasBeenSetMask());
+            mask.Value = true;
+            mask.Weight = true;
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IBaseLayerGetter? lhs,
-            IBaseLayerGetter? rhs)
+            IMiscellaneousDataGetter? lhs,
+            IMiscellaneousDataGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!object.Equals(lhs.Header, rhs.Header)) return false;
+            if (lhs.Value != rhs.Value) return false;
+            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             return true;
         }
         
-        public virtual int GetHashCode(IBaseLayerGetter item)
+        public virtual int GetHashCode(IMiscellaneousDataGetter item)
         {
             var hash = new HashCode();
-            if (item.Header.TryGet(out var Headeritem))
-            {
-                hash.Add(Headeritem);
-            }
+            hash.Add(item.Value);
+            hash.Add(item.Weight);
             return hash.ToHashCode();
         }
         
         #endregion
         
         
-        public virtual object GetNew()
+        public object GetNew()
         {
-            return BaseLayer.GetNew();
+            return MiscellaneousData.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IBaseLayerGetter obj)
+        public IEnumerable<ILinkGetter> GetLinks(IMiscellaneousDataGetter obj)
         {
-            if (obj.Header != null)
-            {
-                foreach (var item in obj.Header.Links)
-                {
-                    yield return item;
-                }
-            }
             yield break;
         }
         
         #endregion
         
     }
-    public partial class BaseLayerSetterTranslationCommon
+    public partial class MiscellaneousDataSetterTranslationCommon
     {
-        public static readonly BaseLayerSetterTranslationCommon Instance = new BaseLayerSetterTranslationCommon();
+        public static readonly MiscellaneousDataSetterTranslationCommon Instance = new MiscellaneousDataSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public virtual void DeepCopyIn(
-            IBaseLayer item,
-            IBaseLayerGetter rhs,
+        public void DeepCopyIn(
+            IMiscellaneousData item,
+            IMiscellaneousDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)BaseLayer_FieldIndex.Header) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MiscellaneousData_FieldIndex.Value) ?? true))
             {
-                errorMask?.PushIndex((int)BaseLayer_FieldIndex.Header);
-                try
-                {
-                    if(rhs.Header.TryGet(out var rhsHeader))
-                    {
-                        item.Header = rhsHeader.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)BaseLayer_FieldIndex.Header));
-                    }
-                    else
-                    {
-                        item.Header = default;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Value = rhs.Value;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscellaneousData_FieldIndex.Weight) ?? true))
+            {
+                item.Weight = rhs.Weight;
             }
         }
         
         #endregion
         
-        public BaseLayer DeepCopy(
-            IBaseLayerGetter item,
-            BaseLayer.TranslationMask? copyMask = null)
+        public MiscellaneousData DeepCopy(
+            IMiscellaneousDataGetter item,
+            MiscellaneousData.TranslationMask? copyMask = null)
         {
-            BaseLayer ret = (BaseLayer)((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).GetNew();
+            MiscellaneousData ret = (MiscellaneousData)((MiscellaneousDataCommon)((IMiscellaneousDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public BaseLayer DeepCopy(
-            IBaseLayerGetter item,
-            out BaseLayer.ErrorMask errorMask,
-            BaseLayer.TranslationMask? copyMask = null)
+        public MiscellaneousData DeepCopy(
+            IMiscellaneousDataGetter item,
+            out MiscellaneousData.ErrorMask errorMask,
+            MiscellaneousData.TranslationMask? copyMask = null)
         {
-            BaseLayer ret = (BaseLayer)((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).GetNew();
+            MiscellaneousData ret = (MiscellaneousData)((MiscellaneousDataCommon)((IMiscellaneousDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1366,12 +1339,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
-        public BaseLayer DeepCopy(
-            IBaseLayerGetter item,
+        public MiscellaneousData DeepCopy(
+            IMiscellaneousDataGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            BaseLayer ret = (BaseLayer)((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).GetNew();
+            MiscellaneousData ret = (MiscellaneousData)((MiscellaneousDataCommon)((IMiscellaneousDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1386,27 +1359,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class BaseLayer
+    public partial class MiscellaneousData
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BaseLayer_Registration.Instance;
-        public static BaseLayer_Registration Registration => BaseLayer_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => MiscellaneousData_Registration.Instance;
+        public static MiscellaneousData_Registration Registration => MiscellaneousData_Registration.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonInstance() => BaseLayerCommon.Instance;
+        protected object CommonInstance() => MiscellaneousDataCommon.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonSetterInstance()
+        protected object CommonSetterInstance()
         {
-            return BaseLayerSetterCommon.Instance;
+            return MiscellaneousDataSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected virtual object CommonSetterTranslationInstance() => BaseLayerSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => MiscellaneousDataSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IBaseLayerGetter.CommonInstance() => this.CommonInstance();
+        object IMiscellaneousDataGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IBaseLayerGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IMiscellaneousDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IBaseLayerGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IMiscellaneousDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1417,44 +1390,48 @@ namespace Mutagen.Bethesda.Oblivion
 #region Xml Translation
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class BaseLayerXmlWriteTranslation : IXmlWriteTranslator
+    public partial class MiscellaneousDataXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static BaseLayerXmlWriteTranslation Instance = new BaseLayerXmlWriteTranslation();
+        public readonly static MiscellaneousDataXmlWriteTranslation Instance = new MiscellaneousDataXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IBaseLayerGetter item,
+            IMiscellaneousDataGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((item.Header != null)
-                && (translationMask?.GetShouldTranslate((int)BaseLayer_FieldIndex.Header) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)MiscellaneousData_FieldIndex.Value) ?? true))
             {
-                if (item.Header.TryGet(out var HeaderItem))
-                {
-                    ((LayerHeaderXmlWriteTranslation)((IXmlItem)HeaderItem).XmlWriteTranslator).Write(
-                        item: HeaderItem,
-                        node: node,
-                        name: nameof(item.Header),
-                        fieldIndex: (int)BaseLayer_FieldIndex.Header,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)BaseLayer_FieldIndex.Header));
-                }
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Value),
+                    item: item.Value,
+                    fieldIndex: (int)MiscellaneousData_FieldIndex.Value,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MiscellaneousData_FieldIndex.Weight) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Weight),
+                    item: item.Weight,
+                    fieldIndex: (int)MiscellaneousData_FieldIndex.Weight,
+                    errorMask: errorMask);
             }
         }
 
-        public virtual void Write(
+        public void Write(
             XElement node,
-            IBaseLayerGetter item,
+            IMiscellaneousDataGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.BaseLayer");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.MiscellaneousData");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.BaseLayer");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.MiscellaneousData");
             }
             WriteToNodeXml(
                 item: item,
@@ -1463,7 +1440,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationMask: translationMask);
         }
 
-        public virtual void Write(
+        public void Write(
             XElement node,
             object item,
             ErrorMaskBuilder? errorMask,
@@ -1471,7 +1448,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string? name = null)
         {
             Write(
-                item: (IBaseLayerGetter)item,
+                item: (IMiscellaneousDataGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1480,7 +1457,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IBaseLayerGetter item,
+            IMiscellaneousDataGetter item,
             ErrorMaskBuilder? errorMask,
             int fieldIndex,
             TranslationCrystal? translationMask,
@@ -1490,7 +1467,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             try
             {
                 Write(
-                    item: (IBaseLayerGetter)item,
+                    item: (IMiscellaneousDataGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1509,12 +1486,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class BaseLayerXmlCreateTranslation
+    public partial class MiscellaneousDataXmlCreateTranslation
     {
-        public readonly static BaseLayerXmlCreateTranslation Instance = new BaseLayerXmlCreateTranslation();
+        public readonly static MiscellaneousDataXmlCreateTranslation Instance = new MiscellaneousDataXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IBaseLayer item,
+            IMiscellaneousData item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1523,7 +1500,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    BaseLayerXmlCreateTranslation.FillPublicElementXml(
+                    MiscellaneousDataXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1539,7 +1516,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IBaseLayer item,
+            IMiscellaneousData item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1547,14 +1524,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "Header":
-                    errorMask?.PushIndex((int)BaseLayer_FieldIndex.Header);
+                case "Value":
+                    errorMask?.PushIndex((int)MiscellaneousData_FieldIndex.Value);
                     try
                     {
-                        item.Header = LoquiXmlTranslation<LayerHeader>.Instance.Parse(
+                        item.Value = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)BaseLayer_FieldIndex.Header));
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Weight":
+                    errorMask?.PushIndex((int)MiscellaneousData_FieldIndex.Weight);
+                    try
+                    {
+                        item.Weight = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1577,30 +1571,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Xml Write Mixins
-    public static class BaseLayerXmlTranslationMixIn
+    public static class MiscellaneousDataXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IBaseLayerGetter item,
+            this IMiscellaneousDataGetter item,
             XElement node,
-            out BaseLayer.ErrorMask errorMask,
-            BaseLayer.TranslationMask? translationMask = null,
+            out MiscellaneousData.ErrorMask errorMask,
+            MiscellaneousData.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((BaseLayerXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((MiscellaneousDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = BaseLayer.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MiscellaneousData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this IBaseLayerGetter item,
+            this IMiscellaneousDataGetter item,
             string path,
-            out BaseLayer.ErrorMask errorMask,
-            BaseLayer.TranslationMask? translationMask = null,
+            out MiscellaneousData.ErrorMask errorMask,
+            MiscellaneousData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1614,7 +1608,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this IBaseLayerGetter item,
+            this IMiscellaneousDataGetter item,
             string path,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1631,10 +1625,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this IBaseLayerGetter item,
+            this IMiscellaneousDataGetter item,
             Stream stream,
-            out BaseLayer.ErrorMask errorMask,
-            BaseLayer.TranslationMask? translationMask = null,
+            out MiscellaneousData.ErrorMask errorMask,
+            MiscellaneousData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1648,7 +1642,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this IBaseLayerGetter item,
+            this IMiscellaneousDataGetter item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1665,13 +1659,13 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this IBaseLayerGetter item,
+            this IMiscellaneousDataGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
             string? name = null)
         {
-            ((BaseLayerXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((MiscellaneousDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1680,12 +1674,12 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this IBaseLayerGetter item,
+            this IMiscellaneousDataGetter item,
             XElement node,
             string? name = null,
-            BaseLayer.TranslationMask? translationMask = null)
+            MiscellaneousData.TranslationMask? translationMask = null)
         {
-            ((BaseLayerXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((MiscellaneousDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1694,12 +1688,12 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this IBaseLayerGetter item,
+            this IMiscellaneousDataGetter item,
             string path,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((BaseLayerXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((MiscellaneousDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1709,12 +1703,12 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this IBaseLayerGetter item,
+            this IMiscellaneousDataGetter item,
             Stream stream,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((BaseLayerXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((MiscellaneousDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1733,51 +1727,52 @@ namespace Mutagen.Bethesda.Oblivion
 #region Binary Translation
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class BaseLayerBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class MiscellaneousDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static BaseLayerBinaryWriteTranslation Instance = new BaseLayerBinaryWriteTranslation();
+        public readonly static MiscellaneousDataBinaryWriteTranslation Instance = new MiscellaneousDataBinaryWriteTranslation();
 
-        public static void WriteRecordTypes(
-            IBaseLayerGetter item,
-            MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+        public static void WriteEmbedded(
+            IMiscellaneousDataGetter item,
+            MutagenWriter writer)
         {
-            if (item.Header.TryGet(out var HeaderItem))
+            writer.Write(item.Value);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Weight);
+        }
+
+        public void Write(
+            MutagenWriter writer,
+            IMiscellaneousDataGetter item,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: recordTypeConverter.ConvertToCustom(MiscellaneousData_Registration.DATA_HEADER),
+                type: ObjectType.Subrecord))
             {
-                ((LayerHeaderBinaryWriteTranslation)((IBinaryItem)HeaderItem).BinaryWriteTranslator).Write(
-                    item: HeaderItem,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                WriteEmbedded(
+                    item: item,
+                    writer: writer);
             }
         }
 
-        public virtual void Write(
-            MutagenWriter writer,
-            IBaseLayerGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            WriteRecordTypes(
-                item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public virtual void Write(
+        public void Write(
             MutagenWriter writer,
             object item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IBaseLayerGetter)item,
+                item: (IMiscellaneousDataGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class BaseLayerBinaryCreateTranslation
+    public partial class MiscellaneousDataBinaryCreateTranslation
     {
-        public readonly static BaseLayerBinaryCreateTranslation Instance = new BaseLayerBinaryCreateTranslation();
+        public readonly static MiscellaneousDataBinaryCreateTranslation Instance = new MiscellaneousDataBinaryCreateTranslation();
 
     }
 
@@ -1785,13 +1780,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Binary Write Mixins
-    public static class BaseLayerBinaryTranslationMixIn
+    public static class MiscellaneousDataBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IBaseLayerGetter item,
+            this IMiscellaneousDataGetter item,
             MutagenWriter writer)
         {
-            ((BaseLayerBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((MiscellaneousDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 recordTypeConverter: null);
@@ -1804,34 +1799,33 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class BaseLayerBinaryOverlay :
+    public partial class MiscellaneousDataBinaryOverlay :
         BinaryOverlay,
-        IBaseLayerGetter
+        IMiscellaneousDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BaseLayer_Registration.Instance;
-        public static BaseLayer_Registration Registration => BaseLayer_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => MiscellaneousData_Registration.Instance;
+        public static MiscellaneousData_Registration Registration => MiscellaneousData_Registration.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonInstance() => BaseLayerCommon.Instance;
+        protected object CommonInstance() => MiscellaneousDataCommon.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonSetterTranslationInstance() => BaseLayerSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => MiscellaneousDataSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IBaseLayerGetter.CommonInstance() => this.CommonInstance();
+        object IMiscellaneousDataGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IBaseLayerGetter.CommonSetterInstance() => null;
+        object? IMiscellaneousDataGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IBaseLayerGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IMiscellaneousDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBaseLayerGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMiscellaneousDataGetter)rhs, include);
 
-        public IEnumerable<ILinkGetter> Links => BaseLayerCommon.Instance.GetLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object XmlWriteTranslator => BaseLayerXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => MiscellaneousDataXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -1840,7 +1834,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((BaseLayerXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((MiscellaneousDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -1848,31 +1842,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object BinaryWriteTranslator => BaseLayerBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => MiscellaneousDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((BaseLayerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((MiscellaneousDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
-        #region Header
-        private RangeInt32? _HeaderLocation;
-        private bool _Header_IsSet => _HeaderLocation.HasValue;
-        public ILayerHeaderGetter? Header => _Header_IsSet ? LayerHeaderBinaryOverlay.LayerHeaderFactory(new BinaryMemoryReadStream(_data.Slice(_HeaderLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
-        public bool Header_IsSet => _HeaderLocation.HasValue;
-        #endregion
+        public Int32 Value => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0, 4));
+        public Single Weight => SpanExt.GetFloat(_data.Slice(4, 4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected BaseLayerBinaryOverlay(
+        protected MiscellaneousDataBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1881,49 +1871,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
 
-        public static BaseLayerBinaryOverlay BaseLayerFactory(
+        public static MiscellaneousDataBinaryOverlay MiscellaneousDataFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new BaseLayerBinaryOverlay(
-                bytes: stream.RemainingMemory,
+            var ret = new MiscellaneousDataBinaryOverlay(
+                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.Meta),
                 package: package);
-            int offset = stream.Position;
+            var finalPos = checked((int)(stream.Position + package.Meta.Subrecord(stream.RemainingSpan).TotalLength));
+            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
+            stream.Position += 0x8 + package.Meta.SubConstants.HeaderLength;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,
-                offset: 0);
-            ret.FillTypelessSubrecordTypes(
-                stream: stream,
-                finalPos: stream.Length,
-                offset: offset,
-                recordTypeConverter: recordTypeConverter,
-                fill: ret.FillRecordType);
+                offset: offset);
             return ret;
         }
 
-        public virtual TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
-            int finalPos,
-            int offset,
-            RecordType type,
-            int? lastParsed,
-            RecordTypeConverter? recordTypeConverter)
-        {
-            type = recordTypeConverter.ConvertToStandard(type);
-            switch (type.TypeInt)
-            {
-                case 0x54585442: // BTXT
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)BaseLayer_FieldIndex.Header) return TryGet<int?>.Failure;
-                    _HeaderLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)BaseLayer_FieldIndex.Header);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
     }
 
 }

@@ -135,34 +135,16 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IPlacedNpcGetter.Scale => this.Scale;
         #endregion
-        #region Position
+        #region Location
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private P3Float _Position;
-        public P3Float Position
+        private Location? _Location;
+        public Location? Location
         {
-            get => this._Position;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Position = value;
-            }
+            get => _Location;
+            set => _Location = value;
         }
-        #endregion
-        #region Rotation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private P3Float _Rotation;
-        public P3Float Rotation
-        {
-            get => this._Rotation;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Rotation = value;
-            }
-        }
-        #endregion
-        #region DATADataTypeState
-        public PlacedNpc.DATADataType DATADataTypeState { get; set; } = default;
+        ILocationGetter? IPlacedNpcGetter.Location => this.Location;
         #endregion
 
         #region To String
@@ -343,9 +325,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Horse = initialValue;
                 this.RagdollData = initialValue;
                 this.Scale = initialValue;
-                this.Position = initialValue;
-                this.Rotation = initialValue;
-                this.DATADataTypeState = initialValue;
+                this.Location = new MaskItem<TItem, Location.Mask<TItem>?>(initialValue, new Location.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -363,9 +343,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Horse,
                 TItem RagdollData,
                 TItem Scale,
-                TItem Position,
-                TItem Rotation,
-                TItem DATADataTypeState)
+                TItem Location)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -382,9 +360,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Horse = Horse;
                 this.RagdollData = RagdollData;
                 this.Scale = Scale;
-                this.Position = Position;
-                this.Rotation = Rotation;
-                this.DATADataTypeState = DATADataTypeState;
+                this.Location = new MaskItem<TItem, Location.Mask<TItem>?>(Location, new Location.Mask<TItem>(Location));
             }
 
             #pragma warning disable CS8618
@@ -405,9 +381,7 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem Horse;
             public TItem RagdollData;
             public TItem Scale;
-            public TItem Position;
-            public TItem Rotation;
-            public TItem DATADataTypeState;
+            public MaskItem<TItem, Location.Mask<TItem>?>? Location { get; set; }
             #endregion
 
             #region Equals
@@ -430,9 +404,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.Horse, rhs.Horse)) return false;
                 if (!object.Equals(this.RagdollData, rhs.RagdollData)) return false;
                 if (!object.Equals(this.Scale, rhs.Scale)) return false;
-                if (!object.Equals(this.Position, rhs.Position)) return false;
-                if (!object.Equals(this.Rotation, rhs.Rotation)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
+                if (!object.Equals(this.Location, rhs.Location)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -447,9 +419,7 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.Horse);
                 hash.Add(this.RagdollData);
                 hash.Add(this.Scale);
-                hash.Add(this.Position);
-                hash.Add(this.Rotation);
-                hash.Add(this.DATADataTypeState);
+                hash.Add(this.Location);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -477,9 +447,11 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.Horse)) return false;
                 if (!eval(this.RagdollData)) return false;
                 if (!eval(this.Scale)) return false;
-                if (!eval(this.Position)) return false;
-                if (!eval(this.Rotation)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
+                if (Location != null)
+                {
+                    if (!eval(this.Location.Overall)) return false;
+                    if (this.Location.Specific != null && !this.Location.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -505,9 +477,11 @@ namespace Mutagen.Bethesda.Oblivion
                 if (eval(this.Horse)) return true;
                 if (eval(this.RagdollData)) return true;
                 if (eval(this.Scale)) return true;
-                if (eval(this.Position)) return true;
-                if (eval(this.Rotation)) return true;
-                if (eval(this.DATADataTypeState)) return true;
+                if (Location != null)
+                {
+                    if (eval(this.Location.Overall)) return true;
+                    if (this.Location.Specific != null && this.Location.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -532,9 +506,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Horse = eval(this.Horse);
                 obj.RagdollData = eval(this.RagdollData);
                 obj.Scale = eval(this.Scale);
-                obj.Position = eval(this.Position);
-                obj.Rotation = eval(this.Rotation);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
+                obj.Location = this.Location == null ? null : new MaskItem<R, Location.Mask<R>?>(eval(this.Location.Overall), this.Location.Specific?.Translate(eval));
             }
             #endregion
 
@@ -593,17 +565,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendItem(Scale, "Scale");
                     }
-                    if (printMask?.Position ?? true)
+                    if (printMask?.Location?.Overall ?? true)
                     {
-                        fg.AppendItem(Position, "Position");
-                    }
-                    if (printMask?.Rotation ?? true)
-                    {
-                        fg.AppendItem(Rotation, "Rotation");
-                    }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        Location?.ToString(fg);
                     }
                 }
                 fg.AppendLine("]");
@@ -626,9 +590,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Exception? Horse;
             public Exception? RagdollData;
             public Exception? Scale;
-            public Exception? Position;
-            public Exception? Rotation;
-            public Exception? DATADataTypeState;
+            public MaskItem<Exception?, Location.ErrorMask?>? Location;
             #endregion
 
             #region IErrorMask
@@ -655,12 +617,8 @@ namespace Mutagen.Bethesda.Oblivion
                         return RagdollData;
                     case PlacedNpc_FieldIndex.Scale:
                         return Scale;
-                    case PlacedNpc_FieldIndex.Position:
-                        return Position;
-                    case PlacedNpc_FieldIndex.Rotation:
-                        return Rotation;
-                    case PlacedNpc_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
+                    case PlacedNpc_FieldIndex.Location:
+                        return Location;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -698,14 +656,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case PlacedNpc_FieldIndex.Scale:
                         this.Scale = ex;
                         break;
-                    case PlacedNpc_FieldIndex.Position:
-                        this.Position = ex;
-                        break;
-                    case PlacedNpc_FieldIndex.Rotation:
-                        this.Rotation = ex;
-                        break;
-                    case PlacedNpc_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
+                    case PlacedNpc_FieldIndex.Location:
+                        this.Location = new MaskItem<Exception?, Location.ErrorMask?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -745,14 +697,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case PlacedNpc_FieldIndex.Scale:
                         this.Scale = (Exception?)obj;
                         break;
-                    case PlacedNpc_FieldIndex.Position:
-                        this.Position = (Exception?)obj;
-                        break;
-                    case PlacedNpc_FieldIndex.Rotation:
-                        this.Rotation = (Exception?)obj;
-                        break;
-                    case PlacedNpc_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
+                    case PlacedNpc_FieldIndex.Location:
+                        this.Location = (MaskItem<Exception?, Location.ErrorMask?>?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -772,9 +718,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Horse != null) return true;
                 if (RagdollData != null) return true;
                 if (Scale != null) return true;
-                if (Position != null) return true;
-                if (Rotation != null) return true;
-                if (DATADataTypeState != null) return true;
+                if (Location != null) return true;
                 return false;
             }
             #endregion
@@ -819,9 +763,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(Horse, "Horse");
                 fg.AppendItem(RagdollData, "RagdollData");
                 fg.AppendItem(Scale, "Scale");
-                fg.AppendItem(Position, "Position");
-                fg.AppendItem(Rotation, "Rotation");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                Location?.ToString(fg);
             }
             #endregion
 
@@ -839,9 +781,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Horse = this.Horse.Combine(rhs.Horse);
                 ret.RagdollData = this.RagdollData.Combine(rhs.RagdollData);
                 ret.Scale = this.Scale.Combine(rhs.Scale);
-                ret.Position = this.Position.Combine(rhs.Position);
-                ret.Rotation = this.Rotation.Combine(rhs.Rotation);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+                ret.Location = this.Location.Combine(rhs.Location, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -873,9 +813,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Horse;
             public bool RagdollData;
             public bool Scale;
-            public bool Position;
-            public bool Rotation;
-            public bool DATADataTypeState;
+            public MaskItem<bool, Location.TranslationMask?> Location;
             #endregion
 
             #region Ctors
@@ -891,9 +829,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Horse = defaultOn;
                 this.RagdollData = defaultOn;
                 this.Scale = defaultOn;
-                this.Position = defaultOn;
-                this.Rotation = defaultOn;
-                this.DATADataTypeState = defaultOn;
+                this.Location = new MaskItem<bool, Location.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -910,20 +846,13 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Horse, null));
                 ret.Add((RagdollData, null));
                 ret.Add((Scale, null));
-                ret.Add((Position, null));
-                ret.Add((Rotation, null));
-                ret.Add((DATADataTypeState, null));
+                ret.Add((Location?.Overall ?? true, Location?.Specific?.GetCrystal()));
             }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = PlacedNpc_Registration.TriggeringRecordType;
-        [Flags]
-        public enum DATADataType
-        {
-            Has = 1
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => PlacedNpcCommon.Instance.GetLinks(this);
         public PlacedNpc(FormKey formKey)
@@ -1015,9 +944,7 @@ namespace Mutagen.Bethesda.Oblivion
         new IFormLinkNullable<PlacedCreature> Horse { get; }
         new Byte[]? RagdollData { get; set; }
         new Single? Scale { get; set; }
-        new P3Float Position { get; set; }
-        new P3Float Rotation { get; set; }
-        new PlacedNpc.DATADataType DATADataTypeState { get; set; }
+        new Location? Location { get; set; }
     }
 
     public partial interface IPlacedNpcInternal :
@@ -1044,9 +971,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkNullableGetter<IPlacedCreatureGetter> Horse { get; }
         ReadOnlyMemorySlice<Byte>? RagdollData { get; }
         Single? Scale { get; }
-        P3Float Position { get; }
-        P3Float Rotation { get; }
-        PlacedNpc.DATADataType DATADataTypeState { get; }
+        ILocationGetter? Location { get; }
 
     }
 
@@ -1355,9 +1280,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Horse = 11,
         RagdollData = 12,
         Scale = 13,
-        Position = 14,
-        Rotation = 15,
-        DATADataTypeState = 16,
+        Location = 14,
     }
     #endregion
 
@@ -1375,9 +1298,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "1bd10cd8-4d9b-4cc0-9639-51f02a1b2e36";
 
-        public const ushort AdditionalFieldCount = 12;
+        public const ushort AdditionalFieldCount = 10;
 
-        public const ushort FieldCount = 17;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(PlacedNpc.Mask<>);
 
@@ -1425,12 +1348,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)PlacedNpc_FieldIndex.RagdollData;
                 case "SCALE":
                     return (ushort)PlacedNpc_FieldIndex.Scale;
-                case "POSITION":
-                    return (ushort)PlacedNpc_FieldIndex.Position;
-                case "ROTATION":
-                    return (ushort)PlacedNpc_FieldIndex.Rotation;
-                case "DATADATATYPESTATE":
-                    return (ushort)PlacedNpc_FieldIndex.DATADataTypeState;
+                case "LOCATION":
+                    return (ushort)PlacedNpc_FieldIndex.Location;
                 default:
                     return null;
             }
@@ -1450,9 +1369,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedNpc_FieldIndex.Horse:
                 case PlacedNpc_FieldIndex.RagdollData:
                 case PlacedNpc_FieldIndex.Scale:
-                case PlacedNpc_FieldIndex.Position:
-                case PlacedNpc_FieldIndex.Rotation:
-                case PlacedNpc_FieldIndex.DATADataTypeState:
+                case PlacedNpc_FieldIndex.Location:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1466,6 +1383,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case PlacedNpc_FieldIndex.DistantLODData:
                 case PlacedNpc_FieldIndex.EnableParent:
+                case PlacedNpc_FieldIndex.Location:
                     return true;
                 case PlacedNpc_FieldIndex.Base:
                 case PlacedNpc_FieldIndex.XPCIFluff:
@@ -1474,9 +1392,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedNpc_FieldIndex.Horse:
                 case PlacedNpc_FieldIndex.RagdollData:
                 case PlacedNpc_FieldIndex.Scale:
-                case PlacedNpc_FieldIndex.Position:
-                case PlacedNpc_FieldIndex.Rotation:
-                case PlacedNpc_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1497,9 +1412,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedNpc_FieldIndex.Horse:
                 case PlacedNpc_FieldIndex.RagdollData:
                 case PlacedNpc_FieldIndex.Scale:
-                case PlacedNpc_FieldIndex.Position:
-                case PlacedNpc_FieldIndex.Rotation:
-                case PlacedNpc_FieldIndex.DATADataTypeState:
+                case PlacedNpc_FieldIndex.Location:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1529,12 +1442,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "RagdollData";
                 case PlacedNpc_FieldIndex.Scale:
                     return "Scale";
-                case PlacedNpc_FieldIndex.Position:
-                    return "Position";
-                case PlacedNpc_FieldIndex.Rotation:
-                    return "Rotation";
-                case PlacedNpc_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
+                case PlacedNpc_FieldIndex.Location:
+                    return "Location";
                 default:
                     return OblivionMajorRecord_Registration.GetNthName(index);
             }
@@ -1554,9 +1463,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedNpc_FieldIndex.Horse:
                 case PlacedNpc_FieldIndex.RagdollData:
                 case PlacedNpc_FieldIndex.Scale:
-                case PlacedNpc_FieldIndex.Position:
-                case PlacedNpc_FieldIndex.Rotation:
-                case PlacedNpc_FieldIndex.DATADataTypeState:
+                case PlacedNpc_FieldIndex.Location:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsNthDerivative(index);
@@ -1577,9 +1484,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PlacedNpc_FieldIndex.Horse:
                 case PlacedNpc_FieldIndex.RagdollData:
                 case PlacedNpc_FieldIndex.Scale:
-                case PlacedNpc_FieldIndex.Position:
-                case PlacedNpc_FieldIndex.Rotation:
-                case PlacedNpc_FieldIndex.DATADataTypeState:
+                case PlacedNpc_FieldIndex.Location:
                     return false;
                 default:
                     return OblivionMajorRecord_Registration.IsProtected(index);
@@ -1609,12 +1514,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Byte[]);
                 case PlacedNpc_FieldIndex.Scale:
                     return typeof(Single);
-                case PlacedNpc_FieldIndex.Position:
-                    return typeof(P3Float);
-                case PlacedNpc_FieldIndex.Rotation:
-                    return typeof(P3Float);
-                case PlacedNpc_FieldIndex.DATADataTypeState:
-                    return typeof(PlacedNpc.DATADataType);
+                case PlacedNpc_FieldIndex.Location:
+                    return typeof(Location);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -1634,7 +1535,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = ACHR_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 9;
+        public const int NumTypedFields = 10;
         public static readonly Type BinaryWriteTranslation = typeof(PlacedNpcBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1686,9 +1587,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Horse.FormKey = null;
             item.RagdollData = default;
             item.Scale = default;
-            item.Position = default;
-            item.Rotation = default;
-            item.DATADataTypeState = default;
+            item.Location = null;
             base.Clear(item);
         }
         
@@ -1712,9 +1611,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "HasDATADataType":
-                    item.DATADataTypeState |= PlacedNpc.DATADataType.Has;
-                    break;
                 default:
                     OblivionMajorRecordSetterCommon.FillPrivateElementXml(
                         item: item,
@@ -1866,15 +1762,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.DATADataTypeState = PlacedNpc.DATADataType.Has;
-                    }
-                    item.Position = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.Rotation = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.Rotation);
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength; // Skip header
+                    item.Location = Mutagen.Bethesda.Oblivion.Location.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.Location);
                 }
                 default:
                     return OblivionMajorRecordSetterCommon.FillBinaryRecordTypes(
@@ -1967,9 +1857,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Horse = object.Equals(item.Horse, rhs.Horse);
             ret.RagdollData = MemorySliceExt.Equal(item.RagdollData, rhs.RagdollData);
             ret.Scale = item.Scale.EqualsWithin(rhs.Scale);
-            ret.Position = item.Position.Equals(rhs.Position);
-            ret.Rotation = item.Rotation.Equals(rhs.Rotation);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
+            ret.Location = EqualsMaskHelper.EqualsHelper(
+                item.Location,
+                rhs.Location,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2066,17 +1958,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(ScaleItem, "Scale");
             }
-            if (printMask?.Position ?? true)
+            if ((printMask?.Location?.Overall ?? true)
+                && item.Location.TryGet(out var LocationItem))
             {
-                fg.AppendItem(item.Position, "Position");
-            }
-            if (printMask?.Rotation ?? true)
-            {
-                fg.AppendItem(item.Rotation, "Rotation");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                LocationItem?.ToString(fg, "Location");
             }
         }
         
@@ -2095,6 +1980,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Horse.HasValue && checkMask.Horse.Value != (item.Horse.FormKey != null)) return false;
             if (checkMask.RagdollData.HasValue && checkMask.RagdollData.Value != (item.RagdollData != null)) return false;
             if (checkMask.Scale.HasValue && checkMask.Scale.Value != (item.Scale != null)) return false;
+            if (checkMask.Location?.Overall.HasValue ?? false && checkMask.Location.Overall.Value != (item.Location != null)) return false;
+            if (checkMask.Location?.Specific != null && (item.Location == null || !item.Location.HasBeenSet(checkMask.Location.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -2115,9 +2002,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Horse = (item.Horse.FormKey != null);
             mask.RagdollData = (item.RagdollData != null);
             mask.Scale = (item.Scale != null);
-            mask.Position = true;
-            mask.Rotation = true;
-            mask.DATADataTypeState = true;
+            var itemLocation = item.Location;
+            mask.Location = new MaskItem<bool, Location.Mask<bool>?>(itemLocation != null, itemLocation?.GetHasBeenSetMask());
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -2176,9 +2062,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!lhs.Horse.Equals(rhs.Horse)) return false;
             if (!MemorySliceExt.Equal(lhs.RagdollData, rhs.RagdollData)) return false;
             if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
-            if (!lhs.Position.Equals(rhs.Position)) return false;
-            if (!lhs.Rotation.Equals(rhs.Rotation)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!object.Equals(lhs.Location, rhs.Location)) return false;
             return true;
         }
         
@@ -2239,9 +2123,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(Scaleitem);
             }
-            hash.Add(item.Position);
-            hash.Add(item.Rotation);
-            hash.Add(item.DATADataTypeState);
+            if (item.Location.TryGet(out var Locationitem))
+            {
+                hash.Add(Locationitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2428,17 +2313,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.Scale = rhs.Scale;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Position) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Location) ?? true))
             {
-                item.Position = rhs.Position;
-            }
-            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Rotation) ?? true))
-            {
-                item.Rotation = rhs.Rotation;
-            }
-            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
+                errorMask?.PushIndex((int)PlacedNpc_FieldIndex.Location);
+                try
+                {
+                    if(rhs.Location.TryGet(out var rhsLocation))
+                    {
+                        item.Location = rhsLocation.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedNpc_FieldIndex.Location));
+                    }
+                    else
+                    {
+                        item.Location = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
         }
         
@@ -2680,35 +2579,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)PlacedNpc_FieldIndex.Scale,
                     errorMask: errorMask);
             }
-            if (item.DATADataTypeState.HasFlag(PlacedNpc.DATADataType.Has))
+            if ((item.Location != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Location) ?? true))
             {
-                if ((translationMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Position) ?? true))
+                if (item.Location.TryGet(out var LocationItem))
                 {
-                    P3FloatXmlTranslation.Instance.Write(
+                    ((LocationXmlWriteTranslation)((IXmlItem)LocationItem).XmlWriteTranslator).Write(
+                        item: LocationItem,
                         node: node,
-                        name: nameof(item.Position),
-                        item: item.Position,
-                        fieldIndex: (int)PlacedNpc_FieldIndex.Position,
-                        errorMask: errorMask);
+                        name: nameof(item.Location),
+                        fieldIndex: (int)PlacedNpc_FieldIndex.Location,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)PlacedNpc_FieldIndex.Location));
                 }
-                if ((translationMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Rotation) ?? true))
-                {
-                    P3FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Rotation),
-                        item: item.Rotation,
-                        fieldIndex: (int)PlacedNpc_FieldIndex.Rotation,
-                        errorMask: errorMask);
-                }
-            }
-            if ((translationMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<PlacedNpc.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)PlacedNpc_FieldIndex.DATADataTypeState,
-                    errorMask: errorMask);
             }
         }
 
@@ -2981,50 +2864,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Position":
-                    errorMask?.PushIndex((int)PlacedNpc_FieldIndex.Position);
+                case "Location":
+                    errorMask?.PushIndex((int)PlacedNpc_FieldIndex.Location);
                     try
                     {
-                        item.Position = P3FloatXmlTranslation.Instance.Parse(
+                        item.Location = LoquiXmlTranslation<Location>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.DATADataTypeState |= PlacedNpc.DATADataType.Has;
-                    break;
-                case "Rotation":
-                    errorMask?.PushIndex((int)PlacedNpc_FieldIndex.Rotation);
-                    try
-                    {
-                        item.Rotation = P3FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DATADataTypeState":
-                    errorMask?.PushIndex((int)PlacedNpc_FieldIndex.DATADataTypeState);
-                    try
-                    {
-                        item.DATADataTypeState = EnumXmlTranslation<PlacedNpc.DATADataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)PlacedNpc_FieldIndex.Location));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3122,15 +2969,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static PlacedNpcBinaryWriteTranslation Instance = new PlacedNpcBinaryWriteTranslation();
 
-        public static void WriteEmbedded(
-            IPlacedNpcGetter item,
-            MutagenWriter writer)
-        {
-            OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IPlacedNpcGetter item,
             MutagenWriter writer,
@@ -3182,16 +3020,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.Scale,
                 header: recordTypeConverter.ConvertToCustom(PlacedNpc_Registration.XSCL_HEADER));
-            if (item.DATADataTypeState.HasFlag(PlacedNpc.DATADataType.Has))
+            if (item.Location.TryGet(out var LocationItem))
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(PlacedNpc_Registration.DATA_HEADER)))
+                using (HeaderExport.ExportHeader(writer, PlacedNpc_Registration.DATA_HEADER, ObjectType.Subrecord))
                 {
-                    Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
+                    ((LocationBinaryWriteTranslation)((IBinaryItem)LocationItem).BinaryWriteTranslator).Write(
+                        item: LocationItem,
                         writer: writer,
-                        item: item.Position);
-                    Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Rotation);
+                        recordTypeConverter: recordTypeConverter);
                 }
             }
         }
@@ -3206,7 +3042,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: recordTypeConverter.ConvertToCustom(PlacedNpc_Registration.ACHR_HEADER),
                 type: ObjectType.Record))
             {
-                WriteEmbedded(
+                OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -3360,17 +3196,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _ScaleLocation;
         public Single? Scale => _ScaleLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _ScaleLocation.Value, _package.Meta)) : default(Single?);
         #endregion
-        private int? _DATALocation;
-        public PlacedNpc.DATADataType DATADataTypeState { get; private set; }
-        #region Position
-        private int _PositionLocation => _DATALocation!.Value + 0x0;
-        private bool _Position_IsSet => _DATALocation.HasValue;
-        public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation.Read(_data.Slice(_PositionLocation, 12)) : default;
-        #endregion
-        #region Rotation
-        private int _RotationLocation => _DATALocation!.Value + 0xC;
-        private bool _Rotation_IsSet => _DATALocation.HasValue;
-        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation.Read(_data.Slice(_RotationLocation, 12)) : default;
+        #region Location
+        public ILocationGetter? Location { get; private set; }
+        public bool Location_IsSet => Location != null;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
@@ -3469,9 +3297,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
-                    this.DATADataTypeState = PlacedNpc.DATADataType.Has;
-                    return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.Rotation);
+                    stream.Position += _package.Meta.SubConstants.HeaderLength;
+                    this.Location = LocationBinaryOverlay.LocationFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)PlacedNpc_FieldIndex.Location);
                 }
                 default:
                     return base.FillRecordType(

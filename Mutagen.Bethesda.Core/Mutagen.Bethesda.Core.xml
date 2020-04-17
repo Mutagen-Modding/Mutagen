@@ -1,0 +1,3679 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Mutagen.Bethesda.Core</name>
+    </assembly>
+    <members>
+        <member name="T:Mutagen.Bethesda.DirectModLinkCache`1">
+             <summary>
+             A Link Cache using a single mod as its link target.
+            
+             Internal caching will only occur for the types required to serve the requested link.
+            
+             All functionality is multithread safe.
+            
+             Modification of the target Mod is not safe.  Internal caches can become incorrect if 
+             modifications occur on content already cached.
+             </summary>
+             <typeparam name="TMod">Mod type</typeparam>
+        </member>
+        <member name="M:Mutagen.Bethesda.DirectModLinkCache`1.#ctor(`0)">
+            <summary>
+            Constructs a DirectModLinkCache around a target mod
+            </summary>
+            <param name="sourceMod">Mod to resolve against when linking</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.DirectModLinkCache`1.TryLookup(Mutagen.Bethesda.FormKey,Mutagen.Bethesda.IMajorRecordCommonGetter@)">
+             <summary>
+             Looks up a given FormKey to try to locate the target record.
+            
+             This call is not as optimized as its generic typed counterpart.
+             It does not know what type the record is limited to, and so much load and process
+             all record types in order to do a proper search.
+             </summary>
+             <param name="formKey">FormKey to search for</param>
+             <param name="majorRec">MajorRecord if found</param>
+             <returns>True if record was found</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.DirectModLinkCache`1.TryLookup``1(Mutagen.Bethesda.FormKey,``0@)">
+             <summary>
+             Looks up a given FormKey to try to locate the target record.
+            
+             Will only look into the Groups that are applicable to the given type.
+             </summary>
+             <param name="formKey">FormKey to search for</param>
+             <param name="majorRec">MajorRecord if found</param>
+             <typeparam name="TMajor">MajorRecod type or interface to look for</typeparam>
+             <returns>True if record was found</returns>
+             <exception cref="T:System.ArgumentException">
+             An unexpected TMajor type will throw an exception.
+             Unexpected types include:
+               - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)
+               - A setter type is requested from a getter only object.
+             </exception>
+        </member>
+        <member name="T:Mutagen.Bethesda.FormLinkNullable`1">
+            <summary>
+            A FormKey with an associated Major Record Type that it is allowed to link to.
+            This provides type safety concepts on top of a basic FormKey.
+            FormKey allowed to be null to communicate the absence of the field.
+            </summary>
+            <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
+        </member>
+        <member name="F:Mutagen.Bethesda.FormLinkNullable`1.Empty">
+            <summary>
+            A readonly singleton representing an unlinked and null FormLinkNullable
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.FormLinkNullable`1.FormKey">
+            <summary>
+            FormKey of the target record.
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormLinkNullable`1.#ctor">
+            <summary>
+            Default constructor that starts unlinked and null
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormLinkNullable`1.#ctor(System.Nullable{Mutagen.Bethesda.FormKey})">
+            <summary>
+            Default constructor that creates a link to the target FormKey
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormLinkNullable`1.Set(System.Nullable{Mutagen.Bethesda.FormKey})">
+            <summary>
+            Sets the link to the target FormKey
+            </summary>
+            <param name="formKey">Target FormKey to link to</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormLinkNullable`1.Set(`0)">
+            <summary>
+            Sets the link to the target Major Record
+            </summary>
+            <param name="value">Target record to link to</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormLinkNullable`1.Unset">
+            <summary>
+            Resets to an unlinked and null state
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Mutagen.Bethesda.FormLinkNullable`1.Equals(System.Object)" -->
+        <member name="M:Mutagen.Bethesda.FormLinkNullable`1.Equals(Mutagen.Bethesda.IFormLinkGetter{`0})">
+            <summary>
+            Compares equality of two links, where rhs is a non nullable link.
+            </summary>
+            <param name="other">Other link to compare to</param>
+            <returns>True if FormKey members are equal</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormLinkNullable`1.Equals(Mutagen.Bethesda.IFormLinkNullableGetter{`0})">
+            <summary>
+            Compares equality of two links, where rhs is a nullable link.
+            </summary>
+            <param name="other">Other link to compare to</param>
+            <returns>True if FormKey members are equal</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormLinkNullable`1.GetHashCode">
+            <summary>
+            Returns hash code
+            </summary>
+            <returns>Hash code evaluated from FormKey member</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormLinkNullable`1.ToString">
+            <summary>
+            Returns string representation of link
+            </summary>
+            <returns>Returns FormKey string</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormLinkNullable`1.TryResolve``1(Mutagen.Bethesda.ILinkCache{``0},`0@)">
+            <summary>
+            Attempts to locate link target in given Link Cache.
+            </summary>
+            <param name="package">Link Cache to resolve against</param>
+            <param name="major">Located record if successful</param>
+            <typeparam name="TMod">Mod type</typeparam>
+            <returns>True if link was resolved and a record was retrieved</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormLinkNullable`1.TryResolveFormKey``1(Mutagen.Bethesda.ILinkCache{``0},Mutagen.Bethesda.FormKey@)">
+            <summary>
+            Attempts to locate an associated FormKey from the link
+            </summary>
+            <param name="formKey">FormKey if found</param>
+            <returns>True if FormKey is not null</returns>
+            <typeparam name="TMod">Mod type</typeparam>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormLinkNullable`1.TryResolve``1(Mutagen.Bethesda.ILinkCache{``0})">
+            <summary>
+            Attempts to locate link target in given Link Cache.
+            </summary>
+            <param name="package">Link Cache to resolve against</param>
+            <returns>TryGet object with located record if successful</returns>
+            <typeparam name="TMod">Mod type</typeparam>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormLinkNullable`1.TryGetModKey(Mutagen.Bethesda.ModKey@)">
+            <summary>
+            Attempts to locate an associated ModKey from the link
+            </summary>
+            <param name="modKey">ModKey if found</param>
+            <returns>True if FormKey is not null</returns>
+        </member>
+        <member name="T:Mutagen.Bethesda.ILinkCache`1">
+            <summary>
+            An interface for retriving records given a FormKey.
+            </summary>
+            <typeparam name="TMod">Modtype records are being retrieved from</typeparam>
+        </member>
+        <member name="M:Mutagen.Bethesda.ILinkCache`1.TryLookup(Mutagen.Bethesda.FormKey,Mutagen.Bethesda.IMajorRecordCommonGetter@)">
+            <summary>
+            Retrieves the record that matches the FormKey relative to the source the package was attached to.
+            
+            NOTE:  This call is much slower than the alternative that uses generics, as all records in the entire mod must be
+            processed, rather than being able to scope the search to a specific area.
+            </summary>
+            <param name="formKey">FormKey to look for</param>
+            <param name="majorRec">Out parameter containing the record if successful</param>
+            <returns>True if a matching record was found</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.ILinkCache`1.TryLookup``1(Mutagen.Bethesda.FormKey,``0@)">
+            <summary>
+            Retrieves the record that matches the FormKey relative to the source the package was attached to.
+            
+            If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
+            the function will return false.
+            </summary>
+            <param name="formKey">FormKey to look for</param>
+            <param name="majorRec">Out parameter containing the record if successful</param>
+            <returns>True if a matching record was found</returns>
+            <typeparam name="TMajor">The type of Major Record to look up</typeparam>
+            <exception cref="T:System.ArgumentException">
+            An unexpected TMajor type will throw an exception.
+            Unexpected types include:
+              - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)
+              - A setter type is requested from a getter only object.
+            </exception>
+        </member>
+        <member name="M:Mutagen.Bethesda.ILinkCacheExt.CreateLinkCache``1(``0)">
+            <summary>
+            Creates a new linking package relative to a mod.
+            </summary>
+            <typeparam name="TMod">Mod type</typeparam>
+            <param name="mod">Mod to construct the package relative to</param>
+            <returns>LinkPackage attached to given mod</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.ILinkCacheExt.CreateLinkCache``1(Mutagen.Bethesda.LoadOrder{``0})">
+            <summary>
+            Creates a new linking package relative to a load order.
+            </summary>
+            <typeparam name="TMod">Mod type</typeparam>
+            <param name="loadOrder">LoadOrder to construct the package relative to</param>
+            <returns>LinkPackage attached to given LoadOrder</returns>
+        </member>
+        <member name="T:Mutagen.Bethesda.LoadOrderLinkCache`1">
+             <summary>
+             A Link Cache using a LoadOrder as its link target.
+             Will resolve links to the highest overriding mod containing the record being sought.
+            
+             Internal caching will only occur as deep into the load order as necessary, for only the types required
+             to serve the requested link.
+            
+             All functionality is multithread safe.
+            
+             Modification of the target LoadOrder, or Mods on the LoadOrder is not safe.  Internal caches can become
+             incorrect if modifications occur on content already cached.
+             </summary>
+             <typeparam name="TMod">Mod type</typeparam>
+        </member>
+        <member name="M:Mutagen.Bethesda.LoadOrderLinkCache`1.#ctor(Mutagen.Bethesda.LoadOrder{`0})">
+            <summary>
+            Constructs a LoadOrderLinkCache around a target load order
+            </summary>
+            <param name="loadOrder">LoadOrder to resolve against when linking</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.LoadOrderLinkCache`1.TryLookup(Mutagen.Bethesda.FormKey,Mutagen.Bethesda.IMajorRecordCommonGetter@)">
+             <summary>
+             Looks up a given FormKey to try to locate the target record.
+            
+             This call is not as optimized as its generic typed counterpart.
+             It does not know what type the record is limited to, and so much load and process
+             all record types in order to do a proper search.
+             </summary>
+             <param name="formKey">FormKey to search for</param>
+             <param name="majorRec">MajorRecord if found</param>
+             <returns>True if record was found</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.LoadOrderLinkCache`1.TryLookup``1(Mutagen.Bethesda.FormKey,``0@)">
+             <summary>
+             Looks up a given FormKey to try to locate the target record.
+            
+             Will only look into the Groups that are applicable to the given type.
+             </summary>
+             <param name="formKey">FormKey to search for</param>
+             <param name="majorRec">MajorRecord if found</param>
+             <typeparam name="TMajor">MajorRecod type or interface to look for</typeparam>
+             <returns>True if record was found</returns>
+             <exception cref="T:System.ArgumentException">
+             An unexpected TMajor type will throw an exception.
+             Unexpected types include:
+               - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)
+               - A setter type is requested from a getter only object.
+             </exception>
+        </member>
+        <member name="T:Mutagen.Bethesda.LoadOrder">
+            <summary>
+            A static class with LoadOrder related utility functions
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.LoadOrder.TryGetPluginsFile(Mutagen.Bethesda.GameMode,Noggog.FilePath@)">
+            <summary>
+            Attempts to locate the path to a game's load order file
+            </summary>
+            <param name="game">Game to locate for</param>
+            <param name="path">Path to load order file if it was located</param>
+            <returns>True if file located</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.LoadOrder.AlignLoadOrder(System.Collections.Generic.IEnumerable{Mutagen.Bethesda.ModKey},Noggog.DirectoryPath,System.Boolean)">
+            <summary>
+            Constructs a load order from a list of mods and a data folder.
+            Load Order is sorted to the order the game will load the mod files: by file's date modified timestamp.
+            </summary>
+            <param name="modsToInclude">Mods to include</param>
+            <param name="dataPath">Path to data folder</param>
+            <returns>List of modkeys in load order, excluding missing mods</returns>
+            <exception cref="T:System.IO.FileNotFoundException">If throwOnMissingMods true and file is missing</exception>
+        </member>
+        <member name="M:Mutagen.Bethesda.LoadOrder.ProcessLoadOrder(System.IO.Stream)">
+            <summary>
+            Parses a stream to retrieve all ModKeys in expected plugin file format
+            </summary>
+            <param name="stream">Stream to read from</param>
+            <returns>List of modkeys representing a load order</returns>
+            <exception cref="T:System.ArgumentException">Line in plugin stream is unexpected</exception>
+        </member>
+        <member name="M:Mutagen.Bethesda.LoadOrder.ProcessLoadOrder(Noggog.FilePath)">
+            <summary>
+            Parses a file to retrieve all ModKeys in expected plugin file format
+            </summary>
+            <param name="path">Path of plugin list</param>
+            <returns>List of modkeys representing a load order</returns>
+            <exception cref="T:System.ArgumentException">Line in plugin file is unexpected</exception>
+        </member>
+        <member name="M:Mutagen.Bethesda.LoadOrder.GetUsualLoadOrder(Mutagen.Bethesda.GameMode,Noggog.DirectoryPath,System.Boolean)">
+            <summary>
+            Returns a load order listing from the usual sources
+            </summary>
+            <param name="game">Game type</param>
+            <param name="dataPath">Path to game's data folder</param>
+            <param name="allowMissingMods">Whether to skip missing mods</param>
+            <returns>List of modkeys representing a load order</returns>
+            <exception cref="T:System.ArgumentException">Line in plugin file is unexpected</exception>
+            <exception cref="T:System.IO.FileNotFoundException">If plugin file not located, or if allowMissingMods false and file is missing</exception>
+        </member>
+        <member name="T:Mutagen.Bethesda.LoadOrder`1">
+            <summary>
+            A container for Mod objects in an order
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.LoadOrder`1.Count">
+            <summary>
+            Number of mods
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.LoadOrder`1.Item(Mutagen.Bethesda.LoadOrderIndex)">
+            <summary>
+            Access a mod at a given index
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.LoadOrder`1.TryGetListing(Mutagen.Bethesda.ModKey,System.ValueTuple{Mutagen.Bethesda.LoadOrderIndex,Mutagen.Bethesda.ModListing{`0}}@)">
+            <summary>
+            Attempts to retrive a mod listing given a ModKey
+            </summary>
+            <param name="key">ModKey to query for</param>
+            <param name="result">Result containing located index, and a reference to the listing</param>
+            <returns>True if matching mod located</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.LoadOrder`1.TryGetMod(Mutagen.Bethesda.ModKey,System.ValueTuple{Mutagen.Bethesda.LoadOrderIndex,`0}@)">
+            <summary>
+            Attempts to retrive a mod object given a ModKey
+            </summary>
+            <param name="key">ModKey to query for</param>
+            <param name="result">Result containing located index, and a reference to the mod object</param>
+            <returns>True if matching mod located</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.LoadOrder`1.TryGetListing(Mutagen.Bethesda.LoadOrderIndex,Mutagen.Bethesda.ModListing{`0}@)">
+            <summary>
+            Attempts to retrive a mod listing given an index
+            </summary>
+            <param name="index">Index to retrieve</param>
+            <param name="result">Reference to the mod listing</param>
+            <returns>True if index in range</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.LoadOrder`1.Add(`0)">
+            <summary>
+            Adds a mod to the end of the load order
+            </summary>
+            <param name="mod">Mod to add</param>
+            <exception cref="T:System.ArgumentException">If mod with same key exists already</exception>
+        </member>
+        <member name="M:Mutagen.Bethesda.LoadOrder`1.Add(`0,System.Int32)">
+            <summary>
+            Adds a mod at the given index
+            </summary>
+            <param name="mod">Mod to add</param>
+            <param name="index">Index to insert at</param>
+            <exception cref="T:System.ArgumentException">If mod with same key exists already</exception>
+        </member>
+        <member name="M:Mutagen.Bethesda.LoadOrder`1.Contains(Mutagen.Bethesda.ModKey)">
+            <summary>
+            Checks if a mod exists with given key
+            </summary>
+            <param name="key">Key to query</param>
+            <returns>True if mod on list with key</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.LoadOrder`1.IndexOf(Mutagen.Bethesda.ModKey)">
+            <summary>
+            Locates index of a mod with given key
+            </summary>
+            <param name="key">Key to query</param>
+            <returns>Index of mod on list with key. -1 if not located</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.LoadOrder`1.Clear">
+            <summary>
+            Clears load order of all mods
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.LoadOrder`1.Importer">
+            <summary>
+            Delegate used for importing mods
+            </summary>
+            <param name="path">Path to mod file</param>
+            <param name="modKey">ModKey associated with listing</param>
+            <param name="mod">Out parameter containing mod object if successful</param>
+            <returns>True if import successful</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.LoadOrder`1.Import(Noggog.DirectoryPath,System.Collections.Generic.IReadOnlyList{Mutagen.Bethesda.ModKey},Mutagen.Bethesda.LoadOrder{`0}.Importer)">
+            <summary>
+            Clears load order and fills it with mods constructed by given importer
+            </summary>
+            <param name="dataFolder">Path data folder containing mods</param>
+            <param name="loadOrder">Unique list of mod keys to import</param>
+            <param name="importer">Function used to construct a mod</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.LoadOrder`1.GetEnumerator">
+            <summary>
+            Iterates through all mod listings in load order
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Core.Persistance.TextFileFormKeyAllocator">
+            <summary>
+            A FormKey allocator that utilizes a folder of text files to persist and sync.
+            
+            This class is made thread safe by locking internally on the Mod object.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Core.Persistance.TextFileFormKeyAllocator.Mod">
+            <summary>
+            Associated Mod
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Core.Persistance.TextFileFormKeyAllocator.GetNextFormKey">
+             <summary>
+             Returns a FormKey with the next listed ID in the Mod's header.
+             No checks will be done that this is truly a unique key; It is assumed the header is in a correct state.
+            
+             The Mod's header will be incremented to mark the allocated key as "used".
+             </summary>
+             <returns>The next FormKey from the Mod</returns>
+        </member>
+        <member name="T:Mutagen.Bethesda.AMod">
+            <summary>
+            An abstract base class for Mods to inherit from for some common functionality
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.AMod.ModKey">
+            <summary>
+            The key associated with the mod
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.AMod.GameMode">
+            <summary>
+            The game associated with the mod
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.AMod.#ctor(Mutagen.Bethesda.ModKey,Mutagen.Bethesda.IFormKeyAllocator)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="modKey">Key to assign the mod</param>
+            <param name="allocator">Optional custom FormKey allocator logic</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.AMod.GetNextFormKey">
+            <summary>
+            Requests a new unused FormKey from the alloctor specified in the mod's construction
+            </summary>
+            <returns>An unused FormKey</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.AMod.GetNextFormKey(System.String)">
+            <summary>
+            Requests a new unused FormKey from the alloctor specified in the mod's construction
+            </summary>
+            <param name="editorID">The target EditorID that may potentially be used for synchronization</param>
+            <returns>An unused FormKey</returns>
+        </member>
+        <member name="T:Mutagen.Bethesda.Persistance.SimpleFormKeyAllocator">
+             <summary>
+             A simple FormKey allocator that simply leverages a Mod's NextObjectID tracker to allocate.
+             No safety checks or syncronization is provided.
+            
+             This class is thread safe.
+             </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Persistance.SimpleFormKeyAllocator.Mod">
+            <summary>
+            Attached Mod that will be used as reference when allocating new keys
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Persistance.SimpleFormKeyAllocator.#ctor(Mutagen.Bethesda.IMod)">
+            <summary>
+            Constructs a new SimpleNextIDAllocator that looks to a given Mod for the next key
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Persistance.SimpleFormKeyAllocator.GetNextFormKey">
+             <summary>
+             Returns a FormKey with the next listed ID in the Mod's header.
+             No checks will be done that this is truly a unique key; It is assumed the header is in a correct state.
+            
+             The Mod's header will be incremented to mark the allocated key as "used".
+             </summary>
+             <returns>The next FormKey from the Mod</returns>
+        </member>
+        <member name="P:Mutagen.Bethesda.MutagenInterfaceReadStream.OffsetReference">
+            <inheritdoc />
+        </member>
+        <member name="P:Mutagen.Bethesda.MutagenInterfaceReadStream.MetaData">
+            <inheritdoc />
+        </member>
+        <member name="P:Mutagen.Bethesda.MutagenInterfaceReadStream.MasterReferences">
+            <inheritdoc />
+        </member>
+        <member name="P:Mutagen.Bethesda.MutagenInterfaceReadStream.Position">
+            <inheritdoc />
+        </member>
+        <member name="P:Mutagen.Bethesda.MutagenInterfaceReadStream.Length">
+            <inheritdoc />
+        </member>
+        <member name="P:Mutagen.Bethesda.MutagenInterfaceReadStream.Remaining">
+            <inheritdoc />
+        </member>
+        <member name="P:Mutagen.Bethesda.MutagenInterfaceReadStream.Complete">
+            <inheritdoc />
+        </member>
+        <member name="P:Mutagen.Bethesda.MutagenInterfaceReadStream.RemainingSpan">
+            <inheritdoc />
+        </member>
+        <member name="P:Mutagen.Bethesda.MutagenInterfaceReadStream.RemainingMemory">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.Get(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.Get(System.Byte[],System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetBool">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetBool(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetBytes(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetDouble">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetDouble(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetFloat">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetFloat(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetInt16">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetInt16(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetInt32">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetInt32(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetInt64">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetInt64(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetInt8">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetInt8(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetMemory(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetMemory(System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetSpan(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetSpan(System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetStringUTF8(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetStringUTF8(System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetUInt16">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetUInt16(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetUInt32">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetUInt32(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetUInt64">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetUInt64(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetUInt8">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetUInt8(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.Read(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.Read(System.Byte[])">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.ReadAndReframe(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.ReadBool">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.ReadBytes(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.ReadDouble">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.ReadFloat">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.ReadInt16">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.ReadInt32">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.ReadInt64">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.ReadInt8">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.ReadMemory(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.ReadMemory(System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.ReadSpan(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.ReadSpan(System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.ReadStringUTF8(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.ReadUInt16">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.ReadUInt32">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.ReadUInt64">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.ReadUInt8">
+            <inheritdoc />
+        </member>
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.WriteTo(System.IO.Stream,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="T:Mutagen.Bethesda.BinaryWriteParameters">
+            <summary>
+            Parameter object for customizing binary export job instructions
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.BinaryWriteParameters.MasterFlagSyncOption">
+            <summary>
+            Flag to specify what logic to use to keep a mod's master flag in sync
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "F:Mutagen.Bethesda.BinaryWriteParameters.MasterFlagSyncOption.NoCheck" -->
+        <member name="F:Mutagen.Bethesda.BinaryWriteParameters.MasterFlagSyncOption.ThrowIfMisaligned">
+            <summary>
+            If a mod's master flag does not match the path being exported to, throw
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.BinaryWriteParameters.MasterFlagSyncOption.CorrectToPath">
+            <summary>
+            If a mod's master flag does not match the path being exported to, modify it to match the path
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.BinaryWriteParameters.MastersListSyncOption">
+            <summary>
+            Flag to specify what logic to use to keep a mod's master list in sync
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "F:Mutagen.Bethesda.BinaryWriteParameters.MastersListSyncOption.NoCheck" -->
+        <member name="F:Mutagen.Bethesda.BinaryWriteParameters.MastersListSyncOption.Iterate">
+            <summary>
+            Iterate source mod before writing to compile the list of masters to use.
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.BinaryWriteParameters.MasterFlagSync">
+            <summary>
+            Logic to use to keep a mod's master flag in sync
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.BinaryWriteParameters.MastersListSync">
+            <summary>
+            Logic to use to keep a mod's master list in sync
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.BinaryWriteParameters.RunMasterMatch(Mutagen.Bethesda.IModGetter,System.String)">
+            <summary>
+            Aligns a mod's ModKey to a path's implied ModKey.
+            Will adjust its logic based on the MasterFlagSync option:
+             - ThrowIfMisaligned:  If the path and mod do not match, throw.
+             - CorrectToPath:  If the path and mod do not match, use path's key.
+            </summary>
+            <param name="mod">Mod to check and adjust</param>
+            <param name="path">Path to compare to</param>
+            <returns>ModKey to use</returns>
+            <exception cref="T:System.ArgumentException">If misaligned and set to ThrowIfMisaligned</exception>
+        </member>
+        <member name="T:Mutagen.Bethesda.Internals.CompositeReadStream">
+            <summary>
+            Class for reading through several streams.
+            Minimal implementation, but can be fleshed out eventually
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.LoadOrderIndex">
+            <summary>
+            A struct representing an index of a mod in a LoadOrder
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.LoadOrderIndex.#ctor(System.Int32)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="id">ID to assign.  Cannot be negative</param>
+            <exception cref="T:System.ArgumentException">Will throw if ID given is negative.</exception>
+        </member>
+        <member name="T:Mutagen.Bethesda.StringBinaryType">
+            <summary>
+            Binary storage patterns for strings
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.StringBinaryType.Plain">
+            <summary>
+            No custom logic
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.StringBinaryType.NullTerminate">
+            <summary>
+            Terminated by an extra null character at the end
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.StringBinaryType.PrependLength">
+            <summary>
+            Length prepended as a uint
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.StringBinaryType.PrependLengthUShort">
+            <summary>
+            Length prepended as a ushort
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.NullableExt">
+            <summary>
+            Extension class for checking and retrieving nullable values with one access.
+            This helps provide options for ideal Overlay usage where properties are only accessed once.
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.NullableExt.TryGet``1(``0,``0@)">
+            <summary>
+            Retrieves a nullable class field if it exists.
+            This helps provide options for ideal Overlay usage where properties are only accessed once.
+            </summary>
+            <param name="source">Field to retrieve</param>
+            <param name="item">Non-null result if field exists</param>
+            <returns>True if field exists, and item contains a non-null value</returns>
+            <typeparam name="T">Item type being retrieved</typeparam>
+        </member>
+        <member name="M:Mutagen.Bethesda.NullableExt.TryGet``1(System.Nullable{``0},``0@)">
+            <summary>
+            Retrieves a nullable struct field if it exists.
+            This helps provide options for ideal Overlay usage where properties are only accessed once.
+            </summary>
+            <param name="source">Field to retrieve</param>
+            <param name="item">Non-null result if field exists</param>
+            <returns>True if field exists, and item contains a non-null value</returns>
+            <typeparam name="T">Item type being retrieved</typeparam>
+        </member>
+        <member name="T:Mutagen.Bethesda.IFormKeyAllocator">
+            <summary>
+            An interface for something that can allocate new FormKeys when requested
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.IFormKeyAllocator.GetNextFormKey">
+            <summary>
+            Requests a new unused FormKey, with no other requirements
+            </summary>
+            <returns>An unused FormKey</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.IFormKeyAllocator.GetNextFormKey(System.String)">
+            <summary>
+            Requests a new unused FormKey, given an EditorID to be used for syncronization purposes.
+            The EditorID can be used to provide persistance syncronization by the implementation.
+            </summary>
+            <returns>An unused FormKey</returns>
+        </member>
+        <member name="T:Mutagen.Bethesda.IMajorRecordEnumerable">
+            <summary>
+            An interface for classes that contain Major Records and can enumerate them.
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.IMajorRecordEnumerable.EnumerateMajorRecords">
+            <summary>
+            Enumerates all contained Major Records
+            </summary>
+            <returns>Enumerable of all contained Major Records</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.IMajorRecordEnumerable.EnumerateMajorRecords``1">
+            <summary>
+            Enumerates all contained Major Records of the specified generic type
+            </summary>
+            <returns>Enumerable of all contained Major Records</returns>
+        </member>
+        <member name="T:Mutagen.Bethesda.IMajorRecordGetterEnumerable">
+            <summary>
+            An interface for classes that contain Major Record Getter interfaces and can enumerate them
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.IMajorRecordGetterEnumerable.EnumerateMajorRecords">
+            <summary>
+            Enumerates all contained Major Record Getters
+            </summary>
+            <returns>Enumerable of all contained Major Record Getters</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.IMajorRecordGetterEnumerable.EnumerateMajorRecords``1">
+            <summary>
+            Enumerates all contained Major Record Getters of the specified generic type
+            </summary>
+            <returns>Enumerable of all contained Major Record Getters</returns>
+        </member>
+        <member name="T:Mutagen.Bethesda.IGenderedItemGetter`1">
+            <summary>
+            An interface for an object exposing readonly Gendered Items
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.IGenderedItemGetter`1.Male">
+            <summary>
+            Male item
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.IGenderedItemGetter`1.Female">
+            <summary>
+            Female item
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.GenderedItem`1">
+            <summary>
+            An object exposing data in a gendered format
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.GenderedItem`1.Male">
+            <summary>
+            Male item
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.GenderedItem`1.Female">
+            <summary>
+            Female item
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.GenderedItem`1.#ctor(`0,`0)">
+            <summary>
+            Constructor that takes a male and female item
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.GenderedItem`1.GetEnumerator">
+            <summary>
+            Enumerates first the male item, then the female item
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.GenderedItem`1.ToString(Loqui.FileGeneration,System.String)">
+            <summary>
+            Prints the male and female items to the stream
+            </summary>
+            <param name="fg">Stream to print into</param>
+            <param name="name">Optional name to include</param>
+        </member>
+        <member name="T:Mutagen.Bethesda.Binary.GlobalCustomParsing">
+            <summary>
+            Static class with some common utility functions for parsing Global records
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Binary.GlobalCustomParsing.IGlobalCommon">
+            <summary>
+            An interface for Global records
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.GlobalCustomParsing.GetGlobalChar(Mutagen.Bethesda.Binary.MajorRecordFrame)">
+            <summary>
+            Retrieves the character representing a Global's data type from a MajorRecordFrame
+            </summary>
+            <param name="frame">Frame to retrieve from</param>
+            <returns>Character representing data type</returns>
+            <exception cref="T:System.ArgumentException">If FNAM not present or malformed</exception>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.GlobalCustomParsing.Create``1(Mutagen.Bethesda.Binary.MutagenFrame,System.Func{Mutagen.Bethesda.Binary.MutagenFrame,System.Char,``0})">
+            <summary>
+            Global factory helper
+            </summary>
+            <param name="frame">Frame to read from</param>
+            <param name="getter">Func factory to create Global given data type char</param>
+            <returns>Constructed Global from getter</returns>
+            <exception cref="T:System.ArgumentException">If frame aligned to a malformed Global record</exception>
+        </member>
+        <member name="T:Mutagen.Bethesda.Binary.GroupHeader">
+            <summary>
+            A ref struct that overlays on top of bytes that is able to retrive Group header data on demand.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.GroupHeader.Meta">
+            <summary>
+            Game metadata to use as reference for alignment
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.GroupHeader.Span">
+            <summary>
+            Bytes overlaid onto
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.GroupHeader.#ctor(Mutagen.Bethesda.Binary.GameConstants,System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="meta">Game metadata to use as reference for alignment</param>
+            <param name="span">Span to overlay on, aligned to the start of the Group's header</param>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.GroupHeader.GameMode">
+            <summary>
+            GameMode associated with header
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.GroupHeader.HeaderLength">
+            <summary>
+            The length that the header itself takes
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.GroupHeader.RecordType">
+            <summary>
+            RecordType of the Group header.
+            Should always be GRUP, unless struct is overlaid on bad data.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.GroupHeader.RecordLength">
+            <summary>
+            The length explicitly contained in the length bytes of the header
+            Note that for Groups, this is equivalent to TotalLength
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.GroupHeader.ContainedRecordTypeSpan">
+            <summary>
+            The raw bytes of the RecordType of the records contained by the Group
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.GroupHeader.ContainedRecordType">
+            <summary>
+            The RecordType of the records contained by the Group
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.GroupHeader.GroupType">
+            <summary>
+            The integer representing a Group's Type enum.
+            Since each game has its own Group Enum, this field is offered as an int that should
+            be casted to the appropriate enum for use.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.GroupHeader.LastModifiedSpan">
+            <summary>
+            The raw bytes of the last modified data
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.GroupHeader.TotalLength">
+            <summary>
+            Total length of the Group, including the header and its content.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.GroupHeader.IsGroup">
+            <summary>
+            True if RecordType == "GRUP".
+            Should always be true, unless struct is overlaid on bad data.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.GroupHeader.ContentLength">
+            <summary>
+            The length of the content of the Group, excluding the header bytes.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.GroupHeader.TypeAndLengthLength">
+            <summary>
+            The length of the RecordType and the length bytes
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.GroupHeader.IsTopLevel">
+            <summary>
+            True if GroupType is marked as top level. (GroupType == 0)
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.GroupHeader.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="T:Mutagen.Bethesda.Binary.GroupFrame">
+            <summary>
+            A ref struct that overlays on top of bytes that is able to retrive Group data on demand.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.GroupFrame.Header">
+            <summary>
+            Header ref struct for accessing header data
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.GroupFrame.HeaderAndContentData">
+            <summary>
+            Raw bytes of both header and content data
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.GroupFrame.Content">
+            <summary>
+            Raw bytes of the content data, excluding the header
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.GroupFrame.#ctor(Mutagen.Bethesda.Binary.GameConstants,System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="meta">Game metadata to use as reference for alignment</param>
+            <param name="span">Span to overlay on, aligned to the start of the header</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.GroupFrame.#ctor(Mutagen.Bethesda.Binary.GroupHeader,System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="header">Existing GroupHeader struct</param>
+            <param name="span">Span to overlay on, aligned to the start of the Group's header</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.GroupFrame.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="T:Mutagen.Bethesda.Binary.GroupMemoryFrame">
+            <summary>
+            A ref struct that overlays on top of bytes that is able to retrive Group data on demand.
+            Unlike GroupFrame, this struct exposes its data members as MemorySlices instead of Spans
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.GroupMemoryFrame.Header">
+            <summary>
+            Header ref struct for accessing header data
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.GroupMemoryFrame.HeaderAndContentData">
+            <summary>
+            Raw bytes of both header and content data
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.GroupMemoryFrame.Content">
+            <summary>
+            Raw bytes of the content data, excluding the header
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.GroupMemoryFrame.#ctor(Mutagen.Bethesda.Binary.GameConstants,Noggog.ReadOnlyMemorySlice{System.Byte})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="meta">Game metadata to use as reference for alignment</param>
+            <param name="span">Span to overlay on, aligned to the start of the header</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.GroupMemoryFrame.#ctor(Mutagen.Bethesda.Binary.GroupHeader,Noggog.ReadOnlyMemorySlice{System.Byte})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="header">Existing GroupHeader struct</param>
+            <param name="span">Span to overlay on, aligned to the start of the Group's header</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.GroupMemoryFrame.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="T:Mutagen.Bethesda.Binary.MajorRecordHeader">
+            <summary>
+            A ref struct that overlays on top of bytes that is able to retrive Major Record header data on demand.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordHeader.Meta">
+            <summary>
+            Game metadata to use as reference for alignment
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordHeader.Span">
+            <summary>
+            Bytes overlaid onto
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MajorRecordHeader.#ctor(Mutagen.Bethesda.Binary.GameConstants,System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="meta">Game metadata to use as reference for alignment</param>
+            <param name="span">Span to overlay on, aligned to the start of the Major Record's header</param>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordHeader.GameMode">
+            <summary>
+            GameMode associated with header
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordHeader.HeaderLength">
+            <summary>
+            The length that the header itself takes
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordHeader.RecordType">
+            <summary>
+            RecordType of the header
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordHeader.RecordLength">
+            <summary>
+            The length explicitly contained in the length bytes of the header
+            Note that for Major Records, this is equivalent to ContentLength
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordHeader.ContentLength">
+            <summary>
+            The length of the content of the Group, excluding the header bytes.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordHeader.MajorRecordFlags">
+            <summary>
+            The integer representing a Major Record's flags enum.
+            Since each game has its own flag Enum, this field is offered as an int that should
+            be casted to the appropriate enum for use.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordHeader.FormID">
+            <summary>
+            FormID of the Major Record
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordHeader.TotalLength">
+            <summary>
+            Total length of the Major Record, including the header and its content.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordHeader.IsCompressed">
+            <summary>
+            Whether the compression flag is on
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MajorRecordHeader.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="T:Mutagen.Bethesda.Binary.MajorRecordHeaderWritable">
+            <summary>
+            A ref struct that overlays on top of bytes that is able to retrive Major Record header data on demand.
+            It requires to be overlaid on writable bytes, so that values can also be set and modified on the source bytes.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordHeaderWritable.Meta">
+            <summary>
+            Game metadata to use as reference for alignment
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordHeaderWritable.Span">
+            <summary>
+            Bytes overlaid onto
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MajorRecordHeaderWritable.#ctor(Mutagen.Bethesda.Binary.GameConstants,System.Span{System.Byte})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="meta">Game metadata to use as reference for alignment</param>
+            <param name="span">Span to overlay on, aligned to the start of the Major Record's header</param>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordHeaderWritable.GameMode">
+            <summary>
+            GameMode associated with header
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordHeaderWritable.HeaderLength">
+            <summary>
+            The length that the header itself takes
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordHeaderWritable.RecordType">
+            <summary>
+            RecordType of the header
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordHeaderWritable.ContentLength">
+            <summary>
+            The length of the content of the Group, excluding the header bytes.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordHeaderWritable.RecordLength">
+            <summary>
+            The length explicitly contained in the length bytes of the header
+            Note that for Major Records, this is equivalent to ContentLength
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordHeaderWritable.MajorRecordFlags">
+            <summary>
+            The integer representing a Major Record's flags enum.
+            Since each game has its own flag Enum, this field is offered as an int that should
+            be casted to the appropriate enum for use.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordHeaderWritable.FormID">
+            <summary>
+            FormID of the Major Record
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordHeaderWritable.TotalLength">
+            <summary>
+            Total length of the Major Record, including the header and its content.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordHeaderWritable.IsCompressed">
+            <summary>
+            Whether the compression flag is on
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MajorRecordHeaderWritable.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="T:Mutagen.Bethesda.Binary.MajorRecordFrame">
+            <summary>
+            A ref struct that overlays on top of bytes that is able to retrive Major Record data on demand.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordFrame.Header">
+            <summary>
+            Header ref struct for accessing header data
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordFrame.HeaderAndContentData">
+            <summary>
+            Raw bytes of both header and content data
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordFrame.Content">
+            <summary>
+            Raw bytes of the content data, excluding the header
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MajorRecordFrame.#ctor(Mutagen.Bethesda.Binary.GameConstants,System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="meta">Game metadata to use as reference for alignment</param>
+            <param name="span">Span to overlay on, aligned to the start of the header</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MajorRecordFrame.#ctor(Mutagen.Bethesda.Binary.MajorRecordHeader,System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="header">Existing MajorRecordHeader struct</param>
+            <param name="span">Span to overlay on, aligned to the start of the header</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MajorRecordFrame.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="T:Mutagen.Bethesda.Binary.MajorRecordMemoryFrame">
+            <summary>
+            A ref struct that overlays on top of bytes that is able to retrive Major Record data on demand.
+            Unlike MajorRecordFrame, this struct exposes its data members as MemorySlices instead of Spans
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordMemoryFrame.Header">
+            <summary>
+            Header ref struct for accessing header data
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordMemoryFrame.HeaderAndContentData">
+            <summary>
+            Raw bytes of both header and content data
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordMemoryFrame.Content">
+            <summary>
+            Raw bytes of the content data, excluding the header
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MajorRecordMemoryFrame.#ctor(Mutagen.Bethesda.Binary.GameConstants,Noggog.ReadOnlyMemorySlice{System.Byte})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="meta">Game metadata to use as reference for alignment</param>
+            <param name="span">Span to overlay on, aligned to the start of the header</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MajorRecordMemoryFrame.#ctor(Mutagen.Bethesda.Binary.MajorRecordHeader,Noggog.ReadOnlyMemorySlice{System.Byte})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="header">Existing MajorRecordHeader struct</param>
+            <param name="span">Span to overlay on, aligned to the start of the header</param>
+        </member>
+        <member name="T:Mutagen.Bethesda.Binary.MajorRecordConstants">
+            <summary>
+            Reference for Major Record alignment and length constants
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordConstants.FlagLocationOffset">
+            <summary>
+            Offset in the header where flags are located
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MajorRecordConstants.FormIDLocationOffset">
+            <summary>
+            Offset in the header where the FormID is located
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MajorRecordConstants.#ctor(Mutagen.Bethesda.GameMode,System.SByte,System.SByte,System.SByte,System.SByte)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="gameMode">GameMode to associate with the constants</param>
+            <param name="headerLength">Length of a Major Record header</param>
+            <param name="lengthLength">Number of bytes representing the content length</param>
+            <param name="flagsLoc">Offset in the header where flags are located</param>
+            <param name="formIDloc">Offset in the header where the FormID is located</param>
+        </member>
+        <member name="T:Mutagen.Bethesda.Binary.ModHeader">
+            <summary>
+            A ref struct that overlays on top of bytes that is able to retrive Mod header data on demand.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.ModHeader.Meta">
+            <summary>
+            Game metadata to use as reference for alignment
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.ModHeader.Span">
+            <summary>
+            Bytes overlaid onto
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.ModHeader.#ctor(Mutagen.Bethesda.Binary.GameConstants,System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="meta">Game metadata to use as reference for alignment</param>
+            <param name="span">Span to overlay on, aligned to the start of the Group's header</param>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.ModHeader.GameMode">
+            <summary>
+            GameMode associated with header
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.ModHeader.HeaderLength">
+            <summary>
+            The length that the header itself takes
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.ModHeader.RecordType">
+            <summary>
+            RecordType of the Mod header.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.ModHeader.RecordLength">
+            <summary>
+            The length explicitly contained in the length bytes of the header
+            Note that for Mod headers, this is equivalent to ContentLength
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.ModHeader.ContentLength">
+            <summary>
+            The length of the content, excluding the header bytes.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.ModHeader.TotalLength">
+            <summary>
+            Total length, including the header and its content.
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Binary.RecordHeaderConstants">
+            <summary>
+            Reference for Record alignment and length constants
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.RecordHeaderConstants.ObjectType">
+            <summary>
+            Type of object the constants are associated with
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.RecordHeaderConstants.GameMode">
+            <summary>
+            GameMode associated with the constants
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.RecordHeaderConstants.HeaderLength">
+            <summary>
+            The length that the header itself takes
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.RecordHeaderConstants.LengthLength">
+            <summary>
+            Number of bytes that hold length information
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.RecordHeaderConstants.LengthAfterLength">
+            <summary>
+            Number of bytes in the header following the length information
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.RecordHeaderConstants.LengthAfterType">
+            <summary>
+            Number of bytes in the header following the record type information
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.RecordHeaderConstants.TypeAndLengthLength">
+            <summary>
+            Size of the record type and length bytes
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.RecordHeaderConstants.HeaderIncludedInLength">
+            <summary>
+            Whether the size of the header itself is included in the length bytes, in addition to the content length
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.RecordHeaderConstants.#ctor(Mutagen.Bethesda.GameMode,Mutagen.Bethesda.ObjectType,System.SByte,System.SByte)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="gameMode">GameMode to associate with the constants</param>
+            <param name="type">Type of object to associate the constants with</param>
+            <param name="headerLength">Length of the header</param>
+            <param name="lengthLength">Number of bytes containing content length information</param>
+        </member>
+        <member name="T:Mutagen.Bethesda.Binary.SubrecordHeader">
+            <summary>
+            A ref struct that overlays on top of bytes that is able to retrive Sub Record header data on demand.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.SubrecordHeader.Meta">
+            <summary>
+            Game metadata to use as reference for alignment
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.SubrecordHeader.Span">
+            <summary>
+            Bytes overlaid onto
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.SubrecordHeader.#ctor(Mutagen.Bethesda.Binary.GameConstants,System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="meta">Game metadata to use as reference for alignment</param>
+            <param name="span">Span to overlay on, aligned to the start of the Sub Record's header</param>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.SubrecordHeader.GameMode">
+            <summary>
+            GameMode associated with header
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.SubrecordHeader.HeaderLength">
+            <summary>
+            The length that the header itself takes
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.SubrecordHeader.RecordType">
+            <summary>
+            RecordType of the header
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.SubrecordHeader.RecordLength">
+            <summary>
+            The length explicitly contained in the length bytes of the header
+            Note that for Sub Records, this is equivalent to ContentLength
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.SubrecordHeader.ContentLength">
+            <summary>
+            The length of the content of the Sub Record, excluding the header bytes.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.SubrecordHeader.TotalLength">
+            <summary>
+            Total length of the Major Record, including the header and its content.
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.SubrecordHeader.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="T:Mutagen.Bethesda.Binary.SubrecordFrame">
+            <summary>
+            A ref struct that overlays on top of bytes that is able to retrive Sub Record data on demand.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.SubrecordFrame.Header">
+            <summary>
+            Header ref struct for accessing header data
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.SubrecordFrame.HeaderAndContentData">
+            <summary>
+            Raw bytes of both header and content data
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.SubrecordFrame.Content">
+            <summary>
+            Raw bytes of the content data, excluding the header
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.SubrecordFrame.#ctor(Mutagen.Bethesda.Binary.GameConstants,System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="meta">Game metadata to use as reference for alignment</param>
+            <param name="span">Span to overlay on, aligned to the start of the header</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.SubrecordFrame.#ctor(Mutagen.Bethesda.Binary.SubrecordHeader,System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="header">Existing SubrecordHeader struct</param>
+            <param name="span">Span to overlay on, aligned to the start of the header</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.SubrecordFrame.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="T:Mutagen.Bethesda.Binary.SubrecordMemoryFrame">
+            <summary>
+            A ref struct that overlays on top of bytes that is able to retrive Major Record data on demand.
+            Unlike SubrecordFrame, this struct exposes its data members as MemorySlices instead of Spans
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.SubrecordMemoryFrame.Header">
+            <summary>
+            Header ref struct for accessing header data
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.SubrecordMemoryFrame.HeaderAndContentData">
+            <summary>
+            Raw bytes of both header and content data
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.SubrecordMemoryFrame.Content">
+            <summary>
+            Raw bytes of the content data, excluding the header
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.SubrecordMemoryFrame.#ctor(Mutagen.Bethesda.Binary.GameConstants,Noggog.ReadOnlyMemorySlice{System.Byte})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="meta">Game metadata to use as reference for alignment</param>
+            <param name="span">Span to overlay on, aligned to the start of the header</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.SubrecordMemoryFrame.#ctor(Mutagen.Bethesda.Binary.SubrecordHeader,Noggog.ReadOnlyMemorySlice{System.Byte})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="header">Existing SubrecordHeader struct</param>
+            <param name="span">Span to overlay on, aligned to the start of the header</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.SubrecordMemoryFrame.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="T:Mutagen.Bethesda.Binary.VariableHeader">
+            <summary>
+            A ref struct that overlays on top of bytes that is able to retrive basic header data on demand
+            utilizing a given constants object to define the lengths
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.VariableHeader.Span">
+            <summary>
+            Bytes overlaid onto
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.VariableHeader.Constants">
+            <summary>
+            Record metadata to use as reference for alignment
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.VariableHeader.#ctor(Mutagen.Bethesda.Binary.RecordHeaderConstants,System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="constants">Record constants to use as reference for alignment</param>
+            <param name="span">Span to overlay on, aligned to the start of the header</param>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.VariableHeader.HeaderLength">
+            <summary>
+            The length that the header itself takes
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.VariableHeader.RecordType">
+            <summary>
+            RecordType of the header
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.VariableHeader.RecordLength">
+            <summary>
+            The length explicitly contained in the length bytes of the header
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.VariableHeader.TypeAndLengthLength">
+            <summary>
+            The length of the RecordType and the length bytes
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.VariableHeader.TotalLength">
+            <summary>
+            Total length of the record, including the header and its content.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.VariableHeader.IsGroup">
+            <summary>
+            True if RecordType == "GRUP"
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.VariableHeader.ContentLength">
+            <summary>
+            The length of the content, excluding the header bytes.
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Binary.GameConstants">
+            <summary>
+            Reference for all the alignment and length constants related to a specific game
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.GameConstants.GameMode">
+            <summary>
+            Associated game type
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.GameConstants.ModHeaderLength">
+            <summary>
+            Length of the Mod header's metadata, excluding content
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.GameConstants.ModHeaderFluffLength">
+            <summary>
+            Length of the Mod header's non-fundamental metadata
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.GameConstants.GroupConstants">
+            <summary>
+            Group constants
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.GameConstants.MajorConstants">
+            <summary>
+            Major Record constants
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.GameConstants.SubConstants">
+            <summary>
+            Sub Record constants
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.GameConstants.#ctor(Mutagen.Bethesda.GameMode,System.SByte,System.SByte,Mutagen.Bethesda.Binary.RecordHeaderConstants,Mutagen.Bethesda.Binary.MajorRecordConstants,Mutagen.Bethesda.Binary.RecordHeaderConstants)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="gameMode">GameMode to associate with the constants</param>
+            <param name="modHeaderLength">Length of the ModHeader</param>
+            <param name="modHeaderFluffLength">Length of the ModHeader excluding initial recordtype and length bytes.</param>
+            <param name="groupConstants">Constants defining Groups</param>
+            <param name="majorConstants">Constants defining Major Records</param>
+            <param name="subConstants">Constants defining Sub Records</param>
+        </member>
+        <member name="F:Mutagen.Bethesda.Binary.GameConstants.Oblivion">
+            <summary>
+            Readonly singleton of Oblivion game constants
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.Binary.GameConstants.Skyrim">
+            <summary>
+            Readonly singleton of Skyrim LE game constants
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.GameConstants.Constants(Mutagen.Bethesda.ObjectType)">
+            <summary>
+            Returns record constants related to a certain ObjectType
+            </summary>
+            <param name="type">ObjectType to query</param>
+            <returns>Record Constants associated with type</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.GameConstants.Get(Mutagen.Bethesda.GameMode)">
+            <summary>
+            Returns GameConstant readonly singleton associated with a GameMode 
+            </summary>
+            <param name="mode">GameMode to query</param>
+            <returns>GameConstant readonly singleton associated with mode</returns>
+        </member>
+        <member name="T:Mutagen.Bethesda.Binary.IMutagenReadStream">
+            <summary>
+            Interface for IBinaryReadStream enhanced with Mutagen specific functionality
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.IMutagenReadStream.MetaData">
+            <summary>
+            Game constants meta object to reference for header length measurements
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.IMutagenReadStream.MasterReferences">
+            <summary>
+            Optional MasterReferenceReader to reference while reading
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.IMutagenReadStream.OffsetReference">
+            <summary>
+            Convenience offset tracker variable for helping print meaningful position information
+            relative to an original source file.  Only used if a stream gets reframed.
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.IMutagenReadStream.ReadAndReframe(System.Int32)">
+            <summary>
+            Reads an amount of bytes into an internal array and returns a new stream wrapping those bytes.
+            OffsetReference is updated to be aligned to the original source starting position.
+            This call will advance the source stream by the number of bytes.
+            The returned stream will be ready to read and start at its Position 0.
+            </summary>
+            <param name="length">Number of bytes to read and reframe</param>
+            <returns>A new stream wrapping an internal array, set to position 0.</returns>
+        </member>
+        <member name="T:Mutagen.Bethesda.Binary.MutagenBinaryReadStream">
+            <summary>
+            A class that wraps a stream with Mutagen-specific binary reading functionality
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MutagenBinaryReadStream.OffsetReference">
+            <summary>
+            Convenience offset tracker variable for helping print meaningful position information
+            relative to an original source file.  Only used if a stream gets reframed.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MutagenBinaryReadStream.MetaData">
+            <summary>
+            Game constants meta object to reference for header length measurements
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MutagenBinaryReadStream.MasterReferences">
+            <summary>
+            Optional MasterReferenceReader to reference while reading
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenBinaryReadStream.#ctor(System.String,Mutagen.Bethesda.Binary.GameConstants,Mutagen.Bethesda.Internals.MasterReferenceReader,System.Int32,System.Int64)">
+            <summary>
+            Constructor that opens a read stream to a path
+            </summary>
+            <param name="path">Path to read from</param>
+            <param name="metaData">Game constants meta object to reference for header length measurements</param>
+            <param name="masterReferences">Optional MasterReferenceReader to reference while reading</param>
+            <param name="bufferSize">Size of internal buffer</param>
+            <param name="offsetReference">Optional offset reference position to use</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenBinaryReadStream.#ctor(System.IO.Stream,Mutagen.Bethesda.Binary.GameConstants,Mutagen.Bethesda.Internals.MasterReferenceReader,System.Int32,System.Boolean,System.Int64)">
+            <summary>
+            Constructor that wraps an existing stream
+            </summary>
+            <param name="stream">Stream to wrap and read from</param>
+            <param name="metaData">Game constants meta object to reference for header length measurements</param>
+            <param name="masterReferences">Optional MasterReferenceReader to reference while reading</param>
+            <param name="bufferSize">Size of internal buffer</param>
+            <param name="offsetReference">Optional offset reference position to use</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenBinaryReadStream.ReadAndReframe(System.Int32)">
+            <summary>
+            Reads an amount of bytes into an internal array and returns a new stream wrapping those bytes.
+            OffsetReference is updated to be aligned to the original source starting position.
+            This call will advance the source stream by the number of bytes.
+            The returned stream will be ready to read and start at its Position 0.
+            </summary>
+            <param name="length">Number of bytes to read and reframe</param>
+            <returns>A new stream wrapping an internal array, set to position 0.</returns>
+        </member>
+        <member name="T:Mutagen.Bethesda.Binary.MutagenMemoryReadStream">
+            <summary>
+            A class that wraps an array or span directly with Mutagen-specific binary reading functionality
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MutagenMemoryReadStream.OffsetReference">
+            <summary>
+            Convenience offset tracker variable for helping print meaningful position information
+            relative to an original source file.  Only used if a stream gets reframed.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MutagenMemoryReadStream.MetaData">
+            <summary>
+            Game constants meta object to reference for header length measurements
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MutagenMemoryReadStream.MasterReferences">
+            <summary>
+            Optional MasterReferenceReader to reference while reading
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenMemoryReadStream.#ctor(System.Byte[],Mutagen.Bethesda.Binary.GameConstants,Mutagen.Bethesda.Internals.MasterReferenceReader,System.Int64)">
+            <summary>
+            Constructor that wraps an array
+            </summary>
+            <param name="data">Array to wrap and read from</param>
+            <param name="metaData">Game constants meta object to reference for header length measurements</param>
+            <param name="masterReferences">Optional MasterReferenceReader to reference while reading</param>
+            <param name="bufferSize">Size of internal buffer</param>
+            <param name="offsetReference">Optional offset reference position to use</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenMemoryReadStream.#ctor(Noggog.ReadOnlyMemorySlice{System.Byte},Mutagen.Bethesda.Binary.GameConstants,Mutagen.Bethesda.Internals.MasterReferenceReader,System.Int64)">
+            <summary>
+            Constructor that wraps a memory slice
+            </summary>
+            <param name="data">Span to wrap and read from</param>
+            <param name="metaData">Game constants meta object to reference for header length measurements</param>
+            <param name="masterReferences">Optional MasterReferenceReader to reference while reading</param>
+            <param name="bufferSize">Size of internal buffer</param>
+            <param name="offsetReference">Optional offset reference position to use</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenMemoryReadStream.ReadAndReframe(System.Int32)">
+            <summary>
+            Reads an amount of bytes into an internal array and returns a new stream wrapping those bytes.
+            OffsetReference is updated to be aligned to the original source starting position.
+            This call will advance the source stream by the number of bytes.
+            The returned stream will be ready to read and start at its Position 0.
+            </summary>
+            <param name="length">Number of bytes to read and reframe</param>
+            <returns>A new stream wrapping an internal array, set to position 0.</returns>
+        </member>
+        <member name="T:Mutagen.Bethesda.Binary.HeaderExport">
+            <summary>
+            A disposable class that helps streamline writing headers.
+            Track number of bytes written inside its using statement, and then 
+            updates the header's length bytes appropriately when it is disposed.
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.Binary.HeaderExport.Writer">
+            <summary>
+            Writer being tracked
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.Binary.HeaderExport.SizePosition">
+            <summary>
+            Location of the header's length bytes
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.Binary.HeaderExport.RecordConstants">
+            <summary>
+            Record constants to use
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.HeaderExport.ExportHeader(Mutagen.Bethesda.Binary.MutagenWriter,Mutagen.Bethesda.RecordType,Mutagen.Bethesda.ObjectType)">
+            <summary>
+            Exports a header, and creates disposable to track content length.
+            When disposed, header will automatically update its length bytes.
+            </summary>
+            <param name="writer">Writer to export header to</param>
+            <param name="record">RecordType of the header</param>
+            <param name="type">ObjectType the header is for</param>
+            <returns>Object to dispose when header's content has been written</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.HeaderExport.ExportSubrecordHeader(Mutagen.Bethesda.Binary.MutagenWriter,Mutagen.Bethesda.RecordType)">
+            <summary>
+            Exports a subrecord header, and creates disposable to track content length.
+            When disposed, header will automatically update its length bytes.
+            </summary>
+            <param name="writer">Writer to export header to</param>
+            <param name="record">RecordType of the header</param>
+            <returns>Object to dispose when header's content has been written</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.HeaderExport.Dispose">
+            <summary>
+            Measures length of content and writes results to header
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Binary.MutagenFrame">
+            <summary>
+            Struct representing a begin and end location within a stream.
+            It does not enforce reading within those bounds, but simply acts as a reference marker.
+            It also implements input stream interfaces, which will read from the source stream.
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.Binary.MutagenFrame.Reader">
+            <summary>
+            Associated reader
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.Binary.MutagenFrame.InitialPosition">
+            <summary>
+            Starting point for the frame
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.Binary.MutagenFrame.FinalLocation">
+            <summary>
+            First position not included in the frame
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MutagenFrame.Complete">
+            <summary>
+            Whether the frame's contents have been read.
+            Associated reader might have more content
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MutagenFrame.Position">
+            <inheritdoc/>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MutagenFrame.PositionWithOffset">
+            <inheritdoc/>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MutagenFrame.FinalWithOffset">
+            <inheritdoc/>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MutagenFrame.TotalLength">
+            <inheritdoc/>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MutagenFrame.Remaining">
+            <inheritdoc/>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MutagenFrame.Length">
+            <inheritdoc/>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MutagenFrame.OffsetReference">
+            <inheritdoc/>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MutagenFrame.RemainingSpan">
+            <inheritdoc/>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MutagenFrame.RemainingMemory">
+            <inheritdoc/>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MutagenFrame.MetaData">
+            <inheritdoc/>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MutagenFrame.MasterReferences">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.#ctor(Mutagen.Bethesda.Binary.IMutagenReadStream)">
+            <summary>
+            Constructs new frame around current reader position until its completion
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.TryCheckUpcomingRead(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.CheckUpcomingRead(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.TryCheckUpcomingRead(System.Int64,System.Exception@)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ContainsPosition(System.Int64)">
+            <summary>
+            Checks if given reader location is within the frame
+            </summary>
+            <param name="loc">Location to query</param>
+            <returns>True if location within frame's region</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.SetPosition(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.SetToFinalPosition">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadRemaining">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ByFinalPosition(Mutagen.Bethesda.Binary.IMutagenReadStream,System.Int64)">
+            <summary>
+            Creates a frame around reader with set final position
+            </summary>
+            <param name="reader">Reader to frame</param>
+            <param name="finalPosition">Absolute position to be marked as frame end</param>
+            <returns>Frame with current position as start, and given final position</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ByLength(Mutagen.Bethesda.Binary.IMutagenReadStream,System.Int64)">
+            <summary>
+            Creates a frame around reader of a given length
+            </summary>
+            <param name="reader">Reader to frame</param>
+            <param name="length">Size of frame</param>
+            <returns>Frame with current position as start, and given length</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.SpawnWithFinalPosition(System.Int64)">
+            <summary>
+            Creates a new frame around reader with set final position
+            </summary>
+            <param name="finalPosition">Absolute position to be marked as frame end</param>
+            <returns>Frame with current position as start, and given final position</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.SpawnWithLength(System.Int64,System.Boolean)">
+            <summary>
+            Creates a new frame around reader of a given length
+            </summary>
+            <param name="length">Size of frame</param>
+            <param name="checkFraming">Whethr to do a check that frame doesn't exceed reader's final position</param>
+            <returns>Frame with current position as start, and given length</returns>
+            <exception cref="T:System.ArgumentException">If checkFraming is true, and frame exceeds reader's final position</exception>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.Decompress">
+            <summary>
+            Decompresses frame content into a new backing stream.
+            Will read an integer to determine how large the compressed data is, and will read that amount.
+            </summary>
+            <returns>New frame with a new backing stream with uncompressed content</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.Decompress(System.UInt32)">
+            <summary>
+            Decompresses into a new backing stream
+            </summary>
+            <param name="resultLen">Number of bytes to read for decompression</param>
+            <returns>New frame with a new backing stream with uncompressed content</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadAndReframe(System.Int32)">
+            <summary>
+            Reads some bytes and reframes them into a new frame with a new backing stream.
+            </summary>
+            <param name="length">Amount of bytes to read from source frame</param>
+            <returns>New frame with a new backing stream</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.Mutagen#Bethesda#Binary#IMutagenReadStream#ReadAndReframe(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.Read(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.Read(System.Byte[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadBytes(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadBool">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadUInt8">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadUInt16">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadUInt32">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadUInt64">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadInt8">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadInt16">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadInt32">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadInt64">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadFloat">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadDouble">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadBoolean">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadStringUTF8(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.WriteTo(System.IO.Stream,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.Get(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetBytes(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.Get(System.Byte[],System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetBool(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetUInt8(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetUInt16(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetUInt32(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetUInt64(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetInt8(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetInt16(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetInt32(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetInt64(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetFloat(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetDouble(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetStringUTF8(System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetBool">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetUInt8">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetUInt16">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetUInt32">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetUInt64">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetInt8">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetInt16">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetInt32">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetInt64">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetFloat">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetDouble">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetStringUTF8(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadSpan(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadSpan(System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetSpan(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetSpan(System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadMemory(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadMemory(System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetMemory(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetMemory(System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Mutagen.Bethesda.Binary.MutagenWriter">
+            <summary>
+            A wrapper around IBinaryWriter with extra Mutagen-specific reference data
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.Binary.MutagenWriter.Writer">
+            <summary>
+            Wrapped writer
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MutagenWriter.BaseStream">
+            <summary>
+            Base stream that the writer wraps
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MutagenWriter.Meta">
+            <summary>
+            Game metadata content to refer to for header information
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MutagenWriter.MasterReferences">
+            <summary>
+            Optional master references for easy access during write operations
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MutagenWriter.Position">
+            <inheritdoc/>
+        </member>
+        <member name="P:Mutagen.Bethesda.Binary.MutagenWriter.Length">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenWriter.Write(System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenWriter.Write(System.Nullable{System.Boolean})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenWriter.Write(System.Byte)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenWriter.Write(System.Nullable{System.Byte})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenWriter.Write(System.Byte[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenWriter.Write(System.ReadOnlySpan{System.Byte})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenWriter.Write(System.UInt16)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenWriter.Write(System.Nullable{System.UInt16})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenWriter.Write(System.UInt32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenWriter.Write(System.Nullable{System.UInt32})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenWriter.Write(System.UInt64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenWriter.Write(System.Nullable{System.UInt64})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenWriter.Write(System.Nullable{System.SByte})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenWriter.Write(System.Int16)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenWriter.Write(System.Nullable{System.Int16})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenWriter.Write(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenWriter.Write(System.Nullable{System.Int32})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenWriter.Write(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenWriter.Write(System.Nullable{System.Int64})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenWriter.Write(System.Single)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenWriter.Write(System.Nullable{System.Single})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenWriter.Write(System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenWriter.Write(System.Nullable{System.Double})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenWriter.Write(System.Char)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenWriter.WriteZeros(System.UInt32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenWriter.Write(System.ReadOnlySpan{System.Char})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenWriter.Write(System.String,Mutagen.Bethesda.StringBinaryType)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenWriter.Write(System.Drawing.Color,System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenWriter.Dispose">
+            <summary>
+            Disposes of Writer if applicable
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.AGroup`1">
+            <summary>
+            An abstract base class for Groups to inherit from for some common functionality
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.AGroup`1.Records">
+            <summary>
+            An enumerable of all the records contained by the group.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.AGroup`1.Count">
+            <summary>
+            Number of records contained in the group.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.AGroup`1.SourceMod">
+            <summary>
+            The parent Mod object associated with the group.
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.AGroup`1.#ctor(Mutagen.Bethesda.IMod)">
+            <summary>
+            Constructor with parent Mod to be associated with
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Mutagen.Bethesda.AGroup`1.ToString" -->
+        <member name="T:Mutagen.Bethesda.IGroupCommon`1">
+            <summary>
+            An interface that Group Record objects implement to hook into the common systems
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.IGroupCommon`1.SourceMod">
+            <summary>
+            Mod object the Group belongs to
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.IGroupCommon`1.Records">
+            <summary>
+            A convenience accessor to iterate over all records in a group
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.IGroupCommon`1.Count">
+            <summary>
+            Number of contained records
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.IGroupCommonExt">
+            <summary>
+            Class containing extension methods for groups
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.IGroupCommonExt.AddNew``1(Mutagen.Bethesda.AGroup{``0})">
+            <summary>
+            Convenience function to instantiate a new Major Record and add it to the Group.
+            FormKey will be automatically assigned.
+            </summary>
+            <param name="group">Group to add record to</param>
+            <returns>New record already added to the Group</returns>
+        </member>
+        <member name="T:Mutagen.Bethesda.GameMode">
+            <summary>
+            Games that Mutagen.Bethesda is aware of and supports in some capacity
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.GroupTypeEnum">
+            <summary>
+            Different categories of Group records
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.IBinaryStreamExt">
+            <summary>
+            Extension functions adding Mutagen specific parsing functionality
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.IBinaryStreamExt.ReadColor(Noggog.IBinaryReadStream)">
+            <summary>
+            Reads a color from the binary stream.
+            The stream will be advanced 4 bytes (or 3 if only 3 remain). 
+            If the stream has more than 3 bytes, the 4th byte will be interpreted as alpha.
+            Will throw an exception if there is not at least 3 bytes remaining.
+            </summary>
+            <param name="stream">Stream to read from</param>
+            <returns>Bytes converted to a Color object</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.IBinaryStreamExt.ReadColor(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Extracts a color from binary span. 
+            If the span more than 3 bytes, the 4th byte will be interpreted as alpha.
+            Will throw an exception if there is not at least 3 bytes.
+            </summary>
+            <param name="span">Span to read from</param>
+            <returns>Bytes converted to a Color object</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.IBinaryStreamExt.ReadColor(Noggog.ReadOnlyMemorySlice{System.Byte})">
+            <summary>
+            Extracts a color from binary span. 
+            If the span more than 3 bytes, the 4th byte will be interpreted as alpha.
+            Will throw an exception if there is not at least 3 bytes.
+            </summary>
+            <param name="span">Span to read from</param>
+            <returns>Bytes converted to a Color object</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.IBinaryStreamExt.ReadZString(Noggog.IBinaryReadStream,System.Int32)">
+            <summary>
+            Reads a ZString from the binary stream
+            </summary>
+            <param name="stream">Stream to read from</param>
+            <param name="length">Length of the zstring</param>
+            <returns>ZString of desired length</returns>
+        </member>
+        <member name="T:Mutagen.Bethesda.FormID">
+             <summary>
+             A struct representing a FormID as it exists on disk:
+               - The ID of a record (6 bytes)
+               - The Mod Index the ID associated with, relative to the container Mod's master header list.
+            
+             Note:
+             FormID should be used sparingly, as it's prone to Mod indexing errors if mishandled.
+             FormKey is a more preferable struct for normal use.
+             </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.FormID.Null">
+            <summary>
+            A static readonly singleton that represents a null FormID (all zeros).
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.FormID.Raw">
+            <summary>
+            The raw uint as it would be stored on disk with both the ID and Mod index.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.FormID.ModIndex">
+            <summary>
+            The ModIndex bytes of the FormID
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.FormID.ID">
+            <summary>
+            The ID bytes of a FormID.
+            Exposed as a uint, but will only ever have values filling the first 6 bytes.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Mutagen.Bethesda.FormID.#ctor(Mutagen.Bethesda.ModIndex,System.UInt32)" -->
+        <member name="M:Mutagen.Bethesda.FormID.#ctor(System.UInt32)">
+            <summary>
+            Constructor taking a Mod index and ID as a single uint, as it would be stored on-disk.
+            Mod index is stored in the upper two bytes of the value.
+            </summary>
+            <param name="idWithModIndex">Mod index and Record ID to use</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormID.Factory(System.ReadOnlySpan{System.Char})">
+            <summary>
+            Converts a char span in hexadecimal format to a FormID
+            </summary>
+            <param name="hexStr">string in hexadecimal format: (0x)FFFFFFFF</param>
+            <returns>Converted FormID</returns>
+            <exception cref="T:System.ArgumentException">Thrown on unconvertable string input</exception>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormID.TryFactory(System.ReadOnlySpan{System.Char},Mutagen.Bethesda.FormID@)">
+            <summary>
+            Attempts to convert a string in hexadecimal format to a FormID
+            </summary>
+            <param name="hexStr">string in hexadecimal format: (0x)FFFFFFFF</param>
+            <param name="id">Converted FormID if successful</param>
+            <returns>True if successful</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormID.Factory(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Convert an array to a FormID
+            </summary>
+            <param name="bytes">Input byte array</param>
+            <returns>Converted FormID</returns>
+            <exception cref="T:System.ArgumentException">Thrown if array size less than 4</exception>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormID.Factory(System.UInt32)">
+            <summary>
+            Wrap a uint with a FormID
+            </summary>
+            <param name="idWithModIndex">Mod index and Record ID to use</param>
+            <returns>Converted FormID</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormID.ToBytes">
+            <summary>
+            Converts to a byte array of size 4.
+            </summary>
+            <returns>byte array of size 4 with raw contents</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormID.ToHex">
+            <summary>
+            Converts to a hex string: FFFFFFFF
+            </summary>
+            <returns>Hex string</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormID.ToString">
+            <summary>
+            Converts to a hex string: FFFFFFFF
+            </summary>
+            <returns>Hex string</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormID.IDString">
+            <summary>
+            Converts to a hex string containing only the ID section: FFFFFF
+            </summary>
+            <returns>Hex string</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormID.Equals(System.Object)">
+            <summary>
+            Default equality operator
+            </summary>
+            <param name="obj">object to compare to</param>
+            <returns>True if FormID with equal raw value</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormID.Equals(Mutagen.Bethesda.FormID)">
+            <summary>
+            FormID equality operator
+            </summary>
+            <param name="other">FormID to compare to</param>
+            <returns>True equal raw value</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormID.GetHashCode">
+            <summary>
+            Hashcode retrieved from Raw value.
+            </summary>
+            <returns>Hashcode retrieved from Raw value.</returns>
+        </member>
+        <member name="T:Mutagen.Bethesda.FormKey">
+             <summary>
+             A struct representing a unique identifier for a record:
+               - The ID of a record (6 bytes)
+               - The ModKey the record originates from
+            
+             FormKeys are preferable to FormIDs, as they:
+               - Cannot be misinterpreted to originate from the wrong Mod depending on context
+               - Remove the 255 limit while within code space.  On-disk formats still enforce 255 limit.
+             </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.FormKey.NullStr">
+            <summary>
+            A static readonly singleton string representing a null FormKey
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.FormKey.Null">
+            <summary>
+            A static readonly singleton Null FormKey
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.FormKey.ID">
+            <summary>
+            Record ID
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.FormKey.ModKey">
+            <summary>
+            ModKey the Record originates from
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.FormKey.IsNull">
+            <summary>
+            True if FormKey is considered Null
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Mutagen.Bethesda.FormKey.#ctor(Mutagen.Bethesda.ModKey,System.UInt32)" -->
+        <member name="M:Mutagen.Bethesda.FormKey.Factory(Mutagen.Bethesda.Internals.MasterReferenceReader,System.UInt32)">
+            <summary>
+            Constructs a FormKey from a list of masters and the raw uint
+            </summary>
+            <param name="masterReferences">Master reference list to refer to</param>
+            <param name="idWithModID">Mod index and Record ID to use</param>
+            <returns>Converted FormID</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormKey.TryFactory(System.ReadOnlySpan{System.Char},Mutagen.Bethesda.FormKey@)">
+            <summary>
+            Attempts to construct a FormKey from a string:
+              012ABC:ModName.esp
+            </summary>
+            <param name="str">String to parse</param>
+            <param name="formKey">FormKey if successfully converted</param>
+            <returns>True if conversion successful</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormKey.Factory(System.ReadOnlySpan{System.Char})">
+            <summary>
+            Constructs a FormKey from a string:
+              012ABC:ModName.esp
+            </summary>
+            <param name="str">String to parse</param>
+            <returns>Converted FormKey</returns>
+            <exception cref="T:System.ArgumentException">If string malformed</exception>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormKey.ToString">
+            <summary>
+            Converts to a string: FFFFFF:MyMod.esp
+            </summary>
+            <returns>String representation of FormKey</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormKey.IDString">
+            <summary>
+            Converts to a hex string containing only the ID section: FFFFFF
+            </summary>
+            <returns>Hex string</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormKey.Equals(System.Object)">
+            <summary>
+            Default equality operator
+            </summary>
+            <param name="obj">object to compare to</param>
+            <returns>True if FormKey with equal ModKey and ID values</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormKey.Equals(Mutagen.Bethesda.FormKey)">
+            <summary>
+            FormKey equality operator
+            </summary>
+            <param name="obj">FormKey to compare to</param>
+            <returns>True if equal ModKey and ID values</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormKey.GetHashCode">
+            <summary>
+            Hashcode retrieved from ModKey and ID values.
+            </summary>
+            <returns>Hashcode retrieved from ModKey and ID values.</returns>
+        </member>
+        <member name="T:Mutagen.Bethesda.IDuplicatable">
+             <summary>
+             An interface for an object that can duplicate itself while maintaining internal FormLink routing between itself
+             and other accompanying duplicated records.
+            
+             Eg, a set of Major Records can be duplicated with new FormKeys, but still maintain their pointers to each other's new keys.
+             </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.IDuplicatable.Duplicate(System.Func{Mutagen.Bethesda.FormKey},System.Collections.Generic.IList{System.ValueTuple{Mutagen.Bethesda.IMajorRecordCommon,Mutagen.Bethesda.FormKey}})">
+            <summary>
+            Creates a new copy of the record with a new FormKey, but all the same contents.
+            Optionally, a duplicated records tracker can be provided, which will reroute all internal FormLinks in addition.
+            </summary>
+            <param name="getNextFormKey">Function to retrieve new FormKeys from when needed</param>
+            <param name="duplicatedRecordTracker">Tracker object for rerouting FormLinks</param>
+            <returns>Duplicated object</returns>
+        </member>
+        <member name="T:Mutagen.Bethesda.GameSettingType">
+            <summary>
+            Various types that a GameSetting can contain
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.IGameSettingCommon">
+            <summary>
+            An interface that GameSetting objects implement to hook into the common systems
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.IGameSettingCommon.SettingType">
+            <summary>
+            The type of data that the GameSetting contains
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.IGameSettingNumeric">
+            <summary>
+            An interface that numeric GameSetting objects implement to hook into the common systems
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.IGameSettingNumeric.RawData">
+            <summary>
+            Raw float data representation of the numeric GameSetting's content
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.GameSettingUtility">
+            <summary>
+            Static class to provide common GameSetting utility concepts
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.GameSettingUtility.IntChar">
+            <summary>
+            Character signal for Integer content
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.GameSettingUtility.FloatChar">
+            <summary>
+            Character signal for Float content
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.GameSettingUtility.StringChar">
+            <summary>
+            Character signal for String content
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.GameSettingUtility.BoolChar">
+            <summary>
+            Character signal for Boolean content
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.GameSettingUtility.TryGetGameSettingType(System.Char,Mutagen.Bethesda.GameSettingType@)">
+            <summary>
+            Tries to convert a character to a corresponding enum type value.
+            </summary>
+            <param name="c">Character to convert</param>
+            <param name="type">Resulting enum type, if convertable</param>
+            <returns>True if character was able to be converted to an enum value</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.GameSettingUtility.GetChar(Mutagen.Bethesda.GameSettingType)">
+            <summary>
+            Tries to convert a character to a corresponding enum type value.
+            </summary>
+            <param name="type">The type enum to convert</param>
+            <returns>Character paired with the type enum</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.GameSettingUtility.CorrectEDID(System.String,Mutagen.Bethesda.GameSettingType)">
+            <summary>
+            Adjusts a string to be GameSetting compliant with the given type.
+            This means having the correct character at the start of the string.
+            </summary>
+            <param name="input">String to check and correct</param>
+            <param name="type">Game type to conform to</param>
+            <returns>GameSetting compliant EditorID string</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.GameSettingUtility.GetGameSettingType(System.ReadOnlySpan{System.Byte},Mutagen.Bethesda.Binary.GameConstants)">
+            <summary>
+            Takes a span aligned to a major record, and attempts to locate the game setting type.
+            Will throw if the span is misaligned or doesn't start at a valid major record header.
+            </summary>
+            <param name="span">Data beginning at the start of a major record</param>
+            <param name="meta">Game meta information to use in parsing</param>
+            <returns>A response of the GameSettingType if found, or a reason if not.</returns>
+        </member>
+        <member name="T:Mutagen.Bethesda.IMajorRecordCommon">
+            <summary>
+            An interface that Major Record objects implement to hook into the common systems
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.IMajorRecordCommon.IsCompressed">
+            <summary>
+            Marker of whether the content is compressed
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.IMajorRecordCommon.MajorRecordFlagsRaw">
+            <summary>
+            Raw integer flag data
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.IMajorRecordCommonGetter">
+            <summary>
+            An interface that Major Record objects implement to hook into the common getter systems
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.IMajorRecordCommonGetter.EditorID">
+            <summary>
+            The usually unique string identifier assigned to the Major Record
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.IMajorRecordCommonGetter.IsCompressed">
+            <summary>
+            Marker of whether the content is compressed
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.IMajorRecordCommonGetter.MajorRecordFlagsRaw">
+            <summary>
+            Raw integer flag data
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.IMajorRecordCommonGetter.FormKey">
+            <summary>
+            The unique identifier assigned to the Major Record
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.IModGetter">
+            <summary>
+            An interface that Mod objects implement to hook into the common getter systems
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.IModGetter.GameMode">
+            <summary>
+            The associated game type
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.IModGetter.MasterReferences">
+            <summary>
+            Read only list of master reference getters.
+            </summary>
+            <returns>Read only list of master reference getters</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.IModGetter.GetGroupGetter``1">
+            <summary>
+            Returns the Group getter object associated with the given Major Record Type.
+            </summary>
+            <returns>Group getter object associated with the given Major Record Type</returns>
+            <typeparam name="TMajor">The type of Major Record to get the Group for</typeparam>
+            <exception cref="T:System.ArgumentException">
+            An unexpected TMajor type will throw an exception.
+            Unexpected types include:
+              - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)
+              - A setter type is requested from a getter only object.
+            </exception>
+        </member>
+        <member name="M:Mutagen.Bethesda.IModGetter.WriteToBinary(System.String,Mutagen.Bethesda.BinaryWriteParameters)">
+            <summary>
+            Exports to disk in Bethesda binary format.
+            Access and iterates through the mod object's contents in a single thread.
+            </summary>
+            <param name="path">Path to export to</param>
+            <param name="param">Optional customization parameters</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.IModGetter.WriteToBinaryParallel(System.String,Mutagen.Bethesda.BinaryWriteParameters)">
+            <summary>
+            Exports to disk in Bethesda binary format.
+            Access and iterates through the mod groups in separate threads.  All provided mod objects
+            are thread safe to use with this function.
+            </summary>
+            <param name="path">Path to export to</param>
+            <param name="param">Optional customization parameters</param>
+        </member>
+        <member name="P:Mutagen.Bethesda.IModGetter.ModKey">
+            <summary>
+            The key associated with this mod
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.IMod">
+            <summary>
+            An interface that Mod objects implement to hook into the common systems
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.IMod.MasterReferences">
+            <summary>
+            List of master references.
+            </summary>
+            <returns>List of master references</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.IMod.GetGroup``1">
+            <summary>
+            Returns the Group object associated with the given Major Record Type.
+            </summary>
+            <returns>Group object associated with the given Major Record Type</returns>
+            <typeparam name="TMajor">The type of Major Record to get the Group for</typeparam>
+            <exception cref="T:System.ArgumentException">
+            An unexpected TMajor type will throw an exception.
+            Unexpected types include:
+              - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)
+              - A setter type is requested from a getter only object.
+            </exception>
+        </member>
+        <member name="T:Mutagen.Bethesda.IModDisposeGetter">
+            <summary>
+            An interface for Overlay mod systems
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.INamed">
+            <summary>
+            An interface implemented by Major Records that have names
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.INamed.Name">
+            <summary>
+            The display name of the record
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.EDIDLink`1">
+            <summary>
+            A specialized link for Oblivion Magic Effects, which use 4 character EditorIDs rather than FormIDs to link.
+            This class stores the target EDID as RecordType, as that is a convenient 4 character struct
+            </summary>
+            <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
+        </member>
+        <member name="F:Mutagen.Bethesda.EDIDLink`1.Empty">
+            <summary>
+            A readonly singleton representing an unlinked EDIDLink
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.EDIDLink`1.Null">
+            <summary>
+            A readonly singleton representing a "null" record type
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.EDIDLink`1.EDID">
+            <summary>
+            Record type representing the target EditorID to link against
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.EDIDLink`1.#ctor">
+            <summary>
+            Default constructor that creates an unlinked EDIDLink
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.EDIDLink`1.#ctor(Mutagen.Bethesda.RecordType)">
+            <summary>
+            Default constructor that creates an EDIDLink linked to the target EditorID
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.EDIDLink`1.Set(Mutagen.Bethesda.RecordType)">
+            <summary>
+            Sets the link to the target EditorID
+            </summary>
+            <param name="type">Target EditorID to link to</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.EDIDLink`1.Set(`0)">
+            <summary>
+            Sets the link to the target Major Record
+            </summary>
+            <param name="value">Target record to link to</param>
+            <exception cref="T:System.ArgumentException">If EditorID of target record is not 4 characters</exception>
+        </member>
+        <member name="M:Mutagen.Bethesda.EDIDLink`1.Equals(Mutagen.Bethesda.IEDIDLinkGetter{`0})">
+            <summary>
+            Compares equality of two links.
+            </summary>
+            <param name="other">Other link to compare to</param>
+            <returns>True if EDID members are equal</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.EDIDLink`1.GetHashCode">
+            <summary>
+            Returns hash code
+            </summary>
+            <returns>Hash code evaluated from EDID member</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.EDIDLink`1.ToString">
+            <summary>
+            Returns string representation of link
+            </summary>
+            <returns>Returns EDID RecordType string</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.EDIDLink`1.TryResolve``1(Mutagen.Bethesda.ILinkCache{``0},`0@)">
+            <summary>
+            Attempts to locate link target in given Link Cache.
+            </summary>
+            <param name="package">Link Cache to resolve against</param>
+            <param name="major">Located record if successful</param>
+            <returns>True if link was resolved and a record was retrieved</returns>
+            <typeparam name="TMod">Mod type</typeparam>
+        </member>
+        <member name="M:Mutagen.Bethesda.EDIDLink`1.TryResolveFormKey``1(Mutagen.Bethesda.ILinkCache{``0},Mutagen.Bethesda.FormKey@)">
+            <summary>
+            Attempts to locate link target's FormKey in given Link Cache.
+            </summary>
+            <param name="package">Link Cache to resolve against</param>
+            <param name="major">Located FormKey if successful</param>
+            <returns>True if link was resolved and a record was retrieved</returns>
+            <typeparam name="TMod">Mod type</typeparam>
+        </member>
+        <member name="M:Mutagen.Bethesda.EDIDLink`1.TryResolve``1(Mutagen.Bethesda.ILinkCache{``0})">
+            <summary>
+            Attempts to locate link target in given Link Cache.
+            </summary>
+            <param name="package">Link Cache to resolve against</param>
+            <returns>TryGet object with located record if successful</returns>
+            <typeparam name="TMod">Mod type</typeparam>
+        </member>
+        <member name="M:Mutagen.Bethesda.EDIDLink`1.Unset">
+            <summary>
+            Resets to an unlinked state
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.FormLink`1">
+            <summary>
+            A FormKey with an associated Major Record Type that it is allowed to link to.
+            This provides type safety concepts on top of a basic FormKey.
+            </summary>
+            <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
+        </member>
+        <member name="F:Mutagen.Bethesda.FormLink`1.Empty">
+            <summary>
+            A readonly singleton representing an unlinked FormLink
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.FormLink`1.FormKey">
+            <summary>
+            FormKey of the target record
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormLink`1.#ctor">
+            <summary>
+            Default constructor that starts unlinked
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormLink`1.#ctor(Mutagen.Bethesda.FormKey)">
+            <summary>
+            Default constructor that creates a link to the target FormKey
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormLink`1.Set(Mutagen.Bethesda.FormKey)">
+            <summary>
+            Sets the link to the target FormKey
+            </summary>
+            <param name="formKey">Target FormKey to link to</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormLink`1.Set(`0)">
+            <summary>
+            Sets the link to the target Major Record
+            </summary>
+            <param name="value">Target record to link to</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormLink`1.Unset">
+            <summary>
+            Resets to an unlinked state
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Mutagen.Bethesda.FormLink`1.Equals(System.Object)" -->
+        <member name="M:Mutagen.Bethesda.FormLink`1.Equals(Mutagen.Bethesda.IFormLinkGetter{`0})">
+            <summary>
+            Compares equality of two links.
+            </summary>
+            <param name="other">Other link to compare to</param>
+            <returns>True if FormKey members are equal</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormLink`1.Equals(Mutagen.Bethesda.IFormLinkNullableGetter{`0})">
+            <summary>
+            Compares equality of two links, where rhs is a nullable link.
+            </summary>
+            <param name="other">Other link to compare to</param>
+            <returns>True if FormKey members are equal</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormLink`1.GetHashCode">
+            <summary>
+            Returns hash code
+            </summary>
+            <returns>Hash code evaluated from FormKey member</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormLink`1.ToString">
+            <summary>
+            Returns string representation of link
+            </summary>
+            <returns>Returns FormKey string</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormLink`1.TryResolve``1(Mutagen.Bethesda.ILinkCache{``0},`0@)">
+            <summary>
+            Attempts to locate link target in given Link Cache.
+            </summary>
+            <param name="package">Link Cache to resolve against</param>
+            <param name="major">Located record if successful</param>
+            <returns>True if link was resolved and a record was retrieved</returns>
+            <typeparam name="TMod">Mod type</typeparam>
+        </member>
+        <member name="M:Mutagen.Bethesda.FormLink`1.TryResolve``1(Mutagen.Bethesda.ILinkCache{``0})">
+            <summary>
+            Attempts to locate link target in given Link Cache.
+            </summary>
+            <param name="package">Link Cache to resolve against</param>
+            <returns>TryGet object with located record if successful</returns>
+            <typeparam name="TMod">Mod type</typeparam>
+        </member>
+        <member name="T:Mutagen.Bethesda.IEDIDLinkGetter">
+            <summary>
+            An interface for a read-only EDID Link
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.IEDIDLinkGetter.EDID">
+            <summary>
+            Record type representing the target EditorID to link against
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.IEDIDLinkGetter`1">
+            <summary>
+            An interface for a read-only EDID Link, with a Major Record type constraint
+            </summary>
+            <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
+        </member>
+        <member name="T:Mutagen.Bethesda.IEDIDLink`1">
+            <summary>
+            An interface for a EDID Link, with a Major Record type constraint
+            </summary>
+            <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
+        </member>
+        <member name="P:Mutagen.Bethesda.IEDIDLink`1.EDID">
+            <summary>
+            Record type representing the target EditorID to link against
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.IEDIDLinkExt">
+            <summary>
+            A static class that contains extension functions for EDIDLinks
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.IEDIDLinkExt.TryResolve``2(Mutagen.Bethesda.IEDIDLinkGetter{``0},Mutagen.Bethesda.ILinkCache{``1},``0@)">
+            <summary>
+            Attempts to locate link target in given Link Cache.
+            </summary>
+            <param name="edidLink">EDIDLink to resolve</param>
+            <param name="package">Link Cache to resolve against</param>
+            <param name="major">Located record if successful</param>
+            <returns>True if link was resolved and a record was retrieved</returns>
+            <typeparam name="TMod">Mod type</typeparam>
+            <typeparam name="TMajor">Major Record type to resolve to</typeparam>
+        </member>
+        <member name="T:Mutagen.Bethesda.IFormLinkGetter">
+            <summary>
+            An interface for a read-only FormLink
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.IFormLinkGetter.FormKey">
+            <summary>
+            FormKey to link against
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.IFormLinkGetter`1">
+            <summary>
+            An interface for a read-only FormLink, with a Major Record type constraint
+            </summary>
+            <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
+        </member>
+        <member name="T:Mutagen.Bethesda.IFormLink">
+            <summary>
+            An interface for a FormLink
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.IFormLink.FormKey">
+            <summary>
+            FormKey to link against
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.IFormLink`1">
+            <summary>
+            An interface for a FormLink, with a Major Record type constraint
+            </summary>
+            <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
+        </member>
+        <member name="T:Mutagen.Bethesda.IFormLinkNullableGetter">
+            <summary>
+            An interface for a read-only FormLink.
+            FormKey is allowed to be null to communicate absence of a record.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.IFormLinkNullableGetter.FormKey">
+            <summary>
+            FormKey to link against
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.IFormLinkNullableGetter`1">
+            <summary>
+            An interface for a read-only FormLink, with a Major Record type constraint 
+            FormKey is allowed to be null to communicate absence of a record.
+            </summary>
+            <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
+        </member>
+        <member name="T:Mutagen.Bethesda.IFormLinkNullable">
+            <summary>
+            An interface for a FormLink.
+            FormKey is allowed to be null to communicate absence of a record.
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.IFormLinkNullable`1">
+            <summary>
+            An interface for a FormLink, with a Major Record type constraint 
+            FormKey is allowed to be null to communicate absence of a record.
+            </summary>
+            <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
+        </member>
+        <member name="T:Mutagen.Bethesda.IFormLinkExt">
+            <summary>
+            A static class that contains extension functions for FormLinks
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.IFormLinkExt.TryResolve``2(Mutagen.Bethesda.IFormLinkGetter{``0},Mutagen.Bethesda.ILinkCache{``1},``0@)">
+            <summary>
+            Attempts to locate link target in given Link Cache.
+            </summary>
+            <param name="formLink">FormLink to resolve</param>
+            <param name="package">Link Cache to resolve against</param>
+            <param name="major">Located record if successful</param>
+            <returns>True if link was resolved and a record was retrieved</returns>
+            <typeparam name="TMod">Mod type</typeparam>
+            <typeparam name="TMajor">Major Record type to resolve to</typeparam>
+        </member>
+        <member name="M:Mutagen.Bethesda.IFormLinkExt.TryResolve``2(Mutagen.Bethesda.IFormLinkNullableGetter{``0},Mutagen.Bethesda.ILinkCache{``1},``0@)">
+            <summary>
+            Attempts to locate link target in given Link Cache.
+            </summary>
+            <param name="formLink">FormLink to resolve</param>
+            <param name="package">Link Cache to resolve against</param>
+            <param name="major">Located record if successful</param>
+            <returns>True if link was resolved and a record was retrieved</returns>
+            <typeparam name="TMod">Mod type</typeparam>
+            <typeparam name="TMajor">Major Record type to resolve to</typeparam>
+        </member>
+        <member name="T:Mutagen.Bethesda.ILinkGetter">
+            <summary>
+            An interface for an object that is able to resolve against a LinkCache
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.ILinkGetter.TargetType">
+            <summary>
+            The MajorRecord Type that the link is associated with
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.ILinkGetter.TryGetModKey(Mutagen.Bethesda.ModKey@)">
+            <summary>
+            Attempts to locate an associated ModKey from the link
+            </summary>
+            <param name="modKey">ModKey if found</param>
+            <returns>True of ModKey information was located</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.ILinkGetter.TryResolveFormKey``1(Mutagen.Bethesda.ILinkCache{``0},Mutagen.Bethesda.FormKey@)">
+            <summary>
+            Attempts to locate an associated FormKey from the link
+            </summary>
+            <param name="formKey">FormKey if found</param>
+            <returns>True if FormKey found</returns>
+            <typeparam name="TMod">Mod type</typeparam>
+        </member>
+        <member name="M:Mutagen.Bethesda.ILinkGetter.TryResolveCommon``1(Mutagen.Bethesda.ILinkCache{``0},Mutagen.Bethesda.IMajorRecordCommonGetter@)">
+            <summary>
+            Attempts to locate link target in given Link Cache.
+            </summary>
+            <param name="package">Link Cache to resolve against</param>
+            <param name="majorRecord">Located record if successful</param>
+            <returns>True if link was resolved and a record was retrieved</returns>
+            <typeparam name="TMod">Mod type</typeparam>
+        </member>
+        <member name="T:Mutagen.Bethesda.ILinkGetter`1">
+            <summary>
+            An interface for an object that is able to resolve against a LinkCache
+            </summary>
+            <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
+        </member>
+        <member name="M:Mutagen.Bethesda.ILinkGetter`1.TryResolve``1(Mutagen.Bethesda.ILinkCache{``0})">
+            <summary>
+            Attempts to locate link target in given Link Cache.
+            </summary>
+            <param name="package">Link Cache to resolve against</param>
+            <returns>TryGet object with located record if successful</returns>
+            <typeparam name="TMod">Mod type</typeparam>
+        </member>
+        <member name="T:Mutagen.Bethesda.ILinkExt">
+            <summary>
+            A static class with extension methods for ILink interfaces
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.ILinkExt.TryResolve``2(Mutagen.Bethesda.ILinkGetter{``1},Mutagen.Bethesda.ILinkCache{``0},``1@)">
+            <summary>
+            Attempts to locate link target in given Link Cache.
+            </summary>
+            <param name="link">Link to resolve</param>
+            <param name="package">Link Cache to resolve against</param>
+            <param name="majorRecord">Major Record if located</param>
+            <returns>True if successful in linking to record</returns>
+            <typeparam name="TMod">Mod type</typeparam>
+            <typeparam name="TMajor">Major Record type to resolve to</typeparam>
+        </member>
+        <member name="M:Mutagen.Bethesda.ILinkExt.Resolve``2(Mutagen.Bethesda.ILinkGetter{``1},Mutagen.Bethesda.ILinkCache{``0})">
+            <summary>
+            Locates link target in given Link Cache.
+            </summary>
+            <param name="link">Link to resolve</param>
+            <param name="package">Link Cache to resolve against</param>
+            <returns>Located Major Record</returns>
+            <exception cref="T:System.NullReferenceException">If link was not succesful</exception>
+            <typeparam name="TMod">Mod type</typeparam>
+            <typeparam name="TMajor">Major Record type to resolve to</typeparam>
+        </member>
+        <member name="T:Mutagen.Bethesda.ILinkContainer">
+            <summary>
+            An interface for classes that contain links and can enumerate them.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.ILinkContainer.Links">
+            <summary>
+            Enumerable of all contained links
+            </summary>
+            <returns>Enumerable of all contained links</returns>
+        </member>
+        <member name="T:Mutagen.Bethesda.ModIndex">
+            <summary>
+            A struct representing a index of a master within a FormID.
+            Mods can only reference a byte's worth of masters, so indices must be limited to a byte.
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.ModIndex.Zero">
+            <summary>
+            A static readonly singleton ModID with value 0
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.ModIndex.ID">
+            <summary>
+            Index value
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.ModIndex.#ctor(System.Byte)">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.ModIndex.ToString">
+            <summary>
+            Prints index in hex format: FF
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.ModIndex.Equals(System.Object)">
+            <summary>
+            Default equality operator
+            </summary>
+            <param name="obj">object to compare to</param>
+            <returns>True if ModIndex with equal index</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.ModIndex.GetHashCode">
+            <summary>
+            Hashcode retrieved from index
+            </summary>
+            <returns>Hashcode retrieved from index</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.ModIndex.GetModIndexByteFromUInt(System.UInt32)">
+            <summary>
+            Extracts the index byte from a uint input
+            </summary>
+            <param name="i">uint to retrieve mod index from</param>
+            <returns>Byte containing the mod index</returns>
+        </member>
+        <member name="T:Mutagen.Bethesda.ModKey">
+            <summary>
+            ModKey represents a unique identifier for a mod.  
+            
+            The proper factory format is: [ModName].es[p/m], depending on whether it is a master file or not.
+            
+            A correct ModKey is very important if a mod's contents will ever be added to another mod (as an override).
+            Otherwise, records will become mis-linked.  The ModKey should typically be the name that the mod intends to be exported
+            to disk with.  If a mod is not going to be exported, then any unique name is sufficient.
+            
+            General practice is to use ModKey.TryFactory on a mod's file name when at all possible
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.ModKey.Null">
+            <summary>
+            A static readonly singleton representing a null ModKey
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.ModKey.Name">
+            <summary>
+            Mod name
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.ModKey.Master">
+            <summary>
+            Master flag
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.ModKey.FileName">
+            <summary>
+            Convenience accessor to get the appropriate file name
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.ModKey.#ctor(System.String,System.Boolean)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="name">Name of mod</param>
+            <param name="master">True if mod is a master</param>
+        </member>
+        <member name="M:Mutagen.Bethesda.ModKey.Equals(Mutagen.Bethesda.ModKey)">
+            <summary>
+            ModKey equality operator
+            Name is compared ignoring case
+            </summary>
+            <param name="obj">ModKey to compare to</param>
+            <returns>True equal Name and Master value</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.ModKey.Equals(System.Object)">
+            <summary>
+            Default equality operator
+            Name is compared ignoring case
+            </summary>
+            <param name="obj">object to compare to</param>
+            <returns>True if ModKey with equal Name and Master value</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.ModKey.GetHashCode">
+            <summary>
+            Hashcode retrieved from upper case Name and Master values.
+            </summary>
+            <returns>Hashcode retrieved from upper case Name and Master values.</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.ModKey.ToString">
+            <summary>
+            Converts to a string: MyMod.esp
+            </summary>
+            <returns>String representation of ModKey</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.ModKey.TryFactory(System.ReadOnlySpan{System.Char},Mutagen.Bethesda.ModKey@)">
+            <summary>
+            Attempts to construct a ModKey from a string:
+              ModName.esp
+            </summary>
+            <param name="str">String to parse</param>
+            <param name="modKey">ModKey if successfully converted</param>
+            <returns>True if conversion successful</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.ModKey.Factory(System.ReadOnlySpan{System.Char})">
+            <summary>
+            Constructs a ModKey from a string:
+              ModName.esp
+            </summary>
+            <param name="str">String to parse</param>
+            <returns>Converted ModKey</returns>
+            <exception cref="T:System.ArgumentException">If string malformed</exception>
+        </member>
+        <member name="T:Mutagen.Bethesda.ModListing`1">
+            <summary>
+            Class associating a ModKey with a Mod object that may or may not exist.
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.ModListing`1.Mod">
+            <summary>
+            Mod object
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.ModListing`1.Key">
+            <summary>
+            ModKey associated with listing
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.ModListing`1.#ctor(`0)">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.ModListing`1.UnloadedModListing(Mutagen.Bethesda.ModKey)">
+            <summary>
+            Factory to create a ModListing which does not have a mod object
+            </summary>
+            <param name="key">ModKey to associate with listing</param>
+            <returns>ModListing with no mod object</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.ModListing`1.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="T:Mutagen.Bethesda.ObjectType">
+            <summary>
+            Categories of objects that can be generated
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.ObjectType.Subrecord">
+            <summary>
+            A subrecord that is contained by a Record object.  No FormID
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.ObjectType.Record">
+            <summary>
+            A Record that is contained by a Group object, and contains Subrecords.  Has FormID
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.ObjectType.Group">
+            <summary>
+            A list of Records or sub-Groups
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.ObjectType.Mod">
+            <summary>
+            The top level Mod object that contains all records
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.MajorRecord.MajorRecordFlag">
+            <summary>
+            Common MajorRecord flags
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.MajorRecord.MajorRecordFlag.Compressed">
+            <summary>
+            True if record content should be compressed
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.MajorRecord.TitleString">
+            <summary>
+            A convenience property to print "EditorID - FormKey"
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.RecordType">
+            <summary>
+            A struct representing a four character header for a record.
+            These are used commonly in the binary format to delineate records and subrecords.
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.RecordType.Length">
+            <summary>
+            The common length for all RecordTypes
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.RecordType.Null">
+            <summary>
+            A static readonly singleton string representing a null RecordType
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.RecordType.TypeInt">
+            <summary>
+            The type as an integer
+            </summary>
+        </member>
+        <member name="P:Mutagen.Bethesda.RecordType.Type">
+            <summary>
+            The type as a four character string
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.RecordType.#ctor(System.Int32)">
+            <summary>
+            Constructor taking in an integer
+            </summary>
+        </member>
+        <member name="M:Mutagen.Bethesda.RecordType.#ctor(System.ReadOnlySpan{System.Char})">
+            <summary>
+            Constructor taking in a string
+            The integer constructor is preferable in most cases, as it is faster and can never throw an exception.
+            </summary>
+            <param name="type">String of four characters</param>
+            <exception cref="T:System.ArgumentException">If string does not contain exactly four characters</exception>
+        </member>
+        <member name="M:Mutagen.Bethesda.RecordType.TryFactory(System.ReadOnlySpan{System.Char},Mutagen.Bethesda.RecordType@)">
+            <summary>
+            Attempts to construct a RecordType from a string.
+            Must be of size 4 to succeed.
+            </summary>
+            <param name="str">String to parse</param>
+            <param name="recType">RecordType if successfully converted</param>
+            <returns>True if conversion successful</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.RecordType.Equals(System.Object)">
+            <summary>
+            Default equality operator
+            </summary>
+            <param name="obj">object to compare to</param>
+            <returns>True if RecordType with equal TypeInt</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.RecordType.Equals(Mutagen.Bethesda.RecordType)">
+            <summary>
+            RecordType equality operator
+            </summary>
+            <param name="obj">RecordType to compare to</param>
+            <returns>True if equal TypeInt value</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.RecordType.Equals(System.String)">
+            <summary>
+            String equality operator
+            </summary>
+            <param name="obj">String to compare to</param>
+            <returns>True if equal Type string value</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.RecordType.GetHashCode">
+            <summary>
+            Hashcode retrieved from TypeInt value.
+            </summary>
+            <returns>Hashcode retrieved from TypeInt value.</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.RecordType.ToString">
+            <summary>
+            Converts to a four character string.
+            </summary>
+            <returns>String representation of RecordType</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.RecordType.GetStringType(System.Int32)">
+            <summary>
+            Converts an integer to its string RecordType representation
+            </summary>
+            <param name="typeInt">Integer to convert</param>
+            <returns>Four character string</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.RecordType.GetTypeInt(System.ReadOnlySpan{System.Char})">
+            <summary>
+            Converts an string to its int RecordType representation
+            </summary>
+            <param name="typeStr">Four character string to convert</param>
+            <returns>Integer representing the record type</returns>
+            <exception cref="T:System.ArgumentException">If string does not contain exactly four characters</exception>
+        </member>
+        <member name="M:Mutagen.Bethesda.UtilityTranslation.EnumerateSubrecords(Noggog.ReadOnlyMemorySlice{System.Byte},Mutagen.Bethesda.Binary.GameConstants)">
+            <summary>
+            Parses span data and enumerates pairs of record type -> locations
+            
+            It is assumed the span contains only subrecords
+            </summary>
+            <param name="span">Bytes containing subrecords</param>
+            <param name="meta">Metadata to use in subrecord parsing</param>
+            <returns>Enumerable of KeyValue pairs of encountered RecordTypes and their locations relative to the input span</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.UtilityTranslation.FindRepeatingSubrecord(System.ReadOnlySpan{System.Byte},Mutagen.Bethesda.Binary.GameConstants,Mutagen.Bethesda.RecordType,System.Int32@)">
+            <summary>
+            Parses span data and locates all uninterrupted repeating instances of target record type
+            
+            It is assumed the span contains only subrecords
+            </summary>
+            <param name="span">Bytes containing subrecords</param>
+            <param name="meta">Metadata to use in subrecord parsing</param>
+            <param name="recordType">Repeating type to locate</param>
+            <returns>Array of locations of located target types</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.UtilityTranslation.FindFirstSubrecords(System.ReadOnlySpan{System.Byte},Mutagen.Bethesda.Binary.GameConstants,Mutagen.Bethesda.RecordType[])">
+            <summary>
+            Locates the first encountered instances of all given subrecord types, and returns an array of their locations
+            -1 represents a recordtype that was not found.
+            
+            Not suggested to use with high numbers of record types, as it is an N^2 algorithm
+            </summary>
+            <param name="data">Subrecord data to be parsed</param>
+            <param name="recordTypes">Record types to locate</param>
+            <param name="meta">Metadata to use in subrecord parsing</param>
+            <returns>Array of found record locations</returns>
+        </member>
+        <member name="M:Mutagen.Bethesda.UtilityTranslation.FindNextSubrecords(System.ReadOnlySpan{System.Byte},Mutagen.Bethesda.Binary.GameConstants,System.Int32@,Mutagen.Bethesda.RecordType[])">
+            <summary>
+            Locates the first encountered instances of all given subrecord types, and returns an array of their locations
+            -1 represents a recordtype that was not found.
+            
+            If a subrecord is encountered that is not of the target types, it will stop looking for more matches
+            
+            </summary>
+            <param name="data">Subrecord data to be parsed</param>
+            <param name="recordTypes">Record types to locate</param>
+            <param name="meta">Metadata to use in subrecord parsing</param>
+            <returns>Array of found record locations</returns>
+        </member>
+        <member name="T:Noggog.BinaryStringUtility">
+            <summary>
+            Static class with string-related utility functions
+            </summary>
+        </member>
+        <member name="M:Noggog.BinaryStringUtility.ToZString(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Converts span to a string.  Should be slower than ToZString with ReadOnlyMemorySlice parameter.
+            </summary>
+            <param name="bytes">Bytes to turn into a string</param>
+            <returns>string containing a character for every byte in the input span</returns>
+        </member>
+        <member name="M:Noggog.BinaryStringUtility.ToZString(Noggog.ReadOnlyMemorySlice{System.Byte})">
+            <summary>
+            Converts memory slice to a string.  Should be faster than ToZString with ReadOnlySpan parameter.
+            </summary>
+            <param name="bytes">Bytes to turn into a string</param>
+            <returns>string containing a character for every byte in the input span</returns>
+        </member>
+        <member name="M:Noggog.BinaryStringUtility.ToZStringBuffer(System.ReadOnlySpan{System.Byte},System.Span{System.Char})">
+            <summary>
+            Translates a span of bytes into a span of chars
+            </summary>
+            <param name="bytes">Bytes to convert to chars</param>
+            <param name="temporaryCharBuffer">Char span to put bytes into</param>
+        </member>
+        <member name="M:Noggog.BinaryStringUtility.ProcessNullTermination(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Trims the last byte if it is 0.
+            </summary>
+            <param name="bytes">Bytes to trim</param>
+            <returns>Trimmed bytes</returns>
+        </member>
+        <member name="M:Noggog.BinaryStringUtility.ProcessNullTermination(Noggog.ReadOnlyMemorySlice{System.Byte})">
+            <summary>
+            Trims the last byte if it is 0.
+            </summary>
+            <param name="bytes">Bytes to trim</param>
+            <returns>Trimmed bytes</returns>
+        </member>
+        <member name="M:Noggog.BinaryStringUtility.ProcessWholeToZString(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Null trims and then processes bytes into a string
+            </summary>
+            <param name="bytes">Bytes to convert</param>
+            <returns>String representation of bytes</returns>
+        </member>
+        <member name="M:Noggog.BinaryStringUtility.ProcessWholeToZString(Noggog.ReadOnlyMemorySlice{System.Byte})">
+            <summary>
+            Null trims and then processes bytes into a string
+            </summary>
+            <param name="bytes">Bytes to convert</param>
+            <returns>String representation of bytes</returns>
+        </member>
+        <member name="M:Noggog.BinaryStringUtility.ParseUnknownLengthString(Noggog.IBinaryReadStream)">
+            <summary>
+            Reads bytes from a stream until a null termination character occurs.
+            Converts results to a string.
+            </summary>
+            <param name="stream">Stream to read from</param>
+            <returns>First null terminated string read</returns>
+        </member>
+        <member name="M:Noggog.BinaryStringUtility.ParsePrependedString(Noggog.ReadOnlyMemorySlice{System.Byte},System.Byte)">
+            <summary>
+            Read string of known length, which is prepended by bytes denoting its length.
+            Converts results to a string.
+            </summary>
+            <param name="span">Bytes to retrieve string from</param>
+            <param name="lengthLength">Amount of bytes containing length information</param>
+            <returns>String of length denoted by initial bytes</returns>
+        </member>
+    </members>
+</doc>

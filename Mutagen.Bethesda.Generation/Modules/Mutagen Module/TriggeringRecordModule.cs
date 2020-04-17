@@ -83,12 +83,10 @@ namespace Mutagen.Bethesda.Generation
                         {
                             await SetContainerSubTriggers(obj, field);
                         }));
-                await Task.WhenAll(
-                    obj.IterateFields(expandSets: SetMarkerType.ExpandSets.TrueAndInclude, nonIntegrated: true)
-                        .Select(async (field) =>
-                        {
-                            await SetRecordTrigger(obj, field, field.GetFieldData());
-                        }));
+                foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.TrueAndInclude, nonIntegrated: true))
+                {
+                    await SetRecordTrigger(obj, field, field.GetFieldData());
+                }
                 await SetObjectTrigger(obj);
                 obj.GetObjectData().WiringComplete.Complete();
                 await base.LoadWrapup(obj);

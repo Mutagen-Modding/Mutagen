@@ -7,24 +7,25 @@
       <String name="Description" recordType="DESC" hasBeenSet="True" />
       <String name="Icon" recordType="ICON" hasBeenSet="True" />
       <RefDirect name="Model" refName="Model" />
-      <Data>
-        <Fields>
-          <Enum name="Flags" enumName="MagicEffect.MagicFlag" byteLength="4" />
-          <Float name="BaseCost" />
-          <ByteArray name="Unused" byteLength="4" nullable="NotNull" />
-          <Enum name="MagicSchool" enumName="MagicSchool" byteLength="4" />
-          <Enum name="Resistance" enumName="Resistance" byteLength="4" />
-          <UInt32 name="CounterEffectCount" />
-          <FormLink name="Light" refName="Light" />
-          <Float name="ProjectileSpeed" />
-          <FormLink name="EffectShader" refName="EffectShader" />
-          <Break />
-          <RefDirect name="SubData" hasBeenSet="True" refName="MagicEffectSubData" />
-        </Fields>
-      </Data>
+      <RefDirect name="Data" refName="MagicEffectData" />
       <List name="CounterEffects" recordType="ESCE">
         <FormLink refName="MagicEffect" type="EDIDChars" />
       </List>
+    </Fields>
+  </Object>
+  <Object name="MagicEffectData" objType="Subrecord" recordType="DATA" GUID="5b30822f-ca7b-436d-b0f1-f2cb07b5aee6" ID="196">
+    <Fields>
+      <Enum name="Flags" enumName="MagicEffect.MagicFlag" byteLength="4" />
+      <Float name="BaseCost" />
+      <ByteArray name="Unused" byteLength="4" nullable="NotNull" />
+      <Enum name="MagicSchool" enumName="MagicSchool" byteLength="4" />
+      <Enum name="Resistance" enumName="Resistance" byteLength="4" />
+      <UInt32 name="CounterEffectCount" />
+      <FormLink name="Light" refName="Light" />
+      <Float name="ProjectileSpeed" />
+      <FormLink name="EffectShader" refName="EffectShader" />
+      <Break />
+      <RefDirect name="SubData" hasBeenSet="True" refName="MagicEffectSubData" />
     </Fields>
   </Object>
   <Object name="MagicEffectSubData" objType="Subrecord" GUID="ebfe4657-51cf-4f56-95c9-8e3eee98fa5a" ID="56">

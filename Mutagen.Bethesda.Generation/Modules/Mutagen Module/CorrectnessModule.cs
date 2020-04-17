@@ -40,6 +40,10 @@ namespace Mutagen.Bethesda.Generation
                     }
                     triggerRecMapping[triggerRec] = field;
                 }
+                if (field is LoquiType loqui && loqui.GetFieldData().HasTrigger)
+                {
+                    if (loqui.SingletonType != SingletonLevel.None) break;
+                }
             }
 
             bool triggerEncountered = false;

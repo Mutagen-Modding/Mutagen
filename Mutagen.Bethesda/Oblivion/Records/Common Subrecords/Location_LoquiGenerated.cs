@@ -15,7 +15,6 @@ using Noggog;
 using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -32,39 +31,34 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class BaseLayer :
-        IBaseLayer,
-        ILoquiObjectSetter<BaseLayer>,
-        IEquatable<BaseLayer>,
+    public partial class Location :
+        ILocation,
+        ILoquiObjectSetter<Location>,
+        IEquatable<Location>,
         IEqualsMask
     {
         #region Ctor
-        public BaseLayer()
+        public Location()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Header
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private LayerHeader? _Header;
-        public LayerHeader? Header
-        {
-            get => _Header;
-            set => _Header = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILayerHeaderGetter? IBaseLayerGetter.Header => this.Header;
+        #region Position
+        public P3Float Position { get; set; } = default;
+        #endregion
+        #region Rotation
+        public P3Float Rotation { get; set; } = default;
         #endregion
 
         #region To String
 
-        public virtual void ToString(
+        public void ToString(
             FileGeneration fg,
             string? name = null)
         {
-            BaseLayerMixIn.ToString(
+            LocationMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -74,22 +68,22 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IBaseLayerGetter rhs)) return false;
-            return ((BaseLayerCommon)((IBaseLayerGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is ILocationGetter rhs)) return false;
+            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(BaseLayer obj)
+        public bool Equals(Location obj)
         {
-            return ((BaseLayerCommon)((IBaseLayerGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((BaseLayerCommon)((IBaseLayerGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((LocationCommon)((ILocationGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object XmlWriteTranslator => BaseLayerXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => LocationXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -98,7 +92,7 @@ namespace Mutagen.Bethesda.Oblivion
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((BaseLayerXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((LocationXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -107,9 +101,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static BaseLayer CreateFromXml(
+        public static Location CreateFromXml(
             XElement node,
-            BaseLayer.TranslationMask? translationMask = null)
+            Location.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -118,27 +112,27 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static BaseLayer CreateFromXml(
+        public static Location CreateFromXml(
             XElement node,
-            out BaseLayer.ErrorMask errorMask,
-            BaseLayer.TranslationMask? translationMask = null)
+            out Location.ErrorMask errorMask,
+            Location.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = BaseLayer.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Location.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public static BaseLayer CreateFromXml(
+        public static Location CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new BaseLayer();
-            ((BaseLayerSetterCommon)((IBaseLayerGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new Location();
+            ((LocationSetterCommon)((ILocationGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -146,9 +140,9 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static BaseLayer CreateFromXml(
+        public static Location CreateFromXml(
             string path,
-            BaseLayer.TranslationMask? translationMask = null)
+            Location.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -156,10 +150,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static BaseLayer CreateFromXml(
+        public static Location CreateFromXml(
             string path,
-            out BaseLayer.ErrorMask errorMask,
-            BaseLayer.TranslationMask? translationMask = null)
+            out Location.ErrorMask errorMask,
+            Location.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -168,10 +162,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static BaseLayer CreateFromXml(
+        public static Location CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            BaseLayer.TranslationMask? translationMask = null)
+            Location.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -180,9 +174,9 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static BaseLayer CreateFromXml(
+        public static Location CreateFromXml(
             Stream stream,
-            BaseLayer.TranslationMask? translationMask = null)
+            Location.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -190,10 +184,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static BaseLayer CreateFromXml(
+        public static Location CreateFromXml(
             Stream stream,
-            out BaseLayer.ErrorMask errorMask,
-            BaseLayer.TranslationMask? translationMask = null)
+            out Location.ErrorMask errorMask,
+            Location.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -202,10 +196,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static BaseLayer CreateFromXml(
+        public static Location CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            BaseLayer.TranslationMask? translationMask = null)
+            Location.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -225,9 +219,18 @@ namespace Mutagen.Bethesda.Oblivion
             where TItem : notnull
         {
             #region Ctors
-            public Mask(TItem Header)
+            public Mask(TItem initialValue)
             {
-                this.Header = new MaskItem<TItem, LayerHeader.Mask<TItem>?>(Header, new LayerHeader.Mask<TItem>(Header));
+                this.Position = initialValue;
+                this.Rotation = initialValue;
+            }
+
+            public Mask(
+                TItem Position,
+                TItem Rotation)
+            {
+                this.Position = Position;
+                this.Rotation = Rotation;
             }
 
             #pragma warning disable CS8618
@@ -239,7 +242,8 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public MaskItem<TItem, LayerHeader.Mask<TItem>?>? Header { get; set; }
+            public TItem Position;
+            public TItem Rotation;
             #endregion
 
             #region Equals
@@ -252,38 +256,34 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Header, rhs.Header)) return false;
+                if (!object.Equals(this.Position, rhs.Position)) return false;
+                if (!object.Equals(this.Rotation, rhs.Rotation)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Header);
+                hash.Add(this.Position);
+                hash.Add(this.Rotation);
                 return hash.ToHashCode();
             }
 
             #endregion
 
             #region All
-            public virtual bool All(Func<TItem, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
-                if (Header != null)
-                {
-                    if (!eval(this.Header.Overall)) return false;
-                    if (this.Header.Specific != null && !this.Header.Specific.All(eval)) return false;
-                }
+                if (!eval(this.Position)) return false;
+                if (!eval(this.Rotation)) return false;
                 return true;
             }
             #endregion
 
             #region Any
-            public virtual bool Any(Func<TItem, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
-                if (Header != null)
-                {
-                    if (eval(this.Header.Overall)) return true;
-                    if (this.Header.Specific != null && this.Header.Specific.Any(eval)) return true;
-                }
+                if (eval(this.Position)) return true;
+                if (eval(this.Rotation)) return true;
                 return false;
             }
             #endregion
@@ -291,14 +291,15 @@ namespace Mutagen.Bethesda.Oblivion
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new BaseLayer.Mask<R>();
+                var ret = new Location.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Header = this.Header == null ? null : new MaskItem<R, LayerHeader.Mask<R>?>(eval(this.Header.Overall), this.Header.Specific?.Translate(eval));
+                obj.Position = eval(this.Position);
+                obj.Rotation = eval(this.Rotation);
             }
             #endregion
 
@@ -308,22 +309,26 @@ namespace Mutagen.Bethesda.Oblivion
                 return ToString(printMask: null);
             }
 
-            public string ToString(BaseLayer.Mask<bool>? printMask = null)
+            public string ToString(Location.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, BaseLayer.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, Location.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(BaseLayer.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(Location.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Header?.Overall ?? true)
+                    if (printMask?.Position ?? true)
                     {
-                        Header?.ToString(fg);
+                        fg.AppendItem(Position, "Position");
+                    }
+                    if (printMask?.Rotation ?? true)
+                    {
+                        fg.AppendItem(Rotation, "Rotation");
                     }
                 }
                 fg.AppendLine("]");
@@ -350,52 +355,62 @@ namespace Mutagen.Bethesda.Oblivion
                     return _warnings;
                 }
             }
-            public MaskItem<Exception?, LayerHeader.ErrorMask?>? Header;
+            public Exception? Position;
+            public Exception? Rotation;
             #endregion
 
             #region IErrorMask
-            public virtual object? GetNthMask(int index)
+            public object? GetNthMask(int index)
             {
-                BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
+                Location_FieldIndex enu = (Location_FieldIndex)index;
                 switch (enu)
                 {
-                    case BaseLayer_FieldIndex.Header:
-                        return Header;
+                    case Location_FieldIndex.Position:
+                        return Position;
+                    case Location_FieldIndex.Rotation:
+                        return Rotation;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public virtual void SetNthException(int index, Exception ex)
+            public void SetNthException(int index, Exception ex)
             {
-                BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
+                Location_FieldIndex enu = (Location_FieldIndex)index;
                 switch (enu)
                 {
-                    case BaseLayer_FieldIndex.Header:
-                        this.Header = new MaskItem<Exception?, LayerHeader.ErrorMask?>(ex, null);
+                    case Location_FieldIndex.Position:
+                        this.Position = ex;
+                        break;
+                    case Location_FieldIndex.Rotation:
+                        this.Rotation = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public virtual void SetNthMask(int index, object obj)
+            public void SetNthMask(int index, object obj)
             {
-                BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
+                Location_FieldIndex enu = (Location_FieldIndex)index;
                 switch (enu)
                 {
-                    case BaseLayer_FieldIndex.Header:
-                        this.Header = (MaskItem<Exception?, LayerHeader.ErrorMask?>?)obj;
+                    case Location_FieldIndex.Position:
+                        this.Position = (Exception?)obj;
+                        break;
+                    case Location_FieldIndex.Rotation:
+                        this.Rotation = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public virtual bool IsInError()
+            public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Header != null) return true;
+                if (Position != null) return true;
+                if (Rotation != null) return true;
                 return false;
             }
             #endregion
@@ -408,7 +423,7 @@ namespace Mutagen.Bethesda.Oblivion
                 return fg.ToString();
             }
 
-            public virtual void ToString(FileGeneration fg, string? name = null)
+            public void ToString(FileGeneration fg, string? name = null)
             {
                 fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
@@ -428,9 +443,10 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 fg.AppendLine("]");
             }
-            protected virtual void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(FileGeneration fg)
             {
-                Header?.ToString(fg);
+                fg.AppendItem(Position, "Position");
+                fg.AppendItem(Rotation, "Rotation");
             }
             #endregion
 
@@ -439,7 +455,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Header = this.Header.Combine(rhs.Header, (l, r) => l.Combine(r));
+                ret.Position = this.Position.Combine(rhs.Position);
+                ret.Rotation = this.Rotation.Combine(rhs.Rotation);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -461,13 +478,15 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public MaskItem<bool, LayerHeader.TranslationMask?> Header;
+            public bool Position;
+            public bool Rotation;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.Header = new MaskItem<bool, LayerHeader.TranslationMask?>(defaultOn, null);
+                this.Position = defaultOn;
+                this.Rotation = defaultOn;
             }
 
             #endregion
@@ -481,47 +500,43 @@ namespace Mutagen.Bethesda.Oblivion
                 return _crystal;
             }
 
-            protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Header?.Overall ?? true, Header?.Specific?.GetCrystal()));
+                ret.Add((Position, null));
+                ret.Add((Rotation, null));
             }
         }
         #endregion
 
-        #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<ILinkGetter> Links => BaseLayerCommon.Instance.GetLinks(this);
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object BinaryWriteTranslator => BaseLayerBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => LocationBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((BaseLayerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((LocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static BaseLayer CreateFromBinary(MutagenFrame frame)
+        public static Location CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public static BaseLayer CreateFromBinary(
+        public static Location CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new BaseLayer();
-            ((BaseLayerSetterCommon)((IBaseLayerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new Location();
+            ((LocationSetterCommon)((ILocationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -534,34 +549,34 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBaseLayerGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILocationGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((BaseLayerSetterCommon)((IBaseLayerGetter)this).CommonSetterInstance()!).Clear(this);
+            ((LocationSetterCommon)((ILocationGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static BaseLayer GetNew()
+        internal static Location GetNew()
         {
-            return new BaseLayer();
+            return new Location();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IBaseLayer :
-        IBaseLayerGetter,
-        ILoquiObjectSetter<IBaseLayer>
+    public partial interface ILocation :
+        ILocationGetter,
+        ILoquiObjectSetter<ILocation>
     {
-        new LayerHeader? Header { get; set; }
+        new P3Float Position { get; set; }
+        new P3Float Rotation { get; set; }
     }
 
-    public partial interface IBaseLayerGetter :
+    public partial interface ILocationGetter :
         ILoquiObject,
-        ILoquiObject<IBaseLayerGetter>,
+        ILoquiObject<ILocationGetter>,
         IXmlItem,
-        ILinkContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -570,49 +585,50 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        ILayerHeaderGetter? Header { get; }
+        P3Float Position { get; }
+        P3Float Rotation { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class BaseLayerMixIn
+    public static partial class LocationMixIn
     {
-        public static void Clear(this IBaseLayer item)
+        public static void Clear(this ILocation item)
         {
-            ((BaseLayerSetterCommon)((IBaseLayerGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((LocationSetterCommon)((ILocationGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static BaseLayer.Mask<bool> GetEqualsMask(
-            this IBaseLayerGetter item,
-            IBaseLayerGetter rhs,
+        public static Location.Mask<bool> GetEqualsMask(
+            this ILocationGetter item,
+            ILocationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((LocationCommon)((ILocationGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IBaseLayerGetter item,
+            this ILocationGetter item,
             string? name = null,
-            BaseLayer.Mask<bool>? printMask = null)
+            Location.Mask<bool>? printMask = null)
         {
-            return ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).ToString(
+            return ((LocationCommon)((ILocationGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IBaseLayerGetter item,
+            this ILocationGetter item,
             FileGeneration fg,
             string? name = null,
-            BaseLayer.Mask<bool>? printMask = null)
+            Location.Mask<bool>? printMask = null)
         {
-            ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).ToString(
+            ((LocationCommon)((ILocationGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -620,38 +636,38 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this IBaseLayerGetter item,
-            BaseLayer.Mask<bool?> checkMask)
+            this ILocationGetter item,
+            Location.Mask<bool?> checkMask)
         {
-            return ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).HasBeenSet(
+            return ((LocationCommon)((ILocationGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static BaseLayer.Mask<bool> GetHasBeenSetMask(this IBaseLayerGetter item)
+        public static Location.Mask<bool> GetHasBeenSetMask(this ILocationGetter item)
         {
-            var ret = new BaseLayer.Mask<bool>(false);
-            ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new Location.Mask<bool>(false);
+            ((LocationCommon)((ILocationGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IBaseLayerGetter item,
-            IBaseLayerGetter rhs)
+            this ILocationGetter item,
+            ILocationGetter rhs)
         {
-            return ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).Equals(
+            return ((LocationCommon)((ILocationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this IBaseLayer lhs,
-            IBaseLayerGetter rhs,
-            BaseLayer.TranslationMask? copyMask = null)
+            this ILocation lhs,
+            ILocationGetter rhs,
+            Location.TranslationMask? copyMask = null)
         {
-            ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LocationSetterTranslationCommon)((ILocationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -659,59 +675,59 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void DeepCopyIn(
-            this IBaseLayer lhs,
-            IBaseLayerGetter rhs,
-            out BaseLayer.ErrorMask errorMask,
-            BaseLayer.TranslationMask? copyMask = null)
+            this ILocation lhs,
+            ILocationGetter rhs,
+            out Location.ErrorMask errorMask,
+            Location.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LocationSetterTranslationCommon)((ILocationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = BaseLayer.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Location.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IBaseLayer lhs,
-            IBaseLayerGetter rhs,
+            this ILocation lhs,
+            ILocationGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LocationSetterTranslationCommon)((ILocationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static BaseLayer DeepCopy(
-            this IBaseLayerGetter item,
-            BaseLayer.TranslationMask? copyMask = null)
+        public static Location DeepCopy(
+            this ILocationGetter item,
+            Location.TranslationMask? copyMask = null)
         {
-            return ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((LocationSetterTranslationCommon)((ILocationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static BaseLayer DeepCopy(
-            this IBaseLayerGetter item,
-            out BaseLayer.ErrorMask errorMask,
-            BaseLayer.TranslationMask? copyMask = null)
+        public static Location DeepCopy(
+            this ILocationGetter item,
+            out Location.ErrorMask errorMask,
+            Location.TranslationMask? copyMask = null)
         {
-            return ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((LocationSetterTranslationCommon)((ILocationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static BaseLayer DeepCopy(
-            this IBaseLayerGetter item,
+        public static Location DeepCopy(
+            this ILocationGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((BaseLayerSetterTranslationCommon)((IBaseLayerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((LocationSetterTranslationCommon)((ILocationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -720,9 +736,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IBaseLayer item,
+            this ILocation item,
             XElement node,
-            BaseLayer.TranslationMask? translationMask = null)
+            Location.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -733,10 +749,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IBaseLayer item,
+            this ILocation item,
             XElement node,
-            out BaseLayer.ErrorMask errorMask,
-            BaseLayer.TranslationMask? translationMask = null)
+            out Location.ErrorMask errorMask,
+            Location.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -744,16 +760,16 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = BaseLayer.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Location.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this IBaseLayer item,
+            this ILocation item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((BaseLayerSetterCommon)((IBaseLayerGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((LocationSetterCommon)((ILocationGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -761,9 +777,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IBaseLayer item,
+            this ILocation item,
             string path,
-            BaseLayer.TranslationMask? translationMask = null)
+            Location.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -773,10 +789,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IBaseLayer item,
+            this ILocation item,
             string path,
-            out BaseLayer.ErrorMask errorMask,
-            BaseLayer.TranslationMask? translationMask = null)
+            out Location.ErrorMask errorMask,
+            Location.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -787,10 +803,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IBaseLayer item,
+            this ILocation item,
             string path,
             ErrorMaskBuilder? errorMask,
-            BaseLayer.TranslationMask? translationMask = null)
+            Location.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -801,9 +817,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IBaseLayer item,
+            this ILocation item,
             Stream stream,
-            BaseLayer.TranslationMask? translationMask = null)
+            Location.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -813,10 +829,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IBaseLayer item,
+            this ILocation item,
             Stream stream,
-            out BaseLayer.ErrorMask errorMask,
-            BaseLayer.TranslationMask? translationMask = null)
+            out Location.ErrorMask errorMask,
+            Location.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -827,10 +843,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IBaseLayer item,
+            this ILocation item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            BaseLayer.TranslationMask? translationMask = null)
+            Location.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -845,7 +861,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IBaseLayer item,
+            this ILocation item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -855,11 +871,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromBinary(
-            this IBaseLayer item,
+            this ILocation item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((BaseLayerSetterCommon)((IBaseLayerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((LocationSetterCommon)((ILocationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -875,47 +891,48 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     #region Field Index
-    public enum BaseLayer_FieldIndex
+    public enum Location_FieldIndex
     {
-        Header = 0,
+        Position = 0,
+        Rotation = 1,
     }
     #endregion
 
     #region Registration
-    public partial class BaseLayer_Registration : ILoquiRegistration
+    public partial class Location_Registration : ILoquiRegistration
     {
-        public static readonly BaseLayer_Registration Instance = new BaseLayer_Registration();
+        public static readonly Location_Registration Instance = new Location_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 145,
+            msgID: 201,
             version: 0);
 
-        public const string GUID = "4b14f70e-5702-4ed0-b691-09996696e4d9";
+        public const string GUID = "d33c0af1-394e-4795-9a09-7497c199b745";
 
-        public const ushort AdditionalFieldCount = 1;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 1;
+        public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(BaseLayer.Mask<>);
+        public static readonly Type MaskType = typeof(Location.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(BaseLayer.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Location.ErrorMask);
 
-        public static readonly Type ClassType = typeof(BaseLayer);
+        public static readonly Type ClassType = typeof(Location);
 
-        public static readonly Type GetterType = typeof(IBaseLayerGetter);
+        public static readonly Type GetterType = typeof(ILocationGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IBaseLayer);
+        public static readonly Type SetterType = typeof(ILocation);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Oblivion.BaseLayer";
+        public const string FullName = "Mutagen.Bethesda.Oblivion.Location";
 
-        public const string Name = "BaseLayer";
+        public const string Name = "Location";
 
         public const string Namespace = "Mutagen.Bethesda.Oblivion";
 
@@ -927,8 +944,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
-                case "HEADER":
-                    return (ushort)BaseLayer_FieldIndex.Header;
+                case "POSITION":
+                    return (ushort)Location_FieldIndex.Position;
+                case "ROTATION":
+                    return (ushort)Location_FieldIndex.Rotation;
                 default:
                     return null;
             }
@@ -936,10 +955,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
+            Location_FieldIndex enu = (Location_FieldIndex)index;
             switch (enu)
             {
-                case BaseLayer_FieldIndex.Header:
+                case Location_FieldIndex.Position:
+                case Location_FieldIndex.Rotation:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -948,11 +968,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
+            Location_FieldIndex enu = (Location_FieldIndex)index;
             switch (enu)
             {
-                case BaseLayer_FieldIndex.Header:
-                    return true;
+                case Location_FieldIndex.Position:
+                case Location_FieldIndex.Rotation:
+                    return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -960,10 +981,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
+            Location_FieldIndex enu = (Location_FieldIndex)index;
             switch (enu)
             {
-                case BaseLayer_FieldIndex.Header:
+                case Location_FieldIndex.Position:
+                case Location_FieldIndex.Rotation:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -972,11 +994,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static string GetNthName(ushort index)
         {
-            BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
+            Location_FieldIndex enu = (Location_FieldIndex)index;
             switch (enu)
             {
-                case BaseLayer_FieldIndex.Header:
-                    return "Header";
+                case Location_FieldIndex.Position:
+                    return "Position";
+                case Location_FieldIndex.Rotation:
+                    return "Rotation";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -984,10 +1008,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
+            Location_FieldIndex enu = (Location_FieldIndex)index;
             switch (enu)
             {
-                case BaseLayer_FieldIndex.Header:
+                case Location_FieldIndex.Position:
+                case Location_FieldIndex.Rotation:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -996,10 +1021,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsProtected(ushort index)
         {
-            BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
+            Location_FieldIndex enu = (Location_FieldIndex)index;
             switch (enu)
             {
-                case BaseLayer_FieldIndex.Header:
+                case Location_FieldIndex.Position:
+                case Location_FieldIndex.Rotation:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1008,34 +1034,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Type GetNthType(ushort index)
         {
-            BaseLayer_FieldIndex enu = (BaseLayer_FieldIndex)index;
+            Location_FieldIndex enu = (Location_FieldIndex)index;
             switch (enu)
             {
-                case BaseLayer_FieldIndex.Header:
-                    return typeof(LayerHeader);
+                case Location_FieldIndex.Position:
+                    return typeof(P3Float);
+                case Location_FieldIndex.Rotation:
+                    return typeof(P3Float);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(BaseLayerXmlWriteTranslation);
-        public static readonly RecordType BTXT_HEADER = new RecordType("BTXT");
-        public static readonly RecordType ATXT_HEADER = new RecordType("ATXT");
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
-        {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        BTXT_HEADER,
-                        ATXT_HEADER
-                    })
-            );
-        });
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 1;
-        public static readonly Type BinaryWriteTranslation = typeof(BaseLayerBinaryWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(LocationXmlWriteTranslation);
+        public const int NumStructFields = 2;
+        public const int NumTypedFields = 0;
+        public static readonly Type BinaryWriteTranslation = typeof(LocationBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1068,21 +1082,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class BaseLayerSetterCommon
+    public partial class LocationSetterCommon
     {
-        public static readonly BaseLayerSetterCommon Instance = new BaseLayerSetterCommon();
+        public static readonly LocationSetterCommon Instance = new LocationSetterCommon();
 
         partial void ClearPartial();
         
-        public virtual void Clear(IBaseLayer item)
+        public void Clear(ILocation item)
         {
             ClearPartial();
-            item.Header = null;
+            item.Position = default;
+            item.Rotation = default;
         }
         
         #region Xml Translation
         public virtual void CopyInFromXml(
-            IBaseLayer item,
+            ILocation item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1091,7 +1106,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    BaseLayerXmlCreateTranslation.FillPublicElementXml(
+                    LocationXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1110,37 +1125,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Binary Translation
         protected static void FillBinaryStructs(
-            IBaseLayer item,
+            ILocation item,
             MutagenFrame frame)
         {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IBaseLayer item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x54585442: // BTXT
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)BaseLayer_FieldIndex.Header) return TryGet<int?>.Failure;
-                    item.Header = Mutagen.Bethesda.Oblivion.LayerHeader.CreateFromBinary(
-                        frame: frame,
-                        recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)BaseLayer_FieldIndex.Header);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
+            item.Position = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Rotation = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
         }
         
         public virtual void CopyInFromBinary(
-            IBaseLayer item,
+            ILocation item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1149,24 +1142,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame,
                 setFinal: false,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: FillBinaryStructs);
         }
         
         #endregion
         
     }
-    public partial class BaseLayerCommon
+    public partial class LocationCommon
     {
-        public static readonly BaseLayerCommon Instance = new BaseLayerCommon();
+        public static readonly LocationCommon Instance = new LocationCommon();
 
-        public BaseLayer.Mask<bool> GetEqualsMask(
-            IBaseLayerGetter item,
-            IBaseLayerGetter rhs,
+        public Location.Mask<bool> GetEqualsMask(
+            ILocationGetter item,
+            ILocationGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new BaseLayer.Mask<bool>(false);
-            ((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new Location.Mask<bool>(false);
+            ((LocationCommon)((ILocationGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1175,23 +1167,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public void FillEqualsMask(
-            IBaseLayerGetter item,
-            IBaseLayerGetter rhs,
-            BaseLayer.Mask<bool> ret,
+            ILocationGetter item,
+            ILocationGetter rhs,
+            Location.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Header = EqualsMaskHelper.EqualsHelper(
-                item.Header,
-                rhs.Header,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.Position = item.Position.Equals(rhs.Position);
+            ret.Rotation = item.Rotation.Equals(rhs.Rotation);
         }
         
         public string ToString(
-            IBaseLayerGetter item,
+            ILocationGetter item,
             string? name = null,
-            BaseLayer.Mask<bool>? printMask = null)
+            Location.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1203,18 +1192,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public void ToString(
-            IBaseLayerGetter item,
+            ILocationGetter item,
             FileGeneration fg,
             string? name = null,
-            BaseLayer.Mask<bool>? printMask = null)
+            Location.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"BaseLayer =>");
+                fg.AppendLine($"Location =>");
             }
             else
             {
-                fg.AppendLine($"{name} (BaseLayer) =>");
+                fg.AppendLine($"{name} (Location) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1228,137 +1217,112 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         protected static void ToStringFields(
-            IBaseLayerGetter item,
+            ILocationGetter item,
             FileGeneration fg,
-            BaseLayer.Mask<bool>? printMask = null)
+            Location.Mask<bool>? printMask = null)
         {
-            if ((printMask?.Header?.Overall ?? true)
-                && item.Header.TryGet(out var HeaderItem))
+            if (printMask?.Position ?? true)
             {
-                HeaderItem?.ToString(fg, "Header");
+                fg.AppendItem(item.Position, "Position");
+            }
+            if (printMask?.Rotation ?? true)
+            {
+                fg.AppendItem(item.Rotation, "Rotation");
             }
         }
         
         public bool HasBeenSet(
-            IBaseLayerGetter item,
-            BaseLayer.Mask<bool?> checkMask)
+            ILocationGetter item,
+            Location.Mask<bool?> checkMask)
         {
-            if (checkMask.Header?.Overall.HasValue ?? false && checkMask.Header.Overall.Value != (item.Header != null)) return false;
-            if (checkMask.Header?.Specific != null && (item.Header == null || !item.Header.HasBeenSet(checkMask.Header.Specific))) return false;
             return true;
         }
         
         public void FillHasBeenSetMask(
-            IBaseLayerGetter item,
-            BaseLayer.Mask<bool> mask)
+            ILocationGetter item,
+            Location.Mask<bool> mask)
         {
-            var itemHeader = item.Header;
-            mask.Header = new MaskItem<bool, LayerHeader.Mask<bool>?>(itemHeader != null, itemHeader?.GetHasBeenSetMask());
+            mask.Position = true;
+            mask.Rotation = true;
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IBaseLayerGetter? lhs,
-            IBaseLayerGetter? rhs)
+            ILocationGetter? lhs,
+            ILocationGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!object.Equals(lhs.Header, rhs.Header)) return false;
+            if (!lhs.Position.Equals(rhs.Position)) return false;
+            if (!lhs.Rotation.Equals(rhs.Rotation)) return false;
             return true;
         }
         
-        public virtual int GetHashCode(IBaseLayerGetter item)
+        public virtual int GetHashCode(ILocationGetter item)
         {
             var hash = new HashCode();
-            if (item.Header.TryGet(out var Headeritem))
-            {
-                hash.Add(Headeritem);
-            }
+            hash.Add(item.Position);
+            hash.Add(item.Rotation);
             return hash.ToHashCode();
         }
         
         #endregion
         
         
-        public virtual object GetNew()
+        public object GetNew()
         {
-            return BaseLayer.GetNew();
+            return Location.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IBaseLayerGetter obj)
+        public IEnumerable<ILinkGetter> GetLinks(ILocationGetter obj)
         {
-            if (obj.Header != null)
-            {
-                foreach (var item in obj.Header.Links)
-                {
-                    yield return item;
-                }
-            }
             yield break;
         }
         
         #endregion
         
     }
-    public partial class BaseLayerSetterTranslationCommon
+    public partial class LocationSetterTranslationCommon
     {
-        public static readonly BaseLayerSetterTranslationCommon Instance = new BaseLayerSetterTranslationCommon();
+        public static readonly LocationSetterTranslationCommon Instance = new LocationSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public virtual void DeepCopyIn(
-            IBaseLayer item,
-            IBaseLayerGetter rhs,
+        public void DeepCopyIn(
+            ILocation item,
+            ILocationGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)BaseLayer_FieldIndex.Header) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.Position) ?? true))
             {
-                errorMask?.PushIndex((int)BaseLayer_FieldIndex.Header);
-                try
-                {
-                    if(rhs.Header.TryGet(out var rhsHeader))
-                    {
-                        item.Header = rhsHeader.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)BaseLayer_FieldIndex.Header));
-                    }
-                    else
-                    {
-                        item.Header = default;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Position = rhs.Position;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.Rotation) ?? true))
+            {
+                item.Rotation = rhs.Rotation;
             }
         }
         
         #endregion
         
-        public BaseLayer DeepCopy(
-            IBaseLayerGetter item,
-            BaseLayer.TranslationMask? copyMask = null)
+        public Location DeepCopy(
+            ILocationGetter item,
+            Location.TranslationMask? copyMask = null)
         {
-            BaseLayer ret = (BaseLayer)((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).GetNew();
+            Location ret = (Location)((LocationCommon)((ILocationGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public BaseLayer DeepCopy(
-            IBaseLayerGetter item,
-            out BaseLayer.ErrorMask errorMask,
-            BaseLayer.TranslationMask? copyMask = null)
+        public Location DeepCopy(
+            ILocationGetter item,
+            out Location.ErrorMask errorMask,
+            Location.TranslationMask? copyMask = null)
         {
-            BaseLayer ret = (BaseLayer)((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).GetNew();
+            Location ret = (Location)((LocationCommon)((ILocationGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1366,12 +1330,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
-        public BaseLayer DeepCopy(
-            IBaseLayerGetter item,
+        public Location DeepCopy(
+            ILocationGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            BaseLayer ret = (BaseLayer)((BaseLayerCommon)((IBaseLayerGetter)item).CommonInstance()!).GetNew();
+            Location ret = (Location)((LocationCommon)((ILocationGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1386,27 +1350,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class BaseLayer
+    public partial class Location
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BaseLayer_Registration.Instance;
-        public static BaseLayer_Registration Registration => BaseLayer_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Location_Registration.Instance;
+        public static Location_Registration Registration => Location_Registration.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonInstance() => BaseLayerCommon.Instance;
+        protected object CommonInstance() => LocationCommon.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonSetterInstance()
+        protected object CommonSetterInstance()
         {
-            return BaseLayerSetterCommon.Instance;
+            return LocationSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected virtual object CommonSetterTranslationInstance() => BaseLayerSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => LocationSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IBaseLayerGetter.CommonInstance() => this.CommonInstance();
+        object ILocationGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IBaseLayerGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object ILocationGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IBaseLayerGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object ILocationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1417,44 +1381,48 @@ namespace Mutagen.Bethesda.Oblivion
 #region Xml Translation
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class BaseLayerXmlWriteTranslation : IXmlWriteTranslator
+    public partial class LocationXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static BaseLayerXmlWriteTranslation Instance = new BaseLayerXmlWriteTranslation();
+        public readonly static LocationXmlWriteTranslation Instance = new LocationXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IBaseLayerGetter item,
+            ILocationGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((item.Header != null)
-                && (translationMask?.GetShouldTranslate((int)BaseLayer_FieldIndex.Header) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Location_FieldIndex.Position) ?? true))
             {
-                if (item.Header.TryGet(out var HeaderItem))
-                {
-                    ((LayerHeaderXmlWriteTranslation)((IXmlItem)HeaderItem).XmlWriteTranslator).Write(
-                        item: HeaderItem,
-                        node: node,
-                        name: nameof(item.Header),
-                        fieldIndex: (int)BaseLayer_FieldIndex.Header,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)BaseLayer_FieldIndex.Header));
-                }
+                P3FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Position),
+                    item: item.Position,
+                    fieldIndex: (int)Location_FieldIndex.Position,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Location_FieldIndex.Rotation) ?? true))
+            {
+                P3FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Rotation),
+                    item: item.Rotation,
+                    fieldIndex: (int)Location_FieldIndex.Rotation,
+                    errorMask: errorMask);
             }
         }
 
-        public virtual void Write(
+        public void Write(
             XElement node,
-            IBaseLayerGetter item,
+            ILocationGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.BaseLayer");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Location");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.BaseLayer");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Location");
             }
             WriteToNodeXml(
                 item: item,
@@ -1463,7 +1431,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationMask: translationMask);
         }
 
-        public virtual void Write(
+        public void Write(
             XElement node,
             object item,
             ErrorMaskBuilder? errorMask,
@@ -1471,7 +1439,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string? name = null)
         {
             Write(
-                item: (IBaseLayerGetter)item,
+                item: (ILocationGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1480,7 +1448,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             XElement node,
-            IBaseLayerGetter item,
+            ILocationGetter item,
             ErrorMaskBuilder? errorMask,
             int fieldIndex,
             TranslationCrystal? translationMask,
@@ -1490,7 +1458,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             try
             {
                 Write(
-                    item: (IBaseLayerGetter)item,
+                    item: (ILocationGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1509,12 +1477,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class BaseLayerXmlCreateTranslation
+    public partial class LocationXmlCreateTranslation
     {
-        public readonly static BaseLayerXmlCreateTranslation Instance = new BaseLayerXmlCreateTranslation();
+        public readonly static LocationXmlCreateTranslation Instance = new LocationXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IBaseLayer item,
+            ILocation item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1523,7 +1491,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    BaseLayerXmlCreateTranslation.FillPublicElementXml(
+                    LocationXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1539,7 +1507,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IBaseLayer item,
+            ILocation item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1547,14 +1515,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "Header":
-                    errorMask?.PushIndex((int)BaseLayer_FieldIndex.Header);
+                case "Position":
+                    errorMask?.PushIndex((int)Location_FieldIndex.Position);
                     try
                     {
-                        item.Header = LoquiXmlTranslation<LayerHeader>.Instance.Parse(
+                        item.Position = P3FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)BaseLayer_FieldIndex.Header));
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Rotation":
+                    errorMask?.PushIndex((int)Location_FieldIndex.Rotation);
+                    try
+                    {
+                        item.Rotation = P3FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1577,30 +1562,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Xml Write Mixins
-    public static class BaseLayerXmlTranslationMixIn
+    public static class LocationXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IBaseLayerGetter item,
+            this ILocationGetter item,
             XElement node,
-            out BaseLayer.ErrorMask errorMask,
-            BaseLayer.TranslationMask? translationMask = null,
+            out Location.ErrorMask errorMask,
+            Location.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((BaseLayerXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((LocationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = BaseLayer.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Location.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this IBaseLayerGetter item,
+            this ILocationGetter item,
             string path,
-            out BaseLayer.ErrorMask errorMask,
-            BaseLayer.TranslationMask? translationMask = null,
+            out Location.ErrorMask errorMask,
+            Location.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1614,7 +1599,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this IBaseLayerGetter item,
+            this ILocationGetter item,
             string path,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1631,10 +1616,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this IBaseLayerGetter item,
+            this ILocationGetter item,
             Stream stream,
-            out BaseLayer.ErrorMask errorMask,
-            BaseLayer.TranslationMask? translationMask = null,
+            out Location.ErrorMask errorMask,
+            Location.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1648,7 +1633,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this IBaseLayerGetter item,
+            this ILocationGetter item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1665,13 +1650,13 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this IBaseLayerGetter item,
+            this ILocationGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
             string? name = null)
         {
-            ((BaseLayerXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((LocationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1680,12 +1665,12 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this IBaseLayerGetter item,
+            this ILocationGetter item,
             XElement node,
             string? name = null,
-            BaseLayer.TranslationMask? translationMask = null)
+            Location.TranslationMask? translationMask = null)
         {
-            ((BaseLayerXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((LocationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1694,12 +1679,12 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this IBaseLayerGetter item,
+            this ILocationGetter item,
             string path,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((BaseLayerXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((LocationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1709,12 +1694,12 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this IBaseLayerGetter item,
+            this ILocationGetter item,
             Stream stream,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((BaseLayerXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((LocationXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1733,51 +1718,48 @@ namespace Mutagen.Bethesda.Oblivion
 #region Binary Translation
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class BaseLayerBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class LocationBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static BaseLayerBinaryWriteTranslation Instance = new BaseLayerBinaryWriteTranslation();
+        public readonly static LocationBinaryWriteTranslation Instance = new LocationBinaryWriteTranslation();
 
-        public static void WriteRecordTypes(
-            IBaseLayerGetter item,
-            MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+        public static void WriteEmbedded(
+            ILocationGetter item,
+            MutagenWriter writer)
         {
-            if (item.Header.TryGet(out var HeaderItem))
-            {
-                ((LayerHeaderBinaryWriteTranslation)((IBinaryItem)HeaderItem).BinaryWriteTranslator).Write(
-                    item: HeaderItem,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
-            }
+            Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Position);
+            Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Rotation);
         }
 
-        public virtual void Write(
+        public void Write(
             MutagenWriter writer,
-            IBaseLayerGetter item,
+            ILocationGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            WriteRecordTypes(
+            WriteEmbedded(
                 item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                writer: writer);
         }
 
-        public virtual void Write(
+        public void Write(
             MutagenWriter writer,
             object item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IBaseLayerGetter)item,
+                item: (ILocationGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class BaseLayerBinaryCreateTranslation
+    public partial class LocationBinaryCreateTranslation
     {
-        public readonly static BaseLayerBinaryCreateTranslation Instance = new BaseLayerBinaryCreateTranslation();
+        public readonly static LocationBinaryCreateTranslation Instance = new LocationBinaryCreateTranslation();
 
     }
 
@@ -1785,13 +1767,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Binary Write Mixins
-    public static class BaseLayerBinaryTranslationMixIn
+    public static class LocationBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IBaseLayerGetter item,
+            this ILocationGetter item,
             MutagenWriter writer)
         {
-            ((BaseLayerBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((LocationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 recordTypeConverter: null);
@@ -1804,34 +1786,33 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class BaseLayerBinaryOverlay :
+    public partial class LocationBinaryOverlay :
         BinaryOverlay,
-        IBaseLayerGetter
+        ILocationGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BaseLayer_Registration.Instance;
-        public static BaseLayer_Registration Registration => BaseLayer_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Location_Registration.Instance;
+        public static Location_Registration Registration => Location_Registration.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonInstance() => BaseLayerCommon.Instance;
+        protected object CommonInstance() => LocationCommon.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonSetterTranslationInstance() => BaseLayerSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => LocationSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IBaseLayerGetter.CommonInstance() => this.CommonInstance();
+        object ILocationGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IBaseLayerGetter.CommonSetterInstance() => null;
+        object? ILocationGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IBaseLayerGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object ILocationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBaseLayerGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILocationGetter)rhs, include);
 
-        public IEnumerable<ILinkGetter> Links => BaseLayerCommon.Instance.GetLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object XmlWriteTranslator => BaseLayerXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => LocationXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -1840,7 +1821,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((BaseLayerXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((LocationXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -1848,31 +1829,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object BinaryWriteTranslator => BaseLayerBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => LocationBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((BaseLayerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((LocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
-        #region Header
-        private RangeInt32? _HeaderLocation;
-        private bool _Header_IsSet => _HeaderLocation.HasValue;
-        public ILayerHeaderGetter? Header => _Header_IsSet ? LayerHeaderBinaryOverlay.LayerHeaderFactory(new BinaryMemoryReadStream(_data.Slice(_HeaderLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
-        public bool Header_IsSet => _HeaderLocation.HasValue;
-        #endregion
+        public P3Float Position => P3FloatBinaryTranslation.Read(_data.Slice(0, 12));
+        public P3Float Rotation => P3FloatBinaryTranslation.Read(_data.Slice(12, 12));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected BaseLayerBinaryOverlay(
+        protected LocationBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1881,49 +1858,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
 
-        public static BaseLayerBinaryOverlay BaseLayerFactory(
+        public static LocationBinaryOverlay LocationFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new BaseLayerBinaryOverlay(
-                bytes: stream.RemainingMemory,
+            var ret = new LocationBinaryOverlay(
+                bytes: stream.RemainingMemory.Slice(0, 24),
                 package: package);
             int offset = stream.Position;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,
-                offset: 0);
-            ret.FillTypelessSubrecordTypes(
-                stream: stream,
-                finalPos: stream.Length,
-                offset: offset,
-                recordTypeConverter: recordTypeConverter,
-                fill: ret.FillRecordType);
+                offset: offset);
             return ret;
         }
 
-        public virtual TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
-            int finalPos,
-            int offset,
-            RecordType type,
-            int? lastParsed,
-            RecordTypeConverter? recordTypeConverter)
-        {
-            type = recordTypeConverter.ConvertToStandard(type);
-            switch (type.TypeInt)
-            {
-                case 0x54585442: // BTXT
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)BaseLayer_FieldIndex.Header) return TryGet<int?>.Failure;
-                    _HeaderLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)BaseLayer_FieldIndex.Header);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
     }
 
 }

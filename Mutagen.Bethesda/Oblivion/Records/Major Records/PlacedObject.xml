@@ -32,12 +32,7 @@
       <ByteArray name="RagdollData" recordType="XRGD" />
       <Float name="Scale" recordType="XSCL" />
       <FormLink name="ContainedSoul" recordType="XSOL" refName="SoulGem" />
-      <Data>
-        <Fields>
-          <P3Float name="Position" />
-          <P3Float name="Rotation" />
-        </Fields>
-      </Data>
+      <RefDirect name="Location" refName="Location" recordType="DATA" />
     </Fields>
   </Object>
   <Object name="TeleportDestination" recordType="XTEL" objType="Subrecord" GUID="852c0c03-6606-4ae4-8733-4375d9cd1544" ID="122">

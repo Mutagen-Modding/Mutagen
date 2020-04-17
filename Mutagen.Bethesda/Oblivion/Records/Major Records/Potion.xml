@@ -8,13 +8,14 @@
       <String name="Icon" recordType="ICON" />
       <FormLink name="Script" refName="Script" recordType="SCRI" />
       <Float name="Weight" recordType="DATA" />
-      <Data recordType="ENIT">
-        <Fields>
-          <UInt32 name="Value" />
-          <Enum name="Flags" enumName="IngredientFlag" byteLength="4" />
-        </Fields>
-      </Data>
+      <RefDirect name="Data" refName="PotionData" />
       <RefList name="Effects" refName="Effect" />
+    </Fields>
+  </Object>
+  <Object name="PotionData" objType="Subrecord" recordType="ENIT" GUID="bbd59739-d2a2-4702-93dc-71ffd5a4310e" ID="202">
+    <Fields>
+      <UInt32 name="Value" />
+      <Enum name="Flags" enumName="IngredientFlag" byteLength="4" />
     </Fields>
   </Object>
 </Loqui>

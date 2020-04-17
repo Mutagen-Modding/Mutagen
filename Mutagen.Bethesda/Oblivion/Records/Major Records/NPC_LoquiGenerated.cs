@@ -73,96 +73,16 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? INpcGetter.Model => this.Model;
         #endregion
-        #region Flags
+        #region Configuration
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Npc.NpcFlag _Flags;
-        public Npc.NpcFlag Flags
+        private NpcConfiguration? _Configuration;
+        public NpcConfiguration? Configuration
         {
-            get => this._Flags;
-            set
-            {
-                this.ACBSDataTypeState |= ACBSDataType.Has;
-                this._Flags = value;
-            }
+            get => _Configuration;
+            set => _Configuration = value;
         }
-        #endregion
-        #region BaseSpellPoints
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt16 _BaseSpellPoints;
-        public UInt16 BaseSpellPoints
-        {
-            get => this._BaseSpellPoints;
-            set
-            {
-                this.ACBSDataTypeState |= ACBSDataType.Has;
-                this._BaseSpellPoints = value;
-            }
-        }
-        #endregion
-        #region Fatigue
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt16 _Fatigue;
-        public UInt16 Fatigue
-        {
-            get => this._Fatigue;
-            set
-            {
-                this.ACBSDataTypeState |= ACBSDataType.Has;
-                this._Fatigue = value;
-            }
-        }
-        #endregion
-        #region BarterGold
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt16 _BarterGold;
-        public UInt16 BarterGold
-        {
-            get => this._BarterGold;
-            set
-            {
-                this.ACBSDataTypeState |= ACBSDataType.Has;
-                this._BarterGold = value;
-            }
-        }
-        #endregion
-        #region LevelOffset
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Int16 _LevelOffset;
-        public Int16 LevelOffset
-        {
-            get => this._LevelOffset;
-            set
-            {
-                this.ACBSDataTypeState |= ACBSDataType.Has;
-                this._LevelOffset = value;
-            }
-        }
-        #endregion
-        #region CalcMin
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt16 _CalcMin;
-        public UInt16 CalcMin
-        {
-            get => this._CalcMin;
-            set
-            {
-                this.ACBSDataTypeState |= ACBSDataType.Has;
-                this._CalcMin = value;
-            }
-        }
-        #endregion
-        #region CalcMax
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt16 _CalcMax;
-        public UInt16 CalcMax
-        {
-            get => this._CalcMax;
-            set
-            {
-                this.ACBSDataTypeState |= ACBSDataType.Has;
-                this._CalcMax = value;
-            }
-        }
+        INpcConfigurationGetter? INpcGetter.Configuration => this.Configuration;
         #endregion
         #region Factions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -227,107 +147,16 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
-        #region Aggression
+        #region AIData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Aggression;
-        public Byte Aggression
+        private AIData? _AIData;
+        public AIData? AIData
         {
-            get => this._Aggression;
-            set
-            {
-                this.AIDTDataTypeState |= AIDTDataType.Has;
-                this._Aggression = value;
-            }
-        }
-        #endregion
-        #region Confidence
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Confidence;
-        public Byte Confidence
-        {
-            get => this._Confidence;
-            set
-            {
-                this.AIDTDataTypeState |= AIDTDataType.Has;
-                this._Confidence = value;
-            }
-        }
-        #endregion
-        #region EnergyLevel
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _EnergyLevel;
-        public Byte EnergyLevel
-        {
-            get => this._EnergyLevel;
-            set
-            {
-                this.AIDTDataTypeState |= AIDTDataType.Has;
-                this._EnergyLevel = value;
-            }
-        }
-        #endregion
-        #region Responsibility
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Responsibility;
-        public Byte Responsibility
-        {
-            get => this._Responsibility;
-            set
-            {
-                this.AIDTDataTypeState |= AIDTDataType.Has;
-                this._Responsibility = value;
-            }
-        }
-        #endregion
-        #region BuySellServices
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Npc.BuySellServiceFlag _BuySellServices;
-        public Npc.BuySellServiceFlag BuySellServices
-        {
-            get => this._BuySellServices;
-            set
-            {
-                this.AIDTDataTypeState |= AIDTDataType.Has;
-                this._BuySellServices = value;
-            }
-        }
-        #endregion
-        #region Teaches
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Skill _Teaches;
-        public Skill Teaches
-        {
-            get => this._Teaches;
-            set
-            {
-                this.AIDTDataTypeState |= AIDTDataType.Has;
-                this._Teaches = value;
-            }
-        }
-        #endregion
-        #region MaximumTrainingLevel
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _MaximumTrainingLevel;
-        public Byte MaximumTrainingLevel
-        {
-            get => this._MaximumTrainingLevel;
-            set
-            {
-                this.AIDTDataTypeState |= AIDTDataType.Has;
-                this._MaximumTrainingLevel = value;
-            }
-        }
-        #endregion
-        #region Fluff
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Fluff = new byte[2];
-        public Byte[] Fluff
-        {
-            get => _Fluff;
-            set => this._Fluff = value ?? new byte[2];
+            get => _AIData;
+            set => _AIData = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> INpcGetter.Fluff => this.Fluff;
+        IAIDataGetter? INpcGetter.AIData => this.AIData;
         #endregion
         #region AIPackages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -364,395 +193,16 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IClassGetter> INpcGetter.Class => this.Class;
         #endregion
-        #region Armorer
+        #region Stats
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Armorer;
-        public Byte Armorer
+        private NpcData? _Stats;
+        public NpcData? Stats
         {
-            get => this._Armorer;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Armorer = value;
-            }
+            get => _Stats;
+            set => _Stats = value;
         }
-        #endregion
-        #region Athletics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Athletics;
-        public Byte Athletics
-        {
-            get => this._Athletics;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Athletics = value;
-            }
-        }
-        #endregion
-        #region Blade
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Blade;
-        public Byte Blade
-        {
-            get => this._Blade;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Blade = value;
-            }
-        }
-        #endregion
-        #region Block
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Block;
-        public Byte Block
-        {
-            get => this._Block;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Block = value;
-            }
-        }
-        #endregion
-        #region Blunt
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Blunt;
-        public Byte Blunt
-        {
-            get => this._Blunt;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Blunt = value;
-            }
-        }
-        #endregion
-        #region HandToHand
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _HandToHand;
-        public Byte HandToHand
-        {
-            get => this._HandToHand;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._HandToHand = value;
-            }
-        }
-        #endregion
-        #region HeavyArmor
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _HeavyArmor;
-        public Byte HeavyArmor
-        {
-            get => this._HeavyArmor;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._HeavyArmor = value;
-            }
-        }
-        #endregion
-        #region Alchemy
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Alchemy;
-        public Byte Alchemy
-        {
-            get => this._Alchemy;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Alchemy = value;
-            }
-        }
-        #endregion
-        #region Alteration
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Alteration;
-        public Byte Alteration
-        {
-            get => this._Alteration;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Alteration = value;
-            }
-        }
-        #endregion
-        #region Conjuration
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Conjuration;
-        public Byte Conjuration
-        {
-            get => this._Conjuration;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Conjuration = value;
-            }
-        }
-        #endregion
-        #region Destruction
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Destruction;
-        public Byte Destruction
-        {
-            get => this._Destruction;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Destruction = value;
-            }
-        }
-        #endregion
-        #region Illusion
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Illusion;
-        public Byte Illusion
-        {
-            get => this._Illusion;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Illusion = value;
-            }
-        }
-        #endregion
-        #region Mysticism
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Mysticism;
-        public Byte Mysticism
-        {
-            get => this._Mysticism;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Mysticism = value;
-            }
-        }
-        #endregion
-        #region Restoration
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Restoration;
-        public Byte Restoration
-        {
-            get => this._Restoration;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Restoration = value;
-            }
-        }
-        #endregion
-        #region Acrobatics
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Acrobatics;
-        public Byte Acrobatics
-        {
-            get => this._Acrobatics;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Acrobatics = value;
-            }
-        }
-        #endregion
-        #region LightArmor
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _LightArmor;
-        public Byte LightArmor
-        {
-            get => this._LightArmor;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._LightArmor = value;
-            }
-        }
-        #endregion
-        #region Marksman
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Marksman;
-        public Byte Marksman
-        {
-            get => this._Marksman;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Marksman = value;
-            }
-        }
-        #endregion
-        #region Mercantile
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Mercantile;
-        public Byte Mercantile
-        {
-            get => this._Mercantile;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Mercantile = value;
-            }
-        }
-        #endregion
-        #region Security
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Security;
-        public Byte Security
-        {
-            get => this._Security;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Security = value;
-            }
-        }
-        #endregion
-        #region Sneak
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Sneak;
-        public Byte Sneak
-        {
-            get => this._Sneak;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Sneak = value;
-            }
-        }
-        #endregion
-        #region Speechcraft
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Speechcraft;
-        public Byte Speechcraft
-        {
-            get => this._Speechcraft;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Speechcraft = value;
-            }
-        }
-        #endregion
-        #region Health
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt32 _Health;
-        public UInt32 Health
-        {
-            get => this._Health;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Health = value;
-            }
-        }
-        #endregion
-        #region Strength
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Strength;
-        public Byte Strength
-        {
-            get => this._Strength;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Strength = value;
-            }
-        }
-        #endregion
-        #region Intelligence
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Intelligence;
-        public Byte Intelligence
-        {
-            get => this._Intelligence;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Intelligence = value;
-            }
-        }
-        #endregion
-        #region Willpower
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Willpower;
-        public Byte Willpower
-        {
-            get => this._Willpower;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Willpower = value;
-            }
-        }
-        #endregion
-        #region Agility
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Agility;
-        public Byte Agility
-        {
-            get => this._Agility;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Agility = value;
-            }
-        }
-        #endregion
-        #region Speed
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Speed;
-        public Byte Speed
-        {
-            get => this._Speed;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Speed = value;
-            }
-        }
-        #endregion
-        #region Endurance
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Endurance;
-        public Byte Endurance
-        {
-            get => this._Endurance;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Endurance = value;
-            }
-        }
-        #endregion
-        #region Personality
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Personality;
-        public Byte Personality
-        {
-            get => this._Personality;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Personality = value;
-            }
-        }
-        #endregion
-        #region Luck
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte _Luck;
-        public Byte Luck
-        {
-            get => this._Luck;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Luck = value;
-            }
-        }
+        INpcDataGetter? INpcGetter.Stats => this.Stats;
         #endregion
         #region Hair
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -847,15 +297,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte>? INpcGetter.Unknown => this.Unknown;
-        #endregion
-        #region ACBSDataTypeState
-        public Npc.ACBSDataType ACBSDataTypeState { get; set; } = default;
-        #endregion
-        #region AIDTDataTypeState
-        public Npc.AIDTDataType AIDTDataTypeState { get; set; } = default;
-        #endregion
-        #region DATADataTypeState
-        public Npc.DATADataType DATADataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -1029,60 +470,18 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Name = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.Flags = initialValue;
-                this.BaseSpellPoints = initialValue;
-                this.Fatigue = initialValue;
-                this.BarterGold = initialValue;
-                this.LevelOffset = initialValue;
-                this.CalcMin = initialValue;
-                this.CalcMax = initialValue;
+                this.Configuration = new MaskItem<TItem, NpcConfiguration.Mask<TItem>?>(initialValue, new NpcConfiguration.Mask<TItem>(initialValue));
                 this.Factions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RankPlacement.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, RankPlacement.Mask<TItem>?>>());
                 this.DeathItem = initialValue;
                 this.Race = initialValue;
                 this.Spells = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Script = initialValue;
                 this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ItemEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ItemEntry.Mask<TItem>?>>());
-                this.Aggression = initialValue;
-                this.Confidence = initialValue;
-                this.EnergyLevel = initialValue;
-                this.Responsibility = initialValue;
-                this.BuySellServices = initialValue;
-                this.Teaches = initialValue;
-                this.MaximumTrainingLevel = initialValue;
-                this.Fluff = initialValue;
+                this.AIData = new MaskItem<TItem, AIData.Mask<TItem>?>(initialValue, new AIData.Mask<TItem>(initialValue));
                 this.AIPackages = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Animations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Class = initialValue;
-                this.Armorer = initialValue;
-                this.Athletics = initialValue;
-                this.Blade = initialValue;
-                this.Block = initialValue;
-                this.Blunt = initialValue;
-                this.HandToHand = initialValue;
-                this.HeavyArmor = initialValue;
-                this.Alchemy = initialValue;
-                this.Alteration = initialValue;
-                this.Conjuration = initialValue;
-                this.Destruction = initialValue;
-                this.Illusion = initialValue;
-                this.Mysticism = initialValue;
-                this.Restoration = initialValue;
-                this.Acrobatics = initialValue;
-                this.LightArmor = initialValue;
-                this.Marksman = initialValue;
-                this.Mercantile = initialValue;
-                this.Security = initialValue;
-                this.Sneak = initialValue;
-                this.Speechcraft = initialValue;
-                this.Health = initialValue;
-                this.Strength = initialValue;
-                this.Intelligence = initialValue;
-                this.Willpower = initialValue;
-                this.Agility = initialValue;
-                this.Speed = initialValue;
-                this.Endurance = initialValue;
-                this.Personality = initialValue;
-                this.Luck = initialValue;
+                this.Stats = new MaskItem<TItem, NpcData.Mask<TItem>?>(initialValue, new NpcData.Mask<TItem>(initialValue));
                 this.Hair = initialValue;
                 this.HairLength = initialValue;
                 this.Eyes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
@@ -1092,9 +491,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.FaceGenGeometryAsymmetric = initialValue;
                 this.FaceGenTextureSymmetric = initialValue;
                 this.Unknown = initialValue;
-                this.ACBSDataTypeState = initialValue;
-                this.AIDTDataTypeState = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -1105,60 +501,18 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem OblivionMajorRecordFlags,
                 TItem Name,
                 TItem Model,
-                TItem Flags,
-                TItem BaseSpellPoints,
-                TItem Fatigue,
-                TItem BarterGold,
-                TItem LevelOffset,
-                TItem CalcMin,
-                TItem CalcMax,
+                TItem Configuration,
                 TItem Factions,
                 TItem DeathItem,
                 TItem Race,
                 TItem Spells,
                 TItem Script,
                 TItem Items,
-                TItem Aggression,
-                TItem Confidence,
-                TItem EnergyLevel,
-                TItem Responsibility,
-                TItem BuySellServices,
-                TItem Teaches,
-                TItem MaximumTrainingLevel,
-                TItem Fluff,
+                TItem AIData,
                 TItem AIPackages,
                 TItem Animations,
                 TItem Class,
-                TItem Armorer,
-                TItem Athletics,
-                TItem Blade,
-                TItem Block,
-                TItem Blunt,
-                TItem HandToHand,
-                TItem HeavyArmor,
-                TItem Alchemy,
-                TItem Alteration,
-                TItem Conjuration,
-                TItem Destruction,
-                TItem Illusion,
-                TItem Mysticism,
-                TItem Restoration,
-                TItem Acrobatics,
-                TItem LightArmor,
-                TItem Marksman,
-                TItem Mercantile,
-                TItem Security,
-                TItem Sneak,
-                TItem Speechcraft,
-                TItem Health,
-                TItem Strength,
-                TItem Intelligence,
-                TItem Willpower,
-                TItem Agility,
-                TItem Speed,
-                TItem Endurance,
-                TItem Personality,
-                TItem Luck,
+                TItem Stats,
                 TItem Hair,
                 TItem HairLength,
                 TItem Eyes,
@@ -1167,10 +521,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem FaceGenGeometrySymmetric,
                 TItem FaceGenGeometryAsymmetric,
                 TItem FaceGenTextureSymmetric,
-                TItem Unknown,
-                TItem ACBSDataTypeState,
-                TItem AIDTDataTypeState,
-                TItem DATADataTypeState)
+                TItem Unknown)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -1180,60 +531,18 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Name = Name;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.Flags = Flags;
-                this.BaseSpellPoints = BaseSpellPoints;
-                this.Fatigue = Fatigue;
-                this.BarterGold = BarterGold;
-                this.LevelOffset = LevelOffset;
-                this.CalcMin = CalcMin;
-                this.CalcMax = CalcMax;
+                this.Configuration = new MaskItem<TItem, NpcConfiguration.Mask<TItem>?>(Configuration, new NpcConfiguration.Mask<TItem>(Configuration));
                 this.Factions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RankPlacement.Mask<TItem>?>>?>(Factions, Enumerable.Empty<MaskItemIndexed<TItem, RankPlacement.Mask<TItem>?>>());
                 this.DeathItem = DeathItem;
                 this.Race = Race;
                 this.Spells = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Spells, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Script = Script;
                 this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ItemEntry.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, ItemEntry.Mask<TItem>?>>());
-                this.Aggression = Aggression;
-                this.Confidence = Confidence;
-                this.EnergyLevel = EnergyLevel;
-                this.Responsibility = Responsibility;
-                this.BuySellServices = BuySellServices;
-                this.Teaches = Teaches;
-                this.MaximumTrainingLevel = MaximumTrainingLevel;
-                this.Fluff = Fluff;
+                this.AIData = new MaskItem<TItem, AIData.Mask<TItem>?>(AIData, new AIData.Mask<TItem>(AIData));
                 this.AIPackages = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AIPackages, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Animations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Animations, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Class = Class;
-                this.Armorer = Armorer;
-                this.Athletics = Athletics;
-                this.Blade = Blade;
-                this.Block = Block;
-                this.Blunt = Blunt;
-                this.HandToHand = HandToHand;
-                this.HeavyArmor = HeavyArmor;
-                this.Alchemy = Alchemy;
-                this.Alteration = Alteration;
-                this.Conjuration = Conjuration;
-                this.Destruction = Destruction;
-                this.Illusion = Illusion;
-                this.Mysticism = Mysticism;
-                this.Restoration = Restoration;
-                this.Acrobatics = Acrobatics;
-                this.LightArmor = LightArmor;
-                this.Marksman = Marksman;
-                this.Mercantile = Mercantile;
-                this.Security = Security;
-                this.Sneak = Sneak;
-                this.Speechcraft = Speechcraft;
-                this.Health = Health;
-                this.Strength = Strength;
-                this.Intelligence = Intelligence;
-                this.Willpower = Willpower;
-                this.Agility = Agility;
-                this.Speed = Speed;
-                this.Endurance = Endurance;
-                this.Personality = Personality;
-                this.Luck = Luck;
+                this.Stats = new MaskItem<TItem, NpcData.Mask<TItem>?>(Stats, new NpcData.Mask<TItem>(Stats));
                 this.Hair = Hair;
                 this.HairLength = HairLength;
                 this.Eyes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Eyes, Enumerable.Empty<(int Index, TItem Value)>());
@@ -1243,9 +552,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.FaceGenGeometryAsymmetric = FaceGenGeometryAsymmetric;
                 this.FaceGenTextureSymmetric = FaceGenTextureSymmetric;
                 this.Unknown = Unknown;
-                this.ACBSDataTypeState = ACBSDataTypeState;
-                this.AIDTDataTypeState = AIDTDataTypeState;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -1259,60 +565,18 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             public TItem Name;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
-            public TItem Flags;
-            public TItem BaseSpellPoints;
-            public TItem Fatigue;
-            public TItem BarterGold;
-            public TItem LevelOffset;
-            public TItem CalcMin;
-            public TItem CalcMax;
+            public MaskItem<TItem, NpcConfiguration.Mask<TItem>?>? Configuration { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, RankPlacement.Mask<TItem>?>>?>? Factions;
             public TItem DeathItem;
             public TItem Race;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Spells;
             public TItem Script;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ItemEntry.Mask<TItem>?>>?>? Items;
-            public TItem Aggression;
-            public TItem Confidence;
-            public TItem EnergyLevel;
-            public TItem Responsibility;
-            public TItem BuySellServices;
-            public TItem Teaches;
-            public TItem MaximumTrainingLevel;
-            public TItem Fluff;
+            public MaskItem<TItem, AIData.Mask<TItem>?>? AIData { get; set; }
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? AIPackages;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Animations;
             public TItem Class;
-            public TItem Armorer;
-            public TItem Athletics;
-            public TItem Blade;
-            public TItem Block;
-            public TItem Blunt;
-            public TItem HandToHand;
-            public TItem HeavyArmor;
-            public TItem Alchemy;
-            public TItem Alteration;
-            public TItem Conjuration;
-            public TItem Destruction;
-            public TItem Illusion;
-            public TItem Mysticism;
-            public TItem Restoration;
-            public TItem Acrobatics;
-            public TItem LightArmor;
-            public TItem Marksman;
-            public TItem Mercantile;
-            public TItem Security;
-            public TItem Sneak;
-            public TItem Speechcraft;
-            public TItem Health;
-            public TItem Strength;
-            public TItem Intelligence;
-            public TItem Willpower;
-            public TItem Agility;
-            public TItem Speed;
-            public TItem Endurance;
-            public TItem Personality;
-            public TItem Luck;
+            public MaskItem<TItem, NpcData.Mask<TItem>?>? Stats { get; set; }
             public TItem Hair;
             public TItem HairLength;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Eyes;
@@ -1322,9 +586,6 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem FaceGenGeometryAsymmetric;
             public TItem FaceGenTextureSymmetric;
             public TItem Unknown;
-            public TItem ACBSDataTypeState;
-            public TItem AIDTDataTypeState;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -1340,60 +601,18 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.BaseSpellPoints, rhs.BaseSpellPoints)) return false;
-                if (!object.Equals(this.Fatigue, rhs.Fatigue)) return false;
-                if (!object.Equals(this.BarterGold, rhs.BarterGold)) return false;
-                if (!object.Equals(this.LevelOffset, rhs.LevelOffset)) return false;
-                if (!object.Equals(this.CalcMin, rhs.CalcMin)) return false;
-                if (!object.Equals(this.CalcMax, rhs.CalcMax)) return false;
+                if (!object.Equals(this.Configuration, rhs.Configuration)) return false;
                 if (!object.Equals(this.Factions, rhs.Factions)) return false;
                 if (!object.Equals(this.DeathItem, rhs.DeathItem)) return false;
                 if (!object.Equals(this.Race, rhs.Race)) return false;
                 if (!object.Equals(this.Spells, rhs.Spells)) return false;
                 if (!object.Equals(this.Script, rhs.Script)) return false;
                 if (!object.Equals(this.Items, rhs.Items)) return false;
-                if (!object.Equals(this.Aggression, rhs.Aggression)) return false;
-                if (!object.Equals(this.Confidence, rhs.Confidence)) return false;
-                if (!object.Equals(this.EnergyLevel, rhs.EnergyLevel)) return false;
-                if (!object.Equals(this.Responsibility, rhs.Responsibility)) return false;
-                if (!object.Equals(this.BuySellServices, rhs.BuySellServices)) return false;
-                if (!object.Equals(this.Teaches, rhs.Teaches)) return false;
-                if (!object.Equals(this.MaximumTrainingLevel, rhs.MaximumTrainingLevel)) return false;
-                if (!object.Equals(this.Fluff, rhs.Fluff)) return false;
+                if (!object.Equals(this.AIData, rhs.AIData)) return false;
                 if (!object.Equals(this.AIPackages, rhs.AIPackages)) return false;
                 if (!object.Equals(this.Animations, rhs.Animations)) return false;
                 if (!object.Equals(this.Class, rhs.Class)) return false;
-                if (!object.Equals(this.Armorer, rhs.Armorer)) return false;
-                if (!object.Equals(this.Athletics, rhs.Athletics)) return false;
-                if (!object.Equals(this.Blade, rhs.Blade)) return false;
-                if (!object.Equals(this.Block, rhs.Block)) return false;
-                if (!object.Equals(this.Blunt, rhs.Blunt)) return false;
-                if (!object.Equals(this.HandToHand, rhs.HandToHand)) return false;
-                if (!object.Equals(this.HeavyArmor, rhs.HeavyArmor)) return false;
-                if (!object.Equals(this.Alchemy, rhs.Alchemy)) return false;
-                if (!object.Equals(this.Alteration, rhs.Alteration)) return false;
-                if (!object.Equals(this.Conjuration, rhs.Conjuration)) return false;
-                if (!object.Equals(this.Destruction, rhs.Destruction)) return false;
-                if (!object.Equals(this.Illusion, rhs.Illusion)) return false;
-                if (!object.Equals(this.Mysticism, rhs.Mysticism)) return false;
-                if (!object.Equals(this.Restoration, rhs.Restoration)) return false;
-                if (!object.Equals(this.Acrobatics, rhs.Acrobatics)) return false;
-                if (!object.Equals(this.LightArmor, rhs.LightArmor)) return false;
-                if (!object.Equals(this.Marksman, rhs.Marksman)) return false;
-                if (!object.Equals(this.Mercantile, rhs.Mercantile)) return false;
-                if (!object.Equals(this.Security, rhs.Security)) return false;
-                if (!object.Equals(this.Sneak, rhs.Sneak)) return false;
-                if (!object.Equals(this.Speechcraft, rhs.Speechcraft)) return false;
-                if (!object.Equals(this.Health, rhs.Health)) return false;
-                if (!object.Equals(this.Strength, rhs.Strength)) return false;
-                if (!object.Equals(this.Intelligence, rhs.Intelligence)) return false;
-                if (!object.Equals(this.Willpower, rhs.Willpower)) return false;
-                if (!object.Equals(this.Agility, rhs.Agility)) return false;
-                if (!object.Equals(this.Speed, rhs.Speed)) return false;
-                if (!object.Equals(this.Endurance, rhs.Endurance)) return false;
-                if (!object.Equals(this.Personality, rhs.Personality)) return false;
-                if (!object.Equals(this.Luck, rhs.Luck)) return false;
+                if (!object.Equals(this.Stats, rhs.Stats)) return false;
                 if (!object.Equals(this.Hair, rhs.Hair)) return false;
                 if (!object.Equals(this.HairLength, rhs.HairLength)) return false;
                 if (!object.Equals(this.Eyes, rhs.Eyes)) return false;
@@ -1403,9 +622,6 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.FaceGenGeometryAsymmetric, rhs.FaceGenGeometryAsymmetric)) return false;
                 if (!object.Equals(this.FaceGenTextureSymmetric, rhs.FaceGenTextureSymmetric)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-                if (!object.Equals(this.ACBSDataTypeState, rhs.ACBSDataTypeState)) return false;
-                if (!object.Equals(this.AIDTDataTypeState, rhs.AIDTDataTypeState)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1413,60 +629,18 @@ namespace Mutagen.Bethesda.Oblivion
                 var hash = new HashCode();
                 hash.Add(this.Name);
                 hash.Add(this.Model);
-                hash.Add(this.Flags);
-                hash.Add(this.BaseSpellPoints);
-                hash.Add(this.Fatigue);
-                hash.Add(this.BarterGold);
-                hash.Add(this.LevelOffset);
-                hash.Add(this.CalcMin);
-                hash.Add(this.CalcMax);
+                hash.Add(this.Configuration);
                 hash.Add(this.Factions);
                 hash.Add(this.DeathItem);
                 hash.Add(this.Race);
                 hash.Add(this.Spells);
                 hash.Add(this.Script);
                 hash.Add(this.Items);
-                hash.Add(this.Aggression);
-                hash.Add(this.Confidence);
-                hash.Add(this.EnergyLevel);
-                hash.Add(this.Responsibility);
-                hash.Add(this.BuySellServices);
-                hash.Add(this.Teaches);
-                hash.Add(this.MaximumTrainingLevel);
-                hash.Add(this.Fluff);
+                hash.Add(this.AIData);
                 hash.Add(this.AIPackages);
                 hash.Add(this.Animations);
                 hash.Add(this.Class);
-                hash.Add(this.Armorer);
-                hash.Add(this.Athletics);
-                hash.Add(this.Blade);
-                hash.Add(this.Block);
-                hash.Add(this.Blunt);
-                hash.Add(this.HandToHand);
-                hash.Add(this.HeavyArmor);
-                hash.Add(this.Alchemy);
-                hash.Add(this.Alteration);
-                hash.Add(this.Conjuration);
-                hash.Add(this.Destruction);
-                hash.Add(this.Illusion);
-                hash.Add(this.Mysticism);
-                hash.Add(this.Restoration);
-                hash.Add(this.Acrobatics);
-                hash.Add(this.LightArmor);
-                hash.Add(this.Marksman);
-                hash.Add(this.Mercantile);
-                hash.Add(this.Security);
-                hash.Add(this.Sneak);
-                hash.Add(this.Speechcraft);
-                hash.Add(this.Health);
-                hash.Add(this.Strength);
-                hash.Add(this.Intelligence);
-                hash.Add(this.Willpower);
-                hash.Add(this.Agility);
-                hash.Add(this.Speed);
-                hash.Add(this.Endurance);
-                hash.Add(this.Personality);
-                hash.Add(this.Luck);
+                hash.Add(this.Stats);
                 hash.Add(this.Hair);
                 hash.Add(this.HairLength);
                 hash.Add(this.Eyes);
@@ -1476,9 +650,6 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.FaceGenGeometryAsymmetric);
                 hash.Add(this.FaceGenTextureSymmetric);
                 hash.Add(this.Unknown);
-                hash.Add(this.ACBSDataTypeState);
-                hash.Add(this.AIDTDataTypeState);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -1495,13 +666,11 @@ namespace Mutagen.Bethesda.Oblivion
                     if (!eval(this.Model.Overall)) return false;
                     if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
-                if (!eval(this.Flags)) return false;
-                if (!eval(this.BaseSpellPoints)) return false;
-                if (!eval(this.Fatigue)) return false;
-                if (!eval(this.BarterGold)) return false;
-                if (!eval(this.LevelOffset)) return false;
-                if (!eval(this.CalcMin)) return false;
-                if (!eval(this.CalcMax)) return false;
+                if (Configuration != null)
+                {
+                    if (!eval(this.Configuration.Overall)) return false;
+                    if (this.Configuration.Specific != null && !this.Configuration.Specific.All(eval)) return false;
+                }
                 if (this.Factions != null)
                 {
                     if (!eval(this.Factions.Overall)) return false;
@@ -1540,14 +709,11 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                 }
-                if (!eval(this.Aggression)) return false;
-                if (!eval(this.Confidence)) return false;
-                if (!eval(this.EnergyLevel)) return false;
-                if (!eval(this.Responsibility)) return false;
-                if (!eval(this.BuySellServices)) return false;
-                if (!eval(this.Teaches)) return false;
-                if (!eval(this.MaximumTrainingLevel)) return false;
-                if (!eval(this.Fluff)) return false;
+                if (AIData != null)
+                {
+                    if (!eval(this.AIData.Overall)) return false;
+                    if (this.AIData.Specific != null && !this.AIData.Specific.All(eval)) return false;
+                }
                 if (this.AIPackages != null)
                 {
                     if (!eval(this.AIPackages.Overall)) return false;
@@ -1571,36 +737,11 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                 }
                 if (!eval(this.Class)) return false;
-                if (!eval(this.Armorer)) return false;
-                if (!eval(this.Athletics)) return false;
-                if (!eval(this.Blade)) return false;
-                if (!eval(this.Block)) return false;
-                if (!eval(this.Blunt)) return false;
-                if (!eval(this.HandToHand)) return false;
-                if (!eval(this.HeavyArmor)) return false;
-                if (!eval(this.Alchemy)) return false;
-                if (!eval(this.Alteration)) return false;
-                if (!eval(this.Conjuration)) return false;
-                if (!eval(this.Destruction)) return false;
-                if (!eval(this.Illusion)) return false;
-                if (!eval(this.Mysticism)) return false;
-                if (!eval(this.Restoration)) return false;
-                if (!eval(this.Acrobatics)) return false;
-                if (!eval(this.LightArmor)) return false;
-                if (!eval(this.Marksman)) return false;
-                if (!eval(this.Mercantile)) return false;
-                if (!eval(this.Security)) return false;
-                if (!eval(this.Sneak)) return false;
-                if (!eval(this.Speechcraft)) return false;
-                if (!eval(this.Health)) return false;
-                if (!eval(this.Strength)) return false;
-                if (!eval(this.Intelligence)) return false;
-                if (!eval(this.Willpower)) return false;
-                if (!eval(this.Agility)) return false;
-                if (!eval(this.Speed)) return false;
-                if (!eval(this.Endurance)) return false;
-                if (!eval(this.Personality)) return false;
-                if (!eval(this.Luck)) return false;
+                if (Stats != null)
+                {
+                    if (!eval(this.Stats.Overall)) return false;
+                    if (this.Stats.Specific != null && !this.Stats.Specific.All(eval)) return false;
+                }
                 if (!eval(this.Hair)) return false;
                 if (!eval(this.HairLength)) return false;
                 if (this.Eyes != null)
@@ -1620,9 +761,6 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.FaceGenGeometryAsymmetric)) return false;
                 if (!eval(this.FaceGenTextureSymmetric)) return false;
                 if (!eval(this.Unknown)) return false;
-                if (!eval(this.ACBSDataTypeState)) return false;
-                if (!eval(this.AIDTDataTypeState)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -1637,13 +775,11 @@ namespace Mutagen.Bethesda.Oblivion
                     if (eval(this.Model.Overall)) return true;
                     if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
                 }
-                if (eval(this.Flags)) return true;
-                if (eval(this.BaseSpellPoints)) return true;
-                if (eval(this.Fatigue)) return true;
-                if (eval(this.BarterGold)) return true;
-                if (eval(this.LevelOffset)) return true;
-                if (eval(this.CalcMin)) return true;
-                if (eval(this.CalcMax)) return true;
+                if (Configuration != null)
+                {
+                    if (eval(this.Configuration.Overall)) return true;
+                    if (this.Configuration.Specific != null && this.Configuration.Specific.Any(eval)) return true;
+                }
                 if (this.Factions != null)
                 {
                     if (eval(this.Factions.Overall)) return true;
@@ -1682,14 +818,11 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                 }
-                if (eval(this.Aggression)) return true;
-                if (eval(this.Confidence)) return true;
-                if (eval(this.EnergyLevel)) return true;
-                if (eval(this.Responsibility)) return true;
-                if (eval(this.BuySellServices)) return true;
-                if (eval(this.Teaches)) return true;
-                if (eval(this.MaximumTrainingLevel)) return true;
-                if (eval(this.Fluff)) return true;
+                if (AIData != null)
+                {
+                    if (eval(this.AIData.Overall)) return true;
+                    if (this.AIData.Specific != null && this.AIData.Specific.Any(eval)) return true;
+                }
                 if (this.AIPackages != null)
                 {
                     if (eval(this.AIPackages.Overall)) return true;
@@ -1713,36 +846,11 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                 }
                 if (eval(this.Class)) return true;
-                if (eval(this.Armorer)) return true;
-                if (eval(this.Athletics)) return true;
-                if (eval(this.Blade)) return true;
-                if (eval(this.Block)) return true;
-                if (eval(this.Blunt)) return true;
-                if (eval(this.HandToHand)) return true;
-                if (eval(this.HeavyArmor)) return true;
-                if (eval(this.Alchemy)) return true;
-                if (eval(this.Alteration)) return true;
-                if (eval(this.Conjuration)) return true;
-                if (eval(this.Destruction)) return true;
-                if (eval(this.Illusion)) return true;
-                if (eval(this.Mysticism)) return true;
-                if (eval(this.Restoration)) return true;
-                if (eval(this.Acrobatics)) return true;
-                if (eval(this.LightArmor)) return true;
-                if (eval(this.Marksman)) return true;
-                if (eval(this.Mercantile)) return true;
-                if (eval(this.Security)) return true;
-                if (eval(this.Sneak)) return true;
-                if (eval(this.Speechcraft)) return true;
-                if (eval(this.Health)) return true;
-                if (eval(this.Strength)) return true;
-                if (eval(this.Intelligence)) return true;
-                if (eval(this.Willpower)) return true;
-                if (eval(this.Agility)) return true;
-                if (eval(this.Speed)) return true;
-                if (eval(this.Endurance)) return true;
-                if (eval(this.Personality)) return true;
-                if (eval(this.Luck)) return true;
+                if (Stats != null)
+                {
+                    if (eval(this.Stats.Overall)) return true;
+                    if (this.Stats.Specific != null && this.Stats.Specific.Any(eval)) return true;
+                }
                 if (eval(this.Hair)) return true;
                 if (eval(this.HairLength)) return true;
                 if (this.Eyes != null)
@@ -1762,9 +870,6 @@ namespace Mutagen.Bethesda.Oblivion
                 if (eval(this.FaceGenGeometryAsymmetric)) return true;
                 if (eval(this.FaceGenTextureSymmetric)) return true;
                 if (eval(this.Unknown)) return true;
-                if (eval(this.ACBSDataTypeState)) return true;
-                if (eval(this.AIDTDataTypeState)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -1782,13 +887,7 @@ namespace Mutagen.Bethesda.Oblivion
                 base.Translate_InternalFill(obj, eval);
                 obj.Name = eval(this.Name);
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-                obj.Flags = eval(this.Flags);
-                obj.BaseSpellPoints = eval(this.BaseSpellPoints);
-                obj.Fatigue = eval(this.Fatigue);
-                obj.BarterGold = eval(this.BarterGold);
-                obj.LevelOffset = eval(this.LevelOffset);
-                obj.CalcMin = eval(this.CalcMin);
-                obj.CalcMax = eval(this.CalcMax);
+                obj.Configuration = this.Configuration == null ? null : new MaskItem<R, NpcConfiguration.Mask<R>?>(eval(this.Configuration.Overall), this.Configuration.Specific?.Translate(eval));
                 if (Factions != null)
                 {
                     obj.Factions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, RankPlacement.Mask<R>?>>?>(eval(this.Factions.Overall), Enumerable.Empty<MaskItemIndexed<R, RankPlacement.Mask<R>?>>());
@@ -1836,14 +935,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                 }
-                obj.Aggression = eval(this.Aggression);
-                obj.Confidence = eval(this.Confidence);
-                obj.EnergyLevel = eval(this.EnergyLevel);
-                obj.Responsibility = eval(this.Responsibility);
-                obj.BuySellServices = eval(this.BuySellServices);
-                obj.Teaches = eval(this.Teaches);
-                obj.MaximumTrainingLevel = eval(this.MaximumTrainingLevel);
-                obj.Fluff = eval(this.Fluff);
+                obj.AIData = this.AIData == null ? null : new MaskItem<R, AIData.Mask<R>?>(eval(this.AIData.Overall), this.AIData.Specific?.Translate(eval));
                 if (AIPackages != null)
                 {
                     obj.AIPackages = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AIPackages.Overall), Enumerable.Empty<(int Index, R Value)>());
@@ -1873,36 +965,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                 }
                 obj.Class = eval(this.Class);
-                obj.Armorer = eval(this.Armorer);
-                obj.Athletics = eval(this.Athletics);
-                obj.Blade = eval(this.Blade);
-                obj.Block = eval(this.Block);
-                obj.Blunt = eval(this.Blunt);
-                obj.HandToHand = eval(this.HandToHand);
-                obj.HeavyArmor = eval(this.HeavyArmor);
-                obj.Alchemy = eval(this.Alchemy);
-                obj.Alteration = eval(this.Alteration);
-                obj.Conjuration = eval(this.Conjuration);
-                obj.Destruction = eval(this.Destruction);
-                obj.Illusion = eval(this.Illusion);
-                obj.Mysticism = eval(this.Mysticism);
-                obj.Restoration = eval(this.Restoration);
-                obj.Acrobatics = eval(this.Acrobatics);
-                obj.LightArmor = eval(this.LightArmor);
-                obj.Marksman = eval(this.Marksman);
-                obj.Mercantile = eval(this.Mercantile);
-                obj.Security = eval(this.Security);
-                obj.Sneak = eval(this.Sneak);
-                obj.Speechcraft = eval(this.Speechcraft);
-                obj.Health = eval(this.Health);
-                obj.Strength = eval(this.Strength);
-                obj.Intelligence = eval(this.Intelligence);
-                obj.Willpower = eval(this.Willpower);
-                obj.Agility = eval(this.Agility);
-                obj.Speed = eval(this.Speed);
-                obj.Endurance = eval(this.Endurance);
-                obj.Personality = eval(this.Personality);
-                obj.Luck = eval(this.Luck);
+                obj.Stats = this.Stats == null ? null : new MaskItem<R, NpcData.Mask<R>?>(eval(this.Stats.Overall), this.Stats.Specific?.Translate(eval));
                 obj.Hair = eval(this.Hair);
                 obj.HairLength = eval(this.HairLength);
                 if (Eyes != null)
@@ -1925,9 +988,6 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.FaceGenGeometryAsymmetric = eval(this.FaceGenGeometryAsymmetric);
                 obj.FaceGenTextureSymmetric = eval(this.FaceGenTextureSymmetric);
                 obj.Unknown = eval(this.Unknown);
-                obj.ACBSDataTypeState = eval(this.ACBSDataTypeState);
-                obj.AIDTDataTypeState = eval(this.AIDTDataTypeState);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -1958,33 +1018,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         Model?.ToString(fg);
                     }
-                    if (printMask?.Flags ?? true)
+                    if (printMask?.Configuration?.Overall ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
-                    }
-                    if (printMask?.BaseSpellPoints ?? true)
-                    {
-                        fg.AppendItem(BaseSpellPoints, "BaseSpellPoints");
-                    }
-                    if (printMask?.Fatigue ?? true)
-                    {
-                        fg.AppendItem(Fatigue, "Fatigue");
-                    }
-                    if (printMask?.BarterGold ?? true)
-                    {
-                        fg.AppendItem(BarterGold, "BarterGold");
-                    }
-                    if (printMask?.LevelOffset ?? true)
-                    {
-                        fg.AppendItem(LevelOffset, "LevelOffset");
-                    }
-                    if (printMask?.CalcMin ?? true)
-                    {
-                        fg.AppendItem(CalcMin, "CalcMin");
-                    }
-                    if (printMask?.CalcMax ?? true)
-                    {
-                        fg.AppendItem(CalcMax, "CalcMax");
+                        Configuration?.ToString(fg);
                     }
                     if ((printMask?.Factions?.Overall ?? true)
                         && Factions.TryGet(out var FactionsItem))
@@ -2067,37 +1103,9 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.Aggression ?? true)
+                    if (printMask?.AIData?.Overall ?? true)
                     {
-                        fg.AppendItem(Aggression, "Aggression");
-                    }
-                    if (printMask?.Confidence ?? true)
-                    {
-                        fg.AppendItem(Confidence, "Confidence");
-                    }
-                    if (printMask?.EnergyLevel ?? true)
-                    {
-                        fg.AppendItem(EnergyLevel, "EnergyLevel");
-                    }
-                    if (printMask?.Responsibility ?? true)
-                    {
-                        fg.AppendItem(Responsibility, "Responsibility");
-                    }
-                    if (printMask?.BuySellServices ?? true)
-                    {
-                        fg.AppendItem(BuySellServices, "BuySellServices");
-                    }
-                    if (printMask?.Teaches ?? true)
-                    {
-                        fg.AppendItem(Teaches, "Teaches");
-                    }
-                    if (printMask?.MaximumTrainingLevel ?? true)
-                    {
-                        fg.AppendItem(MaximumTrainingLevel, "MaximumTrainingLevel");
-                    }
-                    if (printMask?.Fluff ?? true)
-                    {
-                        fg.AppendItem(Fluff, "Fluff");
+                        AIData?.ToString(fg);
                     }
                     if ((printMask?.AIPackages?.Overall ?? true)
                         && AIPackages.TryGet(out var AIPackagesItem))
@@ -2149,125 +1157,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendItem(Class, "Class");
                     }
-                    if (printMask?.Armorer ?? true)
+                    if (printMask?.Stats?.Overall ?? true)
                     {
-                        fg.AppendItem(Armorer, "Armorer");
-                    }
-                    if (printMask?.Athletics ?? true)
-                    {
-                        fg.AppendItem(Athletics, "Athletics");
-                    }
-                    if (printMask?.Blade ?? true)
-                    {
-                        fg.AppendItem(Blade, "Blade");
-                    }
-                    if (printMask?.Block ?? true)
-                    {
-                        fg.AppendItem(Block, "Block");
-                    }
-                    if (printMask?.Blunt ?? true)
-                    {
-                        fg.AppendItem(Blunt, "Blunt");
-                    }
-                    if (printMask?.HandToHand ?? true)
-                    {
-                        fg.AppendItem(HandToHand, "HandToHand");
-                    }
-                    if (printMask?.HeavyArmor ?? true)
-                    {
-                        fg.AppendItem(HeavyArmor, "HeavyArmor");
-                    }
-                    if (printMask?.Alchemy ?? true)
-                    {
-                        fg.AppendItem(Alchemy, "Alchemy");
-                    }
-                    if (printMask?.Alteration ?? true)
-                    {
-                        fg.AppendItem(Alteration, "Alteration");
-                    }
-                    if (printMask?.Conjuration ?? true)
-                    {
-                        fg.AppendItem(Conjuration, "Conjuration");
-                    }
-                    if (printMask?.Destruction ?? true)
-                    {
-                        fg.AppendItem(Destruction, "Destruction");
-                    }
-                    if (printMask?.Illusion ?? true)
-                    {
-                        fg.AppendItem(Illusion, "Illusion");
-                    }
-                    if (printMask?.Mysticism ?? true)
-                    {
-                        fg.AppendItem(Mysticism, "Mysticism");
-                    }
-                    if (printMask?.Restoration ?? true)
-                    {
-                        fg.AppendItem(Restoration, "Restoration");
-                    }
-                    if (printMask?.Acrobatics ?? true)
-                    {
-                        fg.AppendItem(Acrobatics, "Acrobatics");
-                    }
-                    if (printMask?.LightArmor ?? true)
-                    {
-                        fg.AppendItem(LightArmor, "LightArmor");
-                    }
-                    if (printMask?.Marksman ?? true)
-                    {
-                        fg.AppendItem(Marksman, "Marksman");
-                    }
-                    if (printMask?.Mercantile ?? true)
-                    {
-                        fg.AppendItem(Mercantile, "Mercantile");
-                    }
-                    if (printMask?.Security ?? true)
-                    {
-                        fg.AppendItem(Security, "Security");
-                    }
-                    if (printMask?.Sneak ?? true)
-                    {
-                        fg.AppendItem(Sneak, "Sneak");
-                    }
-                    if (printMask?.Speechcraft ?? true)
-                    {
-                        fg.AppendItem(Speechcraft, "Speechcraft");
-                    }
-                    if (printMask?.Health ?? true)
-                    {
-                        fg.AppendItem(Health, "Health");
-                    }
-                    if (printMask?.Strength ?? true)
-                    {
-                        fg.AppendItem(Strength, "Strength");
-                    }
-                    if (printMask?.Intelligence ?? true)
-                    {
-                        fg.AppendItem(Intelligence, "Intelligence");
-                    }
-                    if (printMask?.Willpower ?? true)
-                    {
-                        fg.AppendItem(Willpower, "Willpower");
-                    }
-                    if (printMask?.Agility ?? true)
-                    {
-                        fg.AppendItem(Agility, "Agility");
-                    }
-                    if (printMask?.Speed ?? true)
-                    {
-                        fg.AppendItem(Speed, "Speed");
-                    }
-                    if (printMask?.Endurance ?? true)
-                    {
-                        fg.AppendItem(Endurance, "Endurance");
-                    }
-                    if (printMask?.Personality ?? true)
-                    {
-                        fg.AppendItem(Personality, "Personality");
-                    }
-                    if (printMask?.Luck ?? true)
-                    {
-                        fg.AppendItem(Luck, "Luck");
+                        Stats?.ToString(fg);
                     }
                     if (printMask?.Hair ?? true)
                     {
@@ -2324,18 +1216,6 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendItem(Unknown, "Unknown");
                     }
-                    if (printMask?.ACBSDataTypeState ?? true)
-                    {
-                        fg.AppendItem(ACBSDataTypeState, "ACBSDataTypeState");
-                    }
-                    if (printMask?.AIDTDataTypeState ?? true)
-                    {
-                        fg.AppendItem(AIDTDataTypeState, "AIDTDataTypeState");
-                    }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
                 fg.AppendLine("]");
             }
@@ -2350,60 +1230,18 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             public Exception? Name;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
-            public Exception? Flags;
-            public Exception? BaseSpellPoints;
-            public Exception? Fatigue;
-            public Exception? BarterGold;
-            public Exception? LevelOffset;
-            public Exception? CalcMin;
-            public Exception? CalcMax;
+            public MaskItem<Exception?, NpcConfiguration.ErrorMask?>? Configuration;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>? Factions;
             public Exception? DeathItem;
             public Exception? Race;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Spells;
             public Exception? Script;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemEntry.ErrorMask?>>?>? Items;
-            public Exception? Aggression;
-            public Exception? Confidence;
-            public Exception? EnergyLevel;
-            public Exception? Responsibility;
-            public Exception? BuySellServices;
-            public Exception? Teaches;
-            public Exception? MaximumTrainingLevel;
-            public Exception? Fluff;
+            public MaskItem<Exception?, AIData.ErrorMask?>? AIData;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AIPackages;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Animations;
             public Exception? Class;
-            public Exception? Armorer;
-            public Exception? Athletics;
-            public Exception? Blade;
-            public Exception? Block;
-            public Exception? Blunt;
-            public Exception? HandToHand;
-            public Exception? HeavyArmor;
-            public Exception? Alchemy;
-            public Exception? Alteration;
-            public Exception? Conjuration;
-            public Exception? Destruction;
-            public Exception? Illusion;
-            public Exception? Mysticism;
-            public Exception? Restoration;
-            public Exception? Acrobatics;
-            public Exception? LightArmor;
-            public Exception? Marksman;
-            public Exception? Mercantile;
-            public Exception? Security;
-            public Exception? Sneak;
-            public Exception? Speechcraft;
-            public Exception? Health;
-            public Exception? Strength;
-            public Exception? Intelligence;
-            public Exception? Willpower;
-            public Exception? Agility;
-            public Exception? Speed;
-            public Exception? Endurance;
-            public Exception? Personality;
-            public Exception? Luck;
+            public MaskItem<Exception?, NpcData.ErrorMask?>? Stats;
             public Exception? Hair;
             public Exception? HairLength;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Eyes;
@@ -2413,9 +1251,6 @@ namespace Mutagen.Bethesda.Oblivion
             public Exception? FaceGenGeometryAsymmetric;
             public Exception? FaceGenTextureSymmetric;
             public Exception? Unknown;
-            public Exception? ACBSDataTypeState;
-            public Exception? AIDTDataTypeState;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -2428,20 +1263,8 @@ namespace Mutagen.Bethesda.Oblivion
                         return Name;
                     case Npc_FieldIndex.Model:
                         return Model;
-                    case Npc_FieldIndex.Flags:
-                        return Flags;
-                    case Npc_FieldIndex.BaseSpellPoints:
-                        return BaseSpellPoints;
-                    case Npc_FieldIndex.Fatigue:
-                        return Fatigue;
-                    case Npc_FieldIndex.BarterGold:
-                        return BarterGold;
-                    case Npc_FieldIndex.LevelOffset:
-                        return LevelOffset;
-                    case Npc_FieldIndex.CalcMin:
-                        return CalcMin;
-                    case Npc_FieldIndex.CalcMax:
-                        return CalcMax;
+                    case Npc_FieldIndex.Configuration:
+                        return Configuration;
                     case Npc_FieldIndex.Factions:
                         return Factions;
                     case Npc_FieldIndex.DeathItem:
@@ -2454,88 +1277,16 @@ namespace Mutagen.Bethesda.Oblivion
                         return Script;
                     case Npc_FieldIndex.Items:
                         return Items;
-                    case Npc_FieldIndex.Aggression:
-                        return Aggression;
-                    case Npc_FieldIndex.Confidence:
-                        return Confidence;
-                    case Npc_FieldIndex.EnergyLevel:
-                        return EnergyLevel;
-                    case Npc_FieldIndex.Responsibility:
-                        return Responsibility;
-                    case Npc_FieldIndex.BuySellServices:
-                        return BuySellServices;
-                    case Npc_FieldIndex.Teaches:
-                        return Teaches;
-                    case Npc_FieldIndex.MaximumTrainingLevel:
-                        return MaximumTrainingLevel;
-                    case Npc_FieldIndex.Fluff:
-                        return Fluff;
+                    case Npc_FieldIndex.AIData:
+                        return AIData;
                     case Npc_FieldIndex.AIPackages:
                         return AIPackages;
                     case Npc_FieldIndex.Animations:
                         return Animations;
                     case Npc_FieldIndex.Class:
                         return Class;
-                    case Npc_FieldIndex.Armorer:
-                        return Armorer;
-                    case Npc_FieldIndex.Athletics:
-                        return Athletics;
-                    case Npc_FieldIndex.Blade:
-                        return Blade;
-                    case Npc_FieldIndex.Block:
-                        return Block;
-                    case Npc_FieldIndex.Blunt:
-                        return Blunt;
-                    case Npc_FieldIndex.HandToHand:
-                        return HandToHand;
-                    case Npc_FieldIndex.HeavyArmor:
-                        return HeavyArmor;
-                    case Npc_FieldIndex.Alchemy:
-                        return Alchemy;
-                    case Npc_FieldIndex.Alteration:
-                        return Alteration;
-                    case Npc_FieldIndex.Conjuration:
-                        return Conjuration;
-                    case Npc_FieldIndex.Destruction:
-                        return Destruction;
-                    case Npc_FieldIndex.Illusion:
-                        return Illusion;
-                    case Npc_FieldIndex.Mysticism:
-                        return Mysticism;
-                    case Npc_FieldIndex.Restoration:
-                        return Restoration;
-                    case Npc_FieldIndex.Acrobatics:
-                        return Acrobatics;
-                    case Npc_FieldIndex.LightArmor:
-                        return LightArmor;
-                    case Npc_FieldIndex.Marksman:
-                        return Marksman;
-                    case Npc_FieldIndex.Mercantile:
-                        return Mercantile;
-                    case Npc_FieldIndex.Security:
-                        return Security;
-                    case Npc_FieldIndex.Sneak:
-                        return Sneak;
-                    case Npc_FieldIndex.Speechcraft:
-                        return Speechcraft;
-                    case Npc_FieldIndex.Health:
-                        return Health;
-                    case Npc_FieldIndex.Strength:
-                        return Strength;
-                    case Npc_FieldIndex.Intelligence:
-                        return Intelligence;
-                    case Npc_FieldIndex.Willpower:
-                        return Willpower;
-                    case Npc_FieldIndex.Agility:
-                        return Agility;
-                    case Npc_FieldIndex.Speed:
-                        return Speed;
-                    case Npc_FieldIndex.Endurance:
-                        return Endurance;
-                    case Npc_FieldIndex.Personality:
-                        return Personality;
-                    case Npc_FieldIndex.Luck:
-                        return Luck;
+                    case Npc_FieldIndex.Stats:
+                        return Stats;
                     case Npc_FieldIndex.Hair:
                         return Hair;
                     case Npc_FieldIndex.HairLength:
@@ -2554,12 +1305,6 @@ namespace Mutagen.Bethesda.Oblivion
                         return FaceGenTextureSymmetric;
                     case Npc_FieldIndex.Unknown:
                         return Unknown;
-                    case Npc_FieldIndex.ACBSDataTypeState:
-                        return ACBSDataTypeState;
-                    case Npc_FieldIndex.AIDTDataTypeState:
-                        return AIDTDataTypeState;
-                    case Npc_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -2576,26 +1321,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case Npc_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
-                    case Npc_FieldIndex.Flags:
-                        this.Flags = ex;
-                        break;
-                    case Npc_FieldIndex.BaseSpellPoints:
-                        this.BaseSpellPoints = ex;
-                        break;
-                    case Npc_FieldIndex.Fatigue:
-                        this.Fatigue = ex;
-                        break;
-                    case Npc_FieldIndex.BarterGold:
-                        this.BarterGold = ex;
-                        break;
-                    case Npc_FieldIndex.LevelOffset:
-                        this.LevelOffset = ex;
-                        break;
-                    case Npc_FieldIndex.CalcMin:
-                        this.CalcMin = ex;
-                        break;
-                    case Npc_FieldIndex.CalcMax:
-                        this.CalcMax = ex;
+                    case Npc_FieldIndex.Configuration:
+                        this.Configuration = new MaskItem<Exception?, NpcConfiguration.ErrorMask?>(ex, null);
                         break;
                     case Npc_FieldIndex.Factions:
                         this.Factions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>(ex, null);
@@ -2615,29 +1342,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case Npc_FieldIndex.Items:
                         this.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemEntry.ErrorMask?>>?>(ex, null);
                         break;
-                    case Npc_FieldIndex.Aggression:
-                        this.Aggression = ex;
-                        break;
-                    case Npc_FieldIndex.Confidence:
-                        this.Confidence = ex;
-                        break;
-                    case Npc_FieldIndex.EnergyLevel:
-                        this.EnergyLevel = ex;
-                        break;
-                    case Npc_FieldIndex.Responsibility:
-                        this.Responsibility = ex;
-                        break;
-                    case Npc_FieldIndex.BuySellServices:
-                        this.BuySellServices = ex;
-                        break;
-                    case Npc_FieldIndex.Teaches:
-                        this.Teaches = ex;
-                        break;
-                    case Npc_FieldIndex.MaximumTrainingLevel:
-                        this.MaximumTrainingLevel = ex;
-                        break;
-                    case Npc_FieldIndex.Fluff:
-                        this.Fluff = ex;
+                    case Npc_FieldIndex.AIData:
+                        this.AIData = new MaskItem<Exception?, AIData.ErrorMask?>(ex, null);
                         break;
                     case Npc_FieldIndex.AIPackages:
                         this.AIPackages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
@@ -2648,95 +1354,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case Npc_FieldIndex.Class:
                         this.Class = ex;
                         break;
-                    case Npc_FieldIndex.Armorer:
-                        this.Armorer = ex;
-                        break;
-                    case Npc_FieldIndex.Athletics:
-                        this.Athletics = ex;
-                        break;
-                    case Npc_FieldIndex.Blade:
-                        this.Blade = ex;
-                        break;
-                    case Npc_FieldIndex.Block:
-                        this.Block = ex;
-                        break;
-                    case Npc_FieldIndex.Blunt:
-                        this.Blunt = ex;
-                        break;
-                    case Npc_FieldIndex.HandToHand:
-                        this.HandToHand = ex;
-                        break;
-                    case Npc_FieldIndex.HeavyArmor:
-                        this.HeavyArmor = ex;
-                        break;
-                    case Npc_FieldIndex.Alchemy:
-                        this.Alchemy = ex;
-                        break;
-                    case Npc_FieldIndex.Alteration:
-                        this.Alteration = ex;
-                        break;
-                    case Npc_FieldIndex.Conjuration:
-                        this.Conjuration = ex;
-                        break;
-                    case Npc_FieldIndex.Destruction:
-                        this.Destruction = ex;
-                        break;
-                    case Npc_FieldIndex.Illusion:
-                        this.Illusion = ex;
-                        break;
-                    case Npc_FieldIndex.Mysticism:
-                        this.Mysticism = ex;
-                        break;
-                    case Npc_FieldIndex.Restoration:
-                        this.Restoration = ex;
-                        break;
-                    case Npc_FieldIndex.Acrobatics:
-                        this.Acrobatics = ex;
-                        break;
-                    case Npc_FieldIndex.LightArmor:
-                        this.LightArmor = ex;
-                        break;
-                    case Npc_FieldIndex.Marksman:
-                        this.Marksman = ex;
-                        break;
-                    case Npc_FieldIndex.Mercantile:
-                        this.Mercantile = ex;
-                        break;
-                    case Npc_FieldIndex.Security:
-                        this.Security = ex;
-                        break;
-                    case Npc_FieldIndex.Sneak:
-                        this.Sneak = ex;
-                        break;
-                    case Npc_FieldIndex.Speechcraft:
-                        this.Speechcraft = ex;
-                        break;
-                    case Npc_FieldIndex.Health:
-                        this.Health = ex;
-                        break;
-                    case Npc_FieldIndex.Strength:
-                        this.Strength = ex;
-                        break;
-                    case Npc_FieldIndex.Intelligence:
-                        this.Intelligence = ex;
-                        break;
-                    case Npc_FieldIndex.Willpower:
-                        this.Willpower = ex;
-                        break;
-                    case Npc_FieldIndex.Agility:
-                        this.Agility = ex;
-                        break;
-                    case Npc_FieldIndex.Speed:
-                        this.Speed = ex;
-                        break;
-                    case Npc_FieldIndex.Endurance:
-                        this.Endurance = ex;
-                        break;
-                    case Npc_FieldIndex.Personality:
-                        this.Personality = ex;
-                        break;
-                    case Npc_FieldIndex.Luck:
-                        this.Luck = ex;
+                    case Npc_FieldIndex.Stats:
+                        this.Stats = new MaskItem<Exception?, NpcData.ErrorMask?>(ex, null);
                         break;
                     case Npc_FieldIndex.Hair:
                         this.Hair = ex;
@@ -2765,15 +1384,6 @@ namespace Mutagen.Bethesda.Oblivion
                     case Npc_FieldIndex.Unknown:
                         this.Unknown = ex;
                         break;
-                    case Npc_FieldIndex.ACBSDataTypeState:
-                        this.ACBSDataTypeState = ex;
-                        break;
-                    case Npc_FieldIndex.AIDTDataTypeState:
-                        this.AIDTDataTypeState = ex;
-                        break;
-                    case Npc_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
-                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -2791,26 +1401,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case Npc_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
-                    case Npc_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.BaseSpellPoints:
-                        this.BaseSpellPoints = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Fatigue:
-                        this.Fatigue = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.BarterGold:
-                        this.BarterGold = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.LevelOffset:
-                        this.LevelOffset = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.CalcMin:
-                        this.CalcMin = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.CalcMax:
-                        this.CalcMax = (Exception?)obj;
+                    case Npc_FieldIndex.Configuration:
+                        this.Configuration = (MaskItem<Exception?, NpcConfiguration.ErrorMask?>?)obj;
                         break;
                     case Npc_FieldIndex.Factions:
                         this.Factions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>)obj;
@@ -2830,29 +1422,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case Npc_FieldIndex.Items:
                         this.Items = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemEntry.ErrorMask?>>?>)obj;
                         break;
-                    case Npc_FieldIndex.Aggression:
-                        this.Aggression = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Confidence:
-                        this.Confidence = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.EnergyLevel:
-                        this.EnergyLevel = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Responsibility:
-                        this.Responsibility = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.BuySellServices:
-                        this.BuySellServices = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Teaches:
-                        this.Teaches = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.MaximumTrainingLevel:
-                        this.MaximumTrainingLevel = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Fluff:
-                        this.Fluff = (Exception?)obj;
+                    case Npc_FieldIndex.AIData:
+                        this.AIData = (MaskItem<Exception?, AIData.ErrorMask?>?)obj;
                         break;
                     case Npc_FieldIndex.AIPackages:
                         this.AIPackages = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
@@ -2863,95 +1434,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case Npc_FieldIndex.Class:
                         this.Class = (Exception?)obj;
                         break;
-                    case Npc_FieldIndex.Armorer:
-                        this.Armorer = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Athletics:
-                        this.Athletics = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Blade:
-                        this.Blade = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Block:
-                        this.Block = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Blunt:
-                        this.Blunt = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.HandToHand:
-                        this.HandToHand = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.HeavyArmor:
-                        this.HeavyArmor = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Alchemy:
-                        this.Alchemy = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Alteration:
-                        this.Alteration = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Conjuration:
-                        this.Conjuration = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Destruction:
-                        this.Destruction = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Illusion:
-                        this.Illusion = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Mysticism:
-                        this.Mysticism = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Restoration:
-                        this.Restoration = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Acrobatics:
-                        this.Acrobatics = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.LightArmor:
-                        this.LightArmor = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Marksman:
-                        this.Marksman = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Mercantile:
-                        this.Mercantile = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Security:
-                        this.Security = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Sneak:
-                        this.Sneak = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Speechcraft:
-                        this.Speechcraft = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Health:
-                        this.Health = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Strength:
-                        this.Strength = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Intelligence:
-                        this.Intelligence = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Willpower:
-                        this.Willpower = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Agility:
-                        this.Agility = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Speed:
-                        this.Speed = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Endurance:
-                        this.Endurance = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Personality:
-                        this.Personality = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.Luck:
-                        this.Luck = (Exception?)obj;
+                    case Npc_FieldIndex.Stats:
+                        this.Stats = (MaskItem<Exception?, NpcData.ErrorMask?>?)obj;
                         break;
                     case Npc_FieldIndex.Hair:
                         this.Hair = (Exception?)obj;
@@ -2980,15 +1464,6 @@ namespace Mutagen.Bethesda.Oblivion
                     case Npc_FieldIndex.Unknown:
                         this.Unknown = (Exception?)obj;
                         break;
-                    case Npc_FieldIndex.ACBSDataTypeState:
-                        this.ACBSDataTypeState = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.AIDTDataTypeState:
-                        this.AIDTDataTypeState = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -3000,60 +1475,18 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Overall != null) return true;
                 if (Name != null) return true;
                 if (Model != null) return true;
-                if (Flags != null) return true;
-                if (BaseSpellPoints != null) return true;
-                if (Fatigue != null) return true;
-                if (BarterGold != null) return true;
-                if (LevelOffset != null) return true;
-                if (CalcMin != null) return true;
-                if (CalcMax != null) return true;
+                if (Configuration != null) return true;
                 if (Factions != null) return true;
                 if (DeathItem != null) return true;
                 if (Race != null) return true;
                 if (Spells != null) return true;
                 if (Script != null) return true;
                 if (Items != null) return true;
-                if (Aggression != null) return true;
-                if (Confidence != null) return true;
-                if (EnergyLevel != null) return true;
-                if (Responsibility != null) return true;
-                if (BuySellServices != null) return true;
-                if (Teaches != null) return true;
-                if (MaximumTrainingLevel != null) return true;
-                if (Fluff != null) return true;
+                if (AIData != null) return true;
                 if (AIPackages != null) return true;
                 if (Animations != null) return true;
                 if (Class != null) return true;
-                if (Armorer != null) return true;
-                if (Athletics != null) return true;
-                if (Blade != null) return true;
-                if (Block != null) return true;
-                if (Blunt != null) return true;
-                if (HandToHand != null) return true;
-                if (HeavyArmor != null) return true;
-                if (Alchemy != null) return true;
-                if (Alteration != null) return true;
-                if (Conjuration != null) return true;
-                if (Destruction != null) return true;
-                if (Illusion != null) return true;
-                if (Mysticism != null) return true;
-                if (Restoration != null) return true;
-                if (Acrobatics != null) return true;
-                if (LightArmor != null) return true;
-                if (Marksman != null) return true;
-                if (Mercantile != null) return true;
-                if (Security != null) return true;
-                if (Sneak != null) return true;
-                if (Speechcraft != null) return true;
-                if (Health != null) return true;
-                if (Strength != null) return true;
-                if (Intelligence != null) return true;
-                if (Willpower != null) return true;
-                if (Agility != null) return true;
-                if (Speed != null) return true;
-                if (Endurance != null) return true;
-                if (Personality != null) return true;
-                if (Luck != null) return true;
+                if (Stats != null) return true;
                 if (Hair != null) return true;
                 if (HairLength != null) return true;
                 if (Eyes != null) return true;
@@ -3063,9 +1496,6 @@ namespace Mutagen.Bethesda.Oblivion
                 if (FaceGenGeometryAsymmetric != null) return true;
                 if (FaceGenTextureSymmetric != null) return true;
                 if (Unknown != null) return true;
-                if (ACBSDataTypeState != null) return true;
-                if (AIDTDataTypeState != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -3103,13 +1533,7 @@ namespace Mutagen.Bethesda.Oblivion
                 base.ToString_FillInternal(fg);
                 fg.AppendItem(Name, "Name");
                 Model?.ToString(fg);
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(BaseSpellPoints, "BaseSpellPoints");
-                fg.AppendItem(Fatigue, "Fatigue");
-                fg.AppendItem(BarterGold, "BarterGold");
-                fg.AppendItem(LevelOffset, "LevelOffset");
-                fg.AppendItem(CalcMin, "CalcMin");
-                fg.AppendItem(CalcMax, "CalcMax");
+                Configuration?.ToString(fg);
                 if (Factions.TryGet(out var FactionsItem))
                 {
                     fg.AppendLine("Factions =>");
@@ -3179,14 +1603,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     fg.AppendLine("]");
                 }
-                fg.AppendItem(Aggression, "Aggression");
-                fg.AppendItem(Confidence, "Confidence");
-                fg.AppendItem(EnergyLevel, "EnergyLevel");
-                fg.AppendItem(Responsibility, "Responsibility");
-                fg.AppendItem(BuySellServices, "BuySellServices");
-                fg.AppendItem(Teaches, "Teaches");
-                fg.AppendItem(MaximumTrainingLevel, "MaximumTrainingLevel");
-                fg.AppendItem(Fluff, "Fluff");
+                AIData?.ToString(fg);
                 if (AIPackages.TryGet(out var AIPackagesItem))
                 {
                     fg.AppendLine("AIPackages =>");
@@ -3232,36 +1649,7 @@ namespace Mutagen.Bethesda.Oblivion
                     fg.AppendLine("]");
                 }
                 fg.AppendItem(Class, "Class");
-                fg.AppendItem(Armorer, "Armorer");
-                fg.AppendItem(Athletics, "Athletics");
-                fg.AppendItem(Blade, "Blade");
-                fg.AppendItem(Block, "Block");
-                fg.AppendItem(Blunt, "Blunt");
-                fg.AppendItem(HandToHand, "HandToHand");
-                fg.AppendItem(HeavyArmor, "HeavyArmor");
-                fg.AppendItem(Alchemy, "Alchemy");
-                fg.AppendItem(Alteration, "Alteration");
-                fg.AppendItem(Conjuration, "Conjuration");
-                fg.AppendItem(Destruction, "Destruction");
-                fg.AppendItem(Illusion, "Illusion");
-                fg.AppendItem(Mysticism, "Mysticism");
-                fg.AppendItem(Restoration, "Restoration");
-                fg.AppendItem(Acrobatics, "Acrobatics");
-                fg.AppendItem(LightArmor, "LightArmor");
-                fg.AppendItem(Marksman, "Marksman");
-                fg.AppendItem(Mercantile, "Mercantile");
-                fg.AppendItem(Security, "Security");
-                fg.AppendItem(Sneak, "Sneak");
-                fg.AppendItem(Speechcraft, "Speechcraft");
-                fg.AppendItem(Health, "Health");
-                fg.AppendItem(Strength, "Strength");
-                fg.AppendItem(Intelligence, "Intelligence");
-                fg.AppendItem(Willpower, "Willpower");
-                fg.AppendItem(Agility, "Agility");
-                fg.AppendItem(Speed, "Speed");
-                fg.AppendItem(Endurance, "Endurance");
-                fg.AppendItem(Personality, "Personality");
-                fg.AppendItem(Luck, "Luck");
+                Stats?.ToString(fg);
                 fg.AppendItem(Hair, "Hair");
                 fg.AppendItem(HairLength, "HairLength");
                 if (Eyes.TryGet(out var EyesItem))
@@ -3292,9 +1680,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(FaceGenGeometryAsymmetric, "FaceGenGeometryAsymmetric");
                 fg.AppendItem(FaceGenTextureSymmetric, "FaceGenTextureSymmetric");
                 fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(ACBSDataTypeState, "ACBSDataTypeState");
-                fg.AppendItem(AIDTDataTypeState, "AIDTDataTypeState");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -3305,60 +1690,18 @@ namespace Mutagen.Bethesda.Oblivion
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.BaseSpellPoints = this.BaseSpellPoints.Combine(rhs.BaseSpellPoints);
-                ret.Fatigue = this.Fatigue.Combine(rhs.Fatigue);
-                ret.BarterGold = this.BarterGold.Combine(rhs.BarterGold);
-                ret.LevelOffset = this.LevelOffset.Combine(rhs.LevelOffset);
-                ret.CalcMin = this.CalcMin.Combine(rhs.CalcMin);
-                ret.CalcMax = this.CalcMax.Combine(rhs.CalcMax);
+                ret.Configuration = this.Configuration.Combine(rhs.Configuration, (l, r) => l.Combine(r));
                 ret.Factions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, RankPlacement.ErrorMask?>>?>(ExceptionExt.Combine(this.Factions?.Overall, rhs.Factions?.Overall), ExceptionExt.Combine(this.Factions?.Specific, rhs.Factions?.Specific));
                 ret.DeathItem = this.DeathItem.Combine(rhs.DeathItem);
                 ret.Race = this.Race.Combine(rhs.Race);
                 ret.Spells = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Spells?.Overall, rhs.Spells?.Overall), ExceptionExt.Combine(this.Spells?.Specific, rhs.Spells?.Specific));
                 ret.Script = this.Script.Combine(rhs.Script);
                 ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
-                ret.Aggression = this.Aggression.Combine(rhs.Aggression);
-                ret.Confidence = this.Confidence.Combine(rhs.Confidence);
-                ret.EnergyLevel = this.EnergyLevel.Combine(rhs.EnergyLevel);
-                ret.Responsibility = this.Responsibility.Combine(rhs.Responsibility);
-                ret.BuySellServices = this.BuySellServices.Combine(rhs.BuySellServices);
-                ret.Teaches = this.Teaches.Combine(rhs.Teaches);
-                ret.MaximumTrainingLevel = this.MaximumTrainingLevel.Combine(rhs.MaximumTrainingLevel);
-                ret.Fluff = this.Fluff.Combine(rhs.Fluff);
+                ret.AIData = this.AIData.Combine(rhs.AIData, (l, r) => l.Combine(r));
                 ret.AIPackages = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AIPackages?.Overall, rhs.AIPackages?.Overall), ExceptionExt.Combine(this.AIPackages?.Specific, rhs.AIPackages?.Specific));
                 ret.Animations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Animations?.Overall, rhs.Animations?.Overall), ExceptionExt.Combine(this.Animations?.Specific, rhs.Animations?.Specific));
                 ret.Class = this.Class.Combine(rhs.Class);
-                ret.Armorer = this.Armorer.Combine(rhs.Armorer);
-                ret.Athletics = this.Athletics.Combine(rhs.Athletics);
-                ret.Blade = this.Blade.Combine(rhs.Blade);
-                ret.Block = this.Block.Combine(rhs.Block);
-                ret.Blunt = this.Blunt.Combine(rhs.Blunt);
-                ret.HandToHand = this.HandToHand.Combine(rhs.HandToHand);
-                ret.HeavyArmor = this.HeavyArmor.Combine(rhs.HeavyArmor);
-                ret.Alchemy = this.Alchemy.Combine(rhs.Alchemy);
-                ret.Alteration = this.Alteration.Combine(rhs.Alteration);
-                ret.Conjuration = this.Conjuration.Combine(rhs.Conjuration);
-                ret.Destruction = this.Destruction.Combine(rhs.Destruction);
-                ret.Illusion = this.Illusion.Combine(rhs.Illusion);
-                ret.Mysticism = this.Mysticism.Combine(rhs.Mysticism);
-                ret.Restoration = this.Restoration.Combine(rhs.Restoration);
-                ret.Acrobatics = this.Acrobatics.Combine(rhs.Acrobatics);
-                ret.LightArmor = this.LightArmor.Combine(rhs.LightArmor);
-                ret.Marksman = this.Marksman.Combine(rhs.Marksman);
-                ret.Mercantile = this.Mercantile.Combine(rhs.Mercantile);
-                ret.Security = this.Security.Combine(rhs.Security);
-                ret.Sneak = this.Sneak.Combine(rhs.Sneak);
-                ret.Speechcraft = this.Speechcraft.Combine(rhs.Speechcraft);
-                ret.Health = this.Health.Combine(rhs.Health);
-                ret.Strength = this.Strength.Combine(rhs.Strength);
-                ret.Intelligence = this.Intelligence.Combine(rhs.Intelligence);
-                ret.Willpower = this.Willpower.Combine(rhs.Willpower);
-                ret.Agility = this.Agility.Combine(rhs.Agility);
-                ret.Speed = this.Speed.Combine(rhs.Speed);
-                ret.Endurance = this.Endurance.Combine(rhs.Endurance);
-                ret.Personality = this.Personality.Combine(rhs.Personality);
-                ret.Luck = this.Luck.Combine(rhs.Luck);
+                ret.Stats = this.Stats.Combine(rhs.Stats, (l, r) => l.Combine(r));
                 ret.Hair = this.Hair.Combine(rhs.Hair);
                 ret.HairLength = this.HairLength.Combine(rhs.HairLength);
                 ret.Eyes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Eyes?.Overall, rhs.Eyes?.Overall), ExceptionExt.Combine(this.Eyes?.Specific, rhs.Eyes?.Specific));
@@ -3368,9 +1711,6 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.FaceGenGeometryAsymmetric = this.FaceGenGeometryAsymmetric.Combine(rhs.FaceGenGeometryAsymmetric);
                 ret.FaceGenTextureSymmetric = this.FaceGenTextureSymmetric.Combine(rhs.FaceGenTextureSymmetric);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.ACBSDataTypeState = this.ACBSDataTypeState.Combine(rhs.ACBSDataTypeState);
-                ret.AIDTDataTypeState = this.AIDTDataTypeState.Combine(rhs.AIDTDataTypeState);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -3395,60 +1735,18 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             public bool Name;
             public MaskItem<bool, Model.TranslationMask?> Model;
-            public bool Flags;
-            public bool BaseSpellPoints;
-            public bool Fatigue;
-            public bool BarterGold;
-            public bool LevelOffset;
-            public bool CalcMin;
-            public bool CalcMax;
+            public MaskItem<bool, NpcConfiguration.TranslationMask?> Configuration;
             public MaskItem<bool, RankPlacement.TranslationMask?> Factions;
             public bool DeathItem;
             public bool Race;
             public bool Spells;
             public bool Script;
             public MaskItem<bool, ItemEntry.TranslationMask?> Items;
-            public bool Aggression;
-            public bool Confidence;
-            public bool EnergyLevel;
-            public bool Responsibility;
-            public bool BuySellServices;
-            public bool Teaches;
-            public bool MaximumTrainingLevel;
-            public bool Fluff;
+            public MaskItem<bool, AIData.TranslationMask?> AIData;
             public bool AIPackages;
             public bool Animations;
             public bool Class;
-            public bool Armorer;
-            public bool Athletics;
-            public bool Blade;
-            public bool Block;
-            public bool Blunt;
-            public bool HandToHand;
-            public bool HeavyArmor;
-            public bool Alchemy;
-            public bool Alteration;
-            public bool Conjuration;
-            public bool Destruction;
-            public bool Illusion;
-            public bool Mysticism;
-            public bool Restoration;
-            public bool Acrobatics;
-            public bool LightArmor;
-            public bool Marksman;
-            public bool Mercantile;
-            public bool Security;
-            public bool Sneak;
-            public bool Speechcraft;
-            public bool Health;
-            public bool Strength;
-            public bool Intelligence;
-            public bool Willpower;
-            public bool Agility;
-            public bool Speed;
-            public bool Endurance;
-            public bool Personality;
-            public bool Luck;
+            public MaskItem<bool, NpcData.TranslationMask?> Stats;
             public bool Hair;
             public bool HairLength;
             public bool Eyes;
@@ -3458,9 +1756,6 @@ namespace Mutagen.Bethesda.Oblivion
             public bool FaceGenGeometryAsymmetric;
             public bool FaceGenTextureSymmetric;
             public bool Unknown;
-            public bool ACBSDataTypeState;
-            public bool AIDTDataTypeState;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -3469,60 +1764,18 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Name = defaultOn;
                 this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
-                this.Flags = defaultOn;
-                this.BaseSpellPoints = defaultOn;
-                this.Fatigue = defaultOn;
-                this.BarterGold = defaultOn;
-                this.LevelOffset = defaultOn;
-                this.CalcMin = defaultOn;
-                this.CalcMax = defaultOn;
+                this.Configuration = new MaskItem<bool, NpcConfiguration.TranslationMask?>(defaultOn, null);
                 this.Factions = new MaskItem<bool, RankPlacement.TranslationMask?>(defaultOn, null);
                 this.DeathItem = defaultOn;
                 this.Race = defaultOn;
                 this.Spells = defaultOn;
                 this.Script = defaultOn;
                 this.Items = new MaskItem<bool, ItemEntry.TranslationMask?>(defaultOn, null);
-                this.Aggression = defaultOn;
-                this.Confidence = defaultOn;
-                this.EnergyLevel = defaultOn;
-                this.Responsibility = defaultOn;
-                this.BuySellServices = defaultOn;
-                this.Teaches = defaultOn;
-                this.MaximumTrainingLevel = defaultOn;
-                this.Fluff = defaultOn;
+                this.AIData = new MaskItem<bool, AIData.TranslationMask?>(defaultOn, null);
                 this.AIPackages = defaultOn;
                 this.Animations = defaultOn;
                 this.Class = defaultOn;
-                this.Armorer = defaultOn;
-                this.Athletics = defaultOn;
-                this.Blade = defaultOn;
-                this.Block = defaultOn;
-                this.Blunt = defaultOn;
-                this.HandToHand = defaultOn;
-                this.HeavyArmor = defaultOn;
-                this.Alchemy = defaultOn;
-                this.Alteration = defaultOn;
-                this.Conjuration = defaultOn;
-                this.Destruction = defaultOn;
-                this.Illusion = defaultOn;
-                this.Mysticism = defaultOn;
-                this.Restoration = defaultOn;
-                this.Acrobatics = defaultOn;
-                this.LightArmor = defaultOn;
-                this.Marksman = defaultOn;
-                this.Mercantile = defaultOn;
-                this.Security = defaultOn;
-                this.Sneak = defaultOn;
-                this.Speechcraft = defaultOn;
-                this.Health = defaultOn;
-                this.Strength = defaultOn;
-                this.Intelligence = defaultOn;
-                this.Willpower = defaultOn;
-                this.Agility = defaultOn;
-                this.Speed = defaultOn;
-                this.Endurance = defaultOn;
-                this.Personality = defaultOn;
-                this.Luck = defaultOn;
+                this.Stats = new MaskItem<bool, NpcData.TranslationMask?>(defaultOn, null);
                 this.Hair = defaultOn;
                 this.HairLength = defaultOn;
                 this.Eyes = defaultOn;
@@ -3532,9 +1785,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.FaceGenGeometryAsymmetric = defaultOn;
                 this.FaceGenTextureSymmetric = defaultOn;
                 this.Unknown = defaultOn;
-                this.ACBSDataTypeState = defaultOn;
-                this.AIDTDataTypeState = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -3544,60 +1794,18 @@ namespace Mutagen.Bethesda.Oblivion
                 base.GetCrystal(ret);
                 ret.Add((Name, null));
                 ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-                ret.Add((Flags, null));
-                ret.Add((BaseSpellPoints, null));
-                ret.Add((Fatigue, null));
-                ret.Add((BarterGold, null));
-                ret.Add((LevelOffset, null));
-                ret.Add((CalcMin, null));
-                ret.Add((CalcMax, null));
+                ret.Add((Configuration?.Overall ?? true, Configuration?.Specific?.GetCrystal()));
                 ret.Add((Factions?.Overall ?? true, Factions?.Specific?.GetCrystal()));
                 ret.Add((DeathItem, null));
                 ret.Add((Race, null));
                 ret.Add((Spells, null));
                 ret.Add((Script, null));
                 ret.Add((Items?.Overall ?? true, Items?.Specific?.GetCrystal()));
-                ret.Add((Aggression, null));
-                ret.Add((Confidence, null));
-                ret.Add((EnergyLevel, null));
-                ret.Add((Responsibility, null));
-                ret.Add((BuySellServices, null));
-                ret.Add((Teaches, null));
-                ret.Add((MaximumTrainingLevel, null));
-                ret.Add((Fluff, null));
+                ret.Add((AIData?.Overall ?? true, AIData?.Specific?.GetCrystal()));
                 ret.Add((AIPackages, null));
                 ret.Add((Animations, null));
                 ret.Add((Class, null));
-                ret.Add((Armorer, null));
-                ret.Add((Athletics, null));
-                ret.Add((Blade, null));
-                ret.Add((Block, null));
-                ret.Add((Blunt, null));
-                ret.Add((HandToHand, null));
-                ret.Add((HeavyArmor, null));
-                ret.Add((Alchemy, null));
-                ret.Add((Alteration, null));
-                ret.Add((Conjuration, null));
-                ret.Add((Destruction, null));
-                ret.Add((Illusion, null));
-                ret.Add((Mysticism, null));
-                ret.Add((Restoration, null));
-                ret.Add((Acrobatics, null));
-                ret.Add((LightArmor, null));
-                ret.Add((Marksman, null));
-                ret.Add((Mercantile, null));
-                ret.Add((Security, null));
-                ret.Add((Sneak, null));
-                ret.Add((Speechcraft, null));
-                ret.Add((Health, null));
-                ret.Add((Strength, null));
-                ret.Add((Intelligence, null));
-                ret.Add((Willpower, null));
-                ret.Add((Agility, null));
-                ret.Add((Speed, null));
-                ret.Add((Endurance, null));
-                ret.Add((Personality, null));
-                ret.Add((Luck, null));
+                ret.Add((Stats?.Overall ?? true, Stats?.Specific?.GetCrystal()));
                 ret.Add((Hair, null));
                 ret.Add((HairLength, null));
                 ret.Add((Eyes, null));
@@ -3607,30 +1815,12 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((FaceGenGeometryAsymmetric, null));
                 ret.Add((FaceGenTextureSymmetric, null));
                 ret.Add((Unknown, null));
-                ret.Add((ACBSDataTypeState, null));
-                ret.Add((AIDTDataTypeState, null));
-                ret.Add((DATADataTypeState, null));
             }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Npc_Registration.TriggeringRecordType;
-        [Flags]
-        public enum ACBSDataType
-        {
-            Has = 1
-        }
-        [Flags]
-        public enum AIDTDataType
-        {
-            Has = 1
-        }
-        [Flags]
-        public enum DATADataType
-        {
-            Has = 1
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => NpcCommon.Instance.GetLinks(this);
         public Npc(FormKey formKey)
@@ -3714,60 +1904,18 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
-        new Npc.NpcFlag Flags { get; set; }
-        new UInt16 BaseSpellPoints { get; set; }
-        new UInt16 Fatigue { get; set; }
-        new UInt16 BarterGold { get; set; }
-        new Int16 LevelOffset { get; set; }
-        new UInt16 CalcMin { get; set; }
-        new UInt16 CalcMax { get; set; }
+        new NpcConfiguration? Configuration { get; set; }
         new ExtendedList<RankPlacement> Factions { get; }
         new IFormLinkNullable<AItem> DeathItem { get; }
         new IFormLinkNullable<Race> Race { get; }
         new ExtendedList<IFormLink<ASpell>>? Spells { get; set; }
         new IFormLinkNullable<Script> Script { get; }
         new ExtendedList<ItemEntry> Items { get; }
-        new Byte Aggression { get; set; }
-        new Byte Confidence { get; set; }
-        new Byte EnergyLevel { get; set; }
-        new Byte Responsibility { get; set; }
-        new Npc.BuySellServiceFlag BuySellServices { get; set; }
-        new Skill Teaches { get; set; }
-        new Byte MaximumTrainingLevel { get; set; }
-        new Byte[] Fluff { get; set; }
+        new AIData? AIData { get; set; }
         new ExtendedList<IFormLink<AIPackage>>? AIPackages { get; set; }
         new ExtendedList<String>? Animations { get; set; }
         new IFormLinkNullable<Class> Class { get; }
-        new Byte Armorer { get; set; }
-        new Byte Athletics { get; set; }
-        new Byte Blade { get; set; }
-        new Byte Block { get; set; }
-        new Byte Blunt { get; set; }
-        new Byte HandToHand { get; set; }
-        new Byte HeavyArmor { get; set; }
-        new Byte Alchemy { get; set; }
-        new Byte Alteration { get; set; }
-        new Byte Conjuration { get; set; }
-        new Byte Destruction { get; set; }
-        new Byte Illusion { get; set; }
-        new Byte Mysticism { get; set; }
-        new Byte Restoration { get; set; }
-        new Byte Acrobatics { get; set; }
-        new Byte LightArmor { get; set; }
-        new Byte Marksman { get; set; }
-        new Byte Mercantile { get; set; }
-        new Byte Security { get; set; }
-        new Byte Sneak { get; set; }
-        new Byte Speechcraft { get; set; }
-        new UInt32 Health { get; set; }
-        new Byte Strength { get; set; }
-        new Byte Intelligence { get; set; }
-        new Byte Willpower { get; set; }
-        new Byte Agility { get; set; }
-        new Byte Speed { get; set; }
-        new Byte Endurance { get; set; }
-        new Byte Personality { get; set; }
-        new Byte Luck { get; set; }
+        new NpcData? Stats { get; set; }
         new IFormLinkNullable<Hair> Hair { get; }
         new Single? HairLength { get; set; }
         new ExtendedList<IFormLink<Eye>>? Eyes { get; set; }
@@ -3777,9 +1925,6 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte[]? FaceGenGeometryAsymmetric { get; set; }
         new Byte[]? FaceGenTextureSymmetric { get; set; }
         new Byte[]? Unknown { get; set; }
-        new Npc.ACBSDataType ACBSDataTypeState { get; set; }
-        new Npc.AIDTDataType AIDTDataTypeState { get; set; }
-        new Npc.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface INpcInternal :
@@ -3798,60 +1943,18 @@ namespace Mutagen.Bethesda.Oblivion
     {
         String? Name { get; }
         IModelGetter? Model { get; }
-        Npc.NpcFlag Flags { get; }
-        UInt16 BaseSpellPoints { get; }
-        UInt16 Fatigue { get; }
-        UInt16 BarterGold { get; }
-        Int16 LevelOffset { get; }
-        UInt16 CalcMin { get; }
-        UInt16 CalcMax { get; }
+        INpcConfigurationGetter? Configuration { get; }
         IReadOnlyList<IRankPlacementGetter> Factions { get; }
         IFormLinkNullableGetter<IAItemGetter> DeathItem { get; }
         IFormLinkNullableGetter<IRaceGetter> Race { get; }
         IReadOnlyList<IFormLinkGetter<IASpellGetter>>? Spells { get; }
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
         IReadOnlyList<IItemEntryGetter> Items { get; }
-        Byte Aggression { get; }
-        Byte Confidence { get; }
-        Byte EnergyLevel { get; }
-        Byte Responsibility { get; }
-        Npc.BuySellServiceFlag BuySellServices { get; }
-        Skill Teaches { get; }
-        Byte MaximumTrainingLevel { get; }
-        ReadOnlyMemorySlice<Byte> Fluff { get; }
+        IAIDataGetter? AIData { get; }
         IReadOnlyList<IFormLinkGetter<IAIPackageGetter>>? AIPackages { get; }
         IReadOnlyList<String>? Animations { get; }
         IFormLinkNullableGetter<IClassGetter> Class { get; }
-        Byte Armorer { get; }
-        Byte Athletics { get; }
-        Byte Blade { get; }
-        Byte Block { get; }
-        Byte Blunt { get; }
-        Byte HandToHand { get; }
-        Byte HeavyArmor { get; }
-        Byte Alchemy { get; }
-        Byte Alteration { get; }
-        Byte Conjuration { get; }
-        Byte Destruction { get; }
-        Byte Illusion { get; }
-        Byte Mysticism { get; }
-        Byte Restoration { get; }
-        Byte Acrobatics { get; }
-        Byte LightArmor { get; }
-        Byte Marksman { get; }
-        Byte Mercantile { get; }
-        Byte Security { get; }
-        Byte Sneak { get; }
-        Byte Speechcraft { get; }
-        UInt32 Health { get; }
-        Byte Strength { get; }
-        Byte Intelligence { get; }
-        Byte Willpower { get; }
-        Byte Agility { get; }
-        Byte Speed { get; }
-        Byte Endurance { get; }
-        Byte Personality { get; }
-        Byte Luck { get; }
+        INpcDataGetter? Stats { get; }
         IFormLinkNullableGetter<IHairGetter> Hair { get; }
         Single? HairLength { get; }
         IReadOnlyList<IFormLinkGetter<IEyeGetter>>? Eyes { get; }
@@ -3861,9 +1964,6 @@ namespace Mutagen.Bethesda.Oblivion
         ReadOnlyMemorySlice<Byte>? FaceGenGeometryAsymmetric { get; }
         ReadOnlyMemorySlice<Byte>? FaceGenTextureSymmetric { get; }
         ReadOnlyMemorySlice<Byte>? Unknown { get; }
-        Npc.ACBSDataType ACBSDataTypeState { get; }
-        Npc.AIDTDataType AIDTDataTypeState { get; }
-        Npc.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -4165,72 +2265,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         OblivionMajorRecordFlags = 4,
         Name = 5,
         Model = 6,
-        Flags = 7,
-        BaseSpellPoints = 8,
-        Fatigue = 9,
-        BarterGold = 10,
-        LevelOffset = 11,
-        CalcMin = 12,
-        CalcMax = 13,
-        Factions = 14,
-        DeathItem = 15,
-        Race = 16,
-        Spells = 17,
-        Script = 18,
-        Items = 19,
-        Aggression = 20,
-        Confidence = 21,
-        EnergyLevel = 22,
-        Responsibility = 23,
-        BuySellServices = 24,
-        Teaches = 25,
-        MaximumTrainingLevel = 26,
-        Fluff = 27,
-        AIPackages = 28,
-        Animations = 29,
-        Class = 30,
-        Armorer = 31,
-        Athletics = 32,
-        Blade = 33,
-        Block = 34,
-        Blunt = 35,
-        HandToHand = 36,
-        HeavyArmor = 37,
-        Alchemy = 38,
-        Alteration = 39,
-        Conjuration = 40,
-        Destruction = 41,
-        Illusion = 42,
-        Mysticism = 43,
-        Restoration = 44,
-        Acrobatics = 45,
-        LightArmor = 46,
-        Marksman = 47,
-        Mercantile = 48,
-        Security = 49,
-        Sneak = 50,
-        Speechcraft = 51,
-        Health = 52,
-        Strength = 53,
-        Intelligence = 54,
-        Willpower = 55,
-        Agility = 56,
-        Speed = 57,
-        Endurance = 58,
-        Personality = 59,
-        Luck = 60,
-        Hair = 61,
-        HairLength = 62,
-        Eyes = 63,
-        HairColor = 64,
-        CombatStyle = 65,
-        FaceGenGeometrySymmetric = 66,
-        FaceGenGeometryAsymmetric = 67,
-        FaceGenTextureSymmetric = 68,
-        Unknown = 69,
-        ACBSDataTypeState = 70,
-        AIDTDataTypeState = 71,
-        DATADataTypeState = 72,
+        Configuration = 7,
+        Factions = 8,
+        DeathItem = 9,
+        Race = 10,
+        Spells = 11,
+        Script = 12,
+        Items = 13,
+        AIData = 14,
+        AIPackages = 15,
+        Animations = 16,
+        Class = 17,
+        Stats = 18,
+        Hair = 19,
+        HairLength = 20,
+        Eyes = 21,
+        HairColor = 22,
+        CombatStyle = 23,
+        FaceGenGeometrySymmetric = 24,
+        FaceGenGeometryAsymmetric = 25,
+        FaceGenTextureSymmetric = 26,
+        Unknown = 27,
     }
     #endregion
 
@@ -4248,9 +2303,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "96396343-a32a-4165-b745-e038c5e06eeb";
 
-        public const ushort AdditionalFieldCount = 68;
+        public const ushort AdditionalFieldCount = 23;
 
-        public const ushort FieldCount = 73;
+        public const ushort FieldCount = 28;
 
         public static readonly Type MaskType = typeof(Npc.Mask<>);
 
@@ -4284,20 +2339,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Npc_FieldIndex.Name;
                 case "MODEL":
                     return (ushort)Npc_FieldIndex.Model;
-                case "FLAGS":
-                    return (ushort)Npc_FieldIndex.Flags;
-                case "BASESPELLPOINTS":
-                    return (ushort)Npc_FieldIndex.BaseSpellPoints;
-                case "FATIGUE":
-                    return (ushort)Npc_FieldIndex.Fatigue;
-                case "BARTERGOLD":
-                    return (ushort)Npc_FieldIndex.BarterGold;
-                case "LEVELOFFSET":
-                    return (ushort)Npc_FieldIndex.LevelOffset;
-                case "CALCMIN":
-                    return (ushort)Npc_FieldIndex.CalcMin;
-                case "CALCMAX":
-                    return (ushort)Npc_FieldIndex.CalcMax;
+                case "CONFIGURATION":
+                    return (ushort)Npc_FieldIndex.Configuration;
                 case "FACTIONS":
                     return (ushort)Npc_FieldIndex.Factions;
                 case "DEATHITEM":
@@ -4310,88 +2353,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Npc_FieldIndex.Script;
                 case "ITEMS":
                     return (ushort)Npc_FieldIndex.Items;
-                case "AGGRESSION":
-                    return (ushort)Npc_FieldIndex.Aggression;
-                case "CONFIDENCE":
-                    return (ushort)Npc_FieldIndex.Confidence;
-                case "ENERGYLEVEL":
-                    return (ushort)Npc_FieldIndex.EnergyLevel;
-                case "RESPONSIBILITY":
-                    return (ushort)Npc_FieldIndex.Responsibility;
-                case "BUYSELLSERVICES":
-                    return (ushort)Npc_FieldIndex.BuySellServices;
-                case "TEACHES":
-                    return (ushort)Npc_FieldIndex.Teaches;
-                case "MAXIMUMTRAININGLEVEL":
-                    return (ushort)Npc_FieldIndex.MaximumTrainingLevel;
-                case "FLUFF":
-                    return (ushort)Npc_FieldIndex.Fluff;
+                case "AIDATA":
+                    return (ushort)Npc_FieldIndex.AIData;
                 case "AIPACKAGES":
                     return (ushort)Npc_FieldIndex.AIPackages;
                 case "ANIMATIONS":
                     return (ushort)Npc_FieldIndex.Animations;
                 case "CLASS":
                     return (ushort)Npc_FieldIndex.Class;
-                case "ARMORER":
-                    return (ushort)Npc_FieldIndex.Armorer;
-                case "ATHLETICS":
-                    return (ushort)Npc_FieldIndex.Athletics;
-                case "BLADE":
-                    return (ushort)Npc_FieldIndex.Blade;
-                case "BLOCK":
-                    return (ushort)Npc_FieldIndex.Block;
-                case "BLUNT":
-                    return (ushort)Npc_FieldIndex.Blunt;
-                case "HANDTOHAND":
-                    return (ushort)Npc_FieldIndex.HandToHand;
-                case "HEAVYARMOR":
-                    return (ushort)Npc_FieldIndex.HeavyArmor;
-                case "ALCHEMY":
-                    return (ushort)Npc_FieldIndex.Alchemy;
-                case "ALTERATION":
-                    return (ushort)Npc_FieldIndex.Alteration;
-                case "CONJURATION":
-                    return (ushort)Npc_FieldIndex.Conjuration;
-                case "DESTRUCTION":
-                    return (ushort)Npc_FieldIndex.Destruction;
-                case "ILLUSION":
-                    return (ushort)Npc_FieldIndex.Illusion;
-                case "MYSTICISM":
-                    return (ushort)Npc_FieldIndex.Mysticism;
-                case "RESTORATION":
-                    return (ushort)Npc_FieldIndex.Restoration;
-                case "ACROBATICS":
-                    return (ushort)Npc_FieldIndex.Acrobatics;
-                case "LIGHTARMOR":
-                    return (ushort)Npc_FieldIndex.LightArmor;
-                case "MARKSMAN":
-                    return (ushort)Npc_FieldIndex.Marksman;
-                case "MERCANTILE":
-                    return (ushort)Npc_FieldIndex.Mercantile;
-                case "SECURITY":
-                    return (ushort)Npc_FieldIndex.Security;
-                case "SNEAK":
-                    return (ushort)Npc_FieldIndex.Sneak;
-                case "SPEECHCRAFT":
-                    return (ushort)Npc_FieldIndex.Speechcraft;
-                case "HEALTH":
-                    return (ushort)Npc_FieldIndex.Health;
-                case "STRENGTH":
-                    return (ushort)Npc_FieldIndex.Strength;
-                case "INTELLIGENCE":
-                    return (ushort)Npc_FieldIndex.Intelligence;
-                case "WILLPOWER":
-                    return (ushort)Npc_FieldIndex.Willpower;
-                case "AGILITY":
-                    return (ushort)Npc_FieldIndex.Agility;
-                case "SPEED":
-                    return (ushort)Npc_FieldIndex.Speed;
-                case "ENDURANCE":
-                    return (ushort)Npc_FieldIndex.Endurance;
-                case "PERSONALITY":
-                    return (ushort)Npc_FieldIndex.Personality;
-                case "LUCK":
-                    return (ushort)Npc_FieldIndex.Luck;
+                case "STATS":
+                    return (ushort)Npc_FieldIndex.Stats;
                 case "HAIR":
                     return (ushort)Npc_FieldIndex.Hair;
                 case "HAIRLENGTH":
@@ -4410,12 +2381,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Npc_FieldIndex.FaceGenTextureSymmetric;
                 case "UNKNOWN":
                     return (ushort)Npc_FieldIndex.Unknown;
-                case "ACBSDATATYPESTATE":
-                    return (ushort)Npc_FieldIndex.ACBSDataTypeState;
-                case "AIDTDATATYPESTATE":
-                    return (ushort)Npc_FieldIndex.AIDTDataTypeState;
-                case "DATADATATYPESTATE":
-                    return (ushort)Npc_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -4435,55 +2400,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return true;
                 case Npc_FieldIndex.Name:
                 case Npc_FieldIndex.Model:
-                case Npc_FieldIndex.Flags:
-                case Npc_FieldIndex.BaseSpellPoints:
-                case Npc_FieldIndex.Fatigue:
-                case Npc_FieldIndex.BarterGold:
-                case Npc_FieldIndex.LevelOffset:
-                case Npc_FieldIndex.CalcMin:
-                case Npc_FieldIndex.CalcMax:
+                case Npc_FieldIndex.Configuration:
                 case Npc_FieldIndex.DeathItem:
                 case Npc_FieldIndex.Race:
                 case Npc_FieldIndex.Script:
-                case Npc_FieldIndex.Aggression:
-                case Npc_FieldIndex.Confidence:
-                case Npc_FieldIndex.EnergyLevel:
-                case Npc_FieldIndex.Responsibility:
-                case Npc_FieldIndex.BuySellServices:
-                case Npc_FieldIndex.Teaches:
-                case Npc_FieldIndex.MaximumTrainingLevel:
-                case Npc_FieldIndex.Fluff:
+                case Npc_FieldIndex.AIData:
                 case Npc_FieldIndex.Class:
-                case Npc_FieldIndex.Armorer:
-                case Npc_FieldIndex.Athletics:
-                case Npc_FieldIndex.Blade:
-                case Npc_FieldIndex.Block:
-                case Npc_FieldIndex.Blunt:
-                case Npc_FieldIndex.HandToHand:
-                case Npc_FieldIndex.HeavyArmor:
-                case Npc_FieldIndex.Alchemy:
-                case Npc_FieldIndex.Alteration:
-                case Npc_FieldIndex.Conjuration:
-                case Npc_FieldIndex.Destruction:
-                case Npc_FieldIndex.Illusion:
-                case Npc_FieldIndex.Mysticism:
-                case Npc_FieldIndex.Restoration:
-                case Npc_FieldIndex.Acrobatics:
-                case Npc_FieldIndex.LightArmor:
-                case Npc_FieldIndex.Marksman:
-                case Npc_FieldIndex.Mercantile:
-                case Npc_FieldIndex.Security:
-                case Npc_FieldIndex.Sneak:
-                case Npc_FieldIndex.Speechcraft:
-                case Npc_FieldIndex.Health:
-                case Npc_FieldIndex.Strength:
-                case Npc_FieldIndex.Intelligence:
-                case Npc_FieldIndex.Willpower:
-                case Npc_FieldIndex.Agility:
-                case Npc_FieldIndex.Speed:
-                case Npc_FieldIndex.Endurance:
-                case Npc_FieldIndex.Personality:
-                case Npc_FieldIndex.Luck:
+                case Npc_FieldIndex.Stats:
                 case Npc_FieldIndex.Hair:
                 case Npc_FieldIndex.HairLength:
                 case Npc_FieldIndex.HairColor:
@@ -4492,9 +2415,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Npc_FieldIndex.FaceGenGeometryAsymmetric:
                 case Npc_FieldIndex.FaceGenTextureSymmetric:
                 case Npc_FieldIndex.Unknown:
-                case Npc_FieldIndex.ACBSDataTypeState:
-                case Npc_FieldIndex.AIDTDataTypeState:
-                case Npc_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return ANpc_Registration.GetNthIsEnumerable(index);
@@ -4507,62 +2427,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Npc_FieldIndex.Model:
+                case Npc_FieldIndex.Configuration:
                 case Npc_FieldIndex.Factions:
                 case Npc_FieldIndex.Items:
+                case Npc_FieldIndex.AIData:
+                case Npc_FieldIndex.Stats:
                     return true;
                 case Npc_FieldIndex.Name:
-                case Npc_FieldIndex.Flags:
-                case Npc_FieldIndex.BaseSpellPoints:
-                case Npc_FieldIndex.Fatigue:
-                case Npc_FieldIndex.BarterGold:
-                case Npc_FieldIndex.LevelOffset:
-                case Npc_FieldIndex.CalcMin:
-                case Npc_FieldIndex.CalcMax:
                 case Npc_FieldIndex.DeathItem:
                 case Npc_FieldIndex.Race:
                 case Npc_FieldIndex.Spells:
                 case Npc_FieldIndex.Script:
-                case Npc_FieldIndex.Aggression:
-                case Npc_FieldIndex.Confidence:
-                case Npc_FieldIndex.EnergyLevel:
-                case Npc_FieldIndex.Responsibility:
-                case Npc_FieldIndex.BuySellServices:
-                case Npc_FieldIndex.Teaches:
-                case Npc_FieldIndex.MaximumTrainingLevel:
-                case Npc_FieldIndex.Fluff:
                 case Npc_FieldIndex.AIPackages:
                 case Npc_FieldIndex.Animations:
                 case Npc_FieldIndex.Class:
-                case Npc_FieldIndex.Armorer:
-                case Npc_FieldIndex.Athletics:
-                case Npc_FieldIndex.Blade:
-                case Npc_FieldIndex.Block:
-                case Npc_FieldIndex.Blunt:
-                case Npc_FieldIndex.HandToHand:
-                case Npc_FieldIndex.HeavyArmor:
-                case Npc_FieldIndex.Alchemy:
-                case Npc_FieldIndex.Alteration:
-                case Npc_FieldIndex.Conjuration:
-                case Npc_FieldIndex.Destruction:
-                case Npc_FieldIndex.Illusion:
-                case Npc_FieldIndex.Mysticism:
-                case Npc_FieldIndex.Restoration:
-                case Npc_FieldIndex.Acrobatics:
-                case Npc_FieldIndex.LightArmor:
-                case Npc_FieldIndex.Marksman:
-                case Npc_FieldIndex.Mercantile:
-                case Npc_FieldIndex.Security:
-                case Npc_FieldIndex.Sneak:
-                case Npc_FieldIndex.Speechcraft:
-                case Npc_FieldIndex.Health:
-                case Npc_FieldIndex.Strength:
-                case Npc_FieldIndex.Intelligence:
-                case Npc_FieldIndex.Willpower:
-                case Npc_FieldIndex.Agility:
-                case Npc_FieldIndex.Speed:
-                case Npc_FieldIndex.Endurance:
-                case Npc_FieldIndex.Personality:
-                case Npc_FieldIndex.Luck:
                 case Npc_FieldIndex.Hair:
                 case Npc_FieldIndex.HairLength:
                 case Npc_FieldIndex.Eyes:
@@ -4572,9 +2450,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Npc_FieldIndex.FaceGenGeometryAsymmetric:
                 case Npc_FieldIndex.FaceGenTextureSymmetric:
                 case Npc_FieldIndex.Unknown:
-                case Npc_FieldIndex.ACBSDataTypeState:
-                case Npc_FieldIndex.AIDTDataTypeState:
-                case Npc_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return ANpc_Registration.GetNthIsLoqui(index);
@@ -4588,60 +2463,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Npc_FieldIndex.Name:
                 case Npc_FieldIndex.Model:
-                case Npc_FieldIndex.Flags:
-                case Npc_FieldIndex.BaseSpellPoints:
-                case Npc_FieldIndex.Fatigue:
-                case Npc_FieldIndex.BarterGold:
-                case Npc_FieldIndex.LevelOffset:
-                case Npc_FieldIndex.CalcMin:
-                case Npc_FieldIndex.CalcMax:
+                case Npc_FieldIndex.Configuration:
                 case Npc_FieldIndex.Factions:
                 case Npc_FieldIndex.DeathItem:
                 case Npc_FieldIndex.Race:
                 case Npc_FieldIndex.Spells:
                 case Npc_FieldIndex.Script:
                 case Npc_FieldIndex.Items:
-                case Npc_FieldIndex.Aggression:
-                case Npc_FieldIndex.Confidence:
-                case Npc_FieldIndex.EnergyLevel:
-                case Npc_FieldIndex.Responsibility:
-                case Npc_FieldIndex.BuySellServices:
-                case Npc_FieldIndex.Teaches:
-                case Npc_FieldIndex.MaximumTrainingLevel:
-                case Npc_FieldIndex.Fluff:
+                case Npc_FieldIndex.AIData:
                 case Npc_FieldIndex.AIPackages:
                 case Npc_FieldIndex.Animations:
                 case Npc_FieldIndex.Class:
-                case Npc_FieldIndex.Armorer:
-                case Npc_FieldIndex.Athletics:
-                case Npc_FieldIndex.Blade:
-                case Npc_FieldIndex.Block:
-                case Npc_FieldIndex.Blunt:
-                case Npc_FieldIndex.HandToHand:
-                case Npc_FieldIndex.HeavyArmor:
-                case Npc_FieldIndex.Alchemy:
-                case Npc_FieldIndex.Alteration:
-                case Npc_FieldIndex.Conjuration:
-                case Npc_FieldIndex.Destruction:
-                case Npc_FieldIndex.Illusion:
-                case Npc_FieldIndex.Mysticism:
-                case Npc_FieldIndex.Restoration:
-                case Npc_FieldIndex.Acrobatics:
-                case Npc_FieldIndex.LightArmor:
-                case Npc_FieldIndex.Marksman:
-                case Npc_FieldIndex.Mercantile:
-                case Npc_FieldIndex.Security:
-                case Npc_FieldIndex.Sneak:
-                case Npc_FieldIndex.Speechcraft:
-                case Npc_FieldIndex.Health:
-                case Npc_FieldIndex.Strength:
-                case Npc_FieldIndex.Intelligence:
-                case Npc_FieldIndex.Willpower:
-                case Npc_FieldIndex.Agility:
-                case Npc_FieldIndex.Speed:
-                case Npc_FieldIndex.Endurance:
-                case Npc_FieldIndex.Personality:
-                case Npc_FieldIndex.Luck:
+                case Npc_FieldIndex.Stats:
                 case Npc_FieldIndex.Hair:
                 case Npc_FieldIndex.HairLength:
                 case Npc_FieldIndex.Eyes:
@@ -4651,9 +2484,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Npc_FieldIndex.FaceGenGeometryAsymmetric:
                 case Npc_FieldIndex.FaceGenTextureSymmetric:
                 case Npc_FieldIndex.Unknown:
-                case Npc_FieldIndex.ACBSDataTypeState:
-                case Npc_FieldIndex.AIDTDataTypeState:
-                case Npc_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return ANpc_Registration.GetNthIsSingleton(index);
@@ -4669,20 +2499,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Name";
                 case Npc_FieldIndex.Model:
                     return "Model";
-                case Npc_FieldIndex.Flags:
-                    return "Flags";
-                case Npc_FieldIndex.BaseSpellPoints:
-                    return "BaseSpellPoints";
-                case Npc_FieldIndex.Fatigue:
-                    return "Fatigue";
-                case Npc_FieldIndex.BarterGold:
-                    return "BarterGold";
-                case Npc_FieldIndex.LevelOffset:
-                    return "LevelOffset";
-                case Npc_FieldIndex.CalcMin:
-                    return "CalcMin";
-                case Npc_FieldIndex.CalcMax:
-                    return "CalcMax";
+                case Npc_FieldIndex.Configuration:
+                    return "Configuration";
                 case Npc_FieldIndex.Factions:
                     return "Factions";
                 case Npc_FieldIndex.DeathItem:
@@ -4695,88 +2513,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Script";
                 case Npc_FieldIndex.Items:
                     return "Items";
-                case Npc_FieldIndex.Aggression:
-                    return "Aggression";
-                case Npc_FieldIndex.Confidence:
-                    return "Confidence";
-                case Npc_FieldIndex.EnergyLevel:
-                    return "EnergyLevel";
-                case Npc_FieldIndex.Responsibility:
-                    return "Responsibility";
-                case Npc_FieldIndex.BuySellServices:
-                    return "BuySellServices";
-                case Npc_FieldIndex.Teaches:
-                    return "Teaches";
-                case Npc_FieldIndex.MaximumTrainingLevel:
-                    return "MaximumTrainingLevel";
-                case Npc_FieldIndex.Fluff:
-                    return "Fluff";
+                case Npc_FieldIndex.AIData:
+                    return "AIData";
                 case Npc_FieldIndex.AIPackages:
                     return "AIPackages";
                 case Npc_FieldIndex.Animations:
                     return "Animations";
                 case Npc_FieldIndex.Class:
                     return "Class";
-                case Npc_FieldIndex.Armorer:
-                    return "Armorer";
-                case Npc_FieldIndex.Athletics:
-                    return "Athletics";
-                case Npc_FieldIndex.Blade:
-                    return "Blade";
-                case Npc_FieldIndex.Block:
-                    return "Block";
-                case Npc_FieldIndex.Blunt:
-                    return "Blunt";
-                case Npc_FieldIndex.HandToHand:
-                    return "HandToHand";
-                case Npc_FieldIndex.HeavyArmor:
-                    return "HeavyArmor";
-                case Npc_FieldIndex.Alchemy:
-                    return "Alchemy";
-                case Npc_FieldIndex.Alteration:
-                    return "Alteration";
-                case Npc_FieldIndex.Conjuration:
-                    return "Conjuration";
-                case Npc_FieldIndex.Destruction:
-                    return "Destruction";
-                case Npc_FieldIndex.Illusion:
-                    return "Illusion";
-                case Npc_FieldIndex.Mysticism:
-                    return "Mysticism";
-                case Npc_FieldIndex.Restoration:
-                    return "Restoration";
-                case Npc_FieldIndex.Acrobatics:
-                    return "Acrobatics";
-                case Npc_FieldIndex.LightArmor:
-                    return "LightArmor";
-                case Npc_FieldIndex.Marksman:
-                    return "Marksman";
-                case Npc_FieldIndex.Mercantile:
-                    return "Mercantile";
-                case Npc_FieldIndex.Security:
-                    return "Security";
-                case Npc_FieldIndex.Sneak:
-                    return "Sneak";
-                case Npc_FieldIndex.Speechcraft:
-                    return "Speechcraft";
-                case Npc_FieldIndex.Health:
-                    return "Health";
-                case Npc_FieldIndex.Strength:
-                    return "Strength";
-                case Npc_FieldIndex.Intelligence:
-                    return "Intelligence";
-                case Npc_FieldIndex.Willpower:
-                    return "Willpower";
-                case Npc_FieldIndex.Agility:
-                    return "Agility";
-                case Npc_FieldIndex.Speed:
-                    return "Speed";
-                case Npc_FieldIndex.Endurance:
-                    return "Endurance";
-                case Npc_FieldIndex.Personality:
-                    return "Personality";
-                case Npc_FieldIndex.Luck:
-                    return "Luck";
+                case Npc_FieldIndex.Stats:
+                    return "Stats";
                 case Npc_FieldIndex.Hair:
                     return "Hair";
                 case Npc_FieldIndex.HairLength:
@@ -4795,12 +2541,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "FaceGenTextureSymmetric";
                 case Npc_FieldIndex.Unknown:
                     return "Unknown";
-                case Npc_FieldIndex.ACBSDataTypeState:
-                    return "ACBSDataTypeState";
-                case Npc_FieldIndex.AIDTDataTypeState:
-                    return "AIDTDataTypeState";
-                case Npc_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
                 default:
                     return ANpc_Registration.GetNthName(index);
             }
@@ -4813,60 +2553,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Npc_FieldIndex.Name:
                 case Npc_FieldIndex.Model:
-                case Npc_FieldIndex.Flags:
-                case Npc_FieldIndex.BaseSpellPoints:
-                case Npc_FieldIndex.Fatigue:
-                case Npc_FieldIndex.BarterGold:
-                case Npc_FieldIndex.LevelOffset:
-                case Npc_FieldIndex.CalcMin:
-                case Npc_FieldIndex.CalcMax:
+                case Npc_FieldIndex.Configuration:
                 case Npc_FieldIndex.Factions:
                 case Npc_FieldIndex.DeathItem:
                 case Npc_FieldIndex.Race:
                 case Npc_FieldIndex.Spells:
                 case Npc_FieldIndex.Script:
                 case Npc_FieldIndex.Items:
-                case Npc_FieldIndex.Aggression:
-                case Npc_FieldIndex.Confidence:
-                case Npc_FieldIndex.EnergyLevel:
-                case Npc_FieldIndex.Responsibility:
-                case Npc_FieldIndex.BuySellServices:
-                case Npc_FieldIndex.Teaches:
-                case Npc_FieldIndex.MaximumTrainingLevel:
-                case Npc_FieldIndex.Fluff:
+                case Npc_FieldIndex.AIData:
                 case Npc_FieldIndex.AIPackages:
                 case Npc_FieldIndex.Animations:
                 case Npc_FieldIndex.Class:
-                case Npc_FieldIndex.Armorer:
-                case Npc_FieldIndex.Athletics:
-                case Npc_FieldIndex.Blade:
-                case Npc_FieldIndex.Block:
-                case Npc_FieldIndex.Blunt:
-                case Npc_FieldIndex.HandToHand:
-                case Npc_FieldIndex.HeavyArmor:
-                case Npc_FieldIndex.Alchemy:
-                case Npc_FieldIndex.Alteration:
-                case Npc_FieldIndex.Conjuration:
-                case Npc_FieldIndex.Destruction:
-                case Npc_FieldIndex.Illusion:
-                case Npc_FieldIndex.Mysticism:
-                case Npc_FieldIndex.Restoration:
-                case Npc_FieldIndex.Acrobatics:
-                case Npc_FieldIndex.LightArmor:
-                case Npc_FieldIndex.Marksman:
-                case Npc_FieldIndex.Mercantile:
-                case Npc_FieldIndex.Security:
-                case Npc_FieldIndex.Sneak:
-                case Npc_FieldIndex.Speechcraft:
-                case Npc_FieldIndex.Health:
-                case Npc_FieldIndex.Strength:
-                case Npc_FieldIndex.Intelligence:
-                case Npc_FieldIndex.Willpower:
-                case Npc_FieldIndex.Agility:
-                case Npc_FieldIndex.Speed:
-                case Npc_FieldIndex.Endurance:
-                case Npc_FieldIndex.Personality:
-                case Npc_FieldIndex.Luck:
+                case Npc_FieldIndex.Stats:
                 case Npc_FieldIndex.Hair:
                 case Npc_FieldIndex.HairLength:
                 case Npc_FieldIndex.Eyes:
@@ -4876,9 +2574,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Npc_FieldIndex.FaceGenGeometryAsymmetric:
                 case Npc_FieldIndex.FaceGenTextureSymmetric:
                 case Npc_FieldIndex.Unknown:
-                case Npc_FieldIndex.ACBSDataTypeState:
-                case Npc_FieldIndex.AIDTDataTypeState:
-                case Npc_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return ANpc_Registration.IsNthDerivative(index);
@@ -4892,60 +2587,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Npc_FieldIndex.Name:
                 case Npc_FieldIndex.Model:
-                case Npc_FieldIndex.Flags:
-                case Npc_FieldIndex.BaseSpellPoints:
-                case Npc_FieldIndex.Fatigue:
-                case Npc_FieldIndex.BarterGold:
-                case Npc_FieldIndex.LevelOffset:
-                case Npc_FieldIndex.CalcMin:
-                case Npc_FieldIndex.CalcMax:
+                case Npc_FieldIndex.Configuration:
                 case Npc_FieldIndex.Factions:
                 case Npc_FieldIndex.DeathItem:
                 case Npc_FieldIndex.Race:
                 case Npc_FieldIndex.Spells:
                 case Npc_FieldIndex.Script:
                 case Npc_FieldIndex.Items:
-                case Npc_FieldIndex.Aggression:
-                case Npc_FieldIndex.Confidence:
-                case Npc_FieldIndex.EnergyLevel:
-                case Npc_FieldIndex.Responsibility:
-                case Npc_FieldIndex.BuySellServices:
-                case Npc_FieldIndex.Teaches:
-                case Npc_FieldIndex.MaximumTrainingLevel:
-                case Npc_FieldIndex.Fluff:
+                case Npc_FieldIndex.AIData:
                 case Npc_FieldIndex.AIPackages:
                 case Npc_FieldIndex.Animations:
                 case Npc_FieldIndex.Class:
-                case Npc_FieldIndex.Armorer:
-                case Npc_FieldIndex.Athletics:
-                case Npc_FieldIndex.Blade:
-                case Npc_FieldIndex.Block:
-                case Npc_FieldIndex.Blunt:
-                case Npc_FieldIndex.HandToHand:
-                case Npc_FieldIndex.HeavyArmor:
-                case Npc_FieldIndex.Alchemy:
-                case Npc_FieldIndex.Alteration:
-                case Npc_FieldIndex.Conjuration:
-                case Npc_FieldIndex.Destruction:
-                case Npc_FieldIndex.Illusion:
-                case Npc_FieldIndex.Mysticism:
-                case Npc_FieldIndex.Restoration:
-                case Npc_FieldIndex.Acrobatics:
-                case Npc_FieldIndex.LightArmor:
-                case Npc_FieldIndex.Marksman:
-                case Npc_FieldIndex.Mercantile:
-                case Npc_FieldIndex.Security:
-                case Npc_FieldIndex.Sneak:
-                case Npc_FieldIndex.Speechcraft:
-                case Npc_FieldIndex.Health:
-                case Npc_FieldIndex.Strength:
-                case Npc_FieldIndex.Intelligence:
-                case Npc_FieldIndex.Willpower:
-                case Npc_FieldIndex.Agility:
-                case Npc_FieldIndex.Speed:
-                case Npc_FieldIndex.Endurance:
-                case Npc_FieldIndex.Personality:
-                case Npc_FieldIndex.Luck:
+                case Npc_FieldIndex.Stats:
                 case Npc_FieldIndex.Hair:
                 case Npc_FieldIndex.HairLength:
                 case Npc_FieldIndex.Eyes:
@@ -4955,9 +2608,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Npc_FieldIndex.FaceGenGeometryAsymmetric:
                 case Npc_FieldIndex.FaceGenTextureSymmetric:
                 case Npc_FieldIndex.Unknown:
-                case Npc_FieldIndex.ACBSDataTypeState:
-                case Npc_FieldIndex.AIDTDataTypeState:
-                case Npc_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return ANpc_Registration.IsProtected(index);
@@ -4973,20 +2623,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(String);
                 case Npc_FieldIndex.Model:
                     return typeof(Model);
-                case Npc_FieldIndex.Flags:
-                    return typeof(Npc.NpcFlag);
-                case Npc_FieldIndex.BaseSpellPoints:
-                    return typeof(UInt16);
-                case Npc_FieldIndex.Fatigue:
-                    return typeof(UInt16);
-                case Npc_FieldIndex.BarterGold:
-                    return typeof(UInt16);
-                case Npc_FieldIndex.LevelOffset:
-                    return typeof(Int16);
-                case Npc_FieldIndex.CalcMin:
-                    return typeof(UInt16);
-                case Npc_FieldIndex.CalcMax:
-                    return typeof(UInt16);
+                case Npc_FieldIndex.Configuration:
+                    return typeof(NpcConfiguration);
                 case Npc_FieldIndex.Factions:
                     return typeof(ExtendedList<RankPlacement>);
                 case Npc_FieldIndex.DeathItem:
@@ -4999,88 +2637,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(IFormLinkNullable<Script>);
                 case Npc_FieldIndex.Items:
                     return typeof(ExtendedList<ItemEntry>);
-                case Npc_FieldIndex.Aggression:
-                    return typeof(Byte);
-                case Npc_FieldIndex.Confidence:
-                    return typeof(Byte);
-                case Npc_FieldIndex.EnergyLevel:
-                    return typeof(Byte);
-                case Npc_FieldIndex.Responsibility:
-                    return typeof(Byte);
-                case Npc_FieldIndex.BuySellServices:
-                    return typeof(Npc.BuySellServiceFlag);
-                case Npc_FieldIndex.Teaches:
-                    return typeof(Skill);
-                case Npc_FieldIndex.MaximumTrainingLevel:
-                    return typeof(Byte);
-                case Npc_FieldIndex.Fluff:
-                    return typeof(Byte[]);
+                case Npc_FieldIndex.AIData:
+                    return typeof(AIData);
                 case Npc_FieldIndex.AIPackages:
                     return typeof(ExtendedList<IFormLink<AIPackage>>);
                 case Npc_FieldIndex.Animations:
                     return typeof(ExtendedList<String>);
                 case Npc_FieldIndex.Class:
                     return typeof(IFormLinkNullable<Class>);
-                case Npc_FieldIndex.Armorer:
-                    return typeof(Byte);
-                case Npc_FieldIndex.Athletics:
-                    return typeof(Byte);
-                case Npc_FieldIndex.Blade:
-                    return typeof(Byte);
-                case Npc_FieldIndex.Block:
-                    return typeof(Byte);
-                case Npc_FieldIndex.Blunt:
-                    return typeof(Byte);
-                case Npc_FieldIndex.HandToHand:
-                    return typeof(Byte);
-                case Npc_FieldIndex.HeavyArmor:
-                    return typeof(Byte);
-                case Npc_FieldIndex.Alchemy:
-                    return typeof(Byte);
-                case Npc_FieldIndex.Alteration:
-                    return typeof(Byte);
-                case Npc_FieldIndex.Conjuration:
-                    return typeof(Byte);
-                case Npc_FieldIndex.Destruction:
-                    return typeof(Byte);
-                case Npc_FieldIndex.Illusion:
-                    return typeof(Byte);
-                case Npc_FieldIndex.Mysticism:
-                    return typeof(Byte);
-                case Npc_FieldIndex.Restoration:
-                    return typeof(Byte);
-                case Npc_FieldIndex.Acrobatics:
-                    return typeof(Byte);
-                case Npc_FieldIndex.LightArmor:
-                    return typeof(Byte);
-                case Npc_FieldIndex.Marksman:
-                    return typeof(Byte);
-                case Npc_FieldIndex.Mercantile:
-                    return typeof(Byte);
-                case Npc_FieldIndex.Security:
-                    return typeof(Byte);
-                case Npc_FieldIndex.Sneak:
-                    return typeof(Byte);
-                case Npc_FieldIndex.Speechcraft:
-                    return typeof(Byte);
-                case Npc_FieldIndex.Health:
-                    return typeof(UInt32);
-                case Npc_FieldIndex.Strength:
-                    return typeof(Byte);
-                case Npc_FieldIndex.Intelligence:
-                    return typeof(Byte);
-                case Npc_FieldIndex.Willpower:
-                    return typeof(Byte);
-                case Npc_FieldIndex.Agility:
-                    return typeof(Byte);
-                case Npc_FieldIndex.Speed:
-                    return typeof(Byte);
-                case Npc_FieldIndex.Endurance:
-                    return typeof(Byte);
-                case Npc_FieldIndex.Personality:
-                    return typeof(Byte);
-                case Npc_FieldIndex.Luck:
-                    return typeof(Byte);
+                case Npc_FieldIndex.Stats:
+                    return typeof(NpcData);
                 case Npc_FieldIndex.Hair:
                     return typeof(IFormLinkNullable<Hair>);
                 case Npc_FieldIndex.HairLength:
@@ -5099,12 +2665,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Byte[]);
                 case Npc_FieldIndex.Unknown:
                     return typeof(Byte[]);
-                case Npc_FieldIndex.ACBSDataTypeState:
-                    return typeof(Npc.ACBSDataType);
-                case Npc_FieldIndex.AIDTDataTypeState:
-                    return typeof(Npc.AIDTDataType);
-                case Npc_FieldIndex.DATADataTypeState:
-                    return typeof(Npc.DATADataType);
                 default:
                     return ANpc_Registration.GetNthType(index);
             }
@@ -5137,7 +2697,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
         public static readonly RecordType TriggeringRecordType = NPC__HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 20;
+        public const int NumTypedFields = 23;
         public static readonly Type BinaryWriteTranslation = typeof(NpcBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -5182,60 +2742,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Name = default;
             item.Model = null;
-            item.Flags = default;
-            item.BaseSpellPoints = default;
-            item.Fatigue = default;
-            item.BarterGold = default;
-            item.LevelOffset = default;
-            item.CalcMin = default;
-            item.CalcMax = default;
+            item.Configuration = null;
             item.Factions.Clear();
             item.DeathItem.FormKey = null;
             item.Race.FormKey = null;
             item.Spells = null;
             item.Script.FormKey = null;
             item.Items.Clear();
-            item.Aggression = default;
-            item.Confidence = default;
-            item.EnergyLevel = default;
-            item.Responsibility = default;
-            item.BuySellServices = default;
-            item.Teaches = default;
-            item.MaximumTrainingLevel = default;
-            item.Fluff = new byte[2];
+            item.AIData = null;
             item.AIPackages = null;
             item.Animations = null;
             item.Class.FormKey = null;
-            item.Armorer = default;
-            item.Athletics = default;
-            item.Blade = default;
-            item.Block = default;
-            item.Blunt = default;
-            item.HandToHand = default;
-            item.HeavyArmor = default;
-            item.Alchemy = default;
-            item.Alteration = default;
-            item.Conjuration = default;
-            item.Destruction = default;
-            item.Illusion = default;
-            item.Mysticism = default;
-            item.Restoration = default;
-            item.Acrobatics = default;
-            item.LightArmor = default;
-            item.Marksman = default;
-            item.Mercantile = default;
-            item.Security = default;
-            item.Sneak = default;
-            item.Speechcraft = default;
-            item.Health = default;
-            item.Strength = default;
-            item.Intelligence = default;
-            item.Willpower = default;
-            item.Agility = default;
-            item.Speed = default;
-            item.Endurance = default;
-            item.Personality = default;
-            item.Luck = default;
+            item.Stats = null;
             item.Hair.FormKey = null;
             item.HairLength = default;
             item.Eyes = null;
@@ -5245,9 +2763,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.FaceGenGeometryAsymmetric = default;
             item.FaceGenTextureSymmetric = default;
             item.Unknown = default;
-            item.ACBSDataTypeState = default;
-            item.AIDTDataTypeState = default;
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -5281,15 +2796,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "HasACBSDataType":
-                    item.ACBSDataTypeState |= Npc.ACBSDataType.Has;
-                    break;
-                case "HasAIDTDataType":
-                    item.AIDTDataTypeState |= Npc.AIDTDataType.Has;
-                    break;
-                case "HasDATADataType":
-                    item.DATADataTypeState |= Npc.DATADataType.Has;
-                    break;
                 default:
                     ANpcSetterCommon.FillPrivateElementXml(
                         item: item,
@@ -5422,20 +2928,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x53424341: // ACBS
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.ACBSDataTypeState = Npc.ACBSDataType.Has;
-                    }
-                    item.Flags = EnumBinaryTranslation<Npc.NpcFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.BaseSpellPoints = dataFrame.ReadUInt16();
-                    item.Fatigue = dataFrame.ReadUInt16();
-                    item.BarterGold = dataFrame.ReadUInt16();
-                    item.LevelOffset = dataFrame.ReadInt16();
-                    item.CalcMin = dataFrame.ReadUInt16();
-                    item.CalcMax = dataFrame.ReadUInt16();
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.CalcMax);
+                    item.Configuration = Mutagen.Bethesda.Oblivion.NpcConfiguration.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Configuration);
                 }
                 case 0x4D414E53: // SNAM
                 {
@@ -5506,21 +3000,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x54444941: // AIDT
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.AIDTDataTypeState = Npc.AIDTDataType.Has;
-                    }
-                    item.Aggression = dataFrame.ReadUInt8();
-                    item.Confidence = dataFrame.ReadUInt8();
-                    item.EnergyLevel = dataFrame.ReadUInt8();
-                    item.Responsibility = dataFrame.ReadUInt8();
-                    item.BuySellServices = EnumBinaryTranslation<Npc.BuySellServiceFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.Teaches = EnumBinaryTranslation<Skill>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
-                    item.MaximumTrainingLevel = dataFrame.ReadUInt8();
-                    item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(2));
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Fluff);
+                    item.AIData = Mutagen.Bethesda.Oblivion.AIData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.AIData);
                 }
                 case 0x44494B50: // PKID
                 {
@@ -5559,43 +3040,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.DATADataTypeState = Npc.DATADataType.Has;
-                    }
-                    item.Armorer = dataFrame.ReadUInt8();
-                    item.Athletics = dataFrame.ReadUInt8();
-                    item.Blade = dataFrame.ReadUInt8();
-                    item.Block = dataFrame.ReadUInt8();
-                    item.Blunt = dataFrame.ReadUInt8();
-                    item.HandToHand = dataFrame.ReadUInt8();
-                    item.HeavyArmor = dataFrame.ReadUInt8();
-                    item.Alchemy = dataFrame.ReadUInt8();
-                    item.Alteration = dataFrame.ReadUInt8();
-                    item.Conjuration = dataFrame.ReadUInt8();
-                    item.Destruction = dataFrame.ReadUInt8();
-                    item.Illusion = dataFrame.ReadUInt8();
-                    item.Mysticism = dataFrame.ReadUInt8();
-                    item.Restoration = dataFrame.ReadUInt8();
-                    item.Acrobatics = dataFrame.ReadUInt8();
-                    item.LightArmor = dataFrame.ReadUInt8();
-                    item.Marksman = dataFrame.ReadUInt8();
-                    item.Mercantile = dataFrame.ReadUInt8();
-                    item.Security = dataFrame.ReadUInt8();
-                    item.Sneak = dataFrame.ReadUInt8();
-                    item.Speechcraft = dataFrame.ReadUInt8();
-                    item.Health = dataFrame.ReadUInt32();
-                    item.Strength = dataFrame.ReadUInt8();
-                    item.Intelligence = dataFrame.ReadUInt8();
-                    item.Willpower = dataFrame.ReadUInt8();
-                    item.Agility = dataFrame.ReadUInt8();
-                    item.Speed = dataFrame.ReadUInt8();
-                    item.Endurance = dataFrame.ReadUInt8();
-                    item.Personality = dataFrame.ReadUInt8();
-                    item.Luck = dataFrame.ReadUInt8();
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Luck);
+                    item.Stats = Mutagen.Bethesda.Oblivion.NpcData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Stats);
                 }
                 case 0x4D414E48: // HNAM
                 {
@@ -5764,13 +3210,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Flags = item.Flags == rhs.Flags;
-            ret.BaseSpellPoints = item.BaseSpellPoints == rhs.BaseSpellPoints;
-            ret.Fatigue = item.Fatigue == rhs.Fatigue;
-            ret.BarterGold = item.BarterGold == rhs.BarterGold;
-            ret.LevelOffset = item.LevelOffset == rhs.LevelOffset;
-            ret.CalcMin = item.CalcMin == rhs.CalcMin;
-            ret.CalcMax = item.CalcMax == rhs.CalcMax;
+            ret.Configuration = EqualsMaskHelper.EqualsHelper(
+                item.Configuration,
+                rhs.Configuration,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Factions = item.Factions.CollectionEqualsHelper(
                 rhs.Factions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -5786,14 +3230,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Items,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.Aggression = item.Aggression == rhs.Aggression;
-            ret.Confidence = item.Confidence == rhs.Confidence;
-            ret.EnergyLevel = item.EnergyLevel == rhs.EnergyLevel;
-            ret.Responsibility = item.Responsibility == rhs.Responsibility;
-            ret.BuySellServices = item.BuySellServices == rhs.BuySellServices;
-            ret.Teaches = item.Teaches == rhs.Teaches;
-            ret.MaximumTrainingLevel = item.MaximumTrainingLevel == rhs.MaximumTrainingLevel;
-            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff.Span, rhs.Fluff.Span);
+            ret.AIData = EqualsMaskHelper.EqualsHelper(
+                item.AIData,
+                rhs.AIData,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.AIPackages = item.AIPackages.CollectionEqualsHelper(
                 rhs.AIPackages,
                 (l, r) => object.Equals(l, r),
@@ -5803,36 +3244,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 (l, r) => string.Equals(l, r),
                 include);
             ret.Class = object.Equals(item.Class, rhs.Class);
-            ret.Armorer = item.Armorer == rhs.Armorer;
-            ret.Athletics = item.Athletics == rhs.Athletics;
-            ret.Blade = item.Blade == rhs.Blade;
-            ret.Block = item.Block == rhs.Block;
-            ret.Blunt = item.Blunt == rhs.Blunt;
-            ret.HandToHand = item.HandToHand == rhs.HandToHand;
-            ret.HeavyArmor = item.HeavyArmor == rhs.HeavyArmor;
-            ret.Alchemy = item.Alchemy == rhs.Alchemy;
-            ret.Alteration = item.Alteration == rhs.Alteration;
-            ret.Conjuration = item.Conjuration == rhs.Conjuration;
-            ret.Destruction = item.Destruction == rhs.Destruction;
-            ret.Illusion = item.Illusion == rhs.Illusion;
-            ret.Mysticism = item.Mysticism == rhs.Mysticism;
-            ret.Restoration = item.Restoration == rhs.Restoration;
-            ret.Acrobatics = item.Acrobatics == rhs.Acrobatics;
-            ret.LightArmor = item.LightArmor == rhs.LightArmor;
-            ret.Marksman = item.Marksman == rhs.Marksman;
-            ret.Mercantile = item.Mercantile == rhs.Mercantile;
-            ret.Security = item.Security == rhs.Security;
-            ret.Sneak = item.Sneak == rhs.Sneak;
-            ret.Speechcraft = item.Speechcraft == rhs.Speechcraft;
-            ret.Health = item.Health == rhs.Health;
-            ret.Strength = item.Strength == rhs.Strength;
-            ret.Intelligence = item.Intelligence == rhs.Intelligence;
-            ret.Willpower = item.Willpower == rhs.Willpower;
-            ret.Agility = item.Agility == rhs.Agility;
-            ret.Speed = item.Speed == rhs.Speed;
-            ret.Endurance = item.Endurance == rhs.Endurance;
-            ret.Personality = item.Personality == rhs.Personality;
-            ret.Luck = item.Luck == rhs.Luck;
+            ret.Stats = EqualsMaskHelper.EqualsHelper(
+                item.Stats,
+                rhs.Stats,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Hair = object.Equals(item.Hair, rhs.Hair);
             ret.HairLength = item.HairLength.EqualsWithin(rhs.HairLength);
             ret.Eyes = item.Eyes.CollectionEqualsHelper(
@@ -5845,9 +3261,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.FaceGenGeometryAsymmetric = MemorySliceExt.Equal(item.FaceGenGeometryAsymmetric, rhs.FaceGenGeometryAsymmetric);
             ret.FaceGenTextureSymmetric = MemorySliceExt.Equal(item.FaceGenTextureSymmetric, rhs.FaceGenTextureSymmetric);
             ret.Unknown = MemorySliceExt.Equal(item.Unknown, rhs.Unknown);
-            ret.ACBSDataTypeState = item.ACBSDataTypeState == rhs.ACBSDataTypeState;
-            ret.AIDTDataTypeState = item.AIDTDataTypeState == rhs.AIDTDataTypeState;
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -5909,33 +3322,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 ModelItem?.ToString(fg, "Model");
             }
-            if (printMask?.Flags ?? true)
+            if ((printMask?.Configuration?.Overall ?? true)
+                && item.Configuration.TryGet(out var ConfigurationItem))
             {
-                fg.AppendItem(item.Flags, "Flags");
-            }
-            if (printMask?.BaseSpellPoints ?? true)
-            {
-                fg.AppendItem(item.BaseSpellPoints, "BaseSpellPoints");
-            }
-            if (printMask?.Fatigue ?? true)
-            {
-                fg.AppendItem(item.Fatigue, "Fatigue");
-            }
-            if (printMask?.BarterGold ?? true)
-            {
-                fg.AppendItem(item.BarterGold, "BarterGold");
-            }
-            if (printMask?.LevelOffset ?? true)
-            {
-                fg.AppendItem(item.LevelOffset, "LevelOffset");
-            }
-            if (printMask?.CalcMin ?? true)
-            {
-                fg.AppendItem(item.CalcMin, "CalcMin");
-            }
-            if (printMask?.CalcMax ?? true)
-            {
-                fg.AppendItem(item.CalcMax, "CalcMax");
+                ConfigurationItem?.ToString(fg, "Configuration");
             }
             if (printMask?.Factions?.Overall ?? true)
             {
@@ -6007,37 +3397,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.Aggression ?? true)
+            if ((printMask?.AIData?.Overall ?? true)
+                && item.AIData.TryGet(out var AIDataItem))
             {
-                fg.AppendItem(item.Aggression, "Aggression");
-            }
-            if (printMask?.Confidence ?? true)
-            {
-                fg.AppendItem(item.Confidence, "Confidence");
-            }
-            if (printMask?.EnergyLevel ?? true)
-            {
-                fg.AppendItem(item.EnergyLevel, "EnergyLevel");
-            }
-            if (printMask?.Responsibility ?? true)
-            {
-                fg.AppendItem(item.Responsibility, "Responsibility");
-            }
-            if (printMask?.BuySellServices ?? true)
-            {
-                fg.AppendItem(item.BuySellServices, "BuySellServices");
-            }
-            if (printMask?.Teaches ?? true)
-            {
-                fg.AppendItem(item.Teaches, "Teaches");
-            }
-            if (printMask?.MaximumTrainingLevel ?? true)
-            {
-                fg.AppendItem(item.MaximumTrainingLevel, "MaximumTrainingLevel");
-            }
-            if (printMask?.Fluff ?? true)
-            {
-                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
+                AIDataItem?.ToString(fg, "AIData");
             }
             if ((printMask?.AIPackages?.Overall ?? true)
                 && item.AIPackages.TryGet(out var AIPackagesItem))
@@ -6082,125 +3445,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(ClassItem, "Class");
             }
-            if (printMask?.Armorer ?? true)
+            if ((printMask?.Stats?.Overall ?? true)
+                && item.Stats.TryGet(out var StatsItem))
             {
-                fg.AppendItem(item.Armorer, "Armorer");
-            }
-            if (printMask?.Athletics ?? true)
-            {
-                fg.AppendItem(item.Athletics, "Athletics");
-            }
-            if (printMask?.Blade ?? true)
-            {
-                fg.AppendItem(item.Blade, "Blade");
-            }
-            if (printMask?.Block ?? true)
-            {
-                fg.AppendItem(item.Block, "Block");
-            }
-            if (printMask?.Blunt ?? true)
-            {
-                fg.AppendItem(item.Blunt, "Blunt");
-            }
-            if (printMask?.HandToHand ?? true)
-            {
-                fg.AppendItem(item.HandToHand, "HandToHand");
-            }
-            if (printMask?.HeavyArmor ?? true)
-            {
-                fg.AppendItem(item.HeavyArmor, "HeavyArmor");
-            }
-            if (printMask?.Alchemy ?? true)
-            {
-                fg.AppendItem(item.Alchemy, "Alchemy");
-            }
-            if (printMask?.Alteration ?? true)
-            {
-                fg.AppendItem(item.Alteration, "Alteration");
-            }
-            if (printMask?.Conjuration ?? true)
-            {
-                fg.AppendItem(item.Conjuration, "Conjuration");
-            }
-            if (printMask?.Destruction ?? true)
-            {
-                fg.AppendItem(item.Destruction, "Destruction");
-            }
-            if (printMask?.Illusion ?? true)
-            {
-                fg.AppendItem(item.Illusion, "Illusion");
-            }
-            if (printMask?.Mysticism ?? true)
-            {
-                fg.AppendItem(item.Mysticism, "Mysticism");
-            }
-            if (printMask?.Restoration ?? true)
-            {
-                fg.AppendItem(item.Restoration, "Restoration");
-            }
-            if (printMask?.Acrobatics ?? true)
-            {
-                fg.AppendItem(item.Acrobatics, "Acrobatics");
-            }
-            if (printMask?.LightArmor ?? true)
-            {
-                fg.AppendItem(item.LightArmor, "LightArmor");
-            }
-            if (printMask?.Marksman ?? true)
-            {
-                fg.AppendItem(item.Marksman, "Marksman");
-            }
-            if (printMask?.Mercantile ?? true)
-            {
-                fg.AppendItem(item.Mercantile, "Mercantile");
-            }
-            if (printMask?.Security ?? true)
-            {
-                fg.AppendItem(item.Security, "Security");
-            }
-            if (printMask?.Sneak ?? true)
-            {
-                fg.AppendItem(item.Sneak, "Sneak");
-            }
-            if (printMask?.Speechcraft ?? true)
-            {
-                fg.AppendItem(item.Speechcraft, "Speechcraft");
-            }
-            if (printMask?.Health ?? true)
-            {
-                fg.AppendItem(item.Health, "Health");
-            }
-            if (printMask?.Strength ?? true)
-            {
-                fg.AppendItem(item.Strength, "Strength");
-            }
-            if (printMask?.Intelligence ?? true)
-            {
-                fg.AppendItem(item.Intelligence, "Intelligence");
-            }
-            if (printMask?.Willpower ?? true)
-            {
-                fg.AppendItem(item.Willpower, "Willpower");
-            }
-            if (printMask?.Agility ?? true)
-            {
-                fg.AppendItem(item.Agility, "Agility");
-            }
-            if (printMask?.Speed ?? true)
-            {
-                fg.AppendItem(item.Speed, "Speed");
-            }
-            if (printMask?.Endurance ?? true)
-            {
-                fg.AppendItem(item.Endurance, "Endurance");
-            }
-            if (printMask?.Personality ?? true)
-            {
-                fg.AppendItem(item.Personality, "Personality");
-            }
-            if (printMask?.Luck ?? true)
-            {
-                fg.AppendItem(item.Luck, "Luck");
+                StatsItem?.ToString(fg, "Stats");
             }
             if ((printMask?.Hair ?? true)
                 && item.Hair.TryGet(out var HairItem))
@@ -6261,18 +3509,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendLine($"Unknown => {SpanExt.ToHexString(UnknownItem)}");
             }
-            if (printMask?.ACBSDataTypeState ?? true)
-            {
-                fg.AppendItem(item.ACBSDataTypeState, "ACBSDataTypeState");
-            }
-            if (printMask?.AIDTDataTypeState ?? true)
-            {
-                fg.AppendItem(item.AIDTDataTypeState, "AIDTDataTypeState");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
-            }
         }
         
         public bool HasBeenSet(
@@ -6282,13 +3518,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.Configuration?.Overall.HasValue ?? false && checkMask.Configuration.Overall.Value != (item.Configuration != null)) return false;
+            if (checkMask.Configuration?.Specific != null && (item.Configuration == null || !item.Configuration.HasBeenSet(checkMask.Configuration.Specific))) return false;
             if (checkMask.DeathItem.HasValue && checkMask.DeathItem.Value != (item.DeathItem.FormKey != null)) return false;
             if (checkMask.Race.HasValue && checkMask.Race.Value != (item.Race.FormKey != null)) return false;
             if (checkMask.Spells?.Overall.HasValue ?? false && checkMask.Spells!.Overall.Value != (item.Spells != null)) return false;
             if (checkMask.Script.HasValue && checkMask.Script.Value != (item.Script.FormKey != null)) return false;
+            if (checkMask.AIData?.Overall.HasValue ?? false && checkMask.AIData.Overall.Value != (item.AIData != null)) return false;
+            if (checkMask.AIData?.Specific != null && (item.AIData == null || !item.AIData.HasBeenSet(checkMask.AIData.Specific))) return false;
             if (checkMask.AIPackages?.Overall.HasValue ?? false && checkMask.AIPackages!.Overall.Value != (item.AIPackages != null)) return false;
             if (checkMask.Animations?.Overall.HasValue ?? false && checkMask.Animations!.Overall.Value != (item.Animations != null)) return false;
             if (checkMask.Class.HasValue && checkMask.Class.Value != (item.Class.FormKey != null)) return false;
+            if (checkMask.Stats?.Overall.HasValue ?? false && checkMask.Stats.Overall.Value != (item.Stats != null)) return false;
+            if (checkMask.Stats?.Specific != null && (item.Stats == null || !item.Stats.HasBeenSet(checkMask.Stats.Specific))) return false;
             if (checkMask.Hair.HasValue && checkMask.Hair.Value != (item.Hair.FormKey != null)) return false;
             if (checkMask.HairLength.HasValue && checkMask.HairLength.Value != (item.HairLength != null)) return false;
             if (checkMask.Eyes?.Overall.HasValue ?? false && checkMask.Eyes!.Overall.Value != (item.Eyes != null)) return false;
@@ -6310,13 +3552,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Name = (item.Name != null);
             var itemModel = item.Model;
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            mask.Flags = true;
-            mask.BaseSpellPoints = true;
-            mask.Fatigue = true;
-            mask.BarterGold = true;
-            mask.LevelOffset = true;
-            mask.CalcMin = true;
-            mask.CalcMax = true;
+            var itemConfiguration = item.Configuration;
+            mask.Configuration = new MaskItem<bool, NpcConfiguration.Mask<bool>?>(itemConfiguration != null, itemConfiguration?.GetHasBeenSetMask());
             var FactionsItem = item.Factions;
             mask.Factions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RankPlacement.Mask<bool>?>>?>(true, FactionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RankPlacement.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.DeathItem = (item.DeathItem.FormKey != null);
@@ -6325,47 +3562,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Script = (item.Script.FormKey != null);
             var ItemsItem = item.Items;
             mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ItemEntry.Mask<bool>?>>?>(true, ItemsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ItemEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.Aggression = true;
-            mask.Confidence = true;
-            mask.EnergyLevel = true;
-            mask.Responsibility = true;
-            mask.BuySellServices = true;
-            mask.Teaches = true;
-            mask.MaximumTrainingLevel = true;
-            mask.Fluff = true;
+            var itemAIData = item.AIData;
+            mask.AIData = new MaskItem<bool, AIData.Mask<bool>?>(itemAIData != null, itemAIData?.GetHasBeenSetMask());
             mask.AIPackages = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.AIPackages != null), default);
             mask.Animations = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Animations != null), default);
             mask.Class = (item.Class.FormKey != null);
-            mask.Armorer = true;
-            mask.Athletics = true;
-            mask.Blade = true;
-            mask.Block = true;
-            mask.Blunt = true;
-            mask.HandToHand = true;
-            mask.HeavyArmor = true;
-            mask.Alchemy = true;
-            mask.Alteration = true;
-            mask.Conjuration = true;
-            mask.Destruction = true;
-            mask.Illusion = true;
-            mask.Mysticism = true;
-            mask.Restoration = true;
-            mask.Acrobatics = true;
-            mask.LightArmor = true;
-            mask.Marksman = true;
-            mask.Mercantile = true;
-            mask.Security = true;
-            mask.Sneak = true;
-            mask.Speechcraft = true;
-            mask.Health = true;
-            mask.Strength = true;
-            mask.Intelligence = true;
-            mask.Willpower = true;
-            mask.Agility = true;
-            mask.Speed = true;
-            mask.Endurance = true;
-            mask.Personality = true;
-            mask.Luck = true;
+            var itemStats = item.Stats;
+            mask.Stats = new MaskItem<bool, NpcData.Mask<bool>?>(itemStats != null, itemStats?.GetHasBeenSetMask());
             mask.Hair = (item.Hair.FormKey != null);
             mask.HairLength = (item.HairLength != null);
             mask.Eyes = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Eyes != null), default);
@@ -6375,9 +3578,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.FaceGenGeometryAsymmetric = (item.FaceGenGeometryAsymmetric != null);
             mask.FaceGenTextureSymmetric = (item.FaceGenTextureSymmetric != null);
             mask.Unknown = (item.Unknown != null);
-            mask.ACBSDataTypeState = true;
-            mask.AIDTDataTypeState = true;
-            mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -6467,60 +3667,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!base.Equals(rhs)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.BaseSpellPoints != rhs.BaseSpellPoints) return false;
-            if (lhs.Fatigue != rhs.Fatigue) return false;
-            if (lhs.BarterGold != rhs.BarterGold) return false;
-            if (lhs.LevelOffset != rhs.LevelOffset) return false;
-            if (lhs.CalcMin != rhs.CalcMin) return false;
-            if (lhs.CalcMax != rhs.CalcMax) return false;
+            if (!object.Equals(lhs.Configuration, rhs.Configuration)) return false;
             if (!lhs.Factions.SequenceEqual(rhs.Factions)) return false;
             if (!lhs.DeathItem.Equals(rhs.DeathItem)) return false;
             if (!lhs.Race.Equals(rhs.Race)) return false;
             if (!lhs.Spells.SequenceEqual(rhs.Spells)) return false;
             if (!lhs.Script.Equals(rhs.Script)) return false;
             if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
-            if (lhs.Aggression != rhs.Aggression) return false;
-            if (lhs.Confidence != rhs.Confidence) return false;
-            if (lhs.EnergyLevel != rhs.EnergyLevel) return false;
-            if (lhs.Responsibility != rhs.Responsibility) return false;
-            if (lhs.BuySellServices != rhs.BuySellServices) return false;
-            if (lhs.Teaches != rhs.Teaches) return false;
-            if (lhs.MaximumTrainingLevel != rhs.MaximumTrainingLevel) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff.Span, rhs.Fluff.Span)) return false;
+            if (!object.Equals(lhs.AIData, rhs.AIData)) return false;
             if (!lhs.AIPackages.SequenceEqual(rhs.AIPackages)) return false;
             if (!lhs.Animations.SequenceEqual(rhs.Animations)) return false;
             if (!lhs.Class.Equals(rhs.Class)) return false;
-            if (lhs.Armorer != rhs.Armorer) return false;
-            if (lhs.Athletics != rhs.Athletics) return false;
-            if (lhs.Blade != rhs.Blade) return false;
-            if (lhs.Block != rhs.Block) return false;
-            if (lhs.Blunt != rhs.Blunt) return false;
-            if (lhs.HandToHand != rhs.HandToHand) return false;
-            if (lhs.HeavyArmor != rhs.HeavyArmor) return false;
-            if (lhs.Alchemy != rhs.Alchemy) return false;
-            if (lhs.Alteration != rhs.Alteration) return false;
-            if (lhs.Conjuration != rhs.Conjuration) return false;
-            if (lhs.Destruction != rhs.Destruction) return false;
-            if (lhs.Illusion != rhs.Illusion) return false;
-            if (lhs.Mysticism != rhs.Mysticism) return false;
-            if (lhs.Restoration != rhs.Restoration) return false;
-            if (lhs.Acrobatics != rhs.Acrobatics) return false;
-            if (lhs.LightArmor != rhs.LightArmor) return false;
-            if (lhs.Marksman != rhs.Marksman) return false;
-            if (lhs.Mercantile != rhs.Mercantile) return false;
-            if (lhs.Security != rhs.Security) return false;
-            if (lhs.Sneak != rhs.Sneak) return false;
-            if (lhs.Speechcraft != rhs.Speechcraft) return false;
-            if (lhs.Health != rhs.Health) return false;
-            if (lhs.Strength != rhs.Strength) return false;
-            if (lhs.Intelligence != rhs.Intelligence) return false;
-            if (lhs.Willpower != rhs.Willpower) return false;
-            if (lhs.Agility != rhs.Agility) return false;
-            if (lhs.Speed != rhs.Speed) return false;
-            if (lhs.Endurance != rhs.Endurance) return false;
-            if (lhs.Personality != rhs.Personality) return false;
-            if (lhs.Luck != rhs.Luck) return false;
+            if (!object.Equals(lhs.Stats, rhs.Stats)) return false;
             if (!lhs.Hair.Equals(rhs.Hair)) return false;
             if (!lhs.HairLength.EqualsWithin(rhs.HairLength)) return false;
             if (!lhs.Eyes.SequenceEqual(rhs.Eyes)) return false;
@@ -6530,9 +3688,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!MemorySliceExt.Equal(lhs.FaceGenGeometryAsymmetric, rhs.FaceGenGeometryAsymmetric)) return false;
             if (!MemorySliceExt.Equal(lhs.FaceGenTextureSymmetric, rhs.FaceGenTextureSymmetric)) return false;
             if (!MemorySliceExt.Equal(lhs.Unknown, rhs.Unknown)) return false;
-            if (lhs.ACBSDataTypeState != rhs.ACBSDataTypeState) return false;
-            if (lhs.AIDTDataTypeState != rhs.AIDTDataTypeState) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
         
@@ -6583,13 +3738,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(Modelitem);
             }
-            hash.Add(item.Flags);
-            hash.Add(item.BaseSpellPoints);
-            hash.Add(item.Fatigue);
-            hash.Add(item.BarterGold);
-            hash.Add(item.LevelOffset);
-            hash.Add(item.CalcMin);
-            hash.Add(item.CalcMax);
+            if (item.Configuration.TryGet(out var Configurationitem))
+            {
+                hash.Add(Configurationitem);
+            }
             hash.Add(item.Factions);
             if (item.DeathItem.TryGet(out var DeathItemitem))
             {
@@ -6605,50 +3757,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 hash.Add(Scriptitem);
             }
             hash.Add(item.Items);
-            hash.Add(item.Aggression);
-            hash.Add(item.Confidence);
-            hash.Add(item.EnergyLevel);
-            hash.Add(item.Responsibility);
-            hash.Add(item.BuySellServices);
-            hash.Add(item.Teaches);
-            hash.Add(item.MaximumTrainingLevel);
-            hash.Add(item.Fluff);
+            if (item.AIData.TryGet(out var AIDataitem))
+            {
+                hash.Add(AIDataitem);
+            }
             hash.Add(item.AIPackages);
             hash.Add(item.Animations);
             if (item.Class.TryGet(out var Classitem))
             {
                 hash.Add(Classitem);
             }
-            hash.Add(item.Armorer);
-            hash.Add(item.Athletics);
-            hash.Add(item.Blade);
-            hash.Add(item.Block);
-            hash.Add(item.Blunt);
-            hash.Add(item.HandToHand);
-            hash.Add(item.HeavyArmor);
-            hash.Add(item.Alchemy);
-            hash.Add(item.Alteration);
-            hash.Add(item.Conjuration);
-            hash.Add(item.Destruction);
-            hash.Add(item.Illusion);
-            hash.Add(item.Mysticism);
-            hash.Add(item.Restoration);
-            hash.Add(item.Acrobatics);
-            hash.Add(item.LightArmor);
-            hash.Add(item.Marksman);
-            hash.Add(item.Mercantile);
-            hash.Add(item.Security);
-            hash.Add(item.Sneak);
-            hash.Add(item.Speechcraft);
-            hash.Add(item.Health);
-            hash.Add(item.Strength);
-            hash.Add(item.Intelligence);
-            hash.Add(item.Willpower);
-            hash.Add(item.Agility);
-            hash.Add(item.Speed);
-            hash.Add(item.Endurance);
-            hash.Add(item.Personality);
-            hash.Add(item.Luck);
+            if (item.Stats.TryGet(out var Statsitem))
+            {
+                hash.Add(Statsitem);
+            }
             if (item.Hair.TryGet(out var Hairitem))
             {
                 hash.Add(Hairitem);
@@ -6682,9 +3804,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(UnknownItem);
             }
-            hash.Add(item.ACBSDataTypeState);
-            hash.Add(item.AIDTDataTypeState);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -6835,33 +3954,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Configuration) ?? true))
             {
-                item.Flags = rhs.Flags;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.BaseSpellPoints) ?? true))
-            {
-                item.BaseSpellPoints = rhs.BaseSpellPoints;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Fatigue) ?? true))
-            {
-                item.Fatigue = rhs.Fatigue;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.BarterGold) ?? true))
-            {
-                item.BarterGold = rhs.BarterGold;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.LevelOffset) ?? true))
-            {
-                item.LevelOffset = rhs.LevelOffset;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.CalcMin) ?? true))
-            {
-                item.CalcMin = rhs.CalcMin;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.CalcMax) ?? true))
-            {
-                item.CalcMax = rhs.CalcMax;
+                errorMask?.PushIndex((int)Npc_FieldIndex.Configuration);
+                try
+                {
+                    if(rhs.Configuration.TryGet(out var rhsConfiguration))
+                    {
+                        item.Configuration = rhsConfiguration.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Npc_FieldIndex.Configuration));
+                    }
+                    else
+                    {
+                        item.Configuration = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Factions) ?? true))
             {
@@ -6950,37 +4067,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Aggression) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.AIData) ?? true))
             {
-                item.Aggression = rhs.Aggression;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Confidence) ?? true))
-            {
-                item.Confidence = rhs.Confidence;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.EnergyLevel) ?? true))
-            {
-                item.EnergyLevel = rhs.EnergyLevel;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Responsibility) ?? true))
-            {
-                item.Responsibility = rhs.Responsibility;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.BuySellServices) ?? true))
-            {
-                item.BuySellServices = rhs.BuySellServices;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Teaches) ?? true))
-            {
-                item.Teaches = rhs.Teaches;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.MaximumTrainingLevel) ?? true))
-            {
-                item.MaximumTrainingLevel = rhs.MaximumTrainingLevel;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Fluff) ?? true))
-            {
-                item.Fluff = rhs.Fluff.ToArray();
+                errorMask?.PushIndex((int)Npc_FieldIndex.AIData);
+                try
+                {
+                    if(rhs.AIData.TryGet(out var rhsAIData))
+                    {
+                        item.AIData = rhsAIData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Npc_FieldIndex.AIData));
+                    }
+                    else
+                    {
+                        item.AIData = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.AIPackages) ?? true))
             {
@@ -7039,125 +4150,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.Class.FormKey = rhs.Class.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Armorer) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Stats) ?? true))
             {
-                item.Armorer = rhs.Armorer;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Athletics) ?? true))
-            {
-                item.Athletics = rhs.Athletics;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Blade) ?? true))
-            {
-                item.Blade = rhs.Blade;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Block) ?? true))
-            {
-                item.Block = rhs.Block;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Blunt) ?? true))
-            {
-                item.Blunt = rhs.Blunt;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.HandToHand) ?? true))
-            {
-                item.HandToHand = rhs.HandToHand;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.HeavyArmor) ?? true))
-            {
-                item.HeavyArmor = rhs.HeavyArmor;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Alchemy) ?? true))
-            {
-                item.Alchemy = rhs.Alchemy;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Alteration) ?? true))
-            {
-                item.Alteration = rhs.Alteration;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Conjuration) ?? true))
-            {
-                item.Conjuration = rhs.Conjuration;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Destruction) ?? true))
-            {
-                item.Destruction = rhs.Destruction;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Illusion) ?? true))
-            {
-                item.Illusion = rhs.Illusion;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Mysticism) ?? true))
-            {
-                item.Mysticism = rhs.Mysticism;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Restoration) ?? true))
-            {
-                item.Restoration = rhs.Restoration;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Acrobatics) ?? true))
-            {
-                item.Acrobatics = rhs.Acrobatics;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.LightArmor) ?? true))
-            {
-                item.LightArmor = rhs.LightArmor;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Marksman) ?? true))
-            {
-                item.Marksman = rhs.Marksman;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Mercantile) ?? true))
-            {
-                item.Mercantile = rhs.Mercantile;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Security) ?? true))
-            {
-                item.Security = rhs.Security;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Sneak) ?? true))
-            {
-                item.Sneak = rhs.Sneak;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Speechcraft) ?? true))
-            {
-                item.Speechcraft = rhs.Speechcraft;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Health) ?? true))
-            {
-                item.Health = rhs.Health;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Strength) ?? true))
-            {
-                item.Strength = rhs.Strength;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Intelligence) ?? true))
-            {
-                item.Intelligence = rhs.Intelligence;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Willpower) ?? true))
-            {
-                item.Willpower = rhs.Willpower;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Agility) ?? true))
-            {
-                item.Agility = rhs.Agility;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Speed) ?? true))
-            {
-                item.Speed = rhs.Speed;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Endurance) ?? true))
-            {
-                item.Endurance = rhs.Endurance;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Personality) ?? true))
-            {
-                item.Personality = rhs.Personality;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Luck) ?? true))
-            {
-                item.Luck = rhs.Luck;
+                errorMask?.PushIndex((int)Npc_FieldIndex.Stats);
+                try
+                {
+                    if(rhs.Stats.TryGet(out var rhsStats))
+                    {
+                        item.Stats = rhsStats.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Npc_FieldIndex.Stats));
+                    }
+                    else
+                    {
+                        item.Stats = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Hair) ?? true))
             {
@@ -7245,18 +4262,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Unknown = default;
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.ACBSDataTypeState) ?? true))
-            {
-                item.ACBSDataTypeState = rhs.ACBSDataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.AIDTDataTypeState) ?? true))
-            {
-                item.AIDTDataTypeState = rhs.AIDTDataTypeState;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
             }
         }
         
@@ -7476,70 +4481,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.Model));
                 }
             }
-            if (item.ACBSDataTypeState.HasFlag(Npc.ACBSDataType.Has))
+            if ((item.Configuration != null)
+                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Configuration) ?? true))
             {
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Flags) ?? true))
+                if (item.Configuration.TryGet(out var ConfigurationItem))
                 {
-                    EnumXmlTranslation<Npc.NpcFlag>.Instance.Write(
+                    ((NpcConfigurationXmlWriteTranslation)((IXmlItem)ConfigurationItem).XmlWriteTranslator).Write(
+                        item: ConfigurationItem,
                         node: node,
-                        name: nameof(item.Flags),
-                        item: item.Flags,
-                        fieldIndex: (int)Npc_FieldIndex.Flags,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.BaseSpellPoints) ?? true))
-                {
-                    UInt16XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.BaseSpellPoints),
-                        item: item.BaseSpellPoints,
-                        fieldIndex: (int)Npc_FieldIndex.BaseSpellPoints,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Fatigue) ?? true))
-                {
-                    UInt16XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Fatigue),
-                        item: item.Fatigue,
-                        fieldIndex: (int)Npc_FieldIndex.Fatigue,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.BarterGold) ?? true))
-                {
-                    UInt16XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.BarterGold),
-                        item: item.BarterGold,
-                        fieldIndex: (int)Npc_FieldIndex.BarterGold,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.LevelOffset) ?? true))
-                {
-                    Int16XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.LevelOffset),
-                        item: item.LevelOffset,
-                        fieldIndex: (int)Npc_FieldIndex.LevelOffset,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.CalcMin) ?? true))
-                {
-                    UInt16XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.CalcMin),
-                        item: item.CalcMin,
-                        fieldIndex: (int)Npc_FieldIndex.CalcMin,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.CalcMax) ?? true))
-                {
-                    UInt16XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.CalcMax),
-                        item: item.CalcMax,
-                        fieldIndex: (int)Npc_FieldIndex.CalcMax,
-                        errorMask: errorMask);
+                        name: nameof(item.Configuration),
+                        fieldIndex: (int)Npc_FieldIndex.Configuration,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.Configuration));
                 }
             }
             if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Factions) ?? true))
@@ -7635,79 +4588,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                     });
             }
-            if (item.AIDTDataTypeState.HasFlag(Npc.AIDTDataType.Has))
+            if ((item.AIData != null)
+                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.AIData) ?? true))
             {
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Aggression) ?? true))
+                if (item.AIData.TryGet(out var AIDataItem))
                 {
-                    ByteXmlTranslation.Instance.Write(
+                    ((AIDataXmlWriteTranslation)((IXmlItem)AIDataItem).XmlWriteTranslator).Write(
+                        item: AIDataItem,
                         node: node,
-                        name: nameof(item.Aggression),
-                        item: item.Aggression,
-                        fieldIndex: (int)Npc_FieldIndex.Aggression,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Confidence) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Confidence),
-                        item: item.Confidence,
-                        fieldIndex: (int)Npc_FieldIndex.Confidence,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.EnergyLevel) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.EnergyLevel),
-                        item: item.EnergyLevel,
-                        fieldIndex: (int)Npc_FieldIndex.EnergyLevel,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Responsibility) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Responsibility),
-                        item: item.Responsibility,
-                        fieldIndex: (int)Npc_FieldIndex.Responsibility,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.BuySellServices) ?? true))
-                {
-                    EnumXmlTranslation<Npc.BuySellServiceFlag>.Instance.Write(
-                        node: node,
-                        name: nameof(item.BuySellServices),
-                        item: item.BuySellServices,
-                        fieldIndex: (int)Npc_FieldIndex.BuySellServices,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Teaches) ?? true))
-                {
-                    EnumXmlTranslation<Skill>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Teaches),
-                        item: item.Teaches,
-                        fieldIndex: (int)Npc_FieldIndex.Teaches,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.MaximumTrainingLevel) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.MaximumTrainingLevel),
-                        item: item.MaximumTrainingLevel,
-                        fieldIndex: (int)Npc_FieldIndex.MaximumTrainingLevel,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Fluff) ?? true))
-                {
-                    ByteArrayXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Fluff),
-                        item: item.Fluff,
-                        fieldIndex: (int)Npc_FieldIndex.Fluff,
-                        errorMask: errorMask);
+                        name: nameof(item.AIData),
+                        fieldIndex: (int)Npc_FieldIndex.AIData,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.AIData));
                 }
             }
             if ((item.AIPackages != null)
@@ -7758,277 +4650,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Npc_FieldIndex.Class,
                     errorMask: errorMask);
             }
-            if (item.DATADataTypeState.HasFlag(Npc.DATADataType.Has))
+            if ((item.Stats != null)
+                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Stats) ?? true))
             {
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Armorer) ?? true))
+                if (item.Stats.TryGet(out var StatsItem))
                 {
-                    ByteXmlTranslation.Instance.Write(
+                    ((NpcDataXmlWriteTranslation)((IXmlItem)StatsItem).XmlWriteTranslator).Write(
+                        item: StatsItem,
                         node: node,
-                        name: nameof(item.Armorer),
-                        item: item.Armorer,
-                        fieldIndex: (int)Npc_FieldIndex.Armorer,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Athletics) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Athletics),
-                        item: item.Athletics,
-                        fieldIndex: (int)Npc_FieldIndex.Athletics,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Blade) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Blade),
-                        item: item.Blade,
-                        fieldIndex: (int)Npc_FieldIndex.Blade,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Block) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Block),
-                        item: item.Block,
-                        fieldIndex: (int)Npc_FieldIndex.Block,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Blunt) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Blunt),
-                        item: item.Blunt,
-                        fieldIndex: (int)Npc_FieldIndex.Blunt,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.HandToHand) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.HandToHand),
-                        item: item.HandToHand,
-                        fieldIndex: (int)Npc_FieldIndex.HandToHand,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.HeavyArmor) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.HeavyArmor),
-                        item: item.HeavyArmor,
-                        fieldIndex: (int)Npc_FieldIndex.HeavyArmor,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Alchemy) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Alchemy),
-                        item: item.Alchemy,
-                        fieldIndex: (int)Npc_FieldIndex.Alchemy,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Alteration) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Alteration),
-                        item: item.Alteration,
-                        fieldIndex: (int)Npc_FieldIndex.Alteration,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Conjuration) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Conjuration),
-                        item: item.Conjuration,
-                        fieldIndex: (int)Npc_FieldIndex.Conjuration,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Destruction) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Destruction),
-                        item: item.Destruction,
-                        fieldIndex: (int)Npc_FieldIndex.Destruction,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Illusion) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Illusion),
-                        item: item.Illusion,
-                        fieldIndex: (int)Npc_FieldIndex.Illusion,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Mysticism) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Mysticism),
-                        item: item.Mysticism,
-                        fieldIndex: (int)Npc_FieldIndex.Mysticism,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Restoration) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Restoration),
-                        item: item.Restoration,
-                        fieldIndex: (int)Npc_FieldIndex.Restoration,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Acrobatics) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Acrobatics),
-                        item: item.Acrobatics,
-                        fieldIndex: (int)Npc_FieldIndex.Acrobatics,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.LightArmor) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.LightArmor),
-                        item: item.LightArmor,
-                        fieldIndex: (int)Npc_FieldIndex.LightArmor,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Marksman) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Marksman),
-                        item: item.Marksman,
-                        fieldIndex: (int)Npc_FieldIndex.Marksman,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Mercantile) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Mercantile),
-                        item: item.Mercantile,
-                        fieldIndex: (int)Npc_FieldIndex.Mercantile,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Security) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Security),
-                        item: item.Security,
-                        fieldIndex: (int)Npc_FieldIndex.Security,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Sneak) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Sneak),
-                        item: item.Sneak,
-                        fieldIndex: (int)Npc_FieldIndex.Sneak,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Speechcraft) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Speechcraft),
-                        item: item.Speechcraft,
-                        fieldIndex: (int)Npc_FieldIndex.Speechcraft,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Health) ?? true))
-                {
-                    UInt32XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Health),
-                        item: item.Health,
-                        fieldIndex: (int)Npc_FieldIndex.Health,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Strength) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Strength),
-                        item: item.Strength,
-                        fieldIndex: (int)Npc_FieldIndex.Strength,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Intelligence) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Intelligence),
-                        item: item.Intelligence,
-                        fieldIndex: (int)Npc_FieldIndex.Intelligence,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Willpower) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Willpower),
-                        item: item.Willpower,
-                        fieldIndex: (int)Npc_FieldIndex.Willpower,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Agility) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Agility),
-                        item: item.Agility,
-                        fieldIndex: (int)Npc_FieldIndex.Agility,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Speed) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Speed),
-                        item: item.Speed,
-                        fieldIndex: (int)Npc_FieldIndex.Speed,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Endurance) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Endurance),
-                        item: item.Endurance,
-                        fieldIndex: (int)Npc_FieldIndex.Endurance,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Personality) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Personality),
-                        item: item.Personality,
-                        fieldIndex: (int)Npc_FieldIndex.Personality,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Luck) ?? true))
-                {
-                    ByteXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Luck),
-                        item: item.Luck,
-                        fieldIndex: (int)Npc_FieldIndex.Luck,
-                        errorMask: errorMask);
+                        name: nameof(item.Stats),
+                        fieldIndex: (int)Npc_FieldIndex.Stats,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.Stats));
                 }
             }
             if ((item.Hair.FormKey != null)
@@ -8128,33 +4761,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Unknown),
                     item: item.Unknown.Value,
                     fieldIndex: (int)Npc_FieldIndex.Unknown,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.ACBSDataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Npc.ACBSDataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ACBSDataTypeState),
-                    item: item.ACBSDataTypeState,
-                    fieldIndex: (int)Npc_FieldIndex.ACBSDataTypeState,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.AIDTDataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Npc.AIDTDataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.AIDTDataTypeState),
-                    item: item.AIDTDataTypeState,
-                    fieldIndex: (int)Npc_FieldIndex.AIDTDataTypeState,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Npc.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)Npc_FieldIndex.DATADataTypeState,
                     errorMask: errorMask);
             }
         }
@@ -8331,122 +4937,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Flags":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Flags);
+                case "Configuration":
+                    errorMask?.PushIndex((int)Npc_FieldIndex.Configuration);
                     try
                     {
-                        item.Flags = EnumXmlTranslation<Npc.NpcFlag>.Instance.Parse(
+                        item.Configuration = LoquiXmlTranslation<NpcConfiguration>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.ACBSDataTypeState |= Npc.ACBSDataType.Has;
-                    break;
-                case "BaseSpellPoints":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.BaseSpellPoints);
-                    try
-                    {
-                        item.BaseSpellPoints = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Fatigue":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Fatigue);
-                    try
-                    {
-                        item.Fatigue = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BarterGold":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.BarterGold);
-                    try
-                    {
-                        item.BarterGold = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LevelOffset":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.LevelOffset);
-                    try
-                    {
-                        item.LevelOffset = Int16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CalcMin":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.CalcMin);
-                    try
-                    {
-                        item.CalcMin = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "CalcMax":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.CalcMax);
-                    try
-                    {
-                        item.CalcMax = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.Configuration));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -8596,141 +5094,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Aggression":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Aggression);
+                case "AIData":
+                    errorMask?.PushIndex((int)Npc_FieldIndex.AIData);
                     try
                     {
-                        item.Aggression = ByteXmlTranslation.Instance.Parse(
+                        item.AIData = LoquiXmlTranslation<AIData>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.AIDTDataTypeState |= Npc.AIDTDataType.Has;
-                    break;
-                case "Confidence":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Confidence);
-                    try
-                    {
-                        item.Confidence = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EnergyLevel":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.EnergyLevel);
-                    try
-                    {
-                        item.EnergyLevel = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Responsibility":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Responsibility);
-                    try
-                    {
-                        item.Responsibility = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BuySellServices":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.BuySellServices);
-                    try
-                    {
-                        item.BuySellServices = EnumXmlTranslation<Npc.BuySellServiceFlag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Teaches":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Teaches);
-                    try
-                    {
-                        item.Teaches = EnumXmlTranslation<Skill>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MaximumTrainingLevel":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.MaximumTrainingLevel);
-                    try
-                    {
-                        item.MaximumTrainingLevel = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Fluff":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Fluff);
-                    try
-                    {
-                        item.Fluff = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            fallbackLength: 2,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.AIData));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -8816,536 +5187,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Armorer":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Armorer);
+                case "Stats":
+                    errorMask?.PushIndex((int)Npc_FieldIndex.Stats);
                     try
                     {
-                        item.Armorer = ByteXmlTranslation.Instance.Parse(
+                        item.Stats = LoquiXmlTranslation<NpcData>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.DATADataTypeState |= Npc.DATADataType.Has;
-                    break;
-                case "Athletics":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Athletics);
-                    try
-                    {
-                        item.Athletics = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Blade":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Blade);
-                    try
-                    {
-                        item.Blade = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Block":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Block);
-                    try
-                    {
-                        item.Block = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Blunt":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Blunt);
-                    try
-                    {
-                        item.Blunt = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HandToHand":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.HandToHand);
-                    try
-                    {
-                        item.HandToHand = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HeavyArmor":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.HeavyArmor);
-                    try
-                    {
-                        item.HeavyArmor = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Alchemy":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Alchemy);
-                    try
-                    {
-                        item.Alchemy = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Alteration":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Alteration);
-                    try
-                    {
-                        item.Alteration = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Conjuration":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Conjuration);
-                    try
-                    {
-                        item.Conjuration = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Destruction":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Destruction);
-                    try
-                    {
-                        item.Destruction = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Illusion":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Illusion);
-                    try
-                    {
-                        item.Illusion = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Mysticism":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Mysticism);
-                    try
-                    {
-                        item.Mysticism = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Restoration":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Restoration);
-                    try
-                    {
-                        item.Restoration = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Acrobatics":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Acrobatics);
-                    try
-                    {
-                        item.Acrobatics = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LightArmor":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.LightArmor);
-                    try
-                    {
-                        item.LightArmor = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Marksman":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Marksman);
-                    try
-                    {
-                        item.Marksman = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Mercantile":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Mercantile);
-                    try
-                    {
-                        item.Mercantile = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Security":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Security);
-                    try
-                    {
-                        item.Security = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Sneak":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Sneak);
-                    try
-                    {
-                        item.Sneak = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Speechcraft":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Speechcraft);
-                    try
-                    {
-                        item.Speechcraft = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Health":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Health);
-                    try
-                    {
-                        item.Health = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Strength":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Strength);
-                    try
-                    {
-                        item.Strength = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Intelligence":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Intelligence);
-                    try
-                    {
-                        item.Intelligence = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Willpower":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Willpower);
-                    try
-                    {
-                        item.Willpower = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Agility":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Agility);
-                    try
-                    {
-                        item.Agility = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Speed":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Speed);
-                    try
-                    {
-                        item.Speed = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Endurance":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Endurance);
-                    try
-                    {
-                        item.Endurance = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Personality":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Personality);
-                    try
-                    {
-                        item.Personality = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Luck":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.Luck);
-                    try
-                    {
-                        item.Luck = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.Stats));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -9529,60 +5378,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "ACBSDataTypeState":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.ACBSDataTypeState);
-                    try
-                    {
-                        item.ACBSDataTypeState = EnumXmlTranslation<Npc.ACBSDataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AIDTDataTypeState":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.AIDTDataTypeState);
-                    try
-                    {
-                        item.AIDTDataTypeState = EnumXmlTranslation<Npc.AIDTDataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DATADataTypeState":
-                    errorMask?.PushIndex((int)Npc_FieldIndex.DATADataTypeState);
-                    try
-                    {
-                        item.DATADataTypeState = EnumXmlTranslation<Npc.DATADataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
                     ANpcXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -9669,15 +5464,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static NpcBinaryWriteTranslation Instance = new NpcBinaryWriteTranslation();
 
-        public static void WriteEmbedded(
-            INpcGetter item,
-            MutagenWriter writer)
-        {
-            OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             INpcGetter item,
             MutagenWriter writer,
@@ -9699,21 +5485,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.ACBSDataTypeState.HasFlag(Npc.ACBSDataType.Has))
+            if (item.Configuration.TryGet(out var ConfigurationItem))
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Npc_Registration.ACBS_HEADER)))
-                {
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Npc.NpcFlag>.Instance.Write(
-                        writer,
-                        item.Flags,
-                        length: 4);
-                    writer.Write(item.BaseSpellPoints);
-                    writer.Write(item.Fatigue);
-                    writer.Write(item.BarterGold);
-                    writer.Write(item.LevelOffset);
-                    writer.Write(item.CalcMin);
-                    writer.Write(item.CalcMax);
-                }
+                ((NpcConfigurationBinaryWriteTranslation)((IBinaryItem)ConfigurationItem).BinaryWriteTranslator).Write(
+                    item: ConfigurationItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IRankPlacementGetter>.Instance.Write(
                 writer: writer,
@@ -9763,27 +5540,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             recordTypeConverter: conv);
                     }
                 });
-            if (item.AIDTDataTypeState.HasFlag(Npc.AIDTDataType.Has))
+            if (item.AIData.TryGet(out var AIDataItem))
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Npc_Registration.AIDT_HEADER)))
-                {
-                    writer.Write(item.Aggression);
-                    writer.Write(item.Confidence);
-                    writer.Write(item.EnergyLevel);
-                    writer.Write(item.Responsibility);
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Npc.BuySellServiceFlag>.Instance.Write(
-                        writer,
-                        item.BuySellServices,
-                        length: 4);
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
-                        writer,
-                        item.Teaches,
-                        length: 1);
-                    writer.Write(item.MaximumTrainingLevel);
-                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Fluff);
-                }
+                ((AIDataBinaryWriteTranslation)((IBinaryItem)AIDataItem).BinaryWriteTranslator).Write(
+                    item: AIDataItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IAIPackageGetter>>.Instance.Write(
                 writer: writer,
@@ -9804,41 +5566,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.Class,
                 header: recordTypeConverter.ConvertToCustom(Npc_Registration.CNAM_HEADER));
-            if (item.DATADataTypeState.HasFlag(Npc.DATADataType.Has))
+            if (item.Stats.TryGet(out var StatsItem))
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Npc_Registration.DATA_HEADER)))
-                {
-                    writer.Write(item.Armorer);
-                    writer.Write(item.Athletics);
-                    writer.Write(item.Blade);
-                    writer.Write(item.Block);
-                    writer.Write(item.Blunt);
-                    writer.Write(item.HandToHand);
-                    writer.Write(item.HeavyArmor);
-                    writer.Write(item.Alchemy);
-                    writer.Write(item.Alteration);
-                    writer.Write(item.Conjuration);
-                    writer.Write(item.Destruction);
-                    writer.Write(item.Illusion);
-                    writer.Write(item.Mysticism);
-                    writer.Write(item.Restoration);
-                    writer.Write(item.Acrobatics);
-                    writer.Write(item.LightArmor);
-                    writer.Write(item.Marksman);
-                    writer.Write(item.Mercantile);
-                    writer.Write(item.Security);
-                    writer.Write(item.Sneak);
-                    writer.Write(item.Speechcraft);
-                    writer.Write(item.Health);
-                    writer.Write(item.Strength);
-                    writer.Write(item.Intelligence);
-                    writer.Write(item.Willpower);
-                    writer.Write(item.Agility);
-                    writer.Write(item.Speed);
-                    writer.Write(item.Endurance);
-                    writer.Write(item.Personality);
-                    writer.Write(item.Luck);
-                }
+                ((NpcDataBinaryWriteTranslation)((IBinaryItem)StatsItem).BinaryWriteTranslator).Write(
+                    item: StatsItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -9895,7 +5628,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: recordTypeConverter.ConvertToCustom(Npc_Registration.NPC__HEADER),
                 type: ObjectType.Record))
             {
-                WriteEmbedded(
+                OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -10036,42 +5769,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IModelGetter? Model { get; private set; }
         public bool Model_IsSet => Model != null;
         #endregion
-        private int? _ACBSLocation;
-        public Npc.ACBSDataType ACBSDataTypeState { get; private set; }
-        #region Flags
-        private int _FlagsLocation => _ACBSLocation!.Value + 0x0;
-        private bool _Flags_IsSet => _ACBSLocation.HasValue;
-        public Npc.NpcFlag Flags => _Flags_IsSet ? (Npc.NpcFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
-        #endregion
-        #region BaseSpellPoints
-        private int _BaseSpellPointsLocation => _ACBSLocation!.Value + 0x4;
-        private bool _BaseSpellPoints_IsSet => _ACBSLocation.HasValue;
-        public UInt16 BaseSpellPoints => _BaseSpellPoints_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_BaseSpellPointsLocation, 2)) : default;
-        #endregion
-        #region Fatigue
-        private int _FatigueLocation => _ACBSLocation!.Value + 0x6;
-        private bool _Fatigue_IsSet => _ACBSLocation.HasValue;
-        public UInt16 Fatigue => _Fatigue_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_FatigueLocation, 2)) : default;
-        #endregion
-        #region BarterGold
-        private int _BarterGoldLocation => _ACBSLocation!.Value + 0x8;
-        private bool _BarterGold_IsSet => _ACBSLocation.HasValue;
-        public UInt16 BarterGold => _BarterGold_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_BarterGoldLocation, 2)) : default;
-        #endregion
-        #region LevelOffset
-        private int _LevelOffsetLocation => _ACBSLocation!.Value + 0xA;
-        private bool _LevelOffset_IsSet => _ACBSLocation.HasValue;
-        public Int16 LevelOffset => _LevelOffset_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_LevelOffsetLocation, 2)) : default;
-        #endregion
-        #region CalcMin
-        private int _CalcMinLocation => _ACBSLocation!.Value + 0xC;
-        private bool _CalcMin_IsSet => _ACBSLocation.HasValue;
-        public UInt16 CalcMin => _CalcMin_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_CalcMinLocation, 2)) : default;
-        #endregion
-        #region CalcMax
-        private int _CalcMaxLocation => _ACBSLocation!.Value + 0xE;
-        private bool _CalcMax_IsSet => _ACBSLocation.HasValue;
-        public UInt16 CalcMax => _CalcMax_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_CalcMaxLocation, 2)) : default;
+        #region Configuration
+        private RangeInt32? _ConfigurationLocation;
+        private bool _Configuration_IsSet => _ConfigurationLocation.HasValue;
+        public INpcConfigurationGetter? Configuration => _Configuration_IsSet ? NpcConfigurationBinaryOverlay.NpcConfigurationFactory(new BinaryMemoryReadStream(_data.Slice(_ConfigurationLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Configuration_IsSet => _ConfigurationLocation.HasValue;
         #endregion
         public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = ListExt.Empty<RankPlacementBinaryOverlay>();
         #region DeathItem
@@ -10091,47 +5793,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormLinkNullable<IScriptGetter>.Empty;
         #endregion
         public IReadOnlyList<IItemEntryGetter> Items { get; private set; } = ListExt.Empty<ItemEntryBinaryOverlay>();
-        private int? _AIDTLocation;
-        public Npc.AIDTDataType AIDTDataTypeState { get; private set; }
-        #region Aggression
-        private int _AggressionLocation => _AIDTLocation!.Value + 0x0;
-        private bool _Aggression_IsSet => _AIDTLocation.HasValue;
-        public Byte Aggression => _Aggression_IsSet ? _data.Span[_AggressionLocation] : default;
-        #endregion
-        #region Confidence
-        private int _ConfidenceLocation => _AIDTLocation!.Value + 0x1;
-        private bool _Confidence_IsSet => _AIDTLocation.HasValue;
-        public Byte Confidence => _Confidence_IsSet ? _data.Span[_ConfidenceLocation] : default;
-        #endregion
-        #region EnergyLevel
-        private int _EnergyLevelLocation => _AIDTLocation!.Value + 0x2;
-        private bool _EnergyLevel_IsSet => _AIDTLocation.HasValue;
-        public Byte EnergyLevel => _EnergyLevel_IsSet ? _data.Span[_EnergyLevelLocation] : default;
-        #endregion
-        #region Responsibility
-        private int _ResponsibilityLocation => _AIDTLocation!.Value + 0x3;
-        private bool _Responsibility_IsSet => _AIDTLocation.HasValue;
-        public Byte Responsibility => _Responsibility_IsSet ? _data.Span[_ResponsibilityLocation] : default;
-        #endregion
-        #region BuySellServices
-        private int _BuySellServicesLocation => _AIDTLocation!.Value + 0x4;
-        private bool _BuySellServices_IsSet => _AIDTLocation.HasValue;
-        public Npc.BuySellServiceFlag BuySellServices => _BuySellServices_IsSet ? (Npc.BuySellServiceFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_BuySellServicesLocation, 4)) : default;
-        #endregion
-        #region Teaches
-        private int _TeachesLocation => _AIDTLocation!.Value + 0x8;
-        private bool _Teaches_IsSet => _AIDTLocation.HasValue;
-        public Skill Teaches => _Teaches_IsSet ? (Skill)_data.Span.Slice(_TeachesLocation, 1)[0] : default;
-        #endregion
-        #region MaximumTrainingLevel
-        private int _MaximumTrainingLevelLocation => _AIDTLocation!.Value + 0x9;
-        private bool _MaximumTrainingLevel_IsSet => _AIDTLocation.HasValue;
-        public Byte MaximumTrainingLevel => _MaximumTrainingLevel_IsSet ? _data.Span[_MaximumTrainingLevelLocation] : default;
-        #endregion
-        #region Fluff
-        private int _FluffLocation => _AIDTLocation!.Value + 0xA;
-        private bool _Fluff_IsSet => _AIDTLocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> Fluff => _Fluff_IsSet ? _data.Span.Slice(_FluffLocation, 2).ToArray() : default(ReadOnlyMemorySlice<byte>);
+        #region AIData
+        private RangeInt32? _AIDataLocation;
+        private bool _AIData_IsSet => _AIDataLocation.HasValue;
+        public IAIDataGetter? AIData => _AIData_IsSet ? AIDataBinaryOverlay.AIDataFactory(new BinaryMemoryReadStream(_data.Slice(_AIDataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool AIData_IsSet => _AIDataLocation.HasValue;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IAIPackageGetter>>? AIPackages { get; private set; }
         public IReadOnlyList<String>? Animations { get; private set; }
@@ -10140,157 +5806,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Class_IsSet => _ClassLocation.HasValue;
         public IFormLinkNullableGetter<IClassGetter> Class => _ClassLocation.HasValue ? new FormLinkNullable<IClassGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ClassLocation.Value, _package.Meta)))) : FormLinkNullable<IClassGetter>.Empty;
         #endregion
-        private int? _DATALocation;
-        public Npc.DATADataType DATADataTypeState { get; private set; }
-        #region Armorer
-        private int _ArmorerLocation => _DATALocation!.Value + 0x0;
-        private bool _Armorer_IsSet => _DATALocation.HasValue;
-        public Byte Armorer => _Armorer_IsSet ? _data.Span[_ArmorerLocation] : default;
-        #endregion
-        #region Athletics
-        private int _AthleticsLocation => _DATALocation!.Value + 0x1;
-        private bool _Athletics_IsSet => _DATALocation.HasValue;
-        public Byte Athletics => _Athletics_IsSet ? _data.Span[_AthleticsLocation] : default;
-        #endregion
-        #region Blade
-        private int _BladeLocation => _DATALocation!.Value + 0x2;
-        private bool _Blade_IsSet => _DATALocation.HasValue;
-        public Byte Blade => _Blade_IsSet ? _data.Span[_BladeLocation] : default;
-        #endregion
-        #region Block
-        private int _BlockLocation => _DATALocation!.Value + 0x3;
-        private bool _Block_IsSet => _DATALocation.HasValue;
-        public Byte Block => _Block_IsSet ? _data.Span[_BlockLocation] : default;
-        #endregion
-        #region Blunt
-        private int _BluntLocation => _DATALocation!.Value + 0x4;
-        private bool _Blunt_IsSet => _DATALocation.HasValue;
-        public Byte Blunt => _Blunt_IsSet ? _data.Span[_BluntLocation] : default;
-        #endregion
-        #region HandToHand
-        private int _HandToHandLocation => _DATALocation!.Value + 0x5;
-        private bool _HandToHand_IsSet => _DATALocation.HasValue;
-        public Byte HandToHand => _HandToHand_IsSet ? _data.Span[_HandToHandLocation] : default;
-        #endregion
-        #region HeavyArmor
-        private int _HeavyArmorLocation => _DATALocation!.Value + 0x6;
-        private bool _HeavyArmor_IsSet => _DATALocation.HasValue;
-        public Byte HeavyArmor => _HeavyArmor_IsSet ? _data.Span[_HeavyArmorLocation] : default;
-        #endregion
-        #region Alchemy
-        private int _AlchemyLocation => _DATALocation!.Value + 0x7;
-        private bool _Alchemy_IsSet => _DATALocation.HasValue;
-        public Byte Alchemy => _Alchemy_IsSet ? _data.Span[_AlchemyLocation] : default;
-        #endregion
-        #region Alteration
-        private int _AlterationLocation => _DATALocation!.Value + 0x8;
-        private bool _Alteration_IsSet => _DATALocation.HasValue;
-        public Byte Alteration => _Alteration_IsSet ? _data.Span[_AlterationLocation] : default;
-        #endregion
-        #region Conjuration
-        private int _ConjurationLocation => _DATALocation!.Value + 0x9;
-        private bool _Conjuration_IsSet => _DATALocation.HasValue;
-        public Byte Conjuration => _Conjuration_IsSet ? _data.Span[_ConjurationLocation] : default;
-        #endregion
-        #region Destruction
-        private int _DestructionLocation => _DATALocation!.Value + 0xA;
-        private bool _Destruction_IsSet => _DATALocation.HasValue;
-        public Byte Destruction => _Destruction_IsSet ? _data.Span[_DestructionLocation] : default;
-        #endregion
-        #region Illusion
-        private int _IllusionLocation => _DATALocation!.Value + 0xB;
-        private bool _Illusion_IsSet => _DATALocation.HasValue;
-        public Byte Illusion => _Illusion_IsSet ? _data.Span[_IllusionLocation] : default;
-        #endregion
-        #region Mysticism
-        private int _MysticismLocation => _DATALocation!.Value + 0xC;
-        private bool _Mysticism_IsSet => _DATALocation.HasValue;
-        public Byte Mysticism => _Mysticism_IsSet ? _data.Span[_MysticismLocation] : default;
-        #endregion
-        #region Restoration
-        private int _RestorationLocation => _DATALocation!.Value + 0xD;
-        private bool _Restoration_IsSet => _DATALocation.HasValue;
-        public Byte Restoration => _Restoration_IsSet ? _data.Span[_RestorationLocation] : default;
-        #endregion
-        #region Acrobatics
-        private int _AcrobaticsLocation => _DATALocation!.Value + 0xE;
-        private bool _Acrobatics_IsSet => _DATALocation.HasValue;
-        public Byte Acrobatics => _Acrobatics_IsSet ? _data.Span[_AcrobaticsLocation] : default;
-        #endregion
-        #region LightArmor
-        private int _LightArmorLocation => _DATALocation!.Value + 0xF;
-        private bool _LightArmor_IsSet => _DATALocation.HasValue;
-        public Byte LightArmor => _LightArmor_IsSet ? _data.Span[_LightArmorLocation] : default;
-        #endregion
-        #region Marksman
-        private int _MarksmanLocation => _DATALocation!.Value + 0x10;
-        private bool _Marksman_IsSet => _DATALocation.HasValue;
-        public Byte Marksman => _Marksman_IsSet ? _data.Span[_MarksmanLocation] : default;
-        #endregion
-        #region Mercantile
-        private int _MercantileLocation => _DATALocation!.Value + 0x11;
-        private bool _Mercantile_IsSet => _DATALocation.HasValue;
-        public Byte Mercantile => _Mercantile_IsSet ? _data.Span[_MercantileLocation] : default;
-        #endregion
-        #region Security
-        private int _SecurityLocation => _DATALocation!.Value + 0x12;
-        private bool _Security_IsSet => _DATALocation.HasValue;
-        public Byte Security => _Security_IsSet ? _data.Span[_SecurityLocation] : default;
-        #endregion
-        #region Sneak
-        private int _SneakLocation => _DATALocation!.Value + 0x13;
-        private bool _Sneak_IsSet => _DATALocation.HasValue;
-        public Byte Sneak => _Sneak_IsSet ? _data.Span[_SneakLocation] : default;
-        #endregion
-        #region Speechcraft
-        private int _SpeechcraftLocation => _DATALocation!.Value + 0x14;
-        private bool _Speechcraft_IsSet => _DATALocation.HasValue;
-        public Byte Speechcraft => _Speechcraft_IsSet ? _data.Span[_SpeechcraftLocation] : default;
-        #endregion
-        #region Health
-        private int _HealthLocation => _DATALocation!.Value + 0x15;
-        private bool _Health_IsSet => _DATALocation.HasValue;
-        public UInt32 Health => _Health_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_HealthLocation, 4)) : default;
-        #endregion
-        #region Strength
-        private int _StrengthLocation => _DATALocation!.Value + 0x19;
-        private bool _Strength_IsSet => _DATALocation.HasValue;
-        public Byte Strength => _Strength_IsSet ? _data.Span[_StrengthLocation] : default;
-        #endregion
-        #region Intelligence
-        private int _IntelligenceLocation => _DATALocation!.Value + 0x1A;
-        private bool _Intelligence_IsSet => _DATALocation.HasValue;
-        public Byte Intelligence => _Intelligence_IsSet ? _data.Span[_IntelligenceLocation] : default;
-        #endregion
-        #region Willpower
-        private int _WillpowerLocation => _DATALocation!.Value + 0x1B;
-        private bool _Willpower_IsSet => _DATALocation.HasValue;
-        public Byte Willpower => _Willpower_IsSet ? _data.Span[_WillpowerLocation] : default;
-        #endregion
-        #region Agility
-        private int _AgilityLocation => _DATALocation!.Value + 0x1C;
-        private bool _Agility_IsSet => _DATALocation.HasValue;
-        public Byte Agility => _Agility_IsSet ? _data.Span[_AgilityLocation] : default;
-        #endregion
-        #region Speed
-        private int _SpeedLocation => _DATALocation!.Value + 0x1D;
-        private bool _Speed_IsSet => _DATALocation.HasValue;
-        public Byte Speed => _Speed_IsSet ? _data.Span[_SpeedLocation] : default;
-        #endregion
-        #region Endurance
-        private int _EnduranceLocation => _DATALocation!.Value + 0x1E;
-        private bool _Endurance_IsSet => _DATALocation.HasValue;
-        public Byte Endurance => _Endurance_IsSet ? _data.Span[_EnduranceLocation] : default;
-        #endregion
-        #region Personality
-        private int _PersonalityLocation => _DATALocation!.Value + 0x1F;
-        private bool _Personality_IsSet => _DATALocation.HasValue;
-        public Byte Personality => _Personality_IsSet ? _data.Span[_PersonalityLocation] : default;
-        #endregion
-        #region Luck
-        private int _LuckLocation => _DATALocation!.Value + 0x20;
-        private bool _Luck_IsSet => _DATALocation.HasValue;
-        public Byte Luck => _Luck_IsSet ? _data.Span[_LuckLocation] : default;
+        #region Stats
+        private RangeInt32? _StatsLocation;
+        private bool _Stats_IsSet => _StatsLocation.HasValue;
+        public INpcDataGetter? Stats => _Stats_IsSet ? NpcDataBinaryOverlay.NpcDataFactory(new BinaryMemoryReadStream(_data.Slice(_StatsLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Stats_IsSet => _StatsLocation.HasValue;
         #endregion
         #region Hair
         private int? _HairLocation;
@@ -10392,9 +5912,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x53424341: // ACBS
                 {
-                    _ACBSLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
-                    this.ACBSDataTypeState = Npc.ACBSDataType.Has;
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.CalcMax);
+                    _ConfigurationLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Configuration);
                 }
                 case 0x4D414E53: // SNAM
                 {
@@ -10458,9 +5977,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x54444941: // AIDT
                 {
-                    _AIDTLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
-                    this.AIDTDataTypeState = Npc.AIDTDataType.Has;
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Fluff);
+                    _AIDataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.AIData);
                 }
                 case 0x44494B50: // PKID
                 {
@@ -10495,9 +6013,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
-                    this.DATADataTypeState = Npc.DATADataType.Has;
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Luck);
+                    _StatsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Stats);
                 }
                 case 0x4D414E48: // HNAM
                 {

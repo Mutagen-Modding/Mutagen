@@ -16,7 +16,6 @@ using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Oblivion;
-using System.Drawing;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -90,114 +89,16 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ILightGetter.Icon => this.Icon;
         #endregion
-        #region Time
-        public readonly static Int32 _Time_Default = -1;
+        #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Int32 _Time;
-        public Int32 Time
+        private LightData? _Data;
+        public LightData? Data
         {
-            get => this._Time;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Time = value;
-            }
+            get => _Data;
+            set => _Data = value;
         }
-        #endregion
-        #region Radius
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt32 _Radius;
-        public UInt32 Radius
-        {
-            get => this._Radius;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Radius = value;
-            }
-        }
-        #endregion
-        #region Color
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Color _Color;
-        public Color Color
-        {
-            get => this._Color;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Color = value;
-            }
-        }
-        #endregion
-        #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Light.LightFlag _Flags;
-        public Light.LightFlag Flags
-        {
-            get => this._Flags;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._Flags = value;
-            }
-        }
-        #endregion
-        #region FalloffExponent
-        public readonly static Single _FalloffExponent_Default = 1;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _FalloffExponent;
-        public Single FalloffExponent
-        {
-            get => this._FalloffExponent;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._FalloffExponent = value;
-            }
-        }
-        #endregion
-        #region FOV
-        public readonly static Single _FOV_Default = 90;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _FOV;
-        public Single FOV
-        {
-            get => this._FOV;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this._FOV = value;
-            }
-        }
-        #endregion
-        #region Value
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt32 _Value;
-        public UInt32 Value
-        {
-            get => this._Value;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this._Value = value;
-            }
-        }
-        #endregion
-        #region Weight
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _Weight;
-        public Single Weight
-        {
-            get => this._Weight;
-            set
-            {
-                this.DATADataTypeState |= DATADataType.Has;
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this._Weight = value;
-            }
-        }
+        ILightDataGetter? ILightGetter.Data => this.Data;
         #endregion
         #region Fade
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -216,9 +117,6 @@ namespace Mutagen.Bethesda.Oblivion
         public IFormLinkNullable<Sound> Sound => this._Sound;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundGetter> ILightGetter.Sound => this.Sound;
-        #endregion
-        #region DATADataTypeState
-        public Light.DATADataType DATADataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -394,17 +292,9 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Script = initialValue;
                 this.Name = initialValue;
                 this.Icon = initialValue;
-                this.Time = initialValue;
-                this.Radius = initialValue;
-                this.Color = initialValue;
-                this.Flags = initialValue;
-                this.FalloffExponent = initialValue;
-                this.FOV = initialValue;
-                this.Value = initialValue;
-                this.Weight = initialValue;
+                this.Data = new MaskItem<TItem, LightData.Mask<TItem>?>(initialValue, new LightData.Mask<TItem>(initialValue));
                 this.Fade = initialValue;
                 this.Sound = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -417,17 +307,9 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Script,
                 TItem Name,
                 TItem Icon,
-                TItem Time,
-                TItem Radius,
-                TItem Color,
-                TItem Flags,
-                TItem FalloffExponent,
-                TItem FOV,
-                TItem Value,
-                TItem Weight,
+                TItem Data,
                 TItem Fade,
-                TItem Sound,
-                TItem DATADataTypeState)
+                TItem Sound)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -439,17 +321,9 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Script = Script;
                 this.Name = Name;
                 this.Icon = Icon;
-                this.Time = Time;
-                this.Radius = Radius;
-                this.Color = Color;
-                this.Flags = Flags;
-                this.FalloffExponent = FalloffExponent;
-                this.FOV = FOV;
-                this.Value = Value;
-                this.Weight = Weight;
+                this.Data = new MaskItem<TItem, LightData.Mask<TItem>?>(Data, new LightData.Mask<TItem>(Data));
                 this.Fade = Fade;
                 this.Sound = Sound;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -465,17 +339,9 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem Script;
             public TItem Name;
             public TItem Icon;
-            public TItem Time;
-            public TItem Radius;
-            public TItem Color;
-            public TItem Flags;
-            public TItem FalloffExponent;
-            public TItem FOV;
-            public TItem Value;
-            public TItem Weight;
+            public MaskItem<TItem, LightData.Mask<TItem>?>? Data { get; set; }
             public TItem Fade;
             public TItem Sound;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -493,17 +359,9 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.Script, rhs.Script)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Icon, rhs.Icon)) return false;
-                if (!object.Equals(this.Time, rhs.Time)) return false;
-                if (!object.Equals(this.Radius, rhs.Radius)) return false;
-                if (!object.Equals(this.Color, rhs.Color)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.FalloffExponent, rhs.FalloffExponent)) return false;
-                if (!object.Equals(this.FOV, rhs.FOV)) return false;
-                if (!object.Equals(this.Value, rhs.Value)) return false;
-                if (!object.Equals(this.Weight, rhs.Weight)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
                 if (!object.Equals(this.Fade, rhs.Fade)) return false;
                 if (!object.Equals(this.Sound, rhs.Sound)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -513,17 +371,9 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.Script);
                 hash.Add(this.Name);
                 hash.Add(this.Icon);
-                hash.Add(this.Time);
-                hash.Add(this.Radius);
-                hash.Add(this.Color);
-                hash.Add(this.Flags);
-                hash.Add(this.FalloffExponent);
-                hash.Add(this.FOV);
-                hash.Add(this.Value);
-                hash.Add(this.Weight);
+                hash.Add(this.Data);
                 hash.Add(this.Fade);
                 hash.Add(this.Sound);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -542,17 +392,13 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.Script)) return false;
                 if (!eval(this.Name)) return false;
                 if (!eval(this.Icon)) return false;
-                if (!eval(this.Time)) return false;
-                if (!eval(this.Radius)) return false;
-                if (!eval(this.Color)) return false;
-                if (!eval(this.Flags)) return false;
-                if (!eval(this.FalloffExponent)) return false;
-                if (!eval(this.FOV)) return false;
-                if (!eval(this.Value)) return false;
-                if (!eval(this.Weight)) return false;
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
                 if (!eval(this.Fade)) return false;
                 if (!eval(this.Sound)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -569,17 +415,13 @@ namespace Mutagen.Bethesda.Oblivion
                 if (eval(this.Script)) return true;
                 if (eval(this.Name)) return true;
                 if (eval(this.Icon)) return true;
-                if (eval(this.Time)) return true;
-                if (eval(this.Radius)) return true;
-                if (eval(this.Color)) return true;
-                if (eval(this.Flags)) return true;
-                if (eval(this.FalloffExponent)) return true;
-                if (eval(this.FOV)) return true;
-                if (eval(this.Value)) return true;
-                if (eval(this.Weight)) return true;
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
                 if (eval(this.Fade)) return true;
                 if (eval(this.Sound)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -599,17 +441,9 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Script = eval(this.Script);
                 obj.Name = eval(this.Name);
                 obj.Icon = eval(this.Icon);
-                obj.Time = eval(this.Time);
-                obj.Radius = eval(this.Radius);
-                obj.Color = eval(this.Color);
-                obj.Flags = eval(this.Flags);
-                obj.FalloffExponent = eval(this.FalloffExponent);
-                obj.FOV = eval(this.FOV);
-                obj.Value = eval(this.Value);
-                obj.Weight = eval(this.Weight);
+                obj.Data = this.Data == null ? null : new MaskItem<R, LightData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
                 obj.Fade = eval(this.Fade);
                 obj.Sound = eval(this.Sound);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -648,37 +482,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendItem(Icon, "Icon");
                     }
-                    if (printMask?.Time ?? true)
+                    if (printMask?.Data?.Overall ?? true)
                     {
-                        fg.AppendItem(Time, "Time");
-                    }
-                    if (printMask?.Radius ?? true)
-                    {
-                        fg.AppendItem(Radius, "Radius");
-                    }
-                    if (printMask?.Color ?? true)
-                    {
-                        fg.AppendItem(Color, "Color");
-                    }
-                    if (printMask?.Flags ?? true)
-                    {
-                        fg.AppendItem(Flags, "Flags");
-                    }
-                    if (printMask?.FalloffExponent ?? true)
-                    {
-                        fg.AppendItem(FalloffExponent, "FalloffExponent");
-                    }
-                    if (printMask?.FOV ?? true)
-                    {
-                        fg.AppendItem(FOV, "FOV");
-                    }
-                    if (printMask?.Value ?? true)
-                    {
-                        fg.AppendItem(Value, "Value");
-                    }
-                    if (printMask?.Weight ?? true)
-                    {
-                        fg.AppendItem(Weight, "Weight");
+                        Data?.ToString(fg);
                     }
                     if (printMask?.Fade ?? true)
                     {
@@ -687,10 +493,6 @@ namespace Mutagen.Bethesda.Oblivion
                     if (printMask?.Sound ?? true)
                     {
                         fg.AppendItem(Sound, "Sound");
-                    }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -708,17 +510,9 @@ namespace Mutagen.Bethesda.Oblivion
             public Exception? Script;
             public Exception? Name;
             public Exception? Icon;
-            public Exception? Time;
-            public Exception? Radius;
-            public Exception? Color;
-            public Exception? Flags;
-            public Exception? FalloffExponent;
-            public Exception? FOV;
-            public Exception? Value;
-            public Exception? Weight;
+            public MaskItem<Exception?, LightData.ErrorMask?>? Data;
             public Exception? Fade;
             public Exception? Sound;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -735,28 +529,12 @@ namespace Mutagen.Bethesda.Oblivion
                         return Name;
                     case Light_FieldIndex.Icon:
                         return Icon;
-                    case Light_FieldIndex.Time:
-                        return Time;
-                    case Light_FieldIndex.Radius:
-                        return Radius;
-                    case Light_FieldIndex.Color:
-                        return Color;
-                    case Light_FieldIndex.Flags:
-                        return Flags;
-                    case Light_FieldIndex.FalloffExponent:
-                        return FalloffExponent;
-                    case Light_FieldIndex.FOV:
-                        return FOV;
-                    case Light_FieldIndex.Value:
-                        return Value;
-                    case Light_FieldIndex.Weight:
-                        return Weight;
+                    case Light_FieldIndex.Data:
+                        return Data;
                     case Light_FieldIndex.Fade:
                         return Fade;
                     case Light_FieldIndex.Sound:
                         return Sound;
-                    case Light_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -779,38 +557,14 @@ namespace Mutagen.Bethesda.Oblivion
                     case Light_FieldIndex.Icon:
                         this.Icon = ex;
                         break;
-                    case Light_FieldIndex.Time:
-                        this.Time = ex;
-                        break;
-                    case Light_FieldIndex.Radius:
-                        this.Radius = ex;
-                        break;
-                    case Light_FieldIndex.Color:
-                        this.Color = ex;
-                        break;
-                    case Light_FieldIndex.Flags:
-                        this.Flags = ex;
-                        break;
-                    case Light_FieldIndex.FalloffExponent:
-                        this.FalloffExponent = ex;
-                        break;
-                    case Light_FieldIndex.FOV:
-                        this.FOV = ex;
-                        break;
-                    case Light_FieldIndex.Value:
-                        this.Value = ex;
-                        break;
-                    case Light_FieldIndex.Weight:
-                        this.Weight = ex;
+                    case Light_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, LightData.ErrorMask?>(ex, null);
                         break;
                     case Light_FieldIndex.Fade:
                         this.Fade = ex;
                         break;
                     case Light_FieldIndex.Sound:
                         this.Sound = ex;
-                        break;
-                    case Light_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -835,38 +589,14 @@ namespace Mutagen.Bethesda.Oblivion
                     case Light_FieldIndex.Icon:
                         this.Icon = (Exception?)obj;
                         break;
-                    case Light_FieldIndex.Time:
-                        this.Time = (Exception?)obj;
-                        break;
-                    case Light_FieldIndex.Radius:
-                        this.Radius = (Exception?)obj;
-                        break;
-                    case Light_FieldIndex.Color:
-                        this.Color = (Exception?)obj;
-                        break;
-                    case Light_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
-                        break;
-                    case Light_FieldIndex.FalloffExponent:
-                        this.FalloffExponent = (Exception?)obj;
-                        break;
-                    case Light_FieldIndex.FOV:
-                        this.FOV = (Exception?)obj;
-                        break;
-                    case Light_FieldIndex.Value:
-                        this.Value = (Exception?)obj;
-                        break;
-                    case Light_FieldIndex.Weight:
-                        this.Weight = (Exception?)obj;
+                    case Light_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, LightData.ErrorMask?>?)obj;
                         break;
                     case Light_FieldIndex.Fade:
                         this.Fade = (Exception?)obj;
                         break;
                     case Light_FieldIndex.Sound:
                         this.Sound = (Exception?)obj;
-                        break;
-                    case Light_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -881,17 +611,9 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Script != null) return true;
                 if (Name != null) return true;
                 if (Icon != null) return true;
-                if (Time != null) return true;
-                if (Radius != null) return true;
-                if (Color != null) return true;
-                if (Flags != null) return true;
-                if (FalloffExponent != null) return true;
-                if (FOV != null) return true;
-                if (Value != null) return true;
-                if (Weight != null) return true;
+                if (Data != null) return true;
                 if (Fade != null) return true;
                 if (Sound != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -931,17 +653,9 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(Script, "Script");
                 fg.AppendItem(Name, "Name");
                 fg.AppendItem(Icon, "Icon");
-                fg.AppendItem(Time, "Time");
-                fg.AppendItem(Radius, "Radius");
-                fg.AppendItem(Color, "Color");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(FalloffExponent, "FalloffExponent");
-                fg.AppendItem(FOV, "FOV");
-                fg.AppendItem(Value, "Value");
-                fg.AppendItem(Weight, "Weight");
+                Data?.ToString(fg);
                 fg.AppendItem(Fade, "Fade");
                 fg.AppendItem(Sound, "Sound");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -954,17 +668,9 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Script = this.Script.Combine(rhs.Script);
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Icon = this.Icon.Combine(rhs.Icon);
-                ret.Time = this.Time.Combine(rhs.Time);
-                ret.Radius = this.Radius.Combine(rhs.Radius);
-                ret.Color = this.Color.Combine(rhs.Color);
-                ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.FalloffExponent = this.FalloffExponent.Combine(rhs.FalloffExponent);
-                ret.FOV = this.FOV.Combine(rhs.FOV);
-                ret.Value = this.Value.Combine(rhs.Value);
-                ret.Weight = this.Weight.Combine(rhs.Weight);
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 ret.Fade = this.Fade.Combine(rhs.Fade);
                 ret.Sound = this.Sound.Combine(rhs.Sound);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -991,17 +697,9 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Script;
             public bool Name;
             public bool Icon;
-            public bool Time;
-            public bool Radius;
-            public bool Color;
-            public bool Flags;
-            public bool FalloffExponent;
-            public bool FOV;
-            public bool Value;
-            public bool Weight;
+            public MaskItem<bool, LightData.TranslationMask?> Data;
             public bool Fade;
             public bool Sound;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -1012,17 +710,9 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Script = defaultOn;
                 this.Name = defaultOn;
                 this.Icon = defaultOn;
-                this.Time = defaultOn;
-                this.Radius = defaultOn;
-                this.Color = defaultOn;
-                this.Flags = defaultOn;
-                this.FalloffExponent = defaultOn;
-                this.FOV = defaultOn;
-                this.Value = defaultOn;
-                this.Weight = defaultOn;
+                this.Data = new MaskItem<bool, LightData.TranslationMask?>(defaultOn, null);
                 this.Fade = defaultOn;
                 this.Sound = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -1034,29 +724,15 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Script, null));
                 ret.Add((Name, null));
                 ret.Add((Icon, null));
-                ret.Add((Time, null));
-                ret.Add((Radius, null));
-                ret.Add((Color, null));
-                ret.Add((Flags, null));
-                ret.Add((FalloffExponent, null));
-                ret.Add((FOV, null));
-                ret.Add((Value, null));
-                ret.Add((Weight, null));
+                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
                 ret.Add((Fade, null));
                 ret.Add((Sound, null));
-                ret.Add((DATADataTypeState, null));
             }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Light_Registration.TriggeringRecordType;
-        [Flags]
-        public enum DATADataType
-        {
-            Has = 1,
-            Break0 = 2
-        }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IEnumerable<ILinkGetter> Links => LightCommon.Instance.GetLinks(this);
         public Light(FormKey formKey)
@@ -1142,17 +818,9 @@ namespace Mutagen.Bethesda.Oblivion
         new IFormLinkNullable<Script> Script { get; }
         new String? Name { get; set; }
         new String? Icon { get; set; }
-        new Int32 Time { get; set; }
-        new UInt32 Radius { get; set; }
-        new Color Color { get; set; }
-        new Light.LightFlag Flags { get; set; }
-        new Single FalloffExponent { get; set; }
-        new Single FOV { get; set; }
-        new UInt32 Value { get; set; }
-        new Single Weight { get; set; }
+        new LightData? Data { get; set; }
         new Single? Fade { get; set; }
         new IFormLinkNullable<Sound> Sound { get; }
-        new Light.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface ILightInternal :
@@ -1173,17 +841,9 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
         String? Name { get; }
         String? Icon { get; }
-        Int32 Time { get; }
-        UInt32 Radius { get; }
-        Color Color { get; }
-        Light.LightFlag Flags { get; }
-        Single FalloffExponent { get; }
-        Single FOV { get; }
-        UInt32 Value { get; }
-        Single Weight { get; }
+        ILightDataGetter? Data { get; }
         Single? Fade { get; }
         IFormLinkNullableGetter<ISoundGetter> Sound { get; }
-        Light.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -1487,17 +1147,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Script = 6,
         Name = 7,
         Icon = 8,
-        Time = 9,
-        Radius = 10,
-        Color = 11,
-        Flags = 12,
-        FalloffExponent = 13,
-        FOV = 14,
-        Value = 15,
-        Weight = 16,
-        Fade = 17,
-        Sound = 18,
-        DATADataTypeState = 19,
+        Data = 9,
+        Fade = 10,
+        Sound = 11,
     }
     #endregion
 
@@ -1515,9 +1167,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "c427a7d6-4fbf-45c8-80c7-f3c8f8646bc1";
 
-        public const ushort AdditionalFieldCount = 15;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 20;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(Light.Mask<>);
 
@@ -1555,28 +1207,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Light_FieldIndex.Name;
                 case "ICON":
                     return (ushort)Light_FieldIndex.Icon;
-                case "TIME":
-                    return (ushort)Light_FieldIndex.Time;
-                case "RADIUS":
-                    return (ushort)Light_FieldIndex.Radius;
-                case "COLOR":
-                    return (ushort)Light_FieldIndex.Color;
-                case "FLAGS":
-                    return (ushort)Light_FieldIndex.Flags;
-                case "FALLOFFEXPONENT":
-                    return (ushort)Light_FieldIndex.FalloffExponent;
-                case "FOV":
-                    return (ushort)Light_FieldIndex.FOV;
-                case "VALUE":
-                    return (ushort)Light_FieldIndex.Value;
-                case "WEIGHT":
-                    return (ushort)Light_FieldIndex.Weight;
+                case "DATA":
+                    return (ushort)Light_FieldIndex.Data;
                 case "FADE":
                     return (ushort)Light_FieldIndex.Fade;
                 case "SOUND":
                     return (ushort)Light_FieldIndex.Sound;
-                case "DATADATATYPESTATE":
-                    return (ushort)Light_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -1591,17 +1227,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Light_FieldIndex.Script:
                 case Light_FieldIndex.Name:
                 case Light_FieldIndex.Icon:
-                case Light_FieldIndex.Time:
-                case Light_FieldIndex.Radius:
-                case Light_FieldIndex.Color:
-                case Light_FieldIndex.Flags:
-                case Light_FieldIndex.FalloffExponent:
-                case Light_FieldIndex.FOV:
-                case Light_FieldIndex.Value:
-                case Light_FieldIndex.Weight:
+                case Light_FieldIndex.Data:
                 case Light_FieldIndex.Fade:
                 case Light_FieldIndex.Sound:
-                case Light_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return AItem_Registration.GetNthIsEnumerable(index);
@@ -1614,21 +1242,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Light_FieldIndex.Model:
+                case Light_FieldIndex.Data:
                     return true;
                 case Light_FieldIndex.Script:
                 case Light_FieldIndex.Name:
                 case Light_FieldIndex.Icon:
-                case Light_FieldIndex.Time:
-                case Light_FieldIndex.Radius:
-                case Light_FieldIndex.Color:
-                case Light_FieldIndex.Flags:
-                case Light_FieldIndex.FalloffExponent:
-                case Light_FieldIndex.FOV:
-                case Light_FieldIndex.Value:
-                case Light_FieldIndex.Weight:
                 case Light_FieldIndex.Fade:
                 case Light_FieldIndex.Sound:
-                case Light_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return AItem_Registration.GetNthIsLoqui(index);
@@ -1644,17 +1264,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Light_FieldIndex.Script:
                 case Light_FieldIndex.Name:
                 case Light_FieldIndex.Icon:
-                case Light_FieldIndex.Time:
-                case Light_FieldIndex.Radius:
-                case Light_FieldIndex.Color:
-                case Light_FieldIndex.Flags:
-                case Light_FieldIndex.FalloffExponent:
-                case Light_FieldIndex.FOV:
-                case Light_FieldIndex.Value:
-                case Light_FieldIndex.Weight:
+                case Light_FieldIndex.Data:
                 case Light_FieldIndex.Fade:
                 case Light_FieldIndex.Sound:
-                case Light_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return AItem_Registration.GetNthIsSingleton(index);
@@ -1674,28 +1286,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Name";
                 case Light_FieldIndex.Icon:
                     return "Icon";
-                case Light_FieldIndex.Time:
-                    return "Time";
-                case Light_FieldIndex.Radius:
-                    return "Radius";
-                case Light_FieldIndex.Color:
-                    return "Color";
-                case Light_FieldIndex.Flags:
-                    return "Flags";
-                case Light_FieldIndex.FalloffExponent:
-                    return "FalloffExponent";
-                case Light_FieldIndex.FOV:
-                    return "FOV";
-                case Light_FieldIndex.Value:
-                    return "Value";
-                case Light_FieldIndex.Weight:
-                    return "Weight";
+                case Light_FieldIndex.Data:
+                    return "Data";
                 case Light_FieldIndex.Fade:
                     return "Fade";
                 case Light_FieldIndex.Sound:
                     return "Sound";
-                case Light_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
                 default:
                     return AItem_Registration.GetNthName(index);
             }
@@ -1710,17 +1306,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Light_FieldIndex.Script:
                 case Light_FieldIndex.Name:
                 case Light_FieldIndex.Icon:
-                case Light_FieldIndex.Time:
-                case Light_FieldIndex.Radius:
-                case Light_FieldIndex.Color:
-                case Light_FieldIndex.Flags:
-                case Light_FieldIndex.FalloffExponent:
-                case Light_FieldIndex.FOV:
-                case Light_FieldIndex.Value:
-                case Light_FieldIndex.Weight:
+                case Light_FieldIndex.Data:
                 case Light_FieldIndex.Fade:
                 case Light_FieldIndex.Sound:
-                case Light_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return AItem_Registration.IsNthDerivative(index);
@@ -1736,17 +1324,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Light_FieldIndex.Script:
                 case Light_FieldIndex.Name:
                 case Light_FieldIndex.Icon:
-                case Light_FieldIndex.Time:
-                case Light_FieldIndex.Radius:
-                case Light_FieldIndex.Color:
-                case Light_FieldIndex.Flags:
-                case Light_FieldIndex.FalloffExponent:
-                case Light_FieldIndex.FOV:
-                case Light_FieldIndex.Value:
-                case Light_FieldIndex.Weight:
+                case Light_FieldIndex.Data:
                 case Light_FieldIndex.Fade:
                 case Light_FieldIndex.Sound:
-                case Light_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return AItem_Registration.IsProtected(index);
@@ -1766,28 +1346,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(String);
                 case Light_FieldIndex.Icon:
                     return typeof(String);
-                case Light_FieldIndex.Time:
-                    return typeof(Int32);
-                case Light_FieldIndex.Radius:
-                    return typeof(UInt32);
-                case Light_FieldIndex.Color:
-                    return typeof(Color);
-                case Light_FieldIndex.Flags:
-                    return typeof(Light.LightFlag);
-                case Light_FieldIndex.FalloffExponent:
-                    return typeof(Single);
-                case Light_FieldIndex.FOV:
-                    return typeof(Single);
-                case Light_FieldIndex.Value:
-                    return typeof(UInt32);
-                case Light_FieldIndex.Weight:
-                    return typeof(Single);
+                case Light_FieldIndex.Data:
+                    return typeof(LightData);
                 case Light_FieldIndex.Fade:
                     return typeof(Single);
                 case Light_FieldIndex.Sound:
                     return typeof(IFormLinkNullable<Sound>);
-                case Light_FieldIndex.DATADataTypeState:
-                    return typeof(Light.DATADataType);
                 default:
                     return AItem_Registration.GetNthType(index);
             }
@@ -1804,7 +1368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
         public static readonly RecordType TriggeringRecordType = LIGH_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 6;
+        public const int NumTypedFields = 7;
         public static readonly Type BinaryWriteTranslation = typeof(LightBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1851,17 +1415,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Script.FormKey = null;
             item.Name = default;
             item.Icon = default;
-            item.Time = Light._Time_Default;
-            item.Radius = default;
-            item.Color = default;
-            item.Flags = default;
-            item.FalloffExponent = Light._FalloffExponent_Default;
-            item.FOV = Light._FOV_Default;
-            item.Value = default;
-            item.Weight = default;
+            item.Data = null;
             item.Fade = default;
             item.Sound.FormKey = null;
-            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1890,9 +1446,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "HasDATADataType":
-                    item.DATADataTypeState |= Light.DATADataType.Has;
-                    break;
                 default:
                     AItemSetterCommon.FillPrivateElementXml(
                         item: item,
@@ -1912,7 +1465,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             try
             {
-                item.DATADataTypeState |= Light.DATADataType.Break0;
                 foreach (var elem in node.Elements())
                 {
                     FillPrivateElementXml(
@@ -2029,28 +1581,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (!dataFrame.Complete)
-                    {
-                        item.DATADataTypeState = Light.DATADataType.Has;
-                    }
-                    item.Time = dataFrame.ReadInt32();
-                    item.Radius = dataFrame.ReadUInt32();
-                    item.Color = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        extraByte: true);
-                    item.Flags = EnumBinaryTranslation<Light.LightFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.FalloffExponent = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.FOV = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    if (dataFrame.Complete)
-                    {
-                        item.DATADataTypeState |= Light.DATADataType.Break0;
-                        return TryGet<int?>.Succeed((int)Light_FieldIndex.FOV);
-                    }
-                    item.Value = dataFrame.ReadUInt32();
-                    item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)Light_FieldIndex.Weight);
+                    item.Data = Mutagen.Bethesda.Oblivion.LightData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Light_FieldIndex.Data);
                 }
                 case 0x4D414E46: // FNAM
                 {
@@ -2159,17 +1691,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Script = object.Equals(item.Script, rhs.Script);
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Icon = string.Equals(item.Icon, rhs.Icon);
-            ret.Time = item.Time == rhs.Time;
-            ret.Radius = item.Radius == rhs.Radius;
-            ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
-            ret.Flags = item.Flags == rhs.Flags;
-            ret.FalloffExponent = item.FalloffExponent.EqualsWithin(rhs.FalloffExponent);
-            ret.FOV = item.FOV.EqualsWithin(rhs.FOV);
-            ret.Value = item.Value == rhs.Value;
-            ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Fade = item.Fade.EqualsWithin(rhs.Fade);
             ret.Sound = object.Equals(item.Sound, rhs.Sound);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2241,37 +1769,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(IconItem, "Icon");
             }
-            if (printMask?.Time ?? true)
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data.TryGet(out var DataItem))
             {
-                fg.AppendItem(item.Time, "Time");
-            }
-            if (printMask?.Radius ?? true)
-            {
-                fg.AppendItem(item.Radius, "Radius");
-            }
-            if (printMask?.Color ?? true)
-            {
-                fg.AppendItem(item.Color, "Color");
-            }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendItem(item.Flags, "Flags");
-            }
-            if (printMask?.FalloffExponent ?? true)
-            {
-                fg.AppendItem(item.FalloffExponent, "FalloffExponent");
-            }
-            if (printMask?.FOV ?? true)
-            {
-                fg.AppendItem(item.FOV, "FOV");
-            }
-            if (printMask?.Value ?? true)
-            {
-                fg.AppendItem(item.Value, "Value");
-            }
-            if (printMask?.Weight ?? true)
-            {
-                fg.AppendItem(item.Weight, "Weight");
+                DataItem?.ToString(fg, "Data");
             }
             if ((printMask?.Fade ?? true)
                 && item.Fade.TryGet(out var FadeItem))
@@ -2282,10 +1783,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 && item.Sound.TryGet(out var SoundItem))
             {
                 fg.AppendItem(SoundItem, "Sound");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -2298,6 +1795,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Script.HasValue && checkMask.Script.Value != (item.Script.FormKey != null)) return false;
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
+            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
+            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
             if (checkMask.Fade.HasValue && checkMask.Fade.Value != (item.Fade != null)) return false;
             if (checkMask.Sound.HasValue && checkMask.Sound.Value != (item.Sound.FormKey != null)) return false;
             return base.HasBeenSet(
@@ -2314,17 +1813,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Script = (item.Script.FormKey != null);
             mask.Name = (item.Name != null);
             mask.Icon = (item.Icon != null);
-            mask.Time = true;
-            mask.Radius = true;
-            mask.Color = true;
-            mask.Flags = true;
-            mask.FalloffExponent = true;
-            mask.FOV = true;
-            mask.Value = true;
-            mask.Weight = true;
+            var itemData = item.Data;
+            mask.Data = new MaskItem<bool, LightData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
             mask.Fade = (item.Fade != null);
             mask.Sound = (item.Sound.FormKey != null);
-            mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -2397,17 +1889,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!lhs.Script.Equals(rhs.Script)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
-            if (lhs.Time != rhs.Time) return false;
-            if (lhs.Radius != rhs.Radius) return false;
-            if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.FalloffExponent.EqualsWithin(rhs.FalloffExponent)) return false;
-            if (!lhs.FOV.EqualsWithin(rhs.FOV)) return false;
-            if (lhs.Value != rhs.Value) return false;
-            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            if (!object.Equals(lhs.Data, rhs.Data)) return false;
             if (!lhs.Fade.EqualsWithin(rhs.Fade)) return false;
             if (!lhs.Sound.Equals(rhs.Sound)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
         
@@ -2457,14 +1941,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(Iconitem);
             }
-            hash.Add(item.Time);
-            hash.Add(item.Radius);
-            hash.Add(item.Color);
-            hash.Add(item.Flags);
-            hash.Add(item.FalloffExponent);
-            hash.Add(item.FOV);
-            hash.Add(item.Value);
-            hash.Add(item.Weight);
+            if (item.Data.TryGet(out var Dataitem))
+            {
+                hash.Add(Dataitem);
+            }
             if (item.Fade.TryGet(out var Fadeitem))
             {
                 hash.Add(Fadeitem);
@@ -2473,7 +1953,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(Sounditem);
             }
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2594,37 +2073,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.Icon = rhs.Icon;
             }
-            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Time) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Data) ?? true))
             {
-                item.Time = rhs.Time;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Radius) ?? true))
-            {
-                item.Radius = rhs.Radius;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Color) ?? true))
-            {
-                item.Color = rhs.Color;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Flags) ?? true))
-            {
-                item.Flags = rhs.Flags;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.FalloffExponent) ?? true))
-            {
-                item.FalloffExponent = rhs.FalloffExponent;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.FOV) ?? true))
-            {
-                item.FOV = rhs.FOV;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Value) ?? true))
-            {
-                item.Value = rhs.Value;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Weight) ?? true))
-            {
-                item.Weight = rhs.Weight;
+                errorMask?.PushIndex((int)Light_FieldIndex.Data);
+                try
+                {
+                    if(rhs.Data.TryGet(out var rhsData))
+                    {
+                        item.Data = rhsData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Light_FieldIndex.Data));
+                    }
+                    else
+                    {
+                        item.Data = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Fade) ?? true))
             {
@@ -2633,10 +2106,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Sound) ?? true))
             {
                 item.Sound.FormKey = rhs.Sound.FormKey;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
             }
         }
         
@@ -2850,86 +2319,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Light_FieldIndex.Icon,
                     errorMask: errorMask);
             }
-            if (item.DATADataTypeState.HasFlag(Light.DATADataType.Has))
+            if ((item.Data != null)
+                && (translationMask?.GetShouldTranslate((int)Light_FieldIndex.Data) ?? true))
             {
-                if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Time) ?? true))
+                if (item.Data.TryGet(out var DataItem))
                 {
-                    Int32XmlTranslation.Instance.Write(
+                    ((LightDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                        item: DataItem,
                         node: node,
-                        name: nameof(item.Time),
-                        item: item.Time,
-                        fieldIndex: (int)Light_FieldIndex.Time,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Radius) ?? true))
-                {
-                    UInt32XmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Radius),
-                        item: item.Radius,
-                        fieldIndex: (int)Light_FieldIndex.Radius,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Color) ?? true))
-                {
-                    ColorXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.Color),
-                        item: item.Color,
-                        fieldIndex: (int)Light_FieldIndex.Color,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Flags) ?? true))
-                {
-                    EnumXmlTranslation<Light.LightFlag>.Instance.Write(
-                        node: node,
-                        name: nameof(item.Flags),
-                        item: item.Flags,
-                        fieldIndex: (int)Light_FieldIndex.Flags,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.FalloffExponent) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.FalloffExponent),
-                        item: item.FalloffExponent,
-                        fieldIndex: (int)Light_FieldIndex.FalloffExponent,
-                        errorMask: errorMask);
-                }
-                if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.FOV) ?? true))
-                {
-                    FloatXmlTranslation.Instance.Write(
-                        node: node,
-                        name: nameof(item.FOV),
-                        item: item.FOV,
-                        fieldIndex: (int)Light_FieldIndex.FOV,
-                        errorMask: errorMask);
-                }
-                if (!item.DATADataTypeState.HasFlag(Light.DATADataType.Break0))
-                {
-                    if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Value) ?? true))
-                    {
-                        UInt32XmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.Value),
-                            item: item.Value,
-                            fieldIndex: (int)Light_FieldIndex.Value,
-                            errorMask: errorMask);
-                    }
-                    if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Weight) ?? true))
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            node: node,
-                            name: nameof(item.Weight),
-                            item: item.Weight,
-                            fieldIndex: (int)Light_FieldIndex.Weight,
-                            errorMask: errorMask);
-                    }
-                }
-                else
-                {
-                    node.Add(new XElement("HasDATADataType"));
+                        name: nameof(item.Data),
+                        fieldIndex: (int)Light_FieldIndex.Data,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Light_FieldIndex.Data));
                 }
             }
             if ((item.Fade != null)
@@ -2950,15 +2351,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Sound),
                     item: item.Sound.FormKey.Value,
                     fieldIndex: (int)Light_FieldIndex.Sound,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<Light.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)Light_FieldIndex.DATADataTypeState,
                     errorMask: errorMask);
             }
         }
@@ -3156,141 +2548,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Time":
-                    errorMask?.PushIndex((int)Light_FieldIndex.Time);
+                case "Data":
+                    errorMask?.PushIndex((int)Light_FieldIndex.Data);
                     try
                     {
-                        item.Time = Int32XmlTranslation.Instance.Parse(
+                        item.Data = LoquiXmlTranslation<LightData>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.DATADataTypeState |= Light.DATADataType.Has;
-                    break;
-                case "Radius":
-                    errorMask?.PushIndex((int)Light_FieldIndex.Radius);
-                    try
-                    {
-                        item.Radius = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Color":
-                    errorMask?.PushIndex((int)Light_FieldIndex.Color);
-                    try
-                    {
-                        item.Color = ColorXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)Light_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<Light.LightFlag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FalloffExponent":
-                    errorMask?.PushIndex((int)Light_FieldIndex.FalloffExponent);
-                    try
-                    {
-                        item.FalloffExponent = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "FOV":
-                    errorMask?.PushIndex((int)Light_FieldIndex.FOV);
-                    try
-                    {
-                        item.FOV = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Value":
-                    errorMask?.PushIndex((int)Light_FieldIndex.Value);
-                    try
-                    {
-                        item.Value = UInt32XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    item.DATADataTypeState &= ~Light.DATADataType.Break0;
-                    break;
-                case "Weight":
-                    errorMask?.PushIndex((int)Light_FieldIndex.Weight);
-                    try
-                    {
-                        item.Weight = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Light_FieldIndex.Data));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3325,24 +2590,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         item.Sound.FormKey = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DATADataTypeState":
-                    errorMask?.PushIndex((int)Light_FieldIndex.DATADataTypeState);
-                    try
-                    {
-                        item.DATADataTypeState = EnumXmlTranslation<Light.DATADataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3442,15 +2689,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static LightBinaryWriteTranslation Instance = new LightBinaryWriteTranslation();
 
-        public static void WriteEmbedded(
-            ILightGetter item,
-            MutagenWriter writer)
-        {
-            OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             ILightGetter item,
             MutagenWriter writer,
@@ -3481,34 +2719,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Icon,
                 header: recordTypeConverter.ConvertToCustom(Light_Registration.ICON_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.DATADataTypeState.HasFlag(Light.DATADataType.Has))
+            if (item.Data.TryGet(out var DataItem))
             {
-                using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Light_Registration.DATA_HEADER)))
-                {
-                    writer.Write(item.Time);
-                    writer.Write(item.Radius);
-                    Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.Color,
-                        extraByte: true);
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Light.LightFlag>.Instance.Write(
-                        writer,
-                        item.Flags,
-                        length: 4);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.FalloffExponent);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                        writer: writer,
-                        item: item.FOV);
-                    if (!item.DATADataTypeState.HasFlag(Light.DATADataType.Break0))
-                    {
-                        writer.Write(item.Value);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                            writer: writer,
-                            item: item.Weight);
-                    }
-                }
+                ((LightDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                    item: DataItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
             }
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -3530,7 +2746,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 record: recordTypeConverter.ConvertToCustom(Light_Registration.LIGH_HEADER),
                 type: ObjectType.Record))
             {
-                WriteEmbedded(
+                OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -3669,47 +2885,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _IconLocation;
         public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _IconLocation.Value, _package.Meta)) : default(string?);
         #endregion
-        private int? _DATALocation;
-        public Light.DATADataType DATADataTypeState { get; private set; }
-        #region Time
-        private int _TimeLocation => _DATALocation!.Value + 0x0;
-        private bool _Time_IsSet => _DATALocation.HasValue;
-        public Int32 Time => _Time_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_TimeLocation, 4)) : default;
-        #endregion
-        #region Radius
-        private int _RadiusLocation => _DATALocation!.Value + 0x4;
-        private bool _Radius_IsSet => _DATALocation.HasValue;
-        public UInt32 Radius => _Radius_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_RadiusLocation, 4)) : default;
-        #endregion
-        #region Color
-        private int _ColorLocation => _DATALocation!.Value + 0x8;
-        private bool _Color_IsSet => _DATALocation.HasValue;
-        public Color Color => _Color_IsSet ? _data.Slice(_ColorLocation, 4).ReadColor() : default;
-        #endregion
-        #region Flags
-        private int _FlagsLocation => _DATALocation!.Value + 0xC;
-        private bool _Flags_IsSet => _DATALocation.HasValue;
-        public Light.LightFlag Flags => _Flags_IsSet ? (Light.LightFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 4)) : default;
-        #endregion
-        #region FalloffExponent
-        private int _FalloffExponentLocation => _DATALocation!.Value + 0x10;
-        private bool _FalloffExponent_IsSet => _DATALocation.HasValue;
-        public Single FalloffExponent => _FalloffExponent_IsSet ? SpanExt.GetFloat(_data.Slice(_FalloffExponentLocation, 4)) : default;
-        #endregion
-        #region FOV
-        private int _FOVLocation => _DATALocation!.Value + 0x14;
-        private bool _FOV_IsSet => _DATALocation.HasValue;
-        public Single FOV => _FOV_IsSet ? SpanExt.GetFloat(_data.Slice(_FOVLocation, 4)) : default;
-        #endregion
-        #region Value
-        private int _ValueLocation => _DATALocation!.Value + 0x18;
-        private bool _Value_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Light.DATADataType.Break0);
-        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ValueLocation, 4)) : default;
-        #endregion
-        #region Weight
-        private int _WeightLocation => _DATALocation!.Value + 0x1C;
-        private bool _Weight_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Light.DATADataType.Break0);
-        public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Slice(_WeightLocation, 4)) : default;
+        #region Data
+        private RangeInt32? _DataLocation;
+        private bool _Data_IsSet => _DataLocation.HasValue;
+        public ILightDataGetter? Data => _Data_IsSet ? LightDataBinaryOverlay.LightDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region Fade
         private int? _FadeLocation;
@@ -3795,14 +2975,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
-                    this.DATADataTypeState = Light.DATADataType.Has;
-                    var subLen = _package.Meta.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
-                    if (subLen <= 0x18)
-                    {
-                        this.DATADataTypeState |= Light.DATADataType.Break0;
-                    }
-                    return TryGet<int?>.Succeed((int)Light_FieldIndex.Weight);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Light_FieldIndex.Data);
                 }
                 case 0x4D414E46: // FNAM
                 {

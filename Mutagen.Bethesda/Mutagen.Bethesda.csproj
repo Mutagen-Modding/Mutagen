@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.3.0-dev-4</Version>
+    <Version>0.3.1</Version>
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
     <Description>A C# library for manipulating, creating, and analyzing Bethesda mods.</Description>
@@ -14,6 +14,9 @@
     <RepositoryUrl>https://github.com/Noggog/Mutagen</RepositoryUrl>
     <PackageReleaseNotes>Bethesda Modding</PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\Users\Levia\Documents\Repos\Mutagen\Mutagen.Bethesda\Mutagen.Bethesda.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Warmup.cs" />
@@ -1295,6 +1298,39 @@
     </Compile>
     <Compile Include="Oblivion\Records\Major Records\KeyData_LoquiGenerated.cs">
       <DependentUpon>Key.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\LayerHeader_LoquiGenerated.cs">
+      <DependentUpon>Landscape.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\LightData_LoquiGenerated.cs">
+      <DependentUpon>Light.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\MagicEffectData_LoquiGenerated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\MiscellaneousData_LoquiGenerated.cs">
+      <DependentUpon>Miscellaneous.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\NpcConfiguration_LoquiGenerated.cs">
+      <DependentUpon>NPC.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\AIData_LoquiGenerated.cs">
+      <DependentUpon>NPC.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\NpcData_LoquiGenerated.cs">
+      <DependentUpon>NPC.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Common Subrecords\Location_LoquiGenerated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\PotionData_LoquiGenerated.cs">
+      <DependentUpon>Potion.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\QuestTargetData_LoquiGenerated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\QuestData_LoquiGenerated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

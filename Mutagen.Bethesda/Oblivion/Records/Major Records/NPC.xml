@@ -6,17 +6,7 @@
     <Fields>
       <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
-      <Data recordType="ACBS">
-        <Fields>
-          <Enum name="Flags" enumName="Npc.NpcFlag" byteLength="4" />
-          <UInt16 name="BaseSpellPoints" />
-          <UInt16 name="Fatigue" />
-          <UInt16 name="BarterGold" />
-          <Int16 name="LevelOffset" />
-          <UInt16 name="CalcMin" />
-          <UInt16 name="CalcMax" />
-        </Fields>
-      </Data>
+      <RefDirect name="Configuration" refName="NpcConfiguration" />
       <List name="Factions">
         <RefDirect refName="RankPlacement" />
       </List>
@@ -29,18 +19,7 @@
       <List name="Items">
         <RefDirect refName="ItemEntry" />
       </List>
-      <Data recordType="AIDT">
-        <Fields>
-          <UInt8 name="Aggression" />
-          <UInt8 name="Confidence" />
-          <UInt8 name="EnergyLevel" />
-          <UInt8 name="Responsibility" />
-          <Enum name="BuySellServices" enumName="Npc.BuySellServiceFlag" byteLength="4" />
-          <Enum name="Teaches" enumName="Skill" byteLength="1" />
-          <UInt8 name="MaximumTrainingLevel" />
-          <ByteArray name="Fluff" byteLength="2" nullable="NotNull" />
-        </Fields>
-      </Data>
+      <RefDirect name="AIData" refName="AIData" />
       <List name="AIPackages">
         <FormLink refName="AIPackage" recordType="PKID" />
       </List>
@@ -48,40 +27,7 @@
         <String />
       </List>
       <FormLink name="Class" recordType="CNAM" refName="Class" />
-      <Data>
-        <Fields>
-          <UInt8 name="Armorer" />
-          <UInt8 name="Athletics" />
-          <UInt8 name="Blade" />
-          <UInt8 name="Block" />
-          <UInt8 name="Blunt" />
-          <UInt8 name="HandToHand" />
-          <UInt8 name="HeavyArmor" />
-          <UInt8 name="Alchemy" />
-          <UInt8 name="Alteration" />
-          <UInt8 name="Conjuration" />
-          <UInt8 name="Destruction" />
-          <UInt8 name="Illusion" />
-          <UInt8 name="Mysticism" />
-          <UInt8 name="Restoration" />
-          <UInt8 name="Acrobatics" />
-          <UInt8 name="LightArmor" />
-          <UInt8 name="Marksman" />
-          <UInt8 name="Mercantile" />
-          <UInt8 name="Security" />
-          <UInt8 name="Sneak" />
-          <UInt8 name="Speechcraft" />
-          <UInt32 name="Health" />
-          <UInt8 name="Strength" />
-          <UInt8 name="Intelligence" />
-          <UInt8 name="Willpower" />
-          <UInt8 name="Agility" />
-          <UInt8 name="Speed" />
-          <UInt8 name="Endurance" />
-          <UInt8 name="Personality" />
-          <UInt8 name="Luck" />
-        </Fields>
-      </Data>
+      <RefDirect name="Stats" refName="NpcData" />
       <FormLink name="Hair" recordType="HNAM" refName="Hair" />
       <Float name="HairLength" recordType="LNAM" />
       <List name="Eyes" recordType="ENAM">
@@ -93,6 +39,63 @@
       <ByteArray name="FaceGenGeometryAsymmetric" recordType="FGGA" />
       <ByteArray name="FaceGenTextureSymmetric" recordType="FGTS" />
       <ByteArray name="Unknown" recordType="FNAM" />
+    </Fields>
+  </Object>
+  <Object name="NpcConfiguration" objType="Subrecord" recordType="ACBS" GUID="01742ef6-ce08-4574-bb21-c03ac0e59d3a" ID="198">
+    <Fields>
+      <Enum name="Flags" enumName="Npc.NpcFlag" byteLength="4" />
+      <UInt16 name="BaseSpellPoints" />
+      <UInt16 name="Fatigue" />
+      <UInt16 name="BarterGold" />
+      <Int16 name="LevelOffset" />
+      <UInt16 name="CalcMin" />
+      <UInt16 name="CalcMax" />
+    </Fields>
+  </Object>
+  <Object name="AIData" objType="Subrecord" recordType="AIDT" GUID="4c031ad6-6a9d-4855-81b4-81ff0b43a9af" ID="199">
+    <Fields>
+      <UInt8 name="Aggression" />
+      <UInt8 name="Confidence" />
+      <UInt8 name="EnergyLevel" />
+      <UInt8 name="Responsibility" />
+      <Enum name="BuySellServices" enumName="Npc.BuySellServiceFlag" byteLength="4" />
+      <Enum name="Teaches" enumName="Skill" byteLength="1" />
+      <UInt8 name="MaximumTrainingLevel" />
+      <ByteArray name="Fluff" byteLength="2" nullable="NotNull" />
+    </Fields>
+  </Object>
+  <Object name="NpcData" objType="Subrecord" recordType="DATA" GUID="6ec3a936-c2df-43d5-a3a1-641ca180cdaa" ID="200">
+    <Fields>
+      <UInt8 name="Armorer" />
+      <UInt8 name="Athletics" />
+      <UInt8 name="Blade" />
+      <UInt8 name="Block" />
+      <UInt8 name="Blunt" />
+      <UInt8 name="HandToHand" />
+      <UInt8 name="HeavyArmor" />
+      <UInt8 name="Alchemy" />
+      <UInt8 name="Alteration" />
+      <UInt8 name="Conjuration" />
+      <UInt8 name="Destruction" />
+      <UInt8 name="Illusion" />
+      <UInt8 name="Mysticism" />
+      <UInt8 name="Restoration" />
+      <UInt8 name="Acrobatics" />
+      <UInt8 name="LightArmor" />
+      <UInt8 name="Marksman" />
+      <UInt8 name="Mercantile" />
+      <UInt8 name="Security" />
+      <UInt8 name="Sneak" />
+      <UInt8 name="Speechcraft" />
+      <UInt32 name="Health" />
+      <UInt8 name="Strength" />
+      <UInt8 name="Intelligence" />
+      <UInt8 name="Willpower" />
+      <UInt8 name="Agility" />
+      <UInt8 name="Speed" />
+      <UInt8 name="Endurance" />
+      <UInt8 name="Personality" />
+      <UInt8 name="Luck" />
     </Fields>
   </Object>
   <Object name="RankPlacement" objType="Subrecord" recordType="SNAM" GUID="825729c0-9865-4e99-87a2-ea87f3fc373a" ID="85">

@@ -99,31 +99,53 @@ namespace Mutagen.Bethesda.Generation
                     {
                         fg.AppendLine($"using (HeaderExport.ExportHeader(writer, {objGen.RegistrationName}.{data.MarkerType.Value.Type}_HEADER, ObjectType.Subrecord)) {{ }}");
                     }
-                    string line;
-                    if (loquiGen.TargetObjectGeneration != null)
+                    var needsHeaderWrite = false;
+                    if (NeedsHeaderProcessing(loquiGen))
                     {
-                        line = $"(({this.Module.TranslationWriteClassName(loquiGen.TargetObjectGeneration)})(({nameof(IBinaryItem)}){itemAccessor}).{this.Module.TranslationWriteItemMember})";
+                        needsHeaderWrite = true;
+                        fg.AppendLine($"using (HeaderExport.ExportHeader(writer, {loquiGen.GetFieldData().TriggeringRecordSetAccessor}, ObjectType.Subrecord))");
                     }
-                    else
+                    using (new BraceWrapper(fg, doIt: needsHeaderWrite))
                     {
-                        line = $"(({this.Module.TranslationWriteInterface})(({nameof(IBinaryItem)}){itemAccessor}).{this.Module.TranslationWriteItemMember})";
-                    }
-                    using (var args = new ArgsWrapper(fg, $"{line}.Write{loquiGen.GetGenericTypes(true, MaskType.Normal)}"))
-                    {
-                        args.Add($"item: {itemAccessor}");
-                        args.Add($"writer: {writerAccessor}");
-                        if (data?.RecordTypeConverter != null
-                            && data.RecordTypeConverter.FromConversions.Count > 0)
+                        string line;
+                        if (loquiGen.TargetObjectGeneration != null)
                         {
-                            args.Add($"recordTypeConverter: {objGen.RegistrationName}.{(typeGen.Name ?? typeGen.Parent?.Name)}Converter");
+                            line = $"(({this.Module.TranslationWriteClassName(loquiGen.TargetObjectGeneration)})(({nameof(IBinaryItem)}){itemAccessor}).{this.Module.TranslationWriteItemMember})";
                         }
-                        else if (converterAccessor != null)
+                        else
                         {
-                            args.Add($"recordTypeConverter: {converterAccessor}");
+                            line = $"(({this.Module.TranslationWriteInterface})(({nameof(IBinaryItem)}){itemAccessor}).{this.Module.TranslationWriteItemMember})";
+                        }
+                        using (var args = new ArgsWrapper(fg, $"{line}.Write{loquiGen.GetGenericTypes(true, MaskType.Normal)}"))
+                        {
+                            args.Add($"item: {itemAccessor}");
+                            args.Add($"writer: {writerAccessor}");
+                            if (data?.RecordTypeConverter != null
+                                && data.RecordTypeConverter.FromConversions.Count > 0)
+                            {
+                                args.Add($"recordTypeConverter: {objGen.RegistrationName}.{(typeGen.Name ?? typeGen.Parent?.Name)}Converter");
+                            }
+                            else if (converterAccessor != null)
+                            {
+                                args.Add($"recordTypeConverter: {converterAccessor}");
+                            }
                         }
                     }
                 }
             }
+        }
+
+        public bool NeedsHeaderProcessing(LoquiType loquiGen)
+        {
+            if (loquiGen.SingletonType != SingletonLevel.Singleton
+                && loquiGen.TargetObjectGeneration != null
+                && loquiGen.GetFieldData().HasTrigger
+                && !loquiGen.TargetObjectGeneration.Abstract
+                && loquiGen.TargetObjectGeneration.GetObjectData().TriggeringSource == null)
+            {
+                return true;
+            }
+            return false;
         }
 
         public override bool ShouldGenerateCopyIn(TypeGeneration typeGen)
@@ -165,6 +187,10 @@ namespace Mutagen.Bethesda.Generation
                 }
                 else
                 {
+                    if (NeedsHeaderProcessing(loquiGen))
+                    {
+                        fg.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)}; // Skip header");
+                    }
                     using (var args = new ArgsWrapper(fg,
                         $"{itemAccessor.DirectAccess} = {loquiGen.TargetObjectGeneration.Namespace}.{loquiGen.TypeName(getter: false, internalInterface: true)}.{this.Module.CreateFromPrefix}{this.Module.ModuleNickname}"))
                     {
@@ -470,6 +496,10 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
+                if (NeedsHeaderProcessing(loqui))
+                {
+                    fg.AppendLine("stream.Position += _package.Meta.SubConstants.HeaderLength;");
+                }
                 using (var args = new ArgsWrapper(fg,
                     $"this.{accessor} = {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory"))
                 {

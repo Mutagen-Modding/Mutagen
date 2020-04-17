@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class AlphaLayer :
         BaseLayer,
-        IAlphaLayerInternal,
+        IAlphaLayer,
         ILoquiObjectSetter<AlphaLayer>,
         IEquatable<AlphaLayer>,
         IEqualsMask
@@ -232,16 +232,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public Mask(
-                TItem Texture,
-                TItem Quadrant,
-                TItem LayerNumber,
-                TItem BTXTDataTypeState,
+                TItem Header,
                 TItem AlphaLayerData)
-            : base(
-                Texture: Texture,
-                Quadrant: Quadrant,
-                LayerNumber: LayerNumber,
-                BTXTDataTypeState: BTXTDataTypeState)
+            : base(Header: Header)
             {
                 this.AlphaLayerData = AlphaLayerData;
             }
@@ -547,16 +540,9 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IAlphaLayer :
         IAlphaLayerGetter,
         IBaseLayer,
-        ILoquiObjectSetter<IAlphaLayerInternal>
+        ILoquiObjectSetter<IAlphaLayer>
     {
         new Byte[]? AlphaLayerData { get; set; }
-    }
-
-    public partial interface IAlphaLayerInternal :
-        IBaseLayerInternal,
-        IAlphaLayer,
-        IAlphaLayerGetter
-    {
     }
 
     public partial interface IAlphaLayerGetter :
@@ -574,7 +560,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Common MixIn
     public static partial class AlphaLayerMixIn
     {
-        public static void Clear(this IAlphaLayerInternal item)
+        public static void Clear(this IAlphaLayer item)
         {
             ((AlphaLayerSetterCommon)((IAlphaLayerGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
@@ -642,7 +628,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void DeepCopyIn(
-            this IAlphaLayerInternal lhs,
+            this IAlphaLayer lhs,
             IAlphaLayerGetter rhs,
             out AlphaLayer.ErrorMask errorMask,
             AlphaLayer.TranslationMask? copyMask = null)
@@ -657,7 +643,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void DeepCopyIn(
-            this IAlphaLayerInternal lhs,
+            this IAlphaLayer lhs,
             IAlphaLayerGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
@@ -703,7 +689,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IAlphaLayerInternal item,
+            this IAlphaLayer item,
             XElement node,
             AlphaLayer.TranslationMask? translationMask = null)
         {
@@ -716,7 +702,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IAlphaLayerInternal item,
+            this IAlphaLayer item,
             XElement node,
             out AlphaLayer.ErrorMask errorMask,
             AlphaLayer.TranslationMask? translationMask = null)
@@ -731,7 +717,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IAlphaLayerInternal item,
+            this IAlphaLayer item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -744,7 +730,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IAlphaLayerInternal item,
+            this IAlphaLayer item,
             string path,
             AlphaLayer.TranslationMask? translationMask = null)
         {
@@ -756,7 +742,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IAlphaLayerInternal item,
+            this IAlphaLayer item,
             string path,
             out AlphaLayer.ErrorMask errorMask,
             AlphaLayer.TranslationMask? translationMask = null)
@@ -770,7 +756,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IAlphaLayerInternal item,
+            this IAlphaLayer item,
             string path,
             ErrorMaskBuilder? errorMask,
             AlphaLayer.TranslationMask? translationMask = null)
@@ -784,7 +770,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IAlphaLayerInternal item,
+            this IAlphaLayer item,
             Stream stream,
             AlphaLayer.TranslationMask? translationMask = null)
         {
@@ -796,7 +782,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IAlphaLayerInternal item,
+            this IAlphaLayer item,
             Stream stream,
             out AlphaLayer.ErrorMask errorMask,
             AlphaLayer.TranslationMask? translationMask = null)
@@ -810,7 +796,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IAlphaLayerInternal item,
+            this IAlphaLayer item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
             AlphaLayer.TranslationMask? translationMask = null)
@@ -828,7 +814,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IAlphaLayerInternal item,
+            this IAlphaLayer item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -838,7 +824,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromBinary(
-            this IAlphaLayerInternal item,
+            this IAlphaLayer item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -860,11 +846,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum AlphaLayer_FieldIndex
     {
-        Texture = 0,
-        Quadrant = 1,
-        LayerNumber = 2,
-        BTXTDataTypeState = 3,
-        AlphaLayerData = 4,
+        Header = 0,
+        AlphaLayerData = 1,
     }
     #endregion
 
@@ -884,7 +867,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 2;
 
         public static readonly Type MaskType = typeof(AlphaLayer.Mask<>);
 
@@ -898,7 +881,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type SetterType = typeof(IAlphaLayer);
 
-        public static readonly Type? InternalSetterType = typeof(IAlphaLayerInternal);
+        public static readonly Type? InternalSetterType = null;
 
         public const string FullName = "Mutagen.Bethesda.Oblivion.AlphaLayer";
 
@@ -1054,41 +1037,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         partial void ClearPartial();
         
-        public void Clear(IAlphaLayerInternal item)
+        public void Clear(IAlphaLayer item)
         {
             ClearPartial();
             item.AlphaLayerData = default;
             base.Clear(item);
         }
         
-        public override void Clear(IBaseLayerInternal item)
+        public override void Clear(IBaseLayer item)
         {
-            Clear(item: (IAlphaLayerInternal)item);
+            Clear(item: (IAlphaLayer)item);
         }
         
         #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IAlphaLayerInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    BaseLayerSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
         public virtual void CopyInFromXml(
-            IAlphaLayerInternal item,
+            IAlphaLayer item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1097,12 +1060,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
                     AlphaLayerXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
@@ -1119,7 +1076,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void CopyInFromXml(
-            IBaseLayerInternal item,
+            IBaseLayer item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1135,7 +1092,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Binary Translation
         protected static TryGet<int?> FillBinaryRecordTypes(
-            IAlphaLayerInternal item,
+            IAlphaLayer item,
             MutagenFrame frame,
             int? lastParsed,
             RecordType nextRecordType,
@@ -1163,7 +1120,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public virtual void CopyInFromBinary(
-            IAlphaLayerInternal item,
+            IAlphaLayer item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1177,7 +1134,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void CopyInFromBinary(
-            IBaseLayerInternal item,
+            IBaseLayer item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1298,13 +1255,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (index)
             {
-                case BaseLayer_FieldIndex.Texture:
-                    return (AlphaLayer_FieldIndex)((int)index);
-                case BaseLayer_FieldIndex.Quadrant:
-                    return (AlphaLayer_FieldIndex)((int)index);
-                case BaseLayer_FieldIndex.LayerNumber:
-                    return (AlphaLayer_FieldIndex)((int)index);
-                case BaseLayer_FieldIndex.BTXTDataTypeState:
+                case BaseLayer_FieldIndex.Header:
                     return (AlphaLayer_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -1375,19 +1326,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            IAlphaLayerInternal item,
-            IAlphaLayerGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
-        {
-            base.DeepCopyIn(
-                item,
-                rhs,
-                errorMask,
-                copyMask);
-        }
-        
-        public void DeepCopyIn(
             IAlphaLayer item,
             IAlphaLayerGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -1411,18 +1349,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public override void DeepCopyIn(
-            IBaseLayerInternal item,
-            IBaseLayerGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
-        {
-            this.DeepCopyIn(
-                item: (IAlphaLayerInternal)item,
-                rhs: (IAlphaLayerGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
         
         public override void DeepCopyIn(
             IBaseLayer item,
@@ -1594,7 +1520,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new readonly static AlphaLayerXmlCreateTranslation Instance = new AlphaLayerXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IAlphaLayerInternal item,
+            IAlphaLayer item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1619,7 +1545,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IAlphaLayerInternal item,
+            IAlphaLayer item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1751,9 +1677,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAlphaLayerGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            BaseLayerBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
             WriteRecordTypes(
                 item: item,
                 writer: writer,
