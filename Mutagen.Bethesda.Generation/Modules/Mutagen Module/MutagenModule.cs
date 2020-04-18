@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.Generation
             this.SubModules.Add(new TriggeringRecordModule());
             this.SubModules.Add(new GenericsModule());
             this.SubModules.Add(new SpecialParseModule());
-            this.SubModules.Add(new DataTypeModule());
+            this.SubModules.Add(new VersioningModule());
             this.SubModules.Add(new RecordTypeConverterModule());
             this.SubModules.Add(new NumFieldsModule());
             this.SubModules.Add(new CorrectnessModule());

@@ -16,14 +16,13 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen, 
             TypeGeneration typeGen, 
             Accessor dataAccessor, 
-            int? currentPosition,
-            DataType dataType = null)
+            int? currentPosition)
         {
             ArrayType arr = typeGen as ArrayType;
             var data = arr.GetFieldData();
             if (data.BinaryOverlayFallback != BinaryGenerationType.Normal)
             {
-                base.GenerateWrapperFields(fg, objGen, typeGen, dataAccessor, currentPosition, dataType);
+                base.GenerateWrapperFields(fg, objGen, typeGen, dataAccessor, currentPosition);
                 return;
             }
             var subGen = this.Module.GetTypeGeneration(arr.SubTypeGeneration.GetType());
@@ -33,18 +32,6 @@ namespace Mutagen.Bethesda.Generation
                 {
                     var posStr = currentPosition == null ? null : $"{currentPosition}";
                     fg.AppendLine($"public {arr.Interface(getter: true, internalInterface: true)} {typeGen.Name} => BinaryOverlayArrayHelper.EnumSliceFromFixedSize<{arr.SubTypeGeneration.TypeName(getter: true)}>({dataAccessor}.Slice({posStr}), amount: {arr.FixedSize.Value}, enumLength: {e.ByteLength});");
-                }
-                else if (arr.SubTypeGeneration is LoquiType loqui)
-                {
-                    var posStr = $"_{dataType.GetFieldData().RecordType}Location.Value + {currentPosition}";
-                    string recConverter = "null";
-                    if (data?.RecordTypeConverter != null
-                        && data.RecordTypeConverter.FromConversions.Count > 0)
-                    {
-                        recConverter = $"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter";
-                    }
-                    var gen = this.Module.GetTypeGeneration(loqui.GetType());
-                    fg.AppendLine($"public {arr.Interface(getter: true, internalInterface: true)} {typeGen.Name} => BinaryOverlayArrayHelper.LoquiSliceFromFixedSize<{arr.SubTypeGeneration.TypeName(getter: true)}>(_{dataType.GetFieldData().RecordType}Location.HasValue ? {dataAccessor}.Slice({posStr}) : default, amount: {arr.FixedSize.Value}, length: {gen.ExpectedLength(objGen, loqui)}, _package, {recConverter}, {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory);");
                 }
                 else
                 {

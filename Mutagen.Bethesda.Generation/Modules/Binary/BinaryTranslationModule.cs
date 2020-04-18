@@ -95,7 +95,6 @@ namespace Mutagen.Bethesda.Generation
             this._typeGenerations[typeof(DictType)] = new DictBinaryTranslationGeneration();
             this._typeGenerations[typeof(ByteArrayType)] = new ByteArrayBinaryTranslationGeneration();
             this._typeGenerations[typeof(BufferType)] = new BufferBinaryTranslationGeneration();
-            this._typeGenerations[typeof(DataType)] = new DataBinaryTranslationGeneration();
             this._typeGenerations[typeof(ColorType)] = new ColorBinaryTranslationGeneration()
             {
                 PreferDirectTranslation = false
@@ -439,7 +438,7 @@ namespace Mutagen.Bethesda.Generation
                             fg.AppendLine("if (frame.Complete)");
                             using (new BraceWrapper(fg))
                             {
-                                fg.AppendLine($"item.{DataTypeModule.VersioningFieldName} |= {obj.Name}.{DataTypeModule.VersioningEnumName}.Break{breakIndex++};");
+                                fg.AppendLine($"item.{VersioningModule.VersioningFieldName} |= {obj.Name}.{VersioningModule.VersioningEnumName}.Break{breakIndex++};");
                                 fg.AppendLine("return;");
                             }
                             continue;
@@ -695,15 +694,10 @@ namespace Mutagen.Bethesda.Generation
             MutagenFieldData fieldData,
             Func<Task> toDo)
         {
-            var dataSet = field.Field as DataType;
             var typelessStruct = obj.IsTypelessStruct();
             if (typelessStruct && fieldData.IsTriggerForObject)
             {
-                if (dataSet != null)
-                {
-                    fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= (int){dataSet.SubFields.Last().IndexEnumName}) return TryGet<int?>.Failure;");
-                }
-                else if (field.Field is SpecialParseType
+                if (field.Field is SpecialParseType
                     || field.Field is CustomLogic)
                 {
                     var objFields = obj.IterateFieldIndices(nonIntegrated: false).ToList();
@@ -724,11 +718,7 @@ namespace Mutagen.Bethesda.Generation
                 }
             }
             await toDo();
-            if (dataSet != null)
-            {
-                fg.AppendLine($"return TryGet<int?>.Succeed((int){dataSet.SubFields.Last(f => f.IntegrateField).IndexEnumName});");
-            }
-            else if (field.Field is SpecialParseType
+            if (field.Field is SpecialParseType
                 || field.Field is CustomLogic)
             {
                 fg.AppendLine($"return TryGet<int?>.Succeed({(typelessStruct ? "lastParsed" : "null")});");
@@ -814,70 +804,6 @@ namespace Mutagen.Bethesda.Generation
 
         private async Task GenerateFillSnippet(ObjectGeneration obj, FileGeneration fg, TypeGeneration field, BinaryTranslationGeneration generator, string frameAccessor)
         {
-            if (field is DataType set)
-            {
-                fg.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
-                fg.AppendLine($"var dataFrame = {frameAccessor}.SpawnWithLength(contentLength);");
-                fg.AppendLine($"if (!dataFrame.Complete)");
-                using (new BraceWrapper(fg))
-                {
-                    fg.AppendLine($"item.{set.StateName} = {obj.ObjectName}.{set.EnumName}.Has;");
-                }
-                bool isInRange = false;
-                foreach (var subField in set.IterateFieldsWithMeta())
-                {
-                    if (!this.TryGetTypeGeneration(subField.Field.GetType(), out var subGenerator))
-                    {
-                        throw new ArgumentException("Unsupported type generator: " + subField.Field);
-                    }
-
-                    if (!subGenerator.ShouldGenerateCopyIn(subField.Field)) continue;
-                    if (subField.BreakIndex != -1)
-                    {
-                        fg.AppendLine($"if (dataFrame.Complete)");
-                        using (new BraceWrapper(fg))
-                        {
-                            fg.AppendLine($"item.{set.StateName} |= {obj.ObjectName}.{set.EnumName}.Break{subField.BreakIndex};");
-                            string enumName = null;
-                            for (int i = subField.FieldIndex - 1; i >= 0; i--)
-                            {
-                                if (!set.SubFields.TryGet(i, out var prevField)) continue;
-                                if (!prevField.IntegrateField) continue;
-                                enumName = prevField.IndexEnumName;
-                                break;
-                            }
-                            if (enumName != null)
-                            {
-                                enumName = $"(int){enumName}";
-                            }
-                            fg.AppendLine($"return TryGet<int?>.Succeed({enumName ?? "null"});");
-                        }
-                    }
-                    if (subField.Range != null && !isInRange)
-                    {
-                        isInRange = true;
-                        fg.AppendLine($"if (dataFrame.TotalLength > {subField.Range.DataSetSizeMin})");
-                        fg.AppendLine("{");
-                        fg.Depth++;
-                        fg.AppendLine($"item.{set.StateName} |= {obj.Name}.{set.EnumName}.Range{subField.RangeIndex};");
-                    }
-                    if (subField.Range == null && isInRange)
-                    {
-                        isInRange = false;
-                        fg.Depth--;
-                        fg.AppendLine("}");
-                    }
-                    await GenerateFillSnippet(obj, fg, subField.Field, subGenerator, "dataFrame");
-                }
-                if (isInRange)
-                {
-                    isInRange = false;
-                    fg.AppendLine("}");
-                    fg.Depth--;
-                }
-                return;
-            }
-
             var data = field.GetFieldData();
             if (data.Binary == BinaryGenerationType.Custom)
             {
@@ -1268,7 +1194,7 @@ namespace Mutagen.Bethesda.Generation
                         if (field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
                         if (field is BreakType)
                         {
-                            fg.AppendLine($"if (!item.{DataTypeModule.VersioningFieldName}.HasFlag({obj.Name}.{DataTypeModule.VersioningEnumName}.Break{fieldData.BreakIndex}))");
+                            fg.AppendLine($"if (!item.{VersioningModule.VersioningFieldName}.HasFlag({obj.Name}.{VersioningModule.VersioningEnumName}.Break{fieldData.BreakIndex}))");
                             fg.AppendLine("{");
                             fg.Depth++;
                         }
@@ -1379,117 +1305,49 @@ namespace Mutagen.Bethesda.Generation
                         }
 
                         var accessor = Accessor.FromType(field, "item");
-                        if (field is DataType dataType)
-                        {
-                            fg.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Has))");
-                            using (new BraceWrapper(fg))
-                            {
-                                fg.AppendLine($"using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom({obj.RecordTypeHeaderName(fieldData.RecordType.Value)})))");
-                                using (new BraceWrapper(fg))
-                                {
-                                    bool isInRange = false;
-                                    foreach (var subField in dataType.IterateFieldsWithMeta())
-                                    {
-                                        if (!this.TryGetTypeGeneration(subField.Field.GetType(), out var subGenerator))
-                                        {
-                                            throw new ArgumentException("Unsupported type generator: " + subField.Field);
-                                        }
+                        if (!generator.ShouldGenerateWrite(field)) continue;
+                        if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
+                        if (fieldData.Binary == BinaryGenerationType.DoNothing) continue;
 
-                                        var subData = subField.Field.GetFieldData();
-                                        if (!subGenerator.ShouldGenerateCopyIn(subField.Field)) continue;
-                                        if (subData.Binary == BinaryGenerationType.Custom)
-                                        {
-                                            using (var args = new ArgsWrapper(fg,
-                                                $"{TranslationWriteClass(obj)}.WriteBinary{subField.Field.Name}"))
-                                            {
-                                                args.Add("writer: writer");
-                                                args.Add("item: item");
-                                            }
-                                            continue;
-                                        }
-                                        if (subField.BreakIndex != -1)
-                                        {
-                                            fg.AppendLine($"if (!item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Break{subField.BreakIndex}))");
-                                            fg.AppendLine("{");
-                                            fg.Depth++;
-                                        }
-                                        if (subField.Range != null && !isInRange)
-                                        {
-                                            isInRange = true;
-                                            fg.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Range{subField.RangeIndex}))");
-                                            fg.AppendLine("{");
-                                            fg.Depth++;
-                                        }
-                                        if (subField.Range == null && isInRange)
-                                        {
-                                            isInRange = false;
-                                            fg.Depth--;
-                                            fg.AppendLine("}");
-                                        }
-                                        subGenerator.GenerateWrite(
-                                            fg: fg,
-                                            objGen: obj,
-                                            typeGen: subField.Field,
-                                            writerAccessor: "writer",
-                                                translationAccessor: null,
-                                            itemAccessor: Accessor.FromType(subField.Field, "item"),
-                                            errorMaskAccessor: null,
-                                            converterAccessor: "recordTypeConverter");
-                                    }
-                                    for (int i = 0; i < dataType.BreakIndices.Count; i++)
-                                    {
-                                        fg.Depth--;
-                                        fg.AppendLine("}");
-                                    }
-                                }
+                        var loqui = field as LoquiType;
+
+                        // Custom Modheader insert
+                        if (loqui != null
+                            && loqui.Name == "ModHeader")
+                        {
+                            using (var args = new ArgsWrapper(fg,
+                                $"WriteModHeader"))
+                            {
+                                args.Add("mod: item");
+                                args.AddPassArg("writer");
+                                args.AddPassArg("modKey");
+                                args.AddPassArg("param");
                             }
+                            continue;
+                        }
+
+                        bool doIf = true;
+                        if (loqui != null
+                            && loqui.TargetObjectGeneration?.GetObjectType() == ObjectType.Group
+                            && obj.GetObjectType() == ObjectType.Mod)
+                        {
+                            fg.AppendLine($"if (importMask?.{field.Name} ?? true)");
                         }
                         else
                         {
-                            if (!generator.ShouldGenerateWrite(field)) continue;
-                            if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
-                            if (fieldData.Binary == BinaryGenerationType.DoNothing) continue;
-
-                            var loqui = field as LoquiType;
-
-                            // Custom Modheader insert
-                            if (loqui != null
-                                && loqui.Name == "ModHeader")
-                            {
-                                using (var args = new ArgsWrapper(fg,
-                                    $"WriteModHeader"))
-                                {
-                                    args.Add("mod: item");
-                                    args.AddPassArg("writer");
-                                    args.AddPassArg("modKey");
-                                    args.AddPassArg("param");
-                                }
-                                continue;
-                            }
-
-                            bool doIf = true;
-                            if (loqui != null
-                                && loqui.TargetObjectGeneration?.GetObjectType() == ObjectType.Group
-                                && obj.GetObjectType() == ObjectType.Mod)
-                            {
-                                fg.AppendLine($"if (importMask?.{field.Name} ?? true)");
-                            }
-                            else
-                            {
-                                doIf = false;
-                            }
-                            using (new BraceWrapper(fg, doIt: doIf))
-                            {
-                                generator.GenerateWrite(
-                                    fg: fg,
-                                    objGen: obj,
-                                    typeGen: field,
-                                    writerAccessor: "writer",
-                                    itemAccessor: accessor,
-                                    translationAccessor: null,
-                                    errorMaskAccessor: null,
-                                    converterAccessor: "recordTypeConverter");
-                            }
+                            doIf = false;
+                        }
+                        using (new BraceWrapper(fg, doIt: doIf))
+                        {
+                            generator.GenerateWrite(
+                                fg: fg,
+                                objGen: obj,
+                                typeGen: field,
+                                writerAccessor: "writer",
+                                itemAccessor: accessor,
+                                translationAccessor: null,
+                                errorMaskAccessor: null,
+                                converterAccessor: "recordTypeConverter");
                         }
                     }
                 }
@@ -1603,7 +1461,7 @@ namespace Mutagen.Bethesda.Generation
 
                 if (obj.Fields.Any(f => f is BreakType))
                 {
-                    fg.AppendLine($"public {obj.ObjectName}.{DataTypeModule.VersioningEnumName} {DataTypeModule.VersioningFieldName} {{ get; private set; }}");
+                    fg.AppendLine($"public {obj.ObjectName}.{VersioningModule.VersioningEnumName} {VersioningModule.VersioningFieldName} {{ get; private set; }}");
                 }
 
                 foreach (var field in obj.IterateFields(
@@ -2021,7 +1879,7 @@ namespace Mutagen.Bethesda.Generation
                                             fg.AppendLine($"if (ret._data.Length <= 0x{passedLen.Value:X})");
                                             using (new BraceWrapper(fg))
                                             {
-                                                fg.AppendLine($"ret.{DataTypeModule.VersioningFieldName} |= {obj.ObjectName}.{DataTypeModule.VersioningEnumName}.Break{breakIndex++};");
+                                                fg.AppendLine($"ret.{VersioningModule.VersioningFieldName} |= {obj.ObjectName}.{VersioningModule.VersioningEnumName}.Break{breakIndex++};");
                                             }
                                         }
                                         else
@@ -2108,7 +1966,6 @@ namespace Mutagen.Bethesda.Generation
                                 }
 
                                 if (!generator.ShouldGenerateCopyIn(field.Field)) continue;
-                                var dataSet = field.Field as DataType;
                                 foreach (var gen in fieldData.GenerationTypes)
                                 {
                                     LoquiType loqui = gen.Value as LoquiType;

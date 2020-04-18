@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"if (dataFrame.Complete)");
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"item.{DataTypeModule.VersioningFieldName} |= {objGen.ObjectName}.{DataTypeModule.VersioningEnumName}.Break{fieldData.BreakIndex};");
+                fg.AppendLine($"item.{VersioningModule.VersioningFieldName} |= {objGen.ObjectName}.{VersioningModule.VersioningEnumName}.Break{fieldData.BreakIndex};");
                 string enumName = null;
                 var startIndex = objGen.Fields.IndexOf(typeGen);
                 for (int i = startIndex - 1; i >= 0; i--)

@@ -70,8 +70,7 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen,
             TypeGeneration typeGen,
             Accessor dataAccessor,
-            int? passedLength,
-            DataType data = null)
+            int? passedLength)
         {
         }
 
