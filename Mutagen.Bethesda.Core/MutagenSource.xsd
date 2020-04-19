@@ -119,7 +119,45 @@
       <xs:complexContent>
         <xs:extension base="RefDirect">
           <xs:choice>
-            <xs:element name="RecordTypeOverrides" type="RecordTypeMappingsType" minOccurs="0" />
+            <xs:element name="RecordTypeOverrides" type="RecordTypeMappingsType" minOccurs="0" maxOccurs="1" />
+          </xs:choice>
+          <xs:attribute name="recordType" type="xs:string" >
+            <xs:annotation>
+              <xs:documentation>
+                Typical four letter ASCII tag used for the record type.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="markerType" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Typical four letter ASCII tag used for the discarded marker type.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="binary" type="MutagenBinaryType" use="optional" >
+            <xs:annotation>
+              <xs:documentation>
+                How to generate binary translations
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="objType" type="MutagenObjectType">
+            <xs:annotation>
+              <xs:documentation>
+                Type of mutagen object this is referencing.  Only needed for interface typed references.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="NRefDirectField" >
+      <xs:complexContent>
+        <xs:extension base="NRefDirectField">
+          <xs:choice>
+            <xs:element name="RecordTypeOverrides" type="RecordTypeMappingsType" minOccurs="0" maxOccurs="1" />
           </xs:choice>
           <xs:attribute name="recordType" type="xs:string" >
             <xs:annotation>
@@ -255,7 +293,6 @@
         <xs:element name="FormKey" type="NFormKey"/>
         <xs:element name="ModKey" type="NModKey"/>
         <xs:element name="Buffer" type="NBuffer"/>
-        <xs:element name="Data" type="DataType" />
         <xs:element name="SpecialParse" type="NSpecialParse"/>
         <xs:element name="Transfer" type="TransferType"/>
         <xs:element name="Group" type="GroupType" />
@@ -341,6 +378,7 @@
 
   <xs:complexType name="CustomLogic">
     <xs:attribute name="name" type="xs:string" use="required" />
+    <xs:attribute name="byteLength" type="xs:byte" />
     <xs:attribute name="recordType" type="xs:string" >
       <xs:annotation>
         <xs:documentation>
@@ -380,6 +418,13 @@
           <xs:annotation>
             <xs:documentation>
               Type of formID system to use
+            </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="objType" type="MutagenObjectType">
+          <xs:annotation>
+            <xs:documentation>
+              Type of mutagen object this is creating.  Only applicable if FormLink is referencing non-Loqui interfaces
             </xs:documentation>
           </xs:annotation>
         </xs:attribute>
@@ -437,13 +482,6 @@
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType name="DataTypeFieldRangeType">
-    <xs:choice minOccurs="0" maxOccurs="unbounded">
-      <xs:group ref="NamedFieldOptions" minOccurs="0" maxOccurs="unbounded" />
-    </xs:choice>
-    <xs:attribute name="Min" use="required" />
-  </xs:complexType>
-
   <xs:complexType name="GenderedItem" >
     <xs:complexContent>
       <xs:extension base="Field">
@@ -464,27 +502,6 @@
         <xs:attribute name="name" type="xs:string" use="required" />
       </xs:extension>
     </xs:complexContent>
-  </xs:complexType>
-  
-  <xs:complexType name="DataTypeFields" >
-    <xs:choice minOccurs="0" maxOccurs="unbounded" >
-      <xs:group ref="NamedFieldOptions" minOccurs="0" maxOccurs="unbounded" />
-      <xs:element name="Range" type="DataTypeFieldRangeType" />
-    </xs:choice>
-  </xs:complexType>
-  
-  <xs:complexType name="DataType" >
-    <xs:choice minOccurs="0" maxOccurs="unbounded" >
-      <xs:element name="Fields" type="DataTypeFields" minOccurs="0" maxOccurs="1" />
-    </xs:choice>
-    <xs:attribute name="recordType" />
-    <xs:attribute name="binaryOverlay" type="MutagenBinaryType" >
-      <xs:annotation>
-        <xs:documentation>
-          How to generate binary overlay translations.  Defaults to "normal" setting if missing
-        </xs:documentation>
-      </xs:annotation>
-    </xs:attribute>
   </xs:complexType>
 
   <xs:complexType name="RecordTypeMappingsType" >
