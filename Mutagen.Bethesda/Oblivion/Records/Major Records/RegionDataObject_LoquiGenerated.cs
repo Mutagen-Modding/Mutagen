@@ -3198,23 +3198,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<IOblivionMajorRecordGetter> Object => new FormLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
-        public UInt16 ParentIndex => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(4, 2));
-        public ReadOnlyMemorySlice<Byte> Unknown1 => _data.Span.Slice(6, 2).ToArray();
-        public Single Density => SpanExt.GetFloat(_data.Slice(8, 4));
-        public Byte Clustering => _data.Span[12];
-        public Byte MinSlope => _data.Span[13];
-        public Byte MaxSlope => _data.Span[14];
-        public RegionDataObject.Flag Flags => (RegionDataObject.Flag)_data.Span.Slice(15, 1)[0];
-        public UInt16 RadiusWrtPercent => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(16, 2));
-        public UInt16 Radius => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(18, 2));
-        public Single MinHeight => SpanExt.GetFloat(_data.Slice(20, 4));
-        public Single MaxHeight => SpanExt.GetFloat(_data.Slice(24, 4));
-        public Single Sink => SpanExt.GetFloat(_data.Slice(28, 4));
-        public Single SinkVariance => SpanExt.GetFloat(_data.Slice(32, 4));
-        public Single SizeVariance => SpanExt.GetFloat(_data.Slice(36, 4));
-        public P3UInt16 AngleVariance => P3UInt16BinaryTranslation.Read(_data.Slice(40, 6));
-        public ReadOnlyMemorySlice<Byte> Unknown2 => _data.Span.Slice(46, 6).ToArray();
+        public IFormLinkGetter<IOblivionMajorRecordGetter> Object => new FormLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public UInt16 ParentIndex => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x4, 0x2));
+        public ReadOnlyMemorySlice<Byte> Unknown1 => _data.Span.Slice(0x6, 0x2).ToArray();
+        public Single Density => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
+        public Byte Clustering => _data.Span[0xC];
+        public Byte MinSlope => _data.Span[0xD];
+        public Byte MaxSlope => _data.Span[0xE];
+        public RegionDataObject.Flag Flags => (RegionDataObject.Flag)_data.Span.Slice(0xF, 0x1)[0];
+        public UInt16 RadiusWrtPercent => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x10, 0x2));
+        public UInt16 Radius => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x12, 0x2));
+        public Single MinHeight => SpanExt.GetFloat(_data.Slice(0x14, 0x4));
+        public Single MaxHeight => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
+        public Single Sink => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
+        public Single SinkVariance => SpanExt.GetFloat(_data.Slice(0x20, 0x4));
+        public Single SizeVariance => SpanExt.GetFloat(_data.Slice(0x24, 0x4));
+        public P3UInt16 AngleVariance => P3UInt16BinaryTranslation.Read(_data.Slice(0x28, 0x6));
+        public ReadOnlyMemorySlice<Byte> Unknown2 => _data.Span.Slice(0x2E, 0x6).ToArray();
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

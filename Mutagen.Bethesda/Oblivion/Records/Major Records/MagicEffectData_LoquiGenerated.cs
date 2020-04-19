@@ -2764,15 +2764,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public MagicEffectData.VersioningBreaks Versioning { get; private set; }
-        public MagicEffect.MagicFlag Flags => (MagicEffect.MagicFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
-        public Single BaseCost => SpanExt.GetFloat(_data.Slice(4, 4));
-        public ReadOnlyMemorySlice<Byte> Unused => _data.Span.Slice(8, 4).ToArray();
-        public MagicSchool MagicSchool => (MagicSchool)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(12, 4));
-        public Resistance Resistance => (Resistance)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(16, 4));
-        public UInt32 CounterEffectCount => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(20, 4));
-        public IFormLinkGetter<ILightGetter> Light => new FormLink<ILightGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(24, 4))));
-        public Single ProjectileSpeed => SpanExt.GetFloat(_data.Slice(28, 4));
-        public IFormLinkGetter<IEffectShaderGetter> EffectShader => new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(32, 4))));
+        public MagicEffect.MagicFlag Flags => (MagicEffect.MagicFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
+        public Single BaseCost => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
+        public ReadOnlyMemorySlice<Byte> Unused => _data.Span.Slice(0x8, 0x4).ToArray();
+        public MagicSchool MagicSchool => (MagicSchool)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
+        public Resistance Resistance => (Resistance)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x10, 0x4));
+        public UInt32 CounterEffectCount => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x14, 0x4));
+        public IFormLinkGetter<ILightGetter> Light => new FormLink<ILightGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x18, 0x4))));
+        public Single ProjectileSpeed => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
+        public IFormLinkGetter<IEffectShaderGetter> EffectShader => new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x20, 0x4))));
         public IMagicEffectSubDataGetter SubData => MagicEffectSubDataBinaryOverlay.MagicEffectSubDataFactory(new BinaryMemoryReadStream(_data.Slice(36)), _package, default(RecordTypeConverter));
         partial void CustomCtor(
             IBinaryReadStream stream,

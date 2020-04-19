@@ -2737,18 +2737,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Byte Density => _data.Span[0];
-        public Byte MinSlope => _data.Span[1];
-        public Byte MaxSlope => _data.Span[2];
-        public Byte Fluff1 => _data.Span[3];
-        public UInt16 UnitFromWaterAmount => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(4, 2));
-        public UInt16 Fluff2 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(6, 2));
-        public Grass.UnitFromWaterType UnitFromWaterMode => (Grass.UnitFromWaterType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(8, 4));
-        public Single PositionRange => SpanExt.GetFloat(_data.Slice(12, 4));
-        public Single HeightRange => SpanExt.GetFloat(_data.Slice(16, 4));
-        public Single ColorRange => SpanExt.GetFloat(_data.Slice(20, 4));
-        public Single WavePeriod => SpanExt.GetFloat(_data.Slice(24, 4));
-        public Grass.GrassFlag Flags => (Grass.GrassFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(28, 4));
+        public Byte Density => _data.Span[0x0];
+        public Byte MinSlope => _data.Span[0x1];
+        public Byte MaxSlope => _data.Span[0x2];
+        public Byte Fluff1 => _data.Span[0x3];
+        public UInt16 UnitFromWaterAmount => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x4, 0x2));
+        public UInt16 Fluff2 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x6, 0x2));
+        public Grass.UnitFromWaterType UnitFromWaterMode => (Grass.UnitFromWaterType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
+        public Single PositionRange => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
+        public Single HeightRange => SpanExt.GetFloat(_data.Slice(0x10, 0x4));
+        public Single ColorRange => SpanExt.GetFloat(_data.Slice(0x14, 0x4));
+        public Single WavePeriod => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
+        public Grass.GrassFlag Flags => (Grass.GrassFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x1C, 0x4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

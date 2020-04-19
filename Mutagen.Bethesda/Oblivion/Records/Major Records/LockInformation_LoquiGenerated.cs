@@ -2054,10 +2054,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Byte LockLevel => _data.Span[0];
-        public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(1, 3).ToArray();
-        public IFormLinkGetter<IKeyGetter> Key => new FormLink<IKeyGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(4, 4))));
-        public LockInformation.Flag Flags => (LockInformation.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(8, 4));
+        public Byte LockLevel => _data.Span[0x0];
+        public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(0x1, 0x3).ToArray();
+        public IFormLinkGetter<IKeyGetter> Key => new FormLink<IKeyGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public LockInformation.Flag Flags => (LockInformation.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

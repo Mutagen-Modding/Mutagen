@@ -2623,10 +2623,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public ClassData.VersioningBreaks Versioning { get; private set; }
         public ReadOnlyMemorySlice<ActorValue> PrimaryAttributes => BinaryOverlayArrayHelper.EnumSliceFromFixedSize<ActorValue>(_data.Slice(0), amount: 2, enumLength: 4);
-        public Class.SpecializationFlag Specialization => (Class.SpecializationFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(8, 4));
+        public Class.SpecializationFlag Specialization => (Class.SpecializationFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
         public ReadOnlyMemorySlice<ActorValue> SecondaryAttributes => BinaryOverlayArrayHelper.EnumSliceFromFixedSize<ActorValue>(_data.Slice(12), amount: 7, enumLength: 4);
-        public ClassFlag Flags => (ClassFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(40, 4));
-        public ClassService ClassServices => (ClassService)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(44, 4));
+        public ClassFlag Flags => (ClassFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x28, 0x4));
+        public ClassService ClassServices => (ClassService)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x2C, 0x4));
         public IClassTrainingGetter Training => ClassTrainingBinaryOverlay.ClassTrainingFactory(new BinaryMemoryReadStream(_data.Slice(48)), _package, default(RecordTypeConverter));
         partial void CustomCtor(
             IBinaryReadStream stream,

@@ -2059,10 +2059,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Single ArmorValue => GetArmorValueCustom(location: 0);
-        public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(2, 4));
-        public UInt32 Health => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(6, 4));
-        public Single Weight => SpanExt.GetFloat(_data.Slice(10, 4));
+        public Single ArmorValue => GetArmorValueCustom(location: 0x0);
+        public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x2, 0x4));
+        public UInt32 Health => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x6, 0x4));
+        public Single Weight => SpanExt.GetFloat(_data.Slice(0xA, 0x4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

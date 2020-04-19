@@ -2296,13 +2296,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Byte Aggression => _data.Span[0];
-        public Byte Confidence => _data.Span[1];
-        public Byte EnergyLevel => _data.Span[2];
-        public Byte Responsibility => _data.Span[3];
-        public Npc.BuySellServiceFlag BuySellServices => (Npc.BuySellServiceFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
-        public Skill Teaches => (Skill)_data.Span.Slice(8, 1)[0];
-        public Byte MaximumTrainingLevel => _data.Span[9];
+        public Byte Aggression => _data.Span[0x0];
+        public Byte Confidence => _data.Span[0x1];
+        public Byte EnergyLevel => _data.Span[0x2];
+        public Byte Responsibility => _data.Span[0x3];
+        public Npc.BuySellServiceFlag BuySellServices => (Npc.BuySellServiceFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
+        public Skill Teaches => (Skill)_data.Span.Slice(0x8, 0x1)[0];
+        public Byte MaximumTrainingLevel => _data.Span[0x9];
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

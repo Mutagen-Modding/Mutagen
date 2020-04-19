@@ -1726,7 +1726,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public String Data => BinaryStringUtility.ParsePrependedString(_data.Slice(0), lengthLength: 2);
+        public String Data => BinaryStringUtility.ParsePrependedString(_data.Slice(0x0), lengthLength: 2);
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

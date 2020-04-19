@@ -5173,48 +5173,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public MagicEffect.Flag Flags => (MagicEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
-        public Single BaseCost => SpanExt.GetFloat(_data.Slice(4, 4));
+        public MagicEffect.Flag Flags => (MagicEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
+        public Single BaseCost => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
         #region AssociatedItem
         partial void AssociatedItemCustomParse(
             BinaryMemoryReadStream stream,
             int offset);
         #endregion
-        public ActorValueExtended MagicSkill => (ActorValueExtended)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(12, 4));
-        public ActorValueExtended ResistValue => (ActorValueExtended)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(16, 4));
-        public UInt16 CounterEffectCount => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(20, 2));
-        public UInt16 Unknown1 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(22, 2));
-        public IFormLinkGetter<ILightGetter> CastingLight => new FormLink<ILightGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(24, 4))));
-        public Single TaperWeight => SpanExt.GetFloat(_data.Slice(28, 4));
-        public IFormLinkGetter<IEffectShaderGetter> HitShader => new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(32, 4))));
-        public IFormLinkGetter<IEffectShaderGetter> EnchantShader => new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(36, 4))));
-        public UInt32 MinimumSkillLevel => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(40, 4));
-        public UInt32 SpellmakingArea => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(44, 4));
-        public Single SpellmakingCastingTime => SpanExt.GetFloat(_data.Slice(48, 4));
-        public Single TaperCurve => SpanExt.GetFloat(_data.Slice(52, 4));
-        public Single TaperDuration => SpanExt.GetFloat(_data.Slice(56, 4));
-        public Single SecondActorValueWeight => SpanExt.GetFloat(_data.Slice(60, 4));
-        public IMagicEffectArchetypeGetter Archetype => GetArchetypeCustom(location: 64);
-        public IFormLinkGetter<IProjectileGetter> Projectile => new FormLink<IProjectileGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(72, 4))));
-        public IFormLinkGetter<IExplosionGetter> Explosion => new FormLink<IExplosionGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(76, 4))));
-        public CastingType CastingType => (CastingType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(80, 4));
-        public Targeting Delivery => (Targeting)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(84, 4));
-        public ActorValueExtended SecondActorValue => (ActorValueExtended)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(88, 4));
-        public IFormLinkGetter<IArtObjectGetter> CastingArt => new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(92, 4))));
-        public IFormLinkGetter<IArtObjectGetter> HitEffectArt => new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(96, 4))));
-        public IFormLinkGetter<IImpactDataSetGetter> ImpactData => new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(100, 4))));
-        public Single SkillUsageMultiplier => SpanExt.GetFloat(_data.Slice(104, 4));
-        public IFormLinkGetter<IDualCastDataGetter> DualCastArt => new FormLink<IDualCastDataGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(108, 4))));
-        public Single DualCastScale => SpanExt.GetFloat(_data.Slice(112, 4));
-        public IFormLinkGetter<IArtObjectGetter> EnchantArt => new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(116, 4))));
-        public IFormLinkGetter<ISkyrimMajorRecordGetter> Unknown2 => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(120, 4))));
-        public IFormLinkGetter<ISkyrimMajorRecordGetter> Unknown3 => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(124, 4))));
-        public IFormLinkGetter<ISpellGetter> EquipAbility => new FormLink<ISpellGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(128, 4))));
-        public IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(132, 4))));
-        public IFormLinkGetter<IPerkGetter> PerkToApply => new FormLink<IPerkGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(136, 4))));
-        public SoundLevel CastingSoundLevel => (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(140, 4));
-        public Single ScriptEffectAIScore => SpanExt.GetFloat(_data.Slice(144, 4));
-        public Single ScriptEffectAIDelayTime => SpanExt.GetFloat(_data.Slice(148, 4));
+        public ActorValueExtended MagicSkill => (ActorValueExtended)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
+        public ActorValueExtended ResistValue => (ActorValueExtended)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x10, 0x4));
+        public UInt16 CounterEffectCount => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x14, 0x2));
+        public UInt16 Unknown1 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x16, 0x2));
+        public IFormLinkGetter<ILightGetter> CastingLight => new FormLink<ILightGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x18, 0x4))));
+        public Single TaperWeight => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
+        public IFormLinkGetter<IEffectShaderGetter> HitShader => new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x20, 0x4))));
+        public IFormLinkGetter<IEffectShaderGetter> EnchantShader => new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x24, 0x4))));
+        public UInt32 MinimumSkillLevel => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x28, 0x4));
+        public UInt32 SpellmakingArea => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x2C, 0x4));
+        public Single SpellmakingCastingTime => SpanExt.GetFloat(_data.Slice(0x30, 0x4));
+        public Single TaperCurve => SpanExt.GetFloat(_data.Slice(0x34, 0x4));
+        public Single TaperDuration => SpanExt.GetFloat(_data.Slice(0x38, 0x4));
+        public Single SecondActorValueWeight => SpanExt.GetFloat(_data.Slice(0x3C, 0x4));
+        public IMagicEffectArchetypeGetter Archetype => GetArchetypeCustom(location: 0x40);
+        public IFormLinkGetter<IProjectileGetter> Projectile => new FormLink<IProjectileGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x48, 0x4))));
+        public IFormLinkGetter<IExplosionGetter> Explosion => new FormLink<IExplosionGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4C, 0x4))));
+        public CastingType CastingType => (CastingType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x50, 0x4));
+        public Targeting Delivery => (Targeting)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x54, 0x4));
+        public ActorValueExtended SecondActorValue => (ActorValueExtended)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x58, 0x4));
+        public IFormLinkGetter<IArtObjectGetter> CastingArt => new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x5C, 0x4))));
+        public IFormLinkGetter<IArtObjectGetter> HitEffectArt => new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x60, 0x4))));
+        public IFormLinkGetter<IImpactDataSetGetter> ImpactData => new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x64, 0x4))));
+        public Single SkillUsageMultiplier => SpanExt.GetFloat(_data.Slice(0x68, 0x4));
+        public IFormLinkGetter<IDualCastDataGetter> DualCastArt => new FormLink<IDualCastDataGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x6C, 0x4))));
+        public Single DualCastScale => SpanExt.GetFloat(_data.Slice(0x70, 0x4));
+        public IFormLinkGetter<IArtObjectGetter> EnchantArt => new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x74, 0x4))));
+        public IFormLinkGetter<ISkyrimMajorRecordGetter> Unknown2 => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x78, 0x4))));
+        public IFormLinkGetter<ISkyrimMajorRecordGetter> Unknown3 => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x7C, 0x4))));
+        public IFormLinkGetter<ISpellGetter> EquipAbility => new FormLink<ISpellGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x80, 0x4))));
+        public IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x84, 0x4))));
+        public IFormLinkGetter<IPerkGetter> PerkToApply => new FormLink<IPerkGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x88, 0x4))));
+        public SoundLevel CastingSoundLevel => (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8C, 0x4));
+        public Single ScriptEffectAIScore => SpanExt.GetFloat(_data.Slice(0x90, 0x4));
+        public Single ScriptEffectAIDelayTime => SpanExt.GetFloat(_data.Slice(0x94, 0x4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

@@ -2027,10 +2027,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Byte Spring => _data.Span[0];
-        public Byte Summer => _data.Span[1];
-        public Byte Fall => _data.Span[2];
-        public Byte Winter => _data.Span[3];
+        public Byte Spring => _data.Span[0x0];
+        public Byte Summer => _data.Span[0x1];
+        public Byte Fall => _data.Span[0x2];
+        public Byte Winter => _data.Span[0x3];
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

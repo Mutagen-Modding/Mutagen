@@ -2130,8 +2130,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Int16 Version => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0, 2));
-        public UInt16 ObjectFormat => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(2, 2));
+        public Int16 Version => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x0, 0x2));
+        public UInt16 ObjectFormat => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2, 0x2));
         #region Scripts
         partial void ScriptsCustomParse(
             BinaryMemoryReadStream stream,

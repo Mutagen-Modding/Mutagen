@@ -2120,11 +2120,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Month Month => (Month)_data.Span.Slice(0, 1)[0];
-        public Weekday DayOfWeek => (Weekday)_data.Span.Slice(1, 1)[0];
-        public Byte Day => _data.Span[2];
-        public Byte Time => _data.Span[3];
-        public Int32 Duration => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(4, 4));
+        public Month Month => (Month)_data.Span.Slice(0x0, 0x1)[0];
+        public Weekday DayOfWeek => (Weekday)_data.Span.Slice(0x1, 0x1)[0];
+        public Byte Day => _data.Span[0x2];
+        public Byte Time => _data.Span[0x3];
+        public Int32 Duration => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

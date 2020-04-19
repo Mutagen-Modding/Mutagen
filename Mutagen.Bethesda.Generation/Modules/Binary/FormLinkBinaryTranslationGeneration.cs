@@ -239,7 +239,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     throw new NotImplementedException();
                 }
-                fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice({currentPosition}, {this.ExpectedLength(objGen, typeGen).Value})", "_package")};");
+                fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice(0x{currentPosition:X}, 0x{this.ExpectedLength(objGen, typeGen).Value:X})", "_package")};");
             }
         }
     }

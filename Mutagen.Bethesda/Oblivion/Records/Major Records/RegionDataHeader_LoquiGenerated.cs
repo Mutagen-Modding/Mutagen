@@ -1993,9 +1993,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public RegionData.RegionDataType DataType => (RegionData.RegionDataType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
-        public RegionData.RegionDataFlag Flags => (RegionData.RegionDataFlag)_data.Span.Slice(4, 1)[0];
-        public Byte Priority => _data.Span[5];
+        public RegionData.RegionDataType DataType => (RegionData.RegionDataType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
+        public RegionData.RegionDataFlag Flags => (RegionData.RegionDataFlag)_data.Span.Slice(0x4, 0x1)[0];
+        public Byte Priority => _data.Span[0x5];
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

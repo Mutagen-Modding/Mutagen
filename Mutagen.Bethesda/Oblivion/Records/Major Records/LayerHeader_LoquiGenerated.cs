@@ -2001,9 +2001,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<ILandTextureGetter> Texture => new FormLink<ILandTextureGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
-        public AlphaLayer.QuadrantEnum Quadrant => (AlphaLayer.QuadrantEnum)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(4, 2));
-        public UInt16 LayerNumber => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(6, 2));
+        public IFormLinkGetter<ILandTextureGetter> Texture => new FormLink<ILandTextureGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public AlphaLayer.QuadrantEnum Quadrant => (AlphaLayer.QuadrantEnum)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x4, 0x2));
+        public UInt16 LayerNumber => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x6, 0x2));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

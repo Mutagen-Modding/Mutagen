@@ -1842,8 +1842,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public P3Float Position => P3FloatBinaryTranslation.Read(_data.Slice(0, 12));
-        public P3Float Rotation => P3FloatBinaryTranslation.Read(_data.Slice(12, 12));
+        public P3Float Position => P3FloatBinaryTranslation.Read(_data.Slice(0x0, 0xC));
+        public P3Float Rotation => P3FloatBinaryTranslation.Read(_data.Slice(0xC, 0xC));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

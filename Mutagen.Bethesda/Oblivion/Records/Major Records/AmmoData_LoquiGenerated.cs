@@ -2121,11 +2121,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Single Speed => SpanExt.GetFloat(_data.Slice(0, 4));
-        public Ammo.AmmoFlag Flags => (Ammo.AmmoFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
-        public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(8, 4));
-        public Single Weight => SpanExt.GetFloat(_data.Slice(12, 4));
-        public UInt16 Damage => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(16, 2));
+        public Single Speed => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
+        public Ammo.AmmoFlag Flags => (Ammo.AmmoFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
+        public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x8, 0x4));
+        public Single Weight => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
+        public UInt16 Damage => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x10, 0x2));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

@@ -2469,13 +2469,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public DateTime SunriseBegin => GetSunriseBeginCustom(location: 0);
-        public DateTime SunriseEnd => GetSunriseEndCustom(location: 1);
-        public DateTime SunsetBegin => GetSunsetBeginCustom(location: 2);
-        public DateTime SunsetEnd => GetSunsetEndCustom(location: 3);
-        public Byte Volatility => _data.Span[4];
-        public Climate.MoonPhase Phase => GetPhaseCustom(location: 5);
-        public Byte PhaseLength => GetPhaseLengthCustom(location: 6);
+        public DateTime SunriseBegin => GetSunriseBeginCustom(location: 0x0);
+        public DateTime SunriseEnd => GetSunriseEndCustom(location: 0x1);
+        public DateTime SunsetBegin => GetSunsetBeginCustom(location: 0x2);
+        public DateTime SunsetEnd => GetSunsetEndCustom(location: 0x3);
+        public Byte Volatility => _data.Span[0x4];
+        public Climate.MoonPhase Phase => GetPhaseCustom(location: 0x5);
+        public Byte PhaseLength => GetPhaseLengthCustom(location: 0x6);
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

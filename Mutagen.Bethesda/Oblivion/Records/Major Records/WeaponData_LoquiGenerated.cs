@@ -2387,14 +2387,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Weapon.WeaponType Type => (Weapon.WeaponType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
-        public Single Speed => SpanExt.GetFloat(_data.Slice(4, 4));
-        public Single Reach => SpanExt.GetFloat(_data.Slice(8, 4));
-        public Weapon.WeaponFlag Flags => (Weapon.WeaponFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(12, 4));
-        public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(16, 4));
-        public UInt32 Health => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(20, 4));
-        public Single Weight => SpanExt.GetFloat(_data.Slice(24, 4));
-        public UInt16 Damage => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(28, 2));
+        public Weapon.WeaponType Type => (Weapon.WeaponType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
+        public Single Speed => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
+        public Single Reach => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
+        public Weapon.WeaponFlag Flags => (Weapon.WeaponFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
+        public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x10, 0x4));
+        public UInt32 Health => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x14, 0x4));
+        public Single Weight => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
+        public UInt16 Damage => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x1C, 0x2));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

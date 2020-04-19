@@ -2816,19 +2816,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Byte WindSpeed => _data.Span[0];
-        public Byte CloudSpeedLower => _data.Span[1];
-        public Byte CloudSpeedUpper => _data.Span[2];
-        public Byte TransDelta => _data.Span[3];
-        public Byte SunGlare => _data.Span[4];
-        public Byte SunDamage => _data.Span[5];
-        public Byte PrecipitationBeginFadeIn => _data.Span[6];
-        public Byte PrecipitationEndFadeOut => _data.Span[7];
-        public Byte ThunderLightningBeginFadeIn => _data.Span[8];
-        public Byte ThunderLightningEndFadeOut => _data.Span[9];
-        public Byte ThunderLightningFrequency => _data.Span[10];
-        public Weather.WeatherClassification Classification => (Weather.WeatherClassification)_data.Span.Slice(11, 1)[0];
-        public Color LightningColor => _data.Slice(12, 3).ReadColor();
+        public Byte WindSpeed => _data.Span[0x0];
+        public Byte CloudSpeedLower => _data.Span[0x1];
+        public Byte CloudSpeedUpper => _data.Span[0x2];
+        public Byte TransDelta => _data.Span[0x3];
+        public Byte SunGlare => _data.Span[0x4];
+        public Byte SunDamage => _data.Span[0x5];
+        public Byte PrecipitationBeginFadeIn => _data.Span[0x6];
+        public Byte PrecipitationEndFadeOut => _data.Span[0x7];
+        public Byte ThunderLightningBeginFadeIn => _data.Span[0x8];
+        public Byte ThunderLightningEndFadeOut => _data.Span[0x9];
+        public Byte ThunderLightningFrequency => _data.Span[0xA];
+        public Weather.WeatherClassification Classification => (Weather.WeatherClassification)_data.Span.Slice(0xB, 0x1)[0];
+        public Color LightningColor => _data.Slice(0xC, 0x3).ReadColor();
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

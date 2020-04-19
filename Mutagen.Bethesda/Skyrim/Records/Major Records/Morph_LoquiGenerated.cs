@@ -1756,7 +1756,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public ReadOnlyMemorySlice<Byte> Data => _data.Span.Slice(0, 32).ToArray();
+        public ReadOnlyMemorySlice<Byte> Data => _data.Span.Slice(0x0, 0x20).ToArray();
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

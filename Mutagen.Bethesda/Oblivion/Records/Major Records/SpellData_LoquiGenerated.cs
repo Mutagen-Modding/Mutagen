@@ -2036,10 +2036,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Spell.SpellType Type => (Spell.SpellType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
-        public UInt32 Cost => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(4, 4));
-        public Spell.SpellLevel Level => (Spell.SpellLevel)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(8, 4));
-        public Spell.SpellFlag Flag => (Spell.SpellFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(12, 4));
+        public Spell.SpellType Type => (Spell.SpellType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
+        public UInt32 Cost => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
+        public Spell.SpellLevel Level => (Spell.SpellLevel)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
+        public Spell.SpellFlag Flag => (Spell.SpellFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

@@ -1954,8 +1954,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Condition.Flag Flags => GetFlagsCustom(location: 0);
-        public ReadOnlyMemorySlice<Byte> Unknown1 => _data.Span.Slice(1, 3).ToArray();
+        public Condition.Flag Flags => GetFlagsCustom(location: 0x0);
+        public ReadOnlyMemorySlice<Byte> Unknown1 => _data.Span.Slice(0x1, 0x3).ToArray();
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

@@ -1913,8 +1913,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public AIPackage.Flag Flags => GetFlagsCustom(location: 0);
-        public AIPackage.GeneralTypeEnum GeneralType => GetGeneralTypeCustom(location: 4);
+        public AIPackage.Flag Flags => GetFlagsCustom(location: 0x0);
+        public AIPackage.GeneralTypeEnum GeneralType => GetGeneralTypeCustom(location: 0x4);
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

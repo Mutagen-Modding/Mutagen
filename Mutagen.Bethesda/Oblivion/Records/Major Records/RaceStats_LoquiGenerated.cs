@@ -2360,14 +2360,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Byte Strength => _data.Span[0];
-        public Byte Intelligence => _data.Span[1];
-        public Byte Willpower => _data.Span[2];
-        public Byte Agility => _data.Span[3];
-        public Byte Speed => _data.Span[4];
-        public Byte Endurance => _data.Span[5];
-        public Byte Personality => _data.Span[6];
-        public Byte Luck => _data.Span[7];
+        public Byte Strength => _data.Span[0x0];
+        public Byte Intelligence => _data.Span[0x1];
+        public Byte Willpower => _data.Span[0x2];
+        public Byte Agility => _data.Span[0x3];
+        public Byte Speed => _data.Span[0x4];
+        public Byte Endurance => _data.Span[0x5];
+        public Byte Personality => _data.Span[0x6];
+        public Byte Luck => _data.Span[0x7];
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

@@ -1858,8 +1858,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Container.ContainerFlag Flags => (Container.ContainerFlag)_data.Span.Slice(0, 1)[0];
-        public Single Weight => SpanExt.GetFloat(_data.Slice(1, 4));
+        public Container.ContainerFlag Flags => (Container.ContainerFlag)_data.Span.Slice(0x0, 0x1)[0];
+        public Single Weight => SpanExt.GetFloat(_data.Slice(0x1, 0x4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

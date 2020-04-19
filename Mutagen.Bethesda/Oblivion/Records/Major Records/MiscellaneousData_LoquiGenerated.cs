@@ -1855,8 +1855,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Int32 Value => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0, 4));
-        public Single Weight => SpanExt.GetFloat(_data.Slice(4, 4));
+        public Int32 Value => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
+        public Single Weight => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

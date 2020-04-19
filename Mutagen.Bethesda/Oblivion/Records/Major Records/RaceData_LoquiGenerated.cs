@@ -2973,7 +2973,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ISkillBoostGetter SkillBoost4 => SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(8)), _package, default(RecordTypeConverter));
         public ISkillBoostGetter SkillBoost5 => SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(10)), _package, default(RecordTypeConverter));
         public ISkillBoostGetter SkillBoost6 => SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(12)), _package, default(RecordTypeConverter));
-        public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(14, 4).ToArray();
+        public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(0xE, 0x4).ToArray();
         #region Height
         public IGenderedItemGetter<Single> Height
         {
@@ -2998,7 +2998,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         #endregion
-        public Race.Flag Flags => (Race.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(34, 2));
+        public Race.Flag Flags => (Race.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x22, 0x2));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

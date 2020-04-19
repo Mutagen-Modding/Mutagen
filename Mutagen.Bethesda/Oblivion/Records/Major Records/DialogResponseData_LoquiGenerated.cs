@@ -2139,11 +2139,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public EmotionType Emotion => (EmotionType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
-        public Int32 EmotionValue => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(4, 4));
-        public ReadOnlyMemorySlice<Byte> Fluff1 => _data.Span.Slice(8, 4).ToArray();
-        public Byte ResponseNumber => _data.Span[12];
-        public ReadOnlyMemorySlice<Byte> Fluff2 => _data.Span.Slice(13, 3).ToArray();
+        public EmotionType Emotion => (EmotionType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
+        public Int32 EmotionValue => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
+        public ReadOnlyMemorySlice<Byte> Fluff1 => _data.Span.Slice(0x8, 0x4).ToArray();
+        public Byte ResponseNumber => _data.Span[0xC];
+        public ReadOnlyMemorySlice<Byte> Fluff2 => _data.Span.Slice(0xD, 0x3).ToArray();
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

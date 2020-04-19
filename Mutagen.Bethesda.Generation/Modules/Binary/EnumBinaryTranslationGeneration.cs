@@ -159,7 +159,7 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                slice = $"{dataAccessor}.Span.Slice({currentPosition}, {eType.ByteLength})";
+                slice = $"{dataAccessor}.Span.Slice(0x{currentPosition:X}, 0x{eType.ByteLength:X})";
             }
             var getType = GenerateForTypicalWrapper(objGen, typeGen, slice, "_package");
 

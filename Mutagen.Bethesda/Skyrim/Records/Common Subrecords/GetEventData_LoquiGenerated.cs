@@ -2256,13 +2256,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public UInt16 Unknown2 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0, 2));
-        public UInt16 EventFunction => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(2, 2));
-        public UInt16 EventMember => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(4, 2));
-        public IFormLinkGetter<ISkyrimMajorRecordGetter> Parameter3 => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(6, 4))));
-        public Condition.RunOnType RunOnType => (Condition.RunOnType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(10, 4));
-        public IFormLinkGetter<ISkyrimMajorRecordGetter> Reference => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(14, 4))));
-        public Int32 Unknown3 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(18, 4));
+        public UInt16 Unknown2 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x0, 0x2));
+        public UInt16 EventFunction => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2, 0x2));
+        public UInt16 EventMember => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x4, 0x2));
+        public IFormLinkGetter<ISkyrimMajorRecordGetter> Parameter3 => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x6, 0x4))));
+        public Condition.RunOnType RunOnType => (Condition.RunOnType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xA, 0x4));
+        public IFormLinkGetter<ISkyrimMajorRecordGetter> Reference => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0xE, 0x4))));
+        public Int32 Unknown3 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x12, 0x4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

@@ -2925,20 +2925,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Single EyeAdaptSpeed => SpanExt.GetFloat(_data.Slice(0, 4));
-        public Single BlurRadius => SpanExt.GetFloat(_data.Slice(4, 4));
-        public Single BlurPasses => SpanExt.GetFloat(_data.Slice(8, 4));
-        public Single EmissiveMult => SpanExt.GetFloat(_data.Slice(12, 4));
-        public Single TargetLum => SpanExt.GetFloat(_data.Slice(16, 4));
-        public Single UpperLumClamp => SpanExt.GetFloat(_data.Slice(20, 4));
-        public Single BrightScale => SpanExt.GetFloat(_data.Slice(24, 4));
-        public Single BrightClamp => SpanExt.GetFloat(_data.Slice(28, 4));
-        public Single LumRampNoTex => SpanExt.GetFloat(_data.Slice(32, 4));
-        public Single LumRampMin => SpanExt.GetFloat(_data.Slice(36, 4));
-        public Single LumRampMax => SpanExt.GetFloat(_data.Slice(40, 4));
-        public Single SunlightDimmer => SpanExt.GetFloat(_data.Slice(44, 4));
-        public Single GrassDimmer => SpanExt.GetFloat(_data.Slice(48, 4));
-        public Single TreeDimmer => SpanExt.GetFloat(_data.Slice(52, 4));
+        public Single EyeAdaptSpeed => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
+        public Single BlurRadius => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
+        public Single BlurPasses => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
+        public Single EmissiveMult => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
+        public Single TargetLum => SpanExt.GetFloat(_data.Slice(0x10, 0x4));
+        public Single UpperLumClamp => SpanExt.GetFloat(_data.Slice(0x14, 0x4));
+        public Single BrightScale => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
+        public Single BrightClamp => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
+        public Single LumRampNoTex => SpanExt.GetFloat(_data.Slice(0x20, 0x4));
+        public Single LumRampMin => SpanExt.GetFloat(_data.Slice(0x24, 0x4));
+        public Single LumRampMax => SpanExt.GetFloat(_data.Slice(0x28, 0x4));
+        public Single SunlightDimmer => SpanExt.GetFloat(_data.Slice(0x2C, 0x4));
+        public Single GrassDimmer => SpanExt.GetFloat(_data.Slice(0x30, 0x4));
+        public Single TreeDimmer => SpanExt.GetFloat(_data.Slice(0x34, 0x4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

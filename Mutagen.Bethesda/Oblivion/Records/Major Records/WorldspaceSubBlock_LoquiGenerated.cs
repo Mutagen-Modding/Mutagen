@@ -2451,10 +2451,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Int16 BlockNumberY => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0, 2));
-        public Int16 BlockNumberX => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(2, 2));
-        public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
-        public ReadOnlyMemorySlice<Byte> LastModified => _data.Span.Slice(8, 4).ToArray();
+        public Int16 BlockNumberY => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x0, 0x2));
+        public Int16 BlockNumberX => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x2, 0x2));
+        public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
+        public ReadOnlyMemorySlice<Byte> LastModified => _data.Span.Slice(0x8, 0x4).ToArray();
         #region Items
         partial void ItemsCustomParse(
             BinaryMemoryReadStream stream,

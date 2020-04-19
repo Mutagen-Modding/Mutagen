@@ -240,7 +240,7 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                loc = $"{currentPosition}";
+                loc = $"0x{currentPosition:X}";
             }
             using (var args = new ArgsWrapper(fg,
                 $"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet && typeGen.CanBeNullable(getter: true) ? "?" : null)} {typeGen.Name} => Get{typeGen.Name}Custom"))

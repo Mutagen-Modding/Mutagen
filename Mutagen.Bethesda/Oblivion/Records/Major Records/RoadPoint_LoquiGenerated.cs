@@ -2078,8 +2078,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public P3Float Point => P3FloatBinaryTranslation.Read(_data.Slice(0, 12));
-        public ReadOnlyMemorySlice<Byte> NumConnectionsFluffBytes => _data.Span.Slice(12, 3).ToArray();
+        public P3Float Point => P3FloatBinaryTranslation.Read(_data.Slice(0x0, 0xC));
+        public ReadOnlyMemorySlice<Byte> NumConnectionsFluffBytes => _data.Span.Slice(0xC, 0x3).ToArray();
         public IReadOnlyList<P3Float> Connections => BinaryOverlaySetList<P3Float>.FactoryByStartIndex(_data.Slice(15), _package, 12, (s, p) => P3FloatBinaryTranslation.Read(s));
         partial void CustomCtor(
             IBinaryReadStream stream,

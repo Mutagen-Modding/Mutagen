@@ -2659,16 +2659,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public CrimeValues.VersioningBreaks Versioning { get; private set; }
-        public Boolean Arrest => _data.Slice(0, 1)[0] == 1;
-        public Boolean AttackOnSight => _data.Slice(1, 1)[0] == 1;
-        public UInt16 Murder => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(2, 2));
-        public UInt16 Assault => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(4, 2));
-        public UInt16 Trespass => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(6, 2));
-        public UInt16 Pickpocket => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(8, 2));
-        public UInt16 Unknown => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(10, 2));
-        public Single StealMult => SpanExt.GetFloat(_data.Slice(12, 4));
-        public UInt16 Escape => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(16, 2));
-        public UInt16 Werewolf => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(18, 2));
+        public Boolean Arrest => _data.Slice(0x0, 0x1)[0] == 1;
+        public Boolean AttackOnSight => _data.Slice(0x1, 0x1)[0] == 1;
+        public UInt16 Murder => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2, 0x2));
+        public UInt16 Assault => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x4, 0x2));
+        public UInt16 Trespass => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x6, 0x2));
+        public UInt16 Pickpocket => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x8, 0x2));
+        public UInt16 Unknown => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xA, 0x2));
+        public Single StealMult => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
+        public UInt16 Escape => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x10, 0x2));
+        public UInt16 Werewolf => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x12, 0x2));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

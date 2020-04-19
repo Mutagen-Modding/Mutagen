@@ -1841,8 +1841,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public ActorValue Skill => (ActorValue)_data.Span.Slice(0, 1)[0];
-        public SByte Boost => (sbyte)_data.Slice(1, 1)[0];
+        public ActorValue Skill => (ActorValue)_data.Span.Slice(0x0, 0x1)[0];
+        public SByte Boost => (sbyte)_data.Slice(0x1, 0x1)[0];
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

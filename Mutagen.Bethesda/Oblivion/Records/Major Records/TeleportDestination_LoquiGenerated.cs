@@ -1957,9 +1957,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<IPlacedGetter> Destination => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
-        public P3Float Position => P3FloatBinaryTranslation.Read(_data.Slice(4, 12));
-        public P3Float Rotation => P3FloatBinaryTranslation.Read(_data.Slice(16, 12));
+        public IFormLinkGetter<IPlacedGetter> Destination => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public P3Float Position => P3FloatBinaryTranslation.Read(_data.Slice(0x4, 0xC));
+        public P3Float Rotation => P3FloatBinaryTranslation.Read(_data.Slice(0x10, 0xC));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

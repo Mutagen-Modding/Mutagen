@@ -2990,21 +2990,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Creature.CreatureTypeEnum CreatureType => (Creature.CreatureTypeEnum)_data.Span.Slice(0, 1)[0];
-        public Byte CombatSkill => _data.Span[1];
-        public Byte MagicSkill => _data.Span[2];
-        public Byte StealthSkill => _data.Span[3];
-        public SoulLevel SoulLevel => (SoulLevel)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(4, 2));
-        public UInt32 Health => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(6, 4));
-        public UInt16 AttackDamage => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(10, 2));
-        public Byte Strength => _data.Span[12];
-        public Byte Intelligence => _data.Span[13];
-        public Byte Willpower => _data.Span[14];
-        public Byte Agility => _data.Span[15];
-        public Byte Speed => _data.Span[16];
-        public Byte Endurance => _data.Span[17];
-        public Byte Personality => _data.Span[18];
-        public Byte Luck => _data.Span[19];
+        public Creature.CreatureTypeEnum CreatureType => (Creature.CreatureTypeEnum)_data.Span.Slice(0x0, 0x1)[0];
+        public Byte CombatSkill => _data.Span[0x1];
+        public Byte MagicSkill => _data.Span[0x2];
+        public Byte StealthSkill => _data.Span[0x3];
+        public SoulLevel SoulLevel => (SoulLevel)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x4, 0x2));
+        public UInt32 Health => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x6, 0x4));
+        public UInt16 AttackDamage => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xA, 0x2));
+        public Byte Strength => _data.Span[0xC];
+        public Byte Intelligence => _data.Span[0xD];
+        public Byte Willpower => _data.Span[0xE];
+        public Byte Agility => _data.Span[0xF];
+        public Byte Speed => _data.Span[0x10];
+        public Byte Endurance => _data.Span[0x11];
+        public Byte Personality => _data.Span[0x12];
+        public Byte Luck => _data.Span[0x13];
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

@@ -2659,17 +2659,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Single MinWidth => SpanExt.GetFloat(_data.Slice(0, 4));
-        public Single MaxWidth => SpanExt.GetFloat(_data.Slice(4, 4));
-        public Single MinHeight => SpanExt.GetFloat(_data.Slice(8, 4));
-        public Single MaxHeight => SpanExt.GetFloat(_data.Slice(12, 4));
-        public Single Depth => SpanExt.GetFloat(_data.Slice(16, 4));
-        public Single Shininess => SpanExt.GetFloat(_data.Slice(20, 4));
-        public Single ParallaxScale => SpanExt.GetFloat(_data.Slice(24, 4));
-        public Byte ParallaxPasses => _data.Span[28];
-        public Decal.Flag Flags => (Decal.Flag)_data.Span.Slice(29, 1)[0];
-        public UInt16 Unknown => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(30, 2));
-        public Color Color => _data.Slice(32, 4).ReadColor();
+        public Single MinWidth => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
+        public Single MaxWidth => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
+        public Single MinHeight => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
+        public Single MaxHeight => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
+        public Single Depth => SpanExt.GetFloat(_data.Slice(0x10, 0x4));
+        public Single Shininess => SpanExt.GetFloat(_data.Slice(0x14, 0x4));
+        public Single ParallaxScale => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
+        public Byte ParallaxPasses => _data.Span[0x1C];
+        public Decal.Flag Flags => (Decal.Flag)_data.Span.Slice(0x1D, 0x1)[0];
+        public UInt16 Unknown => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x1E, 0x2));
+        public Color Color => _data.Slice(0x20, 0x4).ReadColor();
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

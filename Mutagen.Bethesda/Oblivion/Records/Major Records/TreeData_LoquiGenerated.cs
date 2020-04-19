@@ -2389,14 +2389,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Single LeafCurvature => SpanExt.GetFloat(_data.Slice(0, 4));
-        public Single MinimumLeafAngle => SpanExt.GetFloat(_data.Slice(4, 4));
-        public Single MaximumLeafAngle => SpanExt.GetFloat(_data.Slice(8, 4));
-        public Single BranchDimmingValue => SpanExt.GetFloat(_data.Slice(12, 4));
-        public Single LeafDimmingValue => SpanExt.GetFloat(_data.Slice(16, 4));
-        public Int32 ShadowRadius => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(20, 4));
-        public Single RockingSpeed => SpanExt.GetFloat(_data.Slice(24, 4));
-        public Single RustleSpeed => SpanExt.GetFloat(_data.Slice(28, 4));
+        public Single LeafCurvature => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
+        public Single MinimumLeafAngle => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
+        public Single MaximumLeafAngle => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
+        public Single BranchDimmingValue => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
+        public Single LeafDimmingValue => SpanExt.GetFloat(_data.Slice(0x10, 0x4));
+        public Int32 ShadowRadius => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x14, 0x4));
+        public Single RockingSpeed => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
+        public Single RustleSpeed => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

@@ -1721,7 +1721,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Boolean Data => _data.Slice(0, 1)[0] == 1;
+        public Boolean Data => _data.Slice(0x0, 0x1)[0] == 1;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

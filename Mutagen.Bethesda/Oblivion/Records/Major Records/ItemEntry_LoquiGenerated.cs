@@ -1881,8 +1881,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<IAItemGetter> Item => new FormLink<IAItemGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
-        public Int32? Count => _data.Length >= 8 ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(4, 4)) : default(Int32?);
+        public IFormLinkGetter<IAItemGetter> Item => new FormLink<IAItemGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public Int32? Count => _data.Length >= 8 ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4)) : default(Int32?);
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

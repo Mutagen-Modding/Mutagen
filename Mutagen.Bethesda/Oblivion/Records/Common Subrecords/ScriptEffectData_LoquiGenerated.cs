@@ -2163,10 +2163,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public ScriptEffectData.VersioningBreaks Versioning { get; private set; }
-        public IFormLinkGetter<IScriptGetter> Script => new FormLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
-        public MagicSchool MagicSchool => (MagicSchool)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
-        public IEDIDLinkGetter<IMagicEffectGetter> VisualEffect => new EDIDLink<IMagicEffectGetter>(new RecordType(BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(8, 4))));
-        public ScriptEffect.Flag Flags => (ScriptEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(12, 4));
+        public IFormLinkGetter<IScriptGetter> Script => new FormLink<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public MagicSchool MagicSchool => (MagicSchool)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
+        public IEDIDLinkGetter<IMagicEffectGetter> VisualEffect => new EDIDLink<IMagicEffectGetter>(new RecordType(BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
+        public ScriptEffect.Flag Flags => (ScriptEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

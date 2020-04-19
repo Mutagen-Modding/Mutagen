@@ -2033,10 +2033,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Enchantment.EnchantmentType Type => (Enchantment.EnchantmentType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
-        public UInt32 ChargeAmount => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(4, 4));
-        public UInt32 EnchantCost => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(8, 4));
-        public Enchantment.Flag Flags => (Enchantment.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(12, 4));
+        public Enchantment.EnchantmentType Type => (Enchantment.EnchantmentType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
+        public UInt32 ChargeAmount => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
+        public UInt32 EnchantCost => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x8, 0x4));
+        public Enchantment.Flag Flags => (Enchantment.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

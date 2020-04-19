@@ -2052,10 +2052,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Int32 Index => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0, 4));
-        public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(4, 12).ToArray();
-        public Script.LocalVariableFlag Flags => (Script.LocalVariableFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(16, 4));
-        public ReadOnlyMemorySlice<Byte> Fluff2 => _data.Span.Slice(20, 4).ToArray();
+        public Int32 Index => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
+        public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(0x4, 0xC).ToArray();
+        public Script.LocalVariableFlag Flags => (Script.LocalVariableFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x10, 0x4));
+        public ReadOnlyMemorySlice<Byte> Fluff2 => _data.Span.Slice(0x14, 0x4).ToArray();
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

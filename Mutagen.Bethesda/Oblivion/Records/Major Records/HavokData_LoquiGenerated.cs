@@ -1943,9 +1943,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public HavokData.MaterialType Material => (HavokData.MaterialType)_data.Span.Slice(0, 1)[0];
-        public Byte Friction => _data.Span[1];
-        public Byte Restitution => _data.Span[2];
+        public HavokData.MaterialType Material => (HavokData.MaterialType)_data.Span.Slice(0x0, 0x1)[0];
+        public Byte Friction => _data.Span[0x1];
+        public Byte Restitution => _data.Span[0x2];
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

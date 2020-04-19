@@ -4289,36 +4289,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Byte Armorer => _data.Span[0];
-        public Byte Athletics => _data.Span[1];
-        public Byte Blade => _data.Span[2];
-        public Byte Block => _data.Span[3];
-        public Byte Blunt => _data.Span[4];
-        public Byte HandToHand => _data.Span[5];
-        public Byte HeavyArmor => _data.Span[6];
-        public Byte Alchemy => _data.Span[7];
-        public Byte Alteration => _data.Span[8];
-        public Byte Conjuration => _data.Span[9];
-        public Byte Destruction => _data.Span[10];
-        public Byte Illusion => _data.Span[11];
-        public Byte Mysticism => _data.Span[12];
-        public Byte Restoration => _data.Span[13];
-        public Byte Acrobatics => _data.Span[14];
-        public Byte LightArmor => _data.Span[15];
-        public Byte Marksman => _data.Span[16];
-        public Byte Mercantile => _data.Span[17];
-        public Byte Security => _data.Span[18];
-        public Byte Sneak => _data.Span[19];
-        public Byte Speechcraft => _data.Span[20];
-        public UInt32 Health => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(21, 4));
-        public Byte Strength => _data.Span[25];
-        public Byte Intelligence => _data.Span[26];
-        public Byte Willpower => _data.Span[27];
-        public Byte Agility => _data.Span[28];
-        public Byte Speed => _data.Span[29];
-        public Byte Endurance => _data.Span[30];
-        public Byte Personality => _data.Span[31];
-        public Byte Luck => _data.Span[32];
+        public Byte Armorer => _data.Span[0x0];
+        public Byte Athletics => _data.Span[0x1];
+        public Byte Blade => _data.Span[0x2];
+        public Byte Block => _data.Span[0x3];
+        public Byte Blunt => _data.Span[0x4];
+        public Byte HandToHand => _data.Span[0x5];
+        public Byte HeavyArmor => _data.Span[0x6];
+        public Byte Alchemy => _data.Span[0x7];
+        public Byte Alteration => _data.Span[0x8];
+        public Byte Conjuration => _data.Span[0x9];
+        public Byte Destruction => _data.Span[0xA];
+        public Byte Illusion => _data.Span[0xB];
+        public Byte Mysticism => _data.Span[0xC];
+        public Byte Restoration => _data.Span[0xD];
+        public Byte Acrobatics => _data.Span[0xE];
+        public Byte LightArmor => _data.Span[0xF];
+        public Byte Marksman => _data.Span[0x10];
+        public Byte Mercantile => _data.Span[0x11];
+        public Byte Security => _data.Span[0x12];
+        public Byte Sneak => _data.Span[0x13];
+        public Byte Speechcraft => _data.Span[0x14];
+        public UInt32 Health => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x15, 0x4));
+        public Byte Strength => _data.Span[0x19];
+        public Byte Intelligence => _data.Span[0x1A];
+        public Byte Willpower => _data.Span[0x1B];
+        public Byte Agility => _data.Span[0x1C];
+        public Byte Speed => _data.Span[0x1D];
+        public Byte Endurance => _data.Span[0x1E];
+        public Byte Personality => _data.Span[0x1F];
+        public Byte Luck => _data.Span[0x20];
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

@@ -1853,8 +1853,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Byte Friction => _data.Span[0];
-        public Byte Restitution => _data.Span[1];
+        public Byte Friction => _data.Span[0x0];
+        public Byte Restitution => _data.Span[0x1];
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

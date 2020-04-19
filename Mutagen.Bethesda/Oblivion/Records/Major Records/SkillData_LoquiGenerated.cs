@@ -2127,11 +2127,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public ActorValue Action => (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
-        public ActorValue Attribute => (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
-        public Specialization Specialization => (Specialization)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(8, 4));
-        public Single UseValueFirst => SpanExt.GetFloat(_data.Slice(12, 4));
-        public Single UseValueSecond => SpanExt.GetFloat(_data.Slice(16, 4));
+        public ActorValue Action => (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
+        public ActorValue Attribute => (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
+        public Specialization Specialization => (Specialization)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
+        public Single UseValueFirst => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
+        public Single UseValueSecond => SpanExt.GetFloat(_data.Slice(0x10, 0x4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

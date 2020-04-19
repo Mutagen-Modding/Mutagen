@@ -2048,9 +2048,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Single StaticAttenuation => GetStaticAttenuationCustom(location: 8);
-        public Single StopTime => GetStopTimeCustom(location: 10);
-        public Single StartTime => GetStartTimeCustom(location: 11);
+        public Single StaticAttenuation => GetStaticAttenuationCustom(location: 0x8);
+        public Single StopTime => GetStopTimeCustom(location: 0xA);
+        public Single StartTime => GetStartTimeCustom(location: 0xB);
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

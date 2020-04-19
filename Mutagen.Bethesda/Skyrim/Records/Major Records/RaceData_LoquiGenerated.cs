@@ -5004,7 +5004,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public ISkillBoostGetter SkillBoost4 => SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(8)), _package, default(RecordTypeConverter));
         public ISkillBoostGetter SkillBoost5 => SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(10)), _package, default(RecordTypeConverter));
         public ISkillBoostGetter SkillBoost6 => SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(12)), _package, default(RecordTypeConverter));
-        public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(14, 2).ToArray();
+        public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(0xE, 0x2).ToArray();
         #region Height
         public IGenderedItemGetter<Single> Height
         {
@@ -5029,29 +5029,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         #endregion
-        public Race.Flag Flags => GetFlagsCustom(location: 32);
-        public Single StartingHealth => SpanExt.GetFloat(_data.Slice(36, 4));
-        public Single StartingMagicka => SpanExt.GetFloat(_data.Slice(40, 4));
-        public Single StartingStamina => SpanExt.GetFloat(_data.Slice(44, 4));
-        public Single BaseCarryWeight => SpanExt.GetFloat(_data.Slice(48, 4));
-        public Single BaseMass => SpanExt.GetFloat(_data.Slice(52, 4));
-        public Single AccelerationRate => SpanExt.GetFloat(_data.Slice(56, 4));
-        public Single DecelerationRate => SpanExt.GetFloat(_data.Slice(60, 4));
-        public Race.Size Size => (Race.Size)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(64, 4));
-        public BipedObject HeadBipedObject => (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(68, 4));
-        public BipedObject HairBipedObject => (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(72, 4));
-        public Single InjuredHealthPercent => SpanExt.GetFloat(_data.Slice(76, 4));
-        public BipedObject ShieldBipedObject => (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(80, 4));
-        public Single HealthRegen => SpanExt.GetFloat(_data.Slice(84, 4));
-        public Single MagickaRegen => SpanExt.GetFloat(_data.Slice(88, 4));
-        public Single StaminaRegen => SpanExt.GetFloat(_data.Slice(92, 4));
-        public Single UnarmedDamage => SpanExt.GetFloat(_data.Slice(96, 4));
-        public Single UnarmedReach => SpanExt.GetFloat(_data.Slice(100, 4));
-        public BipedObject BodyBipedObject => (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(104, 4));
-        public Single AimAngleTolerance => SpanExt.GetFloat(_data.Slice(108, 4));
-        public Single FlightRadius => SpanExt.GetFloat(_data.Slice(112, 4));
-        public Single AngularAccelerationRate => SpanExt.GetFloat(_data.Slice(116, 4));
-        public Single AngularTolerance => SpanExt.GetFloat(_data.Slice(120, 4));
+        public Race.Flag Flags => GetFlagsCustom(location: 0x20);
+        public Single StartingHealth => SpanExt.GetFloat(_data.Slice(0x24, 0x4));
+        public Single StartingMagicka => SpanExt.GetFloat(_data.Slice(0x28, 0x4));
+        public Single StartingStamina => SpanExt.GetFloat(_data.Slice(0x2C, 0x4));
+        public Single BaseCarryWeight => SpanExt.GetFloat(_data.Slice(0x30, 0x4));
+        public Single BaseMass => SpanExt.GetFloat(_data.Slice(0x34, 0x4));
+        public Single AccelerationRate => SpanExt.GetFloat(_data.Slice(0x38, 0x4));
+        public Single DecelerationRate => SpanExt.GetFloat(_data.Slice(0x3C, 0x4));
+        public Race.Size Size => (Race.Size)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x40, 0x4));
+        public BipedObject HeadBipedObject => (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x44, 0x4));
+        public BipedObject HairBipedObject => (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x48, 0x4));
+        public Single InjuredHealthPercent => SpanExt.GetFloat(_data.Slice(0x4C, 0x4));
+        public BipedObject ShieldBipedObject => (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x50, 0x4));
+        public Single HealthRegen => SpanExt.GetFloat(_data.Slice(0x54, 0x4));
+        public Single MagickaRegen => SpanExt.GetFloat(_data.Slice(0x58, 0x4));
+        public Single StaminaRegen => SpanExt.GetFloat(_data.Slice(0x5C, 0x4));
+        public Single UnarmedDamage => SpanExt.GetFloat(_data.Slice(0x60, 0x4));
+        public Single UnarmedReach => SpanExt.GetFloat(_data.Slice(0x64, 0x4));
+        public BipedObject BodyBipedObject => (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x68, 0x4));
+        public Single AimAngleTolerance => SpanExt.GetFloat(_data.Slice(0x6C, 0x4));
+        public Single FlightRadius => SpanExt.GetFloat(_data.Slice(0x70, 0x4));
+        public Single AngularAccelerationRate => SpanExt.GetFloat(_data.Slice(0x74, 0x4));
+        public Single AngularTolerance => SpanExt.GetFloat(_data.Slice(0x78, 0x4));
         #region Flags2
         partial void Flags2CustomParse(
             BinaryMemoryReadStream stream,

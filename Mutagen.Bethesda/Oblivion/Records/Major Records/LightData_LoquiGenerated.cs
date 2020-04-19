@@ -2492,14 +2492,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public LightData.VersioningBreaks Versioning { get; private set; }
-        public Int32 Time => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0, 4));
-        public UInt32 Radius => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(4, 4));
-        public Color Color => _data.Slice(8, 4).ReadColor();
-        public Light.LightFlag Flags => (Light.LightFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(12, 4));
-        public Single FalloffExponent => SpanExt.GetFloat(_data.Slice(16, 4));
-        public Single FOV => SpanExt.GetFloat(_data.Slice(20, 4));
-        public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(24, 4));
-        public Single Weight => SpanExt.GetFloat(_data.Slice(28, 4));
+        public Int32 Time => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
+        public UInt32 Radius => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
+        public Color Color => _data.Slice(0x8, 0x4).ReadColor();
+        public Light.LightFlag Flags => (Light.LightFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
+        public Single FalloffExponent => SpanExt.GetFloat(_data.Slice(0x10, 0x4));
+        public Single FOV => SpanExt.GetFloat(_data.Slice(0x14, 0x4));
+        public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x18, 0x4));
+        public Single Weight => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

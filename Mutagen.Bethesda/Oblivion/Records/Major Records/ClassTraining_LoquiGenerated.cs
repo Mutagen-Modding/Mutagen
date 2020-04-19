@@ -1940,9 +1940,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Skill TrainedSkill => (Skill)_data.Span.Slice(0, 1)[0];
-        public Byte MaximumTrainingLevel => _data.Span[1];
-        public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(2, 2).ToArray();
+        public Skill TrainedSkill => (Skill)_data.Span.Slice(0x0, 0x1)[0];
+        public Byte MaximumTrainingLevel => _data.Span[0x1];
+        public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(0x2, 0x2).ToArray();
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

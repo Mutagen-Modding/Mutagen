@@ -1721,7 +1721,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Int32 Data => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0, 4));
+        public Int32 Data => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

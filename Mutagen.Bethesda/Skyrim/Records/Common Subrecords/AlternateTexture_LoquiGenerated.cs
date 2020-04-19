@@ -1946,9 +1946,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public String Name => BinaryStringUtility.ParsePrependedString(_data.Slice(0), lengthLength: 4);
-        public IFormLinkGetter<ITextureSetGetter> NewTexture => new FormLink<ITextureSetGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0, 4))));
-        public Int32 Index => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(4, 4));
+        public String Name => BinaryStringUtility.ParsePrependedString(_data.Slice(0x0), lengthLength: 4);
+        public IFormLinkGetter<ITextureSetGetter> NewTexture => new FormLink<ITextureSetGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public Int32 Index => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

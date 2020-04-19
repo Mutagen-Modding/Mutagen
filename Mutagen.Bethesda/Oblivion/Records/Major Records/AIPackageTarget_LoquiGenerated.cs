@@ -1943,9 +1943,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public AIPackageTarget.ObjectTypeEnum ObjectType => (AIPackageTarget.ObjectTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0, 4));
-        public Int32 Object => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(4, 4));
-        public Int32 Count => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(8, 4));
+        public AIPackageTarget.ObjectTypeEnum ObjectType => (AIPackageTarget.ObjectTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
+        public Int32 Object => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
+        public Int32 Count => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x8, 0x4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

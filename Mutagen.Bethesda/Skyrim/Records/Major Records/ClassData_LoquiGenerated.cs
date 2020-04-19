@@ -4033,33 +4033,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0, 4));
-        public Skill Teaches => (Skill)_data.Span.Slice(4, 1)[0];
-        public Byte MaxTrainingLevel => _data.Span[5];
-        public Byte OneHandedWeight => _data.Span[6];
-        public Byte TwoHandedWeight => _data.Span[7];
-        public Byte MarksmanWeight => _data.Span[8];
-        public Byte BlockWeight => _data.Span[9];
-        public Byte SmithingWeight => _data.Span[10];
-        public Byte HeavyArmorWeight => _data.Span[11];
-        public Byte LightArmorWeight => _data.Span[12];
-        public Byte PickpocketWeight => _data.Span[13];
-        public Byte LockpickingWeight => _data.Span[14];
-        public Byte SneakWeight => _data.Span[15];
-        public Byte AlchemyWeight => _data.Span[16];
-        public Byte SpeechcraftWeight => _data.Span[17];
-        public Byte AlterationWeight => _data.Span[18];
-        public Byte ConjurationWeight => _data.Span[19];
-        public Byte DestructionWeight => _data.Span[20];
-        public Byte IllusionWeight => _data.Span[21];
-        public Byte RestorationWeight => _data.Span[22];
-        public Byte EnchantingWeight => _data.Span[23];
-        public Single BleedoutDefault => SpanExt.GetFloat(_data.Slice(24, 4));
-        public UInt32 VoicePoints => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(28, 4));
-        public Byte HealthWeight => _data.Span[32];
-        public Byte MagickaWeight => _data.Span[33];
-        public Byte StaminaWeight => _data.Span[34];
-        public Byte Unknown2 => _data.Span[35];
+        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
+        public Skill Teaches => (Skill)_data.Span.Slice(0x4, 0x1)[0];
+        public Byte MaxTrainingLevel => _data.Span[0x5];
+        public Byte OneHandedWeight => _data.Span[0x6];
+        public Byte TwoHandedWeight => _data.Span[0x7];
+        public Byte MarksmanWeight => _data.Span[0x8];
+        public Byte BlockWeight => _data.Span[0x9];
+        public Byte SmithingWeight => _data.Span[0xA];
+        public Byte HeavyArmorWeight => _data.Span[0xB];
+        public Byte LightArmorWeight => _data.Span[0xC];
+        public Byte PickpocketWeight => _data.Span[0xD];
+        public Byte LockpickingWeight => _data.Span[0xE];
+        public Byte SneakWeight => _data.Span[0xF];
+        public Byte AlchemyWeight => _data.Span[0x10];
+        public Byte SpeechcraftWeight => _data.Span[0x11];
+        public Byte AlterationWeight => _data.Span[0x12];
+        public Byte ConjurationWeight => _data.Span[0x13];
+        public Byte DestructionWeight => _data.Span[0x14];
+        public Byte IllusionWeight => _data.Span[0x15];
+        public Byte RestorationWeight => _data.Span[0x16];
+        public Byte EnchantingWeight => _data.Span[0x17];
+        public Single BleedoutDefault => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
+        public UInt32 VoicePoints => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x1C, 0x4));
+        public Byte HealthWeight => _data.Span[0x20];
+        public Byte MagickaWeight => _data.Span[0x21];
+        public Byte StaminaWeight => _data.Span[0x22];
+        public Byte Unknown2 => _data.Span[0x23];
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

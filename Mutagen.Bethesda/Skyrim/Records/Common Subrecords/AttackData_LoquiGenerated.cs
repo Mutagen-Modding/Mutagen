@@ -2677,17 +2677,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Single DamageMult => SpanExt.GetFloat(_data.Slice(0, 4));
-        public Single Chance => SpanExt.GetFloat(_data.Slice(4, 4));
-        public IFormLinkGetter<IASpellGetter> Spell => new FormLink<IASpellGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(8, 4))));
-        public AttackData.Flag Flags => (AttackData.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(12, 4));
-        public Single AttackAngle => SpanExt.GetFloat(_data.Slice(16, 4));
-        public Single StrikeAngle => SpanExt.GetFloat(_data.Slice(20, 4));
-        public Single Stagger => SpanExt.GetFloat(_data.Slice(24, 4));
-        public IFormLinkGetter<IKeywordGetter> AttackType => new FormLink<IKeywordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(28, 4))));
-        public Single Knockdown => SpanExt.GetFloat(_data.Slice(32, 4));
-        public Single RecoveryTime => SpanExt.GetFloat(_data.Slice(36, 4));
-        public Single StaminaMult => SpanExt.GetFloat(_data.Slice(40, 4));
+        public Single DamageMult => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
+        public Single Chance => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
+        public IFormLinkGetter<IASpellGetter> Spell => new FormLink<IASpellGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
+        public AttackData.Flag Flags => (AttackData.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
+        public Single AttackAngle => SpanExt.GetFloat(_data.Slice(0x10, 0x4));
+        public Single StrikeAngle => SpanExt.GetFloat(_data.Slice(0x14, 0x4));
+        public Single Stagger => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
+        public IFormLinkGetter<IKeywordGetter> AttackType => new FormLink<IKeywordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x1C, 0x4))));
+        public Single Knockdown => SpanExt.GetFloat(_data.Slice(0x20, 0x4));
+        public Single RecoveryTime => SpanExt.GetFloat(_data.Slice(0x24, 0x4));
+        public Single StaminaMult => SpanExt.GetFloat(_data.Slice(0x28, 0x4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

@@ -2120,10 +2120,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public UInt16 MinimumAttenuationDistance => GetMinimumAttenuationDistanceCustom(location: 0);
-        public UInt16 MaximumAttenuationDistance => GetMaximumAttenuationDistanceCustom(location: 1);
-        public SByte FrequencyAdjustment => (sbyte)_data.Slice(2, 1)[0];
-        public SoundData.Flag Flags => (SoundData.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(4, 4));
+        public UInt16 MinimumAttenuationDistance => GetMinimumAttenuationDistanceCustom(location: 0x0);
+        public UInt16 MaximumAttenuationDistance => GetMaximumAttenuationDistanceCustom(location: 0x1);
+        public SByte FrequencyAdjustment => (sbyte)_data.Slice(0x2, 0x1)[0];
+        public SoundData.Flag Flags => (SoundData.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
