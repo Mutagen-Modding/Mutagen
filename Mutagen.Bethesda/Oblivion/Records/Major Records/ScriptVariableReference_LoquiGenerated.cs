@@ -1793,6 +1793,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return TryGet<int?>.Failure;
             }
         }
+        #region To String
+
+        public override void ToString(
+            FileGeneration fg,
+            string? name = null)
+        {
+            ScriptVariableReferenceMixIn.ToString(
+                item: this,
+                name: name);
+        }
+
+        #endregion
+
     }
 
 }

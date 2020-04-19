@@ -1823,6 +1823,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
+        #region To String
+
+        public override void ToString(
+            FileGeneration fg,
+            string? name = null)
+        {
+            GameSettingMixIn.ToString(
+                item: this,
+                name: name);
+        }
+
+        #endregion
+
     }
 
 }

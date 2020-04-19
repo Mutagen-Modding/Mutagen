@@ -1633,6 +1633,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
+        #region To String
+
+        public virtual void ToString(
+            FileGeneration fg,
+            string? name = null)
+        {
+            ConditionDataMixIn.ToString(
+                item: this,
+                name: name);
+        }
+
+        #endregion
+
     }
 
 }

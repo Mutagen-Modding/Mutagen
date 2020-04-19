@@ -2324,6 +2324,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
             }
         }
+        #region To String
+
+        public override void ToString(
+            FileGeneration fg,
+            string? name = null)
+        {
+            EyeMixIn.ToString(
+                item: this,
+                name: name);
+        }
+
+        #endregion
+
     }
 
 }

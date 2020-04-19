@@ -1647,6 +1647,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
 
+        #region To String
+
+        public virtual void ToString(
+            FileGeneration fg,
+            string? name = null)
+        {
+            ScriptReferenceMixIn.ToString(
+                item: this,
+                name: name);
+        }
+
+        #endregion
+
     }
 
 }

@@ -1911,6 +1911,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
 
+        #region To String
+
+        public override void ToString(
+            FileGeneration fg,
+            string? name = null)
+        {
+            PlaceMixIn.ToString(
+                item: this,
+                name: name);
+        }
+
+        #endregion
+
     }
 
 }

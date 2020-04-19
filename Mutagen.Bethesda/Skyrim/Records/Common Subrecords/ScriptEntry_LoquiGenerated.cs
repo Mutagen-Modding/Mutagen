@@ -2110,6 +2110,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
+        #region To String
+
+        public void ToString(
+            FileGeneration fg,
+            string? name = null)
+        {
+            ScriptEntryMixIn.ToString(
+                item: this,
+                name: name);
+        }
+
+        #endregion
+
     }
 
 }

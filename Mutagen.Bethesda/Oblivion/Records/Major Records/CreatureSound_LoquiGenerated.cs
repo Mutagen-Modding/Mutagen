@@ -2162,6 +2162,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return TryGet<int?>.Failure;
             }
         }
+        #region To String
+
+        public void ToString(
+            FileGeneration fg,
+            string? name = null)
+        {
+            CreatureSoundMixIn.ToString(
+                item: this,
+                name: name);
+        }
+
+        #endregion
+
     }
 
 }

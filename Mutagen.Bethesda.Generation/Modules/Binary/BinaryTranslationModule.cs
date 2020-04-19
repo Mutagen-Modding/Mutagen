@@ -2064,6 +2064,8 @@ namespace Mutagen.Bethesda.Generation
                         }
                     }
                 }
+
+                await obj.GenerateToStringCode(fg);
             }
             fg.AppendLine();
         }

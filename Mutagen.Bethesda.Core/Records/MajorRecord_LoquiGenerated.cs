@@ -2447,6 +2447,19 @@ namespace Mutagen.Bethesda.Internals
                     return TryGet<int?>.Succeed(null);
             }
         }
+        #region To String
+
+        public virtual void ToString(
+            FileGeneration fg,
+            string? name = null)
+        {
+            MajorRecordMixIn.ToString(
+                item: this,
+                name: name);
+        }
+
+        #endregion
+
     }
 
 }

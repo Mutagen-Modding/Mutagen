@@ -1838,6 +1838,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter.Combine(AlphaLayer_Registration.BaseConverter));
             }
         }
+        #region To String
+
+        public override void ToString(
+            FileGeneration fg,
+            string? name = null)
+        {
+            AlphaLayerMixIn.ToString(
+                item: this,
+                name: name);
+        }
+
+        #endregion
+
     }
 
 }

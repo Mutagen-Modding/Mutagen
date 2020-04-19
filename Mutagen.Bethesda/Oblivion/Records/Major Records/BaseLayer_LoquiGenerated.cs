@@ -1924,6 +1924,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return TryGet<int?>.Failure;
             }
         }
+        #region To String
+
+        public virtual void ToString(
+            FileGeneration fg,
+            string? name = null)
+        {
+            BaseLayerMixIn.ToString(
+                item: this,
+                name: name);
+        }
+
+        #endregion
+
     }
 
 }

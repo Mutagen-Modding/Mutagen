@@ -2508,6 +2508,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        #region To String
+
+        public void ToString(
+            FileGeneration fg,
+            string? name = null)
+        {
+            ClimateDataMixIn.ToString(
+                item: this,
+                name: name);
+        }
+
+        #endregion
+
     }
 
 }

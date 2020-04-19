@@ -1959,6 +1959,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
+        #region To String
+
+        public virtual void ToString(
+            FileGeneration fg,
+            string? name = null)
+        {
+            MagicEffectArchetypeMixIn.ToString(
+                item: this,
+                name: name);
+        }
+
+        #endregion
+
     }
 
 }

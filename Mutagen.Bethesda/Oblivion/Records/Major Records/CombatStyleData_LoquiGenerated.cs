@@ -5143,6 +5143,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        #region To String
+
+        public void ToString(
+            FileGeneration fg,
+            string? name = null)
+        {
+            CombatStyleDataMixIn.ToString(
+                item: this,
+                name: name);
+        }
+
+        #endregion
+
     }
 
 }

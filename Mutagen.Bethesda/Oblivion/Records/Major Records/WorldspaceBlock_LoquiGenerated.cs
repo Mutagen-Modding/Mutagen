@@ -2518,6 +2518,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return TryGet<int?>.Succeed(null);
             }
         }
+        #region To String
+
+        public void ToString(
+            FileGeneration fg,
+            string? name = null)
+        {
+            WorldspaceBlockMixIn.ToString(
+                item: this,
+                name: name);
+        }
+
+        #endregion
+
     }
 
 }

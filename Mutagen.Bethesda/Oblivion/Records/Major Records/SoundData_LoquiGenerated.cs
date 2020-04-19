@@ -2156,6 +2156,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        #region To String
+
+        public virtual void ToString(
+            FileGeneration fg,
+            string? name = null)
+        {
+            SoundDataMixIn.ToString(
+                item: this,
+                name: name);
+        }
+
+        #endregion
+
     }
 
 }

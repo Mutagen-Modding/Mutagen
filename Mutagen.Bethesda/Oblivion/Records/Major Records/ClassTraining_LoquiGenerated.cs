@@ -1973,6 +1973,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        #region To String
+
+        public void ToString(
+            FileGeneration fg,
+            string? name = null)
+        {
+            ClassTrainingMixIn.ToString(
+                item: this,
+                name: name);
+        }
+
+        #endregion
+
     }
 
 }
