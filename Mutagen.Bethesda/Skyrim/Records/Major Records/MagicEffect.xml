@@ -47,8 +47,8 @@
       <!-- Actor Value parsed by above custom logic -->
       <FormLink name="Projectile" refName="Projectile" />
       <FormLink name="Explosion" refName="Explosion" />
-      <Enum name="CastingType" enumName="CastingType" byteLength="4" />
-      <Enum name="Delivery" enumName="Targeting" byteLength="4" />
+      <Enum name="CastType" enumName="CastType" byteLength="4" />
+      <Enum name="TargetType" enumName="TargetType" byteLength="4" />
       <Enum name="SecondActorValue" enumName="ActorValueExtended" byteLength="4" />
       <FormLink name="CastingArt" refName="ArtObject" />
       <FormLink name="HitEffectArt" refName="ArtObject" />

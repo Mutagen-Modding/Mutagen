@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="SoundMarker" recordType="SOUN" objType="Record" baseClass="SkyrimMajorRecord" GUID="2915cf72-d87a-4b5d-bb19-2ec3c3801d6f" ID="85">
     <Fields>
-      <RefDirect name="ObjectBounds" refName="ObjectBounds" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
       <ByteArray name="FNAM" recordType="FNAM" />
       <ByteArray name="SNDD" recordType="SNDD" />
       <FormLink name="SoundDescriptor" recordType="SDSC" refName="SoundDescriptor" />

@@ -1,7 +1,26 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="ObjectEffect" recordType="ENCH" objType="Record" baseClass="SkyrimMajorRecord" GUID="0f27c016-189e-43f2-8328-927b0ace82d4" ID="128">
+    <Interface>INamed</Interface>
     <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Data" refName="ObjectEffectData" />
+      <RefList name="Effects" refName="Effect" />
+    </Fields>
+  </Object>
+  <Object name="ObjectEffectData" objType="Subrecord" recordType="ENIT" GUID="edc0fcfa-9555-4856-a0c4-1a12c1a35802" ID="136">
+    <Fields>
+      <UInt32 name="EnchantmentCost" />
+      <Enum name="Flags" enumName="ObjectEffect.Flag" byteLength="4" />
+      <Enum name="CastType" enumName="CastType" byteLength="4" />
+      <Int32 name="EnchantmentAmount" />
+      <Enum name="TargetType" enumName="TargetType" byteLength="4" />
+      <Enum name="EnchantType" enumName="ObjectEffect.EnchantType" byteLength="4" />
+      <Float name="ChargeTime" />
+      <FormLink name="BaseEnchantment" refName="ObjectEffect" />
+      <Break />
+      <FormLink name="WornRestrictions" refName="FormList" />
     </Fields>
   </Object>
 </Loqui>

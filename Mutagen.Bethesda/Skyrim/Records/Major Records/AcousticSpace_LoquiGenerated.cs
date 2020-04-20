@@ -50,14 +50,14 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region ObjectBounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ObjectBounds? _ObjectBounds;
-        public ObjectBounds? ObjectBounds
+        private ObjectBounds _ObjectBounds = new ObjectBounds();
+        public ObjectBounds ObjectBounds
         {
             get => _ObjectBounds;
-            set => _ObjectBounds = value;
+            set => _ObjectBounds = value ?? new ObjectBounds();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter? IAcousticSpaceGetter.ObjectBounds => this.ObjectBounds;
+        IObjectBoundsGetter IAcousticSpaceGetter.ObjectBounds => _ObjectBounds;
         #endregion
         #region AmbientSound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -688,7 +688,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IAcousticSpaceInternal>
     {
-        new ObjectBounds? ObjectBounds { get; set; }
+        new ObjectBounds ObjectBounds { get; set; }
         new IFormLinkNullable<SoundDescriptor> AmbientSound { get; }
         new IFormLinkNullable<Region> UseSoundFromRegion { get; }
         new IFormLinkNullable<ReverbParameters> EnvironmentType { get; }
@@ -708,7 +708,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkContainer,
         IBinaryItem
     {
-        IObjectBoundsGetter? ObjectBounds { get; }
+        IObjectBoundsGetter ObjectBounds { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> AmbientSound { get; }
         IFormLinkNullableGetter<IRegionGetter> UseSoundFromRegion { get; }
         IFormLinkNullableGetter<IReverbParametersGetter> EnvironmentType { get; }
@@ -1242,7 +1242,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IAcousticSpaceInternal item)
         {
             ClearPartial();
-            item.ObjectBounds = null;
+            item.ObjectBounds = new ObjectBounds();
             item.AmbientSound.FormKey = null;
             item.UseSoundFromRegion.FormKey = null;
             item.EnvironmentType.FormKey = null;
@@ -1463,11 +1463,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.ObjectBounds = EqualsMaskHelper.EqualsHelper(
-                item.ObjectBounds,
-                rhs.ObjectBounds,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.AmbientSound = object.Equals(item.AmbientSound, rhs.AmbientSound);
             ret.UseSoundFromRegion = object.Equals(item.UseSoundFromRegion, rhs.UseSoundFromRegion);
             ret.EnvironmentType = object.Equals(item.EnvironmentType, rhs.EnvironmentType);
@@ -1522,10 +1518,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if ((printMask?.ObjectBounds?.Overall ?? true)
-                && item.ObjectBounds.TryGet(out var ObjectBoundsItem))
+            if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                ObjectBoundsItem?.ToString(fg, "ObjectBounds");
+                item.ObjectBounds?.ToString(fg, "ObjectBounds");
             }
             if ((printMask?.AmbientSound ?? true)
                 && item.AmbientSound.TryGet(out var AmbientSoundItem))
@@ -1548,8 +1543,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAcousticSpaceGetter item,
             AcousticSpace.Mask<bool?> checkMask)
         {
-            if (checkMask.ObjectBounds?.Overall.HasValue ?? false && checkMask.ObjectBounds.Overall.Value != (item.ObjectBounds != null)) return false;
-            if (checkMask.ObjectBounds?.Specific != null && (item.ObjectBounds == null || !item.ObjectBounds.HasBeenSet(checkMask.ObjectBounds.Specific))) return false;
             if (checkMask.AmbientSound.HasValue && checkMask.AmbientSound.Value != (item.AmbientSound.FormKey != null)) return false;
             if (checkMask.UseSoundFromRegion.HasValue && checkMask.UseSoundFromRegion.Value != (item.UseSoundFromRegion.FormKey != null)) return false;
             if (checkMask.EnvironmentType.HasValue && checkMask.EnvironmentType.Value != (item.EnvironmentType.FormKey != null)) return false;
@@ -1562,8 +1555,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAcousticSpaceGetter item,
             AcousticSpace.Mask<bool> mask)
         {
-            var itemObjectBounds = item.ObjectBounds;
-            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(itemObjectBounds != null, itemObjectBounds?.GetHasBeenSetMask());
+            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
             mask.AmbientSound = (item.AmbientSound.FormKey != null);
             mask.UseSoundFromRegion = (item.UseSoundFromRegion.FormKey != null);
             mask.EnvironmentType = (item.EnvironmentType.FormKey != null);
@@ -1648,10 +1640,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IAcousticSpaceGetter item)
         {
             var hash = new HashCode();
-            if (item.ObjectBounds.TryGet(out var ObjectBoundsitem))
-            {
-                hash.Add(ObjectBoundsitem);
-            }
+            hash.Add(item.ObjectBounds);
             if (item.AmbientSound.TryGet(out var AmbientSounditem))
             {
                 hash.Add(AmbientSounditem);
@@ -1747,15 +1736,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)AcousticSpace_FieldIndex.ObjectBounds);
                 try
                 {
-                    if(rhs.ObjectBounds.TryGet(out var rhsObjectBounds))
+                    if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.ObjectBounds) ?? true))
                     {
-                        item.ObjectBounds = rhsObjectBounds.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)AcousticSpace_FieldIndex.ObjectBounds));
-                    }
-                    else
-                    {
-                        item.ObjectBounds = default;
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)AcousticSpace_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
                     }
                 }
                 catch (Exception ex)
@@ -1922,19 +1907,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if ((item.ObjectBounds != null)
-                && (translationMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.ObjectBounds) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.ObjectBounds) ?? true))
             {
-                if (item.ObjectBounds.TryGet(out var ObjectBoundsItem))
-                {
-                    ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
-                        item: ObjectBoundsItem,
-                        node: node,
-                        name: nameof(item.ObjectBounds),
-                        fieldIndex: (int)AcousticSpace_FieldIndex.ObjectBounds,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)AcousticSpace_FieldIndex.ObjectBounds));
-                }
+                var ObjectBoundsItem = item.ObjectBounds;
+                ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
+                    item: ObjectBoundsItem,
+                    node: node,
+                    name: nameof(item.ObjectBounds),
+                    fieldIndex: (int)AcousticSpace_FieldIndex.ObjectBounds,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)AcousticSpace_FieldIndex.ObjectBounds));
             }
             if ((item.AmbientSound.FormKey != null)
                 && (translationMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.AmbientSound) ?? true))
@@ -2241,13 +2223,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.ObjectBounds.TryGet(out var ObjectBoundsItem))
-            {
-                ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
-                    item: ObjectBoundsItem,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
-            }
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.AmbientSound,
@@ -2386,8 +2366,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
         private bool _ObjectBounds_IsSet => _ObjectBoundsLocation.HasValue;
-        public IObjectBoundsGetter? ObjectBounds => _ObjectBounds_IsSet ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
-        public bool ObjectBounds_IsSet => _ObjectBoundsLocation.HasValue;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBounds_IsSet ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation!.Value.Min)), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
         #region AmbientSound
         private int? _AmbientSoundLocation;

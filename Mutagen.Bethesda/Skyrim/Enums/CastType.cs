@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public enum CastingType
+    public enum CastType
     {
         ConstantEffect = 0,
         FireAndForget = 1,

@@ -4,6 +4,11 @@
         <name>Mutagen.Bethesda</name>
     </assembly>
     <members>
+        <member name="T:Mutagen.Bethesda.Skyrim.Phoneme.Slot">
+            <summary>
+            Enum representing the different phonemes a weight set can be applied to
+            </summary>
+        </member>
         <member name="T:Mutagen.Bethesda.Warmup">
             <summary>
             A static class to house initialization warmup logic
@@ -49,11 +54,6 @@
         <member name="T:Mutagen.Bethesda.Oblivion.CompareOperator">
             <summary>
             Different types of numeric comparison styles allowed in Oblivion
-            </summary>
-        </member>
-        <member name="T:Mutagen.Bethesda.Skyrim.Phoneme.Slot">
-            <summary>
-            Enum representing the different phonemes a weight set can be applied to
             </summary>
         </member>
     </members>

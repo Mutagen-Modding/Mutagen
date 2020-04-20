@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public enum Targeting
+    public enum TargetType
     {
         Self = 0,
         Touch = 1,

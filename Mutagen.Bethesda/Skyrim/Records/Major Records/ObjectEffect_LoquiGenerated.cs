@@ -37,6 +37,7 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IObjectEffectInternal,
         ILoquiObjectSetter<ObjectEffect>,
+        INamed,
         IEquatable<ObjectEffect>,
         IEqualsMask
     {
@@ -48,6 +49,53 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region ObjectBounds
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ObjectBounds _ObjectBounds = new ObjectBounds();
+        public ObjectBounds ObjectBounds
+        {
+            get => _ObjectBounds;
+            set => _ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectEffectGetter.ObjectBounds => _ObjectBounds;
+        #endregion
+        #region Name
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String? _Name;
+        public String? Name
+        {
+            get => this._Name;
+            set => this._Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IObjectEffectGetter.Name => this.Name;
+        #endregion
+        #region Data
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ObjectEffectData? _Data;
+        public ObjectEffectData? Data
+        {
+            get => _Data;
+            set => _Data = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectEffectDataGetter? IObjectEffectGetter.Data => this.Data;
+        #endregion
+        #region Effects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Effect> _Effects = new ExtendedList<Effect>();
+        public ExtendedList<Effect> Effects
+        {
+            get => this._Effects;
+            protected set => this._Effects = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IEffectGetter> IObjectEffectGetter.Effects => _Effects;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -218,6 +266,10 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.Name = initialValue;
+                this.Data = new MaskItem<TItem, ObjectEffectData.Mask<TItem>?>(initialValue, new ObjectEffectData.Mask<TItem>(initialValue));
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -227,7 +279,11 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem SkyrimMajorRecordFlags,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem ObjectBounds,
+                TItem Name,
+                TItem Data,
+                TItem Effects)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -237,6 +293,10 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.Name = Name;
+                this.Data = new MaskItem<TItem, ObjectEffectData.Mask<TItem>?>(Data, new ObjectEffectData.Mask<TItem>(Data));
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -245,6 +305,13 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem Name;
+            public MaskItem<TItem, ObjectEffectData.Mask<TItem>?>? Data { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>? Effects;
             #endregion
 
             #region Equals
@@ -258,11 +325,19 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.Effects, rhs.Effects)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.Name);
+                hash.Add(this.Data);
+                hash.Add(this.Effects);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -273,6 +348,29 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Name)) return false;
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
+                if (this.Effects != null)
+                {
+                    if (!eval(this.Effects.Overall)) return false;
+                    if (this.Effects.Specific != null)
+                    {
+                        foreach (var item in this.Effects.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -281,6 +379,29 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Name)) return true;
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
+                if (this.Effects != null)
+                {
+                    if (eval(this.Effects.Overall)) return true;
+                    if (this.Effects.Specific != null)
+                    {
+                        foreach (var item in this.Effects.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -296,6 +417,24 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.Name = eval(this.Name);
+                obj.Data = this.Data == null ? null : new MaskItem<R, ObjectEffectData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
+                if (Effects != null)
+                {
+                    obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect.Mask<R>?>>?>(eval(this.Effects.Overall), Enumerable.Empty<MaskItemIndexed<R, Effect.Mask<R>?>>());
+                    if (Effects.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Effect.Mask<R>?>>();
+                        obj.Effects.Specific = l;
+                        foreach (var item in Effects.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, Effect.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Effect.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -318,6 +457,41 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.ToString(fg);
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Data?.Overall ?? true)
+                    {
+                        Data?.ToString(fg);
+                    }
+                    if ((printMask?.Effects?.Overall ?? true)
+                        && Effects.TryGet(out var EffectsItem))
+                    {
+                        fg.AppendLine("Effects =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(EffectsItem.Overall);
+                            if (EffectsItem.Specific != null)
+                            {
+                                foreach (var subItem in EffectsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -329,12 +503,27 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? Name;
+            public MaskItem<Exception?, ObjectEffectData.ErrorMask?>? Data;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>? Effects;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 ObjectEffect_FieldIndex enu = (ObjectEffect_FieldIndex)index;
                 switch (enu)
                 {
+                    case ObjectEffect_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case ObjectEffect_FieldIndex.Name:
+                        return Name;
+                    case ObjectEffect_FieldIndex.Data:
+                        return Data;
+                    case ObjectEffect_FieldIndex.Effects:
+                        return Effects;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -345,6 +534,18 @@ namespace Mutagen.Bethesda.Skyrim
                 ObjectEffect_FieldIndex enu = (ObjectEffect_FieldIndex)index;
                 switch (enu)
                 {
+                    case ObjectEffect_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case ObjectEffect_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case ObjectEffect_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, ObjectEffectData.ErrorMask?>(ex, null);
+                        break;
+                    case ObjectEffect_FieldIndex.Effects:
+                        this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -356,6 +557,18 @@ namespace Mutagen.Bethesda.Skyrim
                 ObjectEffect_FieldIndex enu = (ObjectEffect_FieldIndex)index;
                 switch (enu)
                 {
+                    case ObjectEffect_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case ObjectEffect_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case ObjectEffect_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, ObjectEffectData.ErrorMask?>?)obj;
+                        break;
+                    case ObjectEffect_FieldIndex.Effects:
+                        this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -365,6 +578,10 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ObjectBounds != null) return true;
+                if (Name != null) return true;
+                if (Data != null) return true;
+                if (Effects != null) return true;
                 return false;
             }
             #endregion
@@ -400,6 +617,31 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                ObjectBounds?.ToString(fg);
+                fg.AppendItem(Name, "Name");
+                Data?.ToString(fg);
+                if (Effects.TryGet(out var EffectsItem))
+                {
+                    fg.AppendLine("Effects =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(EffectsItem.Overall);
+                        if (EffectsItem.Specific != null)
+                        {
+                            foreach (var subItem in EffectsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
             }
             #endregion
 
@@ -408,6 +650,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
+                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -429,19 +675,40 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
+            public bool Name;
+            public MaskItem<bool, ObjectEffectData.TranslationMask?> Data;
+            public MaskItem<bool, Effect.TranslationMask?> Effects;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
+                this.Name = defaultOn;
+                this.Data = new MaskItem<bool, ObjectEffectData.TranslationMask?>(defaultOn, null);
+                this.Effects = new MaskItem<bool, Effect.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
+                ret.Add((Name, null));
+                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
+            }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = ObjectEffect_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public override IEnumerable<ILinkGetter> Links => ObjectEffectCommon.Instance.GetLinks(this);
         public ObjectEffect(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -521,6 +788,10 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IObjectEffectInternal>
     {
+        new ObjectBounds ObjectBounds { get; set; }
+        new String? Name { get; set; }
+        new ObjectEffectData? Data { get; set; }
+        new ExtendedList<Effect> Effects { get; }
     }
 
     public partial interface IObjectEffectInternal :
@@ -534,8 +805,13 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         ILoquiObject<IObjectEffectGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
+        IObjectBoundsGetter ObjectBounds { get; }
+        String? Name { get; }
+        IObjectEffectDataGetter? Data { get; }
+        IReadOnlyList<IEffectGetter> Effects { get; }
 
     }
 
@@ -837,6 +1113,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         SkyrimMajorRecordFlags = 4,
         FormVersion = 5,
         Version2 = 6,
+        ObjectBounds = 7,
+        Name = 8,
+        Data = 9,
+        Effects = 10,
     }
     #endregion
 
@@ -854,9 +1134,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "0f27c016-189e-43f2-8328-927b0ace82d4";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(ObjectEffect.Mask<>);
 
@@ -886,6 +1166,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "OBJECTBOUNDS":
+                    return (ushort)ObjectEffect_FieldIndex.ObjectBounds;
+                case "NAME":
+                    return (ushort)ObjectEffect_FieldIndex.Name;
+                case "DATA":
+                    return (ushort)ObjectEffect_FieldIndex.Data;
+                case "EFFECTS":
+                    return (ushort)ObjectEffect_FieldIndex.Effects;
                 default:
                     return null;
             }
@@ -896,6 +1184,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ObjectEffect_FieldIndex enu = (ObjectEffect_FieldIndex)index;
             switch (enu)
             {
+                case ObjectEffect_FieldIndex.Effects:
+                    return true;
+                case ObjectEffect_FieldIndex.ObjectBounds:
+                case ObjectEffect_FieldIndex.Name:
+                case ObjectEffect_FieldIndex.Data:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -906,6 +1200,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ObjectEffect_FieldIndex enu = (ObjectEffect_FieldIndex)index;
             switch (enu)
             {
+                case ObjectEffect_FieldIndex.ObjectBounds:
+                case ObjectEffect_FieldIndex.Data:
+                case ObjectEffect_FieldIndex.Effects:
+                    return true;
+                case ObjectEffect_FieldIndex.Name:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -916,6 +1216,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ObjectEffect_FieldIndex enu = (ObjectEffect_FieldIndex)index;
             switch (enu)
             {
+                case ObjectEffect_FieldIndex.ObjectBounds:
+                case ObjectEffect_FieldIndex.Name:
+                case ObjectEffect_FieldIndex.Data:
+                case ObjectEffect_FieldIndex.Effects:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -926,6 +1231,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ObjectEffect_FieldIndex enu = (ObjectEffect_FieldIndex)index;
             switch (enu)
             {
+                case ObjectEffect_FieldIndex.ObjectBounds:
+                    return "ObjectBounds";
+                case ObjectEffect_FieldIndex.Name:
+                    return "Name";
+                case ObjectEffect_FieldIndex.Data:
+                    return "Data";
+                case ObjectEffect_FieldIndex.Effects:
+                    return "Effects";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -936,6 +1249,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ObjectEffect_FieldIndex enu = (ObjectEffect_FieldIndex)index;
             switch (enu)
             {
+                case ObjectEffect_FieldIndex.ObjectBounds:
+                case ObjectEffect_FieldIndex.Name:
+                case ObjectEffect_FieldIndex.Data:
+                case ObjectEffect_FieldIndex.Effects:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -946,6 +1264,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ObjectEffect_FieldIndex enu = (ObjectEffect_FieldIndex)index;
             switch (enu)
             {
+                case ObjectEffect_FieldIndex.ObjectBounds:
+                case ObjectEffect_FieldIndex.Name:
+                case ObjectEffect_FieldIndex.Data:
+                case ObjectEffect_FieldIndex.Effects:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -956,6 +1279,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ObjectEffect_FieldIndex enu = (ObjectEffect_FieldIndex)index;
             switch (enu)
             {
+                case ObjectEffect_FieldIndex.ObjectBounds:
+                    return typeof(ObjectBounds);
+                case ObjectEffect_FieldIndex.Name:
+                    return typeof(String);
+                case ObjectEffect_FieldIndex.Data:
+                    return typeof(ObjectEffectData);
+                case ObjectEffect_FieldIndex.Effects:
+                    return typeof(ExtendedList<Effect>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -963,9 +1294,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(ObjectEffectXmlWriteTranslation);
         public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
+        public static readonly RecordType OBND_HEADER = new RecordType("OBND");
+        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
+        public static readonly RecordType ENIT_HEADER = new RecordType("ENIT");
+        public static readonly RecordType EFID_HEADER = new RecordType("EFID");
+        public static readonly RecordType EFIT_HEADER = new RecordType("EFIT");
+        public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
         public static readonly RecordType TriggeringRecordType = ENCH_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
+        public const int NumTypedFields = 4;
         public static readonly Type BinaryWriteTranslation = typeof(ObjectEffectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1008,6 +1345,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IObjectEffectInternal item)
         {
             ClearPartial();
+            item.ObjectBounds = new ObjectBounds();
+            item.Name = default;
+            item.Data = null;
+            item.Effects.Clear();
             base.Clear(item);
         }
         
@@ -1112,6 +1453,62 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
         
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            IObjectEffectInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x444E424F: // OBND
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.ObjectBounds);
+                }
+                case 0x4C4C5546: // FULL
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.Name);
+                }
+                case 0x54494E45: // ENIT
+                {
+                    item.Data = Mutagen.Bethesda.Skyrim.ObjectEffectData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.Data);
+                }
+                case 0x44494645: // EFID
+                case 0x54494645: // EFIT
+                case 0x41445443: // CTDA
+                {
+                    item.Effects.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Effect_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out Effect listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<Effect>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.Effects);
+                }
+                default:
+                    return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
+        
         public virtual void CopyInFromBinary(
             IObjectEffectInternal item,
             MutagenFrame frame,
@@ -1176,6 +1573,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Effects = item.Effects.CollectionEqualsHelper(
+                rhs.Effects,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1227,12 +1635,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
+            {
+                fg.AppendItem(NameItem, "Name");
+            }
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data.TryGet(out var DataItem))
+            {
+                DataItem?.ToString(fg, "Data");
+            }
+            if (printMask?.Effects?.Overall ?? true)
+            {
+                fg.AppendLine("Effects =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Effects)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
         }
         
         public bool HasBeenSet(
             IObjectEffectGetter item,
             ObjectEffect.Mask<bool?> checkMask)
         {
+            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
+            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
+            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1242,6 +1685,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IObjectEffectGetter item,
             ObjectEffect.Mask<bool> mask)
         {
+            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
+            mask.Name = (item.Name != null);
+            var itemData = item.Data;
+            mask.Data = new MaskItem<bool, ObjectEffectData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
+            var EffectsItem = item.Effects;
+            mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect.Mask<bool>?>>?>(true, EffectsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1295,6 +1744,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            if (!lhs.Effects.SequenceEqual(rhs.Effects)) return false;
             return true;
         }
         
@@ -1319,6 +1772,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IObjectEffectGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.ObjectBounds);
+            if (item.Name.TryGet(out var Nameitem))
+            {
+                hash.Add(Nameitem);
+            }
+            if (item.Data.TryGet(out var Dataitem))
+            {
+                hash.Add(Dataitem);
+            }
+            hash.Add(item.Effects);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1345,6 +1808,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IEnumerable<ILinkGetter> GetLinks(IObjectEffectGetter obj)
         {
             foreach (var item in base.GetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.Data != null)
+            {
+                foreach (var item in obj.Data.Links)
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Effects.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -1394,6 +1868,82 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)ObjectEffect_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)ObjectEffect_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Data) ?? true))
+            {
+                errorMask?.PushIndex((int)ObjectEffect_FieldIndex.Data);
+                try
+                {
+                    if(rhs.Data.TryGet(out var rhsData))
+                    {
+                        item.Data = rhsData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)ObjectEffect_FieldIndex.Data));
+                    }
+                    else
+                    {
+                        item.Data = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Effects) ?? true))
+            {
+                errorMask?.PushIndex((int)ObjectEffect_FieldIndex.Effects);
+                try
+                {
+                    item.Effects.SetTo(
+                        rhs.Effects
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1536,6 +2086,63 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((translationMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.ObjectBounds) ?? true))
+            {
+                var ObjectBoundsItem = item.ObjectBounds;
+                ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
+                    item: ObjectBoundsItem,
+                    node: node,
+                    name: nameof(item.ObjectBounds),
+                    fieldIndex: (int)ObjectEffect_FieldIndex.ObjectBounds,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ObjectEffect_FieldIndex.ObjectBounds));
+            }
+            if ((item.Name != null)
+                && (translationMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Name) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)ObjectEffect_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if ((item.Data != null)
+                && (translationMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Data) ?? true))
+            {
+                if (item.Data.TryGet(out var DataItem))
+                {
+                    ((ObjectEffectDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                        item: DataItem,
+                        node: node,
+                        name: nameof(item.Data),
+                        fieldIndex: (int)ObjectEffect_FieldIndex.Data,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)ObjectEffect_FieldIndex.Data));
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Effects) ?? true))
+            {
+                ListXmlTranslation<IEffectGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Effects),
+                    item: item.Effects,
+                    fieldIndex: (int)ObjectEffect_FieldIndex.Effects,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ObjectEffect_FieldIndex.Effects),
+                    transl: (XElement subNode, IEffectGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        if (subItem.TryGet(out var Item))
+                        {
+                            ((EffectXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                                item: Item,
+                                node: subNode,
+                                name: null,
+                                errorMask: listSubMask,
+                                translationMask: listTranslMask);
+                        }
+                    });
+            }
         }
 
         public void Write(
@@ -1643,6 +2250,90 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "ObjectBounds":
+                    errorMask?.PushIndex((int)ObjectEffect_FieldIndex.ObjectBounds);
+                    try
+                    {
+                        item.ObjectBounds = LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)ObjectEffect_FieldIndex.ObjectBounds));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Name":
+                    errorMask?.PushIndex((int)ObjectEffect_FieldIndex.Name);
+                    try
+                    {
+                        item.Name = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Data":
+                    errorMask?.PushIndex((int)ObjectEffect_FieldIndex.Data);
+                    try
+                    {
+                        item.Data = LoquiXmlTranslation<ObjectEffectData>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)ObjectEffect_FieldIndex.Data));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Effects":
+                    errorMask?.PushIndex((int)ObjectEffect_FieldIndex.Effects);
+                    try
+                    {
+                        if (ListXmlTranslation<Effect>.Instance.Parse(
+                            node: node,
+                            enumer: out var EffectsItem,
+                            transl: LoquiXmlTranslation<Effect>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Effects.SetTo(EffectsItem);
+                        }
+                        else
+                        {
+                            item.Effects.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1729,6 +2420,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ObjectEffectBinaryWriteTranslation Instance = new ObjectEffectBinaryWriteTranslation();
 
+        public static void WriteRecordTypes(
+            IObjectEffectGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: recordTypeConverter.ConvertToCustom(ObjectEffect_Registration.FULL_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            if (item.Data.TryGet(out var DataItem))
+            {
+                ((ObjectEffectDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                    item: DataItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IEffectGetter>.Instance.Write(
+                writer: writer,
+                items: item.Effects,
+                transl: (MutagenWriter subWriter, IEffectGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    if (subItem.TryGet(out var Item))
+                    {
+                        ((EffectBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            recordTypeConverter: conv);
+                    }
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             IObjectEffectGetter item,
@@ -1742,7 +2474,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1822,6 +2554,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IObjectEffectGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => ObjectEffectCommon.Instance.GetLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => ObjectEffectXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
@@ -1849,6 +2582,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private bool _ObjectBounds_IsSet => _ObjectBoundsLocation.HasValue;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBounds_IsSet ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation!.Value.Min)), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
+        #endregion
+        #region Data
+        private RangeInt32? _DataLocation;
+        private bool _Data_IsSet => _DataLocation.HasValue;
+        public IObjectEffectDataGetter? Data => _Data_IsSet ? ObjectEffectDataBinaryOverlay.ObjectEffectDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Data_IsSet => _DataLocation.HasValue;
+        #endregion
+        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = ListExt.Empty<EffectBinaryOverlay>();
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -1888,6 +2638,53 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case 0x444E424F: // OBND
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.ObjectBounds);
+                }
+                case 0x4C4C5546: // FULL
+                {
+                    _NameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.Name);
+                }
+                case 0x54494E45: // ENIT
+                {
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.Data);
+                }
+                case 0x44494645: // EFID
+                case 0x54494645: // EFIT
+                case 0x41445443: // CTDA
+                {
+                    this.Effects = this.ParseRepeatedTypelessSubrecord<EffectBinaryOverlay>(
+                        stream: stream,
+                        recordTypeConverter: recordTypeConverter,
+                        trigger: Effect_Registration.TriggeringRecordTypes,
+                        factory:  EffectBinaryOverlay.EffectFactory);
+                    return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.Effects);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
         #region To String
 
         public override void ToString(

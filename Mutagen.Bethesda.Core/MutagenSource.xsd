@@ -55,6 +55,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="endMarker" type="xs:string" >
+            <xs:annotation>
+              <xs:documentation>
+                Optional ending marker
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>

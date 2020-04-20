@@ -50,14 +50,14 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region ObjectBounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ObjectBounds? _ObjectBounds;
-        public ObjectBounds? ObjectBounds
+        private ObjectBounds _ObjectBounds = new ObjectBounds();
+        public ObjectBounds ObjectBounds
         {
             get => _ObjectBounds;
-            set => _ObjectBounds = value;
+            set => _ObjectBounds = value ?? new ObjectBounds();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter? ISoundMarkerGetter.ObjectBounds => this.ObjectBounds;
+        IObjectBoundsGetter ISoundMarkerGetter.ObjectBounds => _ObjectBounds;
         #endregion
         #region FNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -696,7 +696,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<ISoundMarkerInternal>
     {
-        new ObjectBounds? ObjectBounds { get; set; }
+        new ObjectBounds ObjectBounds { get; set; }
         new Byte[]? FNAM { get; set; }
         new Byte[]? SNDD { get; set; }
         new IFormLinkNullable<SoundDescriptor> SoundDescriptor { get; }
@@ -716,7 +716,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkContainer,
         IBinaryItem
     {
-        IObjectBoundsGetter? ObjectBounds { get; }
+        IObjectBoundsGetter ObjectBounds { get; }
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
         ReadOnlyMemorySlice<Byte>? SNDD { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> SoundDescriptor { get; }
@@ -1250,7 +1250,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ISoundMarkerInternal item)
         {
             ClearPartial();
-            item.ObjectBounds = null;
+            item.ObjectBounds = new ObjectBounds();
             item.FNAM = default;
             item.SNDD = default;
             item.SoundDescriptor.FormKey = null;
@@ -1467,11 +1467,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.ObjectBounds = EqualsMaskHelper.EqualsHelper(
-                item.ObjectBounds,
-                rhs.ObjectBounds,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.FNAM = MemorySliceExt.Equal(item.FNAM, rhs.FNAM);
             ret.SNDD = MemorySliceExt.Equal(item.SNDD, rhs.SNDD);
             ret.SoundDescriptor = object.Equals(item.SoundDescriptor, rhs.SoundDescriptor);
@@ -1526,10 +1522,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if ((printMask?.ObjectBounds?.Overall ?? true)
-                && item.ObjectBounds.TryGet(out var ObjectBoundsItem))
+            if (printMask?.ObjectBounds?.Overall ?? true)
             {
-                ObjectBoundsItem?.ToString(fg, "ObjectBounds");
+                item.ObjectBounds?.ToString(fg, "ObjectBounds");
             }
             if ((printMask?.FNAM ?? true)
                 && item.FNAM.TryGet(out var FNAMItem))
@@ -1552,8 +1547,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISoundMarkerGetter item,
             SoundMarker.Mask<bool?> checkMask)
         {
-            if (checkMask.ObjectBounds?.Overall.HasValue ?? false && checkMask.ObjectBounds.Overall.Value != (item.ObjectBounds != null)) return false;
-            if (checkMask.ObjectBounds?.Specific != null && (item.ObjectBounds == null || !item.ObjectBounds.HasBeenSet(checkMask.ObjectBounds.Specific))) return false;
             if (checkMask.FNAM.HasValue && checkMask.FNAM.Value != (item.FNAM != null)) return false;
             if (checkMask.SNDD.HasValue && checkMask.SNDD.Value != (item.SNDD != null)) return false;
             if (checkMask.SoundDescriptor.HasValue && checkMask.SoundDescriptor.Value != (item.SoundDescriptor.FormKey != null)) return false;
@@ -1566,8 +1559,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISoundMarkerGetter item,
             SoundMarker.Mask<bool> mask)
         {
-            var itemObjectBounds = item.ObjectBounds;
-            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(itemObjectBounds != null, itemObjectBounds?.GetHasBeenSetMask());
+            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
             mask.FNAM = (item.FNAM != null);
             mask.SNDD = (item.SNDD != null);
             mask.SoundDescriptor = (item.SoundDescriptor.FormKey != null);
@@ -1652,10 +1644,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ISoundMarkerGetter item)
         {
             var hash = new HashCode();
-            if (item.ObjectBounds.TryGet(out var ObjectBoundsitem))
-            {
-                hash.Add(ObjectBoundsitem);
-            }
+            hash.Add(item.ObjectBounds);
             if (item.FNAM.TryGet(out var FNAMItem))
             {
                 hash.Add(FNAMItem);
@@ -1749,15 +1738,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)SoundMarker_FieldIndex.ObjectBounds);
                 try
                 {
-                    if(rhs.ObjectBounds.TryGet(out var rhsObjectBounds))
+                    if ((copyMask?.GetShouldTranslate((int)SoundMarker_FieldIndex.ObjectBounds) ?? true))
                     {
-                        item.ObjectBounds = rhsObjectBounds.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)SoundMarker_FieldIndex.ObjectBounds));
-                    }
-                    else
-                    {
-                        item.ObjectBounds = default;
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)SoundMarker_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
                     }
                 }
                 catch (Exception ex)
@@ -1938,19 +1923,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if ((item.ObjectBounds != null)
-                && (translationMask?.GetShouldTranslate((int)SoundMarker_FieldIndex.ObjectBounds) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)SoundMarker_FieldIndex.ObjectBounds) ?? true))
             {
-                if (item.ObjectBounds.TryGet(out var ObjectBoundsItem))
-                {
-                    ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
-                        item: ObjectBoundsItem,
-                        node: node,
-                        name: nameof(item.ObjectBounds),
-                        fieldIndex: (int)SoundMarker_FieldIndex.ObjectBounds,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)SoundMarker_FieldIndex.ObjectBounds));
-                }
+                var ObjectBoundsItem = item.ObjectBounds;
+                ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
+                    item: ObjectBoundsItem,
+                    node: node,
+                    name: nameof(item.ObjectBounds),
+                    fieldIndex: (int)SoundMarker_FieldIndex.ObjectBounds,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SoundMarker_FieldIndex.ObjectBounds));
             }
             if ((item.FNAM != null)
                 && (translationMask?.GetShouldTranslate((int)SoundMarker_FieldIndex.FNAM) ?? true))
@@ -2257,13 +2239,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.ObjectBounds.TryGet(out var ObjectBoundsItem))
-            {
-                ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
-                    item: ObjectBoundsItem,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
-            }
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FNAM,
@@ -2402,8 +2382,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
         private bool _ObjectBounds_IsSet => _ObjectBoundsLocation.HasValue;
-        public IObjectBoundsGetter? ObjectBounds => _ObjectBounds_IsSet ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
-        public bool ObjectBounds_IsSet => _ObjectBoundsLocation.HasValue;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBounds_IsSet ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation!.Value.Min)), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
         #region FNAM
         private int? _FNAMLocation;

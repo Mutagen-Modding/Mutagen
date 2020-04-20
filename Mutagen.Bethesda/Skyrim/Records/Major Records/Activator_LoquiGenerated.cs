@@ -33,21 +33,43 @@ using System.Buffers.Binary;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class TextureSet :
+    public partial class Activator :
         SkyrimMajorRecord,
-        ITextureSetInternal,
-        ILoquiObjectSetter<TextureSet>,
-        IEquatable<TextureSet>,
+        IActivatorInternal,
+        ILoquiObjectSetter<Activator>,
+        IEquatable<Activator>,
         IEqualsMask
     {
         #region Ctor
-        protected TextureSet()
+        protected Activator()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IActivatorGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #region Name
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String? _Name;
+        public String? Name
+        {
+            get => this._Name;
+            set => this._Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IActivatorGetter.Name => this.Name;
+        #endregion
         #region ObjectBounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ObjectBounds _ObjectBounds = new ObjectBounds();
@@ -57,40 +79,7 @@ namespace Mutagen.Bethesda.Skyrim
             set => _ObjectBounds = value ?? new ObjectBounds();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter ITextureSetGetter.ObjectBounds => _ObjectBounds;
-        #endregion
-        #region Textures
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Textures? _Textures;
-        public Textures? Textures
-        {
-            get => _Textures;
-            set => _Textures = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITexturesGetter? ITextureSetGetter.Textures => this.Textures;
-        #endregion
-        #region Decal
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Decal? _Decal;
-        public Decal? Decal
-        {
-            get => _Decal;
-            set => _Decal = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IDecalGetter? ITextureSetGetter.Decal => this.Decal;
-        #endregion
-        #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private TextureSet.Flag? _Flags;
-        public TextureSet.Flag? Flags
-        {
-            get => this._Flags;
-            set => this._Flags = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        TextureSet.Flag? ITextureSetGetter.Flags => this.Flags;
+        IObjectBoundsGetter IActivatorGetter.ObjectBounds => _ObjectBounds;
         #endregion
 
         #region To String
@@ -99,7 +88,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            TextureSetMixIn.ToString(
+            ActivatorMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -109,29 +98,29 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ITextureSetGetter rhs)) return false;
-            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IActivatorGetter rhs)) return false;
+            return ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(TextureSet obj)
+        public bool Equals(Activator obj)
         {
-            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => TextureSetXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => ActivatorXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((TextureSetXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((ActivatorXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -140,9 +129,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static new TextureSet CreateFromXml(
+        public static new Activator CreateFromXml(
             XElement node,
-            TextureSet.TranslationMask? translationMask = null)
+            Activator.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -151,27 +140,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static TextureSet CreateFromXml(
+        public static Activator CreateFromXml(
             XElement node,
-            out TextureSet.ErrorMask errorMask,
-            TextureSet.TranslationMask? translationMask = null)
+            out Activator.ErrorMask errorMask,
+            Activator.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = TextureSet.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Activator.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public new static TextureSet CreateFromXml(
+        public new static Activator CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new TextureSet();
-            ((TextureSetSetterCommon)((ITextureSetGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new Activator();
+            ((ActivatorSetterCommon)((IActivatorGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -179,9 +168,9 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static TextureSet CreateFromXml(
+        public static Activator CreateFromXml(
             string path,
-            TextureSet.TranslationMask? translationMask = null)
+            Activator.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -189,10 +178,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static TextureSet CreateFromXml(
+        public static Activator CreateFromXml(
             string path,
-            out TextureSet.ErrorMask errorMask,
-            TextureSet.TranslationMask? translationMask = null)
+            out Activator.ErrorMask errorMask,
+            Activator.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -201,10 +190,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static TextureSet CreateFromXml(
+        public static Activator CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            TextureSet.TranslationMask? translationMask = null)
+            Activator.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -213,9 +202,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static TextureSet CreateFromXml(
+        public static Activator CreateFromXml(
             Stream stream,
-            TextureSet.TranslationMask? translationMask = null)
+            Activator.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -223,10 +212,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static TextureSet CreateFromXml(
+        public static Activator CreateFromXml(
             Stream stream,
-            out TextureSet.ErrorMask errorMask,
-            TextureSet.TranslationMask? translationMask = null)
+            out Activator.ErrorMask errorMask,
+            Activator.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -235,10 +224,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static TextureSet CreateFromXml(
+        public static Activator CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            TextureSet.TranslationMask? translationMask = null)
+            Activator.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -262,10 +251,9 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
+                this.Name = initialValue;
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
-                this.Textures = new MaskItem<TItem, Textures.Mask<TItem>?>(initialValue, new Textures.Mask<TItem>(initialValue));
-                this.Decal = new MaskItem<TItem, Decal.Mask<TItem>?>(initialValue, new Decal.Mask<TItem>(initialValue));
-                this.Flags = initialValue;
             }
 
             public Mask(
@@ -276,10 +264,9 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem SkyrimMajorRecordFlags,
                 TItem FormVersion,
                 TItem Version2,
-                TItem ObjectBounds,
-                TItem Textures,
-                TItem Decal,
-                TItem Flags)
+                TItem VirtualMachineAdapter,
+                TItem Name,
+                TItem ObjectBounds)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -289,10 +276,9 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
+                this.Name = Name;
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
-                this.Textures = new MaskItem<TItem, Textures.Mask<TItem>?>(Textures, new Textures.Mask<TItem>(Textures));
-                this.Decal = new MaskItem<TItem, Decal.Mask<TItem>?>(Decal, new Decal.Mask<TItem>(Decal));
-                this.Flags = Flags;
             }
 
             #pragma warning disable CS8618
@@ -304,10 +290,9 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
+            public TItem Name;
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
-            public MaskItem<TItem, Textures.Mask<TItem>?>? Textures { get; set; }
-            public MaskItem<TItem, Decal.Mask<TItem>?>? Decal { get; set; }
-            public TItem Flags;
             #endregion
 
             #region Equals
@@ -321,19 +306,17 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
-                if (!object.Equals(this.Textures, rhs.Textures)) return false;
-                if (!object.Equals(this.Decal, rhs.Decal)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
+                hash.Add(this.Name);
                 hash.Add(this.ObjectBounds);
-                hash.Add(this.Textures);
-                hash.Add(this.Decal);
-                hash.Add(this.Flags);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -344,22 +327,17 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Name)) return false;
                 if (ObjectBounds != null)
                 {
                     if (!eval(this.ObjectBounds.Overall)) return false;
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
-                if (Textures != null)
-                {
-                    if (!eval(this.Textures.Overall)) return false;
-                    if (this.Textures.Specific != null && !this.Textures.Specific.All(eval)) return false;
-                }
-                if (Decal != null)
-                {
-                    if (!eval(this.Decal.Overall)) return false;
-                    if (this.Decal.Specific != null && !this.Decal.Specific.All(eval)) return false;
-                }
-                if (!eval(this.Flags)) return false;
                 return true;
             }
             #endregion
@@ -368,22 +346,17 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Name)) return true;
                 if (ObjectBounds != null)
                 {
                     if (eval(this.ObjectBounds.Overall)) return true;
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
-                if (Textures != null)
-                {
-                    if (eval(this.Textures.Overall)) return true;
-                    if (this.Textures.Specific != null && this.Textures.Specific.Any(eval)) return true;
-                }
-                if (Decal != null)
-                {
-                    if (eval(this.Decal.Overall)) return true;
-                    if (this.Decal.Specific != null && this.Decal.Specific.Any(eval)) return true;
-                }
-                if (eval(this.Flags)) return true;
                 return false;
             }
             #endregion
@@ -391,7 +364,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new TextureSet.Mask<R>();
+                var ret = new Activator.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -399,10 +372,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
+                obj.Name = eval(this.Name);
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
-                obj.Textures = this.Textures == null ? null : new MaskItem<R, Textures.Mask<R>?>(eval(this.Textures.Overall), this.Textures.Specific?.Translate(eval));
-                obj.Decal = this.Decal == null ? null : new MaskItem<R, Decal.Mask<R>?>(eval(this.Decal.Overall), this.Decal.Specific?.Translate(eval));
-                obj.Flags = eval(this.Flags);
             }
             #endregion
 
@@ -412,34 +384,30 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(TextureSet.Mask<bool>? printMask = null)
+            public string ToString(Activator.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, TextureSet.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, Activator.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(TextureSet.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(Activator.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.ToString(fg);
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendItem(Name, "Name");
+                    }
                     if (printMask?.ObjectBounds?.Overall ?? true)
                     {
                         ObjectBounds?.ToString(fg);
-                    }
-                    if (printMask?.Textures?.Overall ?? true)
-                    {
-                        Textures?.ToString(fg);
-                    }
-                    if (printMask?.Decal?.Overall ?? true)
-                    {
-                        Decal?.ToString(fg);
-                    }
-                    if (printMask?.Flags ?? true)
-                    {
-                        fg.AppendItem(Flags, "Flags");
                     }
                 }
                 fg.AppendLine("]");
@@ -453,26 +421,23 @@ namespace Mutagen.Bethesda.Skyrim
             IErrorMask<ErrorMask>
         {
             #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
+            public Exception? Name;
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
-            public MaskItem<Exception?, Textures.ErrorMask?>? Textures;
-            public MaskItem<Exception?, Decal.ErrorMask?>? Decal;
-            public Exception? Flags;
             #endregion
 
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                TextureSet_FieldIndex enu = (TextureSet_FieldIndex)index;
+                Activator_FieldIndex enu = (Activator_FieldIndex)index;
                 switch (enu)
                 {
-                    case TextureSet_FieldIndex.ObjectBounds:
+                    case Activator_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
+                    case Activator_FieldIndex.Name:
+                        return Name;
+                    case Activator_FieldIndex.ObjectBounds:
                         return ObjectBounds;
-                    case TextureSet_FieldIndex.Textures:
-                        return Textures;
-                    case TextureSet_FieldIndex.Decal:
-                        return Decal;
-                    case TextureSet_FieldIndex.Flags:
-                        return Flags;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -480,20 +445,17 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthException(int index, Exception ex)
             {
-                TextureSet_FieldIndex enu = (TextureSet_FieldIndex)index;
+                Activator_FieldIndex enu = (Activator_FieldIndex)index;
                 switch (enu)
                 {
-                    case TextureSet_FieldIndex.ObjectBounds:
+                    case Activator_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
+                    case Activator_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Activator_FieldIndex.ObjectBounds:
                         this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
-                        break;
-                    case TextureSet_FieldIndex.Textures:
-                        this.Textures = new MaskItem<Exception?, Textures.ErrorMask?>(ex, null);
-                        break;
-                    case TextureSet_FieldIndex.Decal:
-                        this.Decal = new MaskItem<Exception?, Decal.ErrorMask?>(ex, null);
-                        break;
-                    case TextureSet_FieldIndex.Flags:
-                        this.Flags = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -503,20 +465,17 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthMask(int index, object obj)
             {
-                TextureSet_FieldIndex enu = (TextureSet_FieldIndex)index;
+                Activator_FieldIndex enu = (Activator_FieldIndex)index;
                 switch (enu)
                 {
-                    case TextureSet_FieldIndex.ObjectBounds:
+                    case Activator_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
+                    case Activator_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Activator_FieldIndex.ObjectBounds:
                         this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
-                        break;
-                    case TextureSet_FieldIndex.Textures:
-                        this.Textures = (MaskItem<Exception?, Textures.ErrorMask?>?)obj;
-                        break;
-                    case TextureSet_FieldIndex.Decal:
-                        this.Decal = (MaskItem<Exception?, Decal.ErrorMask?>?)obj;
-                        break;
-                    case TextureSet_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -527,10 +486,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
+                if (Name != null) return true;
                 if (ObjectBounds != null) return true;
-                if (Textures != null) return true;
-                if (Decal != null) return true;
-                if (Flags != null) return true;
                 return false;
             }
             #endregion
@@ -566,10 +524,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                VirtualMachineAdapter?.ToString(fg);
+                fg.AppendItem(Name, "Name");
                 ObjectBounds?.ToString(fg);
-                Textures?.ToString(fg);
-                Decal?.ToString(fg);
-                fg.AppendItem(Flags, "Flags");
             }
             #endregion
 
@@ -578,10 +535,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
+                ret.Name = this.Name.Combine(rhs.Name);
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
-                ret.Textures = this.Textures.Combine(rhs.Textures, (l, r) => l.Combine(r));
-                ret.Decal = this.Decal.Combine(rhs.Decal, (l, r) => l.Combine(r));
-                ret.Flags = this.Flags.Combine(rhs.Flags);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -604,20 +560,18 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
+            public MaskItem<bool, VirtualMachineAdapter.TranslationMask?> VirtualMachineAdapter;
+            public bool Name;
             public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
-            public MaskItem<bool, Textures.TranslationMask?> Textures;
-            public MaskItem<bool, Decal.TranslationMask?> Decal;
-            public bool Flags;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.TranslationMask?>(defaultOn, null);
+                this.Name = defaultOn;
                 this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
-                this.Textures = new MaskItem<bool, Textures.TranslationMask?>(defaultOn, null);
-                this.Decal = new MaskItem<bool, Decal.TranslationMask?>(defaultOn, null);
-                this.Flags = defaultOn;
             }
 
             #endregion
@@ -625,28 +579,29 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter?.Overall ?? true, VirtualMachineAdapter?.Specific?.GetCrystal()));
+                ret.Add((Name, null));
                 ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
-                ret.Add((Textures?.Overall ?? true, Textures?.Specific?.GetCrystal()));
-                ret.Add((Decal?.Overall ?? true, Decal?.Specific?.GetCrystal()));
-                ret.Add((Flags, null));
             }
         }
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = TextureSet_Registration.TriggeringRecordType;
-        public TextureSet(FormKey formKey)
+        public new static readonly RecordType GrupRecordType = Activator_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public override IEnumerable<ILinkGetter> Links => ActivatorCommon.Instance.GetLinks(this);
+        public Activator(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        public TextureSet(IMod mod)
+        public Activator(IMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public TextureSet(IMod mod, string editorID)
+        public Activator(IMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -656,31 +611,31 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => TextureSetBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ActivatorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((TextureSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ActivatorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static new TextureSet CreateFromBinary(MutagenFrame frame)
+        public static new Activator CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public new static TextureSet CreateFromBinary(
+        public new static Activator CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new TextureSet();
-            ((TextureSetSetterCommon)((ITextureSetGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new Activator();
+            ((ActivatorSetterCommon)((IActivatorGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -693,92 +648,91 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITextureSetGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IActivatorGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((TextureSetSetterCommon)((ITextureSetGetter)this).CommonSetterInstance()!).Clear(this);
+            ((ActivatorSetterCommon)((IActivatorGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new TextureSet GetNew()
+        internal static new Activator GetNew()
         {
-            return new TextureSet();
+            return new Activator();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface ITextureSet :
-        ITextureSetGetter,
+    public partial interface IActivator :
+        IActivatorGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<ITextureSetInternal>
+        ILoquiObjectSetter<IActivatorInternal>
     {
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
+        new String? Name { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
-        new Textures? Textures { get; set; }
-        new Decal? Decal { get; set; }
-        new TextureSet.Flag? Flags { get; set; }
     }
 
-    public partial interface ITextureSetInternal :
+    public partial interface IActivatorInternal :
         ISkyrimMajorRecordInternal,
-        ITextureSet,
-        ITextureSetGetter
+        IActivator,
+        IActivatorGetter
     {
     }
 
-    public partial interface ITextureSetGetter :
+    public partial interface IActivatorGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<ITextureSetGetter>,
+        ILoquiObject<IActivatorGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        String? Name { get; }
         IObjectBoundsGetter ObjectBounds { get; }
-        ITexturesGetter? Textures { get; }
-        IDecalGetter? Decal { get; }
-        TextureSet.Flag? Flags { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class TextureSetMixIn
+    public static partial class ActivatorMixIn
     {
-        public static void Clear(this ITextureSetInternal item)
+        public static void Clear(this IActivatorInternal item)
         {
-            ((TextureSetSetterCommon)((ITextureSetGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((ActivatorSetterCommon)((IActivatorGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static TextureSet.Mask<bool> GetEqualsMask(
-            this ITextureSetGetter item,
-            ITextureSetGetter rhs,
+        public static Activator.Mask<bool> GetEqualsMask(
+            this IActivatorGetter item,
+            IActivatorGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((ActivatorCommon)((IActivatorGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this ITextureSetGetter item,
+            this IActivatorGetter item,
             string? name = null,
-            TextureSet.Mask<bool>? printMask = null)
+            Activator.Mask<bool>? printMask = null)
         {
-            return ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).ToString(
+            return ((ActivatorCommon)((IActivatorGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this ITextureSetGetter item,
+            this IActivatorGetter item,
             FileGeneration fg,
             string? name = null,
-            TextureSet.Mask<bool>? printMask = null)
+            Activator.Mask<bool>? printMask = null)
         {
-            ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).ToString(
+            ((ActivatorCommon)((IActivatorGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -786,86 +740,86 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this ITextureSetGetter item,
-            TextureSet.Mask<bool?> checkMask)
+            this IActivatorGetter item,
+            Activator.Mask<bool?> checkMask)
         {
-            return ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).HasBeenSet(
+            return ((ActivatorCommon)((IActivatorGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static TextureSet.Mask<bool> GetHasBeenSetMask(this ITextureSetGetter item)
+        public static Activator.Mask<bool> GetHasBeenSetMask(this IActivatorGetter item)
         {
-            var ret = new TextureSet.Mask<bool>(false);
-            ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new Activator.Mask<bool>(false);
+            ((ActivatorCommon)((IActivatorGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this ITextureSetGetter item,
-            ITextureSetGetter rhs)
+            this IActivatorGetter item,
+            IActivatorGetter rhs)
         {
-            return ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).Equals(
+            return ((ActivatorCommon)((IActivatorGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this ITextureSetInternal lhs,
-            ITextureSetGetter rhs,
-            out TextureSet.ErrorMask errorMask,
-            TextureSet.TranslationMask? copyMask = null)
+            this IActivatorInternal lhs,
+            IActivatorGetter rhs,
+            out Activator.ErrorMask errorMask,
+            Activator.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((TextureSetSetterTranslationCommon)((ITextureSetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ActivatorSetterTranslationCommon)((IActivatorGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = TextureSet.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Activator.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this ITextureSetInternal lhs,
-            ITextureSetGetter rhs,
+            this IActivatorInternal lhs,
+            IActivatorGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((TextureSetSetterTranslationCommon)((ITextureSetGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ActivatorSetterTranslationCommon)((IActivatorGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static TextureSet DeepCopy(
-            this ITextureSetGetter item,
-            TextureSet.TranslationMask? copyMask = null)
+        public static Activator DeepCopy(
+            this IActivatorGetter item,
+            Activator.TranslationMask? copyMask = null)
         {
-            return ((TextureSetSetterTranslationCommon)((ITextureSetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ActivatorSetterTranslationCommon)((IActivatorGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static TextureSet DeepCopy(
-            this ITextureSetGetter item,
-            out TextureSet.ErrorMask errorMask,
-            TextureSet.TranslationMask? copyMask = null)
+        public static Activator DeepCopy(
+            this IActivatorGetter item,
+            out Activator.ErrorMask errorMask,
+            Activator.TranslationMask? copyMask = null)
         {
-            return ((TextureSetSetterTranslationCommon)((ITextureSetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ActivatorSetterTranslationCommon)((IActivatorGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static TextureSet DeepCopy(
-            this ITextureSetGetter item,
+        public static Activator DeepCopy(
+            this IActivatorGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((TextureSetSetterTranslationCommon)((ITextureSetGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ActivatorSetterTranslationCommon)((IActivatorGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -874,9 +828,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this ITextureSetInternal item,
+            this IActivatorInternal item,
             XElement node,
-            TextureSet.TranslationMask? translationMask = null)
+            Activator.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -887,10 +841,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this ITextureSetInternal item,
+            this IActivatorInternal item,
             XElement node,
-            out TextureSet.ErrorMask errorMask,
-            TextureSet.TranslationMask? translationMask = null)
+            out Activator.ErrorMask errorMask,
+            Activator.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -898,16 +852,16 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = TextureSet.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Activator.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this ITextureSetInternal item,
+            this IActivatorInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((TextureSetSetterCommon)((ITextureSetGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((ActivatorSetterCommon)((IActivatorGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -915,9 +869,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this ITextureSetInternal item,
+            this IActivatorInternal item,
             string path,
-            TextureSet.TranslationMask? translationMask = null)
+            Activator.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -927,10 +881,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this ITextureSetInternal item,
+            this IActivatorInternal item,
             string path,
-            out TextureSet.ErrorMask errorMask,
-            TextureSet.TranslationMask? translationMask = null)
+            out Activator.ErrorMask errorMask,
+            Activator.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -941,10 +895,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this ITextureSetInternal item,
+            this IActivatorInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            TextureSet.TranslationMask? translationMask = null)
+            Activator.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -955,9 +909,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this ITextureSetInternal item,
+            this IActivatorInternal item,
             Stream stream,
-            TextureSet.TranslationMask? translationMask = null)
+            Activator.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -967,10 +921,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this ITextureSetInternal item,
+            this IActivatorInternal item,
             Stream stream,
-            out TextureSet.ErrorMask errorMask,
-            TextureSet.TranslationMask? translationMask = null)
+            out Activator.ErrorMask errorMask,
+            Activator.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -981,10 +935,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this ITextureSetInternal item,
+            this IActivatorInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            TextureSet.TranslationMask? translationMask = null)
+            Activator.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -999,7 +953,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this ITextureSetInternal item,
+            this IActivatorInternal item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -1009,11 +963,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromBinary(
-            this ITextureSetInternal item,
+            this IActivatorInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((TextureSetSetterCommon)((ITextureSetGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((ActivatorSetterCommon)((IActivatorGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -1029,7 +983,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum TextureSet_FieldIndex
+    public enum Activator_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1038,48 +992,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         SkyrimMajorRecordFlags = 4,
         FormVersion = 5,
         Version2 = 6,
-        ObjectBounds = 7,
-        Textures = 8,
-        Decal = 9,
-        Flags = 10,
+        VirtualMachineAdapter = 7,
+        Name = 8,
+        ObjectBounds = 9,
     }
     #endregion
 
     #region Registration
-    public partial class TextureSet_Registration : ILoquiRegistration
+    public partial class Activator_Registration : ILoquiRegistration
     {
-        public static readonly TextureSet_Registration Instance = new TextureSet_Registration();
+        public static readonly Activator_Registration Instance = new Activator_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 22,
+            msgID: 144,
             version: 0);
 
-        public const string GUID = "7d698f54-6430-49c7-ab37-7649204e689b";
+        public const string GUID = "ec45e095-71e5-410d-a22b-ad98bead29c6";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 10;
 
-        public static readonly Type MaskType = typeof(TextureSet.Mask<>);
+        public static readonly Type MaskType = typeof(Activator.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(TextureSet.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Activator.ErrorMask);
 
-        public static readonly Type ClassType = typeof(TextureSet);
+        public static readonly Type ClassType = typeof(Activator);
 
-        public static readonly Type GetterType = typeof(ITextureSetGetter);
+        public static readonly Type GetterType = typeof(IActivatorGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(ITextureSet);
+        public static readonly Type SetterType = typeof(IActivator);
 
-        public static readonly Type? InternalSetterType = typeof(ITextureSetInternal);
+        public static readonly Type? InternalSetterType = typeof(IActivatorInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.TextureSet";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.Activator";
 
-        public const string Name = "TextureSet";
+        public const string Name = "Activator";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -1091,14 +1044,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "VIRTUALMACHINEADAPTER":
+                    return (ushort)Activator_FieldIndex.VirtualMachineAdapter;
+                case "NAME":
+                    return (ushort)Activator_FieldIndex.Name;
                 case "OBJECTBOUNDS":
-                    return (ushort)TextureSet_FieldIndex.ObjectBounds;
-                case "TEXTURES":
-                    return (ushort)TextureSet_FieldIndex.Textures;
-                case "DECAL":
-                    return (ushort)TextureSet_FieldIndex.Decal;
-                case "FLAGS":
-                    return (ushort)TextureSet_FieldIndex.Flags;
+                    return (ushort)Activator_FieldIndex.ObjectBounds;
                 default:
                     return null;
             }
@@ -1106,13 +1057,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            TextureSet_FieldIndex enu = (TextureSet_FieldIndex)index;
+            Activator_FieldIndex enu = (Activator_FieldIndex)index;
             switch (enu)
             {
-                case TextureSet_FieldIndex.ObjectBounds:
-                case TextureSet_FieldIndex.Textures:
-                case TextureSet_FieldIndex.Decal:
-                case TextureSet_FieldIndex.Flags:
+                case Activator_FieldIndex.VirtualMachineAdapter:
+                case Activator_FieldIndex.Name:
+                case Activator_FieldIndex.ObjectBounds:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1121,14 +1071,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            TextureSet_FieldIndex enu = (TextureSet_FieldIndex)index;
+            Activator_FieldIndex enu = (Activator_FieldIndex)index;
             switch (enu)
             {
-                case TextureSet_FieldIndex.ObjectBounds:
-                case TextureSet_FieldIndex.Textures:
-                case TextureSet_FieldIndex.Decal:
+                case Activator_FieldIndex.VirtualMachineAdapter:
+                case Activator_FieldIndex.ObjectBounds:
                     return true;
-                case TextureSet_FieldIndex.Flags:
+                case Activator_FieldIndex.Name:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1137,13 +1086,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            TextureSet_FieldIndex enu = (TextureSet_FieldIndex)index;
+            Activator_FieldIndex enu = (Activator_FieldIndex)index;
             switch (enu)
             {
-                case TextureSet_FieldIndex.ObjectBounds:
-                case TextureSet_FieldIndex.Textures:
-                case TextureSet_FieldIndex.Decal:
-                case TextureSet_FieldIndex.Flags:
+                case Activator_FieldIndex.VirtualMachineAdapter:
+                case Activator_FieldIndex.Name:
+                case Activator_FieldIndex.ObjectBounds:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1152,17 +1100,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static string GetNthName(ushort index)
         {
-            TextureSet_FieldIndex enu = (TextureSet_FieldIndex)index;
+            Activator_FieldIndex enu = (Activator_FieldIndex)index;
             switch (enu)
             {
-                case TextureSet_FieldIndex.ObjectBounds:
+                case Activator_FieldIndex.VirtualMachineAdapter:
+                    return "VirtualMachineAdapter";
+                case Activator_FieldIndex.Name:
+                    return "Name";
+                case Activator_FieldIndex.ObjectBounds:
                     return "ObjectBounds";
-                case TextureSet_FieldIndex.Textures:
-                    return "Textures";
-                case TextureSet_FieldIndex.Decal:
-                    return "Decal";
-                case TextureSet_FieldIndex.Flags:
-                    return "Flags";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -1170,13 +1116,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            TextureSet_FieldIndex enu = (TextureSet_FieldIndex)index;
+            Activator_FieldIndex enu = (Activator_FieldIndex)index;
             switch (enu)
             {
-                case TextureSet_FieldIndex.ObjectBounds:
-                case TextureSet_FieldIndex.Textures:
-                case TextureSet_FieldIndex.Decal:
-                case TextureSet_FieldIndex.Flags:
+                case Activator_FieldIndex.VirtualMachineAdapter:
+                case Activator_FieldIndex.Name:
+                case Activator_FieldIndex.ObjectBounds:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
@@ -1185,13 +1130,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsProtected(ushort index)
         {
-            TextureSet_FieldIndex enu = (TextureSet_FieldIndex)index;
+            Activator_FieldIndex enu = (Activator_FieldIndex)index;
             switch (enu)
             {
-                case TextureSet_FieldIndex.ObjectBounds:
-                case TextureSet_FieldIndex.Textures:
-                case TextureSet_FieldIndex.Decal:
-                case TextureSet_FieldIndex.Flags:
+                case Activator_FieldIndex.VirtualMachineAdapter:
+                case Activator_FieldIndex.Name:
+                case Activator_FieldIndex.ObjectBounds:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
@@ -1200,39 +1144,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static Type GetNthType(ushort index)
         {
-            TextureSet_FieldIndex enu = (TextureSet_FieldIndex)index;
+            Activator_FieldIndex enu = (Activator_FieldIndex)index;
             switch (enu)
             {
-                case TextureSet_FieldIndex.ObjectBounds:
+                case Activator_FieldIndex.VirtualMachineAdapter:
+                    return typeof(VirtualMachineAdapter);
+                case Activator_FieldIndex.Name:
+                    return typeof(String);
+                case Activator_FieldIndex.ObjectBounds:
                     return typeof(ObjectBounds);
-                case TextureSet_FieldIndex.Textures:
-                    return typeof(Textures);
-                case TextureSet_FieldIndex.Decal:
-                    return typeof(Decal);
-                case TextureSet_FieldIndex.Flags:
-                    return typeof(TextureSet.Flag);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(TextureSetXmlWriteTranslation);
-        public static readonly RecordType TXST_HEADER = new RecordType("TXST");
+        public static readonly Type XmlWriteTranslation = typeof(ActivatorXmlWriteTranslation);
+        public static readonly RecordType ACTI_HEADER = new RecordType("ACTI");
+        public static readonly RecordType VMAD_HEADER = new RecordType("VMAD");
+        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType OBND_HEADER = new RecordType("OBND");
-        public static readonly RecordType TX00_HEADER = new RecordType("TX00");
-        public static readonly RecordType TX01_HEADER = new RecordType("TX01");
-        public static readonly RecordType TX02_HEADER = new RecordType("TX02");
-        public static readonly RecordType TX03_HEADER = new RecordType("TX03");
-        public static readonly RecordType TX04_HEADER = new RecordType("TX04");
-        public static readonly RecordType TX05_HEADER = new RecordType("TX05");
-        public static readonly RecordType TX06_HEADER = new RecordType("TX06");
-        public static readonly RecordType TX07_HEADER = new RecordType("TX07");
-        public static readonly RecordType DODT_HEADER = new RecordType("DODT");
-        public static readonly RecordType DNAM_HEADER = new RecordType("DNAM");
-        public static readonly RecordType TriggeringRecordType = TXST_HEADER;
+        public static readonly RecordType TriggeringRecordType = ACTI_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 4;
-        public static readonly Type BinaryWriteTranslation = typeof(TextureSetBinaryWriteTranslation);
+        public const int NumTypedFields = 3;
+        public static readonly Type BinaryWriteTranslation = typeof(ActivatorBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1265,35 +1199,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class TextureSetSetterCommon : SkyrimMajorRecordSetterCommon
+    public partial class ActivatorSetterCommon : SkyrimMajorRecordSetterCommon
     {
-        public new static readonly TextureSetSetterCommon Instance = new TextureSetSetterCommon();
+        public new static readonly ActivatorSetterCommon Instance = new ActivatorSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(ITextureSetInternal item)
+        public void Clear(IActivatorInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
+            item.Name = default;
             item.ObjectBounds = new ObjectBounds();
-            item.Textures = null;
-            item.Decal = null;
-            item.Flags = default;
             base.Clear(item);
         }
         
         public override void Clear(ISkyrimMajorRecordInternal item)
         {
-            Clear(item: (ITextureSetInternal)item);
+            Clear(item: (IActivatorInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (ITextureSetInternal)item);
+            Clear(item: (IActivatorInternal)item);
         }
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
-            ITextureSetInternal item,
+            IActivatorInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1313,7 +1246,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public virtual void CopyInFromXml(
-            ITextureSetInternal item,
+            IActivatorInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1328,7 +1261,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    TextureSetXmlCreateTranslation.FillPublicElementXml(
+                    ActivatorXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1350,7 +1283,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask)
         {
             CopyInFromXml(
-                item: (TextureSet)item,
+                item: (Activator)item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1363,7 +1296,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask)
         {
             CopyInFromXml(
-                item: (TextureSet)item,
+                item: (Activator)item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1372,9 +1305,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => TextureSet_Registration.TXST_HEADER;
+        public override RecordType RecordType => Activator_Registration.ACTI_HEADER;
         protected static void FillBinaryStructs(
-            ITextureSetInternal item,
+            IActivatorInternal item,
             MutagenFrame frame)
         {
             SkyrimMajorRecordSetterCommon.FillBinaryStructs(
@@ -1383,7 +1316,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static TryGet<int?> FillBinaryRecordTypes(
-            ITextureSetInternal item,
+            IActivatorInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
@@ -1392,33 +1325,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case 0x44414D56: // VMAD
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.VirtualMachineAdapter);
+                }
+                case 0x4C4C5546: // FULL
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.Name);
+                }
                 case 0x444E424F: // OBND
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.ObjectBounds);
-                }
-                case 0x30305854: // TX00
-                case 0x31305854: // TX01
-                case 0x32305854: // TX02
-                case 0x33305854: // TX03
-                case 0x34305854: // TX04
-                case 0x35305854: // TX05
-                case 0x36305854: // TX06
-                case 0x37305854: // TX07
-                {
-                    item.Textures = Mutagen.Bethesda.Skyrim.Textures.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Textures);
-                }
-                case 0x54444F44: // DODT
-                {
-                    item.Decal = Mutagen.Bethesda.Skyrim.Decal.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Decal);
-                }
-                case 0x4D414E44: // DNAM
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<TextureSet.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Flags);
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.ObjectBounds);
                 }
                 default:
                     return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
@@ -1431,11 +1354,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public virtual void CopyInFromBinary(
-            ITextureSetInternal item,
+            IActivatorInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<ITextureSetInternal>(
+            UtilityTranslation.MajorRecordParse<IActivatorInternal>(
                 record: item,
                 frame: frame,
                 recType: RecordType,
@@ -1450,7 +1373,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (TextureSet)item,
+                item: (Activator)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1461,7 +1384,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (TextureSet)item,
+                item: (Activator)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1469,17 +1392,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class TextureSetCommon : SkyrimMajorRecordCommon
+    public partial class ActivatorCommon : SkyrimMajorRecordCommon
     {
-        public new static readonly TextureSetCommon Instance = new TextureSetCommon();
+        public new static readonly ActivatorCommon Instance = new ActivatorCommon();
 
-        public TextureSet.Mask<bool> GetEqualsMask(
-            ITextureSetGetter item,
-            ITextureSetGetter rhs,
+        public Activator.Mask<bool> GetEqualsMask(
+            IActivatorGetter item,
+            IActivatorGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new TextureSet.Mask<bool>(false);
-            ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new Activator.Mask<bool>(false);
+            ((ActivatorCommon)((IActivatorGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1488,31 +1411,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            ITextureSetGetter item,
-            ITextureSetGetter rhs,
-            TextureSet.Mask<bool> ret,
+            IActivatorGetter item,
+            IActivatorGetter rhs,
+            Activator.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Name = string.Equals(item.Name, rhs.Name);
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
-            ret.Textures = EqualsMaskHelper.EqualsHelper(
-                item.Textures,
-                rhs.Textures,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
-            ret.Decal = EqualsMaskHelper.EqualsHelper(
-                item.Decal,
-                rhs.Decal,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
-            ret.Flags = item.Flags == rhs.Flags;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string ToString(
-            ITextureSetGetter item,
+            IActivatorGetter item,
             string? name = null,
-            TextureSet.Mask<bool>? printMask = null)
+            Activator.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1524,18 +1442,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            ITextureSetGetter item,
+            IActivatorGetter item,
             FileGeneration fg,
             string? name = null,
-            TextureSet.Mask<bool>? printMask = null)
+            Activator.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"TextureSet =>");
+                fg.AppendLine($"Activator =>");
             }
             else
             {
-                fg.AppendLine($"{name} (TextureSet) =>");
+                fg.AppendLine($"{name} (Activator) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1549,99 +1467,90 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            ITextureSetGetter item,
+            IActivatorGetter item,
             FileGeneration fg,
-            TextureSet.Mask<bool>? printMask = null)
+            Activator.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+            {
+                VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
+            {
+                fg.AppendItem(NameItem, "Name");
+            }
             if (printMask?.ObjectBounds?.Overall ?? true)
             {
                 item.ObjectBounds?.ToString(fg, "ObjectBounds");
             }
-            if ((printMask?.Textures?.Overall ?? true)
-                && item.Textures.TryGet(out var TexturesItem))
-            {
-                TexturesItem?.ToString(fg, "Textures");
-            }
-            if ((printMask?.Decal?.Overall ?? true)
-                && item.Decal.TryGet(out var DecalItem))
-            {
-                DecalItem?.ToString(fg, "Decal");
-            }
-            if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
-            {
-                fg.AppendItem(FlagsItem, "Flags");
-            }
         }
         
         public bool HasBeenSet(
-            ITextureSetGetter item,
-            TextureSet.Mask<bool?> checkMask)
+            IActivatorGetter item,
+            Activator.Mask<bool?> checkMask)
         {
-            if (checkMask.Textures?.Overall.HasValue ?? false && checkMask.Textures.Overall.Value != (item.Textures != null)) return false;
-            if (checkMask.Textures?.Specific != null && (item.Textures == null || !item.Textures.HasBeenSet(checkMask.Textures.Specific))) return false;
-            if (checkMask.Decal?.Overall.HasValue ?? false && checkMask.Decal.Overall.Value != (item.Decal != null)) return false;
-            if (checkMask.Decal?.Specific != null && (item.Decal == null || !item.Decal.HasBeenSet(checkMask.Decal.Specific))) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
+            if (checkMask.VirtualMachineAdapter?.Overall.HasValue ?? false && checkMask.VirtualMachineAdapter.Overall.Value != (item.VirtualMachineAdapter != null)) return false;
+            if (checkMask.VirtualMachineAdapter?.Specific != null && (item.VirtualMachineAdapter == null || !item.VirtualMachineAdapter.HasBeenSet(checkMask.VirtualMachineAdapter.Specific))) return false;
+            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
         
         public void FillHasBeenSetMask(
-            ITextureSetGetter item,
-            TextureSet.Mask<bool> mask)
+            IActivatorGetter item,
+            Activator.Mask<bool> mask)
         {
+            var itemVirtualMachineAdapter = item.VirtualMachineAdapter;
+            mask.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
+            mask.Name = (item.Name != null);
             mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
-            var itemTextures = item.Textures;
-            mask.Textures = new MaskItem<bool, Textures.Mask<bool>?>(itemTextures != null, itemTextures?.GetHasBeenSetMask());
-            var itemDecal = item.Decal;
-            mask.Decal = new MaskItem<bool, Decal.Mask<bool>?>(itemDecal != null, itemDecal?.GetHasBeenSetMask());
-            mask.Flags = (item.Flags != null);
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
         }
         
-        public static TextureSet_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
+        public static Activator_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case SkyrimMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (TextureSet_FieldIndex)((int)index);
+                    return (Activator_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
-                    return (TextureSet_FieldIndex)((int)index);
+                    return (Activator_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version:
-                    return (TextureSet_FieldIndex)((int)index);
+                    return (Activator_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
-                    return (TextureSet_FieldIndex)((int)index);
+                    return (Activator_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
-                    return (TextureSet_FieldIndex)((int)index);
+                    return (Activator_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
-                    return (TextureSet_FieldIndex)((int)index);
+                    return (Activator_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
-                    return (TextureSet_FieldIndex)((int)index);
+                    return (Activator_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new TextureSet_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Activator_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (TextureSet_FieldIndex)((int)index);
+                    return (Activator_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (TextureSet_FieldIndex)((int)index);
+                    return (Activator_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
-                    return (TextureSet_FieldIndex)((int)index);
+                    return (Activator_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (TextureSet_FieldIndex)((int)index);
+                    return (Activator_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1649,16 +1558,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            ITextureSetGetter? lhs,
-            ITextureSetGetter? rhs)
+            IActivatorGetter? lhs,
+            IActivatorGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+            if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!object.Equals(lhs.Textures, rhs.Textures)) return false;
-            if (!object.Equals(lhs.Decal, rhs.Decal)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
             return true;
         }
         
@@ -1667,8 +1575,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (ITextureSetGetter?)lhs,
-                rhs: rhs as ITextureSetGetter);
+                lhs: (IActivatorGetter?)lhs,
+                rhs: rhs as IActivatorGetter);
         }
         
         public override bool Equals(
@@ -1676,38 +1584,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (ITextureSetGetter?)lhs,
-                rhs: rhs as ITextureSetGetter);
+                lhs: (IActivatorGetter?)lhs,
+                rhs: rhs as IActivatorGetter);
         }
         
-        public virtual int GetHashCode(ITextureSetGetter item)
+        public virtual int GetHashCode(IActivatorGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapteritem))
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
+            if (item.Name.TryGet(out var Nameitem))
+            {
+                hash.Add(Nameitem);
+            }
             hash.Add(item.ObjectBounds);
-            if (item.Textures.TryGet(out var Texturesitem))
-            {
-                hash.Add(Texturesitem);
-            }
-            if (item.Decal.TryGet(out var Decalitem))
-            {
-                hash.Add(Decalitem);
-            }
-            if (item.Flags.TryGet(out var Flagsitem))
-            {
-                hash.Add(Flagsitem);
-            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
         public override int GetHashCode(ISkyrimMajorRecordGetter item)
         {
-            return GetHashCode(item: (ITextureSetGetter)item);
+            return GetHashCode(item: (IActivatorGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (ITextureSetGetter)item);
+            return GetHashCode(item: (IActivatorGetter)item);
         }
         
         #endregion
@@ -1715,41 +1619,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override object GetNew()
         {
-            return TextureSet.GetNew();
+            return Activator.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(ITextureSetGetter obj)
+        public IEnumerable<ILinkGetter> GetLinks(IActivatorGetter obj)
         {
             foreach (var item in base.GetLinks(obj))
             {
                 yield return item;
             }
+            if (obj.VirtualMachineAdapter is ILinkContainer VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
-        partial void PostDuplicate(TextureSet obj, TextureSet rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
+        partial void PostDuplicate(Activator obj, Activator rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            var ret = new TextureSet(getNextFormKey());
-            ret.DeepCopyIn((TextureSet)item);
+            var ret = new Activator(getNextFormKey());
+            ret.DeepCopyIn((Activator)item);
             duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (TextureSet)item, getNextFormKey, duplicatedRecords);
+            PostDuplicate(ret, (Activator)item, getNextFormKey, duplicatedRecords);
             return ret;
         }
         
         #endregion
         
     }
-    public partial class TextureSetSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    public partial class ActivatorSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
-        public new static readonly TextureSetSetterTranslationCommon Instance = new TextureSetSetterTranslationCommon();
+        public new static readonly ActivatorSetterTranslationCommon Instance = new ActivatorSetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            ITextureSetInternal item,
-            ITextureSetGetter rhs,
+            IActivatorInternal item,
+            IActivatorGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1761,8 +1672,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void DeepCopyIn(
-            ITextureSet item,
-            ITextureSetGetter rhs,
+            IActivator item,
+            IActivatorGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1771,15 +1682,45 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs,
                 errorMask,
                 copyMask);
-            if ((copyMask?.GetShouldTranslate((int)TextureSet_FieldIndex.ObjectBounds) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.VirtualMachineAdapter) ?? true))
             {
-                errorMask?.PushIndex((int)TextureSet_FieldIndex.ObjectBounds);
+                errorMask?.PushIndex((int)Activator_FieldIndex.VirtualMachineAdapter);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)TextureSet_FieldIndex.ObjectBounds) ?? true))
+                    if(rhs.VirtualMachineAdapter.TryGet(out var rhsVirtualMachineAdapter))
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Activator_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)Activator_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.ObjectBounds) ?? true))
                     {
                         item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)TextureSet_FieldIndex.ObjectBounds),
+                            copyMask: copyMask?.GetSubCrystal((int)Activator_FieldIndex.ObjectBounds),
                             errorMask: errorMask);
                     }
                 }
@@ -1793,62 +1734,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Textures) ?? true))
-            {
-                errorMask?.PushIndex((int)TextureSet_FieldIndex.Textures);
-                try
-                {
-                    if(rhs.Textures.TryGet(out var rhsTextures))
-                    {
-                        item.Textures = rhsTextures.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)TextureSet_FieldIndex.Textures));
-                    }
-                    else
-                    {
-                        item.Textures = default;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Decal) ?? true))
-            {
-                errorMask?.PushIndex((int)TextureSet_FieldIndex.Decal);
-                try
-                {
-                    if(rhs.Decal.TryGet(out var rhsDecal))
-                    {
-                        item.Decal = rhsDecal.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)TextureSet_FieldIndex.Decal));
-                    }
-                    else
-                    {
-                        item.Decal = default;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Flags) ?? true))
-            {
-                item.Flags = rhs.Flags;
-            }
         }
         
         public override void DeepCopyIn(
@@ -1858,8 +1743,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (ITextureSetInternal)item,
-                rhs: (ITextureSetGetter)rhs,
+                item: (IActivatorInternal)item,
+                rhs: (IActivatorGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1871,8 +1756,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (ITextureSet)item,
-                rhs: (ITextureSetGetter)rhs,
+                item: (IActivator)item,
+                rhs: (IActivatorGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1884,8 +1769,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (ITextureSetInternal)item,
-                rhs: (ITextureSetGetter)rhs,
+                item: (IActivatorInternal)item,
+                rhs: (IActivatorGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1897,31 +1782,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (ITextureSet)item,
-                rhs: (ITextureSetGetter)rhs,
+                item: (IActivator)item,
+                rhs: (IActivatorGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
         #endregion
         
-        public TextureSet DeepCopy(
-            ITextureSetGetter item,
-            TextureSet.TranslationMask? copyMask = null)
+        public Activator DeepCopy(
+            IActivatorGetter item,
+            Activator.TranslationMask? copyMask = null)
         {
-            TextureSet ret = (TextureSet)((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).GetNew();
+            Activator ret = (Activator)((ActivatorCommon)((IActivatorGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public TextureSet DeepCopy(
-            ITextureSetGetter item,
-            out TextureSet.ErrorMask errorMask,
-            TextureSet.TranslationMask? copyMask = null)
+        public Activator DeepCopy(
+            IActivatorGetter item,
+            out Activator.ErrorMask errorMask,
+            Activator.TranslationMask? copyMask = null)
         {
-            TextureSet ret = (TextureSet)((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).GetNew();
+            Activator ret = (Activator)((ActivatorCommon)((IActivatorGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1929,12 +1814,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public TextureSet DeepCopy(
-            ITextureSetGetter item,
+        public Activator DeepCopy(
+            IActivatorGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            TextureSet ret = (TextureSet)((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).GetNew();
+            Activator ret = (Activator)((ActivatorCommon)((IActivatorGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1949,21 +1834,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class TextureSet
+    public partial class Activator
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => TextureSet_Registration.Instance;
-        public new static TextureSet_Registration Registration => TextureSet_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Activator_Registration.Instance;
+        public new static Activator_Registration Registration => Activator_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => TextureSetCommon.Instance;
+        protected override object CommonInstance() => ActivatorCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return TextureSetSetterCommon.Instance;
+            return ActivatorSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => TextureSetSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => ActivatorSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1974,14 +1859,14 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class TextureSetXmlWriteTranslation :
+    public partial class ActivatorXmlWriteTranslation :
         SkyrimMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
     {
-        public new readonly static TextureSetXmlWriteTranslation Instance = new TextureSetXmlWriteTranslation();
+        public new readonly static ActivatorXmlWriteTranslation Instance = new ActivatorXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            ITextureSetGetter item,
+            IActivatorGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1991,69 +1876,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)TextureSet_FieldIndex.ObjectBounds) ?? true))
+            if ((item.VirtualMachineAdapter != null)
+                && (translationMask?.GetShouldTranslate((int)Activator_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+                {
+                    ((VirtualMachineAdapterXmlWriteTranslation)((IXmlItem)VirtualMachineAdapterItem).XmlWriteTranslator).Write(
+                        item: VirtualMachineAdapterItem,
+                        node: node,
+                        name: nameof(item.VirtualMachineAdapter),
+                        fieldIndex: (int)Activator_FieldIndex.VirtualMachineAdapter,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Activator_FieldIndex.VirtualMachineAdapter));
+                }
+            }
+            if ((item.Name != null)
+                && (translationMask?.GetShouldTranslate((int)Activator_FieldIndex.Name) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)Activator_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Activator_FieldIndex.ObjectBounds) ?? true))
             {
                 var ObjectBoundsItem = item.ObjectBounds;
                 ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
                     item: ObjectBoundsItem,
                     node: node,
                     name: nameof(item.ObjectBounds),
-                    fieldIndex: (int)TextureSet_FieldIndex.ObjectBounds,
+                    fieldIndex: (int)Activator_FieldIndex.ObjectBounds,
                     errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)TextureSet_FieldIndex.ObjectBounds));
-            }
-            if ((item.Textures != null)
-                && (translationMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Textures) ?? true))
-            {
-                if (item.Textures.TryGet(out var TexturesItem))
-                {
-                    ((TexturesXmlWriteTranslation)((IXmlItem)TexturesItem).XmlWriteTranslator).Write(
-                        item: TexturesItem,
-                        node: node,
-                        name: nameof(item.Textures),
-                        fieldIndex: (int)TextureSet_FieldIndex.Textures,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)TextureSet_FieldIndex.Textures));
-                }
-            }
-            if ((item.Decal != null)
-                && (translationMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Decal) ?? true))
-            {
-                if (item.Decal.TryGet(out var DecalItem))
-                {
-                    ((DecalXmlWriteTranslation)((IXmlItem)DecalItem).XmlWriteTranslator).Write(
-                        item: DecalItem,
-                        node: node,
-                        name: nameof(item.Decal),
-                        fieldIndex: (int)TextureSet_FieldIndex.Decal,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)TextureSet_FieldIndex.Decal));
-                }
-            }
-            if ((item.Flags != null)
-                && (translationMask?.GetShouldTranslate((int)TextureSet_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<TextureSet.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)TextureSet_FieldIndex.Flags,
-                    errorMask: errorMask);
+                    translationMask: translationMask?.GetSubCrystal((int)Activator_FieldIndex.ObjectBounds));
             }
         }
 
         public void Write(
             XElement node,
-            ITextureSetGetter item,
+            IActivatorGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.TextureSet");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Activator");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.TextureSet");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Activator");
             }
             WriteToNodeXml(
                 item: item,
@@ -2070,7 +1941,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (ITextureSetGetter)item,
+                item: (IActivatorGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -2085,7 +1956,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (ITextureSetGetter)item,
+                item: (IActivatorGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -2100,7 +1971,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (ITextureSetGetter)item,
+                item: (IActivatorGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -2109,12 +1980,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class TextureSetXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
+    public partial class ActivatorXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
     {
-        public new readonly static TextureSetXmlCreateTranslation Instance = new TextureSetXmlCreateTranslation();
+        public new readonly static ActivatorXmlCreateTranslation Instance = new ActivatorXmlCreateTranslation();
 
         public static void FillPublicXml(
-            ITextureSetInternal item,
+            IActivatorInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -2123,7 +1994,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    TextureSetXmlCreateTranslation.FillPublicElementXml(
+                    ActivatorXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -2139,7 +2010,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            ITextureSetInternal item,
+            IActivatorInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -2147,70 +2018,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "VirtualMachineAdapter":
+                    errorMask?.PushIndex((int)Activator_FieldIndex.VirtualMachineAdapter);
+                    try
+                    {
+                        item.VirtualMachineAdapter = LoquiXmlTranslation<VirtualMachineAdapter>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Activator_FieldIndex.VirtualMachineAdapter));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Name":
+                    errorMask?.PushIndex((int)Activator_FieldIndex.Name);
+                    try
+                    {
+                        item.Name = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "ObjectBounds":
-                    errorMask?.PushIndex((int)TextureSet_FieldIndex.ObjectBounds);
+                    errorMask?.PushIndex((int)Activator_FieldIndex.ObjectBounds);
                     try
                     {
                         item.ObjectBounds = LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)TextureSet_FieldIndex.ObjectBounds));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Textures":
-                    errorMask?.PushIndex((int)TextureSet_FieldIndex.Textures);
-                    try
-                    {
-                        item.Textures = LoquiXmlTranslation<Textures>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)TextureSet_FieldIndex.Textures));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Decal":
-                    errorMask?.PushIndex((int)TextureSet_FieldIndex.Decal);
-                    try
-                    {
-                        item.Decal = LoquiXmlTranslation<Decal>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)TextureSet_FieldIndex.Decal));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Flags":
-                    errorMask?.PushIndex((int)TextureSet_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<TextureSet.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                            translationMask: translationMask?.GetSubCrystal((int)Activator_FieldIndex.ObjectBounds));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2239,30 +2091,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Xml Write Mixins
-    public static class TextureSetXmlTranslationMixIn
+    public static class ActivatorXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this ITextureSetGetter item,
+            this IActivatorGetter item,
             XElement node,
-            out TextureSet.ErrorMask errorMask,
-            TextureSet.TranslationMask? translationMask = null,
+            out Activator.ErrorMask errorMask,
+            Activator.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((TextureSetXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((ActivatorXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = TextureSet.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Activator.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this ITextureSetGetter item,
+            this IActivatorGetter item,
             string path,
-            out TextureSet.ErrorMask errorMask,
-            TextureSet.TranslationMask? translationMask = null,
+            out Activator.ErrorMask errorMask,
+            Activator.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2276,10 +2128,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this ITextureSetGetter item,
+            this IActivatorGetter item,
             Stream stream,
-            out TextureSet.ErrorMask errorMask,
-            TextureSet.TranslationMask? translationMask = null,
+            out Activator.ErrorMask errorMask,
+            Activator.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2302,14 +2154,14 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class TextureSetBinaryWriteTranslation :
+    public partial class ActivatorBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static TextureSetBinaryWriteTranslation Instance = new TextureSetBinaryWriteTranslation();
+        public new readonly static ActivatorBinaryWriteTranslation Instance = new ActivatorBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
-            ITextureSetGetter item,
+            IActivatorGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
@@ -2317,40 +2169,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
+            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: recordTypeConverter.ConvertToCustom(Activator_Registration.FULL_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
             var ObjectBoundsItem = item.ObjectBounds;
             ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
                 item: ObjectBoundsItem,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.Textures.TryGet(out var TexturesItem))
-            {
-                ((TexturesBinaryWriteTranslation)((IBinaryItem)TexturesItem).BinaryWriteTranslator).Write(
-                    item: TexturesItem,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
-            }
-            if (item.Decal.TryGet(out var DecalItem))
-            {
-                ((DecalBinaryWriteTranslation)((IBinaryItem)DecalItem).BinaryWriteTranslator).Write(
-                    item: DecalItem,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
-            }
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<TextureSet.Flag>.Instance.WriteNullable(
-                writer,
-                item.Flags,
-                length: 2,
-                header: recordTypeConverter.ConvertToCustom(TextureSet_Registration.DNAM_HEADER));
         }
 
         public void Write(
             MutagenWriter writer,
-            ITextureSetGetter item,
+            IActivatorGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(TextureSet_Registration.TXST_HEADER),
+                record: recordTypeConverter.ConvertToCustom(Activator_Registration.ACTI_HEADER),
                 type: ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2369,7 +2214,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (ITextureSetGetter)item,
+                item: (IActivatorGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2380,7 +2225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (ITextureSetGetter)item,
+                item: (IActivatorGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2391,16 +2236,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (ITextureSetGetter)item,
+                item: (IActivatorGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class TextureSetBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    public partial class ActivatorBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static TextureSetBinaryCreateTranslation Instance = new TextureSetBinaryCreateTranslation();
+        public new readonly static ActivatorBinaryCreateTranslation Instance = new ActivatorBinaryCreateTranslation();
 
     }
 
@@ -2408,7 +2253,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class TextureSetBinaryTranslationMixIn
+    public static class ActivatorBinaryTranslationMixIn
     {
     }
     #endregion
@@ -2417,34 +2262,35 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class TextureSetBinaryOverlay :
+    public partial class ActivatorBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
-        ITextureSetGetter
+        IActivatorGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => TextureSet_Registration.Instance;
-        public new static TextureSet_Registration Registration => TextureSet_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Activator_Registration.Instance;
+        public new static Activator_Registration Registration => Activator_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => TextureSetCommon.Instance;
+        protected override object CommonInstance() => ActivatorCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => TextureSetSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => ActivatorSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ITextureSetGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IActivatorGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => ActivatorCommon.Instance.GetLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => TextureSetXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => ActivatorXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((TextureSetXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((ActivatorXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -2452,44 +2298,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => TextureSetBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ActivatorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((TextureSetBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ActivatorBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region VirtualMachineAdapter
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        private bool _VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapter_IsSet ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
+        #endregion
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
         private bool _ObjectBounds_IsSet => _ObjectBoundsLocation.HasValue;
         private IObjectBoundsGetter? _ObjectBounds => _ObjectBounds_IsSet ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation!.Value.Min)), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
-        #region Textures
-        public ITexturesGetter? Textures { get; private set; }
-        public bool Textures_IsSet => Textures != null;
-        #endregion
-        #region Decal
-        private RangeInt32? _DecalLocation;
-        private bool _Decal_IsSet => _DecalLocation.HasValue;
-        public IDecalGetter? Decal => _Decal_IsSet ? DecalBinaryOverlay.DecalFactory(new BinaryMemoryReadStream(_data.Slice(_DecalLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
-        public bool Decal_IsSet => _DecalLocation.HasValue;
-        #endregion
-        #region Flags
-        private int? _FlagsLocation;
-        private bool Flags_IsSet => _FlagsLocation.HasValue;
-        public TextureSet.Flag? Flags => Flags_IsSet ? (TextureSet.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)) : default(TextureSet.Flag?);
-        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected TextureSetBinaryOverlay(
+        protected ActivatorBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -2498,13 +2339,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TextureSetBinaryOverlay TextureSetFactory(
+        public static ActivatorBinaryOverlay ActivatorFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new TextureSetBinaryOverlay(
+            var ret = new ActivatorBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -2534,35 +2375,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case 0x44414D56: // VMAD
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.VirtualMachineAdapter);
+                }
+                case 0x4C4C5546: // FULL
+                {
+                    _NameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.Name);
+                }
                 case 0x444E424F: // OBND
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.ObjectBounds);
-                }
-                case 0x30305854: // TX00
-                case 0x31305854: // TX01
-                case 0x32305854: // TX02
-                case 0x33305854: // TX03
-                case 0x34305854: // TX04
-                case 0x35305854: // TX05
-                case 0x36305854: // TX06
-                case 0x37305854: // TX07
-                {
-                    this.Textures = TexturesBinaryOverlay.TexturesFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Textures);
-                }
-                case 0x54444F44: // DODT
-                {
-                    _DecalLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Decal);
-                }
-                case 0x4D414E44: // DNAM
-                {
-                    _FlagsLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Flags);
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.ObjectBounds);
                 }
                 default:
                     return base.FillRecordType(
@@ -2580,7 +2406,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             string? name = null)
         {
-            TextureSetMixIn.ToString(
+            ActivatorMixIn.ToString(
                 item: this,
                 name: name);
         }

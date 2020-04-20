@@ -59,6 +59,9 @@ namespace Mutagen.Bethesda.Skyrim
             _AcousticSpaces_Object = new Group<AcousticSpace>(this);
             _MagicEffects_Object = new Group<MagicEffect>(this);
             _LandTextures_Object = new Group<LandTexture>(this);
+            _ObjectEffects_Object = new Group<ObjectEffect>(this);
+            _Spells_Object = new Group<Spell>(this);
+            _Scrolls_Object = new Group<Scroll>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -182,6 +185,27 @@ namespace Mutagen.Bethesda.Skyrim
         public Group<LandTexture> LandTextures => _LandTextures_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<ILandTextureGetter> ISkyrimModGetter.LandTextures => _LandTextures_Object;
+        #endregion
+        #region ObjectEffects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<ObjectEffect> _ObjectEffects_Object;
+        public Group<ObjectEffect> ObjectEffects => _ObjectEffects_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IObjectEffectGetter> ISkyrimModGetter.ObjectEffects => _ObjectEffects_Object;
+        #endregion
+        #region Spells
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Spell> _Spells_Object;
+        public Group<Spell> Spells => _Spells_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<ISpellGetter> ISkyrimModGetter.Spells => _Spells_Object;
+        #endregion
+        #region Scrolls
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Scroll> _Scrolls_Object;
+        public Group<Scroll> Scrolls => _Scrolls_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IScrollGetter> ISkyrimModGetter.Scrolls => _Scrolls_Object;
         #endregion
 
         #region To String
@@ -370,6 +394,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.AcousticSpaces = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.MagicEffects = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.LandTextures = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.ObjectEffects = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Spells = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Scrolls = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -389,7 +416,10 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem SoundMarkers,
                 TItem AcousticSpaces,
                 TItem MagicEffects,
-                TItem LandTextures)
+                TItem LandTextures,
+                TItem ObjectEffects,
+                TItem Spells,
+                TItem Scrolls)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -408,6 +438,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.AcousticSpaces = new MaskItem<TItem, Group.Mask<TItem>?>(AcousticSpaces, new Group.Mask<TItem>(AcousticSpaces));
                 this.MagicEffects = new MaskItem<TItem, Group.Mask<TItem>?>(MagicEffects, new Group.Mask<TItem>(MagicEffects));
                 this.LandTextures = new MaskItem<TItem, Group.Mask<TItem>?>(LandTextures, new Group.Mask<TItem>(LandTextures));
+                this.ObjectEffects = new MaskItem<TItem, Group.Mask<TItem>?>(ObjectEffects, new Group.Mask<TItem>(ObjectEffects));
+                this.Spells = new MaskItem<TItem, Group.Mask<TItem>?>(Spells, new Group.Mask<TItem>(Spells));
+                this.Scrolls = new MaskItem<TItem, Group.Mask<TItem>?>(Scrolls, new Group.Mask<TItem>(Scrolls));
             }
 
             #pragma warning disable CS8618
@@ -436,6 +469,9 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? AcousticSpaces { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? MagicEffects { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? LandTextures { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? ObjectEffects { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Spells { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Scrolls { get; set; }
             #endregion
 
             #region Equals
@@ -465,6 +501,9 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.AcousticSpaces, rhs.AcousticSpaces)) return false;
                 if (!object.Equals(this.MagicEffects, rhs.MagicEffects)) return false;
                 if (!object.Equals(this.LandTextures, rhs.LandTextures)) return false;
+                if (!object.Equals(this.ObjectEffects, rhs.ObjectEffects)) return false;
+                if (!object.Equals(this.Spells, rhs.Spells)) return false;
+                if (!object.Equals(this.Scrolls, rhs.Scrolls)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -487,6 +526,9 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.AcousticSpaces);
                 hash.Add(this.MagicEffects);
                 hash.Add(this.LandTextures);
+                hash.Add(this.ObjectEffects);
+                hash.Add(this.Spells);
+                hash.Add(this.Scrolls);
                 return hash.ToHashCode();
             }
 
@@ -580,6 +622,21 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.LandTextures.Overall)) return false;
                     if (this.LandTextures.Specific != null && !this.LandTextures.Specific.All(eval)) return false;
                 }
+                if (ObjectEffects != null)
+                {
+                    if (!eval(this.ObjectEffects.Overall)) return false;
+                    if (this.ObjectEffects.Specific != null && !this.ObjectEffects.Specific.All(eval)) return false;
+                }
+                if (Spells != null)
+                {
+                    if (!eval(this.Spells.Overall)) return false;
+                    if (this.Spells.Specific != null && !this.Spells.Specific.All(eval)) return false;
+                }
+                if (Scrolls != null)
+                {
+                    if (!eval(this.Scrolls.Overall)) return false;
+                    if (this.Scrolls.Specific != null && !this.Scrolls.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -672,6 +729,21 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.LandTextures.Overall)) return true;
                     if (this.LandTextures.Specific != null && this.LandTextures.Specific.Any(eval)) return true;
                 }
+                if (ObjectEffects != null)
+                {
+                    if (eval(this.ObjectEffects.Overall)) return true;
+                    if (this.ObjectEffects.Specific != null && this.ObjectEffects.Specific.Any(eval)) return true;
+                }
+                if (Spells != null)
+                {
+                    if (eval(this.Spells.Overall)) return true;
+                    if (this.Spells.Specific != null && this.Spells.Specific.Any(eval)) return true;
+                }
+                if (Scrolls != null)
+                {
+                    if (eval(this.Scrolls.Overall)) return true;
+                    if (this.Scrolls.Specific != null && this.Scrolls.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -703,6 +775,9 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.AcousticSpaces = this.AcousticSpaces == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.AcousticSpaces.Overall), this.AcousticSpaces.Specific?.Translate(eval));
                 obj.MagicEffects = this.MagicEffects == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.MagicEffects.Overall), this.MagicEffects.Specific?.Translate(eval));
                 obj.LandTextures = this.LandTextures == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LandTextures.Overall), this.LandTextures.Specific?.Translate(eval));
+                obj.ObjectEffects = this.ObjectEffects == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ObjectEffects.Overall), this.ObjectEffects.Specific?.Translate(eval));
+                obj.Spells = this.Spells == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Spells.Overall), this.Spells.Specific?.Translate(eval));
+                obj.Scrolls = this.Scrolls == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Scrolls.Overall), this.Scrolls.Specific?.Translate(eval));
             }
             #endregion
 
@@ -793,6 +868,18 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         LandTextures?.ToString(fg);
                     }
+                    if (printMask?.ObjectEffects?.Overall ?? true)
+                    {
+                        ObjectEffects?.ToString(fg);
+                    }
+                    if (printMask?.Spells?.Overall ?? true)
+                    {
+                        Spells?.ToString(fg);
+                    }
+                    if (printMask?.Scrolls?.Overall ?? true)
+                    {
+                        Scrolls?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -835,6 +922,9 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<AcousticSpace.ErrorMask>?>? AcousticSpaces;
             public MaskItem<Exception?, Group.ErrorMask<MagicEffect.ErrorMask>?>? MagicEffects;
             public MaskItem<Exception?, Group.ErrorMask<LandTexture.ErrorMask>?>? LandTextures;
+            public MaskItem<Exception?, Group.ErrorMask<ObjectEffect.ErrorMask>?>? ObjectEffects;
+            public MaskItem<Exception?, Group.ErrorMask<Spell.ErrorMask>?>? Spells;
+            public MaskItem<Exception?, Group.ErrorMask<Scroll.ErrorMask>?>? Scrolls;
             #endregion
 
             #region IErrorMask
@@ -877,6 +967,12 @@ namespace Mutagen.Bethesda.Skyrim
                         return MagicEffects;
                     case SkyrimMod_FieldIndex.LandTextures:
                         return LandTextures;
+                    case SkyrimMod_FieldIndex.ObjectEffects:
+                        return ObjectEffects;
+                    case SkyrimMod_FieldIndex.Spells:
+                        return Spells;
+                    case SkyrimMod_FieldIndex.Scrolls:
+                        return Scrolls;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -937,6 +1033,15 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.LandTextures:
                         this.LandTextures = new MaskItem<Exception?, Group.ErrorMask<LandTexture.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.ObjectEffects:
+                        this.ObjectEffects = new MaskItem<Exception?, Group.ErrorMask<ObjectEffect.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Spells:
+                        this.Spells = new MaskItem<Exception?, Group.ErrorMask<Spell.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Scrolls:
+                        this.Scrolls = new MaskItem<Exception?, Group.ErrorMask<Scroll.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -999,6 +1104,15 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.LandTextures:
                         this.LandTextures = (MaskItem<Exception?, Group.ErrorMask<LandTexture.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.ObjectEffects:
+                        this.ObjectEffects = (MaskItem<Exception?, Group.ErrorMask<ObjectEffect.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.Spells:
+                        this.Spells = (MaskItem<Exception?, Group.ErrorMask<Spell.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.Scrolls:
+                        this.Scrolls = (MaskItem<Exception?, Group.ErrorMask<Scroll.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1024,6 +1138,9 @@ namespace Mutagen.Bethesda.Skyrim
                 if (AcousticSpaces != null) return true;
                 if (MagicEffects != null) return true;
                 if (LandTextures != null) return true;
+                if (ObjectEffects != null) return true;
+                if (Spells != null) return true;
+                if (Scrolls != null) return true;
                 return false;
             }
             #endregion
@@ -1075,6 +1192,9 @@ namespace Mutagen.Bethesda.Skyrim
                 AcousticSpaces?.ToString(fg);
                 MagicEffects?.ToString(fg);
                 LandTextures?.ToString(fg);
+                ObjectEffects?.ToString(fg);
+                Spells?.ToString(fg);
+                Scrolls?.ToString(fg);
             }
             #endregion
 
@@ -1100,6 +1220,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.AcousticSpaces = this.AcousticSpaces.Combine(rhs.AcousticSpaces, (l, r) => l.Combine(r));
                 ret.MagicEffects = this.MagicEffects.Combine(rhs.MagicEffects, (l, r) => l.Combine(r));
                 ret.LandTextures = this.LandTextures.Combine(rhs.LandTextures, (l, r) => l.Combine(r));
+                ret.ObjectEffects = this.ObjectEffects.Combine(rhs.ObjectEffects, (l, r) => l.Combine(r));
+                ret.Spells = this.Spells.Combine(rhs.Spells, (l, r) => l.Combine(r));
+                ret.Scrolls = this.Scrolls.Combine(rhs.Scrolls, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1138,6 +1261,9 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<AcousticSpace.TranslationMask>?> AcousticSpaces;
             public MaskItem<bool, Group.TranslationMask<MagicEffect.TranslationMask>?> MagicEffects;
             public MaskItem<bool, Group.TranslationMask<LandTexture.TranslationMask>?> LandTextures;
+            public MaskItem<bool, Group.TranslationMask<ObjectEffect.TranslationMask>?> ObjectEffects;
+            public MaskItem<bool, Group.TranslationMask<Spell.TranslationMask>?> Spells;
+            public MaskItem<bool, Group.TranslationMask<Scroll.TranslationMask>?> Scrolls;
             #endregion
 
             #region Ctors
@@ -1160,6 +1286,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.AcousticSpaces = new MaskItem<bool, Group.TranslationMask<AcousticSpace.TranslationMask>?>(defaultOn, null);
                 this.MagicEffects = new MaskItem<bool, Group.TranslationMask<MagicEffect.TranslationMask>?>(defaultOn, null);
                 this.LandTextures = new MaskItem<bool, Group.TranslationMask<LandTexture.TranslationMask>?>(defaultOn, null);
+                this.ObjectEffects = new MaskItem<bool, Group.TranslationMask<ObjectEffect.TranslationMask>?>(defaultOn, null);
+                this.Spells = new MaskItem<bool, Group.TranslationMask<Spell.TranslationMask>?>(defaultOn, null);
+                this.Scrolls = new MaskItem<bool, Group.TranslationMask<Scroll.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -1192,6 +1321,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((AcousticSpaces?.Overall ?? true, AcousticSpaces?.Specific?.GetCrystal()));
                 ret.Add((MagicEffects?.Overall ?? true, MagicEffects?.Specific?.GetCrystal()));
                 ret.Add((LandTextures?.Overall ?? true, LandTextures?.Specific?.GetCrystal()));
+                ret.Add((ObjectEffects?.Overall ?? true, ObjectEffects?.Specific?.GetCrystal()));
+                ret.Add((Spells?.Overall ?? true, Spells?.Specific?.GetCrystal()));
+                ret.Add((Scrolls?.Overall ?? true, Scrolls?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -1222,6 +1354,9 @@ namespace Mutagen.Bethesda.Skyrim
             _AcousticSpaces_Object = new Group<AcousticSpace>(this);
             _MagicEffects_Object = new Group<MagicEffect>(this);
             _LandTextures_Object = new Group<LandTexture>(this);
+            _ObjectEffects_Object = new Group<ObjectEffect>(this);
+            _Spells_Object = new Group<Spell>(this);
+            _Scrolls_Object = new Group<Scroll>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -1290,6 +1425,18 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.LandTextures ?? true)
             {
                 this.LandTextures.RecordCache.Set(rhsMod.LandTextures.RecordCache.Items);
+            }
+            if (mask?.ObjectEffects ?? true)
+            {
+                this.ObjectEffects.RecordCache.Set(rhsMod.ObjectEffects.RecordCache.Items);
+            }
+            if (mask?.Spells ?? true)
+            {
+                this.Spells.RecordCache.Set(rhsMod.Spells.RecordCache.Items);
+            }
+            if (mask?.Scrolls ?? true)
+            {
+                this.Scrolls.RecordCache.Set(rhsMod.Scrolls.RecordCache.Items);
             }
         }
 
@@ -1410,6 +1557,27 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<LandTexture>());
             }
+            if (mask?.ObjectEffects ?? true)
+            {
+                this.ObjectEffects.RecordCache.Set(
+                    rhs.ObjectEffects.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<ObjectEffect>());
+            }
+            if (mask?.Spells ?? true)
+            {
+                this.Spells.RecordCache.Set(
+                    rhs.Spells.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Spell>());
+            }
+            if (mask?.Scrolls ?? true)
+            {
+                this.Scrolls.RecordCache.Set(
+                    rhs.Scrolls.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Scroll>());
+            }
             Dictionary<FormKey, IMajorRecordCommon> router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var package = this.CreateLinkCache();
@@ -1451,6 +1619,9 @@ namespace Mutagen.Bethesda.Skyrim
             count += AcousticSpaces.RecordCache.Count > 0 ? 1 : 0;
             count += MagicEffects.RecordCache.Count > 0 ? 1 : 0;
             count += LandTextures.RecordCache.Count > 0 ? 1 : 0;
+            count += ObjectEffects.RecordCache.Count > 0 ? 1 : 0;
+            count += Spells.RecordCache.Count > 0 ? 1 : 0;
+            count += Scrolls.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -1641,6 +1812,9 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<AcousticSpace> AcousticSpaces { get; }
         new Group<MagicEffect> MagicEffects { get; }
         new Group<LandTexture> LandTextures { get; }
+        new Group<ObjectEffect> ObjectEffects { get; }
+        new Group<Spell> Spells { get; }
+        new Group<Scroll> Scrolls { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -1674,6 +1848,9 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IAcousticSpaceGetter> AcousticSpaces { get; }
         IGroupGetter<IMagicEffectGetter> MagicEffects { get; }
         IGroupGetter<ILandTextureGetter> LandTextures { get; }
+        IGroupGetter<IObjectEffectGetter> ObjectEffects { get; }
+        IGroupGetter<ISpellGetter> Spells { get; }
+        IGroupGetter<IScrollGetter> Scrolls { get; }
 
     }
 
@@ -2112,6 +2289,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         AcousticSpaces = 14,
         MagicEffects = 15,
         LandTextures = 16,
+        ObjectEffects = 17,
+        Spells = 18,
+        Scrolls = 19,
     }
     #endregion
 
@@ -2129,9 +2309,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 17;
+        public const ushort AdditionalFieldCount = 20;
 
-        public const ushort FieldCount = 17;
+        public const ushort FieldCount = 20;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -2195,6 +2375,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.MagicEffects;
                 case "LANDTEXTURES":
                     return (ushort)SkyrimMod_FieldIndex.LandTextures;
+                case "OBJECTEFFECTS":
+                    return (ushort)SkyrimMod_FieldIndex.ObjectEffects;
+                case "SPELLS":
+                    return (ushort)SkyrimMod_FieldIndex.Spells;
+                case "SCROLLS":
+                    return (ushort)SkyrimMod_FieldIndex.Scrolls;
                 default:
                     return null;
             }
@@ -2222,6 +2408,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.AcousticSpaces:
                 case SkyrimMod_FieldIndex.MagicEffects:
                 case SkyrimMod_FieldIndex.LandTextures:
+                case SkyrimMod_FieldIndex.ObjectEffects:
+                case SkyrimMod_FieldIndex.Spells:
+                case SkyrimMod_FieldIndex.Scrolls:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2250,6 +2439,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.AcousticSpaces:
                 case SkyrimMod_FieldIndex.MagicEffects:
                 case SkyrimMod_FieldIndex.LandTextures:
+                case SkyrimMod_FieldIndex.ObjectEffects:
+                case SkyrimMod_FieldIndex.Spells:
+                case SkyrimMod_FieldIndex.Scrolls:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2278,6 +2470,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.AcousticSpaces:
                 case SkyrimMod_FieldIndex.MagicEffects:
                 case SkyrimMod_FieldIndex.LandTextures:
+                case SkyrimMod_FieldIndex.ObjectEffects:
+                case SkyrimMod_FieldIndex.Spells:
+                case SkyrimMod_FieldIndex.Scrolls:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2323,6 +2518,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "MagicEffects";
                 case SkyrimMod_FieldIndex.LandTextures:
                     return "LandTextures";
+                case SkyrimMod_FieldIndex.ObjectEffects:
+                    return "ObjectEffects";
+                case SkyrimMod_FieldIndex.Spells:
+                    return "Spells";
+                case SkyrimMod_FieldIndex.Scrolls:
+                    return "Scrolls";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2350,6 +2551,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.AcousticSpaces:
                 case SkyrimMod_FieldIndex.MagicEffects:
                 case SkyrimMod_FieldIndex.LandTextures:
+                case SkyrimMod_FieldIndex.ObjectEffects:
+                case SkyrimMod_FieldIndex.Spells:
+                case SkyrimMod_FieldIndex.Scrolls:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2379,6 +2583,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.AcousticSpaces:
                 case SkyrimMod_FieldIndex.MagicEffects:
                 case SkyrimMod_FieldIndex.LandTextures:
+                case SkyrimMod_FieldIndex.ObjectEffects:
+                case SkyrimMod_FieldIndex.Spells:
+                case SkyrimMod_FieldIndex.Scrolls:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2424,6 +2631,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<MagicEffect>);
                 case SkyrimMod_FieldIndex.LandTextures:
                     return typeof(Group<LandTexture>);
+                case SkyrimMod_FieldIndex.ObjectEffects:
+                    return typeof(Group<ObjectEffect>);
+                case SkyrimMod_FieldIndex.Spells:
+                    return typeof(Group<Spell>);
+                case SkyrimMod_FieldIndex.Scrolls:
+                    return typeof(Group<Scroll>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2447,9 +2660,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType ASPC_HEADER = new RecordType("ASPC");
         public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
         public static readonly RecordType LTEX_HEADER = new RecordType("LTEX");
+        public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
+        public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
+        public static readonly RecordType SCRL_HEADER = new RecordType("SCRL");
         public static readonly RecordType TriggeringRecordType = TES4_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 17;
+        public const int NumTypedFields = 20;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2508,6 +2724,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.AcousticSpaces.Clear();
             item.MagicEffects.Clear();
             item.LandTextures.Clear();
+            item.ObjectEffects.Clear();
+            item.Spells.Clear();
+            item.Scrolls.Clear();
         }
         
         #region Xml Translation
@@ -2847,6 +3066,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LandTextures);
                 }
+                case 0x48434E45: // ENCH
+                {
+                    if (importMask?.ObjectEffects ?? true)
+                    {
+                        item.ObjectEffects.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ObjectEffects);
+                }
+                case 0x4C455053: // SPEL
+                {
+                    if (importMask?.Spells ?? true)
+                    {
+                        item.Spells.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Spells);
+                }
+                case 0x4C524353: // SCRL
+                {
+                    if (importMask?.Scrolls ?? true)
+                    {
+                        item.Scrolls.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Scrolls);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -2915,6 +3176,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.AcousticSpaces = MaskItemExt.Factory(item.AcousticSpaces.GetEqualsMask(rhs.AcousticSpaces, include), include);
             ret.MagicEffects = MaskItemExt.Factory(item.MagicEffects.GetEqualsMask(rhs.MagicEffects, include), include);
             ret.LandTextures = MaskItemExt.Factory(item.LandTextures.GetEqualsMask(rhs.LandTextures, include), include);
+            ret.ObjectEffects = MaskItemExt.Factory(item.ObjectEffects.GetEqualsMask(rhs.ObjectEffects, include), include);
+            ret.Spells = MaskItemExt.Factory(item.Spells.GetEqualsMask(rhs.Spells, include), include);
+            ret.Scrolls = MaskItemExt.Factory(item.Scrolls.GetEqualsMask(rhs.Scrolls, include), include);
         }
         
         public string ToString(
@@ -3029,6 +3293,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.LandTextures?.ToString(fg, "LandTextures");
             }
+            if (printMask?.ObjectEffects?.Overall ?? true)
+            {
+                item.ObjectEffects?.ToString(fg, "ObjectEffects");
+            }
+            if (printMask?.Spells?.Overall ?? true)
+            {
+                item.Spells?.ToString(fg, "Spells");
+            }
+            if (printMask?.Scrolls?.Overall ?? true)
+            {
+                item.Scrolls?.ToString(fg, "Scrolls");
+            }
         }
         
         public bool HasBeenSet(
@@ -3059,6 +3335,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.AcousticSpaces = new MaskItem<bool, Group.Mask<bool>?>(true, item.AcousticSpaces?.GetHasBeenSetMask());
             mask.MagicEffects = new MaskItem<bool, Group.Mask<bool>?>(true, item.MagicEffects?.GetHasBeenSetMask());
             mask.LandTextures = new MaskItem<bool, Group.Mask<bool>?>(true, item.LandTextures?.GetHasBeenSetMask());
+            mask.ObjectEffects = new MaskItem<bool, Group.Mask<bool>?>(true, item.ObjectEffects?.GetHasBeenSetMask());
+            mask.Spells = new MaskItem<bool, Group.Mask<bool>?>(true, item.Spells?.GetHasBeenSetMask());
+            mask.Scrolls = new MaskItem<bool, Group.Mask<bool>?>(true, item.Scrolls?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -3085,6 +3364,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.AcousticSpaces, rhs.AcousticSpaces)) return false;
             if (!object.Equals(lhs.MagicEffects, rhs.MagicEffects)) return false;
             if (!object.Equals(lhs.LandTextures, rhs.LandTextures)) return false;
+            if (!object.Equals(lhs.ObjectEffects, rhs.ObjectEffects)) return false;
+            if (!object.Equals(lhs.Spells, rhs.Spells)) return false;
+            if (!object.Equals(lhs.Scrolls, rhs.Scrolls)) return false;
             return true;
         }
         
@@ -3108,6 +3390,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.AcousticSpaces);
             hash.Add(item.MagicEffects);
             hash.Add(item.LandTextures);
+            hash.Add(item.ObjectEffects);
+            hash.Add(item.Spells);
+            hash.Add(item.Scrolls);
             return hash.ToHashCode();
         }
         
@@ -3205,6 +3490,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILandTexture":
                 case "ILandTextureInternal":
                     return obj.LandTextures.RecordCache;
+                case "ObjectEffect":
+                case "IObjectEffectGetter":
+                case "IObjectEffect":
+                case "IObjectEffectInternal":
+                    return obj.ObjectEffects.RecordCache;
+                case "Spell":
+                case "ISpellGetter":
+                case "ISpell":
+                case "ISpellInternal":
+                    return obj.Spells.RecordCache;
+                case "Scroll":
+                case "IScrollGetter":
+                case "IScroll":
+                case "IScrollInternal":
+                    return obj.Scrolls.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown group type: {typeof(T)}");
             }
@@ -3221,7 +3521,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var modHeader = item.ModHeader.DeepCopy() as ModHeader;
             modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
             modHeader.WriteToBinary(new MutagenWriter(stream, GameConstants.Skyrim, masterRefs));
-            Stream[] outputStreams = new Stream[16];
+            Stream[] outputStreams = new Stream[19];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams));
@@ -3239,6 +3539,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.AcousticSpaces, masterRefs, 13, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.MagicEffects, masterRefs, 14, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.LandTextures, masterRefs, 15, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.ObjectEffects, masterRefs, 16, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Spells, masterRefs, 17, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Scrolls, masterRefs, 18, outputStreams));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -3398,6 +3701,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.ObjectEffects is ILinkContainer ObjectEffectslinkCont)
+            {
+                foreach (var item in ObjectEffectslinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Spells is ILinkContainer SpellslinkCont)
+            {
+                foreach (var item in SpellslinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Scrolls is ILinkContainer ScrollslinkCont)
+            {
+                foreach (var item in ScrollslinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -3464,6 +3788,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.LandTextures.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ObjectEffects.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Spells.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Scrolls.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -3625,6 +3961,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILandTexture":
                 case "ILandTextureInternal":
                     foreach (var item in obj.LandTextures.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ObjectEffect":
+                case "IObjectEffectGetter":
+                case "IObjectEffect":
+                case "IObjectEffectInternal":
+                    foreach (var item in obj.ObjectEffects.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Spell":
+                case "ISpellGetter":
+                case "ISpell":
+                case "ISpellInternal":
+                    foreach (var item in obj.Spells.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Scroll":
+                case "IScrollGetter":
+                case "IScroll":
+                case "IScrollInternal":
+                    foreach (var item in obj.Scrolls.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -3988,6 +4351,66 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ObjectEffects) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ObjectEffects);
+                try
+                {
+                    item.ObjectEffects.DeepCopyIn(
+                        rhs: rhs.ObjectEffects,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.ObjectEffects));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Spells) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Spells);
+                try
+                {
+                    item.Spells.DeepCopyIn(
+                        rhs: rhs.Spells,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Spells));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Scrolls) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Scrolls);
+                try
+                {
+                    item.Scrolls.DeepCopyIn(
+                        rhs: rhs.Scrolls,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Scrolls));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -4263,6 +4686,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.LandTextures,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.LandTextures));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ObjectEffects) ?? true))
+            {
+                var ObjectEffectsItem = item.ObjectEffects;
+                ((GroupXmlWriteTranslation)((IXmlItem)ObjectEffectsItem).XmlWriteTranslator).Write<IObjectEffectGetter>(
+                    item: ObjectEffectsItem,
+                    node: node,
+                    name: nameof(item.ObjectEffects),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.ObjectEffects,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.ObjectEffects));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Spells) ?? true))
+            {
+                var SpellsItem = item.Spells;
+                ((GroupXmlWriteTranslation)((IXmlItem)SpellsItem).XmlWriteTranslator).Write<ISpellGetter>(
+                    item: SpellsItem,
+                    node: node,
+                    name: nameof(item.Spells),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Spells,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Spells));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Scrolls) ?? true))
+            {
+                var ScrollsItem = item.Scrolls;
+                ((GroupXmlWriteTranslation)((IXmlItem)ScrollsItem).XmlWriteTranslator).Write<IScrollGetter>(
+                    item: ScrollsItem,
+                    node: node,
+                    name: nameof(item.Scrolls),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Scrolls,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Scrolls));
             }
         }
 
@@ -4674,6 +5130,63 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "ObjectEffects":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ObjectEffects);
+                    try
+                    {
+                        item.ObjectEffects.CopyInFromXml<ObjectEffect>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Spells":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Spells);
+                    try
+                    {
+                        item.Spells.CopyInFromXml<Spell>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Scrolls":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Scrolls);
+                    try
+                    {
+                        item.Scrolls.CopyInFromXml<Scroll>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -4859,6 +5372,9 @@ namespace Mutagen.Bethesda.Skyrim
         public bool AcousticSpaces;
         public bool MagicEffects;
         public bool LandTextures;
+        public bool ObjectEffects;
+        public bool Spells;
+        public bool Scrolls;
         public GroupMask()
         {
         }
@@ -4880,6 +5396,9 @@ namespace Mutagen.Bethesda.Skyrim
             AcousticSpaces = defaultValue;
             MagicEffects = defaultValue;
             LandTextures = defaultValue;
+            ObjectEffects = defaultValue;
+            Spells = defaultValue;
+            Scrolls = defaultValue;
         }
     }
 
@@ -5081,6 +5600,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)LandTexturesItem).BinaryWriteTranslator).Write<ILandTextureGetter>(
                         item: LandTexturesItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.ObjectEffects ?? true)
+            {
+                var ObjectEffectsItem = item.ObjectEffects;
+                if (ObjectEffectsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)ObjectEffectsItem).BinaryWriteTranslator).Write<IObjectEffectGetter>(
+                        item: ObjectEffectsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Spells ?? true)
+            {
+                var SpellsItem = item.Spells;
+                if (SpellsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)SpellsItem).BinaryWriteTranslator).Write<ISpellGetter>(
+                        item: SpellsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Scrolls ?? true)
+            {
+                var ScrollsItem = item.Scrolls;
+                if (ScrollsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)ScrollsItem).BinaryWriteTranslator).Write<IScrollGetter>(
+                        item: ScrollsItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
                 }
@@ -5371,6 +5923,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<ILandTextureGetter>? _LandTextures => _LandTextures_IsSet ? GroupBinaryOverlay<ILandTextureGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _LandTexturesLocation!.Value.Min, _LandTexturesLocation!.Value.Max)), _package) : default;
         public IGroupGetter<ILandTextureGetter> LandTextures => _LandTextures ?? new Group<LandTexture>(this);
         #endregion
+        #region ObjectEffects
+        private RangeInt64? _ObjectEffectsLocation;
+        private bool _ObjectEffects_IsSet => _ObjectEffectsLocation.HasValue;
+        private IGroupGetter<IObjectEffectGetter>? _ObjectEffects => _ObjectEffects_IsSet ? GroupBinaryOverlay<IObjectEffectGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ObjectEffectsLocation!.Value.Min, _ObjectEffectsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IObjectEffectGetter> ObjectEffects => _ObjectEffects ?? new Group<ObjectEffect>(this);
+        #endregion
+        #region Spells
+        private RangeInt64? _SpellsLocation;
+        private bool _Spells_IsSet => _SpellsLocation.HasValue;
+        private IGroupGetter<ISpellGetter>? _Spells => _Spells_IsSet ? GroupBinaryOverlay<ISpellGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _SpellsLocation!.Value.Min, _SpellsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<ISpellGetter> Spells => _Spells ?? new Group<Spell>(this);
+        #endregion
+        #region Scrolls
+        private RangeInt64? _ScrollsLocation;
+        private bool _Scrolls_IsSet => _ScrollsLocation.HasValue;
+        private IGroupGetter<IScrollGetter>? _Scrolls => _Scrolls_IsSet ? GroupBinaryOverlay<IScrollGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ScrollsLocation!.Value.Min, _ScrollsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IScrollGetter> Scrolls => _Scrolls ?? new Group<Scroll>(this);
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             long finalPos,
@@ -5519,6 +6089,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _LandTexturesLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LandTextures);
+                }
+                case 0x48434E45: // ENCH
+                {
+                    _ObjectEffectsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ObjectEffects);
+                }
+                case 0x4C455053: // SPEL
+                {
+                    _SpellsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Spells);
+                }
+                case 0x4C524353: // SCRL
+                {
+                    _ScrollsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Scrolls);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

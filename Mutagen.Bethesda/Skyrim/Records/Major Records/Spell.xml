@@ -1,7 +1,31 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Spell" recordType="SPEL" objType="Record" baseClass="SkyrimMajorRecord" GUID="9bc07114-08cb-4a62-8819-b3edc36ab87e" ID="115">
+  <Object name="Spell" recordType="SPEL" objType="Record" baseClass="ASpell" GUID="9bc07114-08cb-4a62-8819-b3edc36ab87e" ID="115">
+    <Interface>INamed</Interface>
     <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
+      <String name="Name" recordType="FULL" />
+      <List name="Keywords" counterRecType="KSIZ">
+        <FormLink refName="Keyword" recordType="KWDA" />
+      </List>
+      <FormLink name="MenuDisplayObject" refName="Static" recordType="MDOB" />
+      <FormLink name="EquipmentType" refName="EquipType" recordType="ETYP" />
+      <String name="Description" recordType="DESC" />
+      <RefDirect name="Data" refName="SpellData" />
+      <RefList name="Effects" refName="Effect" />
+    </Fields>
+  </Object>
+  <Object name="SpellData" recordType="SPIT" objType="Subrecord" GUID="e315ed8f-6133-4758-bb7a-78fbf4542d94" ID="137">
+    <Fields>
+      <UInt32 name="BaseCost" />
+      <Enum name="Flags" enumName="SpellData.Flag" byteLength="4" />
+      <Enum name="Type" enumName="SpellData.SpellType" byteLength="4" />
+      <Float name="ChargeTime" />
+      <Enum name="CastType" enumName="CastType" byteLength="4" />
+      <Enum name="TargetType" enumName="TargetType" byteLength="4" />
+      <Float name="CastDuration" />
+      <Float name="Range" />
+      <FormLink name="HalfCostPerk" refName="Perk" />
     </Fields>
   </Object>
 </Loqui>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Destructible" recordType="DEST" objType="Subrecord" GUID="ac14ba89-a6ef-4b9a-ba7d-3c0d46d02ccf" ID="138">
+    <Fields>
+      <Int32 name="Health" />
+      <UInt8 name="DESTCount" />
+      <Bool name="VATSTargetable" byteLength="1" />
+      <ByteArray name="Unknown" byteLength="2" nullable="NotNull" />
+    </Fields>
+  </Object>
+  <Object name="DestructionStage" objType="Subrecord" endMarker="DSTF" GUID="8f5dd48b-9ae2-4626-838c-c0821263148a" ID="140">
+    <Fields>
+      <RefDirect name="Data" refName="DestructionStageData" />
+      <RefDirect name="Model" refName="Model">
+        <RecordTypeOverrides>
+          <Mapping From="MODL" To="DMDL" />
+          <Mapping From="MODS" To="DMDS" />
+        </RecordTypeOverrides>
+      </RefDirect>
+    </Fields>
+  </Object>
+  <Object name="DestructionStageData" objType="Subrecord" recordType="DSTD" GUID="6c5320be-ca47-498f-a1ff-e1f756517873" ID="141">
+    <Fields>
+      <UInt8 name="HealthPercent" />
+      <UInt8 name="Index" />
+      <UInt8 name="ModelDamageStage" />
+      <Enum name="Flags" enumName="DestructionStageData.Flag" byteLength="1" />
+      <Int32 name="SelfDamagePerSecond" />
+      <FormLink name="Explosion" refName="Explosion" />
+      <FormLink name="Debris" refName="Debris" />
+      <Int32 name="DebrisCount" />
+    </Fields>
+  </Object>
+</Loqui>

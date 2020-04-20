@@ -33,15 +33,15 @@ using System.Buffers.Binary;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public abstract partial class ASpell :
+    public partial class Debris :
         SkyrimMajorRecord,
-        IASpellInternal,
-        ILoquiObjectSetter<ASpell>,
-        IEquatable<ASpell>,
+        IDebrisInternal,
+        ILoquiObjectSetter<Debris>,
+        IEquatable<Debris>,
         IEqualsMask
     {
         #region Ctor
-        protected ASpell()
+        protected Debris()
         {
             CustomCtor();
         }
@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            ASpellMixIn.ToString(
+            DebrisMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -65,29 +65,29 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IASpellGetter rhs)) return false;
-            return ((ASpellCommon)((IASpellGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IDebrisGetter rhs)) return false;
+            return ((DebrisCommon)((IDebrisGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ASpell obj)
+        public bool Equals(Debris obj)
         {
-            return ((ASpellCommon)((IASpellGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DebrisCommon)((IDebrisGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ASpellCommon)((IASpellGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((DebrisCommon)((IDebrisGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ASpellXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => DebrisXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((ASpellXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((DebrisXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -96,9 +96,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static new ASpell CreateFromXml(
+        public static new Debris CreateFromXml(
             XElement node,
-            ASpell.TranslationMask? translationMask = null)
+            Debris.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -107,30 +107,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static ASpell CreateFromXml(
+        public static Debris CreateFromXml(
             XElement node,
-            out ASpell.ErrorMask errorMask,
-            ASpell.TranslationMask? translationMask = null)
+            out Debris.ErrorMask errorMask,
+            Debris.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ASpell.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Debris.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public new static ASpell CreateFromXml(
+        public new static Debris CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if (!LoquiXmlTranslation.Instance.TryCreate<ASpell>(node, out var ret, errorMask, translationMask))
-            {
-                throw new ArgumentException($"Unknown ASpell subclass: {node.Name.LocalName}");
-            }
-            ((ASpellSetterCommon)((IASpellGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new Debris();
+            ((DebrisSetterCommon)((IDebrisGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -138,9 +135,9 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ASpell CreateFromXml(
+        public static Debris CreateFromXml(
             string path,
-            ASpell.TranslationMask? translationMask = null)
+            Debris.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -148,10 +145,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static ASpell CreateFromXml(
+        public static Debris CreateFromXml(
             string path,
-            out ASpell.ErrorMask errorMask,
-            ASpell.TranslationMask? translationMask = null)
+            out Debris.ErrorMask errorMask,
+            Debris.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -160,10 +157,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static ASpell CreateFromXml(
+        public static Debris CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            ASpell.TranslationMask? translationMask = null)
+            Debris.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -172,9 +169,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static ASpell CreateFromXml(
+        public static Debris CreateFromXml(
             Stream stream,
-            ASpell.TranslationMask? translationMask = null)
+            Debris.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -182,10 +179,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static ASpell CreateFromXml(
+        public static Debris CreateFromXml(
             Stream stream,
-            out ASpell.ErrorMask errorMask,
-            ASpell.TranslationMask? translationMask = null)
+            out Debris.ErrorMask errorMask,
+            Debris.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -194,10 +191,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static ASpell CreateFromXml(
+        public static Debris CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ASpell.TranslationMask? translationMask = null)
+            Debris.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -291,7 +288,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new ASpell.Mask<R>();
+                var ret = new Debris.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -308,16 +305,16 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(ASpell.Mask<bool>? printMask = null)
+            public string ToString(Debris.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, ASpell.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, Debris.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ASpell.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(Debris.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -335,7 +332,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                ASpell_FieldIndex enu = (ASpell_FieldIndex)index;
+                Debris_FieldIndex enu = (Debris_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -345,7 +342,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthException(int index, Exception ex)
             {
-                ASpell_FieldIndex enu = (ASpell_FieldIndex)index;
+                Debris_FieldIndex enu = (Debris_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -356,7 +353,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthMask(int index, object obj)
             {
-                ASpell_FieldIndex enu = (ASpell_FieldIndex)index;
+                Debris_FieldIndex enu = (Debris_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -444,20 +441,19 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public override IEnumerable<ILinkGetter> Links => ASpellCommon.Instance.GetLinks(this);
-        public ASpell(FormKey formKey)
+        public new static readonly RecordType GrupRecordType = Debris_Registration.TriggeringRecordType;
+        public Debris(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        public ASpell(IMod mod)
+        public Debris(IMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public ASpell(IMod mod, string editorID)
+        public Debris(IMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -467,55 +463,77 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ASpellBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => DebrisBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((ASpellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((DebrisBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
+        #region Binary Create
+        [DebuggerStepThrough]
+        public static new Debris CreateFromBinary(MutagenFrame frame)
+        {
+            return CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: null);
+        }
+
+        public new static Debris CreateFromBinary(
+            MutagenFrame frame,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            var ret = new Debris();
+            ((DebrisSetterCommon)((IDebrisGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+                item: ret,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
+            return ret;
+        }
+
+        #endregion
+
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IASpellGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDebrisGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((ASpellSetterCommon)((IASpellGetter)this).CommonSetterInstance()!).Clear(this);
+            ((DebrisSetterCommon)((IDebrisGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new ASpell GetNew()
+        internal static new Debris GetNew()
         {
-            throw new ArgumentException("New called on an abstract class.");
+            return new Debris();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IASpell :
-        IASpellGetter,
+    public partial interface IDebris :
+        IDebrisGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<IASpellInternal>
+        ILoquiObjectSetter<IDebrisInternal>
     {
     }
 
-    public partial interface IASpellInternal :
+    public partial interface IDebrisInternal :
         ISkyrimMajorRecordInternal,
-        IASpell,
-        IASpellGetter
+        IDebris,
+        IDebrisGetter
     {
     }
 
-    public partial interface IASpellGetter :
+    public partial interface IDebrisGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IASpellGetter>,
+        ILoquiObject<IDebrisGetter>,
         IXmlItem,
-        ILinkContainer,
         IBinaryItem
     {
 
@@ -524,42 +542,42 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static partial class ASpellMixIn
+    public static partial class DebrisMixIn
     {
-        public static void Clear(this IASpellInternal item)
+        public static void Clear(this IDebrisInternal item)
         {
-            ((ASpellSetterCommon)((IASpellGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((DebrisSetterCommon)((IDebrisGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ASpell.Mask<bool> GetEqualsMask(
-            this IASpellGetter item,
-            IASpellGetter rhs,
+        public static Debris.Mask<bool> GetEqualsMask(
+            this IDebrisGetter item,
+            IDebrisGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ASpellCommon)((IASpellGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((DebrisCommon)((IDebrisGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IASpellGetter item,
+            this IDebrisGetter item,
             string? name = null,
-            ASpell.Mask<bool>? printMask = null)
+            Debris.Mask<bool>? printMask = null)
         {
-            return ((ASpellCommon)((IASpellGetter)item).CommonInstance()!).ToString(
+            return ((DebrisCommon)((IDebrisGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IASpellGetter item,
+            this IDebrisGetter item,
             FileGeneration fg,
             string? name = null,
-            ASpell.Mask<bool>? printMask = null)
+            Debris.Mask<bool>? printMask = null)
         {
-            ((ASpellCommon)((IASpellGetter)item).CommonInstance()!).ToString(
+            ((DebrisCommon)((IDebrisGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -567,86 +585,86 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this IASpellGetter item,
-            ASpell.Mask<bool?> checkMask)
+            this IDebrisGetter item,
+            Debris.Mask<bool?> checkMask)
         {
-            return ((ASpellCommon)((IASpellGetter)item).CommonInstance()!).HasBeenSet(
+            return ((DebrisCommon)((IDebrisGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static ASpell.Mask<bool> GetHasBeenSetMask(this IASpellGetter item)
+        public static Debris.Mask<bool> GetHasBeenSetMask(this IDebrisGetter item)
         {
-            var ret = new ASpell.Mask<bool>(false);
-            ((ASpellCommon)((IASpellGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new Debris.Mask<bool>(false);
+            ((DebrisCommon)((IDebrisGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IASpellGetter item,
-            IASpellGetter rhs)
+            this IDebrisGetter item,
+            IDebrisGetter rhs)
         {
-            return ((ASpellCommon)((IASpellGetter)item).CommonInstance()!).Equals(
+            return ((DebrisCommon)((IDebrisGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this IASpellInternal lhs,
-            IASpellGetter rhs,
-            out ASpell.ErrorMask errorMask,
-            ASpell.TranslationMask? copyMask = null)
+            this IDebrisInternal lhs,
+            IDebrisGetter rhs,
+            out Debris.ErrorMask errorMask,
+            Debris.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ASpellSetterTranslationCommon)((IASpellGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((DebrisSetterTranslationCommon)((IDebrisGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = ASpell.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Debris.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IASpellInternal lhs,
-            IASpellGetter rhs,
+            this IDebrisInternal lhs,
+            IDebrisGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ASpellSetterTranslationCommon)((IASpellGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((DebrisSetterTranslationCommon)((IDebrisGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static ASpell DeepCopy(
-            this IASpellGetter item,
-            ASpell.TranslationMask? copyMask = null)
+        public static Debris DeepCopy(
+            this IDebrisGetter item,
+            Debris.TranslationMask? copyMask = null)
         {
-            return ((ASpellSetterTranslationCommon)((IASpellGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((DebrisSetterTranslationCommon)((IDebrisGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static ASpell DeepCopy(
-            this IASpellGetter item,
-            out ASpell.ErrorMask errorMask,
-            ASpell.TranslationMask? copyMask = null)
+        public static Debris DeepCopy(
+            this IDebrisGetter item,
+            out Debris.ErrorMask errorMask,
+            Debris.TranslationMask? copyMask = null)
         {
-            return ((ASpellSetterTranslationCommon)((IASpellGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((DebrisSetterTranslationCommon)((IDebrisGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static ASpell DeepCopy(
-            this IASpellGetter item,
+        public static Debris DeepCopy(
+            this IDebrisGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((ASpellSetterTranslationCommon)((IASpellGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((DebrisSetterTranslationCommon)((IDebrisGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -655,9 +673,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IASpellInternal item,
+            this IDebrisInternal item,
             XElement node,
-            ASpell.TranslationMask? translationMask = null)
+            Debris.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -668,10 +686,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IASpellInternal item,
+            this IDebrisInternal item,
             XElement node,
-            out ASpell.ErrorMask errorMask,
-            ASpell.TranslationMask? translationMask = null)
+            out Debris.ErrorMask errorMask,
+            Debris.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -679,16 +697,16 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ASpell.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Debris.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this IASpellInternal item,
+            this IDebrisInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((ASpellSetterCommon)((IASpellGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((DebrisSetterCommon)((IDebrisGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -696,9 +714,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IASpellInternal item,
+            this IDebrisInternal item,
             string path,
-            ASpell.TranslationMask? translationMask = null)
+            Debris.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -708,10 +726,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IASpellInternal item,
+            this IDebrisInternal item,
             string path,
-            out ASpell.ErrorMask errorMask,
-            ASpell.TranslationMask? translationMask = null)
+            out Debris.ErrorMask errorMask,
+            Debris.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -722,10 +740,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IASpellInternal item,
+            this IDebrisInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            ASpell.TranslationMask? translationMask = null)
+            Debris.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -736,9 +754,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IASpellInternal item,
+            this IDebrisInternal item,
             Stream stream,
-            ASpell.TranslationMask? translationMask = null)
+            Debris.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -748,10 +766,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IASpellInternal item,
+            this IDebrisInternal item,
             Stream stream,
-            out ASpell.ErrorMask errorMask,
-            ASpell.TranslationMask? translationMask = null)
+            out Debris.ErrorMask errorMask,
+            Debris.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -762,10 +780,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IASpellInternal item,
+            this IDebrisInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ASpell.TranslationMask? translationMask = null)
+            Debris.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -780,7 +798,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IASpellInternal item,
+            this IDebrisInternal item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -790,11 +808,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromBinary(
-            this IASpellInternal item,
+            this IDebrisInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((ASpellSetterCommon)((IASpellGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((DebrisSetterCommon)((IDebrisGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -810,7 +828,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum ASpell_FieldIndex
+    public enum Debris_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -823,40 +841,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ASpell_Registration : ILoquiRegistration
+    public partial class Debris_Registration : ILoquiRegistration
     {
-        public static readonly ASpell_Registration Instance = new ASpell_Registration();
+        public static readonly Debris_Registration Instance = new Debris_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 145,
+            msgID: 142,
             version: 0);
 
-        public const string GUID = "cef2b193-aa35-4417-afd6-a3bf0f7824f8";
+        public const string GUID = "5bcb6ea3-f45b-4db7-a1ce-65457d4695fe";
 
         public const ushort AdditionalFieldCount = 0;
 
         public const ushort FieldCount = 7;
 
-        public static readonly Type MaskType = typeof(ASpell.Mask<>);
+        public static readonly Type MaskType = typeof(Debris.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ASpell.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Debris.ErrorMask);
 
-        public static readonly Type ClassType = typeof(ASpell);
+        public static readonly Type ClassType = typeof(Debris);
 
-        public static readonly Type GetterType = typeof(IASpellGetter);
+        public static readonly Type GetterType = typeof(IDebrisGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IASpell);
+        public static readonly Type SetterType = typeof(IDebris);
 
-        public static readonly Type? InternalSetterType = typeof(IASpellInternal);
+        public static readonly Type? InternalSetterType = typeof(IDebrisInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.ASpell";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.Debris";
 
-        public const string Name = "ASpell";
+        public const string Name = "Debris";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -875,7 +893,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            ASpell_FieldIndex enu = (ASpell_FieldIndex)index;
+            Debris_FieldIndex enu = (Debris_FieldIndex)index;
             switch (enu)
             {
                 default:
@@ -885,7 +903,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            ASpell_FieldIndex enu = (ASpell_FieldIndex)index;
+            Debris_FieldIndex enu = (Debris_FieldIndex)index;
             switch (enu)
             {
                 default:
@@ -895,7 +913,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            ASpell_FieldIndex enu = (ASpell_FieldIndex)index;
+            Debris_FieldIndex enu = (Debris_FieldIndex)index;
             switch (enu)
             {
                 default:
@@ -905,7 +923,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static string GetNthName(ushort index)
         {
-            ASpell_FieldIndex enu = (ASpell_FieldIndex)index;
+            Debris_FieldIndex enu = (Debris_FieldIndex)index;
             switch (enu)
             {
                 default:
@@ -915,7 +933,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            ASpell_FieldIndex enu = (ASpell_FieldIndex)index;
+            Debris_FieldIndex enu = (Debris_FieldIndex)index;
             switch (enu)
             {
                 default:
@@ -925,7 +943,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsProtected(ushort index)
         {
-            ASpell_FieldIndex enu = (ASpell_FieldIndex)index;
+            Debris_FieldIndex enu = (Debris_FieldIndex)index;
             switch (enu)
             {
                 default:
@@ -935,7 +953,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static Type GetNthType(ushort index)
         {
-            ASpell_FieldIndex enu = (ASpell_FieldIndex)index;
+            Debris_FieldIndex enu = (Debris_FieldIndex)index;
             switch (enu)
             {
                 default:
@@ -943,26 +961,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(ASpellXmlWriteTranslation);
-        public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
-        public static readonly RecordType SHOU_HEADER = new RecordType("SHOU");
-        public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
-        {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        LVSP_HEADER,
-                        SHOU_HEADER,
-                        SPEL_HEADER
-                    })
-            );
-        });
+        public static readonly Type XmlWriteTranslation = typeof(DebrisXmlWriteTranslation);
+        public static readonly RecordType DEBR_HEADER = new RecordType("DEBR");
+        public static readonly RecordType TriggeringRecordType = DEBR_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryWriteTranslation = typeof(ASpellBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(DebrisBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -995,13 +999,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ASpellSetterCommon : SkyrimMajorRecordSetterCommon
+    public partial class DebrisSetterCommon : SkyrimMajorRecordSetterCommon
     {
-        public new static readonly ASpellSetterCommon Instance = new ASpellSetterCommon();
+        public new static readonly DebrisSetterCommon Instance = new DebrisSetterCommon();
 
         partial void ClearPartial();
         
-        public virtual void Clear(IASpellInternal item)
+        public void Clear(IDebrisInternal item)
         {
             ClearPartial();
             base.Clear(item);
@@ -1009,17 +1013,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override void Clear(ISkyrimMajorRecordInternal item)
         {
-            Clear(item: (IASpellInternal)item);
+            Clear(item: (IDebrisInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IASpellInternal)item);
+            Clear(item: (IDebrisInternal)item);
         }
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
-            IASpellInternal item,
+            IDebrisInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1039,7 +1043,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public virtual void CopyInFromXml(
-            IASpellInternal item,
+            IDebrisInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1054,7 +1058,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    ASpellXmlCreateTranslation.FillPublicElementXml(
+                    DebrisXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1076,7 +1080,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask)
         {
             CopyInFromXml(
-                item: (ASpell)item,
+                item: (Debris)item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1089,7 +1093,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask)
         {
             CopyInFromXml(
-                item: (ASpell)item,
+                item: (Debris)item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1098,12 +1102,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => throw new ArgumentException();
+        public override RecordType RecordType => Debris_Registration.DEBR_HEADER;
+        protected static void FillBinaryStructs(
+            IDebrisInternal item,
+            MutagenFrame frame)
+        {
+            SkyrimMajorRecordSetterCommon.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+        
         public virtual void CopyInFromBinary(
-            IASpellInternal item,
+            IDebrisInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
+            UtilityTranslation.MajorRecordParse<IDebrisInternal>(
+                record: item,
+                frame: frame,
+                recType: RecordType,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1112,7 +1132,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (ASpell)item,
+                item: (Debris)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1123,7 +1143,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (ASpell)item,
+                item: (Debris)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1131,17 +1151,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ASpellCommon : SkyrimMajorRecordCommon
+    public partial class DebrisCommon : SkyrimMajorRecordCommon
     {
-        public new static readonly ASpellCommon Instance = new ASpellCommon();
+        public new static readonly DebrisCommon Instance = new DebrisCommon();
 
-        public ASpell.Mask<bool> GetEqualsMask(
-            IASpellGetter item,
-            IASpellGetter rhs,
+        public Debris.Mask<bool> GetEqualsMask(
+            IDebrisGetter item,
+            IDebrisGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ASpell.Mask<bool>(false);
-            ((ASpellCommon)((IASpellGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new Debris.Mask<bool>(false);
+            ((DebrisCommon)((IDebrisGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1150,9 +1170,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IASpellGetter item,
-            IASpellGetter rhs,
-            ASpell.Mask<bool> ret,
+            IDebrisGetter item,
+            IDebrisGetter rhs,
+            Debris.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1160,9 +1180,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public string ToString(
-            IASpellGetter item,
+            IDebrisGetter item,
             string? name = null,
-            ASpell.Mask<bool>? printMask = null)
+            Debris.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1174,18 +1194,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IASpellGetter item,
+            IDebrisGetter item,
             FileGeneration fg,
             string? name = null,
-            ASpell.Mask<bool>? printMask = null)
+            Debris.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ASpell =>");
+                fg.AppendLine($"Debris =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ASpell) =>");
+                fg.AppendLine($"{name} (Debris) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1199,9 +1219,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IASpellGetter item,
+            IDebrisGetter item,
             FileGeneration fg,
-            ASpell.Mask<bool>? printMask = null)
+            Debris.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1210,8 +1230,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public bool HasBeenSet(
-            IASpellGetter item,
-            ASpell.Mask<bool?> checkMask)
+            IDebrisGetter item,
+            Debris.Mask<bool?> checkMask)
         {
             return base.HasBeenSet(
                 item: item,
@@ -1219,49 +1239,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillHasBeenSetMask(
-            IASpellGetter item,
-            ASpell.Mask<bool> mask)
+            IDebrisGetter item,
+            Debris.Mask<bool> mask)
         {
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
         }
         
-        public static ASpell_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
+        public static Debris_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case SkyrimMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (ASpell_FieldIndex)((int)index);
+                    return (Debris_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
-                    return (ASpell_FieldIndex)((int)index);
+                    return (Debris_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version:
-                    return (ASpell_FieldIndex)((int)index);
+                    return (Debris_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
-                    return (ASpell_FieldIndex)((int)index);
+                    return (Debris_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
-                    return (ASpell_FieldIndex)((int)index);
+                    return (Debris_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
-                    return (ASpell_FieldIndex)((int)index);
+                    return (Debris_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
-                    return (ASpell_FieldIndex)((int)index);
+                    return (Debris_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new ASpell_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Debris_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (ASpell_FieldIndex)((int)index);
+                    return (Debris_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (ASpell_FieldIndex)((int)index);
+                    return (Debris_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
-                    return (ASpell_FieldIndex)((int)index);
+                    return (Debris_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (ASpell_FieldIndex)((int)index);
+                    return (Debris_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1269,8 +1289,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IASpellGetter? lhs,
-            IASpellGetter? rhs)
+            IDebrisGetter? lhs,
+            IDebrisGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1283,8 +1303,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IASpellGetter?)lhs,
-                rhs: rhs as IASpellGetter);
+                lhs: (IDebrisGetter?)lhs,
+                rhs: rhs as IDebrisGetter);
         }
         
         public override bool Equals(
@@ -1292,11 +1312,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IASpellGetter?)lhs,
-                rhs: rhs as IASpellGetter);
+                lhs: (IDebrisGetter?)lhs,
+                rhs: rhs as IDebrisGetter);
         }
         
-        public virtual int GetHashCode(IASpellGetter item)
+        public virtual int GetHashCode(IDebrisGetter item)
         {
             var hash = new HashCode();
             hash.Add(base.GetHashCode());
@@ -1305,12 +1325,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override int GetHashCode(ISkyrimMajorRecordGetter item)
         {
-            return GetHashCode(item: (IASpellGetter)item);
+            return GetHashCode(item: (IDebrisGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IASpellGetter)item);
+            return GetHashCode(item: (IDebrisGetter)item);
         }
         
         #endregion
@@ -1318,11 +1338,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override object GetNew()
         {
-            return ASpell.GetNew();
+            return Debris.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IASpellGetter obj)
+        public IEnumerable<ILinkGetter> GetLinks(IDebrisGetter obj)
         {
             foreach (var item in base.GetLinks(obj))
             {
@@ -1331,24 +1351,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        partial void PostDuplicate(ASpell obj, ASpell rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
+        partial void PostDuplicate(Debris obj, Debris rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            throw new NotImplementedException();
+            var ret = new Debris(getNextFormKey());
+            ret.DeepCopyIn((Debris)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Debris)item, getNextFormKey, duplicatedRecords);
+            return ret;
         }
         
         #endregion
         
     }
-    public partial class ASpellSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    public partial class DebrisSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
-        public new static readonly ASpellSetterTranslationCommon Instance = new ASpellSetterTranslationCommon();
+        public new static readonly DebrisSetterTranslationCommon Instance = new DebrisSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public virtual void DeepCopyIn(
-            IASpellInternal item,
-            IASpellGetter rhs,
+        public void DeepCopyIn(
+            IDebrisInternal item,
+            IDebrisGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1359,9 +1383,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
         }
         
-        public virtual void DeepCopyIn(
-            IASpell item,
-            IASpellGetter rhs,
+        public void DeepCopyIn(
+            IDebris item,
+            IDebrisGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1379,8 +1403,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IASpellInternal)item,
-                rhs: (IASpellGetter)rhs,
+                item: (IDebrisInternal)item,
+                rhs: (IDebrisGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1392,8 +1416,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IASpell)item,
-                rhs: (IASpellGetter)rhs,
+                item: (IDebris)item,
+                rhs: (IDebrisGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1405,8 +1429,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IASpellInternal)item,
-                rhs: (IASpellGetter)rhs,
+                item: (IDebrisInternal)item,
+                rhs: (IDebrisGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1418,31 +1442,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IASpell)item,
-                rhs: (IASpellGetter)rhs,
+                item: (IDebris)item,
+                rhs: (IDebrisGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
         #endregion
         
-        public ASpell DeepCopy(
-            IASpellGetter item,
-            ASpell.TranslationMask? copyMask = null)
+        public Debris DeepCopy(
+            IDebrisGetter item,
+            Debris.TranslationMask? copyMask = null)
         {
-            ASpell ret = (ASpell)((ASpellCommon)((IASpellGetter)item).CommonInstance()!).GetNew();
+            Debris ret = (Debris)((DebrisCommon)((IDebrisGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public ASpell DeepCopy(
-            IASpellGetter item,
-            out ASpell.ErrorMask errorMask,
-            ASpell.TranslationMask? copyMask = null)
+        public Debris DeepCopy(
+            IDebrisGetter item,
+            out Debris.ErrorMask errorMask,
+            Debris.TranslationMask? copyMask = null)
         {
-            ASpell ret = (ASpell)((ASpellCommon)((IASpellGetter)item).CommonInstance()!).GetNew();
+            Debris ret = (Debris)((DebrisCommon)((IDebrisGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1450,12 +1474,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public ASpell DeepCopy(
-            IASpellGetter item,
+        public Debris DeepCopy(
+            IDebrisGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            ASpell ret = (ASpell)((ASpellCommon)((IASpellGetter)item).CommonInstance()!).GetNew();
+            Debris ret = (Debris)((DebrisCommon)((IDebrisGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1470,21 +1494,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ASpell
+    public partial class Debris
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ASpell_Registration.Instance;
-        public new static ASpell_Registration Registration => ASpell_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Debris_Registration.Instance;
+        public new static Debris_Registration Registration => Debris_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ASpellCommon.Instance;
+        protected override object CommonInstance() => DebrisCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return ASpellSetterCommon.Instance;
+            return DebrisSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ASpellSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => DebrisSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1495,14 +1519,14 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ASpellXmlWriteTranslation :
+    public partial class DebrisXmlWriteTranslation :
         SkyrimMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
     {
-        public new readonly static ASpellXmlWriteTranslation Instance = new ASpellXmlWriteTranslation();
+        public new readonly static DebrisXmlWriteTranslation Instance = new DebrisXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IASpellGetter item,
+            IDebrisGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1514,18 +1538,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
 
-        public virtual void Write(
+        public void Write(
             XElement node,
-            IASpellGetter item,
+            IDebrisGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.ASpell");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Debris");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.ASpell");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Debris");
             }
             WriteToNodeXml(
                 item: item,
@@ -1542,7 +1566,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IASpellGetter)item,
+                item: (IDebrisGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1557,7 +1581,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IASpellGetter)item,
+                item: (IDebrisGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1572,7 +1596,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IASpellGetter)item,
+                item: (IDebrisGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1581,12 +1605,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ASpellXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
+    public partial class DebrisXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
     {
-        public new readonly static ASpellXmlCreateTranslation Instance = new ASpellXmlCreateTranslation();
+        public new readonly static DebrisXmlCreateTranslation Instance = new DebrisXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IASpellInternal item,
+            IDebrisInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1595,7 +1619,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    ASpellXmlCreateTranslation.FillPublicElementXml(
+                    DebrisXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1611,7 +1635,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            IASpellInternal item,
+            IDebrisInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1636,30 +1660,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Xml Write Mixins
-    public static class ASpellXmlTranslationMixIn
+    public static class DebrisXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IASpellGetter item,
+            this IDebrisGetter item,
             XElement node,
-            out ASpell.ErrorMask errorMask,
-            ASpell.TranslationMask? translationMask = null,
+            out Debris.ErrorMask errorMask,
+            Debris.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((ASpellXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((DebrisXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ASpell.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Debris.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this IASpellGetter item,
+            this IDebrisGetter item,
             string path,
-            out ASpell.ErrorMask errorMask,
-            ASpell.TranslationMask? translationMask = null,
+            out Debris.ErrorMask errorMask,
+            Debris.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1673,10 +1697,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IASpellGetter item,
+            this IDebrisGetter item,
             Stream stream,
-            out ASpell.ErrorMask errorMask,
-            ASpell.TranslationMask? translationMask = null,
+            out Debris.ErrorMask errorMask,
+            Debris.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1699,24 +1723,30 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ASpellBinaryWriteTranslation :
+    public partial class DebrisBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ASpellBinaryWriteTranslation Instance = new ASpellBinaryWriteTranslation();
+        public new readonly static DebrisBinaryWriteTranslation Instance = new DebrisBinaryWriteTranslation();
 
-        public virtual void Write(
+        public void Write(
             MutagenWriter writer,
-            IASpellGetter item,
+            IDebrisGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
-                item: item,
+            using (HeaderExport.ExportHeader(
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                record: recordTypeConverter.ConvertToCustom(Debris_Registration.DEBR_HEADER),
+                type: ObjectType.Record))
+            {
+                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    item: item,
+                    writer: writer);
+                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
         }
 
         public override void Write(
@@ -1725,7 +1755,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IASpellGetter)item,
+                item: (IDebrisGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1736,7 +1766,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IASpellGetter)item,
+                item: (IDebrisGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1747,16 +1777,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IASpellGetter)item,
+                item: (IDebrisGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class ASpellBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    public partial class DebrisBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static ASpellBinaryCreateTranslation Instance = new ASpellBinaryCreateTranslation();
+        public new readonly static DebrisBinaryCreateTranslation Instance = new DebrisBinaryCreateTranslation();
 
     }
 
@@ -1764,7 +1794,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class ASpellBinaryTranslationMixIn
+    public static class DebrisBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1773,35 +1803,34 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ASpellBinaryOverlay :
+    public partial class DebrisBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
-        IASpellGetter
+        IDebrisGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ASpell_Registration.Instance;
-        public new static ASpell_Registration Registration => ASpell_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Debris_Registration.Instance;
+        public new static Debris_Registration Registration => Debris_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ASpellCommon.Instance;
+        protected override object CommonInstance() => DebrisCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ASpellSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => DebrisSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IASpellGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDebrisGetter)rhs, include);
 
-        public override IEnumerable<ILinkGetter> Links => ASpellCommon.Instance.GetLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ASpellXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => DebrisXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((ASpellXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((DebrisXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -1809,12 +1838,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ASpellBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => DebrisBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((ASpellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((DebrisBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
@@ -1825,7 +1854,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset);
 
-        protected ASpellBinaryOverlay(
+        protected DebrisBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1834,13 +1863,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
+        public static DebrisBinaryOverlay DebrisFactory(
+            BinaryMemoryReadStream stream,
+            BinaryOverlayFactoryPackage package,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            stream = UtilityTranslation.DecompressStream(stream, package.Meta);
+            var ret = new DebrisBinaryOverlay(
+                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0x10 + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset);
+            ret.FillSubrecordTypes(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
         #region To String
 
         public override void ToString(
             FileGeneration fg,
             string? name = null)
         {
-            ASpellMixIn.ToString(
+            DebrisMixIn.ToString(
                 item: this,
                 name: name);
         }

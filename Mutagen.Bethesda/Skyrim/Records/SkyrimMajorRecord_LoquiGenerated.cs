@@ -1086,12 +1086,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(SkyrimMajorRecordXmlWriteTranslation);
         public static readonly RecordType ASPC_HEADER = new RecordType("ASPC");
         public static readonly RecordType AACT_HEADER = new RecordType("AACT");
+        public static readonly RecordType ACTI_HEADER = new RecordType("ACTI");
         public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
         public static readonly RecordType ARTO_HEADER = new RecordType("ARTO");
-        public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
         public static readonly RecordType BPTD_HEADER = new RecordType("BPTD");
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
         public static readonly RecordType CLFM_HEADER = new RecordType("CLFM");
+        public static readonly RecordType DEBR_HEADER = new RecordType("DEBR");
         public static readonly RecordType DUAL_HEADER = new RecordType("DUAL");
         public static readonly RecordType EFSH_HEADER = new RecordType("EFSH");
         public static readonly RecordType EQUP_HEADER = new RecordType("EQUP");
@@ -1122,11 +1123,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType RACE_HEADER = new RecordType("RACE");
         public static readonly RecordType REGN_HEADER = new RecordType("REGN");
         public static readonly RecordType REVB_HEADER = new RecordType("REVB");
+        public static readonly RecordType SCRL_HEADER = new RecordType("SCRL");
         public static readonly RecordType SNDR_HEADER = new RecordType("SNDR");
         public static readonly RecordType SOUN_HEADER = new RecordType("SOUN");
         public static readonly RecordType STAT_HEADER = new RecordType("STAT");
         public static readonly RecordType TXST_HEADER = new RecordType("TXST");
         public static readonly RecordType VTYP_HEADER = new RecordType("VTYP");
+        public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
+        public static readonly RecordType SHOU_HEADER = new RecordType("SHOU");
+        public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1136,12 +1141,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         ASPC_HEADER,
                         AACT_HEADER,
+                        ACTI_HEADER,
                         ARMO_HEADER,
                         ARTO_HEADER,
-                        SPEL_HEADER,
                         BPTD_HEADER,
                         CLAS_HEADER,
                         CLFM_HEADER,
+                        DEBR_HEADER,
                         DUAL_HEADER,
                         EFSH_HEADER,
                         EQUP_HEADER,
@@ -1172,11 +1178,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         RACE_HEADER,
                         REGN_HEADER,
                         REVB_HEADER,
+                        SCRL_HEADER,
                         SNDR_HEADER,
                         SOUN_HEADER,
                         STAT_HEADER,
                         TXST_HEADER,
-                        VTYP_HEADER
+                        VTYP_HEADER,
+                        LVSP_HEADER,
+                        SHOU_HEADER,
+                        SPEL_HEADER
                     })
             );
         });

@@ -125,11 +125,11 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IExplosionGetter> IMagicEffectDataGetter.Explosion => this.Explosion;
         #endregion
-        #region CastingType
-        public CastingType CastingType { get; set; } = default;
+        #region CastType
+        public CastType CastType { get; set; } = default;
         #endregion
-        #region Delivery
-        public Targeting Delivery { get; set; } = default;
+        #region TargetType
+        public TargetType TargetType { get; set; } = default;
         #endregion
         #region SecondActorValue
         public ActorValueExtended SecondActorValue { get; set; } = default;
@@ -408,8 +408,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Archetype = new MaskItem<TItem, MagicEffectArchetype.Mask<TItem>?>(initialValue, new MagicEffectArchetype.Mask<TItem>(initialValue));
                 this.Projectile = initialValue;
                 this.Explosion = initialValue;
-                this.CastingType = initialValue;
-                this.Delivery = initialValue;
+                this.CastType = initialValue;
+                this.TargetType = initialValue;
                 this.SecondActorValue = initialValue;
                 this.CastingArt = initialValue;
                 this.HitEffectArt = initialValue;
@@ -448,8 +448,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Archetype,
                 TItem Projectile,
                 TItem Explosion,
-                TItem CastingType,
-                TItem Delivery,
+                TItem CastType,
+                TItem TargetType,
                 TItem SecondActorValue,
                 TItem CastingArt,
                 TItem HitEffectArt,
@@ -486,8 +486,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Archetype = new MaskItem<TItem, MagicEffectArchetype.Mask<TItem>?>(Archetype, new MagicEffectArchetype.Mask<TItem>(Archetype));
                 this.Projectile = Projectile;
                 this.Explosion = Explosion;
-                this.CastingType = CastingType;
-                this.Delivery = Delivery;
+                this.CastType = CastType;
+                this.TargetType = TargetType;
                 this.SecondActorValue = SecondActorValue;
                 this.CastingArt = CastingArt;
                 this.HitEffectArt = HitEffectArt;
@@ -534,8 +534,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, MagicEffectArchetype.Mask<TItem>?>? Archetype { get; set; }
             public TItem Projectile;
             public TItem Explosion;
-            public TItem CastingType;
-            public TItem Delivery;
+            public TItem CastType;
+            public TItem TargetType;
             public TItem SecondActorValue;
             public TItem CastingArt;
             public TItem HitEffectArt;
@@ -583,8 +583,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Archetype, rhs.Archetype)) return false;
                 if (!object.Equals(this.Projectile, rhs.Projectile)) return false;
                 if (!object.Equals(this.Explosion, rhs.Explosion)) return false;
-                if (!object.Equals(this.CastingType, rhs.CastingType)) return false;
-                if (!object.Equals(this.Delivery, rhs.Delivery)) return false;
+                if (!object.Equals(this.CastType, rhs.CastType)) return false;
+                if (!object.Equals(this.TargetType, rhs.TargetType)) return false;
                 if (!object.Equals(this.SecondActorValue, rhs.SecondActorValue)) return false;
                 if (!object.Equals(this.CastingArt, rhs.CastingArt)) return false;
                 if (!object.Equals(this.HitEffectArt, rhs.HitEffectArt)) return false;
@@ -625,8 +625,8 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Archetype);
                 hash.Add(this.Projectile);
                 hash.Add(this.Explosion);
-                hash.Add(this.CastingType);
-                hash.Add(this.Delivery);
+                hash.Add(this.CastType);
+                hash.Add(this.TargetType);
                 hash.Add(this.SecondActorValue);
                 hash.Add(this.CastingArt);
                 hash.Add(this.HitEffectArt);
@@ -674,8 +674,8 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (!eval(this.Projectile)) return false;
                 if (!eval(this.Explosion)) return false;
-                if (!eval(this.CastingType)) return false;
-                if (!eval(this.Delivery)) return false;
+                if (!eval(this.CastType)) return false;
+                if (!eval(this.TargetType)) return false;
                 if (!eval(this.SecondActorValue)) return false;
                 if (!eval(this.CastingArt)) return false;
                 if (!eval(this.HitEffectArt)) return false;
@@ -722,8 +722,8 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (eval(this.Projectile)) return true;
                 if (eval(this.Explosion)) return true;
-                if (eval(this.CastingType)) return true;
-                if (eval(this.Delivery)) return true;
+                if (eval(this.CastType)) return true;
+                if (eval(this.TargetType)) return true;
                 if (eval(this.SecondActorValue)) return true;
                 if (eval(this.CastingArt)) return true;
                 if (eval(this.HitEffectArt)) return true;
@@ -773,8 +773,8 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Archetype = this.Archetype == null ? null : new MaskItem<R, MagicEffectArchetype.Mask<R>?>(eval(this.Archetype.Overall), this.Archetype.Specific?.Translate(eval));
                 obj.Projectile = eval(this.Projectile);
                 obj.Explosion = eval(this.Explosion);
-                obj.CastingType = eval(this.CastingType);
-                obj.Delivery = eval(this.Delivery);
+                obj.CastType = eval(this.CastType);
+                obj.TargetType = eval(this.TargetType);
                 obj.SecondActorValue = eval(this.SecondActorValue);
                 obj.CastingArt = eval(this.CastingArt);
                 obj.HitEffectArt = eval(this.HitEffectArt);
@@ -889,13 +889,13 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(Explosion, "Explosion");
                     }
-                    if (printMask?.CastingType ?? true)
+                    if (printMask?.CastType ?? true)
                     {
-                        fg.AppendItem(CastingType, "CastingType");
+                        fg.AppendItem(CastType, "CastType");
                     }
-                    if (printMask?.Delivery ?? true)
+                    if (printMask?.TargetType ?? true)
                     {
-                        fg.AppendItem(Delivery, "Delivery");
+                        fg.AppendItem(TargetType, "TargetType");
                     }
                     if (printMask?.SecondActorValue ?? true)
                     {
@@ -1005,8 +1005,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, MagicEffectArchetype.ErrorMask?>? Archetype;
             public Exception? Projectile;
             public Exception? Explosion;
-            public Exception? CastingType;
-            public Exception? Delivery;
+            public Exception? CastType;
+            public Exception? TargetType;
             public Exception? SecondActorValue;
             public Exception? CastingArt;
             public Exception? HitEffectArt;
@@ -1069,10 +1069,10 @@ namespace Mutagen.Bethesda.Skyrim
                         return Projectile;
                     case MagicEffectData_FieldIndex.Explosion:
                         return Explosion;
-                    case MagicEffectData_FieldIndex.CastingType:
-                        return CastingType;
-                    case MagicEffectData_FieldIndex.Delivery:
-                        return Delivery;
+                    case MagicEffectData_FieldIndex.CastType:
+                        return CastType;
+                    case MagicEffectData_FieldIndex.TargetType:
+                        return TargetType;
                     case MagicEffectData_FieldIndex.SecondActorValue:
                         return SecondActorValue;
                     case MagicEffectData_FieldIndex.CastingArt:
@@ -1172,11 +1172,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case MagicEffectData_FieldIndex.Explosion:
                         this.Explosion = ex;
                         break;
-                    case MagicEffectData_FieldIndex.CastingType:
-                        this.CastingType = ex;
+                    case MagicEffectData_FieldIndex.CastType:
+                        this.CastType = ex;
                         break;
-                    case MagicEffectData_FieldIndex.Delivery:
-                        this.Delivery = ex;
+                    case MagicEffectData_FieldIndex.TargetType:
+                        this.TargetType = ex;
                         break;
                     case MagicEffectData_FieldIndex.SecondActorValue:
                         this.SecondActorValue = ex;
@@ -1293,11 +1293,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case MagicEffectData_FieldIndex.Explosion:
                         this.Explosion = (Exception?)obj;
                         break;
-                    case MagicEffectData_FieldIndex.CastingType:
-                        this.CastingType = (Exception?)obj;
+                    case MagicEffectData_FieldIndex.CastType:
+                        this.CastType = (Exception?)obj;
                         break;
-                    case MagicEffectData_FieldIndex.Delivery:
-                        this.Delivery = (Exception?)obj;
+                    case MagicEffectData_FieldIndex.TargetType:
+                        this.TargetType = (Exception?)obj;
                         break;
                     case MagicEffectData_FieldIndex.SecondActorValue:
                         this.SecondActorValue = (Exception?)obj;
@@ -1374,8 +1374,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Archetype != null) return true;
                 if (Projectile != null) return true;
                 if (Explosion != null) return true;
-                if (CastingType != null) return true;
-                if (Delivery != null) return true;
+                if (CastType != null) return true;
+                if (TargetType != null) return true;
                 if (SecondActorValue != null) return true;
                 if (CastingArt != null) return true;
                 if (HitEffectArt != null) return true;
@@ -1445,8 +1445,8 @@ namespace Mutagen.Bethesda.Skyrim
                 Archetype?.ToString(fg);
                 fg.AppendItem(Projectile, "Projectile");
                 fg.AppendItem(Explosion, "Explosion");
-                fg.AppendItem(CastingType, "CastingType");
-                fg.AppendItem(Delivery, "Delivery");
+                fg.AppendItem(CastType, "CastType");
+                fg.AppendItem(TargetType, "TargetType");
                 fg.AppendItem(SecondActorValue, "SecondActorValue");
                 fg.AppendItem(CastingArt, "CastingArt");
                 fg.AppendItem(HitEffectArt, "HitEffectArt");
@@ -1490,8 +1490,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Archetype = this.Archetype.Combine(rhs.Archetype, (l, r) => l.Combine(r));
                 ret.Projectile = this.Projectile.Combine(rhs.Projectile);
                 ret.Explosion = this.Explosion.Combine(rhs.Explosion);
-                ret.CastingType = this.CastingType.Combine(rhs.CastingType);
-                ret.Delivery = this.Delivery.Combine(rhs.Delivery);
+                ret.CastType = this.CastType.Combine(rhs.CastType);
+                ret.TargetType = this.TargetType.Combine(rhs.TargetType);
                 ret.SecondActorValue = this.SecondActorValue.Combine(rhs.SecondActorValue);
                 ret.CastingArt = this.CastingArt.Combine(rhs.CastingArt);
                 ret.HitEffectArt = this.HitEffectArt.Combine(rhs.HitEffectArt);
@@ -1548,8 +1548,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, MagicEffectArchetype.TranslationMask?> Archetype;
             public bool Projectile;
             public bool Explosion;
-            public bool CastingType;
-            public bool Delivery;
+            public bool CastType;
+            public bool TargetType;
             public bool SecondActorValue;
             public bool CastingArt;
             public bool HitEffectArt;
@@ -1590,8 +1590,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Archetype = new MaskItem<bool, MagicEffectArchetype.TranslationMask?>(defaultOn, null);
                 this.Projectile = defaultOn;
                 this.Explosion = defaultOn;
-                this.CastingType = defaultOn;
-                this.Delivery = defaultOn;
+                this.CastType = defaultOn;
+                this.TargetType = defaultOn;
                 this.SecondActorValue = defaultOn;
                 this.CastingArt = defaultOn;
                 this.HitEffectArt = defaultOn;
@@ -1642,8 +1642,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Archetype?.Overall ?? true, Archetype?.Specific?.GetCrystal()));
                 ret.Add((Projectile, null));
                 ret.Add((Explosion, null));
-                ret.Add((CastingType, null));
-                ret.Add((Delivery, null));
+                ret.Add((CastType, null));
+                ret.Add((TargetType, null));
                 ret.Add((SecondActorValue, null));
                 ret.Add((CastingArt, null));
                 ret.Add((HitEffectArt, null));
@@ -1750,8 +1750,8 @@ namespace Mutagen.Bethesda.Skyrim
         new MagicEffectArchetype Archetype { get; set; }
         new IFormLink<Projectile> Projectile { get; }
         new IFormLink<Explosion> Explosion { get; }
-        new CastingType CastingType { get; set; }
-        new Targeting Delivery { get; set; }
+        new CastType CastType { get; set; }
+        new TargetType TargetType { get; set; }
         new ActorValueExtended SecondActorValue { get; set; }
         new IFormLink<ArtObject> CastingArt { get; }
         new IFormLink<ArtObject> HitEffectArt { get; }
@@ -1802,8 +1802,8 @@ namespace Mutagen.Bethesda.Skyrim
         IMagicEffectArchetypeGetter Archetype { get; }
         IFormLinkGetter<IProjectileGetter> Projectile { get; }
         IFormLinkGetter<IExplosionGetter> Explosion { get; }
-        CastingType CastingType { get; }
-        Targeting Delivery { get; }
+        CastType CastType { get; }
+        TargetType TargetType { get; }
         ActorValueExtended SecondActorValue { get; }
         IFormLinkGetter<IArtObjectGetter> CastingArt { get; }
         IFormLinkGetter<IArtObjectGetter> HitEffectArt { get; }
@@ -2145,8 +2145,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Archetype = 16,
         Projectile = 17,
         Explosion = 18,
-        CastingType = 19,
-        Delivery = 20,
+        CastType = 19,
+        TargetType = 20,
         SecondActorValue = 21,
         CastingArt = 22,
         HitEffectArt = 23,
@@ -2250,10 +2250,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)MagicEffectData_FieldIndex.Projectile;
                 case "EXPLOSION":
                     return (ushort)MagicEffectData_FieldIndex.Explosion;
-                case "CASTINGTYPE":
-                    return (ushort)MagicEffectData_FieldIndex.CastingType;
-                case "DELIVERY":
-                    return (ushort)MagicEffectData_FieldIndex.Delivery;
+                case "CASTTYPE":
+                    return (ushort)MagicEffectData_FieldIndex.CastType;
+                case "TARGETTYPE":
+                    return (ushort)MagicEffectData_FieldIndex.TargetType;
                 case "SECONDACTORVALUE":
                     return (ushort)MagicEffectData_FieldIndex.SecondActorValue;
                 case "CASTINGART":
@@ -2315,8 +2315,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MagicEffectData_FieldIndex.Archetype:
                 case MagicEffectData_FieldIndex.Projectile:
                 case MagicEffectData_FieldIndex.Explosion:
-                case MagicEffectData_FieldIndex.CastingType:
-                case MagicEffectData_FieldIndex.Delivery:
+                case MagicEffectData_FieldIndex.CastType:
+                case MagicEffectData_FieldIndex.TargetType:
                 case MagicEffectData_FieldIndex.SecondActorValue:
                 case MagicEffectData_FieldIndex.CastingArt:
                 case MagicEffectData_FieldIndex.HitEffectArt:
@@ -2364,8 +2364,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MagicEffectData_FieldIndex.SecondActorValueWeight:
                 case MagicEffectData_FieldIndex.Projectile:
                 case MagicEffectData_FieldIndex.Explosion:
-                case MagicEffectData_FieldIndex.CastingType:
-                case MagicEffectData_FieldIndex.Delivery:
+                case MagicEffectData_FieldIndex.CastType:
+                case MagicEffectData_FieldIndex.TargetType:
                 case MagicEffectData_FieldIndex.SecondActorValue:
                 case MagicEffectData_FieldIndex.CastingArt:
                 case MagicEffectData_FieldIndex.HitEffectArt:
@@ -2412,8 +2412,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MagicEffectData_FieldIndex.Archetype:
                 case MagicEffectData_FieldIndex.Projectile:
                 case MagicEffectData_FieldIndex.Explosion:
-                case MagicEffectData_FieldIndex.CastingType:
-                case MagicEffectData_FieldIndex.Delivery:
+                case MagicEffectData_FieldIndex.CastType:
+                case MagicEffectData_FieldIndex.TargetType:
                 case MagicEffectData_FieldIndex.SecondActorValue:
                 case MagicEffectData_FieldIndex.CastingArt:
                 case MagicEffectData_FieldIndex.HitEffectArt:
@@ -2479,10 +2479,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Projectile";
                 case MagicEffectData_FieldIndex.Explosion:
                     return "Explosion";
-                case MagicEffectData_FieldIndex.CastingType:
-                    return "CastingType";
-                case MagicEffectData_FieldIndex.Delivery:
-                    return "Delivery";
+                case MagicEffectData_FieldIndex.CastType:
+                    return "CastType";
+                case MagicEffectData_FieldIndex.TargetType:
+                    return "TargetType";
                 case MagicEffectData_FieldIndex.SecondActorValue:
                     return "SecondActorValue";
                 case MagicEffectData_FieldIndex.CastingArt:
@@ -2544,8 +2544,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MagicEffectData_FieldIndex.Archetype:
                 case MagicEffectData_FieldIndex.Projectile:
                 case MagicEffectData_FieldIndex.Explosion:
-                case MagicEffectData_FieldIndex.CastingType:
-                case MagicEffectData_FieldIndex.Delivery:
+                case MagicEffectData_FieldIndex.CastType:
+                case MagicEffectData_FieldIndex.TargetType:
                 case MagicEffectData_FieldIndex.SecondActorValue:
                 case MagicEffectData_FieldIndex.CastingArt:
                 case MagicEffectData_FieldIndex.HitEffectArt:
@@ -2592,8 +2592,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MagicEffectData_FieldIndex.Archetype:
                 case MagicEffectData_FieldIndex.Projectile:
                 case MagicEffectData_FieldIndex.Explosion:
-                case MagicEffectData_FieldIndex.CastingType:
-                case MagicEffectData_FieldIndex.Delivery:
+                case MagicEffectData_FieldIndex.CastType:
+                case MagicEffectData_FieldIndex.TargetType:
                 case MagicEffectData_FieldIndex.SecondActorValue:
                 case MagicEffectData_FieldIndex.CastingArt:
                 case MagicEffectData_FieldIndex.HitEffectArt:
@@ -2659,10 +2659,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(IFormLink<Projectile>);
                 case MagicEffectData_FieldIndex.Explosion:
                     return typeof(IFormLink<Explosion>);
-                case MagicEffectData_FieldIndex.CastingType:
-                    return typeof(CastingType);
-                case MagicEffectData_FieldIndex.Delivery:
-                    return typeof(Targeting);
+                case MagicEffectData_FieldIndex.CastType:
+                    return typeof(CastType);
+                case MagicEffectData_FieldIndex.TargetType:
+                    return typeof(TargetType);
                 case MagicEffectData_FieldIndex.SecondActorValue:
                     return typeof(ActorValueExtended);
                 case MagicEffectData_FieldIndex.CastingArt:
@@ -2766,8 +2766,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Archetype.Clear();
             item.Projectile.FormKey = FormKey.Null;
             item.Explosion.FormKey = FormKey.Null;
-            item.CastingType = default;
-            item.Delivery = default;
+            item.CastType = default;
+            item.TargetType = default;
             item.SecondActorValue = default;
             item.CastingArt.FormKey = FormKey.Null;
             item.HitEffectArt.FormKey = FormKey.Null;
@@ -2853,8 +2853,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Explosion.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
-            item.CastingType = EnumBinaryTranslation<CastingType>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Delivery = EnumBinaryTranslation<Targeting>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.CastType = EnumBinaryTranslation<CastType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.TargetType = EnumBinaryTranslation<TargetType>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.SecondActorValue = EnumBinaryTranslation<ActorValueExtended>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.CastingArt.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
@@ -2956,8 +2956,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Archetype = MaskItemExt.Factory(item.Archetype.GetEqualsMask(rhs.Archetype, include), include);
             ret.Projectile = object.Equals(item.Projectile, rhs.Projectile);
             ret.Explosion = object.Equals(item.Explosion, rhs.Explosion);
-            ret.CastingType = item.CastingType == rhs.CastingType;
-            ret.Delivery = item.Delivery == rhs.Delivery;
+            ret.CastType = item.CastType == rhs.CastType;
+            ret.TargetType = item.TargetType == rhs.TargetType;
             ret.SecondActorValue = item.SecondActorValue == rhs.SecondActorValue;
             ret.CastingArt = object.Equals(item.CastingArt, rhs.CastingArt);
             ret.HitEffectArt = object.Equals(item.HitEffectArt, rhs.HitEffectArt);
@@ -3096,13 +3096,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Explosion, "Explosion");
             }
-            if (printMask?.CastingType ?? true)
+            if (printMask?.CastType ?? true)
             {
-                fg.AppendItem(item.CastingType, "CastingType");
+                fg.AppendItem(item.CastType, "CastType");
             }
-            if (printMask?.Delivery ?? true)
+            if (printMask?.TargetType ?? true)
             {
-                fg.AppendItem(item.Delivery, "Delivery");
+                fg.AppendItem(item.TargetType, "TargetType");
             }
             if (printMask?.SecondActorValue ?? true)
             {
@@ -3200,8 +3200,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Archetype = new MaskItem<bool, MagicEffectArchetype.Mask<bool>?>(true, item.Archetype?.GetHasBeenSetMask());
             mask.Projectile = true;
             mask.Explosion = true;
-            mask.CastingType = true;
-            mask.Delivery = true;
+            mask.CastType = true;
+            mask.TargetType = true;
             mask.SecondActorValue = true;
             mask.CastingArt = true;
             mask.HitEffectArt = true;
@@ -3246,8 +3246,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Archetype, rhs.Archetype)) return false;
             if (!lhs.Projectile.Equals(rhs.Projectile)) return false;
             if (!lhs.Explosion.Equals(rhs.Explosion)) return false;
-            if (lhs.CastingType != rhs.CastingType) return false;
-            if (lhs.Delivery != rhs.Delivery) return false;
+            if (lhs.CastType != rhs.CastType) return false;
+            if (lhs.TargetType != rhs.TargetType) return false;
             if (lhs.SecondActorValue != rhs.SecondActorValue) return false;
             if (!lhs.CastingArt.Equals(rhs.CastingArt)) return false;
             if (!lhs.HitEffectArt.Equals(rhs.HitEffectArt)) return false;
@@ -3289,8 +3289,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Archetype);
             hash.Add(item.Projectile);
             hash.Add(item.Explosion);
-            hash.Add(item.CastingType);
-            hash.Add(item.Delivery);
+            hash.Add(item.CastType);
+            hash.Add(item.TargetType);
             hash.Add(item.SecondActorValue);
             hash.Add(item.CastingArt);
             hash.Add(item.HitEffectArt);
@@ -3447,13 +3447,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Explosion.FormKey = rhs.Explosion.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.CastingType) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.CastType) ?? true))
             {
-                item.CastingType = rhs.CastingType;
+                item.CastType = rhs.CastType;
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Delivery) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.TargetType) ?? true))
             {
-                item.Delivery = rhs.Delivery;
+                item.TargetType = rhs.TargetType;
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.SecondActorValue) ?? true))
             {
@@ -3781,22 +3781,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)MagicEffectData_FieldIndex.Explosion,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.CastingType) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.CastType) ?? true))
             {
-                EnumXmlTranslation<CastingType>.Instance.Write(
+                EnumXmlTranslation<CastType>.Instance.Write(
                     node: node,
-                    name: nameof(item.CastingType),
-                    item: item.CastingType,
-                    fieldIndex: (int)MagicEffectData_FieldIndex.CastingType,
+                    name: nameof(item.CastType),
+                    item: item.CastType,
+                    fieldIndex: (int)MagicEffectData_FieldIndex.CastType,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Delivery) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.TargetType) ?? true))
             {
-                EnumXmlTranslation<Targeting>.Instance.Write(
+                EnumXmlTranslation<TargetType>.Instance.Write(
                     node: node,
-                    name: nameof(item.Delivery),
-                    item: item.Delivery,
-                    fieldIndex: (int)MagicEffectData_FieldIndex.Delivery,
+                    name: nameof(item.TargetType),
+                    item: item.TargetType,
+                    fieldIndex: (int)MagicEffectData_FieldIndex.TargetType,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.SecondActorValue) ?? true))
@@ -4392,11 +4392,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "CastingType":
-                    errorMask?.PushIndex((int)MagicEffectData_FieldIndex.CastingType);
+                case "CastType":
+                    errorMask?.PushIndex((int)MagicEffectData_FieldIndex.CastType);
                     try
                     {
-                        item.CastingType = EnumXmlTranslation<CastingType>.Instance.Parse(
+                        item.CastType = EnumXmlTranslation<CastType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -4410,11 +4410,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Delivery":
-                    errorMask?.PushIndex((int)MagicEffectData_FieldIndex.Delivery);
+                case "TargetType":
+                    errorMask?.PushIndex((int)MagicEffectData_FieldIndex.TargetType);
                     try
                     {
-                        item.Delivery = EnumXmlTranslation<Targeting>.Instance.Parse(
+                        item.TargetType = EnumXmlTranslation<TargetType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -4972,13 +4972,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Explosion);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<CastingType>.Instance.Write(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<CastType>.Instance.Write(
                 writer,
-                item.CastingType,
+                item.CastType,
                 length: 4);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Targeting>.Instance.Write(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<TargetType>.Instance.Write(
                 writer,
-                item.Delivery,
+                item.TargetType,
                 length: 4);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValueExtended>.Instance.Write(
                 writer,
@@ -5197,8 +5197,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IMagicEffectArchetypeGetter Archetype => GetArchetypeCustom(location: 0x40);
         public IFormLinkGetter<IProjectileGetter> Projectile => new FormLink<IProjectileGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x48, 0x4))));
         public IFormLinkGetter<IExplosionGetter> Explosion => new FormLink<IExplosionGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4C, 0x4))));
-        public CastingType CastingType => (CastingType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x50, 0x4));
-        public Targeting Delivery => (Targeting)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x54, 0x4));
+        public CastType CastType => (CastType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x50, 0x4));
+        public TargetType TargetType => (TargetType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x54, 0x4));
         public ActorValueExtended SecondActorValue => (ActorValueExtended)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x58, 0x4));
         public IFormLinkGetter<IArtObjectGetter> CastingArt => new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x5C, 0x4))));
         public IFormLinkGetter<IArtObjectGetter> HitEffectArt => new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x60, 0x4))));

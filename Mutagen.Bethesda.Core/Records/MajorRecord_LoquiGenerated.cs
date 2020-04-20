@@ -1277,6 +1277,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType ARTO_HEADER = new RecordType("ARTO");
         public static readonly RecordType BPTD_HEADER = new RecordType("BPTD");
         public static readonly RecordType CLFM_HEADER = new RecordType("CLFM");
+        public static readonly RecordType DEBR_HEADER = new RecordType("DEBR");
         public static readonly RecordType DUAL_HEADER = new RecordType("DUAL");
         public static readonly RecordType EQUP_HEADER = new RecordType("EQUP");
         public static readonly RecordType EXPL_HEADER = new RecordType("EXPL");
@@ -1292,9 +1293,11 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType PERK_HEADER = new RecordType("PERK");
         public static readonly RecordType PROJ_HEADER = new RecordType("PROJ");
         public static readonly RecordType REVB_HEADER = new RecordType("REVB");
+        public static readonly RecordType SCRL_HEADER = new RecordType("SCRL");
         public static readonly RecordType SNDR_HEADER = new RecordType("SNDR");
         public static readonly RecordType TXST_HEADER = new RecordType("TXST");
         public static readonly RecordType VTYP_HEADER = new RecordType("VTYP");
+        public static readonly RecordType SHOU_HEADER = new RecordType("SHOU");
         public static readonly RecordType EDID_HEADER = new RecordType("EDID");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
@@ -1382,6 +1385,7 @@ namespace Mutagen.Bethesda.Internals
                         ARTO_HEADER,
                         BPTD_HEADER,
                         CLFM_HEADER,
+                        DEBR_HEADER,
                         DUAL_HEADER,
                         EQUP_HEADER,
                         EXPL_HEADER,
@@ -1397,9 +1401,11 @@ namespace Mutagen.Bethesda.Internals
                         PERK_HEADER,
                         PROJ_HEADER,
                         REVB_HEADER,
+                        SCRL_HEADER,
                         SNDR_HEADER,
                         TXST_HEADER,
-                        VTYP_HEADER
+                        VTYP_HEADER,
+                        SHOU_HEADER
                     })
             );
         });

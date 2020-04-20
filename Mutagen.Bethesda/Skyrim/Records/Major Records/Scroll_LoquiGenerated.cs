@@ -33,16 +33,16 @@ using System.Buffers.Binary;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class Spell :
-        ASpell,
-        ISpellInternal,
-        ILoquiObjectSetter<Spell>,
+    public partial class Scroll :
+        SkyrimMajorRecord,
+        IScrollInternal,
+        ILoquiObjectSetter<Scroll>,
         INamed,
-        IEquatable<Spell>,
+        IEquatable<Scroll>,
         IEqualsMask
     {
         #region Ctor
-        protected Spell()
+        protected Scroll()
         {
             CustomCtor();
         }
@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Skyrim
             set => _ObjectBounds = value ?? new ObjectBounds();
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter ISpellGetter.ObjectBounds => _ObjectBounds;
+        IObjectBoundsGetter IScrollGetter.ObjectBounds => _ObjectBounds;
         #endregion
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Skyrim
             set => this._Name = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ISpellGetter.Name => this.Name;
+        String? IScrollGetter.Name => this.Name;
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? ISpellGetter.Keywords => _Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IScrollGetter.Keywords => _Keywords;
         #endregion
 
         #endregion
@@ -90,14 +90,14 @@ namespace Mutagen.Bethesda.Skyrim
         protected IFormLinkNullable<Static> _MenuDisplayObject = new FormLinkNullable<Static>();
         public IFormLinkNullable<Static> MenuDisplayObject => this._MenuDisplayObject;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IStaticGetter> ISpellGetter.MenuDisplayObject => this.MenuDisplayObject;
+        IFormLinkNullableGetter<IStaticGetter> IScrollGetter.MenuDisplayObject => this.MenuDisplayObject;
         #endregion
         #region EquipmentType
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IFormLinkNullable<EquipType> _EquipmentType = new FormLinkNullable<EquipType>();
         public IFormLinkNullable<EquipType> EquipmentType => this._EquipmentType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IEquipTypeGetter> ISpellGetter.EquipmentType => this.EquipmentType;
+        IFormLinkNullableGetter<IEquipTypeGetter> IScrollGetter.EquipmentType => this.EquipmentType;
         #endregion
         #region Description
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -108,18 +108,65 @@ namespace Mutagen.Bethesda.Skyrim
             set => this._Description = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ISpellGetter.Description => this.Description;
+        String? IScrollGetter.Description => this.Description;
+        #endregion
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IScrollGetter.Model => this.Model;
+        #endregion
+        #region Destructible
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Destructible? _Destructible;
+        public Destructible? Destructible
+        {
+            get => _Destructible;
+            set => _Destructible = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IScrollGetter.Destructible => this.Destructible;
+        #endregion
+        #region SoundPickUp
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormLinkNullable<SoundDescriptor> _SoundPickUp = new FormLinkNullable<SoundDescriptor>();
+        public IFormLinkNullable<SoundDescriptor> SoundPickUp => this._SoundPickUp;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IScrollGetter.SoundPickUp => this.SoundPickUp;
+        #endregion
+        #region SoundPutDown
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormLinkNullable<SoundDescriptor> _SoundPutDown = new FormLinkNullable<SoundDescriptor>();
+        public IFormLinkNullable<SoundDescriptor> SoundPutDown => this._SoundPutDown;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IScrollGetter.SoundPutDown => this.SoundPutDown;
         #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private SpellData? _Data;
-        public SpellData? Data
+        private ScrollData? _Data;
+        public ScrollData? Data
         {
             get => _Data;
             set => _Data = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISpellDataGetter? ISpellGetter.Data => this.Data;
+        IScrollDataGetter? IScrollGetter.Data => this.Data;
+        #endregion
+        #region SpellData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SpellData? _SpellData;
+        public SpellData? SpellData
+        {
+            get => _SpellData;
+            set => _SpellData = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISpellDataGetter? IScrollGetter.SpellData => this.SpellData;
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -131,7 +178,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IEffectGetter> ISpellGetter.Effects => _Effects;
+        IReadOnlyList<IEffectGetter> IScrollGetter.Effects => _Effects;
         #endregion
 
         #endregion
@@ -142,7 +189,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            SpellMixIn.ToString(
+            ScrollMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -152,29 +199,29 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISpellGetter rhs)) return false;
-            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IScrollGetter rhs)) return false;
+            return ((ScrollCommon)((IScrollGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Spell obj)
+        public bool Equals(Scroll obj)
         {
-            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ScrollCommon)((IScrollGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((SpellCommon)((ISpellGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ScrollCommon)((IScrollGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => SpellXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => ScrollXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((SpellXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((ScrollXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -183,9 +230,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static new Spell CreateFromXml(
+        public static new Scroll CreateFromXml(
             XElement node,
-            Spell.TranslationMask? translationMask = null)
+            Scroll.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -194,27 +241,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static Spell CreateFromXml(
+        public static Scroll CreateFromXml(
             XElement node,
-            out Spell.ErrorMask errorMask,
-            Spell.TranslationMask? translationMask = null)
+            out Scroll.ErrorMask errorMask,
+            Scroll.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Spell.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Scroll.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public new static Spell CreateFromXml(
+        public new static Scroll CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new Spell();
-            ((SpellSetterCommon)((ISpellGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new Scroll();
+            ((ScrollSetterCommon)((IScrollGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -222,9 +269,9 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static Spell CreateFromXml(
+        public static Scroll CreateFromXml(
             string path,
-            Spell.TranslationMask? translationMask = null)
+            Scroll.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -232,10 +279,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static Spell CreateFromXml(
+        public static Scroll CreateFromXml(
             string path,
-            out Spell.ErrorMask errorMask,
-            Spell.TranslationMask? translationMask = null)
+            out Scroll.ErrorMask errorMask,
+            Scroll.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -244,10 +291,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static Spell CreateFromXml(
+        public static Scroll CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Spell.TranslationMask? translationMask = null)
+            Scroll.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -256,9 +303,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static Spell CreateFromXml(
+        public static Scroll CreateFromXml(
             Stream stream,
-            Spell.TranslationMask? translationMask = null)
+            Scroll.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -266,10 +313,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static Spell CreateFromXml(
+        public static Scroll CreateFromXml(
             Stream stream,
-            out Spell.ErrorMask errorMask,
-            Spell.TranslationMask? translationMask = null)
+            out Scroll.ErrorMask errorMask,
+            Scroll.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -278,10 +325,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static Spell CreateFromXml(
+        public static Scroll CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Spell.TranslationMask? translationMask = null)
+            Scroll.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -296,7 +343,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public new class Mask<TItem> :
-            ASpell.Mask<TItem>,
+            SkyrimMajorRecord.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
             where TItem : notnull
@@ -311,7 +358,12 @@ namespace Mutagen.Bethesda.Skyrim
                 this.MenuDisplayObject = initialValue;
                 this.EquipmentType = initialValue;
                 this.Description = initialValue;
-                this.Data = new MaskItem<TItem, SpellData.Mask<TItem>?>(initialValue, new SpellData.Mask<TItem>(initialValue));
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
+                this.SoundPickUp = initialValue;
+                this.SoundPutDown = initialValue;
+                this.Data = new MaskItem<TItem, ScrollData.Mask<TItem>?>(initialValue, new ScrollData.Mask<TItem>(initialValue));
+                this.SpellData = new MaskItem<TItem, SpellData.Mask<TItem>?>(initialValue, new SpellData.Mask<TItem>(initialValue));
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
             }
 
@@ -329,7 +381,12 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem MenuDisplayObject,
                 TItem EquipmentType,
                 TItem Description,
+                TItem Model,
+                TItem Destructible,
+                TItem SoundPickUp,
+                TItem SoundPutDown,
                 TItem Data,
+                TItem SpellData,
                 TItem Effects)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -346,7 +403,12 @@ namespace Mutagen.Bethesda.Skyrim
                 this.MenuDisplayObject = MenuDisplayObject;
                 this.EquipmentType = EquipmentType;
                 this.Description = Description;
-                this.Data = new MaskItem<TItem, SpellData.Mask<TItem>?>(Data, new SpellData.Mask<TItem>(Data));
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
+                this.SoundPickUp = SoundPickUp;
+                this.SoundPutDown = SoundPutDown;
+                this.Data = new MaskItem<TItem, ScrollData.Mask<TItem>?>(Data, new ScrollData.Mask<TItem>(Data));
+                this.SpellData = new MaskItem<TItem, SpellData.Mask<TItem>?>(SpellData, new SpellData.Mask<TItem>(SpellData));
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
             }
 
@@ -365,7 +427,12 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem MenuDisplayObject;
             public TItem EquipmentType;
             public TItem Description;
-            public MaskItem<TItem, SpellData.Mask<TItem>?>? Data { get; set; }
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
+            public TItem SoundPickUp;
+            public TItem SoundPutDown;
+            public MaskItem<TItem, ScrollData.Mask<TItem>?>? Data { get; set; }
+            public MaskItem<TItem, SpellData.Mask<TItem>?>? SpellData { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>? Effects;
             #endregion
 
@@ -386,7 +453,12 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.MenuDisplayObject, rhs.MenuDisplayObject)) return false;
                 if (!object.Equals(this.EquipmentType, rhs.EquipmentType)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
+                if (!object.Equals(this.SoundPickUp, rhs.SoundPickUp)) return false;
+                if (!object.Equals(this.SoundPutDown, rhs.SoundPutDown)) return false;
                 if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.SpellData, rhs.SpellData)) return false;
                 if (!object.Equals(this.Effects, rhs.Effects)) return false;
                 return true;
             }
@@ -399,7 +471,12 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.MenuDisplayObject);
                 hash.Add(this.EquipmentType);
                 hash.Add(this.Description);
+                hash.Add(this.Model);
+                hash.Add(this.Destructible);
+                hash.Add(this.SoundPickUp);
+                hash.Add(this.SoundPutDown);
                 hash.Add(this.Data);
+                hash.Add(this.SpellData);
                 hash.Add(this.Effects);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -431,10 +508,27 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.MenuDisplayObject)) return false;
                 if (!eval(this.EquipmentType)) return false;
                 if (!eval(this.Description)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (Destructible != null)
+                {
+                    if (!eval(this.Destructible.Overall)) return false;
+                    if (this.Destructible.Specific != null && !this.Destructible.Specific.All(eval)) return false;
+                }
+                if (!eval(this.SoundPickUp)) return false;
+                if (!eval(this.SoundPutDown)) return false;
                 if (Data != null)
                 {
                     if (!eval(this.Data.Overall)) return false;
                     if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
+                if (SpellData != null)
+                {
+                    if (!eval(this.SpellData.Overall)) return false;
+                    if (this.SpellData.Specific != null && !this.SpellData.Specific.All(eval)) return false;
                 }
                 if (this.Effects != null)
                 {
@@ -476,10 +570,27 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.MenuDisplayObject)) return true;
                 if (eval(this.EquipmentType)) return true;
                 if (eval(this.Description)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (Destructible != null)
+                {
+                    if (eval(this.Destructible.Overall)) return true;
+                    if (this.Destructible.Specific != null && this.Destructible.Specific.Any(eval)) return true;
+                }
+                if (eval(this.SoundPickUp)) return true;
+                if (eval(this.SoundPutDown)) return true;
                 if (Data != null)
                 {
                     if (eval(this.Data.Overall)) return true;
                     if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
+                if (SpellData != null)
+                {
+                    if (eval(this.SpellData.Overall)) return true;
+                    if (this.SpellData.Specific != null && this.SpellData.Specific.Any(eval)) return true;
                 }
                 if (this.Effects != null)
                 {
@@ -500,7 +611,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new Spell.Mask<R>();
+                var ret = new Scroll.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -527,7 +638,12 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.MenuDisplayObject = eval(this.MenuDisplayObject);
                 obj.EquipmentType = eval(this.EquipmentType);
                 obj.Description = eval(this.Description);
-                obj.Data = this.Data == null ? null : new MaskItem<R, SpellData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
+                obj.SoundPickUp = eval(this.SoundPickUp);
+                obj.SoundPutDown = eval(this.SoundPutDown);
+                obj.Data = this.Data == null ? null : new MaskItem<R, ScrollData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
+                obj.SpellData = this.SpellData == null ? null : new MaskItem<R, SpellData.Mask<R>?>(eval(this.SpellData.Overall), this.SpellData.Specific?.Translate(eval));
                 if (Effects != null)
                 {
                     obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect.Mask<R>?>>?>(eval(this.Effects.Overall), Enumerable.Empty<MaskItemIndexed<R, Effect.Mask<R>?>>());
@@ -552,16 +668,16 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(Spell.Mask<bool>? printMask = null)
+            public string ToString(Scroll.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, Spell.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, Scroll.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Spell.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(Scroll.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -608,9 +724,29 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(Description, "Description");
                     }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.Destructible?.Overall ?? true)
+                    {
+                        Destructible?.ToString(fg);
+                    }
+                    if (printMask?.SoundPickUp ?? true)
+                    {
+                        fg.AppendItem(SoundPickUp, "SoundPickUp");
+                    }
+                    if (printMask?.SoundPutDown ?? true)
+                    {
+                        fg.AppendItem(SoundPutDown, "SoundPutDown");
+                    }
                     if (printMask?.Data?.Overall ?? true)
                     {
                         Data?.ToString(fg);
+                    }
+                    if (printMask?.SpellData?.Overall ?? true)
+                    {
+                        SpellData?.ToString(fg);
                     }
                     if ((printMask?.Effects?.Overall ?? true)
                         && Effects.TryGet(out var EffectsItem))
@@ -643,7 +779,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public new class ErrorMask :
-            ASpell.ErrorMask,
+            SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -653,31 +789,46 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? MenuDisplayObject;
             public Exception? EquipmentType;
             public Exception? Description;
-            public MaskItem<Exception?, SpellData.ErrorMask?>? Data;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
+            public Exception? SoundPickUp;
+            public Exception? SoundPutDown;
+            public MaskItem<Exception?, ScrollData.ErrorMask?>? Data;
+            public MaskItem<Exception?, SpellData.ErrorMask?>? SpellData;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>? Effects;
             #endregion
 
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                Spell_FieldIndex enu = (Spell_FieldIndex)index;
+                Scroll_FieldIndex enu = (Scroll_FieldIndex)index;
                 switch (enu)
                 {
-                    case Spell_FieldIndex.ObjectBounds:
+                    case Scroll_FieldIndex.ObjectBounds:
                         return ObjectBounds;
-                    case Spell_FieldIndex.Name:
+                    case Scroll_FieldIndex.Name:
                         return Name;
-                    case Spell_FieldIndex.Keywords:
+                    case Scroll_FieldIndex.Keywords:
                         return Keywords;
-                    case Spell_FieldIndex.MenuDisplayObject:
+                    case Scroll_FieldIndex.MenuDisplayObject:
                         return MenuDisplayObject;
-                    case Spell_FieldIndex.EquipmentType:
+                    case Scroll_FieldIndex.EquipmentType:
                         return EquipmentType;
-                    case Spell_FieldIndex.Description:
+                    case Scroll_FieldIndex.Description:
                         return Description;
-                    case Spell_FieldIndex.Data:
+                    case Scroll_FieldIndex.Model:
+                        return Model;
+                    case Scroll_FieldIndex.Destructible:
+                        return Destructible;
+                    case Scroll_FieldIndex.SoundPickUp:
+                        return SoundPickUp;
+                    case Scroll_FieldIndex.SoundPutDown:
+                        return SoundPutDown;
+                    case Scroll_FieldIndex.Data:
                         return Data;
-                    case Spell_FieldIndex.Effects:
+                    case Scroll_FieldIndex.SpellData:
+                        return SpellData;
+                    case Scroll_FieldIndex.Effects:
                         return Effects;
                     default:
                         return base.GetNthMask(index);
@@ -686,31 +837,46 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthException(int index, Exception ex)
             {
-                Spell_FieldIndex enu = (Spell_FieldIndex)index;
+                Scroll_FieldIndex enu = (Scroll_FieldIndex)index;
                 switch (enu)
                 {
-                    case Spell_FieldIndex.ObjectBounds:
+                    case Scroll_FieldIndex.ObjectBounds:
                         this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
                         break;
-                    case Spell_FieldIndex.Name:
+                    case Scroll_FieldIndex.Name:
                         this.Name = ex;
                         break;
-                    case Spell_FieldIndex.Keywords:
+                    case Scroll_FieldIndex.Keywords:
                         this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case Spell_FieldIndex.MenuDisplayObject:
+                    case Scroll_FieldIndex.MenuDisplayObject:
                         this.MenuDisplayObject = ex;
                         break;
-                    case Spell_FieldIndex.EquipmentType:
+                    case Scroll_FieldIndex.EquipmentType:
                         this.EquipmentType = ex;
                         break;
-                    case Spell_FieldIndex.Description:
+                    case Scroll_FieldIndex.Description:
                         this.Description = ex;
                         break;
-                    case Spell_FieldIndex.Data:
-                        this.Data = new MaskItem<Exception?, SpellData.ErrorMask?>(ex, null);
+                    case Scroll_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
-                    case Spell_FieldIndex.Effects:
+                    case Scroll_FieldIndex.Destructible:
+                        this.Destructible = new MaskItem<Exception?, Destructible.ErrorMask?>(ex, null);
+                        break;
+                    case Scroll_FieldIndex.SoundPickUp:
+                        this.SoundPickUp = ex;
+                        break;
+                    case Scroll_FieldIndex.SoundPutDown:
+                        this.SoundPutDown = ex;
+                        break;
+                    case Scroll_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, ScrollData.ErrorMask?>(ex, null);
+                        break;
+                    case Scroll_FieldIndex.SpellData:
+                        this.SpellData = new MaskItem<Exception?, SpellData.ErrorMask?>(ex, null);
+                        break;
+                    case Scroll_FieldIndex.Effects:
                         this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ex, null);
                         break;
                     default:
@@ -721,31 +887,46 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthMask(int index, object obj)
             {
-                Spell_FieldIndex enu = (Spell_FieldIndex)index;
+                Scroll_FieldIndex enu = (Scroll_FieldIndex)index;
                 switch (enu)
                 {
-                    case Spell_FieldIndex.ObjectBounds:
+                    case Scroll_FieldIndex.ObjectBounds:
                         this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
                         break;
-                    case Spell_FieldIndex.Name:
+                    case Scroll_FieldIndex.Name:
                         this.Name = (Exception?)obj;
                         break;
-                    case Spell_FieldIndex.Keywords:
+                    case Scroll_FieldIndex.Keywords:
                         this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case Spell_FieldIndex.MenuDisplayObject:
+                    case Scroll_FieldIndex.MenuDisplayObject:
                         this.MenuDisplayObject = (Exception?)obj;
                         break;
-                    case Spell_FieldIndex.EquipmentType:
+                    case Scroll_FieldIndex.EquipmentType:
                         this.EquipmentType = (Exception?)obj;
                         break;
-                    case Spell_FieldIndex.Description:
+                    case Scroll_FieldIndex.Description:
                         this.Description = (Exception?)obj;
                         break;
-                    case Spell_FieldIndex.Data:
-                        this.Data = (MaskItem<Exception?, SpellData.ErrorMask?>?)obj;
+                    case Scroll_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
-                    case Spell_FieldIndex.Effects:
+                    case Scroll_FieldIndex.Destructible:
+                        this.Destructible = (MaskItem<Exception?, Destructible.ErrorMask?>?)obj;
+                        break;
+                    case Scroll_FieldIndex.SoundPickUp:
+                        this.SoundPickUp = (Exception?)obj;
+                        break;
+                    case Scroll_FieldIndex.SoundPutDown:
+                        this.SoundPutDown = (Exception?)obj;
+                        break;
+                    case Scroll_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, ScrollData.ErrorMask?>?)obj;
+                        break;
+                    case Scroll_FieldIndex.SpellData:
+                        this.SpellData = (MaskItem<Exception?, SpellData.ErrorMask?>?)obj;
+                        break;
+                    case Scroll_FieldIndex.Effects:
                         this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>)obj;
                         break;
                     default:
@@ -763,7 +944,12 @@ namespace Mutagen.Bethesda.Skyrim
                 if (MenuDisplayObject != null) return true;
                 if (EquipmentType != null) return true;
                 if (Description != null) return true;
+                if (Model != null) return true;
+                if (Destructible != null) return true;
+                if (SoundPickUp != null) return true;
+                if (SoundPutDown != null) return true;
                 if (Data != null) return true;
+                if (SpellData != null) return true;
                 if (Effects != null) return true;
                 return false;
             }
@@ -827,7 +1013,12 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(MenuDisplayObject, "MenuDisplayObject");
                 fg.AppendItem(EquipmentType, "EquipmentType");
                 fg.AppendItem(Description, "Description");
+                Model?.ToString(fg);
+                Destructible?.ToString(fg);
+                fg.AppendItem(SoundPickUp, "SoundPickUp");
+                fg.AppendItem(SoundPutDown, "SoundPutDown");
                 Data?.ToString(fg);
+                SpellData?.ToString(fg);
                 if (Effects.TryGet(out var EffectsItem))
                 {
                     fg.AppendLine("Effects =>");
@@ -864,7 +1055,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.MenuDisplayObject = this.MenuDisplayObject.Combine(rhs.MenuDisplayObject);
                 ret.EquipmentType = this.EquipmentType.Combine(rhs.EquipmentType);
                 ret.Description = this.Description.Combine(rhs.Description);
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
+                ret.SoundPickUp = this.SoundPickUp.Combine(rhs.SoundPickUp);
+                ret.SoundPutDown = this.SoundPutDown.Combine(rhs.SoundPutDown);
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
+                ret.SpellData = this.SpellData.Combine(rhs.SpellData, (l, r) => l.Combine(r));
                 ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
                 return ret;
             }
@@ -884,7 +1080,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         }
         public new class TranslationMask :
-            ASpell.TranslationMask,
+            SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -894,7 +1090,12 @@ namespace Mutagen.Bethesda.Skyrim
             public bool MenuDisplayObject;
             public bool EquipmentType;
             public bool Description;
-            public MaskItem<bool, SpellData.TranslationMask?> Data;
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public MaskItem<bool, Destructible.TranslationMask?> Destructible;
+            public bool SoundPickUp;
+            public bool SoundPutDown;
+            public MaskItem<bool, ScrollData.TranslationMask?> Data;
+            public MaskItem<bool, SpellData.TranslationMask?> SpellData;
             public MaskItem<bool, Effect.TranslationMask?> Effects;
             #endregion
 
@@ -908,7 +1109,12 @@ namespace Mutagen.Bethesda.Skyrim
                 this.MenuDisplayObject = defaultOn;
                 this.EquipmentType = defaultOn;
                 this.Description = defaultOn;
-                this.Data = new MaskItem<bool, SpellData.TranslationMask?>(defaultOn, null);
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.Destructible = new MaskItem<bool, Destructible.TranslationMask?>(defaultOn, null);
+                this.SoundPickUp = defaultOn;
+                this.SoundPutDown = defaultOn;
+                this.Data = new MaskItem<bool, ScrollData.TranslationMask?>(defaultOn, null);
+                this.SpellData = new MaskItem<bool, SpellData.TranslationMask?>(defaultOn, null);
                 this.Effects = new MaskItem<bool, Effect.TranslationMask?>(defaultOn, null);
             }
 
@@ -923,28 +1129,33 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((MenuDisplayObject, null));
                 ret.Add((EquipmentType, null));
                 ret.Add((Description, null));
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Destructible?.Overall ?? true, Destructible?.Specific?.GetCrystal()));
+                ret.Add((SoundPickUp, null));
+                ret.Add((SoundPutDown, null));
                 ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((SpellData?.Overall ?? true, SpellData?.Specific?.GetCrystal()));
                 ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
             }
         }
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Spell_Registration.TriggeringRecordType;
+        public new static readonly RecordType GrupRecordType = Scroll_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public override IEnumerable<ILinkGetter> Links => SpellCommon.Instance.GetLinks(this);
-        public Spell(FormKey formKey)
+        public override IEnumerable<ILinkGetter> Links => ScrollCommon.Instance.GetLinks(this);
+        public Scroll(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        public Spell(IMod mod)
+        public Scroll(IMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Spell(IMod mod, string editorID)
+        public Scroll(IMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -954,31 +1165,31 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => SpellBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ScrollBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((SpellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ScrollBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static new Spell CreateFromBinary(MutagenFrame frame)
+        public static new Scroll CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public new static Spell CreateFromBinary(
+        public new static Scroll CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new Spell();
-            ((SpellSetterCommon)((ISpellGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new Scroll();
+            ((ScrollSetterCommon)((IScrollGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -991,26 +1202,26 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISpellGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScrollGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((SpellSetterCommon)((ISpellGetter)this).CommonSetterInstance()!).Clear(this);
+            ((ScrollSetterCommon)((IScrollGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new Spell GetNew()
+        internal static new Scroll GetNew()
         {
-            return new Spell();
+            return new Scroll();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface ISpell :
-        ISpellGetter,
-        IASpell,
-        ILoquiObjectSetter<ISpellInternal>
+    public partial interface IScroll :
+        IScrollGetter,
+        ISkyrimMajorRecord,
+        ILoquiObjectSetter<IScrollInternal>
     {
         new ObjectBounds ObjectBounds { get; set; }
         new String? Name { get; set; }
@@ -1018,20 +1229,25 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLinkNullable<Static> MenuDisplayObject { get; }
         new IFormLinkNullable<EquipType> EquipmentType { get; }
         new String? Description { get; set; }
-        new SpellData? Data { get; set; }
+        new Model? Model { get; set; }
+        new Destructible? Destructible { get; set; }
+        new IFormLinkNullable<SoundDescriptor> SoundPickUp { get; }
+        new IFormLinkNullable<SoundDescriptor> SoundPutDown { get; }
+        new ScrollData? Data { get; set; }
+        new SpellData? SpellData { get; set; }
         new ExtendedList<Effect> Effects { get; }
     }
 
-    public partial interface ISpellInternal :
-        IASpellInternal,
-        ISpell,
-        ISpellGetter
+    public partial interface IScrollInternal :
+        ISkyrimMajorRecordInternal,
+        IScroll,
+        IScrollGetter
     {
     }
 
-    public partial interface ISpellGetter :
-        IASpellGetter,
-        ILoquiObject<ISpellGetter>,
+    public partial interface IScrollGetter :
+        ISkyrimMajorRecordGetter,
+        ILoquiObject<IScrollGetter>,
         IXmlItem,
         ILinkContainer,
         IBinaryItem
@@ -1042,7 +1258,12 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject { get; }
         IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType { get; }
         String? Description { get; }
-        ISpellDataGetter? Data { get; }
+        IModelGetter? Model { get; }
+        IDestructibleGetter? Destructible { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> SoundPickUp { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> SoundPutDown { get; }
+        IScrollDataGetter? Data { get; }
+        ISpellDataGetter? SpellData { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
 
     }
@@ -1050,42 +1271,42 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static partial class SpellMixIn
+    public static partial class ScrollMixIn
     {
-        public static void Clear(this ISpellInternal item)
+        public static void Clear(this IScrollInternal item)
         {
-            ((SpellSetterCommon)((ISpellGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((ScrollSetterCommon)((IScrollGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Spell.Mask<bool> GetEqualsMask(
-            this ISpellGetter item,
-            ISpellGetter rhs,
+        public static Scroll.Mask<bool> GetEqualsMask(
+            this IScrollGetter item,
+            IScrollGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((SpellCommon)((ISpellGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((ScrollCommon)((IScrollGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this ISpellGetter item,
+            this IScrollGetter item,
             string? name = null,
-            Spell.Mask<bool>? printMask = null)
+            Scroll.Mask<bool>? printMask = null)
         {
-            return ((SpellCommon)((ISpellGetter)item).CommonInstance()!).ToString(
+            return ((ScrollCommon)((IScrollGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this ISpellGetter item,
+            this IScrollGetter item,
             FileGeneration fg,
             string? name = null,
-            Spell.Mask<bool>? printMask = null)
+            Scroll.Mask<bool>? printMask = null)
         {
-            ((SpellCommon)((ISpellGetter)item).CommonInstance()!).ToString(
+            ((ScrollCommon)((IScrollGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1093,86 +1314,86 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this ISpellGetter item,
-            Spell.Mask<bool?> checkMask)
+            this IScrollGetter item,
+            Scroll.Mask<bool?> checkMask)
         {
-            return ((SpellCommon)((ISpellGetter)item).CommonInstance()!).HasBeenSet(
+            return ((ScrollCommon)((IScrollGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Spell.Mask<bool> GetHasBeenSetMask(this ISpellGetter item)
+        public static Scroll.Mask<bool> GetHasBeenSetMask(this IScrollGetter item)
         {
-            var ret = new Spell.Mask<bool>(false);
-            ((SpellCommon)((ISpellGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new Scroll.Mask<bool>(false);
+            ((ScrollCommon)((IScrollGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this ISpellGetter item,
-            ISpellGetter rhs)
+            this IScrollGetter item,
+            IScrollGetter rhs)
         {
-            return ((SpellCommon)((ISpellGetter)item).CommonInstance()!).Equals(
+            return ((ScrollCommon)((IScrollGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this ISpellInternal lhs,
-            ISpellGetter rhs,
-            out Spell.ErrorMask errorMask,
-            Spell.TranslationMask? copyMask = null)
+            this IScrollInternal lhs,
+            IScrollGetter rhs,
+            out Scroll.ErrorMask errorMask,
+            Scroll.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((SpellSetterTranslationCommon)((ISpellGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ScrollSetterTranslationCommon)((IScrollGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Spell.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Scroll.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this ISpellInternal lhs,
-            ISpellGetter rhs,
+            this IScrollInternal lhs,
+            IScrollGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((SpellSetterTranslationCommon)((ISpellGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ScrollSetterTranslationCommon)((IScrollGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static Spell DeepCopy(
-            this ISpellGetter item,
-            Spell.TranslationMask? copyMask = null)
+        public static Scroll DeepCopy(
+            this IScrollGetter item,
+            Scroll.TranslationMask? copyMask = null)
         {
-            return ((SpellSetterTranslationCommon)((ISpellGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ScrollSetterTranslationCommon)((IScrollGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static Spell DeepCopy(
-            this ISpellGetter item,
-            out Spell.ErrorMask errorMask,
-            Spell.TranslationMask? copyMask = null)
+        public static Scroll DeepCopy(
+            this IScrollGetter item,
+            out Scroll.ErrorMask errorMask,
+            Scroll.TranslationMask? copyMask = null)
         {
-            return ((SpellSetterTranslationCommon)((ISpellGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ScrollSetterTranslationCommon)((IScrollGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static Spell DeepCopy(
-            this ISpellGetter item,
+        public static Scroll DeepCopy(
+            this IScrollGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((SpellSetterTranslationCommon)((ISpellGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ScrollSetterTranslationCommon)((IScrollGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -1181,9 +1402,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this ISpellInternal item,
+            this IScrollInternal item,
             XElement node,
-            Spell.TranslationMask? translationMask = null)
+            Scroll.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -1194,10 +1415,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this ISpellInternal item,
+            this IScrollInternal item,
             XElement node,
-            out Spell.ErrorMask errorMask,
-            Spell.TranslationMask? translationMask = null)
+            out Scroll.ErrorMask errorMask,
+            Scroll.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -1205,16 +1426,16 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Spell.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Scroll.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this ISpellInternal item,
+            this IScrollInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((SpellSetterCommon)((ISpellGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((ScrollSetterCommon)((IScrollGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1222,9 +1443,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this ISpellInternal item,
+            this IScrollInternal item,
             string path,
-            Spell.TranslationMask? translationMask = null)
+            Scroll.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -1234,10 +1455,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this ISpellInternal item,
+            this IScrollInternal item,
             string path,
-            out Spell.ErrorMask errorMask,
-            Spell.TranslationMask? translationMask = null)
+            out Scroll.ErrorMask errorMask,
+            Scroll.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -1248,10 +1469,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this ISpellInternal item,
+            this IScrollInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Spell.TranslationMask? translationMask = null)
+            Scroll.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -1262,9 +1483,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this ISpellInternal item,
+            this IScrollInternal item,
             Stream stream,
-            Spell.TranslationMask? translationMask = null)
+            Scroll.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1274,10 +1495,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this ISpellInternal item,
+            this IScrollInternal item,
             Stream stream,
-            out Spell.ErrorMask errorMask,
-            Spell.TranslationMask? translationMask = null)
+            out Scroll.ErrorMask errorMask,
+            Scroll.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1288,10 +1509,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this ISpellInternal item,
+            this IScrollInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Spell.TranslationMask? translationMask = null)
+            Scroll.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1306,7 +1527,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this ISpellInternal item,
+            this IScrollInternal item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -1316,11 +1537,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromBinary(
-            this ISpellInternal item,
+            this IScrollInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((SpellSetterCommon)((ISpellGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((ScrollSetterCommon)((IScrollGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -1336,7 +1557,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum Spell_FieldIndex
+    public enum Scroll_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1351,46 +1572,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         MenuDisplayObject = 10,
         EquipmentType = 11,
         Description = 12,
-        Data = 13,
-        Effects = 14,
+        Model = 13,
+        Destructible = 14,
+        SoundPickUp = 15,
+        SoundPutDown = 16,
+        Data = 17,
+        SpellData = 18,
+        Effects = 19,
     }
     #endregion
 
     #region Registration
-    public partial class Spell_Registration : ILoquiRegistration
+    public partial class Scroll_Registration : ILoquiRegistration
     {
-        public static readonly Spell_Registration Instance = new Spell_Registration();
+        public static readonly Scroll_Registration Instance = new Scroll_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 115,
+            msgID: 139,
             version: 0);
 
-        public const string GUID = "9bc07114-08cb-4a62-8819-b3edc36ab87e";
+        public const string GUID = "966367fb-9898-41f3-a250-d453749a138b";
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 20;
 
-        public static readonly Type MaskType = typeof(Spell.Mask<>);
+        public static readonly Type MaskType = typeof(Scroll.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Spell.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Scroll.ErrorMask);
 
-        public static readonly Type ClassType = typeof(Spell);
+        public static readonly Type ClassType = typeof(Scroll);
 
-        public static readonly Type GetterType = typeof(ISpellGetter);
+        public static readonly Type GetterType = typeof(IScrollGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(ISpell);
+        public static readonly Type SetterType = typeof(IScroll);
 
-        public static readonly Type? InternalSetterType = typeof(ISpellInternal);
+        public static readonly Type? InternalSetterType = typeof(IScrollInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.Spell";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.Scroll";
 
-        public const string Name = "Spell";
+        public const string Name = "Scroll";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -1403,21 +1629,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (str.Upper)
             {
                 case "OBJECTBOUNDS":
-                    return (ushort)Spell_FieldIndex.ObjectBounds;
+                    return (ushort)Scroll_FieldIndex.ObjectBounds;
                 case "NAME":
-                    return (ushort)Spell_FieldIndex.Name;
+                    return (ushort)Scroll_FieldIndex.Name;
                 case "KEYWORDS":
-                    return (ushort)Spell_FieldIndex.Keywords;
+                    return (ushort)Scroll_FieldIndex.Keywords;
                 case "MENUDISPLAYOBJECT":
-                    return (ushort)Spell_FieldIndex.MenuDisplayObject;
+                    return (ushort)Scroll_FieldIndex.MenuDisplayObject;
                 case "EQUIPMENTTYPE":
-                    return (ushort)Spell_FieldIndex.EquipmentType;
+                    return (ushort)Scroll_FieldIndex.EquipmentType;
                 case "DESCRIPTION":
-                    return (ushort)Spell_FieldIndex.Description;
+                    return (ushort)Scroll_FieldIndex.Description;
+                case "MODEL":
+                    return (ushort)Scroll_FieldIndex.Model;
+                case "DESTRUCTIBLE":
+                    return (ushort)Scroll_FieldIndex.Destructible;
+                case "SOUNDPICKUP":
+                    return (ushort)Scroll_FieldIndex.SoundPickUp;
+                case "SOUNDPUTDOWN":
+                    return (ushort)Scroll_FieldIndex.SoundPutDown;
                 case "DATA":
-                    return (ushort)Spell_FieldIndex.Data;
+                    return (ushort)Scroll_FieldIndex.Data;
+                case "SPELLDATA":
+                    return (ushort)Scroll_FieldIndex.SpellData;
                 case "EFFECTS":
-                    return (ushort)Spell_FieldIndex.Effects;
+                    return (ushort)Scroll_FieldIndex.Effects;
                 default:
                     return null;
             }
@@ -1425,155 +1661,200 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            Spell_FieldIndex enu = (Spell_FieldIndex)index;
+            Scroll_FieldIndex enu = (Scroll_FieldIndex)index;
             switch (enu)
             {
-                case Spell_FieldIndex.Keywords:
-                case Spell_FieldIndex.Effects:
+                case Scroll_FieldIndex.Keywords:
+                case Scroll_FieldIndex.Effects:
                     return true;
-                case Spell_FieldIndex.ObjectBounds:
-                case Spell_FieldIndex.Name:
-                case Spell_FieldIndex.MenuDisplayObject:
-                case Spell_FieldIndex.EquipmentType:
-                case Spell_FieldIndex.Description:
-                case Spell_FieldIndex.Data:
+                case Scroll_FieldIndex.ObjectBounds:
+                case Scroll_FieldIndex.Name:
+                case Scroll_FieldIndex.MenuDisplayObject:
+                case Scroll_FieldIndex.EquipmentType:
+                case Scroll_FieldIndex.Description:
+                case Scroll_FieldIndex.Model:
+                case Scroll_FieldIndex.Destructible:
+                case Scroll_FieldIndex.SoundPickUp:
+                case Scroll_FieldIndex.SoundPutDown:
+                case Scroll_FieldIndex.Data:
+                case Scroll_FieldIndex.SpellData:
                     return false;
                 default:
-                    return ASpell_Registration.GetNthIsEnumerable(index);
+                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            Spell_FieldIndex enu = (Spell_FieldIndex)index;
+            Scroll_FieldIndex enu = (Scroll_FieldIndex)index;
             switch (enu)
             {
-                case Spell_FieldIndex.ObjectBounds:
-                case Spell_FieldIndex.Data:
-                case Spell_FieldIndex.Effects:
+                case Scroll_FieldIndex.ObjectBounds:
+                case Scroll_FieldIndex.Model:
+                case Scroll_FieldIndex.Destructible:
+                case Scroll_FieldIndex.Data:
+                case Scroll_FieldIndex.SpellData:
+                case Scroll_FieldIndex.Effects:
                     return true;
-                case Spell_FieldIndex.Name:
-                case Spell_FieldIndex.Keywords:
-                case Spell_FieldIndex.MenuDisplayObject:
-                case Spell_FieldIndex.EquipmentType:
-                case Spell_FieldIndex.Description:
+                case Scroll_FieldIndex.Name:
+                case Scroll_FieldIndex.Keywords:
+                case Scroll_FieldIndex.MenuDisplayObject:
+                case Scroll_FieldIndex.EquipmentType:
+                case Scroll_FieldIndex.Description:
+                case Scroll_FieldIndex.SoundPickUp:
+                case Scroll_FieldIndex.SoundPutDown:
                     return false;
                 default:
-                    return ASpell_Registration.GetNthIsLoqui(index);
+                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            Spell_FieldIndex enu = (Spell_FieldIndex)index;
+            Scroll_FieldIndex enu = (Scroll_FieldIndex)index;
             switch (enu)
             {
-                case Spell_FieldIndex.ObjectBounds:
-                case Spell_FieldIndex.Name:
-                case Spell_FieldIndex.Keywords:
-                case Spell_FieldIndex.MenuDisplayObject:
-                case Spell_FieldIndex.EquipmentType:
-                case Spell_FieldIndex.Description:
-                case Spell_FieldIndex.Data:
-                case Spell_FieldIndex.Effects:
+                case Scroll_FieldIndex.ObjectBounds:
+                case Scroll_FieldIndex.Name:
+                case Scroll_FieldIndex.Keywords:
+                case Scroll_FieldIndex.MenuDisplayObject:
+                case Scroll_FieldIndex.EquipmentType:
+                case Scroll_FieldIndex.Description:
+                case Scroll_FieldIndex.Model:
+                case Scroll_FieldIndex.Destructible:
+                case Scroll_FieldIndex.SoundPickUp:
+                case Scroll_FieldIndex.SoundPutDown:
+                case Scroll_FieldIndex.Data:
+                case Scroll_FieldIndex.SpellData:
+                case Scroll_FieldIndex.Effects:
                     return false;
                 default:
-                    return ASpell_Registration.GetNthIsSingleton(index);
+                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
         public static string GetNthName(ushort index)
         {
-            Spell_FieldIndex enu = (Spell_FieldIndex)index;
+            Scroll_FieldIndex enu = (Scroll_FieldIndex)index;
             switch (enu)
             {
-                case Spell_FieldIndex.ObjectBounds:
+                case Scroll_FieldIndex.ObjectBounds:
                     return "ObjectBounds";
-                case Spell_FieldIndex.Name:
+                case Scroll_FieldIndex.Name:
                     return "Name";
-                case Spell_FieldIndex.Keywords:
+                case Scroll_FieldIndex.Keywords:
                     return "Keywords";
-                case Spell_FieldIndex.MenuDisplayObject:
+                case Scroll_FieldIndex.MenuDisplayObject:
                     return "MenuDisplayObject";
-                case Spell_FieldIndex.EquipmentType:
+                case Scroll_FieldIndex.EquipmentType:
                     return "EquipmentType";
-                case Spell_FieldIndex.Description:
+                case Scroll_FieldIndex.Description:
                     return "Description";
-                case Spell_FieldIndex.Data:
+                case Scroll_FieldIndex.Model:
+                    return "Model";
+                case Scroll_FieldIndex.Destructible:
+                    return "Destructible";
+                case Scroll_FieldIndex.SoundPickUp:
+                    return "SoundPickUp";
+                case Scroll_FieldIndex.SoundPutDown:
+                    return "SoundPutDown";
+                case Scroll_FieldIndex.Data:
                     return "Data";
-                case Spell_FieldIndex.Effects:
+                case Scroll_FieldIndex.SpellData:
+                    return "SpellData";
+                case Scroll_FieldIndex.Effects:
                     return "Effects";
                 default:
-                    return ASpell_Registration.GetNthName(index);
+                    return SkyrimMajorRecord_Registration.GetNthName(index);
             }
         }
 
         public static bool IsNthDerivative(ushort index)
         {
-            Spell_FieldIndex enu = (Spell_FieldIndex)index;
+            Scroll_FieldIndex enu = (Scroll_FieldIndex)index;
             switch (enu)
             {
-                case Spell_FieldIndex.ObjectBounds:
-                case Spell_FieldIndex.Name:
-                case Spell_FieldIndex.Keywords:
-                case Spell_FieldIndex.MenuDisplayObject:
-                case Spell_FieldIndex.EquipmentType:
-                case Spell_FieldIndex.Description:
-                case Spell_FieldIndex.Data:
-                case Spell_FieldIndex.Effects:
+                case Scroll_FieldIndex.ObjectBounds:
+                case Scroll_FieldIndex.Name:
+                case Scroll_FieldIndex.Keywords:
+                case Scroll_FieldIndex.MenuDisplayObject:
+                case Scroll_FieldIndex.EquipmentType:
+                case Scroll_FieldIndex.Description:
+                case Scroll_FieldIndex.Model:
+                case Scroll_FieldIndex.Destructible:
+                case Scroll_FieldIndex.SoundPickUp:
+                case Scroll_FieldIndex.SoundPutDown:
+                case Scroll_FieldIndex.Data:
+                case Scroll_FieldIndex.SpellData:
+                case Scroll_FieldIndex.Effects:
                     return false;
                 default:
-                    return ASpell_Registration.IsNthDerivative(index);
+                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
         public static bool IsProtected(ushort index)
         {
-            Spell_FieldIndex enu = (Spell_FieldIndex)index;
+            Scroll_FieldIndex enu = (Scroll_FieldIndex)index;
             switch (enu)
             {
-                case Spell_FieldIndex.ObjectBounds:
-                case Spell_FieldIndex.Name:
-                case Spell_FieldIndex.Keywords:
-                case Spell_FieldIndex.MenuDisplayObject:
-                case Spell_FieldIndex.EquipmentType:
-                case Spell_FieldIndex.Description:
-                case Spell_FieldIndex.Data:
-                case Spell_FieldIndex.Effects:
+                case Scroll_FieldIndex.ObjectBounds:
+                case Scroll_FieldIndex.Name:
+                case Scroll_FieldIndex.Keywords:
+                case Scroll_FieldIndex.MenuDisplayObject:
+                case Scroll_FieldIndex.EquipmentType:
+                case Scroll_FieldIndex.Description:
+                case Scroll_FieldIndex.Model:
+                case Scroll_FieldIndex.Destructible:
+                case Scroll_FieldIndex.SoundPickUp:
+                case Scroll_FieldIndex.SoundPutDown:
+                case Scroll_FieldIndex.Data:
+                case Scroll_FieldIndex.SpellData:
+                case Scroll_FieldIndex.Effects:
                     return false;
                 default:
-                    return ASpell_Registration.IsProtected(index);
+                    return SkyrimMajorRecord_Registration.IsProtected(index);
             }
         }
 
         public static Type GetNthType(ushort index)
         {
-            Spell_FieldIndex enu = (Spell_FieldIndex)index;
+            Scroll_FieldIndex enu = (Scroll_FieldIndex)index;
             switch (enu)
             {
-                case Spell_FieldIndex.ObjectBounds:
+                case Scroll_FieldIndex.ObjectBounds:
                     return typeof(ObjectBounds);
-                case Spell_FieldIndex.Name:
+                case Scroll_FieldIndex.Name:
                     return typeof(String);
-                case Spell_FieldIndex.Keywords:
+                case Scroll_FieldIndex.Keywords:
                     return typeof(ExtendedList<IFormLink<Keyword>>);
-                case Spell_FieldIndex.MenuDisplayObject:
+                case Scroll_FieldIndex.MenuDisplayObject:
                     return typeof(IFormLinkNullable<Static>);
-                case Spell_FieldIndex.EquipmentType:
+                case Scroll_FieldIndex.EquipmentType:
                     return typeof(IFormLinkNullable<EquipType>);
-                case Spell_FieldIndex.Description:
+                case Scroll_FieldIndex.Description:
                     return typeof(String);
-                case Spell_FieldIndex.Data:
+                case Scroll_FieldIndex.Model:
+                    return typeof(Model);
+                case Scroll_FieldIndex.Destructible:
+                    return typeof(Destructible);
+                case Scroll_FieldIndex.SoundPickUp:
+                    return typeof(IFormLinkNullable<SoundDescriptor>);
+                case Scroll_FieldIndex.SoundPutDown:
+                    return typeof(IFormLinkNullable<SoundDescriptor>);
+                case Scroll_FieldIndex.Data:
+                    return typeof(ScrollData);
+                case Scroll_FieldIndex.SpellData:
                     return typeof(SpellData);
-                case Spell_FieldIndex.Effects:
+                case Scroll_FieldIndex.Effects:
                     return typeof(ExtendedList<Effect>);
                 default:
-                    return ASpell_Registration.GetNthType(index);
+                    return SkyrimMajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(SpellXmlWriteTranslation);
-        public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
+        public static readonly Type XmlWriteTranslation = typeof(ScrollXmlWriteTranslation);
+        public static readonly RecordType SCRL_HEADER = new RecordType("SCRL");
         public static readonly RecordType OBND_HEADER = new RecordType("OBND");
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType KWDA_HEADER = new RecordType("KWDA");
@@ -1581,14 +1862,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType MDOB_HEADER = new RecordType("MDOB");
         public static readonly RecordType ETYP_HEADER = new RecordType("ETYP");
         public static readonly RecordType DESC_HEADER = new RecordType("DESC");
+        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
+        public static readonly RecordType DEST_HEADER = new RecordType("DEST");
+        public static readonly RecordType YNAM_HEADER = new RecordType("YNAM");
+        public static readonly RecordType ZNAM_HEADER = new RecordType("ZNAM");
+        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType SPIT_HEADER = new RecordType("SPIT");
         public static readonly RecordType EFID_HEADER = new RecordType("EFID");
         public static readonly RecordType EFIT_HEADER = new RecordType("EFIT");
         public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
-        public static readonly RecordType TriggeringRecordType = SPEL_HEADER;
+        public static readonly RecordType TriggeringRecordType = SCRL_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 8;
-        public static readonly Type BinaryWriteTranslation = typeof(SpellBinaryWriteTranslation);
+        public const int NumTypedFields = 13;
+        public static readonly Type BinaryWriteTranslation = typeof(ScrollBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1621,13 +1907,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class SpellSetterCommon : ASpellSetterCommon
+    public partial class ScrollSetterCommon : SkyrimMajorRecordSetterCommon
     {
-        public new static readonly SpellSetterCommon Instance = new SpellSetterCommon();
+        public new static readonly ScrollSetterCommon Instance = new ScrollSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(ISpellInternal item)
+        public void Clear(IScrollInternal item)
         {
             ClearPartial();
             item.ObjectBounds = new ObjectBounds();
@@ -1636,29 +1922,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.MenuDisplayObject.FormKey = null;
             item.EquipmentType.FormKey = null;
             item.Description = default;
+            item.Model = null;
+            item.Destructible = null;
+            item.SoundPickUp.FormKey = null;
+            item.SoundPutDown.FormKey = null;
             item.Data = null;
+            item.SpellData = null;
             item.Effects.Clear();
             base.Clear(item);
         }
         
-        public override void Clear(IASpellInternal item)
-        {
-            Clear(item: (ISpellInternal)item);
-        }
-        
         public override void Clear(ISkyrimMajorRecordInternal item)
         {
-            Clear(item: (ISpellInternal)item);
+            Clear(item: (IScrollInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (ISpellInternal)item);
+            Clear(item: (IScrollInternal)item);
         }
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
-            ISpellInternal item,
+            IScrollInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1667,7 +1953,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 default:
-                    ASpellSetterCommon.FillPrivateElementXml(
+                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -1678,7 +1964,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public virtual void CopyInFromXml(
-            ISpellInternal item,
+            IScrollInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1693,7 +1979,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    SpellXmlCreateTranslation.FillPublicElementXml(
+                    ScrollXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1709,26 +1995,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override void CopyInFromXml(
-            IASpellInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Spell)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
             ISkyrimMajorRecordInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
             CopyInFromXml(
-                item: (Spell)item,
+                item: (Scroll)item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1741,7 +2014,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask)
         {
             CopyInFromXml(
-                item: (Spell)item,
+                item: (Scroll)item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1750,18 +2023,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => Spell_Registration.SPEL_HEADER;
+        public override RecordType RecordType => Scroll_Registration.SCRL_HEADER;
         protected static void FillBinaryStructs(
-            ISpellInternal item,
+            IScrollInternal item,
             MutagenFrame frame)
         {
-            ASpellSetterCommon.FillBinaryStructs(
+            SkyrimMajorRecordSetterCommon.FillBinaryStructs(
                 item: item,
                 frame: frame);
         }
         
         protected static TryGet<int?> FillBinaryRecordTypes(
-            ISpellInternal item,
+            IScrollInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
@@ -1773,7 +2046,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x444E424F: // OBND
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.ObjectBounds);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.ObjectBounds);
                 }
                 case 0x4C4C5546: // FULL
                 {
@@ -1781,7 +2054,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.Name);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.Name);
                 }
                 case 0x5A49534B: // KSIZ
                 {
@@ -1790,11 +2063,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
                             frame: frame,
                             amount: amount,
-                            triggeringRecord: Spell_Registration.KWDA_HEADER,
+                            triggeringRecord: Scroll_Registration.KWDA_HEADER,
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Keyword>>();
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.Keywords);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.Keywords);
                 }
                 case 0x424F444D: // MDOB
                 {
@@ -1802,7 +2075,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.MenuDisplayObject.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.MenuDisplayObject);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.MenuDisplayObject);
                 }
                 case 0x50595445: // ETYP
                 {
@@ -1810,7 +2083,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.EquipmentType.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.EquipmentType);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.EquipmentType);
                 }
                 case 0x43534544: // DESC
                 {
@@ -1818,12 +2091,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.Description);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.Description);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.Model);
+                }
+                case 0x54534544: // DEST
+                {
+                    item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.Destructible);
+                }
+                case 0x4D414E59: // YNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.SoundPickUp.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.SoundPickUp);
+                }
+                case 0x4D414E5A: // ZNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.SoundPutDown.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.SoundPutDown);
+                }
+                case 0x41544144: // DATA
+                {
+                    item.Data = Mutagen.Bethesda.Skyrim.ScrollData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.Data);
                 }
                 case 0x54495053: // SPIT
                 {
-                    item.Data = Mutagen.Bethesda.Skyrim.SpellData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.Data);
+                    item.SpellData = Mutagen.Bethesda.Skyrim.SpellData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.SpellData);
                 }
                 case 0x44494645: // EFID
                 case 0x54494645: // EFIT
@@ -1841,10 +2145,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                     item: out listSubItem!,
                                     recordTypeConverter: conv);
                             }));
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.Effects);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.Effects);
                 }
                 default:
-                    return ASpellSetterCommon.FillBinaryRecordTypes(
+                    return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -1854,11 +2158,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public virtual void CopyInFromBinary(
-            ISpellInternal item,
+            IScrollInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<ISpellInternal>(
+            UtilityTranslation.MajorRecordParse<IScrollInternal>(
                 record: item,
                 frame: frame,
                 recType: RecordType,
@@ -1868,23 +2172,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override void CopyInFromBinary(
-            IASpellInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (Spell)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
-        }
-        
-        public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (Spell)item,
+                item: (Scroll)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1895,7 +2188,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (Spell)item,
+                item: (Scroll)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1903,17 +2196,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SpellCommon : ASpellCommon
+    public partial class ScrollCommon : SkyrimMajorRecordCommon
     {
-        public new static readonly SpellCommon Instance = new SpellCommon();
+        public new static readonly ScrollCommon Instance = new ScrollCommon();
 
-        public Spell.Mask<bool> GetEqualsMask(
-            ISpellGetter item,
-            ISpellGetter rhs,
+        public Scroll.Mask<bool> GetEqualsMask(
+            IScrollGetter item,
+            IScrollGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Spell.Mask<bool>(false);
-            ((SpellCommon)((ISpellGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new Scroll.Mask<bool>(false);
+            ((ScrollCommon)((IScrollGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1922,9 +2215,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            ISpellGetter item,
-            ISpellGetter rhs,
-            Spell.Mask<bool> ret,
+            IScrollGetter item,
+            IScrollGetter rhs,
+            Scroll.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1937,9 +2230,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.MenuDisplayObject = object.Equals(item.MenuDisplayObject, rhs.MenuDisplayObject);
             ret.EquipmentType = object.Equals(item.EquipmentType, rhs.EquipmentType);
             ret.Description = string.Equals(item.Description, rhs.Description);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Destructible = EqualsMaskHelper.EqualsHelper(
+                item.Destructible,
+                rhs.Destructible,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.SoundPickUp = object.Equals(item.SoundPickUp, rhs.SoundPickUp);
+            ret.SoundPutDown = object.Equals(item.SoundPutDown, rhs.SoundPutDown);
             ret.Data = EqualsMaskHelper.EqualsHelper(
                 item.Data,
                 rhs.Data,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.SpellData = EqualsMaskHelper.EqualsHelper(
+                item.SpellData,
+                rhs.SpellData,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Effects = item.Effects.CollectionEqualsHelper(
@@ -1950,9 +2260,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public string ToString(
-            ISpellGetter item,
+            IScrollGetter item,
             string? name = null,
-            Spell.Mask<bool>? printMask = null)
+            Scroll.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1964,18 +2274,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            ISpellGetter item,
+            IScrollGetter item,
             FileGeneration fg,
             string? name = null,
-            Spell.Mask<bool>? printMask = null)
+            Scroll.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Spell =>");
+                fg.AppendLine($"Scroll =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Spell) =>");
+                fg.AppendLine($"{name} (Scroll) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1989,11 +2299,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            ISpellGetter item,
+            IScrollGetter item,
             FileGeneration fg,
-            Spell.Mask<bool>? printMask = null)
+            Scroll.Mask<bool>? printMask = null)
         {
-            ASpellCommon.ToStringFields(
+            SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
@@ -2040,10 +2350,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(DescriptionItem, "Description");
             }
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
+            {
+                ModelItem?.ToString(fg, "Model");
+            }
+            if ((printMask?.Destructible?.Overall ?? true)
+                && item.Destructible.TryGet(out var DestructibleItem))
+            {
+                DestructibleItem?.ToString(fg, "Destructible");
+            }
+            if ((printMask?.SoundPickUp ?? true)
+                && item.SoundPickUp.TryGet(out var SoundPickUpItem))
+            {
+                fg.AppendItem(SoundPickUpItem, "SoundPickUp");
+            }
+            if ((printMask?.SoundPutDown ?? true)
+                && item.SoundPutDown.TryGet(out var SoundPutDownItem))
+            {
+                fg.AppendItem(SoundPutDownItem, "SoundPutDown");
+            }
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data.TryGet(out var DataItem))
             {
                 DataItem?.ToString(fg, "Data");
+            }
+            if ((printMask?.SpellData?.Overall ?? true)
+                && item.SpellData.TryGet(out var SpellDataItem))
+            {
+                SpellDataItem?.ToString(fg, "SpellData");
             }
             if (printMask?.Effects?.Overall ?? true)
             {
@@ -2066,24 +2401,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public bool HasBeenSet(
-            ISpellGetter item,
-            Spell.Mask<bool?> checkMask)
+            IScrollGetter item,
+            Scroll.Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
             if (checkMask.MenuDisplayObject.HasValue && checkMask.MenuDisplayObject.Value != (item.MenuDisplayObject.FormKey != null)) return false;
             if (checkMask.EquipmentType.HasValue && checkMask.EquipmentType.Value != (item.EquipmentType.FormKey != null)) return false;
             if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
+            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
+            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.Destructible?.Overall.HasValue ?? false && checkMask.Destructible.Overall.Value != (item.Destructible != null)) return false;
+            if (checkMask.Destructible?.Specific != null && (item.Destructible == null || !item.Destructible.HasBeenSet(checkMask.Destructible.Specific))) return false;
+            if (checkMask.SoundPickUp.HasValue && checkMask.SoundPickUp.Value != (item.SoundPickUp.FormKey != null)) return false;
+            if (checkMask.SoundPutDown.HasValue && checkMask.SoundPutDown.Value != (item.SoundPutDown.FormKey != null)) return false;
             if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
             if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
+            if (checkMask.SpellData?.Overall.HasValue ?? false && checkMask.SpellData.Overall.Value != (item.SpellData != null)) return false;
+            if (checkMask.SpellData?.Specific != null && (item.SpellData == null || !item.SpellData.HasBeenSet(checkMask.SpellData.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
         
         public void FillHasBeenSetMask(
-            ISpellGetter item,
-            Spell.Mask<bool> mask)
+            IScrollGetter item,
+            Scroll.Mask<bool> mask)
         {
             mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
             mask.Name = (item.Name != null);
@@ -2091,8 +2434,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.MenuDisplayObject = (item.MenuDisplayObject.FormKey != null);
             mask.EquipmentType = (item.EquipmentType.FormKey != null);
             mask.Description = (item.Description != null);
+            var itemModel = item.Model;
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            var itemDestructible = item.Destructible;
+            mask.Destructible = new MaskItem<bool, Destructible.Mask<bool>?>(itemDestructible != null, itemDestructible?.GetHasBeenSetMask());
+            mask.SoundPickUp = (item.SoundPickUp.FormKey != null);
+            mask.SoundPutDown = (item.SoundPutDown.FormKey != null);
             var itemData = item.Data;
-            mask.Data = new MaskItem<bool, SpellData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
+            mask.Data = new MaskItem<bool, ScrollData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
+            var itemSpellData = item.SpellData;
+            mask.SpellData = new MaskItem<bool, SpellData.Mask<bool>?>(itemSpellData != null, itemSpellData?.GetHasBeenSetMask());
             var EffectsItem = item.Effects;
             mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect.Mask<bool>?>>?>(true, EffectsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             base.FillHasBeenSetMask(
@@ -2100,64 +2451,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 mask: mask);
         }
         
-        public static Spell_FieldIndex ConvertFieldIndex(ASpell_FieldIndex index)
-        {
-            switch (index)
-            {
-                case ASpell_FieldIndex.MajorRecordFlagsRaw:
-                    return (Spell_FieldIndex)((int)index);
-                case ASpell_FieldIndex.FormKey:
-                    return (Spell_FieldIndex)((int)index);
-                case ASpell_FieldIndex.Version:
-                    return (Spell_FieldIndex)((int)index);
-                case ASpell_FieldIndex.EditorID:
-                    return (Spell_FieldIndex)((int)index);
-                case ASpell_FieldIndex.SkyrimMajorRecordFlags:
-                    return (Spell_FieldIndex)((int)index);
-                case ASpell_FieldIndex.FormVersion:
-                    return (Spell_FieldIndex)((int)index);
-                case ASpell_FieldIndex.Version2:
-                    return (Spell_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
-        public static new Spell_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
+        public static Scroll_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case SkyrimMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Spell_FieldIndex)((int)index);
+                    return (Scroll_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
-                    return (Spell_FieldIndex)((int)index);
+                    return (Scroll_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version:
-                    return (Spell_FieldIndex)((int)index);
+                    return (Scroll_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
-                    return (Spell_FieldIndex)((int)index);
+                    return (Scroll_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
-                    return (Spell_FieldIndex)((int)index);
+                    return (Scroll_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
-                    return (Spell_FieldIndex)((int)index);
+                    return (Scroll_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
-                    return (Spell_FieldIndex)((int)index);
+                    return (Scroll_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new Spell_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Scroll_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Spell_FieldIndex)((int)index);
+                    return (Scroll_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (Spell_FieldIndex)((int)index);
+                    return (Scroll_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
-                    return (Spell_FieldIndex)((int)index);
+                    return (Scroll_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Spell_FieldIndex)((int)index);
+                    return (Scroll_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -2165,8 +2493,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            ISpellGetter? lhs,
-            ISpellGetter? rhs)
+            IScrollGetter? lhs,
+            IScrollGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -2177,18 +2505,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.MenuDisplayObject.Equals(rhs.MenuDisplayObject)) return false;
             if (!lhs.EquipmentType.Equals(rhs.EquipmentType)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
+            if (!lhs.SoundPickUp.Equals(rhs.SoundPickUp)) return false;
+            if (!lhs.SoundPutDown.Equals(rhs.SoundPutDown)) return false;
             if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            if (!object.Equals(lhs.SpellData, rhs.SpellData)) return false;
             if (!lhs.Effects.SequenceEqual(rhs.Effects)) return false;
             return true;
-        }
-        
-        public override bool Equals(
-            IASpellGetter? lhs,
-            IASpellGetter? rhs)
-        {
-            return Equals(
-                lhs: (ISpellGetter?)lhs,
-                rhs: rhs as ISpellGetter);
         }
         
         public override bool Equals(
@@ -2196,8 +2520,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (ISpellGetter?)lhs,
-                rhs: rhs as ISpellGetter);
+                lhs: (IScrollGetter?)lhs,
+                rhs: rhs as IScrollGetter);
         }
         
         public override bool Equals(
@@ -2205,11 +2529,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (ISpellGetter?)lhs,
-                rhs: rhs as ISpellGetter);
+                lhs: (IScrollGetter?)lhs,
+                rhs: rhs as IScrollGetter);
         }
         
-        public virtual int GetHashCode(ISpellGetter item)
+        public virtual int GetHashCode(IScrollGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.ObjectBounds);
@@ -2230,28 +2554,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Descriptionitem);
             }
+            if (item.Model.TryGet(out var Modelitem))
+            {
+                hash.Add(Modelitem);
+            }
+            if (item.Destructible.TryGet(out var Destructibleitem))
+            {
+                hash.Add(Destructibleitem);
+            }
+            if (item.SoundPickUp.TryGet(out var SoundPickUpitem))
+            {
+                hash.Add(SoundPickUpitem);
+            }
+            if (item.SoundPutDown.TryGet(out var SoundPutDownitem))
+            {
+                hash.Add(SoundPutDownitem);
+            }
             if (item.Data.TryGet(out var Dataitem))
             {
                 hash.Add(Dataitem);
+            }
+            if (item.SpellData.TryGet(out var SpellDataitem))
+            {
+                hash.Add(SpellDataitem);
             }
             hash.Add(item.Effects);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
-        public override int GetHashCode(IASpellGetter item)
-        {
-            return GetHashCode(item: (ISpellGetter)item);
-        }
-        
         public override int GetHashCode(ISkyrimMajorRecordGetter item)
         {
-            return GetHashCode(item: (ISpellGetter)item);
+            return GetHashCode(item: (IScrollGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (ISpellGetter)item);
+            return GetHashCode(item: (IScrollGetter)item);
         }
         
         #endregion
@@ -2259,11 +2598,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override object GetNew()
         {
-            return Spell.GetNew();
+            return Scroll.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(ISpellGetter obj)
+        public IEnumerable<ILinkGetter> GetLinks(IScrollGetter obj)
         {
             foreach (var item in base.GetLinks(obj))
             {
@@ -2278,9 +2617,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             yield return obj.MenuDisplayObject;
             yield return obj.EquipmentType;
-            if (obj.Data != null)
+            if (obj.Model != null)
             {
-                foreach (var item in obj.Data.Links)
+                foreach (var item in obj.Model.Links)
+                {
+                    yield return item;
+                }
+            }
+            yield return obj.SoundPickUp;
+            yield return obj.SoundPutDown;
+            if (obj.SpellData != null)
+            {
+                foreach (var item in obj.SpellData.Links)
                 {
                     yield return item;
                 }
@@ -2292,28 +2640,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        partial void PostDuplicate(Spell obj, Spell rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
+        partial void PostDuplicate(Scroll obj, Scroll rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            var ret = new Spell(getNextFormKey());
-            ret.DeepCopyIn((Spell)item);
+            var ret = new Scroll(getNextFormKey());
+            ret.DeepCopyIn((Scroll)item);
             duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Spell)item, getNextFormKey, duplicatedRecords);
+            PostDuplicate(ret, (Scroll)item, getNextFormKey, duplicatedRecords);
             return ret;
         }
         
         #endregion
         
     }
-    public partial class SpellSetterTranslationCommon : ASpellSetterTranslationCommon
+    public partial class ScrollSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
-        public new static readonly SpellSetterTranslationCommon Instance = new SpellSetterTranslationCommon();
+        public new static readonly ScrollSetterTranslationCommon Instance = new ScrollSetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            ISpellInternal item,
-            ISpellGetter rhs,
+            IScrollInternal item,
+            IScrollGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -2325,8 +2673,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void DeepCopyIn(
-            ISpell item,
-            ISpellGetter rhs,
+            IScroll item,
+            IScrollGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -2335,15 +2683,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs,
                 errorMask,
                 copyMask);
-            if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.ObjectBounds) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.ObjectBounds) ?? true))
             {
-                errorMask?.PushIndex((int)Spell_FieldIndex.ObjectBounds);
+                errorMask?.PushIndex((int)Scroll_FieldIndex.ObjectBounds);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.ObjectBounds) ?? true))
+                    if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.ObjectBounds) ?? true))
                     {
                         item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)Spell_FieldIndex.ObjectBounds),
+                            copyMask: copyMask?.GetSubCrystal((int)Scroll_FieldIndex.ObjectBounds),
                             errorMask: errorMask);
                     }
                 }
@@ -2357,13 +2705,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Name) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Name) ?? true))
             {
                 item.Name = rhs.Name;
             }
-            if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Keywords) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Keywords) ?? true))
             {
-                errorMask?.PushIndex((int)Spell_FieldIndex.Keywords);
+                errorMask?.PushIndex((int)Scroll_FieldIndex.Keywords);
                 try
                 {
                     if ((rhs.Keywords != null))
@@ -2388,28 +2736,88 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.MenuDisplayObject) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.MenuDisplayObject) ?? true))
             {
                 item.MenuDisplayObject.FormKey = rhs.MenuDisplayObject.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.EquipmentType) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.EquipmentType) ?? true))
             {
                 item.EquipmentType.FormKey = rhs.EquipmentType.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Description) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Description) ?? true))
             {
                 item.Description = rhs.Description;
             }
-            if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Data) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Model) ?? true))
             {
-                errorMask?.PushIndex((int)Spell_FieldIndex.Data);
+                errorMask?.PushIndex((int)Scroll_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model.TryGet(out var rhsModel))
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Scroll_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Destructible) ?? true))
+            {
+                errorMask?.PushIndex((int)Scroll_FieldIndex.Destructible);
+                try
+                {
+                    if(rhs.Destructible.TryGet(out var rhsDestructible))
+                    {
+                        item.Destructible = rhsDestructible.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Scroll_FieldIndex.Destructible));
+                    }
+                    else
+                    {
+                        item.Destructible = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.SoundPickUp) ?? true))
+            {
+                item.SoundPickUp.FormKey = rhs.SoundPickUp.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.SoundPutDown) ?? true))
+            {
+                item.SoundPutDown.FormKey = rhs.SoundPutDown.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Data) ?? true))
+            {
+                errorMask?.PushIndex((int)Scroll_FieldIndex.Data);
                 try
                 {
                     if(rhs.Data.TryGet(out var rhsData))
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Spell_FieldIndex.Data));
+                            copyMask?.GetSubCrystal((int)Scroll_FieldIndex.Data));
                     }
                     else
                     {
@@ -2426,9 +2834,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Effects) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.SpellData) ?? true))
             {
-                errorMask?.PushIndex((int)Spell_FieldIndex.Effects);
+                errorMask?.PushIndex((int)Scroll_FieldIndex.SpellData);
+                try
+                {
+                    if(rhs.SpellData.TryGet(out var rhsSpellData))
+                    {
+                        item.SpellData = rhsSpellData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Scroll_FieldIndex.SpellData));
+                    }
+                    else
+                    {
+                        item.SpellData = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Effects) ?? true))
+            {
+                errorMask?.PushIndex((int)Scroll_FieldIndex.Effects);
                 try
                 {
                     item.Effects.SetTo(
@@ -2453,40 +2887,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override void DeepCopyIn(
-            IASpellInternal item,
-            IASpellGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
-        {
-            this.DeepCopyIn(
-                item: (ISpellInternal)item,
-                rhs: (ISpellGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-        
-        public override void DeepCopyIn(
-            IASpell item,
-            IASpellGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
-        {
-            this.DeepCopyIn(
-                item: (ISpell)item,
-                rhs: (ISpellGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-        
-        public override void DeepCopyIn(
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (ISpellInternal)item,
-                rhs: (ISpellGetter)rhs,
+                item: (IScrollInternal)item,
+                rhs: (IScrollGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -2498,8 +2906,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (ISpell)item,
-                rhs: (ISpellGetter)rhs,
+                item: (IScroll)item,
+                rhs: (IScrollGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -2511,8 +2919,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (ISpellInternal)item,
-                rhs: (ISpellGetter)rhs,
+                item: (IScrollInternal)item,
+                rhs: (IScrollGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -2524,31 +2932,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (ISpell)item,
-                rhs: (ISpellGetter)rhs,
+                item: (IScroll)item,
+                rhs: (IScrollGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
         #endregion
         
-        public Spell DeepCopy(
-            ISpellGetter item,
-            Spell.TranslationMask? copyMask = null)
+        public Scroll DeepCopy(
+            IScrollGetter item,
+            Scroll.TranslationMask? copyMask = null)
         {
-            Spell ret = (Spell)((SpellCommon)((ISpellGetter)item).CommonInstance()!).GetNew();
+            Scroll ret = (Scroll)((ScrollCommon)((IScrollGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public Spell DeepCopy(
-            ISpellGetter item,
-            out Spell.ErrorMask errorMask,
-            Spell.TranslationMask? copyMask = null)
+        public Scroll DeepCopy(
+            IScrollGetter item,
+            out Scroll.ErrorMask errorMask,
+            Scroll.TranslationMask? copyMask = null)
         {
-            Spell ret = (Spell)((SpellCommon)((ISpellGetter)item).CommonInstance()!).GetNew();
+            Scroll ret = (Scroll)((ScrollCommon)((IScrollGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -2556,12 +2964,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public Spell DeepCopy(
-            ISpellGetter item,
+        public Scroll DeepCopy(
+            IScrollGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            Spell ret = (Spell)((SpellCommon)((ISpellGetter)item).CommonInstance()!).GetNew();
+            Scroll ret = (Scroll)((ScrollCommon)((IScrollGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -2576,21 +2984,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class Spell
+    public partial class Scroll
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Spell_Registration.Instance;
-        public new static Spell_Registration Registration => Spell_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Scroll_Registration.Instance;
+        public new static Scroll_Registration Registration => Scroll_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => SpellCommon.Instance;
+        protected override object CommonInstance() => ScrollCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return SpellSetterCommon.Instance;
+            return ScrollSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => SpellSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => ScrollSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -2601,54 +3009,54 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class SpellXmlWriteTranslation :
-        ASpellXmlWriteTranslation,
+    public partial class ScrollXmlWriteTranslation :
+        SkyrimMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
     {
-        public new readonly static SpellXmlWriteTranslation Instance = new SpellXmlWriteTranslation();
+        public new readonly static ScrollXmlWriteTranslation Instance = new ScrollXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            ISpellGetter item,
+            IScrollGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ASpellXmlWriteTranslation.WriteToNodeXml(
+            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)Spell_FieldIndex.ObjectBounds) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.ObjectBounds) ?? true))
             {
                 var ObjectBoundsItem = item.ObjectBounds;
                 ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
                     item: ObjectBoundsItem,
                     node: node,
                     name: nameof(item.ObjectBounds),
-                    fieldIndex: (int)Spell_FieldIndex.ObjectBounds,
+                    fieldIndex: (int)Scroll_FieldIndex.ObjectBounds,
                     errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Spell_FieldIndex.ObjectBounds));
+                    translationMask: translationMask?.GetSubCrystal((int)Scroll_FieldIndex.ObjectBounds));
             }
             if ((item.Name != null)
-                && (translationMask?.GetShouldTranslate((int)Spell_FieldIndex.Name) ?? true))
+                && (translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Name),
                     item: item.Name,
-                    fieldIndex: (int)Spell_FieldIndex.Name,
+                    fieldIndex: (int)Scroll_FieldIndex.Name,
                     errorMask: errorMask);
             }
             if ((item.Keywords != null)
-                && (translationMask?.GetShouldTranslate((int)Spell_FieldIndex.Keywords) ?? true))
+                && (translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.Keywords) ?? true))
             {
                 ListXmlTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.Keywords),
                     item: item.Keywords,
-                    fieldIndex: (int)Spell_FieldIndex.Keywords,
+                    fieldIndex: (int)Scroll_FieldIndex.Keywords,
                     errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Spell_FieldIndex.Keywords),
+                    translationMask: translationMask?.GetSubCrystal((int)Scroll_FieldIndex.Keywords),
                     transl: (XElement subNode, IFormLinkGetter<IKeywordGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
@@ -2659,58 +3067,120 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     });
             }
             if ((item.MenuDisplayObject.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Spell_FieldIndex.MenuDisplayObject) ?? true))
+                && (translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.MenuDisplayObject) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.MenuDisplayObject),
                     item: item.MenuDisplayObject.FormKey.Value,
-                    fieldIndex: (int)Spell_FieldIndex.MenuDisplayObject,
+                    fieldIndex: (int)Scroll_FieldIndex.MenuDisplayObject,
                     errorMask: errorMask);
             }
             if ((item.EquipmentType.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Spell_FieldIndex.EquipmentType) ?? true))
+                && (translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.EquipmentType) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.EquipmentType),
                     item: item.EquipmentType.FormKey.Value,
-                    fieldIndex: (int)Spell_FieldIndex.EquipmentType,
+                    fieldIndex: (int)Scroll_FieldIndex.EquipmentType,
                     errorMask: errorMask);
             }
             if ((item.Description != null)
-                && (translationMask?.GetShouldTranslate((int)Spell_FieldIndex.Description) ?? true))
+                && (translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.Description) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Description),
                     item: item.Description,
-                    fieldIndex: (int)Spell_FieldIndex.Description,
+                    fieldIndex: (int)Scroll_FieldIndex.Description,
+                    errorMask: errorMask);
+            }
+            if ((item.Model != null)
+                && (translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.Model) ?? true))
+            {
+                if (item.Model.TryGet(out var ModelItem))
+                {
+                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                        item: ModelItem,
+                        node: node,
+                        name: nameof(item.Model),
+                        fieldIndex: (int)Scroll_FieldIndex.Model,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Scroll_FieldIndex.Model));
+                }
+            }
+            if ((item.Destructible != null)
+                && (translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.Destructible) ?? true))
+            {
+                if (item.Destructible.TryGet(out var DestructibleItem))
+                {
+                    ((DestructibleXmlWriteTranslation)((IXmlItem)DestructibleItem).XmlWriteTranslator).Write(
+                        item: DestructibleItem,
+                        node: node,
+                        name: nameof(item.Destructible),
+                        fieldIndex: (int)Scroll_FieldIndex.Destructible,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Scroll_FieldIndex.Destructible));
+                }
+            }
+            if ((item.SoundPickUp.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.SoundPickUp) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.SoundPickUp),
+                    item: item.SoundPickUp.FormKey.Value,
+                    fieldIndex: (int)Scroll_FieldIndex.SoundPickUp,
+                    errorMask: errorMask);
+            }
+            if ((item.SoundPutDown.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.SoundPutDown) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.SoundPutDown),
+                    item: item.SoundPutDown.FormKey.Value,
+                    fieldIndex: (int)Scroll_FieldIndex.SoundPutDown,
                     errorMask: errorMask);
             }
             if ((item.Data != null)
-                && (translationMask?.GetShouldTranslate((int)Spell_FieldIndex.Data) ?? true))
+                && (translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.Data) ?? true))
             {
                 if (item.Data.TryGet(out var DataItem))
                 {
-                    ((SpellDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                    ((ScrollDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
                         item: DataItem,
                         node: node,
                         name: nameof(item.Data),
-                        fieldIndex: (int)Spell_FieldIndex.Data,
+                        fieldIndex: (int)Scroll_FieldIndex.Data,
                         errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Spell_FieldIndex.Data));
+                        translationMask: translationMask?.GetSubCrystal((int)Scroll_FieldIndex.Data));
                 }
             }
-            if ((translationMask?.GetShouldTranslate((int)Spell_FieldIndex.Effects) ?? true))
+            if ((item.SpellData != null)
+                && (translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.SpellData) ?? true))
+            {
+                if (item.SpellData.TryGet(out var SpellDataItem))
+                {
+                    ((SpellDataXmlWriteTranslation)((IXmlItem)SpellDataItem).XmlWriteTranslator).Write(
+                        item: SpellDataItem,
+                        node: node,
+                        name: nameof(item.SpellData),
+                        fieldIndex: (int)Scroll_FieldIndex.SpellData,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Scroll_FieldIndex.SpellData));
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.Effects) ?? true))
             {
                 ListXmlTranslation<IEffectGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.Effects),
                     item: item.Effects,
-                    fieldIndex: (int)Spell_FieldIndex.Effects,
+                    fieldIndex: (int)Scroll_FieldIndex.Effects,
                     errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Spell_FieldIndex.Effects),
+                    translationMask: translationMask?.GetSubCrystal((int)Scroll_FieldIndex.Effects),
                     transl: (XElement subNode, IEffectGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         if (subItem.TryGet(out var Item))
@@ -2728,16 +3198,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public void Write(
             XElement node,
-            ISpellGetter item,
+            IScrollGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Spell");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Scroll");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Spell");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Scroll");
             }
             WriteToNodeXml(
                 item: item,
@@ -2754,22 +3224,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (ISpellGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IASpellGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (ISpellGetter)item,
+                item: (IScrollGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -2784,7 +3239,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (ISpellGetter)item,
+                item: (IScrollGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -2799,7 +3254,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (ISpellGetter)item,
+                item: (IScrollGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -2808,12 +3263,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class SpellXmlCreateTranslation : ASpellXmlCreateTranslation
+    public partial class ScrollXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
     {
-        public new readonly static SpellXmlCreateTranslation Instance = new SpellXmlCreateTranslation();
+        public new readonly static ScrollXmlCreateTranslation Instance = new ScrollXmlCreateTranslation();
 
         public static void FillPublicXml(
-            ISpellInternal item,
+            IScrollInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -2822,7 +3277,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    SpellXmlCreateTranslation.FillPublicElementXml(
+                    ScrollXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -2838,7 +3293,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            ISpellInternal item,
+            IScrollInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -2847,13 +3302,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "ObjectBounds":
-                    errorMask?.PushIndex((int)Spell_FieldIndex.ObjectBounds);
+                    errorMask?.PushIndex((int)Scroll_FieldIndex.ObjectBounds);
                     try
                     {
                         item.ObjectBounds = LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Spell_FieldIndex.ObjectBounds));
+                            translationMask: translationMask?.GetSubCrystal((int)Scroll_FieldIndex.ObjectBounds));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2866,7 +3321,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Name":
-                    errorMask?.PushIndex((int)Spell_FieldIndex.Name);
+                    errorMask?.PushIndex((int)Scroll_FieldIndex.Name);
                     try
                     {
                         item.Name = StringXmlTranslation.Instance.Parse(
@@ -2884,7 +3339,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Keywords":
-                    errorMask?.PushIndex((int)Spell_FieldIndex.Keywords);
+                    errorMask?.PushIndex((int)Scroll_FieldIndex.Keywords);
                     try
                     {
                         if (ListXmlTranslation<IFormLink<Keyword>>.Instance.Parse(
@@ -2912,7 +3367,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "MenuDisplayObject":
-                    errorMask?.PushIndex((int)Spell_FieldIndex.MenuDisplayObject);
+                    errorMask?.PushIndex((int)Scroll_FieldIndex.MenuDisplayObject);
                     try
                     {
                         item.MenuDisplayObject.FormKey = FormKeyXmlTranslation.Instance.Parse(
@@ -2930,7 +3385,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "EquipmentType":
-                    errorMask?.PushIndex((int)Spell_FieldIndex.EquipmentType);
+                    errorMask?.PushIndex((int)Scroll_FieldIndex.EquipmentType);
                     try
                     {
                         item.EquipmentType.FormKey = FormKeyXmlTranslation.Instance.Parse(
@@ -2948,7 +3403,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Description":
-                    errorMask?.PushIndex((int)Spell_FieldIndex.Description);
+                    errorMask?.PushIndex((int)Scroll_FieldIndex.Description);
                     try
                     {
                         item.Description = StringXmlTranslation.Instance.Parse(
@@ -2965,14 +3420,107 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Data":
-                    errorMask?.PushIndex((int)Spell_FieldIndex.Data);
+                case "Model":
+                    errorMask?.PushIndex((int)Scroll_FieldIndex.Model);
                     try
                     {
-                        item.Data = LoquiXmlTranslation<SpellData>.Instance.Parse(
+                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Spell_FieldIndex.Data));
+                            translationMask: translationMask?.GetSubCrystal((int)Scroll_FieldIndex.Model));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Destructible":
+                    errorMask?.PushIndex((int)Scroll_FieldIndex.Destructible);
+                    try
+                    {
+                        item.Destructible = LoquiXmlTranslation<Destructible>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Scroll_FieldIndex.Destructible));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SoundPickUp":
+                    errorMask?.PushIndex((int)Scroll_FieldIndex.SoundPickUp);
+                    try
+                    {
+                        item.SoundPickUp.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SoundPutDown":
+                    errorMask?.PushIndex((int)Scroll_FieldIndex.SoundPutDown);
+                    try
+                    {
+                        item.SoundPutDown.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Data":
+                    errorMask?.PushIndex((int)Scroll_FieldIndex.Data);
+                    try
+                    {
+                        item.Data = LoquiXmlTranslation<ScrollData>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Scroll_FieldIndex.Data));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SpellData":
+                    errorMask?.PushIndex((int)Scroll_FieldIndex.SpellData);
+                    try
+                    {
+                        item.SpellData = LoquiXmlTranslation<SpellData>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Scroll_FieldIndex.SpellData));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2985,7 +3533,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Effects":
-                    errorMask?.PushIndex((int)Spell_FieldIndex.Effects);
+                    errorMask?.PushIndex((int)Scroll_FieldIndex.Effects);
                     try
                     {
                         if (ListXmlTranslation<Effect>.Instance.Parse(
@@ -3013,7 +3561,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 default:
-                    ASpellXmlCreateTranslation.FillPublicElementXml(
+                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -3029,30 +3577,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Xml Write Mixins
-    public static class SpellXmlTranslationMixIn
+    public static class ScrollXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this ISpellGetter item,
+            this IScrollGetter item,
             XElement node,
-            out Spell.ErrorMask errorMask,
-            Spell.TranslationMask? translationMask = null,
+            out Scroll.ErrorMask errorMask,
+            Scroll.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((SpellXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((ScrollXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Spell.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Scroll.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this ISpellGetter item,
+            this IScrollGetter item,
             string path,
-            out Spell.ErrorMask errorMask,
-            Spell.TranslationMask? translationMask = null,
+            out Scroll.ErrorMask errorMask,
+            Scroll.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -3066,10 +3614,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this ISpellGetter item,
+            this IScrollGetter item,
             Stream stream,
-            out Spell.ErrorMask errorMask,
-            Spell.TranslationMask? translationMask = null,
+            out Scroll.ErrorMask errorMask,
+            Scroll.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -3092,14 +3640,14 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class SpellBinaryWriteTranslation :
-        ASpellBinaryWriteTranslation,
+    public partial class ScrollBinaryWriteTranslation :
+        SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static SpellBinaryWriteTranslation Instance = new SpellBinaryWriteTranslation();
+        public new readonly static ScrollBinaryWriteTranslation Instance = new ScrollBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
-            ISpellGetter item,
+            IScrollGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
@@ -3115,13 +3663,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(Spell_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Scroll_Registration.FULL_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
-                counterType: Spell_Registration.KSIZ_HEADER,
-                recordType: Spell_Registration.KWDA_HEADER,
+                counterType: Scroll_Registration.KSIZ_HEADER,
+                recordType: Scroll_Registration.KWDA_HEADER,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
@@ -3131,20 +3679,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MenuDisplayObject,
-                header: recordTypeConverter.ConvertToCustom(Spell_Registration.MDOB_HEADER));
+                header: recordTypeConverter.ConvertToCustom(Scroll_Registration.MDOB_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.EquipmentType,
-                header: recordTypeConverter.ConvertToCustom(Spell_Registration.ETYP_HEADER));
+                header: recordTypeConverter.ConvertToCustom(Scroll_Registration.ETYP_HEADER));
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Description,
-                header: recordTypeConverter.ConvertToCustom(Spell_Registration.DESC_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Scroll_Registration.DESC_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
+            if (item.Model.TryGet(out var ModelItem))
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            if (item.Destructible.TryGet(out var DestructibleItem))
+            {
+                ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
+                    item: DestructibleItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SoundPickUp,
+                header: recordTypeConverter.ConvertToCustom(Scroll_Registration.YNAM_HEADER));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SoundPutDown,
+                header: recordTypeConverter.ConvertToCustom(Scroll_Registration.ZNAM_HEADER));
             if (item.Data.TryGet(out var DataItem))
             {
-                ((SpellDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                ((ScrollDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            if (item.SpellData.TryGet(out var SpellDataItem))
+            {
+                ((SpellDataBinaryWriteTranslation)((IBinaryItem)SpellDataItem).BinaryWriteTranslator).Write(
+                    item: SpellDataItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
@@ -3165,12 +3742,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public void Write(
             MutagenWriter writer,
-            ISpellGetter item,
+            IScrollGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Spell_Registration.SPEL_HEADER),
+                record: recordTypeConverter.ConvertToCustom(Scroll_Registration.SCRL_HEADER),
                 type: ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -3189,18 +3766,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (ISpellGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
-            IASpellGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (ISpellGetter)item,
+                item: (IScrollGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -3211,7 +3777,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (ISpellGetter)item,
+                item: (IScrollGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -3222,16 +3788,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (ISpellGetter)item,
+                item: (IScrollGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class SpellBinaryCreateTranslation : ASpellBinaryCreateTranslation
+    public partial class ScrollBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static SpellBinaryCreateTranslation Instance = new SpellBinaryCreateTranslation();
+        public new readonly static ScrollBinaryCreateTranslation Instance = new ScrollBinaryCreateTranslation();
 
     }
 
@@ -3239,7 +3805,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class SpellBinaryTranslationMixIn
+    public static class ScrollBinaryTranslationMixIn
     {
     }
     #endregion
@@ -3248,35 +3814,35 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class SpellBinaryOverlay :
-        ASpellBinaryOverlay,
-        ISpellGetter
+    public partial class ScrollBinaryOverlay :
+        SkyrimMajorRecordBinaryOverlay,
+        IScrollGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Spell_Registration.Instance;
-        public new static Spell_Registration Registration => Spell_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Scroll_Registration.Instance;
+        public new static Scroll_Registration Registration => Scroll_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => SpellCommon.Instance;
+        protected override object CommonInstance() => ScrollCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => SpellSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => ScrollSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISpellGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScrollGetter)rhs, include);
 
-        public override IEnumerable<ILinkGetter> Links => SpellCommon.Instance.GetLinks(this);
+        public override IEnumerable<ILinkGetter> Links => ScrollCommon.Instance.GetLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => SpellXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => ScrollXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((SpellXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((ScrollXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -3284,12 +3850,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => SpellBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ScrollBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((SpellBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ScrollBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
@@ -3320,11 +3886,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _DescriptionLocation;
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta)) : default(string?);
         #endregion
+        #region Model
+        public IModelGetter? Model { get; private set; }
+        public bool Model_IsSet => Model != null;
+        #endregion
+        #region Destructible
+        private RangeInt32? _DestructibleLocation;
+        private bool _Destructible_IsSet => _DestructibleLocation.HasValue;
+        public IDestructibleGetter? Destructible => _Destructible_IsSet ? DestructibleBinaryOverlay.DestructibleFactory(new BinaryMemoryReadStream(_data.Slice(_DestructibleLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Destructible_IsSet => _DestructibleLocation.HasValue;
+        #endregion
+        #region SoundPickUp
+        private int? _SoundPickUpLocation;
+        public bool SoundPickUp_IsSet => _SoundPickUpLocation.HasValue;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> SoundPickUp => _SoundPickUpLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundPickUpLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Empty;
+        #endregion
+        #region SoundPutDown
+        private int? _SoundPutDownLocation;
+        public bool SoundPutDown_IsSet => _SoundPutDownLocation.HasValue;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> SoundPutDown => _SoundPutDownLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundPutDownLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Empty;
+        #endregion
         #region Data
         private RangeInt32? _DataLocation;
         private bool _Data_IsSet => _DataLocation.HasValue;
-        public ISpellDataGetter? Data => _Data_IsSet ? SpellDataBinaryOverlay.SpellDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IScrollDataGetter? Data => _Data_IsSet ? ScrollDataBinaryOverlay.ScrollDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
+        #endregion
+        #region SpellData
+        private RangeInt32? _SpellDataLocation;
+        private bool _SpellData_IsSet => _SpellDataLocation.HasValue;
+        public ISpellDataGetter? SpellData => _SpellData_IsSet ? SpellDataBinaryOverlay.SpellDataFactory(new BinaryMemoryReadStream(_data.Slice(_SpellDataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool SpellData_IsSet => _SpellDataLocation.HasValue;
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = ListExt.Empty<EffectBinaryOverlay>();
         partial void CustomCtor(
@@ -3332,7 +3924,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset);
 
-        protected SpellBinaryOverlay(
+        protected ScrollBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -3341,13 +3933,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static SpellBinaryOverlay SpellFactory(
+        public static ScrollBinaryOverlay ScrollFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new SpellBinaryOverlay(
+            var ret = new ScrollBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -3380,12 +3972,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x444E424F: // OBND
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.ObjectBounds);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.ObjectBounds);
                 }
                 case 0x4C4C5546: // FULL
                 {
                     _NameLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.Name);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.Name);
                 }
                 case 0x5A49534B: // KSIZ
                 {
@@ -3399,27 +3991,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         count: count,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.Keywords);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.Keywords);
                 }
                 case 0x424F444D: // MDOB
                 {
                     _MenuDisplayObjectLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.MenuDisplayObject);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.MenuDisplayObject);
                 }
                 case 0x50595445: // ETYP
                 {
                     _EquipmentTypeLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.EquipmentType);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.EquipmentType);
                 }
                 case 0x43534544: // DESC
                 {
                     _DescriptionLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.Description);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.Description);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.Model);
+                }
+                case 0x54534544: // DEST
+                {
+                    _DestructibleLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.Destructible);
+                }
+                case 0x4D414E59: // YNAM
+                {
+                    _SoundPickUpLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.SoundPickUp);
+                }
+                case 0x4D414E5A: // ZNAM
+                {
+                    _SoundPutDownLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.SoundPutDown);
+                }
+                case 0x41544144: // DATA
+                {
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.Data);
                 }
                 case 0x54495053: // SPIT
                 {
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.Data);
+                    _SpellDataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.SpellData);
                 }
                 case 0x44494645: // EFID
                 case 0x54494645: // EFIT
@@ -3430,7 +4050,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: Effect_Registration.TriggeringRecordTypes,
                         factory:  EffectBinaryOverlay.EffectFactory);
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.Effects);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.Effects);
                 }
                 default:
                     return base.FillRecordType(
@@ -3448,7 +4068,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             string? name = null)
         {
-            SpellMixIn.ToString(
+            ScrollMixIn.ToString(
                 item: this,
                 name: name);
         }

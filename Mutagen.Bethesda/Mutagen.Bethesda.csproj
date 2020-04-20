@@ -19,6 +19,18 @@
     <DocumentationFile>C:\Users\Levia\Documents\Repos\Mutagen\Mutagen.Bethesda\Mutagen.Bethesda.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Skyrim\Records\Common Subrecords\DestructionStageData.cs">
+      <DependentUpon>Destructible.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\Effect.cs">
+      <DependentUpon>Effect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ObjectEffect.cs">
+      <DependentUpon>ObjectEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\SpellData.cs">
+      <DependentUpon>Spell.xml</DependentUpon>
+    </Compile>
     <Compile Include="Warmup.cs" />
     <Compile Include="Oblivion\Constants.cs" />
     <Compile Include="Oblivion\Interfaces\IOwner.cs" />
@@ -710,10 +722,10 @@
     <Compile Include="Oblivion\Records\OblivionMod_LoquiGenerated.cs">
       <DependentUpon>OblivionMod.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Enums\CastingType.cs" />
+    <Compile Include="Skyrim\Enums\CastType.cs" />
     <Compile Include="Skyrim\Enums\CompareOperator.cs" />
     <Compile Include="Skyrim\Enums\SoundLevel.cs" />
-    <Compile Include="Skyrim\Enums\Targeting.cs" />
+    <Compile Include="Skyrim\Enums\TargetType.cs" />
     <Compile Include="Skyrim\Interfaces\IBoundableEquipment.cs" />
     <Compile Include="Skyrim\ProtocolDefinition_Skyrim.cs" />
     <Compile Include="Skyrim\Enums\ActorValueExtended.cs" />
@@ -1071,9 +1083,6 @@
     <Compile Include="Oblivion\Records\Major Records\AItem_LoquiGenerated.cs">
       <DependentUpon>AItem.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\ASpell_LoquiGenerated.cs">
-      <DependentUpon>ASpell.xml</DependentUpon>
-    </Compile>
     <Compile Include="Oblivion\Records\Major Records\ASpell_LoquiGenerated.cs">
       <DependentUpon>ASpell.xml</DependentUpon>
     </Compile>
@@ -1385,6 +1394,51 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\ClassData_LoquiGenerated.cs">
       <DependentUpon>Class.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\Effect_LoquiGenerated.cs">
+      <DependentUpon>Effect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\EffectData_LoquiGenerated.cs">
+      <DependentUpon>Effect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ObjectEffectData_LoquiGenerated.cs">
+      <DependentUpon>ObjectEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\SpellData_LoquiGenerated.cs">
+      <DependentUpon>Spell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\Destructable_LoquiGenerated.cs">
+      <DependentUpon>Destructible.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Scroll_LoquiGenerated.cs">
+      <DependentUpon>Scroll.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\Destructible_LoquiGenerated.cs">
+      <DependentUpon>Destructible.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\DestructionStage_LoquiGenerated.cs">
+      <DependentUpon>Destructible.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\DestructionStageData_LoquiGenerated.cs">
+      <DependentUpon>Destructible.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Debris_LoquiGenerated.cs">
+      <DependentUpon>Debris.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ScrollData_LoquiGenerated.cs">
+      <DependentUpon>Scroll.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Activator_LoquiGenerated.cs">
+      <DependentUpon>Activator.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ASpell_LoquiGenerated.cs">
+      <DependentUpon>ASpell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\LeveledSpell_LoquiGenerated.cs">
+      <DependentUpon>LeveledSpell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Shout_LoquiGenerated.cs">
+      <DependentUpon>Shout.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

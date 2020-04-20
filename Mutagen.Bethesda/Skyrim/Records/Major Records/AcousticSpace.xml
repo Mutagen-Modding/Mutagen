@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="AcousticSpace" recordType="ASPC" objType="Record" baseClass="SkyrimMajorRecord" GUID="d5cf0987-a611-4770-b62b-10b433b50ff3" ID="89">
     <Fields>
-      <RefDirect name="ObjectBounds" refName="ObjectBounds" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
       <FormLink name="AmbientSound" refName="SoundDescriptor" recordType="SNAM" />
       <FormLink name="UseSoundFromRegion" refName="Region" recordType="RDAT" />
       <FormLink name="EnvironmentType" refName="ReverbParameters" recordType="BNAM" />
