@@ -1944,6 +1944,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
+        public static ScriptObjectPropertyBinaryOverlay ScriptObjectPropertyFactory(
+            ReadOnlyMemorySlice<byte> slice,
+            BinaryOverlayFactoryPackage package,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            return ScriptObjectPropertyFactory(
+                stream: new BinaryMemoryReadStream(slice),
+                package: package,
+                recordTypeConverter: recordTypeConverter);
+        }
+
         #region To String
 
         public override void ToString(

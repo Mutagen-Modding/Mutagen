@@ -2130,6 +2130,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static DialogResponseBinaryOverlay DialogResponseFactory(
+            ReadOnlyMemorySlice<byte> slice,
+            BinaryOverlayFactoryPackage package,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            return DialogResponseFactory(
+                stream: new BinaryMemoryReadStream(slice),
+                package: package,
+                recordTypeConverter: recordTypeConverter);
+        }
+
         public TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
             int finalPos,

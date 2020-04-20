@@ -1647,6 +1647,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
 
+
         #region To String
 
         public virtual void ToString(

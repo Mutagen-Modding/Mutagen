@@ -5094,6 +5094,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
+        public static RaceDataBinaryOverlay RaceDataFactory(
+            ReadOnlyMemorySlice<byte> slice,
+            BinaryOverlayFactoryPackage package,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            return RaceDataFactory(
+                stream: new BinaryMemoryReadStream(slice),
+                package: package,
+                recordTypeConverter: recordTypeConverter);
+        }
+
         #region To String
 
         public void ToString(

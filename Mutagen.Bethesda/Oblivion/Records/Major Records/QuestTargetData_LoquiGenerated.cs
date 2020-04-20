@@ -1903,6 +1903,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static QuestTargetDataBinaryOverlay QuestTargetDataFactory(
+            ReadOnlyMemorySlice<byte> slice,
+            BinaryOverlayFactoryPackage package,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            return QuestTargetDataFactory(
+                stream: new BinaryMemoryReadStream(slice),
+                package: package,
+                recordTypeConverter: recordTypeConverter);
+        }
+
         #region To String
 
         public void ToString(

@@ -4942,8 +4942,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 if (!_RaceStatsLocation.HasValue) return default;
                 var data = HeaderTranslation.ExtractSubrecordMemory(_data, _RaceStatsLocation.Value, _package.Meta);
                 return new GenderedItem<IRaceStatsGetter>(
-                    RaceStatsBinaryOverlay.RaceStatsFactory(new BinaryMemoryReadStream(data), _package),
-                    RaceStatsBinaryOverlay.RaceStatsFactory(new BinaryMemoryReadStream(data.Slice(8)), _package));
+                    RaceStatsBinaryOverlay.RaceStatsFactory(data, _package),
+                    RaceStatsBinaryOverlay.RaceStatsFactory(data.Slice(8), _package));
             }
         }
         #endregion
@@ -4999,6 +4999,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter,
                 fill: ret.FillRecordType);
             return ret;
+        }
+
+        public static RaceBinaryOverlay RaceFactory(
+            ReadOnlyMemorySlice<byte> slice,
+            BinaryOverlayFactoryPackage package,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            return RaceFactory(
+                stream: new BinaryMemoryReadStream(slice),
+                package: package,
+                recordTypeConverter: recordTypeConverter);
         }
 
         public override TryGet<int?> FillRecordType(

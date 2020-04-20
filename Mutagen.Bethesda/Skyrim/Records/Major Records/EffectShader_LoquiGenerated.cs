@@ -1888,6 +1888,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
+        public static EffectShaderBinaryOverlay EffectShaderFactory(
+            ReadOnlyMemorySlice<byte> slice,
+            BinaryOverlayFactoryPackage package,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            return EffectShaderFactory(
+                stream: new BinaryMemoryReadStream(slice),
+                package: package,
+                recordTypeConverter: recordTypeConverter);
+        }
+
         #region To String
 
         public override void ToString(

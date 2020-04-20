@@ -2069,6 +2069,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static EnchantmentDataBinaryOverlay EnchantmentDataFactory(
+            ReadOnlyMemorySlice<byte> slice,
+            BinaryOverlayFactoryPackage package,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            return EnchantmentDataFactory(
+                stream: new BinaryMemoryReadStream(slice),
+                package: package,
+                recordTypeConverter: recordTypeConverter);
+        }
+
         #region To String
 
         public void ToString(

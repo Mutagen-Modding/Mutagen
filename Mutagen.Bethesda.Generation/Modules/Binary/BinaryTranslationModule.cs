@@ -1931,7 +1931,29 @@ namespace Mutagen.Bethesda.Generation
                         fg.AppendLine("return ret;");
                     }
                     fg.AppendLine();
+
+                    if (obj.GetObjectType() != ObjectType.Mod)
+                    {
+                        using (var args = new FunctionWrapper(fg,
+                            $"public static {this.BinaryOverlayClass(obj)} {obj.Name}Factory"))
+                        {
+                            args.Add($"ReadOnlyMemorySlice<byte> slice");
+                            args.Add($"{nameof(BinaryOverlayFactoryPackage)} package");
+                            args.Add($"{nameof(RecordTypeConverter)}? recordTypeConverter = null");
+                        }
+                        using (new BraceWrapper(fg))
+                        {
+                            using (var args = new ArgsWrapper(fg,
+                                $"return {obj.Name}Factory"))
+                            {
+                                args.Add($"stream: new {nameof(BinaryMemoryReadStream)}(slice)");
+                                args.AddPassArg("package");
+                                args.AddPassArg("recordTypeConverter");
+                            }    
+                        }
+                    }
                 }
+                fg.AppendLine();
 
                 if (HasRecordTypeFields(obj))
                 {

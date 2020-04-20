@@ -524,7 +524,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor packageAccessor)
         {
             LoquiType loqui = typeGen as LoquiType;
-            return $"{this.Module.BinaryOverlayClass(loqui.TargetObjectGeneration)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({dataAccessor}), {packageAccessor})";
+            return $"{this.Module.BinaryOverlayClass(loqui.TargetObjectGeneration)}.{loqui.TargetObjectGeneration.Name}Factory({dataAccessor}, {packageAccessor})";
         }
     }
 }

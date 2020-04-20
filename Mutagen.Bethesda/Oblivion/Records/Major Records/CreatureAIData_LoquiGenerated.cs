@@ -2335,6 +2335,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static CreatureAIDataBinaryOverlay CreatureAIDataFactory(
+            ReadOnlyMemorySlice<byte> slice,
+            BinaryOverlayFactoryPackage package,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            return CreatureAIDataFactory(
+                stream: new BinaryMemoryReadStream(slice),
+                package: package,
+                recordTypeConverter: recordTypeConverter);
+        }
+
         #region To String
 
         public void ToString(

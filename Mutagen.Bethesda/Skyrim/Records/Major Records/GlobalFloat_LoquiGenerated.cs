@@ -2169,6 +2169,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
+        public static GlobalFloatBinaryOverlay GlobalFloatFactory(
+            ReadOnlyMemorySlice<byte> slice,
+            BinaryOverlayFactoryPackage package,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            return GlobalFloatFactory(
+                stream: new BinaryMemoryReadStream(slice),
+                package: package,
+                recordTypeConverter: recordTypeConverter);
+        }
+
         public override TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
             int finalPos,

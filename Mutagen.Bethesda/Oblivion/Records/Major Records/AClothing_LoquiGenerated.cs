@@ -3514,6 +3514,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
 
+
         public override TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
             int finalPos,

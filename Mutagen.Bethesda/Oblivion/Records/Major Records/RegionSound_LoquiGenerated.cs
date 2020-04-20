@@ -1980,6 +1980,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static RegionSoundBinaryOverlay RegionSoundFactory(
+            ReadOnlyMemorySlice<byte> slice,
+            BinaryOverlayFactoryPackage package,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            return RegionSoundFactory(
+                stream: new BinaryMemoryReadStream(slice),
+                package: package,
+                recordTypeConverter: recordTypeConverter);
+        }
+
         #region To String
 
         public void ToString(

@@ -1903,6 +1903,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static BaseLayerBinaryOverlay BaseLayerFactory(
+            ReadOnlyMemorySlice<byte> slice,
+            BinaryOverlayFactoryPackage package,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            return BaseLayerFactory(
+                stream: new BinaryMemoryReadStream(slice),
+                package: package,
+                recordTypeConverter: recordTypeConverter);
+        }
+
         public virtual TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
             int finalPos,

@@ -1977,6 +1977,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
+        public static ModelBinaryOverlay ModelFactory(
+            ReadOnlyMemorySlice<byte> slice,
+            BinaryOverlayFactoryPackage package,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            return ModelFactory(
+                stream: new BinaryMemoryReadStream(slice),
+                package: package,
+                recordTypeConverter: recordTypeConverter);
+        }
+
         public override TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
             int finalPos,
@@ -1996,7 +2007,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
-                        getter: (s, p) => AlternateTextureBinaryOverlay.AlternateTextureFactory(new BinaryMemoryReadStream(s), p));
+                        getter: (s, p) => AlternateTextureBinaryOverlay.AlternateTextureFactory(s, p));
                     stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)Model_FieldIndex.AlternateTextures);
                 }

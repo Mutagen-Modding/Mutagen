@@ -1772,6 +1772,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static ScriptVariableReferenceBinaryOverlay ScriptVariableReferenceFactory(
+            ReadOnlyMemorySlice<byte> slice,
+            BinaryOverlayFactoryPackage package,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            return ScriptVariableReferenceFactory(
+                stream: new BinaryMemoryReadStream(slice),
+                package: package,
+                recordTypeConverter: recordTypeConverter);
+        }
+
         public TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
             int finalPos,

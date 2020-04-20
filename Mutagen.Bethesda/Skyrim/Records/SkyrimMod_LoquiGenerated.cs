@@ -5987,6 +5987,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
+
         public TryGet<int?> FillRecordType(
             IBinaryReadStream stream,
             long finalPos,

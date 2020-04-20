@@ -1938,6 +1938,17 @@ namespace Mutagen.Bethesda.Internals
             return ret;
         }
 
+        public static MasterReferenceBinaryOverlay MasterReferenceFactory(
+            ReadOnlyMemorySlice<byte> slice,
+            BinaryOverlayFactoryPackage package,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            return MasterReferenceFactory(
+                stream: new BinaryMemoryReadStream(slice),
+                package: package,
+                recordTypeConverter: recordTypeConverter);
+        }
+
         public TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
             int finalPos,

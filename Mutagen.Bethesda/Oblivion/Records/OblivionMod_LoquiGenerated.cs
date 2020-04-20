@@ -13012,6 +13012,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+
         public TryGet<int?> FillRecordType(
             IBinaryReadStream stream,
             long finalPos,

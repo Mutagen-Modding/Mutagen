@@ -3342,6 +3342,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static WeatherBinaryOverlay WeatherFactory(
+            ReadOnlyMemorySlice<byte> slice,
+            BinaryOverlayFactoryPackage package,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            return WeatherFactory(
+                stream: new BinaryMemoryReadStream(slice),
+                package: package,
+                recordTypeConverter: recordTypeConverter);
+        }
+
         public override TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
             int finalPos,
@@ -3379,7 +3390,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 16,
-                        getter: (s, p) => WeatherTypeBinaryOverlay.WeatherTypeFactory(new BinaryMemoryReadStream(s), p));
+                        getter: (s, p) => WeatherTypeBinaryOverlay.WeatherTypeFactory(s, p));
                     stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.WeatherTypes);
                 }

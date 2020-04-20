@@ -3713,6 +3713,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
+        public static MagicEffectBinaryOverlay MagicEffectFactory(
+            ReadOnlyMemorySlice<byte> slice,
+            BinaryOverlayFactoryPackage package,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            return MagicEffectFactory(
+                stream: new BinaryMemoryReadStream(slice),
+                package: package,
+                recordTypeConverter: recordTypeConverter);
+        }
+
         public override TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
             int finalPos,
@@ -3781,7 +3792,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
-                        getter: (s, p) => MagicEffectSoundBinaryOverlay.MagicEffectSoundFactory(new BinaryMemoryReadStream(s), p));
+                        getter: (s, p) => MagicEffectSoundBinaryOverlay.MagicEffectSoundFactory(s, p));
                     stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Sounds);
                 }

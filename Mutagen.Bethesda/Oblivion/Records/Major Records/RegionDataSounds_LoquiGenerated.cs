@@ -2094,6 +2094,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+        public static RegionDataSoundsBinaryOverlay RegionDataSoundsFactory(
+            ReadOnlyMemorySlice<byte> slice,
+            BinaryOverlayFactoryPackage package,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            return RegionDataSoundsFactory(
+                stream: new BinaryMemoryReadStream(slice),
+                package: package,
+                recordTypeConverter: recordTypeConverter);
+        }
+
         public override TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
             int finalPos,
@@ -2118,7 +2129,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,
-                        getter: (s, p) => RegionSoundBinaryOverlay.RegionSoundFactory(new BinaryMemoryReadStream(s), p));
+                        getter: (s, p) => RegionSoundBinaryOverlay.RegionSoundFactory(s, p));
                     stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)RegionDataSounds_FieldIndex.Sounds);
                 }

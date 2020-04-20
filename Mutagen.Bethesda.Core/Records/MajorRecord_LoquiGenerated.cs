@@ -2433,6 +2433,7 @@ namespace Mutagen.Bethesda.Internals
         {
         }
 
+
         public virtual TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
             int finalPos,

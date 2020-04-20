@@ -1953,6 +1953,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
+        public static SimpleModelBinaryOverlay SimpleModelFactory(
+            ReadOnlyMemorySlice<byte> slice,
+            BinaryOverlayFactoryPackage package,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            return SimpleModelFactory(
+                stream: new BinaryMemoryReadStream(slice),
+                package: package,
+                recordTypeConverter: recordTypeConverter);
+        }
+
         public virtual TryGet<int?> FillRecordType(
             BinaryMemoryReadStream stream,
             int finalPos,
