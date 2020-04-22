@@ -3458,7 +3458,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Keywords,
                 counterType: MagicEffect_Registration.KSIZ_HEADER,
-                recordType: MagicEffect_Registration.KWDA_HEADER,
+                recordType: recordTypeConverter.ConvertToCustom(MagicEffect_Registration.KWDA_HEADER),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
@@ -3485,7 +3485,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IMagicEffectSoundGetter>.Instance.Write(
                 writer: writer,
                 items: item.Sounds,
-                recordType: MagicEffect_Registration.SNDD_HEADER,
+                recordType: recordTypeConverter.ConvertToCustom(MagicEffect_Registration.SNDD_HEADER),
                 transl: (MutagenWriter subWriter, IMagicEffectSoundGetter subItem, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;

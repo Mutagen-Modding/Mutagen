@@ -2553,7 +2553,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IIdleAnimationGetter>>.Instance.Write(
                 writer: writer,
                 items: item.RelatedIdleAnimations,
-                recordType: IdleAnimation_Registration.DATA_HEADER,
+                recordType: recordTypeConverter.ConvertToCustom(IdleAnimation_Registration.DATA_HEADER),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IIdleAnimationGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(

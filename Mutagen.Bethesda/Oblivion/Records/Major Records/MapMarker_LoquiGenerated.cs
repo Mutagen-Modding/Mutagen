@@ -2063,7 +2063,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<MapMarker.Type>.Instance.Write(
                 writer: writer,
                 items: item.Types,
-                recordType: MapMarker_Registration.TNAM_HEADER,
+                recordType: recordTypeConverter.ConvertToCustom(MapMarker_Registration.TNAM_HEADER),
                 transl: (MutagenWriter subWriter, MapMarker.Type subItem) =>
                 {
                     Mutagen.Bethesda.Binary.EnumBinaryTranslation<MapMarker.Type>.Instance.Write(

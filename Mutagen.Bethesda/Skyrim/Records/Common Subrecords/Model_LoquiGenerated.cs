@@ -1828,7 +1828,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IAlternateTextureGetter>.Instance.Write(
                 writer: writer,
                 items: item.AlternateTextures,
-                recordType: Model_Registration.MODS_HEADER,
+                recordType: recordTypeConverter.ConvertToCustom(Model_Registration.MODS_HEADER),
                 transl: (MutagenWriter subWriter, IAlternateTextureGetter subItem, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;

@@ -4934,7 +4934,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IRegionGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Regions,
-                recordType: Cell_Registration.XCLR_HEADER,
+                recordType: recordTypeConverter.ConvertToCustom(Cell_Registration.XCLR_HEADER),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IRegionGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(

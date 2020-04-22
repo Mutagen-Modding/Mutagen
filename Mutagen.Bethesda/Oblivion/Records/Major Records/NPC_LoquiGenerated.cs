@@ -5560,7 +5560,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.Write(
                 writer: writer,
                 items: item.Animations,
-                recordType: Npc_Registration.KFFZ_HEADER,
+                recordType: recordTypeConverter.ConvertToCustom(Npc_Registration.KFFZ_HEADER),
                 transl: StringBinaryTranslation.Instance.Write);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -5584,7 +5584,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IEyeGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Eyes,
-                recordType: Npc_Registration.ENAM_HEADER,
+                recordType: recordTypeConverter.ConvertToCustom(Npc_Registration.ENAM_HEADER),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IEyeGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(

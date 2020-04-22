@@ -2774,7 +2774,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ILandTextureGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Textures,
-                recordType: Landscape_Registration.VTEX_HEADER,
+                recordType: recordTypeConverter.ConvertToCustom(Landscape_Registration.VTEX_HEADER),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<ILandTextureGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(

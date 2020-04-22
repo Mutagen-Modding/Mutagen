@@ -7914,7 +7914,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.ActorEffect,
                 counterType: Race_Registration.SPCT_HEADER,
-                recordType: Race_Registration.SPLO_HEADER,
+                recordType: recordTypeConverter.ConvertToCustom(Race_Registration.SPLO_HEADER),
                 subRecordPerItem: true,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IASpellGetter> subItem, RecordTypeConverter? conv) =>
                 {
@@ -7937,7 +7937,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Keywords,
                 counterType: Race_Registration.KSIZ_HEADER,
-                recordType: Race_Registration.KWDA_HEADER,
+                recordType: recordTypeConverter.ConvertToCustom(Race_Registration.KWDA_HEADER),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
@@ -8057,7 +8057,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IHairGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Hairs,
-                recordType: Race_Registration.HNAM_HEADER,
+                recordType: recordTypeConverter.ConvertToCustom(Race_Registration.HNAM_HEADER),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IHairGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
@@ -8067,7 +8067,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IEyeGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Eyes,
-                recordType: Race_Registration.ENAM_HEADER,
+                recordType: recordTypeConverter.ConvertToCustom(Race_Registration.ENAM_HEADER),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IEyeGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(

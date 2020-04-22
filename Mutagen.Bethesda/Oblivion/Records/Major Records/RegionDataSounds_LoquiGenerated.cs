@@ -1940,7 +1940,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IRegionSoundGetter>.Instance.Write(
                 writer: writer,
                 items: item.Sounds,
-                recordType: RegionDataSounds_Registration.RDSD_HEADER,
+                recordType: recordTypeConverter.ConvertToCustom(RegionDataSounds_Registration.RDSD_HEADER),
                 transl: (MutagenWriter subWriter, IRegionSoundGetter subItem, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;

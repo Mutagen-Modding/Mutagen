@@ -1941,7 +1941,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<P2Float>.Instance.Write(
                 writer: writer,
                 items: item.RegionPoints,
-                recordType: RegionArea_Registration.RPLD_HEADER,
+                recordType: recordTypeConverter.ConvertToCustom(RegionArea_Registration.RPLD_HEADER),
                 transl: P2FloatBinaryTranslation.Instance.Write);
         }
 

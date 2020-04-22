@@ -2677,7 +2677,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IEDIDLinkGetter<IMagicEffectGetter>>.Instance.Write(
                 writer: writer,
                 items: item.CounterEffects,
-                recordType: MagicEffect_Registration.ESCE_HEADER,
+                recordType: recordTypeConverter.ConvertToCustom(MagicEffect_Registration.ESCE_HEADER),
                 transl: (MutagenWriter subWriter, IEDIDLinkGetter<IMagicEffectGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(

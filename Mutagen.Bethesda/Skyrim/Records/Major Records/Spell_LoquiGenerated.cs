@@ -3121,7 +3121,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Keywords,
                 counterType: Spell_Registration.KSIZ_HEADER,
-                recordType: Spell_Registration.KWDA_HEADER,
+                recordType: recordTypeConverter.ConvertToCustom(Spell_Registration.KWDA_HEADER),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(

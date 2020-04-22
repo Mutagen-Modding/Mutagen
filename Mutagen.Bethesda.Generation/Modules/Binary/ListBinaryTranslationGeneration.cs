@@ -1,4 +1,4 @@
-﻿using Loqui;
+using Loqui;
 using Loqui.Generation;
 using Noggog;
 using Mutagen.Bethesda.Binary;
@@ -169,7 +169,7 @@ namespace Mutagen.Bethesda.Generation
                     case ListBinaryType.SubTrigger:
                         break;
                     case ListBinaryType.Trigger:
-                        args.Add($"recordType: {data.TriggeringRecordSetAccessor}");
+                        args.Add($"recordType: recordTypeConverter.ConvertToCustom({data.TriggeringRecordSetAccessor})");
                         break;
                     case ListBinaryType.CounterRecord:
                         var counterType = new RecordType(list.CustomData[CounterRecordType] as string);
@@ -177,7 +177,7 @@ namespace Mutagen.Bethesda.Generation
                         if (subData.HasTrigger
                             && !subData.HandleTrigger)
                         {
-                            args.Add($"recordType: {subData.TriggeringRecordSetAccessor}");
+                            args.Add($"recordType: recordTypeConverter.ConvertToCustom({subData.TriggeringRecordSetAccessor})");
                         }
                         if ((bool)list.CustomData[CounterSubrecordPerItemType])
                         {
@@ -193,7 +193,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 if (listOfRecords)
                 {
-                    args.Add($"recordType: {subData.TriggeringRecordSetAccessor}");
+                    args.Add($"recordType: recordTypeConverter.ConvertToCustom({subData.TriggeringRecordSetAccessor})");
                 }
                 if (this.Module.TranslationMaskParameter)
                 {

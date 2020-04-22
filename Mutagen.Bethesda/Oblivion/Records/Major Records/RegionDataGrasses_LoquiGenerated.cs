@@ -1810,7 +1810,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IGrassGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Grasses,
-                recordType: RegionDataGrasses_Registration.RDGS_HEADER,
+                recordType: recordTypeConverter.ConvertToCustom(RegionDataGrasses_Registration.RDGS_HEADER),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IGrassGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(

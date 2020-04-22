@@ -2667,7 +2667,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IInterCellPointGetter>.Instance.Write(
                 writer: writer,
                 items: item.InterCellConnections,
-                recordType: PathGrid_Registration.PGRI_HEADER,
+                recordType: recordTypeConverter.ConvertToCustom(PathGrid_Registration.PGRI_HEADER),
                 transl: (MutagenWriter subWriter, IInterCellPointGetter subItem, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;

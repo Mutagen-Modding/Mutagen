@@ -5641,7 +5641,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.Write(
                 writer: writer,
                 items: item.Models,
-                recordType: Creature_Registration.NIFZ_HEADER,
+                recordType: recordTypeConverter.ConvertToCustom(Creature_Registration.NIFZ_HEADER),
                 transl: StringBinaryTranslation.Instance.Write);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -5695,7 +5695,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.Write(
                 writer: writer,
                 items: item.Animations,
-                recordType: Creature_Registration.KFFZ_HEADER,
+                recordType: recordTypeConverter.ConvertToCustom(Creature_Registration.KFFZ_HEADER),
                 transl: StringBinaryTranslation.Instance.Write);
             if (item.Data.TryGet(out var DataItem))
             {

@@ -1827,7 +1827,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IRegionDataObjectGetter>.Instance.Write(
                 writer: writer,
                 items: item.Objects,
-                recordType: RegionDataObjects_Registration.RDOT_HEADER,
+                recordType: recordTypeConverter.ConvertToCustom(RegionDataObjects_Registration.RDOT_HEADER),
                 transl: (MutagenWriter subWriter, IRegionDataObjectGetter subItem, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;

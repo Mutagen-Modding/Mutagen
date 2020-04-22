@@ -3105,7 +3105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IWeatherTypeGetter>.Instance.Write(
                 writer: writer,
                 items: item.WeatherTypes,
-                recordType: Weather_Registration.NAM0_HEADER,
+                recordType: recordTypeConverter.ConvertToCustom(Weather_Registration.NAM0_HEADER),
                 transl: (MutagenWriter subWriter, IWeatherTypeGetter subItem, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;

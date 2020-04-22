@@ -2570,7 +2570,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<UInt32>.Instance.Write(
                 writer: writer,
                 items: item.SpeedTreeSeeds,
-                recordType: Tree_Registration.SNAM_HEADER,
+                recordType: recordTypeConverter.ConvertToCustom(Tree_Registration.SNAM_HEADER),
                 transl: UInt32BinaryTranslation.Instance.Write);
             if (item.Data.TryGet(out var DataItem))
             {
