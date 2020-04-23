@@ -1624,7 +1624,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.TypelessRecordParse(
+            UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 setFinal: false,

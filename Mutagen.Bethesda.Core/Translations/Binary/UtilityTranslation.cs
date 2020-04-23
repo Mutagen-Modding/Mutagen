@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda
             int contentLength,
             RecordTypeConverter? recordTypeConverter);
 
-        public delegate TryGet<int?> RecordTypelessStructFill<R>(
+        public delegate TryGet<int?> SubrecordFill<R>(
             R record,
             MutagenFrame frame,
             int? lastParsed,
@@ -160,7 +160,7 @@ namespace Mutagen.Bethesda
             return record;
         }
 
-        public static M TypelessRecordParse<M>(
+        public static M SubrecordParse<M>(
             M record,
             MutagenFrame frame,
             bool setFinal,
@@ -177,13 +177,13 @@ namespace Mutagen.Bethesda
             return record;
         }
 
-        public static M TypelessRecordParse<M>(
+        public static M SubrecordParse<M>(
             M record,
             MutagenFrame frame,
             bool setFinal,
             RecordTypeConverter? recordTypeConverter,
             RecordStructFill<M> fillStructs,
-            RecordTypelessStructFill<M> fillTyped)
+            SubrecordFill<M> fillTyped)
         {
             fillStructs?.Invoke(
                 record: record,

@@ -1010,7 +1010,7 @@ namespace Mutagen.Bethesda.Generation
                     case ObjectType.Subrecord:
                     case ObjectType.Record:
                         using (var args = new ArgsWrapper(fg,
-                            $"{utilityTranslation}.{(typelessStruct ? "Typeless" : string.Empty)}RecordParse",
+                            $"{utilityTranslation}.{(typelessStruct ? "Subrecord" : "Record")}Parse",
                             suffixLine: Loqui.Generation.Utility.ConfigAwait(async)))
                         {
                             args.Add($"record: {accessor}");
