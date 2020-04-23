@@ -232,15 +232,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Eyes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Eye>>? _Eyes;
-        public ExtendedList<IFormLink<Eye>>? Eyes
+        private ExtendedList<IFormLink<Eyes>>? _Eyes;
+        public ExtendedList<IFormLink<Eyes>>? Eyes
         {
             get => this._Eyes;
             set => this._Eyes = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IEyeGetter>>? IRaceGetter.Eyes => _Eyes;
+        IReadOnlyList<IFormLinkGetter<IEyesGetter>>? IRaceGetter.Eyes => _Eyes;
         #endregion
 
         #endregion
@@ -2734,6 +2734,11 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         #endregion
 
         #region Binary Translation
@@ -2815,7 +2820,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<Attack> Attacks { get; }
         new GenderedItem<BodyData?>? BodyData { get; set; }
         new ExtendedList<IFormLink<Hair>>? Hairs { get; set; }
-        new ExtendedList<IFormLink<Eye>>? Eyes { get; set; }
+        new ExtendedList<IFormLink<Eyes>>? Eyes { get; set; }
         new IFormLinkNullable<BodyPartData> BodyPartData { get; }
         new GenderedItem<Model?>? BehaviorGraph { get; set; }
         new IFormLinkNullable<MaterialType> MaterialType { get; }
@@ -2836,6 +2841,10 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLinkNullable<MovementType> BaseMovementDefaultSneak { get; }
         new IFormLinkNullable<MovementType> BaseMovementDefaultSprint { get; }
         new GenderedItem<HeadData?>? HeadData { get; set; }
+        #region Mutagen
+        new Race.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IRaceInternal :
@@ -2879,7 +2888,7 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IAttackGetter> Attacks { get; }
         IGenderedItemGetter<IBodyDataGetter?>? BodyData { get; }
         IReadOnlyList<IFormLinkGetter<IHairGetter>>? Hairs { get; }
-        IReadOnlyList<IFormLinkGetter<IEyeGetter>>? Eyes { get; }
+        IReadOnlyList<IFormLinkGetter<IEyesGetter>>? Eyes { get; }
         IFormLinkNullableGetter<IBodyPartDataGetter> BodyPartData { get; }
         IGenderedItemGetter<IModelGetter?>? BehaviorGraph { get; }
         IFormLinkNullableGetter<IMaterialTypeGetter> MaterialType { get; }
@@ -2900,6 +2909,10 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSneak { get; }
         IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSprint { get; }
         IGenderedItemGetter<IHeadDataGetter?>? HeadData { get; }
+
+        #region Mutagen
+        Race.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -3765,7 +3778,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.Hairs:
                     return typeof(ExtendedList<IFormLink<Hair>>);
                 case Race_FieldIndex.Eyes:
-                    return typeof(ExtendedList<IFormLink<Eye>>);
+                    return typeof(ExtendedList<IFormLink<Eyes>>);
                 case Race_FieldIndex.BodyPartData:
                     return typeof(IFormLinkNullable<BodyPartData>);
                 case Race_FieldIndex.BehaviorGraph:
@@ -4259,11 +4272,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.Eyes = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Eye>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Eyes>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             recordTypeConverter: recordTypeConverter,
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Eye>>();
+                        .ToExtendedList<IFormLink<Eyes>>();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Eyes);
                 }
                 case 0x4D414E47: // GNAM
@@ -5760,8 +5773,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Eyes = 
                             rhs.Eyes
-                            .Select(r => new FormLink<Eye>(r.FormKey))
-                            .ToExtendedList<IFormLink<Eye>>();
+                            .Select(r => new FormLink<Eyes>(r.FormKey))
+                            .ToExtendedList<IFormLink<Eyes>>();
                     }
                     else
                     {
@@ -6399,14 +6412,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Eyes != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Eyes) ?? true))
             {
-                ListXmlTranslation<IFormLinkGetter<IEyeGetter>>.Instance.Write(
+                ListXmlTranslation<IFormLinkGetter<IEyesGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.Eyes),
                     item: item.Eyes,
                     fieldIndex: (int)Race_FieldIndex.Eyes,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Eyes),
-                    transl: (XElement subNode, IFormLinkGetter<IEyeGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    transl: (XElement subNode, IFormLinkGetter<IEyesGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         FormKeyXmlTranslation.Instance.Write(
                             node: subNode,
@@ -7215,7 +7228,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Race_FieldIndex.Eyes);
                     try
                     {
-                        if (ListXmlTranslation<IFormLink<Eye>>.Instance.Parse(
+                        if (ListXmlTranslation<IFormLink<Eyes>>.Instance.Parse(
                             node: node,
                             enumer: out var EyesItem,
                             transl: FormKeyXmlTranslation.Instance.Parse,
@@ -7947,11 +7960,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         item: subItem);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IEyeGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IEyesGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Eyes,
                 recordType: recordTypeConverter.ConvertToCustom(Race_Registration.ENAM_HEADER),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IEyeGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IEyesGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -8255,6 +8268,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
+        public Race.MajorFlag MajorFlags => (Race.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region Name
         private int? _NameLocation;
@@ -8353,7 +8367,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IGenderedItemGetter<IBodyDataGetter?>? BodyData => _BodyDataOverlay;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IHairGetter>>? Hairs { get; private set; }
-        public IReadOnlyList<IFormLinkGetter<IEyeGetter>>? Eyes { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IEyesGetter>>? Eyes { get; private set; }
         #region BodyPartData
         private int? _BodyPartDataLocation;
         public bool BodyPartData_IsSet => _BodyPartDataLocation.HasValue;
@@ -8663,11 +8677,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = _package.Meta.ReadSubrecord(stream);
                     var subLen = subMeta.ContentLength;
-                    this.Eyes = BinaryOverlaySetList<IFormLinkGetter<IEyeGetter>>.FactoryByStartIndex(
+                    this.Eyes = BinaryOverlaySetList<IFormLinkGetter<IEyesGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IEyeGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => new FormLink<IEyesGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Eyes);
                 }

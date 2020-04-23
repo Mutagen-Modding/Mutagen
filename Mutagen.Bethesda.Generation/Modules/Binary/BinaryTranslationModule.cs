@@ -1462,6 +1462,11 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
 
+                if (obj.GetObjectData().MajorRecordFlags)
+                {
+                    fg.AppendLine($"public {obj.ObjectName}.MajorFlag MajorFlags => ({obj.ObjectName}.MajorFlag)this.MajorRecordFlagsRaw;");
+                }
+
                 fg.AppendLine();
 
                 int? passedLength = 0;

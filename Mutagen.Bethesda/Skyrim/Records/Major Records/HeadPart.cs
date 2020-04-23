@@ -16,6 +16,12 @@ namespace Mutagen.Bethesda.Skyrim
             UseSolidTint = 0x10,
         }
 
+        [Flags]
+        public enum MajorFlag
+        {
+            NonPlayable = 0x0000_0004,
+        }
+
         public enum TypeEnum
         {
             Misc,

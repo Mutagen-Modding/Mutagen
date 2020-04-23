@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
             _Factions_Object = new Group<Faction>(this);
             _HeadParts_Object = new Group<HeadPart>(this);
             _Hairs_Object = new Group<Hair>(this);
-            _Eyes_Object = new Group<Eye>(this);
+            _Eyes_Object = new Group<Eyes>(this);
             _Races_Object = new Group<Race>(this);
             _SoundMarkers_Object = new Group<SoundMarker>(this);
             _AcousticSpaces_Object = new Group<AcousticSpace>(this);
@@ -147,10 +147,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Eyes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Eye> _Eyes_Object;
-        public Group<Eye> Eyes => _Eyes_Object;
+        private Group<Eyes> _Eyes_Object;
+        public Group<Eyes> Eyes => _Eyes_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IEyeGetter> ISkyrimModGetter.Eyes => _Eyes_Object;
+        IGroupGetter<IEyesGetter> ISkyrimModGetter.Eyes => _Eyes_Object;
         #endregion
         #region Races
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -945,7 +945,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<Faction.ErrorMask>?>? Factions;
             public MaskItem<Exception?, Group.ErrorMask<HeadPart.ErrorMask>?>? HeadParts;
             public MaskItem<Exception?, Group.ErrorMask<Hair.ErrorMask>?>? Hairs;
-            public MaskItem<Exception?, Group.ErrorMask<Eye.ErrorMask>?>? Eyes;
+            public MaskItem<Exception?, Group.ErrorMask<Eyes.ErrorMask>?>? Eyes;
             public MaskItem<Exception?, Group.ErrorMask<Race.ErrorMask>?>? Races;
             public MaskItem<Exception?, Group.ErrorMask<SoundMarker.ErrorMask>?>? SoundMarkers;
             public MaskItem<Exception?, Group.ErrorMask<AcousticSpace.ErrorMask>?>? AcousticSpaces;
@@ -1049,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.Hairs = new MaskItem<Exception?, Group.ErrorMask<Hair.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Eyes:
-                        this.Eyes = new MaskItem<Exception?, Group.ErrorMask<Eye.ErrorMask>?>(ex, null);
+                        this.Eyes = new MaskItem<Exception?, Group.ErrorMask<Eyes.ErrorMask>?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.Races:
                         this.Races = new MaskItem<Exception?, Group.ErrorMask<Race.ErrorMask>?>(ex, null);
@@ -1122,7 +1122,7 @@ namespace Mutagen.Bethesda.Skyrim
                         this.Hairs = (MaskItem<Exception?, Group.ErrorMask<Hair.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Eyes:
-                        this.Eyes = (MaskItem<Exception?, Group.ErrorMask<Eye.ErrorMask>?>?)obj;
+                        this.Eyes = (MaskItem<Exception?, Group.ErrorMask<Eyes.ErrorMask>?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.Races:
                         this.Races = (MaskItem<Exception?, Group.ErrorMask<Race.ErrorMask>?>?)obj;
@@ -1296,7 +1296,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<Faction.TranslationMask>?> Factions;
             public MaskItem<bool, Group.TranslationMask<HeadPart.TranslationMask>?> HeadParts;
             public MaskItem<bool, Group.TranslationMask<Hair.TranslationMask>?> Hairs;
-            public MaskItem<bool, Group.TranslationMask<Eye.TranslationMask>?> Eyes;
+            public MaskItem<bool, Group.TranslationMask<Eyes.TranslationMask>?> Eyes;
             public MaskItem<bool, Group.TranslationMask<Race.TranslationMask>?> Races;
             public MaskItem<bool, Group.TranslationMask<SoundMarker.TranslationMask>?> SoundMarkers;
             public MaskItem<bool, Group.TranslationMask<AcousticSpace.TranslationMask>?> AcousticSpaces;
@@ -1322,7 +1322,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Factions = new MaskItem<bool, Group.TranslationMask<Faction.TranslationMask>?>(defaultOn, null);
                 this.HeadParts = new MaskItem<bool, Group.TranslationMask<HeadPart.TranslationMask>?>(defaultOn, null);
                 this.Hairs = new MaskItem<bool, Group.TranslationMask<Hair.TranslationMask>?>(defaultOn, null);
-                this.Eyes = new MaskItem<bool, Group.TranslationMask<Eye.TranslationMask>?>(defaultOn, null);
+                this.Eyes = new MaskItem<bool, Group.TranslationMask<Eyes.TranslationMask>?>(defaultOn, null);
                 this.Races = new MaskItem<bool, Group.TranslationMask<Race.TranslationMask>?>(defaultOn, null);
                 this.SoundMarkers = new MaskItem<bool, Group.TranslationMask<SoundMarker.TranslationMask>?>(defaultOn, null);
                 this.AcousticSpaces = new MaskItem<bool, Group.TranslationMask<AcousticSpace.TranslationMask>?>(defaultOn, null);
@@ -1392,7 +1392,7 @@ namespace Mutagen.Bethesda.Skyrim
             _Factions_Object = new Group<Faction>(this);
             _HeadParts_Object = new Group<HeadPart>(this);
             _Hairs_Object = new Group<Hair>(this);
-            _Eyes_Object = new Group<Eye>(this);
+            _Eyes_Object = new Group<Eyes>(this);
             _Races_Object = new Group<Race>(this);
             _SoundMarkers_Object = new Group<SoundMarker>(this);
             _AcousticSpaces_Object = new Group<AcousticSpace>(this);
@@ -1569,7 +1569,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Eyes.RecordCache.Set(
                     rhs.Eyes.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Eye>());
+                        .Cast<Eyes>());
             }
             if (mask?.Races ?? true)
             {
@@ -1863,7 +1863,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<Faction> Factions { get; }
         new Group<HeadPart> HeadParts { get; }
         new Group<Hair> Hairs { get; }
-        new Group<Eye> Eyes { get; }
+        new Group<Eyes> Eyes { get; }
         new Group<Race> Races { get; }
         new Group<SoundMarker> SoundMarkers { get; }
         new Group<AcousticSpace> AcousticSpaces { get; }
@@ -1900,7 +1900,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IFactionGetter> Factions { get; }
         IGroupGetter<IHeadPartGetter> HeadParts { get; }
         IGroupGetter<IHairGetter> Hairs { get; }
-        IGroupGetter<IEyeGetter> Eyes { get; }
+        IGroupGetter<IEyesGetter> Eyes { get; }
         IGroupGetter<IRaceGetter> Races { get; }
         IGroupGetter<ISoundMarkerGetter> SoundMarkers { get; }
         IGroupGetter<IAcousticSpaceGetter> AcousticSpaces { get; }
@@ -2689,7 +2689,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Hairs:
                     return typeof(Group<Hair>);
                 case SkyrimMod_FieldIndex.Eyes:
-                    return typeof(Group<Eye>);
+                    return typeof(Group<Eyes>);
                 case SkyrimMod_FieldIndex.Races:
                     return typeof(Group<Race>);
                 case SkyrimMod_FieldIndex.SoundMarkers:
@@ -3555,10 +3555,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IHair":
                 case "IHairInternal":
                     return obj.Hairs.RecordCache;
-                case "Eye":
-                case "IEyeGetter":
-                case "IEye":
-                case "IEyeInternal":
+                case "Eyes":
+                case "IEyesGetter":
+                case "IEyes":
+                case "IEyesInternal":
                     return obj.Eyes.RecordCache;
                 case "Race":
                 case "IRaceGetter":
@@ -4023,10 +4023,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return item;
                     }
                     yield break;
-                case "Eye":
-                case "IEyeGetter":
-                case "IEye":
-                case "IEyeInternal":
+                case "Eyes":
+                case "IEyesGetter":
+                case "IEyes":
+                case "IEyesInternal":
                     foreach (var item in obj.Eyes.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
@@ -4765,7 +4765,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Eyes) ?? true))
             {
                 var EyesItem = item.Eyes;
-                ((GroupXmlWriteTranslation)((IXmlItem)EyesItem).XmlWriteTranslator).Write<IEyeGetter>(
+                ((GroupXmlWriteTranslation)((IXmlItem)EyesItem).XmlWriteTranslator).Write<IEyesGetter>(
                     item: EyesItem,
                     node: node,
                     name: nameof(item.Eyes),
@@ -5172,7 +5172,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Eyes);
                     try
                     {
-                        item.Eyes.CopyInFromXml<Eye>(
+                        item.Eyes.CopyInFromXml<Eyes>(
                             node: node,
                             translationMask: translationMask,
                             errorMask: errorMask);
@@ -5716,7 +5716,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 var EyesItem = item.Eyes;
                 if (EyesItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)EyesItem).BinaryWriteTranslator).Write<IEyeGetter>(
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)EyesItem).BinaryWriteTranslator).Write<IEyesGetter>(
                         item: EyesItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
@@ -6074,8 +6074,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Eyes
         private RangeInt64? _EyesLocation;
         private bool _Eyes_IsSet => _EyesLocation.HasValue;
-        private IGroupGetter<IEyeGetter>? _Eyes => _Eyes_IsSet ? GroupBinaryOverlay<IEyeGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _EyesLocation!.Value.Min, _EyesLocation!.Value.Max)), _package) : default;
-        public IGroupGetter<IEyeGetter> Eyes => _Eyes ?? new Group<Eye>(this);
+        private IGroupGetter<IEyesGetter>? _Eyes => _Eyes_IsSet ? GroupBinaryOverlay<IEyesGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _EyesLocation!.Value.Min, _EyesLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IEyesGetter> Eyes => _Eyes ?? new Group<Eyes>(this);
         #endregion
         #region Races
         private RangeInt64? _RacesLocation;

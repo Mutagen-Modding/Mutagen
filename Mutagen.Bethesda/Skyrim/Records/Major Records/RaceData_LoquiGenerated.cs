@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGenderedItemGetter<Single> IRaceDataGetter.Weight => this.Weight;
         #endregion
         #region Flags
-        public Race.Flag Flags { get; set; } = default;
+        public RaceData.Flag Flags { get; set; } = default;
         #endregion
         #region StartingHealth
         public Single StartingHealth { get; set; } = default;
@@ -1633,7 +1633,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Byte[] Fluff { get; set; }
         new GenderedItem<Single> Height { get; set; }
         new GenderedItem<Single> Weight { get; set; }
-        new Race.Flag Flags { get; set; }
+        new RaceData.Flag Flags { get; set; }
         new Single StartingHealth { get; set; }
         new Single StartingMagicka { get; set; }
         new Single StartingStamina { get; set; }
@@ -1680,7 +1680,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte> Fluff { get; }
         IGenderedItemGetter<Single> Height { get; }
         IGenderedItemGetter<Single> Weight { get; }
-        Race.Flag Flags { get; }
+        RaceData.Flag Flags { get; }
         Single StartingHealth { get; }
         Single StartingMagicka { get; }
         Single StartingStamina { get; }
@@ -2485,7 +2485,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RaceData_FieldIndex.Weight:
                     return typeof(GenderedItem<Single>);
                 case RaceData_FieldIndex.Flags:
-                    return typeof(Race.Flag);
+                    return typeof(RaceData.Flag);
                 case RaceData_FieldIndex.StartingHealth:
                     return typeof(Single);
                 case RaceData_FieldIndex.StartingMagicka:
@@ -2666,7 +2666,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Weight = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<Single>(
                 frame: frame,
                 transl: FloatBinaryTranslation.Instance.Parse);
-            item.Flags = EnumBinaryTranslation<Race.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<RaceData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.StartingHealth = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.StartingMagicka = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.StartingStamina = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
@@ -3580,7 +3580,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)RaceData_FieldIndex.Flags) ?? true))
             {
-                EnumXmlTranslation<Race.Flag>.Instance.Write(
+                EnumXmlTranslation<RaceData.Flag>.Instance.Write(
                     node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
@@ -4091,7 +4091,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)RaceData_FieldIndex.Flags);
                     try
                     {
-                        item.Flags = EnumXmlTranslation<Race.Flag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<RaceData.Flag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -4741,7 +4741,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Weight,
                 transl: FloatBinaryTranslation.Instance.Write);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.Flag>.Instance.Write(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<RaceData.Flag>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
@@ -4996,7 +4996,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         #endregion
-        public Race.Flag Flags => GetFlagsCustom(location: 0x20);
+        public RaceData.Flag Flags => GetFlagsCustom(location: 0x20);
         public Single StartingHealth => SpanExt.GetFloat(_data.Slice(0x24, 0x4));
         public Single StartingMagicka => SpanExt.GetFloat(_data.Slice(0x28, 0x4));
         public Single StartingStamina => SpanExt.GetFloat(_data.Slice(0x2C, 0x4));

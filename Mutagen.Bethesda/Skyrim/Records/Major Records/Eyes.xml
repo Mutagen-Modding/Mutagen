@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Eye" recordType="EYES" objType="Record" baseClass="SkyrimMajorRecord" GUID="db478bd6-1bf7-44f7-86ff-577ca301cbfb" ID="47">
+  <Object name="Eyes" recordType="EYES" objType="Record" majorFlag="true" baseClass="SkyrimMajorRecord" GUID="db478bd6-1bf7-44f7-86ff-577ca301cbfb" ID="47">
     <Interface>INamed</Interface>
     <Fields>
       <String name="Name" recordType="FULL" />
       <String name="Icon" recordType="ICON" />
-      <Enum name="Flags" recordType="DATA" enumName="Eye.Flag" byteLength="1" />
+      <Enum name="Flags" recordType="DATA" enumName="Eyes.Flag" byteLength="1" />
     </Fields>
   </Object>
 </Loqui>

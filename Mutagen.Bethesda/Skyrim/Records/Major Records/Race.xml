@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Race" recordType="RACE" objType="Record" baseClass="SkyrimMajorRecord" GUID="54b1dfac-1494-41b6-b6d3-653bc47987eb" ID="49">
+  <Object name="Race" recordType="RACE" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true" GUID="54b1dfac-1494-41b6-b6d3-653bc47987eb" ID="49">
     <Interface>INamed</Interface>
     <Fields>
       <String name="Name" recordType="FULL" />
@@ -56,7 +56,7 @@
         <FormLink refName="Hair" />
       </List>
       <List name="Eyes" recordType="ENAM">
-        <FormLink refName="Eye" />
+        <FormLink refName="Eyes" />
       </List>
       <FormLink name="BodyPartData" refName="BodyPartData" recordType="GNAM" />
       <CustomLogic name="ExtraNAM2" />
@@ -133,7 +133,7 @@
           <Float />
         </Fields>
       </Gendered>
-      <Enum name="Flags" enumName="Race.Flag" byteLength="4" binaryOverlay="Custom" />
+      <Enum name="Flags" enumName="RaceData.Flag" byteLength="4" binaryOverlay="Custom" />
       <Float name="StartingHealth" />
       <Float name="StartingMagicka" />
       <Float name="StartingStamina" />

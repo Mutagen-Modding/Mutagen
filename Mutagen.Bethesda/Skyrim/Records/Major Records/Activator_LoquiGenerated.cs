@@ -1072,6 +1072,11 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         #endregion
 
         #region Binary Translation
@@ -1147,6 +1152,10 @@ namespace Mutagen.Bethesda.Skyrim
         new String? ActivateTextOverride { get; set; }
         new Activator.Flag? Flags { get; set; }
         new IFormLinkNullable<Keyword> InteractionKeyword { get; }
+        #region Mutagen
+        new Activator.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IActivatorInternal :
@@ -1176,6 +1185,10 @@ namespace Mutagen.Bethesda.Skyrim
         String? ActivateTextOverride { get; }
         Activator.Flag? Flags { get; }
         IFormLinkNullableGetter<IKeywordGetter> InteractionKeyword { get; }
+
+        #region Mutagen
+        Activator.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -3666,6 +3679,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
+        public Activator.MajorFlag MajorFlags => (Activator.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;

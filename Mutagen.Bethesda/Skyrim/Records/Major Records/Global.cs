@@ -26,6 +26,12 @@ namespace Mutagen.Bethesda.Skyrim
         public abstract float? RawFloat { get; set; }
         public abstract char TypeChar { get; }
 
+        [Flags]
+        public enum MajorFlag
+        {
+            Constant = 0x0000_0040
+        }
+
         public static Global CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter)

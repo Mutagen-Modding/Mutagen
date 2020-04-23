@@ -33,16 +33,16 @@ using System.Buffers.Binary;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class Eye :
+    public partial class Eyes :
         SkyrimMajorRecord,
-        IEyeInternal,
-        ILoquiObjectSetter<Eye>,
+        IEyesInternal,
+        ILoquiObjectSetter<Eyes>,
         INamed,
-        IEquatable<Eye>,
+        IEquatable<Eyes>,
         IEqualsMask
     {
         #region Ctor
-        protected Eye()
+        protected Eyes()
         {
             CustomCtor();
         }
@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Skyrim
             set => this._Name = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IEyeGetter.Name => this.Name;
+        String? IEyesGetter.Name => this.Name;
         #endregion
         #region Icon
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -69,18 +69,18 @@ namespace Mutagen.Bethesda.Skyrim
             set => this._Icon = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IEyeGetter.Icon => this.Icon;
+        String? IEyesGetter.Icon => this.Icon;
         #endregion
         #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Eye.Flag? _Flags;
-        public Eye.Flag? Flags
+        private Eyes.Flag? _Flags;
+        public Eyes.Flag? Flags
         {
             get => this._Flags;
             set => this._Flags = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Eye.Flag? IEyeGetter.Flags => this.Flags;
+        Eyes.Flag? IEyesGetter.Flags => this.Flags;
         #endregion
 
         #region To String
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            EyeMixIn.ToString(
+            EyesMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -99,29 +99,29 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IEyeGetter rhs)) return false;
-            return ((EyeCommon)((IEyeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IEyesGetter rhs)) return false;
+            return ((EyesCommon)((IEyesGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Eye obj)
+        public bool Equals(Eyes obj)
         {
-            return ((EyeCommon)((IEyeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((EyesCommon)((IEyesGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((EyeCommon)((IEyeGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((EyesCommon)((IEyesGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => EyeXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => EyesXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((EyeXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((EyesXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -130,9 +130,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static new Eye CreateFromXml(
+        public static new Eyes CreateFromXml(
             XElement node,
-            Eye.TranslationMask? translationMask = null)
+            Eyes.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -141,27 +141,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static Eye CreateFromXml(
+        public static Eyes CreateFromXml(
             XElement node,
-            out Eye.ErrorMask errorMask,
-            Eye.TranslationMask? translationMask = null)
+            out Eyes.ErrorMask errorMask,
+            Eyes.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Eye.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Eyes.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public new static Eye CreateFromXml(
+        public new static Eyes CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new Eye();
-            ((EyeSetterCommon)((IEyeGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new Eyes();
+            ((EyesSetterCommon)((IEyesGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -169,9 +169,9 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static Eye CreateFromXml(
+        public static Eyes CreateFromXml(
             string path,
-            Eye.TranslationMask? translationMask = null)
+            Eyes.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -179,10 +179,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static Eye CreateFromXml(
+        public static Eyes CreateFromXml(
             string path,
-            out Eye.ErrorMask errorMask,
-            Eye.TranslationMask? translationMask = null)
+            out Eyes.ErrorMask errorMask,
+            Eyes.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -191,10 +191,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static Eye CreateFromXml(
+        public static Eyes CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Eye.TranslationMask? translationMask = null)
+            Eyes.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -203,9 +203,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static Eye CreateFromXml(
+        public static Eyes CreateFromXml(
             Stream stream,
-            Eye.TranslationMask? translationMask = null)
+            Eyes.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -213,10 +213,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static Eye CreateFromXml(
+        public static Eyes CreateFromXml(
             Stream stream,
-            out Eye.ErrorMask errorMask,
-            Eye.TranslationMask? translationMask = null)
+            out Eyes.ErrorMask errorMask,
+            Eyes.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -225,10 +225,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static Eye CreateFromXml(
+        public static Eyes CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Eye.TranslationMask? translationMask = null)
+            Eyes.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -347,7 +347,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new Eye.Mask<R>();
+                var ret = new Eyes.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -367,16 +367,16 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(Eye.Mask<bool>? printMask = null)
+            public string ToString(Eyes.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, Eye.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, Eyes.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Eye.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(Eyes.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -412,14 +412,14 @@ namespace Mutagen.Bethesda.Skyrim
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                Eye_FieldIndex enu = (Eye_FieldIndex)index;
+                Eyes_FieldIndex enu = (Eyes_FieldIndex)index;
                 switch (enu)
                 {
-                    case Eye_FieldIndex.Name:
+                    case Eyes_FieldIndex.Name:
                         return Name;
-                    case Eye_FieldIndex.Icon:
+                    case Eyes_FieldIndex.Icon:
                         return Icon;
-                    case Eye_FieldIndex.Flags:
+                    case Eyes_FieldIndex.Flags:
                         return Flags;
                     default:
                         return base.GetNthMask(index);
@@ -428,16 +428,16 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthException(int index, Exception ex)
             {
-                Eye_FieldIndex enu = (Eye_FieldIndex)index;
+                Eyes_FieldIndex enu = (Eyes_FieldIndex)index;
                 switch (enu)
                 {
-                    case Eye_FieldIndex.Name:
+                    case Eyes_FieldIndex.Name:
                         this.Name = ex;
                         break;
-                    case Eye_FieldIndex.Icon:
+                    case Eyes_FieldIndex.Icon:
                         this.Icon = ex;
                         break;
-                    case Eye_FieldIndex.Flags:
+                    case Eyes_FieldIndex.Flags:
                         this.Flags = ex;
                         break;
                     default:
@@ -448,16 +448,16 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthMask(int index, object obj)
             {
-                Eye_FieldIndex enu = (Eye_FieldIndex)index;
+                Eyes_FieldIndex enu = (Eyes_FieldIndex)index;
                 switch (enu)
                 {
-                    case Eye_FieldIndex.Name:
+                    case Eyes_FieldIndex.Name:
                         this.Name = (Exception?)obj;
                         break;
-                    case Eye_FieldIndex.Icon:
+                    case Eyes_FieldIndex.Icon:
                         this.Icon = (Exception?)obj;
                         break;
-                    case Eye_FieldIndex.Flags:
+                    case Eyes_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
                     default:
@@ -570,53 +570,58 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Eye_Registration.TriggeringRecordType;
-        public Eye(FormKey formKey)
+        public new static readonly RecordType GrupRecordType = Eyes_Registration.TriggeringRecordType;
+        public Eyes(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        public Eye(IMod mod)
+        public Eyes(IMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Eye(IMod mod, string editorID)
+        public Eyes(IMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
         }
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => EyeBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => EyesBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((EyeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((EyesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static new Eye CreateFromBinary(MutagenFrame frame)
+        public static new Eyes CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public new static Eye CreateFromBinary(
+        public new static Eyes CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new Eye();
-            ((EyeSetterCommon)((IEyeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new Eyes();
+            ((EyesSetterCommon)((IEyesGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -629,90 +634,98 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEyeGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEyesGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((EyeSetterCommon)((IEyeGetter)this).CommonSetterInstance()!).Clear(this);
+            ((EyesSetterCommon)((IEyesGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new Eye GetNew()
+        internal static new Eyes GetNew()
         {
-            return new Eye();
+            return new Eyes();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IEye :
-        IEyeGetter,
+    public partial interface IEyes :
+        IEyesGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<IEyeInternal>
+        ILoquiObjectSetter<IEyesInternal>
     {
         new String? Name { get; set; }
         new String? Icon { get; set; }
-        new Eye.Flag? Flags { get; set; }
+        new Eyes.Flag? Flags { get; set; }
+        #region Mutagen
+        new Eyes.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
-    public partial interface IEyeInternal :
+    public partial interface IEyesInternal :
         ISkyrimMajorRecordInternal,
-        IEye,
-        IEyeGetter
+        IEyes,
+        IEyesGetter
     {
     }
 
-    public partial interface IEyeGetter :
+    public partial interface IEyesGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IEyeGetter>,
+        ILoquiObject<IEyesGetter>,
         IXmlItem,
         IBinaryItem
     {
         String? Name { get; }
         String? Icon { get; }
-        Eye.Flag? Flags { get; }
+        Eyes.Flag? Flags { get; }
+
+        #region Mutagen
+        Eyes.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class EyeMixIn
+    public static partial class EyesMixIn
     {
-        public static void Clear(this IEyeInternal item)
+        public static void Clear(this IEyesInternal item)
         {
-            ((EyeSetterCommon)((IEyeGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((EyesSetterCommon)((IEyesGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Eye.Mask<bool> GetEqualsMask(
-            this IEyeGetter item,
-            IEyeGetter rhs,
+        public static Eyes.Mask<bool> GetEqualsMask(
+            this IEyesGetter item,
+            IEyesGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((EyeCommon)((IEyeGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((EyesCommon)((IEyesGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IEyeGetter item,
+            this IEyesGetter item,
             string? name = null,
-            Eye.Mask<bool>? printMask = null)
+            Eyes.Mask<bool>? printMask = null)
         {
-            return ((EyeCommon)((IEyeGetter)item).CommonInstance()!).ToString(
+            return ((EyesCommon)((IEyesGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IEyeGetter item,
+            this IEyesGetter item,
             FileGeneration fg,
             string? name = null,
-            Eye.Mask<bool>? printMask = null)
+            Eyes.Mask<bool>? printMask = null)
         {
-            ((EyeCommon)((IEyeGetter)item).CommonInstance()!).ToString(
+            ((EyesCommon)((IEyesGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -720,86 +733,86 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this IEyeGetter item,
-            Eye.Mask<bool?> checkMask)
+            this IEyesGetter item,
+            Eyes.Mask<bool?> checkMask)
         {
-            return ((EyeCommon)((IEyeGetter)item).CommonInstance()!).HasBeenSet(
+            return ((EyesCommon)((IEyesGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Eye.Mask<bool> GetHasBeenSetMask(this IEyeGetter item)
+        public static Eyes.Mask<bool> GetHasBeenSetMask(this IEyesGetter item)
         {
-            var ret = new Eye.Mask<bool>(false);
-            ((EyeCommon)((IEyeGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new Eyes.Mask<bool>(false);
+            ((EyesCommon)((IEyesGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IEyeGetter item,
-            IEyeGetter rhs)
+            this IEyesGetter item,
+            IEyesGetter rhs)
         {
-            return ((EyeCommon)((IEyeGetter)item).CommonInstance()!).Equals(
+            return ((EyesCommon)((IEyesGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this IEyeInternal lhs,
-            IEyeGetter rhs,
-            out Eye.ErrorMask errorMask,
-            Eye.TranslationMask? copyMask = null)
+            this IEyesInternal lhs,
+            IEyesGetter rhs,
+            out Eyes.ErrorMask errorMask,
+            Eyes.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((EyeSetterTranslationCommon)((IEyeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((EyesSetterTranslationCommon)((IEyesGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Eye.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Eyes.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IEyeInternal lhs,
-            IEyeGetter rhs,
+            this IEyesInternal lhs,
+            IEyesGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((EyeSetterTranslationCommon)((IEyeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((EyesSetterTranslationCommon)((IEyesGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static Eye DeepCopy(
-            this IEyeGetter item,
-            Eye.TranslationMask? copyMask = null)
+        public static Eyes DeepCopy(
+            this IEyesGetter item,
+            Eyes.TranslationMask? copyMask = null)
         {
-            return ((EyeSetterTranslationCommon)((IEyeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((EyesSetterTranslationCommon)((IEyesGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static Eye DeepCopy(
-            this IEyeGetter item,
-            out Eye.ErrorMask errorMask,
-            Eye.TranslationMask? copyMask = null)
+        public static Eyes DeepCopy(
+            this IEyesGetter item,
+            out Eyes.ErrorMask errorMask,
+            Eyes.TranslationMask? copyMask = null)
         {
-            return ((EyeSetterTranslationCommon)((IEyeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((EyesSetterTranslationCommon)((IEyesGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static Eye DeepCopy(
-            this IEyeGetter item,
+        public static Eyes DeepCopy(
+            this IEyesGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((EyeSetterTranslationCommon)((IEyeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((EyesSetterTranslationCommon)((IEyesGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -808,9 +821,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IEyeInternal item,
+            this IEyesInternal item,
             XElement node,
-            Eye.TranslationMask? translationMask = null)
+            Eyes.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -821,10 +834,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IEyeInternal item,
+            this IEyesInternal item,
             XElement node,
-            out Eye.ErrorMask errorMask,
-            Eye.TranslationMask? translationMask = null)
+            out Eyes.ErrorMask errorMask,
+            Eyes.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -832,16 +845,16 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Eye.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Eyes.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this IEyeInternal item,
+            this IEyesInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((EyeSetterCommon)((IEyeGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((EyesSetterCommon)((IEyesGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -849,9 +862,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IEyeInternal item,
+            this IEyesInternal item,
             string path,
-            Eye.TranslationMask? translationMask = null)
+            Eyes.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -861,10 +874,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IEyeInternal item,
+            this IEyesInternal item,
             string path,
-            out Eye.ErrorMask errorMask,
-            Eye.TranslationMask? translationMask = null)
+            out Eyes.ErrorMask errorMask,
+            Eyes.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -875,10 +888,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IEyeInternal item,
+            this IEyesInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Eye.TranslationMask? translationMask = null)
+            Eyes.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -889,9 +902,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IEyeInternal item,
+            this IEyesInternal item,
             Stream stream,
-            Eye.TranslationMask? translationMask = null)
+            Eyes.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -901,10 +914,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IEyeInternal item,
+            this IEyesInternal item,
             Stream stream,
-            out Eye.ErrorMask errorMask,
-            Eye.TranslationMask? translationMask = null)
+            out Eyes.ErrorMask errorMask,
+            Eyes.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -915,10 +928,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IEyeInternal item,
+            this IEyesInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Eye.TranslationMask? translationMask = null)
+            Eyes.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -933,7 +946,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IEyeInternal item,
+            this IEyesInternal item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -943,11 +956,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromBinary(
-            this IEyeInternal item,
+            this IEyesInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((EyeSetterCommon)((IEyeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((EyesSetterCommon)((IEyesGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -963,7 +976,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum Eye_FieldIndex
+    public enum Eyes_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -978,9 +991,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Eye_Registration : ILoquiRegistration
+    public partial class Eyes_Registration : ILoquiRegistration
     {
-        public static readonly Eye_Registration Instance = new Eye_Registration();
+        public static readonly Eyes_Registration Instance = new Eyes_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
@@ -995,23 +1008,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort FieldCount = 9;
 
-        public static readonly Type MaskType = typeof(Eye.Mask<>);
+        public static readonly Type MaskType = typeof(Eyes.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Eye.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Eyes.ErrorMask);
 
-        public static readonly Type ClassType = typeof(Eye);
+        public static readonly Type ClassType = typeof(Eyes);
 
-        public static readonly Type GetterType = typeof(IEyeGetter);
+        public static readonly Type GetterType = typeof(IEyesGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IEye);
+        public static readonly Type SetterType = typeof(IEyes);
 
-        public static readonly Type? InternalSetterType = typeof(IEyeInternal);
+        public static readonly Type? InternalSetterType = typeof(IEyesInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.Eye";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.Eyes";
 
-        public const string Name = "Eye";
+        public const string Name = "Eyes";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -1024,11 +1037,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (str.Upper)
             {
                 case "NAME":
-                    return (ushort)Eye_FieldIndex.Name;
+                    return (ushort)Eyes_FieldIndex.Name;
                 case "ICON":
-                    return (ushort)Eye_FieldIndex.Icon;
+                    return (ushort)Eyes_FieldIndex.Icon;
                 case "FLAGS":
-                    return (ushort)Eye_FieldIndex.Flags;
+                    return (ushort)Eyes_FieldIndex.Flags;
                 default:
                     return null;
             }
@@ -1036,12 +1049,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            Eye_FieldIndex enu = (Eye_FieldIndex)index;
+            Eyes_FieldIndex enu = (Eyes_FieldIndex)index;
             switch (enu)
             {
-                case Eye_FieldIndex.Name:
-                case Eye_FieldIndex.Icon:
-                case Eye_FieldIndex.Flags:
+                case Eyes_FieldIndex.Name:
+                case Eyes_FieldIndex.Icon:
+                case Eyes_FieldIndex.Flags:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1050,12 +1063,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            Eye_FieldIndex enu = (Eye_FieldIndex)index;
+            Eyes_FieldIndex enu = (Eyes_FieldIndex)index;
             switch (enu)
             {
-                case Eye_FieldIndex.Name:
-                case Eye_FieldIndex.Icon:
-                case Eye_FieldIndex.Flags:
+                case Eyes_FieldIndex.Name:
+                case Eyes_FieldIndex.Icon:
+                case Eyes_FieldIndex.Flags:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1064,12 +1077,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            Eye_FieldIndex enu = (Eye_FieldIndex)index;
+            Eyes_FieldIndex enu = (Eyes_FieldIndex)index;
             switch (enu)
             {
-                case Eye_FieldIndex.Name:
-                case Eye_FieldIndex.Icon:
-                case Eye_FieldIndex.Flags:
+                case Eyes_FieldIndex.Name:
+                case Eyes_FieldIndex.Icon:
+                case Eyes_FieldIndex.Flags:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1078,14 +1091,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static string GetNthName(ushort index)
         {
-            Eye_FieldIndex enu = (Eye_FieldIndex)index;
+            Eyes_FieldIndex enu = (Eyes_FieldIndex)index;
             switch (enu)
             {
-                case Eye_FieldIndex.Name:
+                case Eyes_FieldIndex.Name:
                     return "Name";
-                case Eye_FieldIndex.Icon:
+                case Eyes_FieldIndex.Icon:
                     return "Icon";
-                case Eye_FieldIndex.Flags:
+                case Eyes_FieldIndex.Flags:
                     return "Flags";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
@@ -1094,12 +1107,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            Eye_FieldIndex enu = (Eye_FieldIndex)index;
+            Eyes_FieldIndex enu = (Eyes_FieldIndex)index;
             switch (enu)
             {
-                case Eye_FieldIndex.Name:
-                case Eye_FieldIndex.Icon:
-                case Eye_FieldIndex.Flags:
+                case Eyes_FieldIndex.Name:
+                case Eyes_FieldIndex.Icon:
+                case Eyes_FieldIndex.Flags:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
@@ -1108,12 +1121,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsProtected(ushort index)
         {
-            Eye_FieldIndex enu = (Eye_FieldIndex)index;
+            Eyes_FieldIndex enu = (Eyes_FieldIndex)index;
             switch (enu)
             {
-                case Eye_FieldIndex.Name:
-                case Eye_FieldIndex.Icon:
-                case Eye_FieldIndex.Flags:
+                case Eyes_FieldIndex.Name:
+                case Eyes_FieldIndex.Icon:
+                case Eyes_FieldIndex.Flags:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
@@ -1122,21 +1135,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static Type GetNthType(ushort index)
         {
-            Eye_FieldIndex enu = (Eye_FieldIndex)index;
+            Eyes_FieldIndex enu = (Eyes_FieldIndex)index;
             switch (enu)
             {
-                case Eye_FieldIndex.Name:
+                case Eyes_FieldIndex.Name:
                     return typeof(String);
-                case Eye_FieldIndex.Icon:
+                case Eyes_FieldIndex.Icon:
                     return typeof(String);
-                case Eye_FieldIndex.Flags:
-                    return typeof(Eye.Flag);
+                case Eyes_FieldIndex.Flags:
+                    return typeof(Eyes.Flag);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(EyeXmlWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(EyesXmlWriteTranslation);
         public static readonly RecordType EYES_HEADER = new RecordType("EYES");
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
@@ -1144,7 +1157,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType TriggeringRecordType = EYES_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 3;
-        public static readonly Type BinaryWriteTranslation = typeof(EyeBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(EyesBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1177,13 +1190,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class EyeSetterCommon : SkyrimMajorRecordSetterCommon
+    public partial class EyesSetterCommon : SkyrimMajorRecordSetterCommon
     {
-        public new static readonly EyeSetterCommon Instance = new EyeSetterCommon();
+        public new static readonly EyesSetterCommon Instance = new EyesSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IEyeInternal item)
+        public void Clear(IEyesInternal item)
         {
             ClearPartial();
             item.Name = default;
@@ -1194,17 +1207,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override void Clear(ISkyrimMajorRecordInternal item)
         {
-            Clear(item: (IEyeInternal)item);
+            Clear(item: (IEyesInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IEyeInternal)item);
+            Clear(item: (IEyesInternal)item);
         }
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
-            IEyeInternal item,
+            IEyesInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1224,7 +1237,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public virtual void CopyInFromXml(
-            IEyeInternal item,
+            IEyesInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1239,7 +1252,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    EyeXmlCreateTranslation.FillPublicElementXml(
+                    EyesXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1261,7 +1274,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask)
         {
             CopyInFromXml(
-                item: (Eye)item,
+                item: (Eyes)item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1274,7 +1287,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask)
         {
             CopyInFromXml(
-                item: (Eye)item,
+                item: (Eyes)item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1283,9 +1296,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => Eye_Registration.EYES_HEADER;
+        public override RecordType RecordType => Eyes_Registration.EYES_HEADER;
         protected static void FillBinaryStructs(
-            IEyeInternal item,
+            IEyesInternal item,
             MutagenFrame frame)
         {
             SkyrimMajorRecordSetterCommon.FillBinaryStructs(
@@ -1294,7 +1307,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static TryGet<int?> FillBinaryRecordTypes(
-            IEyeInternal item,
+            IEyesInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
@@ -1309,7 +1322,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Eye_FieldIndex.Name);
+                    return TryGet<int?>.Succeed((int)Eyes_FieldIndex.Name);
                 }
                 case 0x4E4F4349: // ICON
                 {
@@ -1317,13 +1330,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Eye_FieldIndex.Icon);
+                    return TryGet<int?>.Succeed((int)Eyes_FieldIndex.Icon);
                 }
                 case 0x41544144: // DATA
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<Eye.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Eye_FieldIndex.Flags);
+                    item.Flags = EnumBinaryTranslation<Eyes.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Eyes_FieldIndex.Flags);
                 }
                 default:
                     return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
@@ -1336,11 +1349,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public virtual void CopyInFromBinary(
-            IEyeInternal item,
+            IEyesInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<IEyeInternal>(
+            UtilityTranslation.MajorRecordParse<IEyesInternal>(
                 record: item,
                 frame: frame,
                 recType: RecordType,
@@ -1355,7 +1368,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (Eye)item,
+                item: (Eyes)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1366,7 +1379,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (Eye)item,
+                item: (Eyes)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1374,17 +1387,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class EyeCommon : SkyrimMajorRecordCommon
+    public partial class EyesCommon : SkyrimMajorRecordCommon
     {
-        public new static readonly EyeCommon Instance = new EyeCommon();
+        public new static readonly EyesCommon Instance = new EyesCommon();
 
-        public Eye.Mask<bool> GetEqualsMask(
-            IEyeGetter item,
-            IEyeGetter rhs,
+        public Eyes.Mask<bool> GetEqualsMask(
+            IEyesGetter item,
+            IEyesGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Eye.Mask<bool>(false);
-            ((EyeCommon)((IEyeGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new Eyes.Mask<bool>(false);
+            ((EyesCommon)((IEyesGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1393,9 +1406,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IEyeGetter item,
-            IEyeGetter rhs,
-            Eye.Mask<bool> ret,
+            IEyesGetter item,
+            IEyesGetter rhs,
+            Eyes.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1406,9 +1419,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public string ToString(
-            IEyeGetter item,
+            IEyesGetter item,
             string? name = null,
-            Eye.Mask<bool>? printMask = null)
+            Eyes.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1420,18 +1433,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IEyeGetter item,
+            IEyesGetter item,
             FileGeneration fg,
             string? name = null,
-            Eye.Mask<bool>? printMask = null)
+            Eyes.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Eye =>");
+                fg.AppendLine($"Eyes =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Eye) =>");
+                fg.AppendLine($"{name} (Eyes) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1445,9 +1458,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IEyeGetter item,
+            IEyesGetter item,
             FileGeneration fg,
-            Eye.Mask<bool>? printMask = null)
+            Eyes.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1471,8 +1484,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public bool HasBeenSet(
-            IEyeGetter item,
-            Eye.Mask<bool?> checkMask)
+            IEyesGetter item,
+            Eyes.Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
@@ -1483,8 +1496,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillHasBeenSetMask(
-            IEyeGetter item,
-            Eye.Mask<bool> mask)
+            IEyesGetter item,
+            Eyes.Mask<bool> mask)
         {
             mask.Name = (item.Name != null);
             mask.Icon = (item.Icon != null);
@@ -1494,39 +1507,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 mask: mask);
         }
         
-        public static Eye_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
+        public static Eyes_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case SkyrimMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Eye_FieldIndex)((int)index);
+                    return (Eyes_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
-                    return (Eye_FieldIndex)((int)index);
+                    return (Eyes_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version:
-                    return (Eye_FieldIndex)((int)index);
+                    return (Eyes_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
-                    return (Eye_FieldIndex)((int)index);
+                    return (Eyes_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
-                    return (Eye_FieldIndex)((int)index);
+                    return (Eyes_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
-                    return (Eye_FieldIndex)((int)index);
+                    return (Eyes_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new Eye_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Eyes_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Eye_FieldIndex)((int)index);
+                    return (Eyes_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (Eye_FieldIndex)((int)index);
+                    return (Eyes_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
-                    return (Eye_FieldIndex)((int)index);
+                    return (Eyes_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Eye_FieldIndex)((int)index);
+                    return (Eyes_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1534,8 +1547,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IEyeGetter? lhs,
-            IEyeGetter? rhs)
+            IEyesGetter? lhs,
+            IEyesGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1551,8 +1564,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IEyeGetter?)lhs,
-                rhs: rhs as IEyeGetter);
+                lhs: (IEyesGetter?)lhs,
+                rhs: rhs as IEyesGetter);
         }
         
         public override bool Equals(
@@ -1560,11 +1573,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IEyeGetter?)lhs,
-                rhs: rhs as IEyeGetter);
+                lhs: (IEyesGetter?)lhs,
+                rhs: rhs as IEyesGetter);
         }
         
-        public virtual int GetHashCode(IEyeGetter item)
+        public virtual int GetHashCode(IEyesGetter item)
         {
             var hash = new HashCode();
             if (item.Name.TryGet(out var Nameitem))
@@ -1585,12 +1598,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override int GetHashCode(ISkyrimMajorRecordGetter item)
         {
-            return GetHashCode(item: (IEyeGetter)item);
+            return GetHashCode(item: (IEyesGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IEyeGetter)item);
+            return GetHashCode(item: (IEyesGetter)item);
         }
         
         #endregion
@@ -1598,11 +1611,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override object GetNew()
         {
-            return Eye.GetNew();
+            return Eyes.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IEyeGetter obj)
+        public IEnumerable<ILinkGetter> GetLinks(IEyesGetter obj)
         {
             foreach (var item in base.GetLinks(obj))
             {
@@ -1611,28 +1624,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        partial void PostDuplicate(Eye obj, Eye rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
+        partial void PostDuplicate(Eyes obj, Eyes rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            var ret = new Eye(getNextFormKey());
-            ret.DeepCopyIn((Eye)item);
+            var ret = new Eyes(getNextFormKey());
+            ret.DeepCopyIn((Eyes)item);
             duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Eye)item, getNextFormKey, duplicatedRecords);
+            PostDuplicate(ret, (Eyes)item, getNextFormKey, duplicatedRecords);
             return ret;
         }
         
         #endregion
         
     }
-    public partial class EyeSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    public partial class EyesSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
-        public new static readonly EyeSetterTranslationCommon Instance = new EyeSetterTranslationCommon();
+        public new static readonly EyesSetterTranslationCommon Instance = new EyesSetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            IEyeInternal item,
-            IEyeGetter rhs,
+            IEyesInternal item,
+            IEyesGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1644,8 +1657,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void DeepCopyIn(
-            IEye item,
-            IEyeGetter rhs,
+            IEyes item,
+            IEyesGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1654,15 +1667,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs,
                 errorMask,
                 copyMask);
-            if ((copyMask?.GetShouldTranslate((int)Eye_FieldIndex.Name) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Eyes_FieldIndex.Name) ?? true))
             {
                 item.Name = rhs.Name;
             }
-            if ((copyMask?.GetShouldTranslate((int)Eye_FieldIndex.Icon) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Eyes_FieldIndex.Icon) ?? true))
             {
                 item.Icon = rhs.Icon;
             }
-            if ((copyMask?.GetShouldTranslate((int)Eye_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Eyes_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
             }
@@ -1675,8 +1688,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IEyeInternal)item,
-                rhs: (IEyeGetter)rhs,
+                item: (IEyesInternal)item,
+                rhs: (IEyesGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1688,8 +1701,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IEye)item,
-                rhs: (IEyeGetter)rhs,
+                item: (IEyes)item,
+                rhs: (IEyesGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1701,8 +1714,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IEyeInternal)item,
-                rhs: (IEyeGetter)rhs,
+                item: (IEyesInternal)item,
+                rhs: (IEyesGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1714,31 +1727,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IEye)item,
-                rhs: (IEyeGetter)rhs,
+                item: (IEyes)item,
+                rhs: (IEyesGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
         #endregion
         
-        public Eye DeepCopy(
-            IEyeGetter item,
-            Eye.TranslationMask? copyMask = null)
+        public Eyes DeepCopy(
+            IEyesGetter item,
+            Eyes.TranslationMask? copyMask = null)
         {
-            Eye ret = (Eye)((EyeCommon)((IEyeGetter)item).CommonInstance()!).GetNew();
+            Eyes ret = (Eyes)((EyesCommon)((IEyesGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public Eye DeepCopy(
-            IEyeGetter item,
-            out Eye.ErrorMask errorMask,
-            Eye.TranslationMask? copyMask = null)
+        public Eyes DeepCopy(
+            IEyesGetter item,
+            out Eyes.ErrorMask errorMask,
+            Eyes.TranslationMask? copyMask = null)
         {
-            Eye ret = (Eye)((EyeCommon)((IEyeGetter)item).CommonInstance()!).GetNew();
+            Eyes ret = (Eyes)((EyesCommon)((IEyesGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1746,12 +1759,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public Eye DeepCopy(
-            IEyeGetter item,
+        public Eyes DeepCopy(
+            IEyesGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            Eye ret = (Eye)((EyeCommon)((IEyeGetter)item).CommonInstance()!).GetNew();
+            Eyes ret = (Eyes)((EyesCommon)((IEyesGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1766,21 +1779,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class Eye
+    public partial class Eyes
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Eye_Registration.Instance;
-        public new static Eye_Registration Registration => Eye_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Eyes_Registration.Instance;
+        public new static Eyes_Registration Registration => Eyes_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => EyeCommon.Instance;
+        protected override object CommonInstance() => EyesCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return EyeSetterCommon.Instance;
+            return EyesSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => EyeSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => EyesSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1791,14 +1804,14 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class EyeXmlWriteTranslation :
+    public partial class EyesXmlWriteTranslation :
         SkyrimMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
     {
-        public new readonly static EyeXmlWriteTranslation Instance = new EyeXmlWriteTranslation();
+        public new readonly static EyesXmlWriteTranslation Instance = new EyesXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IEyeGetter item,
+            IEyesGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1809,49 +1822,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
             if ((item.Name != null)
-                && (translationMask?.GetShouldTranslate((int)Eye_FieldIndex.Name) ?? true))
+                && (translationMask?.GetShouldTranslate((int)Eyes_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Name),
                     item: item.Name,
-                    fieldIndex: (int)Eye_FieldIndex.Name,
+                    fieldIndex: (int)Eyes_FieldIndex.Name,
                     errorMask: errorMask);
             }
             if ((item.Icon != null)
-                && (translationMask?.GetShouldTranslate((int)Eye_FieldIndex.Icon) ?? true))
+                && (translationMask?.GetShouldTranslate((int)Eyes_FieldIndex.Icon) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Icon),
                     item: item.Icon,
-                    fieldIndex: (int)Eye_FieldIndex.Icon,
+                    fieldIndex: (int)Eyes_FieldIndex.Icon,
                     errorMask: errorMask);
             }
             if ((item.Flags != null)
-                && (translationMask?.GetShouldTranslate((int)Eye_FieldIndex.Flags) ?? true))
+                && (translationMask?.GetShouldTranslate((int)Eyes_FieldIndex.Flags) ?? true))
             {
-                EnumXmlTranslation<Eye.Flag>.Instance.Write(
+                EnumXmlTranslation<Eyes.Flag>.Instance.Write(
                     node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
-                    fieldIndex: (int)Eye_FieldIndex.Flags,
+                    fieldIndex: (int)Eyes_FieldIndex.Flags,
                     errorMask: errorMask);
             }
         }
 
         public void Write(
             XElement node,
-            IEyeGetter item,
+            IEyesGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Eye");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Eyes");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Eye");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Eyes");
             }
             WriteToNodeXml(
                 item: item,
@@ -1868,7 +1881,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IEyeGetter)item,
+                item: (IEyesGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1883,7 +1896,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IEyeGetter)item,
+                item: (IEyesGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1898,7 +1911,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IEyeGetter)item,
+                item: (IEyesGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1907,12 +1920,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class EyeXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
+    public partial class EyesXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
     {
-        public new readonly static EyeXmlCreateTranslation Instance = new EyeXmlCreateTranslation();
+        public new readonly static EyesXmlCreateTranslation Instance = new EyesXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IEyeInternal item,
+            IEyesInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1921,7 +1934,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    EyeXmlCreateTranslation.FillPublicElementXml(
+                    EyesXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1937,7 +1950,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            IEyeInternal item,
+            IEyesInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1946,7 +1959,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "Name":
-                    errorMask?.PushIndex((int)Eye_FieldIndex.Name);
+                    errorMask?.PushIndex((int)Eyes_FieldIndex.Name);
                     try
                     {
                         item.Name = StringXmlTranslation.Instance.Parse(
@@ -1964,7 +1977,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Icon":
-                    errorMask?.PushIndex((int)Eye_FieldIndex.Icon);
+                    errorMask?.PushIndex((int)Eyes_FieldIndex.Icon);
                     try
                     {
                         item.Icon = StringXmlTranslation.Instance.Parse(
@@ -1982,10 +1995,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Flags":
-                    errorMask?.PushIndex((int)Eye_FieldIndex.Flags);
+                    errorMask?.PushIndex((int)Eyes_FieldIndex.Flags);
                     try
                     {
-                        item.Flags = EnumXmlTranslation<Eye.Flag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<Eyes.Flag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2016,30 +2029,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Xml Write Mixins
-    public static class EyeXmlTranslationMixIn
+    public static class EyesXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IEyeGetter item,
+            this IEyesGetter item,
             XElement node,
-            out Eye.ErrorMask errorMask,
-            Eye.TranslationMask? translationMask = null,
+            out Eyes.ErrorMask errorMask,
+            Eyes.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((EyeXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((EyesXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Eye.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Eyes.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this IEyeGetter item,
+            this IEyesGetter item,
             string path,
-            out Eye.ErrorMask errorMask,
-            Eye.TranslationMask? translationMask = null,
+            out Eyes.ErrorMask errorMask,
+            Eyes.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2053,10 +2066,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IEyeGetter item,
+            this IEyesGetter item,
             Stream stream,
-            out Eye.ErrorMask errorMask,
-            Eye.TranslationMask? translationMask = null,
+            out Eyes.ErrorMask errorMask,
+            Eyes.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2079,14 +2092,14 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class EyeBinaryWriteTranslation :
+    public partial class EyesBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static EyeBinaryWriteTranslation Instance = new EyeBinaryWriteTranslation();
+        public new readonly static EyesBinaryWriteTranslation Instance = new EyesBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
-            IEyeGetter item,
+            IEyesGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
@@ -2097,28 +2110,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(Eye_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Eyes_Registration.FULL_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Icon,
-                header: recordTypeConverter.ConvertToCustom(Eye_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Eyes_Registration.ICON_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Eye.Flag>.Instance.WriteNullable(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Eyes.Flag>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 1,
-                header: recordTypeConverter.ConvertToCustom(Eye_Registration.DATA_HEADER));
+                header: recordTypeConverter.ConvertToCustom(Eyes_Registration.DATA_HEADER));
         }
 
         public void Write(
             MutagenWriter writer,
-            IEyeGetter item,
+            IEyesGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Eye_Registration.EYES_HEADER),
+                record: recordTypeConverter.ConvertToCustom(Eyes_Registration.EYES_HEADER),
                 type: ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2137,7 +2150,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IEyeGetter)item,
+                item: (IEyesGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2148,7 +2161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IEyeGetter)item,
+                item: (IEyesGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2159,16 +2172,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IEyeGetter)item,
+                item: (IEyesGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class EyeBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    public partial class EyesBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static EyeBinaryCreateTranslation Instance = new EyeBinaryCreateTranslation();
+        public new readonly static EyesBinaryCreateTranslation Instance = new EyesBinaryCreateTranslation();
 
     }
 
@@ -2176,7 +2189,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class EyeBinaryTranslationMixIn
+    public static class EyesBinaryTranslationMixIn
     {
     }
     #endregion
@@ -2185,34 +2198,34 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class EyeBinaryOverlay :
+    public partial class EyesBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
-        IEyeGetter
+        IEyesGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Eye_Registration.Instance;
-        public new static Eye_Registration Registration => Eye_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Eyes_Registration.Instance;
+        public new static Eyes_Registration Registration => Eyes_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => EyeCommon.Instance;
+        protected override object CommonInstance() => EyesCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => EyeSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => EyesSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEyeGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEyesGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => EyeXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => EyesXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((EyeXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((EyesXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -2220,16 +2233,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => EyeBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => EyesBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((EyeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((EyesBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
+        public Eyes.MajorFlag MajorFlags => (Eyes.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region Name
         private int? _NameLocation;
@@ -2242,14 +2256,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Flags
         private int? _FlagsLocation;
         private bool Flags_IsSet => _FlagsLocation.HasValue;
-        public Eye.Flag? Flags => Flags_IsSet ? (Eye.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(Eye.Flag?);
+        public Eyes.Flag? Flags => Flags_IsSet ? (Eyes.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(Eyes.Flag?);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected EyeBinaryOverlay(
+        protected EyesBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -2258,13 +2272,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static EyeBinaryOverlay EyeFactory(
+        public static EyesBinaryOverlay EyesFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new EyeBinaryOverlay(
+            var ret = new EyesBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -2283,12 +2297,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static EyeBinaryOverlay EyeFactory(
+        public static EyesBinaryOverlay EyesFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            return EyeFactory(
+            return EyesFactory(
                 stream: new BinaryMemoryReadStream(slice),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
@@ -2308,17 +2322,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4C4C5546: // FULL
                 {
                     _NameLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Eye_FieldIndex.Name);
+                    return TryGet<int?>.Succeed((int)Eyes_FieldIndex.Name);
                 }
                 case 0x4E4F4349: // ICON
                 {
                     _IconLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Eye_FieldIndex.Icon);
+                    return TryGet<int?>.Succeed((int)Eyes_FieldIndex.Icon);
                 }
                 case 0x41544144: // DATA
                 {
                     _FlagsLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Eye_FieldIndex.Flags);
+                    return TryGet<int?>.Succeed((int)Eyes_FieldIndex.Flags);
                 }
                 default:
                     return base.FillRecordType(
@@ -2336,7 +2350,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             string? name = null)
         {
-            EyeMixIn.ToString(
+            EyesMixIn.ToString(
                 item: this,
                 name: name);
         }

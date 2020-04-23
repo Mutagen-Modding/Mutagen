@@ -27,6 +27,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="majorFlag" type="xs:boolean">
+            <xs:annotation>
+              <xs:documentation>
+                Whether a major record has custom flags
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
           <xs:attribute name="failOnUnknownType" type="xs:boolean" >
             <xs:annotation>
               <xs:documentation>

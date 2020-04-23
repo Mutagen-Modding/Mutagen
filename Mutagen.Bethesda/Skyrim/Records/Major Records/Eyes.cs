@@ -4,8 +4,14 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class Eye
+    public partial class Eyes
     {
+        [Flags]
+        public enum MajorFlag
+        {
+            NonPlayable = 0x0000_0004,
+        }
+
         [Flags]
         public enum Flag
         {

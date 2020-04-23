@@ -940,6 +940,11 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         #endregion
 
         #region Binary Translation
@@ -1010,6 +1015,10 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<Part> Parts { get; }
         new IFormLinkNullable<TextureSet> TextureSet { get; }
         new IFormLinkNullable<FormList> ValidRaces { get; }
+        #region Mutagen
+        new HeadPart.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IHeadPartInternal :
@@ -1034,6 +1043,10 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IPartGetter> Parts { get; }
         IFormLinkNullableGetter<ITextureSetGetter> TextureSet { get; }
         IFormLinkNullableGetter<IFormListGetter> ValidRaces { get; }
+
+        #region Mutagen
+        HeadPart.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -3137,6 +3150,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
+        public HeadPart.MajorFlag MajorFlags => (HeadPart.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region Name
         private int? _NameLocation;

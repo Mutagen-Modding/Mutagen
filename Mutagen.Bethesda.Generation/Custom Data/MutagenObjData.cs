@@ -26,6 +26,7 @@ namespace Mutagen.Bethesda.Generation
         public TaskCompletionSource WiringComplete = new TaskCompletionSource();
         public RecordTypeConverter BaseRecordTypeConverter;
         public RecordType? EndMarkerType;
+        public bool MajorRecordFlags;
         public GameMode? GameMode
         {
             get

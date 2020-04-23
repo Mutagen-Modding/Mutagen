@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Global" recordType="GLOB" baseClass="SkyrimMajorRecord" objType="Record" abstract="true" GUID="072ceda7-3182-4314-a4e3-927e68f39c3f" ID="12">
+  <Object name="Global" recordType="GLOB" baseClass="SkyrimMajorRecord" majorFlag="true" objType="Record" abstract="true" GUID="072ceda7-3182-4314-a4e3-927e68f39c3f" ID="12">
     <Fields>
       <CustomLogic name="TypeChar" recordType="FNAM" byteLength="1" />
     </Fields>

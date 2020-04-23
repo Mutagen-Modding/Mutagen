@@ -843,11 +843,8 @@
     <Compile Include="Skyrim\Records\Major Records\EquipType_LoquiGenerated.cs">
       <DependentUpon>EquipType.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\Eye.cs">
-      <DependentUpon>Eye.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Major Records\Eye_LoquiGenerated.cs">
-      <DependentUpon>Eye.xml</DependentUpon>
+    <Compile Include="Skyrim\Records\Major Records\Eyes.cs">
+      <DependentUpon>Eyes.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\FaceFxPhonemes.cs">
       <DependentUpon>Race.xml</DependentUpon>
@@ -1442,6 +1439,9 @@
     </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\DestructableData_LoquiGenerated.cs">
       <DependentUpon>Destructible.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Eyes_LoquiGenerated.cs">
+      <DependentUpon>Eyes.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

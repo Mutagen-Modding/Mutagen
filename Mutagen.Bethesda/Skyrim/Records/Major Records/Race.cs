@@ -12,45 +12,11 @@ namespace Mutagen.Bethesda.Skyrim
     {
         internal static readonly RecordType NAM2 = new RecordType("NAM2");
         public bool ExportingExtraNam2 { get; set; }
-
+        
         [Flags]
-        public enum Flag : ulong
+        public enum MajorFlag
         {
-            Playable = 0x0000_0001,
-            FaceGenHead = 0x0000_0002,
-            Child = 0x0000_0004,
-            TiltFrontBack = 0x0000_0008,
-            TiltLeftRight = 0x0000_0010,
-            NoShadow = 0x0000_0020,
-            Swims = 0x0000_0040,
-            Flies = 0x0000_0080,
-            Walks = 0x0000_0100,
-            Immobile = 0x0000_0200,
-            NotPunishable = 0x0000_0400,
-            NoCombatInWater = 0x0000_0800,
-            NoRotatingToHeadTrack = 0x0000_1000,
-            DontShowBloodSpray = 0x0000_2000,
-            DontShowBloodDecal = 0x0000_4000,
-            UsesHeadTrackAnims = 0x0000_8000,
-            SpellsAlignWithMagicNode = 0x0001_0000,
-            UseWorldRaycastsForFootIK = 0x0002_0000,
-            AllowRagdollCollision = 0x0004_0000,
-            RegenHpInCombat = 0x0008_0000,
-            CantOpenDoors = 0x0010_0000,
-            AllowPcDialog = 0x0020_0000,
-            NoKnockdowns = 0x0040_0000,
-            AllowPickpocket = 0x0080_0000,
-            AlwaysUseProxyController = 0x0100_0000,
-            DontShowWeaponBlood = 0x0200_0000,
-            OverlayHeadPartList = 0x0400_0000,
-            OverrideHeadPartList = 0x0800_0000,
-            CanPickupItems = 0x1000_0000,
-            AllowMultipleMembraneShaders = 0x2000_0000,
-            CanDualWield = 0x4000_0000,
-            AvoidsRoads = 0x8000_0000,
-            UseAdvancedAvoidance = 0x0001_0000_0000,
-            NonHostile = 0x0002_0000_0000,
-            AllowMountedCombat = 0x0010_0000_0000,
+            Critter = 0x0008_0000
         }
 
         public enum Size

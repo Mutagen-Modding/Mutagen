@@ -460,6 +460,11 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         #endregion
 
         #region Binary Translation
@@ -499,6 +504,10 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IGlobalInternal>
     {
+        #region Mutagen
+        new Global.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IGlobalInternal :
@@ -514,6 +523,10 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
+
+        #region Mutagen
+        Global.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -1871,6 +1884,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
+        public Global.MajorFlag MajorFlags => (Global.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region TypeChar
         partial void TypeCharCustomParse(
