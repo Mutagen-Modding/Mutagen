@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
                     args.Add("MutagenFrame frame");
-                    if (typelessStruct)
+                    if (obj.GetObjectType() == ObjectType.Subrecord)
                     {
                         args.Add($"int? lastParsed");
                     }
@@ -571,21 +571,21 @@ namespace Mutagen.Bethesda.Generation
                                 using (var args = new ArgsWrapper(fg,
                                     $"return {Loqui.Generation.Utility.Await(HasAsyncRecords(obj, self: false))}{obj.BaseClass.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class, MaskType.Normal)}.Fill{ModuleNickname}RecordTypes"))
                                 {
-                                    args.Add("item: item");
-                                    args.Add("frame: frame");
-                                    if (obj.BaseClass.IsTypelessStruct())
+                                    args.AddPassArg("item");
+                                    args.AddPassArg("frame");
+                                    if (obj.BaseClass.GetObjectType() == ObjectType.Subrecord)
                                     {
-                                        args.Add($"lastParsed: lastParsed");
+                                        args.AddPassArg($"lastParsed");
                                     }
-                                    args.Add("nextRecordType: nextRecordType");
-                                    args.Add("contentLength: contentLength");
+                                    args.AddPassArg("nextRecordType");
+                                    args.AddPassArg("contentLength");
                                     if (data.BaseRecordTypeConverter?.FromConversions.Count > 0)
                                     {
                                         args.Add($"recordTypeConverter: recordTypeConverter.Combine({obj.RegistrationName}.BaseConverter)");
                                     }
                                     else
                                     {
-                                        args.Add("recordTypeConverter: recordTypeConverter");
+                                        args.AddPassArg("recordTypeConverter");
                                     }
                                 }
                             }
@@ -1008,14 +1008,27 @@ namespace Mutagen.Bethesda.Generation
                 switch (objType)
                 {
                     case ObjectType.Subrecord:
-                    case ObjectType.Record:
                         using (var args = new ArgsWrapper(fg,
-                            $"{utilityTranslation}.{(typelessStruct ? "Subrecord" : "Record")}Parse",
+                            $"{utilityTranslation}.SubrecordParse",
                             suffixLine: Loqui.Generation.Utility.ConfigAwait(async)))
                         {
                             args.Add($"record: {accessor}");
                             args.Add("frame: frame");
-                            args.Add($"setFinal: {(obj.TryGetRecordType(out var recType) ? "true" : "false")}");
+                            args.Add("recordTypeConverter: recordTypeConverter");
+                            args.Add($"fillStructs: Fill{ModuleNickname}Structs");
+                            if (HasRecordTypeFields(obj))
+                            {
+                                args.Add($"fillTyped: Fill{ModuleNickname}RecordTypes");
+                            }
+                        }
+                        break;
+                    case ObjectType.Record:
+                        using (var args = new ArgsWrapper(fg,
+                            $"{utilityTranslation}.RecordParse",
+                            suffixLine: Loqui.Generation.Utility.ConfigAwait(async)))
+                        {
+                            args.Add($"record: {accessor}");
+                            args.Add("frame: frame");
                             args.Add("recordTypeConverter: recordTypeConverter");
                             args.Add($"fillStructs: Fill{ModuleNickname}Structs");
                             if (HasRecordTypeFields(obj))

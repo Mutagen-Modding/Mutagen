@@ -1202,10 +1202,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(VendorLocation_Registration.PLVD_HEADER)));
-            UtilityTranslation.RecordParse(
+            UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
-                setFinal: true,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs);
         }

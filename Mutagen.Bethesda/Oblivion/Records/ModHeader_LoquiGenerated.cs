@@ -1743,7 +1743,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             UtilityTranslation.RecordParse(
                 record: item,
                 frame: frame,
-                setFinal: true,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);

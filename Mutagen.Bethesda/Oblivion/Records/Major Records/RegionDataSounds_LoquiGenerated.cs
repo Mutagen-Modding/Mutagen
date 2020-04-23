@@ -1268,6 +1268,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return RegionDataSetterCommon.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        lastParsed: lastParsed,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength,
                         recordTypeConverter: recordTypeConverter);
@@ -1282,7 +1283,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
-                setFinal: false,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);

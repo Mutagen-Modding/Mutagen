@@ -1252,10 +1252,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(LayerHeader_Registration.BTXT_HEADER)));
-            UtilityTranslation.RecordParse(
+            UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
-                setFinal: true,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs);
         }

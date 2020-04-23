@@ -1228,7 +1228,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
-                setFinal: false,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);

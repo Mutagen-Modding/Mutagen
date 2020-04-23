@@ -1081,6 +1081,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected static TryGet<int?> FillBinaryRecordTypes(
             IRegionData item,
             MutagenFrame frame,
+            int? lastParsed,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)

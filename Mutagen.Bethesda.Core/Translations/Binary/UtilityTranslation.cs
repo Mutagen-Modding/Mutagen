@@ -112,24 +112,18 @@ namespace Mutagen.Bethesda
         public static M RecordParse<M>(
             M record,
             MutagenFrame frame,
-            bool setFinal,
             RecordTypeConverter? recordTypeConverter,
             RecordStructFill<M> fillStructs)
         {
             fillStructs?.Invoke(
                 record: record,
                 frame: frame);
-            if (setFinal)
-            {
-                frame.SetToFinalPosition();
-            }
             return record;
         }
 
         public static M RecordParse<M>(
             M record,
             MutagenFrame frame,
-            bool setFinal,
             RecordTypeConverter? recordTypeConverter,
             RecordStructFill<M> fillStructs,
             RecordTypeFill<M> fillTyped)
@@ -153,34 +147,24 @@ namespace Mutagen.Bethesda
                     frame.Position = finalPos;
                 }
             }
-            if (setFinal)
-            {
-                frame.SetToFinalPosition();
-            }
             return record;
         }
 
         public static M SubrecordParse<M>(
             M record,
             MutagenFrame frame,
-            bool setFinal,
             RecordTypeConverter? recordTypeConverter,
             RecordStructFill<M> fillStructs)
         {
             fillStructs?.Invoke(
                 record: record,
                 frame: frame);
-            if (setFinal)
-            {
-                frame.SetToFinalPosition();
-            }
             return record;
         }
 
         public static M SubrecordParse<M>(
             M record,
             MutagenFrame frame,
-            bool setFinal,
             RecordTypeConverter? recordTypeConverter,
             RecordStructFill<M> fillStructs,
             SubrecordFill<M> fillTyped)
@@ -206,10 +190,6 @@ namespace Mutagen.Bethesda
                     frame.Position = finalPos;
                 }
                 lastParsed = parsed.Value;
-            }
-            if (setFinal)
-            {
-                frame.SetToFinalPosition();
             }
             return record;
         }
