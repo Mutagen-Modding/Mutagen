@@ -1855,7 +1855,11 @@ namespace Mutagen.Bethesda.Generation
                         }
                         else
                         {
-                            if (!obj.IsTypelessStruct())
+                            if (obj.IsTypelessStruct())
+                            {
+                                fg.AppendLine($"stream.Position += 0x{passedLength:X};");
+                            }
+                            else
                             {
                                 string headerAddition = null;
                                 switch (obj.GetObjectType())

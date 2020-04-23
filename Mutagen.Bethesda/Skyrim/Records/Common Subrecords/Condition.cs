@@ -399,6 +399,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             partial void CustomCtor(IBinaryReadStream stream, int finalPos, int offset)
             {
+                stream.Position -= 0x4;
                 _data2 = stream.RemainingMemory.Slice(4, 0x14);
                 stream.Position += 0x18;
                 if (stream.Complete || !_package.Meta.TryGetSubrecord(stream, out var subFrame)) return;

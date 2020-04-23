@@ -3237,6 +3237,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 bytes: stream.RemainingMemory.Slice(0, 0x34),
                 package: package);
             int offset = stream.Position;
+            stream.Position += 0x34;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,
