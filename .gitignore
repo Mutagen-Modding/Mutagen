@@ -276,3 +276,7 @@ __pycache__/
 Mutagen.Bethesda.Tests/TestingSettings.xml
 
 *.orig
+
+Mutagen.Bethesda.Core/Mutagen.Bethesda.Core.xml
+
+Mutagen.Bethesda/Mutagen.Bethesda.xml
