@@ -167,7 +167,7 @@ namespace Mutagen.Bethesda.Binary
                 var subFrame = new MutagenFrame(frame.ReadAndReframe(checked((int)totalLen)));
                 frames.Add(subFrame);
             }
-            var ret = new TryGet<T>[frame.Length];
+            var ret = new TryGet<T>[frames.Count];
             Parallel.ForEach(frames, (subFrame, state, count) =>
             {
                 if (transl(subFrame, out var subItem, recordTypeConverter))
