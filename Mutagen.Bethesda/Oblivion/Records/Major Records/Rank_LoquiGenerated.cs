@@ -1459,31 +1459,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.RankNumber = rhs.RankNumber;
             }
-            if ((copyMask?.GetShouldTranslate((int)Rank_FieldIndex.Name) ?? true))
+            if (!rhs.Name.TryGet(out var rhsNameitem))
             {
-                errorMask?.PushIndex((int)Rank_FieldIndex.Name);
-                try
-                {
-                    if (!rhs.Name.TryGet(out var rhsNameitem))
-                    {
-                        item.Name = null;
-                    }
-                    else
-                    {
-                        item.Name = new GenderedItem<String?>(
-                            male: rhsNameitem.Male,
-                            female: rhsNameitem.Female);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Name = null;
+            }
+            else
+            {
+                item.Name = new GenderedItem<String?>(
+                    male: rhsNameitem.Male,
+                    female: rhsNameitem.Female);
             }
             if ((copyMask?.GetShouldTranslate((int)Rank_FieldIndex.Insignia) ?? true))
             {

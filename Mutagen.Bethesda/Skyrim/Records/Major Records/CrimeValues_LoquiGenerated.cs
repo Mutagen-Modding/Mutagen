@@ -45,6 +45,9 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region Versioning
+        public CrimeValues.VersioningBreaks Versioning { get; set; } = default;
+        #endregion
         #region Arrest
         public Boolean Arrest { get; set; } = default;
         #endregion
@@ -74,9 +77,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Werewolf
         public UInt16 Werewolf { get; set; } = default;
-        #endregion
-        #region Versioning
-        public CrimeValues.VersioningBreaks Versioning { get; set; } = default;
         #endregion
 
         #region To String
@@ -248,6 +248,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Versioning = initialValue;
                 this.Arrest = initialValue;
                 this.AttackOnSight = initialValue;
                 this.Murder = initialValue;
@@ -258,10 +259,10 @@ namespace Mutagen.Bethesda.Skyrim
                 this.StealMult = initialValue;
                 this.Escape = initialValue;
                 this.Werewolf = initialValue;
-                this.Versioning = initialValue;
             }
 
             public Mask(
+                TItem Versioning,
                 TItem Arrest,
                 TItem AttackOnSight,
                 TItem Murder,
@@ -271,9 +272,9 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Unknown,
                 TItem StealMult,
                 TItem Escape,
-                TItem Werewolf,
-                TItem Versioning)
+                TItem Werewolf)
             {
+                this.Versioning = Versioning;
                 this.Arrest = Arrest;
                 this.AttackOnSight = AttackOnSight;
                 this.Murder = Murder;
@@ -284,7 +285,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.StealMult = StealMult;
                 this.Escape = Escape;
                 this.Werewolf = Werewolf;
-                this.Versioning = Versioning;
             }
 
             #pragma warning disable CS8618
@@ -296,6 +296,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
+            public TItem Versioning;
             public TItem Arrest;
             public TItem AttackOnSight;
             public TItem Murder;
@@ -306,7 +307,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem StealMult;
             public TItem Escape;
             public TItem Werewolf;
-            public TItem Versioning;
             #endregion
 
             #region Equals
@@ -319,6 +319,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.Arrest, rhs.Arrest)) return false;
                 if (!object.Equals(this.AttackOnSight, rhs.AttackOnSight)) return false;
                 if (!object.Equals(this.Murder, rhs.Murder)) return false;
@@ -329,12 +330,12 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.StealMult, rhs.StealMult)) return false;
                 if (!object.Equals(this.Escape, rhs.Escape)) return false;
                 if (!object.Equals(this.Werewolf, rhs.Werewolf)) return false;
-                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Versioning);
                 hash.Add(this.Arrest);
                 hash.Add(this.AttackOnSight);
                 hash.Add(this.Murder);
@@ -345,7 +346,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.StealMult);
                 hash.Add(this.Escape);
                 hash.Add(this.Werewolf);
-                hash.Add(this.Versioning);
                 return hash.ToHashCode();
             }
 
@@ -354,6 +354,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Versioning)) return false;
                 if (!eval(this.Arrest)) return false;
                 if (!eval(this.AttackOnSight)) return false;
                 if (!eval(this.Murder)) return false;
@@ -364,7 +365,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.StealMult)) return false;
                 if (!eval(this.Escape)) return false;
                 if (!eval(this.Werewolf)) return false;
-                if (!eval(this.Versioning)) return false;
                 return true;
             }
             #endregion
@@ -372,6 +372,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Versioning)) return true;
                 if (eval(this.Arrest)) return true;
                 if (eval(this.AttackOnSight)) return true;
                 if (eval(this.Murder)) return true;
@@ -382,7 +383,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.StealMult)) return true;
                 if (eval(this.Escape)) return true;
                 if (eval(this.Werewolf)) return true;
-                if (eval(this.Versioning)) return true;
                 return false;
             }
             #endregion
@@ -397,6 +397,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Versioning = eval(this.Versioning);
                 obj.Arrest = eval(this.Arrest);
                 obj.AttackOnSight = eval(this.AttackOnSight);
                 obj.Murder = eval(this.Murder);
@@ -407,7 +408,6 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.StealMult = eval(this.StealMult);
                 obj.Escape = eval(this.Escape);
                 obj.Werewolf = eval(this.Werewolf);
-                obj.Versioning = eval(this.Versioning);
             }
             #endregion
 
@@ -430,6 +430,10 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Versioning ?? true)
+                    {
+                        fg.AppendItem(Versioning, "Versioning");
+                    }
                     if (printMask?.Arrest ?? true)
                     {
                         fg.AppendItem(Arrest, "Arrest");
@@ -470,10 +474,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(Werewolf, "Werewolf");
                     }
-                    if (printMask?.Versioning ?? true)
-                    {
-                        fg.AppendItem(Versioning, "Versioning");
-                    }
                 }
                 fg.AppendLine("]");
             }
@@ -499,6 +499,7 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
+            public Exception? Versioning;
             public Exception? Arrest;
             public Exception? AttackOnSight;
             public Exception? Murder;
@@ -509,7 +510,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? StealMult;
             public Exception? Escape;
             public Exception? Werewolf;
-            public Exception? Versioning;
             #endregion
 
             #region IErrorMask
@@ -518,6 +518,8 @@ namespace Mutagen.Bethesda.Skyrim
                 CrimeValues_FieldIndex enu = (CrimeValues_FieldIndex)index;
                 switch (enu)
                 {
+                    case CrimeValues_FieldIndex.Versioning:
+                        return Versioning;
                     case CrimeValues_FieldIndex.Arrest:
                         return Arrest;
                     case CrimeValues_FieldIndex.AttackOnSight:
@@ -538,8 +540,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return Escape;
                     case CrimeValues_FieldIndex.Werewolf:
                         return Werewolf;
-                    case CrimeValues_FieldIndex.Versioning:
-                        return Versioning;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -550,6 +550,9 @@ namespace Mutagen.Bethesda.Skyrim
                 CrimeValues_FieldIndex enu = (CrimeValues_FieldIndex)index;
                 switch (enu)
                 {
+                    case CrimeValues_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
                     case CrimeValues_FieldIndex.Arrest:
                         this.Arrest = ex;
                         break;
@@ -580,9 +583,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case CrimeValues_FieldIndex.Werewolf:
                         this.Werewolf = ex;
                         break;
-                    case CrimeValues_FieldIndex.Versioning:
-                        this.Versioning = ex;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -593,6 +593,9 @@ namespace Mutagen.Bethesda.Skyrim
                 CrimeValues_FieldIndex enu = (CrimeValues_FieldIndex)index;
                 switch (enu)
                 {
+                    case CrimeValues_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
                     case CrimeValues_FieldIndex.Arrest:
                         this.Arrest = (Exception?)obj;
                         break;
@@ -623,9 +626,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case CrimeValues_FieldIndex.Werewolf:
                         this.Werewolf = (Exception?)obj;
                         break;
-                    case CrimeValues_FieldIndex.Versioning:
-                        this.Versioning = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -634,6 +634,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Versioning != null) return true;
                 if (Arrest != null) return true;
                 if (AttackOnSight != null) return true;
                 if (Murder != null) return true;
@@ -644,7 +645,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (StealMult != null) return true;
                 if (Escape != null) return true;
                 if (Werewolf != null) return true;
-                if (Versioning != null) return true;
                 return false;
             }
             #endregion
@@ -679,6 +679,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
+                fg.AppendItem(Versioning, "Versioning");
                 fg.AppendItem(Arrest, "Arrest");
                 fg.AppendItem(AttackOnSight, "AttackOnSight");
                 fg.AppendItem(Murder, "Murder");
@@ -689,7 +690,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(StealMult, "StealMult");
                 fg.AppendItem(Escape, "Escape");
                 fg.AppendItem(Werewolf, "Werewolf");
-                fg.AppendItem(Versioning, "Versioning");
             }
             #endregion
 
@@ -698,6 +698,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.Arrest = this.Arrest.Combine(rhs.Arrest);
                 ret.AttackOnSight = this.AttackOnSight.Combine(rhs.AttackOnSight);
                 ret.Murder = this.Murder.Combine(rhs.Murder);
@@ -708,7 +709,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.StealMult = this.StealMult.Combine(rhs.StealMult);
                 ret.Escape = this.Escape.Combine(rhs.Escape);
                 ret.Werewolf = this.Werewolf.Combine(rhs.Werewolf);
-                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -730,6 +730,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public bool Versioning;
             public bool Arrest;
             public bool AttackOnSight;
             public bool Murder;
@@ -740,12 +741,12 @@ namespace Mutagen.Bethesda.Skyrim
             public bool StealMult;
             public bool Escape;
             public bool Werewolf;
-            public bool Versioning;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.Versioning = defaultOn;
                 this.Arrest = defaultOn;
                 this.AttackOnSight = defaultOn;
                 this.Murder = defaultOn;
@@ -756,7 +757,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.StealMult = defaultOn;
                 this.Escape = defaultOn;
                 this.Werewolf = defaultOn;
-                this.Versioning = defaultOn;
             }
 
             #endregion
@@ -772,6 +772,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Versioning, null));
                 ret.Add((Arrest, null));
                 ret.Add((AttackOnSight, null));
                 ret.Add((Murder, null));
@@ -782,7 +783,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((StealMult, null));
                 ret.Add((Escape, null));
                 ret.Add((Werewolf, null));
-                ret.Add((Versioning, null));
             }
         }
         #endregion
@@ -858,6 +858,7 @@ namespace Mutagen.Bethesda.Skyrim
         ICrimeValuesGetter,
         ILoquiObjectSetter<ICrimeValues>
     {
+        new CrimeValues.VersioningBreaks Versioning { get; set; }
         new Boolean Arrest { get; set; }
         new Boolean AttackOnSight { get; set; }
         new UInt16 Murder { get; set; }
@@ -868,7 +869,6 @@ namespace Mutagen.Bethesda.Skyrim
         new Single StealMult { get; set; }
         new UInt16 Escape { get; set; }
         new UInt16 Werewolf { get; set; }
-        new CrimeValues.VersioningBreaks Versioning { get; set; }
     }
 
     public partial interface ICrimeValuesGetter :
@@ -883,6 +883,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        CrimeValues.VersioningBreaks Versioning { get; }
         Boolean Arrest { get; }
         Boolean AttackOnSight { get; }
         UInt16 Murder { get; }
@@ -893,7 +894,6 @@ namespace Mutagen.Bethesda.Skyrim
         Single StealMult { get; }
         UInt16 Escape { get; }
         UInt16 Werewolf { get; }
-        CrimeValues.VersioningBreaks Versioning { get; }
 
     }
 
@@ -1200,17 +1200,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Field Index
     public enum CrimeValues_FieldIndex
     {
-        Arrest = 0,
-        AttackOnSight = 1,
-        Murder = 2,
-        Assault = 3,
-        Trespass = 4,
-        Pickpocket = 5,
-        Unknown = 6,
-        StealMult = 7,
-        Escape = 8,
-        Werewolf = 9,
-        Versioning = 10,
+        Versioning = 0,
+        Arrest = 1,
+        AttackOnSight = 2,
+        Murder = 3,
+        Assault = 4,
+        Trespass = 5,
+        Pickpocket = 6,
+        Unknown = 7,
+        StealMult = 8,
+        Escape = 9,
+        Werewolf = 10,
     }
     #endregion
 
@@ -1260,6 +1260,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "VERSIONING":
+                    return (ushort)CrimeValues_FieldIndex.Versioning;
                 case "ARREST":
                     return (ushort)CrimeValues_FieldIndex.Arrest;
                 case "ATTACKONSIGHT":
@@ -1280,8 +1282,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)CrimeValues_FieldIndex.Escape;
                 case "WEREWOLF":
                     return (ushort)CrimeValues_FieldIndex.Werewolf;
-                case "VERSIONING":
-                    return (ushort)CrimeValues_FieldIndex.Versioning;
                 default:
                     return null;
             }
@@ -1292,6 +1292,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CrimeValues_FieldIndex enu = (CrimeValues_FieldIndex)index;
             switch (enu)
             {
+                case CrimeValues_FieldIndex.Versioning:
                 case CrimeValues_FieldIndex.Arrest:
                 case CrimeValues_FieldIndex.AttackOnSight:
                 case CrimeValues_FieldIndex.Murder:
@@ -1302,7 +1303,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case CrimeValues_FieldIndex.StealMult:
                 case CrimeValues_FieldIndex.Escape:
                 case CrimeValues_FieldIndex.Werewolf:
-                case CrimeValues_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1314,6 +1314,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CrimeValues_FieldIndex enu = (CrimeValues_FieldIndex)index;
             switch (enu)
             {
+                case CrimeValues_FieldIndex.Versioning:
                 case CrimeValues_FieldIndex.Arrest:
                 case CrimeValues_FieldIndex.AttackOnSight:
                 case CrimeValues_FieldIndex.Murder:
@@ -1324,7 +1325,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case CrimeValues_FieldIndex.StealMult:
                 case CrimeValues_FieldIndex.Escape:
                 case CrimeValues_FieldIndex.Werewolf:
-                case CrimeValues_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1336,6 +1336,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CrimeValues_FieldIndex enu = (CrimeValues_FieldIndex)index;
             switch (enu)
             {
+                case CrimeValues_FieldIndex.Versioning:
                 case CrimeValues_FieldIndex.Arrest:
                 case CrimeValues_FieldIndex.AttackOnSight:
                 case CrimeValues_FieldIndex.Murder:
@@ -1346,7 +1347,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case CrimeValues_FieldIndex.StealMult:
                 case CrimeValues_FieldIndex.Escape:
                 case CrimeValues_FieldIndex.Werewolf:
-                case CrimeValues_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1358,6 +1358,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CrimeValues_FieldIndex enu = (CrimeValues_FieldIndex)index;
             switch (enu)
             {
+                case CrimeValues_FieldIndex.Versioning:
+                    return "Versioning";
                 case CrimeValues_FieldIndex.Arrest:
                     return "Arrest";
                 case CrimeValues_FieldIndex.AttackOnSight:
@@ -1378,8 +1380,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Escape";
                 case CrimeValues_FieldIndex.Werewolf:
                     return "Werewolf";
-                case CrimeValues_FieldIndex.Versioning:
-                    return "Versioning";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1390,6 +1390,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CrimeValues_FieldIndex enu = (CrimeValues_FieldIndex)index;
             switch (enu)
             {
+                case CrimeValues_FieldIndex.Versioning:
                 case CrimeValues_FieldIndex.Arrest:
                 case CrimeValues_FieldIndex.AttackOnSight:
                 case CrimeValues_FieldIndex.Murder:
@@ -1400,7 +1401,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case CrimeValues_FieldIndex.StealMult:
                 case CrimeValues_FieldIndex.Escape:
                 case CrimeValues_FieldIndex.Werewolf:
-                case CrimeValues_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1412,6 +1412,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CrimeValues_FieldIndex enu = (CrimeValues_FieldIndex)index;
             switch (enu)
             {
+                case CrimeValues_FieldIndex.Versioning:
                 case CrimeValues_FieldIndex.Arrest:
                 case CrimeValues_FieldIndex.AttackOnSight:
                 case CrimeValues_FieldIndex.Murder:
@@ -1422,7 +1423,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case CrimeValues_FieldIndex.StealMult:
                 case CrimeValues_FieldIndex.Escape:
                 case CrimeValues_FieldIndex.Werewolf:
-                case CrimeValues_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1434,6 +1434,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CrimeValues_FieldIndex enu = (CrimeValues_FieldIndex)index;
             switch (enu)
             {
+                case CrimeValues_FieldIndex.Versioning:
+                    return typeof(CrimeValues.VersioningBreaks);
                 case CrimeValues_FieldIndex.Arrest:
                     return typeof(Boolean);
                 case CrimeValues_FieldIndex.AttackOnSight:
@@ -1454,8 +1456,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(UInt16);
                 case CrimeValues_FieldIndex.Werewolf:
                     return typeof(UInt16);
-                case CrimeValues_FieldIndex.Versioning:
-                    return typeof(CrimeValues.VersioningBreaks);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1508,6 +1508,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ICrimeValues item)
         {
             ClearPartial();
+            item.Versioning = default;
             item.Arrest = default;
             item.AttackOnSight = default;
             item.Murder = default;
@@ -1518,7 +1519,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.StealMult = default;
             item.Escape = default;
             item.Werewolf = default;
-            item.Versioning = default;
         }
         
         #region Xml Translation
@@ -1620,6 +1620,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Arrest = item.Arrest == rhs.Arrest;
             ret.AttackOnSight = item.AttackOnSight == rhs.AttackOnSight;
             ret.Murder = item.Murder == rhs.Murder;
@@ -1630,7 +1631,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.StealMult = item.StealMult.EqualsWithin(rhs.StealMult);
             ret.Escape = item.Escape == rhs.Escape;
             ret.Werewolf = item.Werewolf == rhs.Werewolf;
-            ret.Versioning = item.Versioning == rhs.Versioning;
         }
         
         public string ToString(
@@ -1677,6 +1677,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             CrimeValues.Mask<bool>? printMask = null)
         {
+            if (printMask?.Versioning ?? true)
+            {
+                fg.AppendItem(item.Versioning, "Versioning");
+            }
             if (printMask?.Arrest ?? true)
             {
                 fg.AppendItem(item.Arrest, "Arrest");
@@ -1717,10 +1721,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Werewolf, "Werewolf");
             }
-            if (printMask?.Versioning ?? true)
-            {
-                fg.AppendItem(item.Versioning, "Versioning");
-            }
         }
         
         public bool HasBeenSet(
@@ -1734,6 +1734,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICrimeValuesGetter item,
             CrimeValues.Mask<bool> mask)
         {
+            mask.Versioning = true;
             mask.Arrest = true;
             mask.AttackOnSight = true;
             mask.Murder = true;
@@ -1744,7 +1745,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.StealMult = true;
             mask.Escape = true;
             mask.Werewolf = true;
-            mask.Versioning = true;
         }
         
         #region Equals and Hash
@@ -1754,6 +1754,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
+            if (lhs.Versioning != rhs.Versioning) return false;
             if (lhs.Arrest != rhs.Arrest) return false;
             if (lhs.AttackOnSight != rhs.AttackOnSight) return false;
             if (lhs.Murder != rhs.Murder) return false;
@@ -1764,13 +1765,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.StealMult.EqualsWithin(rhs.StealMult)) return false;
             if (lhs.Escape != rhs.Escape) return false;
             if (lhs.Werewolf != rhs.Werewolf) return false;
-            if (lhs.Versioning != rhs.Versioning) return false;
             return true;
         }
         
         public virtual int GetHashCode(ICrimeValuesGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Versioning);
             hash.Add(item.Arrest);
             hash.Add(item.AttackOnSight);
             hash.Add(item.Murder);
@@ -1781,7 +1782,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.StealMult);
             hash.Add(item.Escape);
             hash.Add(item.Werewolf);
-            hash.Add(item.Versioning);
             return hash.ToHashCode();
         }
         
@@ -1813,6 +1813,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
+            if ((copyMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.Versioning) ?? true))
+            {
+                item.Versioning = rhs.Versioning;
+            }
             if ((copyMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.Arrest) ?? true))
             {
                 item.Arrest = rhs.Arrest;
@@ -1841,10 +1845,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Unknown = rhs.Unknown;
             }
+            if (rhs.Versioning.HasFlag(CrimeValues.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.StealMult) ?? true))
             {
                 item.StealMult = rhs.StealMult;
             }
+            if (rhs.Versioning.HasFlag(CrimeValues.VersioningBreaks.Break1)) return;
             if ((copyMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.Escape) ?? true))
             {
                 item.Escape = rhs.Escape;
@@ -1852,10 +1858,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((copyMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.Werewolf) ?? true))
             {
                 item.Werewolf = rhs.Werewolf;
-            }
-            if ((copyMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.Versioning) ?? true))
-            {
-                item.Versioning = rhs.Versioning;
             }
         }
         
@@ -1946,6 +1948,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
+            if ((translationMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.Versioning) ?? true))
+            {
+                EnumXmlTranslation<CrimeValues.VersioningBreaks>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Versioning),
+                    item: item.Versioning,
+                    fieldIndex: (int)CrimeValues_FieldIndex.Versioning,
+                    errorMask: errorMask);
+            }
             if ((translationMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.Arrest) ?? true))
             {
                 BooleanXmlTranslation.Instance.Write(
@@ -2034,15 +2045,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     name: nameof(item.Werewolf),
                     item: item.Werewolf,
                     fieldIndex: (int)CrimeValues_FieldIndex.Werewolf,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.Versioning) ?? true))
-            {
-                EnumXmlTranslation<CrimeValues.VersioningBreaks>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Versioning),
-                    item: item.Versioning,
-                    fieldIndex: (int)CrimeValues_FieldIndex.Versioning,
                     errorMask: errorMask);
             }
         }
@@ -2151,6 +2153,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "Versioning":
+                    errorMask?.PushIndex((int)CrimeValues_FieldIndex.Versioning);
+                    try
+                    {
+                        item.Versioning = EnumXmlTranslation<CrimeValues.VersioningBreaks>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "Arrest":
                     errorMask?.PushIndex((int)CrimeValues_FieldIndex.Arrest);
                     try
@@ -2318,24 +2338,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         item.Werewolf = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Versioning":
-                    errorMask?.PushIndex((int)CrimeValues_FieldIndex.Versioning);
-                    try
-                    {
-                        item.Versioning = EnumXmlTranslation<CrimeValues.VersioningBreaks>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

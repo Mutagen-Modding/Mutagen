@@ -24,7 +24,10 @@ namespace Mutagen.Bethesda.Generation
                 elem.Add(new XAttribute(Loqui.Generation.Constants.ENUM_NAME, $"{obj.ObjectName}.{VersioningEnumName}"));
                 elem.Add(new XAttribute("binary", nameof(BinaryGenerationType.NoGeneration)));
                 elem.Add(new XAttribute(Loqui.Generation.Constants.HAS_BEEN_SET, "false"));
-                await obj.LoadField(elem, requireName: true, add: true);
+                var gen = await obj.LoadField(elem, requireName: true, add: false);
+                if (gen.Failed) throw new ArgumentException();
+                gen.Value.SetObjectGeneration(obj, setDefaults: true);
+                obj.Fields.Insert(0, gen.Value);
             }
         }
 
@@ -60,20 +63,12 @@ namespace Mutagen.Bethesda.Generation
         public override async Task PostLoad(ObjectGeneration obj)
         {
             await base.PostLoad(obj);
-            int? breaks = null;
+            int breaks = 0;
             foreach (var field in obj.Fields)
             {
                 if (field is BreakType breakType)
                 {
-                    if (breaks == null)
-                    {
-                        breaks = 0;
-                    }
-                    else
-                    {
-                        breaks++;
-                    }
-                    field.GetFieldData().BreakIndex = breaks;
+                    breakType.Index = breaks++;
                 }
             }
         }

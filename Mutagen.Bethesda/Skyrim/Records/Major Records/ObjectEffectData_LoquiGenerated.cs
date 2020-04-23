@@ -45,6 +45,9 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region Versioning
+        public ObjectEffectData.VersioningBreaks Versioning { get; set; } = default;
+        #endregion
         #region EnchantmentCost
         public UInt32 EnchantmentCost { get; set; } = default;
         #endregion
@@ -79,9 +82,6 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLink<FormList> WornRestrictions => this._WornRestrictions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IFormListGetter> IObjectEffectDataGetter.WornRestrictions => this.WornRestrictions;
-        #endregion
-        #region Versioning
-        public ObjectEffectData.VersioningBreaks Versioning { get; set; } = default;
         #endregion
 
         #region To String
@@ -253,6 +253,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Versioning = initialValue;
                 this.EnchantmentCost = initialValue;
                 this.Flags = initialValue;
                 this.CastType = initialValue;
@@ -262,10 +263,10 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ChargeTime = initialValue;
                 this.BaseEnchantment = initialValue;
                 this.WornRestrictions = initialValue;
-                this.Versioning = initialValue;
             }
 
             public Mask(
+                TItem Versioning,
                 TItem EnchantmentCost,
                 TItem Flags,
                 TItem CastType,
@@ -274,9 +275,9 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EnchantType,
                 TItem ChargeTime,
                 TItem BaseEnchantment,
-                TItem WornRestrictions,
-                TItem Versioning)
+                TItem WornRestrictions)
             {
+                this.Versioning = Versioning;
                 this.EnchantmentCost = EnchantmentCost;
                 this.Flags = Flags;
                 this.CastType = CastType;
@@ -286,7 +287,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ChargeTime = ChargeTime;
                 this.BaseEnchantment = BaseEnchantment;
                 this.WornRestrictions = WornRestrictions;
-                this.Versioning = Versioning;
             }
 
             #pragma warning disable CS8618
@@ -298,6 +298,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
+            public TItem Versioning;
             public TItem EnchantmentCost;
             public TItem Flags;
             public TItem CastType;
@@ -307,7 +308,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem ChargeTime;
             public TItem BaseEnchantment;
             public TItem WornRestrictions;
-            public TItem Versioning;
             #endregion
 
             #region Equals
@@ -320,6 +320,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.EnchantmentCost, rhs.EnchantmentCost)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.CastType, rhs.CastType)) return false;
@@ -329,12 +330,12 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.ChargeTime, rhs.ChargeTime)) return false;
                 if (!object.Equals(this.BaseEnchantment, rhs.BaseEnchantment)) return false;
                 if (!object.Equals(this.WornRestrictions, rhs.WornRestrictions)) return false;
-                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Versioning);
                 hash.Add(this.EnchantmentCost);
                 hash.Add(this.Flags);
                 hash.Add(this.CastType);
@@ -344,7 +345,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.ChargeTime);
                 hash.Add(this.BaseEnchantment);
                 hash.Add(this.WornRestrictions);
-                hash.Add(this.Versioning);
                 return hash.ToHashCode();
             }
 
@@ -353,6 +353,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Versioning)) return false;
                 if (!eval(this.EnchantmentCost)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.CastType)) return false;
@@ -362,7 +363,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.ChargeTime)) return false;
                 if (!eval(this.BaseEnchantment)) return false;
                 if (!eval(this.WornRestrictions)) return false;
-                if (!eval(this.Versioning)) return false;
                 return true;
             }
             #endregion
@@ -370,6 +370,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Versioning)) return true;
                 if (eval(this.EnchantmentCost)) return true;
                 if (eval(this.Flags)) return true;
                 if (eval(this.CastType)) return true;
@@ -379,7 +380,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.ChargeTime)) return true;
                 if (eval(this.BaseEnchantment)) return true;
                 if (eval(this.WornRestrictions)) return true;
-                if (eval(this.Versioning)) return true;
                 return false;
             }
             #endregion
@@ -394,6 +394,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Versioning = eval(this.Versioning);
                 obj.EnchantmentCost = eval(this.EnchantmentCost);
                 obj.Flags = eval(this.Flags);
                 obj.CastType = eval(this.CastType);
@@ -403,7 +404,6 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.ChargeTime = eval(this.ChargeTime);
                 obj.BaseEnchantment = eval(this.BaseEnchantment);
                 obj.WornRestrictions = eval(this.WornRestrictions);
-                obj.Versioning = eval(this.Versioning);
             }
             #endregion
 
@@ -426,6 +426,10 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Versioning ?? true)
+                    {
+                        fg.AppendItem(Versioning, "Versioning");
+                    }
                     if (printMask?.EnchantmentCost ?? true)
                     {
                         fg.AppendItem(EnchantmentCost, "EnchantmentCost");
@@ -462,10 +466,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(WornRestrictions, "WornRestrictions");
                     }
-                    if (printMask?.Versioning ?? true)
-                    {
-                        fg.AppendItem(Versioning, "Versioning");
-                    }
                 }
                 fg.AppendLine("]");
             }
@@ -491,6 +491,7 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
+            public Exception? Versioning;
             public Exception? EnchantmentCost;
             public Exception? Flags;
             public Exception? CastType;
@@ -500,7 +501,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? ChargeTime;
             public Exception? BaseEnchantment;
             public Exception? WornRestrictions;
-            public Exception? Versioning;
             #endregion
 
             #region IErrorMask
@@ -509,6 +509,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ObjectEffectData_FieldIndex enu = (ObjectEffectData_FieldIndex)index;
                 switch (enu)
                 {
+                    case ObjectEffectData_FieldIndex.Versioning:
+                        return Versioning;
                     case ObjectEffectData_FieldIndex.EnchantmentCost:
                         return EnchantmentCost;
                     case ObjectEffectData_FieldIndex.Flags:
@@ -527,8 +529,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return BaseEnchantment;
                     case ObjectEffectData_FieldIndex.WornRestrictions:
                         return WornRestrictions;
-                    case ObjectEffectData_FieldIndex.Versioning:
-                        return Versioning;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -539,6 +539,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ObjectEffectData_FieldIndex enu = (ObjectEffectData_FieldIndex)index;
                 switch (enu)
                 {
+                    case ObjectEffectData_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
                     case ObjectEffectData_FieldIndex.EnchantmentCost:
                         this.EnchantmentCost = ex;
                         break;
@@ -566,9 +569,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case ObjectEffectData_FieldIndex.WornRestrictions:
                         this.WornRestrictions = ex;
                         break;
-                    case ObjectEffectData_FieldIndex.Versioning:
-                        this.Versioning = ex;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -579,6 +579,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ObjectEffectData_FieldIndex enu = (ObjectEffectData_FieldIndex)index;
                 switch (enu)
                 {
+                    case ObjectEffectData_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
                     case ObjectEffectData_FieldIndex.EnchantmentCost:
                         this.EnchantmentCost = (Exception?)obj;
                         break;
@@ -606,9 +609,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case ObjectEffectData_FieldIndex.WornRestrictions:
                         this.WornRestrictions = (Exception?)obj;
                         break;
-                    case ObjectEffectData_FieldIndex.Versioning:
-                        this.Versioning = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -617,6 +617,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Versioning != null) return true;
                 if (EnchantmentCost != null) return true;
                 if (Flags != null) return true;
                 if (CastType != null) return true;
@@ -626,7 +627,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (ChargeTime != null) return true;
                 if (BaseEnchantment != null) return true;
                 if (WornRestrictions != null) return true;
-                if (Versioning != null) return true;
                 return false;
             }
             #endregion
@@ -661,6 +661,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
+                fg.AppendItem(Versioning, "Versioning");
                 fg.AppendItem(EnchantmentCost, "EnchantmentCost");
                 fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(CastType, "CastType");
@@ -670,7 +671,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(ChargeTime, "ChargeTime");
                 fg.AppendItem(BaseEnchantment, "BaseEnchantment");
                 fg.AppendItem(WornRestrictions, "WornRestrictions");
-                fg.AppendItem(Versioning, "Versioning");
             }
             #endregion
 
@@ -679,6 +679,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.EnchantmentCost = this.EnchantmentCost.Combine(rhs.EnchantmentCost);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.CastType = this.CastType.Combine(rhs.CastType);
@@ -688,7 +689,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.ChargeTime = this.ChargeTime.Combine(rhs.ChargeTime);
                 ret.BaseEnchantment = this.BaseEnchantment.Combine(rhs.BaseEnchantment);
                 ret.WornRestrictions = this.WornRestrictions.Combine(rhs.WornRestrictions);
-                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -710,6 +710,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public bool Versioning;
             public bool EnchantmentCost;
             public bool Flags;
             public bool CastType;
@@ -719,12 +720,12 @@ namespace Mutagen.Bethesda.Skyrim
             public bool ChargeTime;
             public bool BaseEnchantment;
             public bool WornRestrictions;
-            public bool Versioning;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.Versioning = defaultOn;
                 this.EnchantmentCost = defaultOn;
                 this.Flags = defaultOn;
                 this.CastType = defaultOn;
@@ -734,7 +735,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ChargeTime = defaultOn;
                 this.BaseEnchantment = defaultOn;
                 this.WornRestrictions = defaultOn;
-                this.Versioning = defaultOn;
             }
 
             #endregion
@@ -750,6 +750,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Versioning, null));
                 ret.Add((EnchantmentCost, null));
                 ret.Add((Flags, null));
                 ret.Add((CastType, null));
@@ -759,7 +760,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ChargeTime, null));
                 ret.Add((BaseEnchantment, null));
                 ret.Add((WornRestrictions, null));
-                ret.Add((Versioning, null));
             }
         }
         #endregion
@@ -836,6 +836,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectEffectDataGetter,
         ILoquiObjectSetter<IObjectEffectData>
     {
+        new ObjectEffectData.VersioningBreaks Versioning { get; set; }
         new UInt32 EnchantmentCost { get; set; }
         new ObjectEffect.Flag Flags { get; set; }
         new CastType CastType { get; set; }
@@ -845,7 +846,6 @@ namespace Mutagen.Bethesda.Skyrim
         new Single ChargeTime { get; set; }
         new IFormLink<ObjectEffect> BaseEnchantment { get; }
         new IFormLink<FormList> WornRestrictions { get; }
-        new ObjectEffectData.VersioningBreaks Versioning { get; set; }
     }
 
     public partial interface IObjectEffectDataGetter :
@@ -861,6 +861,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        ObjectEffectData.VersioningBreaks Versioning { get; }
         UInt32 EnchantmentCost { get; }
         ObjectEffect.Flag Flags { get; }
         CastType CastType { get; }
@@ -870,7 +871,6 @@ namespace Mutagen.Bethesda.Skyrim
         Single ChargeTime { get; }
         IFormLinkGetter<IObjectEffectGetter> BaseEnchantment { get; }
         IFormLinkGetter<IFormListGetter> WornRestrictions { get; }
-        ObjectEffectData.VersioningBreaks Versioning { get; }
 
     }
 
@@ -1177,16 +1177,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Field Index
     public enum ObjectEffectData_FieldIndex
     {
-        EnchantmentCost = 0,
-        Flags = 1,
-        CastType = 2,
-        EnchantmentAmount = 3,
-        TargetType = 4,
-        EnchantType = 5,
-        ChargeTime = 6,
-        BaseEnchantment = 7,
-        WornRestrictions = 8,
-        Versioning = 9,
+        Versioning = 0,
+        EnchantmentCost = 1,
+        Flags = 2,
+        CastType = 3,
+        EnchantmentAmount = 4,
+        TargetType = 5,
+        EnchantType = 6,
+        ChargeTime = 7,
+        BaseEnchantment = 8,
+        WornRestrictions = 9,
     }
     #endregion
 
@@ -1236,6 +1236,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "VERSIONING":
+                    return (ushort)ObjectEffectData_FieldIndex.Versioning;
                 case "ENCHANTMENTCOST":
                     return (ushort)ObjectEffectData_FieldIndex.EnchantmentCost;
                 case "FLAGS":
@@ -1254,8 +1256,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)ObjectEffectData_FieldIndex.BaseEnchantment;
                 case "WORNRESTRICTIONS":
                     return (ushort)ObjectEffectData_FieldIndex.WornRestrictions;
-                case "VERSIONING":
-                    return (ushort)ObjectEffectData_FieldIndex.Versioning;
                 default:
                     return null;
             }
@@ -1266,6 +1266,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ObjectEffectData_FieldIndex enu = (ObjectEffectData_FieldIndex)index;
             switch (enu)
             {
+                case ObjectEffectData_FieldIndex.Versioning:
                 case ObjectEffectData_FieldIndex.EnchantmentCost:
                 case ObjectEffectData_FieldIndex.Flags:
                 case ObjectEffectData_FieldIndex.CastType:
@@ -1275,7 +1276,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ObjectEffectData_FieldIndex.ChargeTime:
                 case ObjectEffectData_FieldIndex.BaseEnchantment:
                 case ObjectEffectData_FieldIndex.WornRestrictions:
-                case ObjectEffectData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1287,6 +1287,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ObjectEffectData_FieldIndex enu = (ObjectEffectData_FieldIndex)index;
             switch (enu)
             {
+                case ObjectEffectData_FieldIndex.Versioning:
                 case ObjectEffectData_FieldIndex.EnchantmentCost:
                 case ObjectEffectData_FieldIndex.Flags:
                 case ObjectEffectData_FieldIndex.CastType:
@@ -1296,7 +1297,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ObjectEffectData_FieldIndex.ChargeTime:
                 case ObjectEffectData_FieldIndex.BaseEnchantment:
                 case ObjectEffectData_FieldIndex.WornRestrictions:
-                case ObjectEffectData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1308,6 +1308,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ObjectEffectData_FieldIndex enu = (ObjectEffectData_FieldIndex)index;
             switch (enu)
             {
+                case ObjectEffectData_FieldIndex.Versioning:
                 case ObjectEffectData_FieldIndex.EnchantmentCost:
                 case ObjectEffectData_FieldIndex.Flags:
                 case ObjectEffectData_FieldIndex.CastType:
@@ -1317,7 +1318,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ObjectEffectData_FieldIndex.ChargeTime:
                 case ObjectEffectData_FieldIndex.BaseEnchantment:
                 case ObjectEffectData_FieldIndex.WornRestrictions:
-                case ObjectEffectData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1329,6 +1329,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ObjectEffectData_FieldIndex enu = (ObjectEffectData_FieldIndex)index;
             switch (enu)
             {
+                case ObjectEffectData_FieldIndex.Versioning:
+                    return "Versioning";
                 case ObjectEffectData_FieldIndex.EnchantmentCost:
                     return "EnchantmentCost";
                 case ObjectEffectData_FieldIndex.Flags:
@@ -1347,8 +1349,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "BaseEnchantment";
                 case ObjectEffectData_FieldIndex.WornRestrictions:
                     return "WornRestrictions";
-                case ObjectEffectData_FieldIndex.Versioning:
-                    return "Versioning";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1359,6 +1359,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ObjectEffectData_FieldIndex enu = (ObjectEffectData_FieldIndex)index;
             switch (enu)
             {
+                case ObjectEffectData_FieldIndex.Versioning:
                 case ObjectEffectData_FieldIndex.EnchantmentCost:
                 case ObjectEffectData_FieldIndex.Flags:
                 case ObjectEffectData_FieldIndex.CastType:
@@ -1368,7 +1369,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ObjectEffectData_FieldIndex.ChargeTime:
                 case ObjectEffectData_FieldIndex.BaseEnchantment:
                 case ObjectEffectData_FieldIndex.WornRestrictions:
-                case ObjectEffectData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1380,6 +1380,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ObjectEffectData_FieldIndex enu = (ObjectEffectData_FieldIndex)index;
             switch (enu)
             {
+                case ObjectEffectData_FieldIndex.Versioning:
                 case ObjectEffectData_FieldIndex.EnchantmentCost:
                 case ObjectEffectData_FieldIndex.Flags:
                 case ObjectEffectData_FieldIndex.CastType:
@@ -1389,7 +1390,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ObjectEffectData_FieldIndex.ChargeTime:
                 case ObjectEffectData_FieldIndex.BaseEnchantment:
                 case ObjectEffectData_FieldIndex.WornRestrictions:
-                case ObjectEffectData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1401,6 +1401,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ObjectEffectData_FieldIndex enu = (ObjectEffectData_FieldIndex)index;
             switch (enu)
             {
+                case ObjectEffectData_FieldIndex.Versioning:
+                    return typeof(ObjectEffectData.VersioningBreaks);
                 case ObjectEffectData_FieldIndex.EnchantmentCost:
                     return typeof(UInt32);
                 case ObjectEffectData_FieldIndex.Flags:
@@ -1419,8 +1421,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(IFormLink<ObjectEffect>);
                 case ObjectEffectData_FieldIndex.WornRestrictions:
                     return typeof(IFormLink<FormList>);
-                case ObjectEffectData_FieldIndex.Versioning:
-                    return typeof(ObjectEffectData.VersioningBreaks);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1473,6 +1473,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IObjectEffectData item)
         {
             ClearPartial();
+            item.Versioning = default;
             item.EnchantmentCost = default;
             item.Flags = default;
             item.CastType = default;
@@ -1482,7 +1483,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ChargeTime = default;
             item.BaseEnchantment.FormKey = FormKey.Null;
             item.WornRestrictions.FormKey = FormKey.Null;
-            item.Versioning = default;
         }
         
         #region Xml Translation
@@ -1582,6 +1582,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.EnchantmentCost = item.EnchantmentCost == rhs.EnchantmentCost;
             ret.Flags = item.Flags == rhs.Flags;
             ret.CastType = item.CastType == rhs.CastType;
@@ -1591,7 +1592,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.ChargeTime = item.ChargeTime.EqualsWithin(rhs.ChargeTime);
             ret.BaseEnchantment = object.Equals(item.BaseEnchantment, rhs.BaseEnchantment);
             ret.WornRestrictions = object.Equals(item.WornRestrictions, rhs.WornRestrictions);
-            ret.Versioning = item.Versioning == rhs.Versioning;
         }
         
         public string ToString(
@@ -1638,6 +1638,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             ObjectEffectData.Mask<bool>? printMask = null)
         {
+            if (printMask?.Versioning ?? true)
+            {
+                fg.AppendItem(item.Versioning, "Versioning");
+            }
             if (printMask?.EnchantmentCost ?? true)
             {
                 fg.AppendItem(item.EnchantmentCost, "EnchantmentCost");
@@ -1674,10 +1678,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.WornRestrictions, "WornRestrictions");
             }
-            if (printMask?.Versioning ?? true)
-            {
-                fg.AppendItem(item.Versioning, "Versioning");
-            }
         }
         
         public bool HasBeenSet(
@@ -1691,6 +1691,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IObjectEffectDataGetter item,
             ObjectEffectData.Mask<bool> mask)
         {
+            mask.Versioning = true;
             mask.EnchantmentCost = true;
             mask.Flags = true;
             mask.CastType = true;
@@ -1700,7 +1701,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.ChargeTime = true;
             mask.BaseEnchantment = true;
             mask.WornRestrictions = true;
-            mask.Versioning = true;
         }
         
         #region Equals and Hash
@@ -1710,6 +1710,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
+            if (lhs.Versioning != rhs.Versioning) return false;
             if (lhs.EnchantmentCost != rhs.EnchantmentCost) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (lhs.CastType != rhs.CastType) return false;
@@ -1719,13 +1720,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.ChargeTime.EqualsWithin(rhs.ChargeTime)) return false;
             if (!lhs.BaseEnchantment.Equals(rhs.BaseEnchantment)) return false;
             if (!lhs.WornRestrictions.Equals(rhs.WornRestrictions)) return false;
-            if (lhs.Versioning != rhs.Versioning) return false;
             return true;
         }
         
         public virtual int GetHashCode(IObjectEffectDataGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Versioning);
             hash.Add(item.EnchantmentCost);
             hash.Add(item.Flags);
             hash.Add(item.CastType);
@@ -1735,7 +1736,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.ChargeTime);
             hash.Add(item.BaseEnchantment);
             hash.Add(item.WornRestrictions);
-            hash.Add(item.Versioning);
             return hash.ToHashCode();
         }
         
@@ -1769,6 +1769,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
+            if ((copyMask?.GetShouldTranslate((int)ObjectEffectData_FieldIndex.Versioning) ?? true))
+            {
+                item.Versioning = rhs.Versioning;
+            }
             if ((copyMask?.GetShouldTranslate((int)ObjectEffectData_FieldIndex.EnchantmentCost) ?? true))
             {
                 item.EnchantmentCost = rhs.EnchantmentCost;
@@ -1801,13 +1805,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.BaseEnchantment.FormKey = rhs.BaseEnchantment.FormKey;
             }
+            if (rhs.Versioning.HasFlag(ObjectEffectData.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)ObjectEffectData_FieldIndex.WornRestrictions) ?? true))
             {
                 item.WornRestrictions.FormKey = rhs.WornRestrictions.FormKey;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ObjectEffectData_FieldIndex.Versioning) ?? true))
-            {
-                item.Versioning = rhs.Versioning;
             }
         }
         
@@ -1898,6 +1899,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
+            if ((translationMask?.GetShouldTranslate((int)ObjectEffectData_FieldIndex.Versioning) ?? true))
+            {
+                EnumXmlTranslation<ObjectEffectData.VersioningBreaks>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Versioning),
+                    item: item.Versioning,
+                    fieldIndex: (int)ObjectEffectData_FieldIndex.Versioning,
+                    errorMask: errorMask);
+            }
             if ((translationMask?.GetShouldTranslate((int)ObjectEffectData_FieldIndex.EnchantmentCost) ?? true))
             {
                 UInt32XmlTranslation.Instance.Write(
@@ -1977,15 +1987,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     name: nameof(item.WornRestrictions),
                     item: item.WornRestrictions.FormKey,
                     fieldIndex: (int)ObjectEffectData_FieldIndex.WornRestrictions,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ObjectEffectData_FieldIndex.Versioning) ?? true))
-            {
-                EnumXmlTranslation<ObjectEffectData.VersioningBreaks>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Versioning),
-                    item: item.Versioning,
-                    fieldIndex: (int)ObjectEffectData_FieldIndex.Versioning,
                     errorMask: errorMask);
             }
         }
@@ -2094,6 +2095,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "Versioning":
+                    errorMask?.PushIndex((int)ObjectEffectData_FieldIndex.Versioning);
+                    try
+                    {
+                        item.Versioning = EnumXmlTranslation<ObjectEffectData.VersioningBreaks>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "EnchantmentCost":
                     errorMask?.PushIndex((int)ObjectEffectData_FieldIndex.EnchantmentCost);
                     try
@@ -2243,24 +2262,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         item.WornRestrictions.FormKey = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Versioning":
-                    errorMask?.PushIndex((int)ObjectEffectData_FieldIndex.Versioning);
-                    try
-                    {
-                        item.Versioning = EnumXmlTranslation<ObjectEffectData.VersioningBreaks>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

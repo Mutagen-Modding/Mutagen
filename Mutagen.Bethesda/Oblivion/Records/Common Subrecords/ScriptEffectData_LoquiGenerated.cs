@@ -45,6 +45,9 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
+        #region Versioning
+        public ScriptEffectData.VersioningBreaks Versioning { get; set; } = default;
+        #endregion
         #region Script
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IFormLink<Script> _Script = new FormLink<Script>();
@@ -64,9 +67,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Flags
         public ScriptEffect.Flag Flags { get; set; } = default;
-        #endregion
-        #region Versioning
-        public ScriptEffectData.VersioningBreaks Versioning { get; set; } = default;
         #endregion
 
         #region To String
@@ -238,25 +238,25 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Versioning = initialValue;
                 this.Script = initialValue;
                 this.MagicSchool = initialValue;
                 this.VisualEffect = initialValue;
                 this.Flags = initialValue;
-                this.Versioning = initialValue;
             }
 
             public Mask(
+                TItem Versioning,
                 TItem Script,
                 TItem MagicSchool,
                 TItem VisualEffect,
-                TItem Flags,
-                TItem Versioning)
+                TItem Flags)
             {
+                this.Versioning = Versioning;
                 this.Script = Script;
                 this.MagicSchool = MagicSchool;
                 this.VisualEffect = VisualEffect;
                 this.Flags = Flags;
-                this.Versioning = Versioning;
             }
 
             #pragma warning disable CS8618
@@ -268,11 +268,11 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
+            public TItem Versioning;
             public TItem Script;
             public TItem MagicSchool;
             public TItem VisualEffect;
             public TItem Flags;
-            public TItem Versioning;
             #endregion
 
             #region Equals
@@ -285,21 +285,21 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.Script, rhs.Script)) return false;
                 if (!object.Equals(this.MagicSchool, rhs.MagicSchool)) return false;
                 if (!object.Equals(this.VisualEffect, rhs.VisualEffect)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Versioning);
                 hash.Add(this.Script);
                 hash.Add(this.MagicSchool);
                 hash.Add(this.VisualEffect);
                 hash.Add(this.Flags);
-                hash.Add(this.Versioning);
                 return hash.ToHashCode();
             }
 
@@ -308,11 +308,11 @@ namespace Mutagen.Bethesda.Oblivion
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Versioning)) return false;
                 if (!eval(this.Script)) return false;
                 if (!eval(this.MagicSchool)) return false;
                 if (!eval(this.VisualEffect)) return false;
                 if (!eval(this.Flags)) return false;
-                if (!eval(this.Versioning)) return false;
                 return true;
             }
             #endregion
@@ -320,11 +320,11 @@ namespace Mutagen.Bethesda.Oblivion
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Versioning)) return true;
                 if (eval(this.Script)) return true;
                 if (eval(this.MagicSchool)) return true;
                 if (eval(this.VisualEffect)) return true;
                 if (eval(this.Flags)) return true;
-                if (eval(this.Versioning)) return true;
                 return false;
             }
             #endregion
@@ -339,11 +339,11 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Versioning = eval(this.Versioning);
                 obj.Script = eval(this.Script);
                 obj.MagicSchool = eval(this.MagicSchool);
                 obj.VisualEffect = eval(this.VisualEffect);
                 obj.Flags = eval(this.Flags);
-                obj.Versioning = eval(this.Versioning);
             }
             #endregion
 
@@ -366,6 +366,10 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Versioning ?? true)
+                    {
+                        fg.AppendItem(Versioning, "Versioning");
+                    }
                     if (printMask?.Script ?? true)
                     {
                         fg.AppendItem(Script, "Script");
@@ -381,10 +385,6 @@ namespace Mutagen.Bethesda.Oblivion
                     if (printMask?.Flags ?? true)
                     {
                         fg.AppendItem(Flags, "Flags");
-                    }
-                    if (printMask?.Versioning ?? true)
-                    {
-                        fg.AppendItem(Versioning, "Versioning");
                     }
                 }
                 fg.AppendLine("]");
@@ -411,11 +411,11 @@ namespace Mutagen.Bethesda.Oblivion
                     return _warnings;
                 }
             }
+            public Exception? Versioning;
             public Exception? Script;
             public Exception? MagicSchool;
             public Exception? VisualEffect;
             public Exception? Flags;
-            public Exception? Versioning;
             #endregion
 
             #region IErrorMask
@@ -424,6 +424,8 @@ namespace Mutagen.Bethesda.Oblivion
                 ScriptEffectData_FieldIndex enu = (ScriptEffectData_FieldIndex)index;
                 switch (enu)
                 {
+                    case ScriptEffectData_FieldIndex.Versioning:
+                        return Versioning;
                     case ScriptEffectData_FieldIndex.Script:
                         return Script;
                     case ScriptEffectData_FieldIndex.MagicSchool:
@@ -432,8 +434,6 @@ namespace Mutagen.Bethesda.Oblivion
                         return VisualEffect;
                     case ScriptEffectData_FieldIndex.Flags:
                         return Flags;
-                    case ScriptEffectData_FieldIndex.Versioning:
-                        return Versioning;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -444,6 +444,9 @@ namespace Mutagen.Bethesda.Oblivion
                 ScriptEffectData_FieldIndex enu = (ScriptEffectData_FieldIndex)index;
                 switch (enu)
                 {
+                    case ScriptEffectData_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
                     case ScriptEffectData_FieldIndex.Script:
                         this.Script = ex;
                         break;
@@ -456,9 +459,6 @@ namespace Mutagen.Bethesda.Oblivion
                     case ScriptEffectData_FieldIndex.Flags:
                         this.Flags = ex;
                         break;
-                    case ScriptEffectData_FieldIndex.Versioning:
-                        this.Versioning = ex;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -469,6 +469,9 @@ namespace Mutagen.Bethesda.Oblivion
                 ScriptEffectData_FieldIndex enu = (ScriptEffectData_FieldIndex)index;
                 switch (enu)
                 {
+                    case ScriptEffectData_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
                     case ScriptEffectData_FieldIndex.Script:
                         this.Script = (Exception?)obj;
                         break;
@@ -481,9 +484,6 @@ namespace Mutagen.Bethesda.Oblivion
                     case ScriptEffectData_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
-                    case ScriptEffectData_FieldIndex.Versioning:
-                        this.Versioning = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -492,11 +492,11 @@ namespace Mutagen.Bethesda.Oblivion
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Versioning != null) return true;
                 if (Script != null) return true;
                 if (MagicSchool != null) return true;
                 if (VisualEffect != null) return true;
                 if (Flags != null) return true;
-                if (Versioning != null) return true;
                 return false;
             }
             #endregion
@@ -531,11 +531,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
+                fg.AppendItem(Versioning, "Versioning");
                 fg.AppendItem(Script, "Script");
                 fg.AppendItem(MagicSchool, "MagicSchool");
                 fg.AppendItem(VisualEffect, "VisualEffect");
                 fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Versioning, "Versioning");
             }
             #endregion
 
@@ -544,11 +544,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.Script = this.Script.Combine(rhs.Script);
                 ret.MagicSchool = this.MagicSchool.Combine(rhs.MagicSchool);
                 ret.VisualEffect = this.VisualEffect.Combine(rhs.VisualEffect);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -570,21 +570,21 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public bool Versioning;
             public bool Script;
             public bool MagicSchool;
             public bool VisualEffect;
             public bool Flags;
-            public bool Versioning;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.Versioning = defaultOn;
                 this.Script = defaultOn;
                 this.MagicSchool = defaultOn;
                 this.VisualEffect = defaultOn;
                 this.Flags = defaultOn;
-                this.Versioning = defaultOn;
             }
 
             #endregion
@@ -600,11 +600,11 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Versioning, null));
                 ret.Add((Script, null));
                 ret.Add((MagicSchool, null));
                 ret.Add((VisualEffect, null));
                 ret.Add((Flags, null));
-                ret.Add((Versioning, null));
             }
         }
         #endregion
@@ -682,11 +682,11 @@ namespace Mutagen.Bethesda.Oblivion
         IScriptEffectDataGetter,
         ILoquiObjectSetter<IScriptEffectData>
     {
+        new ScriptEffectData.VersioningBreaks Versioning { get; set; }
         new IFormLink<Script> Script { get; }
         new MagicSchool MagicSchool { get; set; }
         new IEDIDLink<MagicEffect> VisualEffect { get; }
         new ScriptEffect.Flag Flags { get; set; }
-        new ScriptEffectData.VersioningBreaks Versioning { get; set; }
     }
 
     public partial interface IScriptEffectDataGetter :
@@ -702,11 +702,11 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        ScriptEffectData.VersioningBreaks Versioning { get; }
         IFormLinkGetter<IScriptGetter> Script { get; }
         MagicSchool MagicSchool { get; }
         IEDIDLinkGetter<IMagicEffectGetter> VisualEffect { get; }
         ScriptEffect.Flag Flags { get; }
-        ScriptEffectData.VersioningBreaks Versioning { get; }
 
     }
 
@@ -1013,11 +1013,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum ScriptEffectData_FieldIndex
     {
-        Script = 0,
-        MagicSchool = 1,
-        VisualEffect = 2,
-        Flags = 3,
-        Versioning = 4,
+        Versioning = 0,
+        Script = 1,
+        MagicSchool = 2,
+        VisualEffect = 3,
+        Flags = 4,
     }
     #endregion
 
@@ -1067,6 +1067,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
+                case "VERSIONING":
+                    return (ushort)ScriptEffectData_FieldIndex.Versioning;
                 case "SCRIPT":
                     return (ushort)ScriptEffectData_FieldIndex.Script;
                 case "MAGICSCHOOL":
@@ -1075,8 +1077,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)ScriptEffectData_FieldIndex.VisualEffect;
                 case "FLAGS":
                     return (ushort)ScriptEffectData_FieldIndex.Flags;
-                case "VERSIONING":
-                    return (ushort)ScriptEffectData_FieldIndex.Versioning;
                 default:
                     return null;
             }
@@ -1087,11 +1087,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptEffectData_FieldIndex enu = (ScriptEffectData_FieldIndex)index;
             switch (enu)
             {
+                case ScriptEffectData_FieldIndex.Versioning:
                 case ScriptEffectData_FieldIndex.Script:
                 case ScriptEffectData_FieldIndex.MagicSchool:
                 case ScriptEffectData_FieldIndex.VisualEffect:
                 case ScriptEffectData_FieldIndex.Flags:
-                case ScriptEffectData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1103,11 +1103,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptEffectData_FieldIndex enu = (ScriptEffectData_FieldIndex)index;
             switch (enu)
             {
+                case ScriptEffectData_FieldIndex.Versioning:
                 case ScriptEffectData_FieldIndex.Script:
                 case ScriptEffectData_FieldIndex.MagicSchool:
                 case ScriptEffectData_FieldIndex.VisualEffect:
                 case ScriptEffectData_FieldIndex.Flags:
-                case ScriptEffectData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1119,11 +1119,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptEffectData_FieldIndex enu = (ScriptEffectData_FieldIndex)index;
             switch (enu)
             {
+                case ScriptEffectData_FieldIndex.Versioning:
                 case ScriptEffectData_FieldIndex.Script:
                 case ScriptEffectData_FieldIndex.MagicSchool:
                 case ScriptEffectData_FieldIndex.VisualEffect:
                 case ScriptEffectData_FieldIndex.Flags:
-                case ScriptEffectData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1135,6 +1135,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptEffectData_FieldIndex enu = (ScriptEffectData_FieldIndex)index;
             switch (enu)
             {
+                case ScriptEffectData_FieldIndex.Versioning:
+                    return "Versioning";
                 case ScriptEffectData_FieldIndex.Script:
                     return "Script";
                 case ScriptEffectData_FieldIndex.MagicSchool:
@@ -1143,8 +1145,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "VisualEffect";
                 case ScriptEffectData_FieldIndex.Flags:
                     return "Flags";
-                case ScriptEffectData_FieldIndex.Versioning:
-                    return "Versioning";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1155,11 +1155,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptEffectData_FieldIndex enu = (ScriptEffectData_FieldIndex)index;
             switch (enu)
             {
+                case ScriptEffectData_FieldIndex.Versioning:
                 case ScriptEffectData_FieldIndex.Script:
                 case ScriptEffectData_FieldIndex.MagicSchool:
                 case ScriptEffectData_FieldIndex.VisualEffect:
                 case ScriptEffectData_FieldIndex.Flags:
-                case ScriptEffectData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1171,11 +1171,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptEffectData_FieldIndex enu = (ScriptEffectData_FieldIndex)index;
             switch (enu)
             {
+                case ScriptEffectData_FieldIndex.Versioning:
                 case ScriptEffectData_FieldIndex.Script:
                 case ScriptEffectData_FieldIndex.MagicSchool:
                 case ScriptEffectData_FieldIndex.VisualEffect:
                 case ScriptEffectData_FieldIndex.Flags:
-                case ScriptEffectData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1187,6 +1187,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptEffectData_FieldIndex enu = (ScriptEffectData_FieldIndex)index;
             switch (enu)
             {
+                case ScriptEffectData_FieldIndex.Versioning:
+                    return typeof(ScriptEffectData.VersioningBreaks);
                 case ScriptEffectData_FieldIndex.Script:
                     return typeof(IFormLink<Script>);
                 case ScriptEffectData_FieldIndex.MagicSchool:
@@ -1195,8 +1197,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(IEDIDLink<MagicEffect>);
                 case ScriptEffectData_FieldIndex.Flags:
                     return typeof(ScriptEffect.Flag);
-                case ScriptEffectData_FieldIndex.Versioning:
-                    return typeof(ScriptEffectData.VersioningBreaks);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1249,11 +1249,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IScriptEffectData item)
         {
             ClearPartial();
+            item.Versioning = default;
             item.Script.FormKey = FormKey.Null;
             item.MagicSchool = default;
             item.VisualEffect.EDID = RecordType.Null;
             item.Flags = default;
-            item.Versioning = default;
         }
         
         #region Xml Translation
@@ -1353,11 +1353,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Script = object.Equals(item.Script, rhs.Script);
             ret.MagicSchool = item.MagicSchool == rhs.MagicSchool;
             ret.VisualEffect = object.Equals(item.VisualEffect, rhs.VisualEffect);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Versioning = item.Versioning == rhs.Versioning;
         }
         
         public string ToString(
@@ -1404,6 +1404,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             ScriptEffectData.Mask<bool>? printMask = null)
         {
+            if (printMask?.Versioning ?? true)
+            {
+                fg.AppendItem(item.Versioning, "Versioning");
+            }
             if (printMask?.Script ?? true)
             {
                 fg.AppendItem(item.Script, "Script");
@@ -1420,10 +1424,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(item.Flags, "Flags");
             }
-            if (printMask?.Versioning ?? true)
-            {
-                fg.AppendItem(item.Versioning, "Versioning");
-            }
         }
         
         public bool HasBeenSet(
@@ -1437,11 +1437,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptEffectDataGetter item,
             ScriptEffectData.Mask<bool> mask)
         {
+            mask.Versioning = true;
             mask.Script = true;
             mask.MagicSchool = true;
             mask.VisualEffect = true;
             mask.Flags = true;
-            mask.Versioning = true;
         }
         
         #region Equals and Hash
@@ -1451,22 +1451,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
+            if (lhs.Versioning != rhs.Versioning) return false;
             if (!lhs.Script.Equals(rhs.Script)) return false;
             if (lhs.MagicSchool != rhs.MagicSchool) return false;
             if (!lhs.VisualEffect.Equals(rhs.VisualEffect)) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.Versioning != rhs.Versioning) return false;
             return true;
         }
         
         public virtual int GetHashCode(IScriptEffectDataGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Versioning);
             hash.Add(item.Script);
             hash.Add(item.MagicSchool);
             hash.Add(item.VisualEffect);
             hash.Add(item.Flags);
-            hash.Add(item.Versioning);
             return hash.ToHashCode();
         }
         
@@ -1500,10 +1500,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
+            if ((copyMask?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.Versioning) ?? true))
+            {
+                item.Versioning = rhs.Versioning;
+            }
             if ((copyMask?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.Script) ?? true))
             {
                 item.Script.FormKey = rhs.Script.FormKey;
             }
+            if (rhs.Versioning.HasFlag(ScriptEffectData.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.MagicSchool) ?? true))
             {
                 item.MagicSchool = rhs.MagicSchool;
@@ -1512,13 +1517,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.VisualEffect.EDID = rhs.VisualEffect.EDID;
             }
+            if (rhs.Versioning.HasFlag(ScriptEffectData.VersioningBreaks.Break1)) return;
             if ((copyMask?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.Versioning) ?? true))
-            {
-                item.Versioning = rhs.Versioning;
             }
         }
         
@@ -1609,6 +1611,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
+            if ((translationMask?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.Versioning) ?? true))
+            {
+                EnumXmlTranslation<ScriptEffectData.VersioningBreaks>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Versioning),
+                    item: item.Versioning,
+                    fieldIndex: (int)ScriptEffectData_FieldIndex.Versioning,
+                    errorMask: errorMask);
+            }
             if ((translationMask?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.Script) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
@@ -1643,15 +1654,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)ScriptEffectData_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.Versioning) ?? true))
-            {
-                EnumXmlTranslation<ScriptEffectData.VersioningBreaks>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Versioning),
-                    item: item.Versioning,
-                    fieldIndex: (int)ScriptEffectData_FieldIndex.Versioning,
                     errorMask: errorMask);
             }
         }
@@ -1760,6 +1762,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
+                case "Versioning":
+                    errorMask?.PushIndex((int)ScriptEffectData_FieldIndex.Versioning);
+                    try
+                    {
+                        item.Versioning = EnumXmlTranslation<ScriptEffectData.VersioningBreaks>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "Script":
                     errorMask?.PushIndex((int)ScriptEffectData_FieldIndex.Script);
                     try
@@ -1819,24 +1839,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         item.Flags = EnumXmlTranslation<ScriptEffect.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Versioning":
-                    errorMask?.PushIndex((int)ScriptEffectData_FieldIndex.Versioning);
-                    try
-                    {
-                        item.Versioning = EnumXmlTranslation<ScriptEffectData.VersioningBreaks>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

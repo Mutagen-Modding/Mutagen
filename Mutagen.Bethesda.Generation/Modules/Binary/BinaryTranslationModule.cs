@@ -1192,9 +1192,9 @@ namespace Mutagen.Bethesda.Generation
                         if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
                         if (fieldData.Binary == BinaryGenerationType.DoNothing) continue;
                         if (field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
-                        if (field is BreakType)
+                        if (field is BreakType breakType)
                         {
-                            fg.AppendLine($"if (!item.{VersioningModule.VersioningFieldName}.HasFlag({obj.Name}.{VersioningModule.VersioningEnumName}.Break{fieldData.BreakIndex}))");
+                            fg.AppendLine($"if (!item.{VersioningModule.VersioningFieldName}.HasFlag({obj.Name}.{VersioningModule.VersioningEnumName}.Break{breakType.Index}))");
                             fg.AppendLine("{");
                             fg.Depth++;
                         }
@@ -1882,7 +1882,7 @@ namespace Mutagen.Bethesda.Generation
                                                 fg.AppendLine($"ret.{VersioningModule.VersioningFieldName} |= {obj.ObjectName}.{VersioningModule.VersioningEnumName}.Break{breakIndex++};");
                                             }
                                         }
-                                        else
+                                        else if (field.GetFieldData().BinaryOverlayFallback != BinaryGenerationType.NoGeneration)
                                         {
                                             passedLen += typeGen.ExpectedLength(obj, field).Value;
                                         }

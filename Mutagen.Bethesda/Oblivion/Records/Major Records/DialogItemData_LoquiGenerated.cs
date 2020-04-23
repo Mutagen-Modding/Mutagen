@@ -45,14 +45,14 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
+        #region Versioning
+        public DialogItemData.VersioningBreaks Versioning { get; set; } = default;
+        #endregion
         #region DialogType
         public DialogType DialogType { get; set; } = default;
         #endregion
         #region Flags
         public DialogItem.Flag Flags { get; set; } = default;
-        #endregion
-        #region Versioning
-        public DialogItemData.VersioningBreaks Versioning { get; set; } = default;
         #endregion
 
         #region To String
@@ -224,19 +224,19 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Versioning = initialValue;
                 this.DialogType = initialValue;
                 this.Flags = initialValue;
-                this.Versioning = initialValue;
             }
 
             public Mask(
+                TItem Versioning,
                 TItem DialogType,
-                TItem Flags,
-                TItem Versioning)
+                TItem Flags)
             {
+                this.Versioning = Versioning;
                 this.DialogType = DialogType;
                 this.Flags = Flags;
-                this.Versioning = Versioning;
             }
 
             #pragma warning disable CS8618
@@ -248,9 +248,9 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
+            public TItem Versioning;
             public TItem DialogType;
             public TItem Flags;
-            public TItem Versioning;
             #endregion
 
             #region Equals
@@ -263,17 +263,17 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.DialogType, rhs.DialogType)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Versioning);
                 hash.Add(this.DialogType);
                 hash.Add(this.Flags);
-                hash.Add(this.Versioning);
                 return hash.ToHashCode();
             }
 
@@ -282,9 +282,9 @@ namespace Mutagen.Bethesda.Oblivion
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Versioning)) return false;
                 if (!eval(this.DialogType)) return false;
                 if (!eval(this.Flags)) return false;
-                if (!eval(this.Versioning)) return false;
                 return true;
             }
             #endregion
@@ -292,9 +292,9 @@ namespace Mutagen.Bethesda.Oblivion
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Versioning)) return true;
                 if (eval(this.DialogType)) return true;
                 if (eval(this.Flags)) return true;
-                if (eval(this.Versioning)) return true;
                 return false;
             }
             #endregion
@@ -309,9 +309,9 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Versioning = eval(this.Versioning);
                 obj.DialogType = eval(this.DialogType);
                 obj.Flags = eval(this.Flags);
-                obj.Versioning = eval(this.Versioning);
             }
             #endregion
 
@@ -334,6 +334,10 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Versioning ?? true)
+                    {
+                        fg.AppendItem(Versioning, "Versioning");
+                    }
                     if (printMask?.DialogType ?? true)
                     {
                         fg.AppendItem(DialogType, "DialogType");
@@ -341,10 +345,6 @@ namespace Mutagen.Bethesda.Oblivion
                     if (printMask?.Flags ?? true)
                     {
                         fg.AppendItem(Flags, "Flags");
-                    }
-                    if (printMask?.Versioning ?? true)
-                    {
-                        fg.AppendItem(Versioning, "Versioning");
                     }
                 }
                 fg.AppendLine("]");
@@ -371,9 +371,9 @@ namespace Mutagen.Bethesda.Oblivion
                     return _warnings;
                 }
             }
+            public Exception? Versioning;
             public Exception? DialogType;
             public Exception? Flags;
-            public Exception? Versioning;
             #endregion
 
             #region IErrorMask
@@ -382,12 +382,12 @@ namespace Mutagen.Bethesda.Oblivion
                 DialogItemData_FieldIndex enu = (DialogItemData_FieldIndex)index;
                 switch (enu)
                 {
+                    case DialogItemData_FieldIndex.Versioning:
+                        return Versioning;
                     case DialogItemData_FieldIndex.DialogType:
                         return DialogType;
                     case DialogItemData_FieldIndex.Flags:
                         return Flags;
-                    case DialogItemData_FieldIndex.Versioning:
-                        return Versioning;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -398,14 +398,14 @@ namespace Mutagen.Bethesda.Oblivion
                 DialogItemData_FieldIndex enu = (DialogItemData_FieldIndex)index;
                 switch (enu)
                 {
+                    case DialogItemData_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
                     case DialogItemData_FieldIndex.DialogType:
                         this.DialogType = ex;
                         break;
                     case DialogItemData_FieldIndex.Flags:
                         this.Flags = ex;
-                        break;
-                    case DialogItemData_FieldIndex.Versioning:
-                        this.Versioning = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -417,14 +417,14 @@ namespace Mutagen.Bethesda.Oblivion
                 DialogItemData_FieldIndex enu = (DialogItemData_FieldIndex)index;
                 switch (enu)
                 {
+                    case DialogItemData_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
                     case DialogItemData_FieldIndex.DialogType:
                         this.DialogType = (Exception?)obj;
                         break;
                     case DialogItemData_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
-                        break;
-                    case DialogItemData_FieldIndex.Versioning:
-                        this.Versioning = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -434,9 +434,9 @@ namespace Mutagen.Bethesda.Oblivion
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Versioning != null) return true;
                 if (DialogType != null) return true;
                 if (Flags != null) return true;
-                if (Versioning != null) return true;
                 return false;
             }
             #endregion
@@ -471,9 +471,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
+                fg.AppendItem(Versioning, "Versioning");
                 fg.AppendItem(DialogType, "DialogType");
                 fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Versioning, "Versioning");
             }
             #endregion
 
@@ -482,9 +482,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.DialogType = this.DialogType.Combine(rhs.DialogType);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -506,17 +506,17 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public bool Versioning;
             public bool DialogType;
             public bool Flags;
-            public bool Versioning;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.Versioning = defaultOn;
                 this.DialogType = defaultOn;
                 this.Flags = defaultOn;
-                this.Versioning = defaultOn;
             }
 
             #endregion
@@ -532,9 +532,9 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Versioning, null));
                 ret.Add((DialogType, null));
                 ret.Add((Flags, null));
-                ret.Add((Versioning, null));
             }
         }
         #endregion
@@ -609,9 +609,9 @@ namespace Mutagen.Bethesda.Oblivion
         IDialogItemDataGetter,
         ILoquiObjectSetter<IDialogItemData>
     {
+        new DialogItemData.VersioningBreaks Versioning { get; set; }
         new DialogType DialogType { get; set; }
         new DialogItem.Flag Flags { get; set; }
-        new DialogItemData.VersioningBreaks Versioning { get; set; }
     }
 
     public partial interface IDialogItemDataGetter :
@@ -626,9 +626,9 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        DialogItemData.VersioningBreaks Versioning { get; }
         DialogType DialogType { get; }
         DialogItem.Flag Flags { get; }
-        DialogItemData.VersioningBreaks Versioning { get; }
 
     }
 
@@ -935,9 +935,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum DialogItemData_FieldIndex
     {
-        DialogType = 0,
-        Flags = 1,
-        Versioning = 2,
+        Versioning = 0,
+        DialogType = 1,
+        Flags = 2,
     }
     #endregion
 
@@ -987,12 +987,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
+                case "VERSIONING":
+                    return (ushort)DialogItemData_FieldIndex.Versioning;
                 case "DIALOGTYPE":
                     return (ushort)DialogItemData_FieldIndex.DialogType;
                 case "FLAGS":
                     return (ushort)DialogItemData_FieldIndex.Flags;
-                case "VERSIONING":
-                    return (ushort)DialogItemData_FieldIndex.Versioning;
                 default:
                     return null;
             }
@@ -1003,9 +1003,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogItemData_FieldIndex enu = (DialogItemData_FieldIndex)index;
             switch (enu)
             {
+                case DialogItemData_FieldIndex.Versioning:
                 case DialogItemData_FieldIndex.DialogType:
                 case DialogItemData_FieldIndex.Flags:
-                case DialogItemData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1017,9 +1017,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogItemData_FieldIndex enu = (DialogItemData_FieldIndex)index;
             switch (enu)
             {
+                case DialogItemData_FieldIndex.Versioning:
                 case DialogItemData_FieldIndex.DialogType:
                 case DialogItemData_FieldIndex.Flags:
-                case DialogItemData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1031,9 +1031,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogItemData_FieldIndex enu = (DialogItemData_FieldIndex)index;
             switch (enu)
             {
+                case DialogItemData_FieldIndex.Versioning:
                 case DialogItemData_FieldIndex.DialogType:
                 case DialogItemData_FieldIndex.Flags:
-                case DialogItemData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1045,12 +1045,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogItemData_FieldIndex enu = (DialogItemData_FieldIndex)index;
             switch (enu)
             {
+                case DialogItemData_FieldIndex.Versioning:
+                    return "Versioning";
                 case DialogItemData_FieldIndex.DialogType:
                     return "DialogType";
                 case DialogItemData_FieldIndex.Flags:
                     return "Flags";
-                case DialogItemData_FieldIndex.Versioning:
-                    return "Versioning";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1061,9 +1061,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogItemData_FieldIndex enu = (DialogItemData_FieldIndex)index;
             switch (enu)
             {
+                case DialogItemData_FieldIndex.Versioning:
                 case DialogItemData_FieldIndex.DialogType:
                 case DialogItemData_FieldIndex.Flags:
-                case DialogItemData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1075,9 +1075,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogItemData_FieldIndex enu = (DialogItemData_FieldIndex)index;
             switch (enu)
             {
+                case DialogItemData_FieldIndex.Versioning:
                 case DialogItemData_FieldIndex.DialogType:
                 case DialogItemData_FieldIndex.Flags:
-                case DialogItemData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1089,12 +1089,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             DialogItemData_FieldIndex enu = (DialogItemData_FieldIndex)index;
             switch (enu)
             {
+                case DialogItemData_FieldIndex.Versioning:
+                    return typeof(DialogItemData.VersioningBreaks);
                 case DialogItemData_FieldIndex.DialogType:
                     return typeof(DialogType);
                 case DialogItemData_FieldIndex.Flags:
                     return typeof(DialogItem.Flag);
-                case DialogItemData_FieldIndex.Versioning:
-                    return typeof(DialogItemData.VersioningBreaks);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1147,9 +1147,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IDialogItemData item)
         {
             ClearPartial();
+            item.Versioning = default;
             item.DialogType = default;
             item.Flags = default;
-            item.Versioning = default;
         }
         
         #region Xml Translation
@@ -1238,9 +1238,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.DialogType = item.DialogType == rhs.DialogType;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Versioning = item.Versioning == rhs.Versioning;
         }
         
         public string ToString(
@@ -1287,6 +1287,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             DialogItemData.Mask<bool>? printMask = null)
         {
+            if (printMask?.Versioning ?? true)
+            {
+                fg.AppendItem(item.Versioning, "Versioning");
+            }
             if (printMask?.DialogType ?? true)
             {
                 fg.AppendItem(item.DialogType, "DialogType");
@@ -1294,10 +1298,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (printMask?.Flags ?? true)
             {
                 fg.AppendItem(item.Flags, "Flags");
-            }
-            if (printMask?.Versioning ?? true)
-            {
-                fg.AppendItem(item.Versioning, "Versioning");
             }
         }
         
@@ -1312,9 +1312,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogItemDataGetter item,
             DialogItemData.Mask<bool> mask)
         {
+            mask.Versioning = true;
             mask.DialogType = true;
             mask.Flags = true;
-            mask.Versioning = true;
         }
         
         #region Equals and Hash
@@ -1324,18 +1324,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
+            if (lhs.Versioning != rhs.Versioning) return false;
             if (lhs.DialogType != rhs.DialogType) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.Versioning != rhs.Versioning) return false;
             return true;
         }
         
         public virtual int GetHashCode(IDialogItemDataGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Versioning);
             hash.Add(item.DialogType);
             hash.Add(item.Flags);
-            hash.Add(item.Versioning);
             return hash.ToHashCode();
         }
         
@@ -1367,17 +1367,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
+            if ((copyMask?.GetShouldTranslate((int)DialogItemData_FieldIndex.Versioning) ?? true))
+            {
+                item.Versioning = rhs.Versioning;
+            }
             if ((copyMask?.GetShouldTranslate((int)DialogItemData_FieldIndex.DialogType) ?? true))
             {
                 item.DialogType = rhs.DialogType;
             }
+            if (rhs.Versioning.HasFlag(DialogItemData.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)DialogItemData_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
-            }
-            if ((copyMask?.GetShouldTranslate((int)DialogItemData_FieldIndex.Versioning) ?? true))
-            {
-                item.Versioning = rhs.Versioning;
             }
         }
         
@@ -1468,6 +1469,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
+            if ((translationMask?.GetShouldTranslate((int)DialogItemData_FieldIndex.Versioning) ?? true))
+            {
+                EnumXmlTranslation<DialogItemData.VersioningBreaks>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Versioning),
+                    item: item.Versioning,
+                    fieldIndex: (int)DialogItemData_FieldIndex.Versioning,
+                    errorMask: errorMask);
+            }
             if ((translationMask?.GetShouldTranslate((int)DialogItemData_FieldIndex.DialogType) ?? true))
             {
                 EnumXmlTranslation<DialogType>.Instance.Write(
@@ -1484,15 +1494,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Flags),
                     item: item.Flags,
                     fieldIndex: (int)DialogItemData_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)DialogItemData_FieldIndex.Versioning) ?? true))
-            {
-                EnumXmlTranslation<DialogItemData.VersioningBreaks>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Versioning),
-                    item: item.Versioning,
-                    fieldIndex: (int)DialogItemData_FieldIndex.Versioning,
                     errorMask: errorMask);
             }
         }
@@ -1601,6 +1602,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
+                case "Versioning":
+                    errorMask?.PushIndex((int)DialogItemData_FieldIndex.Versioning);
+                    try
+                    {
+                        item.Versioning = EnumXmlTranslation<DialogItemData.VersioningBreaks>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "DialogType":
                     errorMask?.PushIndex((int)DialogItemData_FieldIndex.DialogType);
                     try
@@ -1624,24 +1643,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         item.Flags = EnumXmlTranslation<DialogItem.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Versioning":
-                    errorMask?.PushIndex((int)DialogItemData_FieldIndex.Versioning);
-                    try
-                    {
-                        item.Versioning = EnumXmlTranslation<DialogItemData.VersioningBreaks>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

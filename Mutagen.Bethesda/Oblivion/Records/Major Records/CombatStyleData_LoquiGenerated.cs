@@ -45,6 +45,9 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
+        #region Versioning
+        public CombatStyleData.VersioningBreaks Versioning { get; set; } = default;
+        #endregion
         #region DodgePercentChance
         public Byte DodgePercentChance { get; set; } = default;
         public static RangeUInt8 DodgePercentChance_Range = new RangeUInt8(0, 100);
@@ -164,9 +167,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region RushingAttackDistanceMult
         public Single RushingAttackDistanceMult { get; set; } = default;
-        #endregion
-        #region Versioning
-        public CombatStyleData.VersioningBreaks Versioning { get; set; } = default;
         #endregion
 
         #region To String
@@ -338,6 +338,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Versioning = initialValue;
                 this.DodgePercentChance = initialValue;
                 this.LeftRightPercentChance = initialValue;
                 this.DodgeLeftRightTimerMin = initialValue;
@@ -374,10 +375,10 @@ namespace Mutagen.Bethesda.Oblivion
                 this.GroupStandoffDistance = initialValue;
                 this.RushingAttackPercentChance = initialValue;
                 this.RushingAttackDistanceMult = initialValue;
-                this.Versioning = initialValue;
             }
 
             public Mask(
+                TItem Versioning,
                 TItem DodgePercentChance,
                 TItem LeftRightPercentChance,
                 TItem DodgeLeftRightTimerMin,
@@ -413,9 +414,9 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem RangedStandoffDistance,
                 TItem GroupStandoffDistance,
                 TItem RushingAttackPercentChance,
-                TItem RushingAttackDistanceMult,
-                TItem Versioning)
+                TItem RushingAttackDistanceMult)
             {
+                this.Versioning = Versioning;
                 this.DodgePercentChance = DodgePercentChance;
                 this.LeftRightPercentChance = LeftRightPercentChance;
                 this.DodgeLeftRightTimerMin = DodgeLeftRightTimerMin;
@@ -452,7 +453,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.GroupStandoffDistance = GroupStandoffDistance;
                 this.RushingAttackPercentChance = RushingAttackPercentChance;
                 this.RushingAttackDistanceMult = RushingAttackDistanceMult;
-                this.Versioning = Versioning;
             }
 
             #pragma warning disable CS8618
@@ -464,6 +464,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
+            public TItem Versioning;
             public TItem DodgePercentChance;
             public TItem LeftRightPercentChance;
             public TItem DodgeLeftRightTimerMin;
@@ -500,7 +501,6 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem GroupStandoffDistance;
             public TItem RushingAttackPercentChance;
             public TItem RushingAttackDistanceMult;
-            public TItem Versioning;
             #endregion
 
             #region Equals
@@ -513,6 +513,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.DodgePercentChance, rhs.DodgePercentChance)) return false;
                 if (!object.Equals(this.LeftRightPercentChance, rhs.LeftRightPercentChance)) return false;
                 if (!object.Equals(this.DodgeLeftRightTimerMin, rhs.DodgeLeftRightTimerMin)) return false;
@@ -549,12 +550,12 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.GroupStandoffDistance, rhs.GroupStandoffDistance)) return false;
                 if (!object.Equals(this.RushingAttackPercentChance, rhs.RushingAttackPercentChance)) return false;
                 if (!object.Equals(this.RushingAttackDistanceMult, rhs.RushingAttackDistanceMult)) return false;
-                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Versioning);
                 hash.Add(this.DodgePercentChance);
                 hash.Add(this.LeftRightPercentChance);
                 hash.Add(this.DodgeLeftRightTimerMin);
@@ -591,7 +592,6 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.GroupStandoffDistance);
                 hash.Add(this.RushingAttackPercentChance);
                 hash.Add(this.RushingAttackDistanceMult);
-                hash.Add(this.Versioning);
                 return hash.ToHashCode();
             }
 
@@ -600,6 +600,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Versioning)) return false;
                 if (!eval(this.DodgePercentChance)) return false;
                 if (!eval(this.LeftRightPercentChance)) return false;
                 if (!eval(this.DodgeLeftRightTimerMin)) return false;
@@ -636,7 +637,6 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.GroupStandoffDistance)) return false;
                 if (!eval(this.RushingAttackPercentChance)) return false;
                 if (!eval(this.RushingAttackDistanceMult)) return false;
-                if (!eval(this.Versioning)) return false;
                 return true;
             }
             #endregion
@@ -644,6 +644,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Versioning)) return true;
                 if (eval(this.DodgePercentChance)) return true;
                 if (eval(this.LeftRightPercentChance)) return true;
                 if (eval(this.DodgeLeftRightTimerMin)) return true;
@@ -680,7 +681,6 @@ namespace Mutagen.Bethesda.Oblivion
                 if (eval(this.GroupStandoffDistance)) return true;
                 if (eval(this.RushingAttackPercentChance)) return true;
                 if (eval(this.RushingAttackDistanceMult)) return true;
-                if (eval(this.Versioning)) return true;
                 return false;
             }
             #endregion
@@ -695,6 +695,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Versioning = eval(this.Versioning);
                 obj.DodgePercentChance = eval(this.DodgePercentChance);
                 obj.LeftRightPercentChance = eval(this.LeftRightPercentChance);
                 obj.DodgeLeftRightTimerMin = eval(this.DodgeLeftRightTimerMin);
@@ -731,7 +732,6 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.GroupStandoffDistance = eval(this.GroupStandoffDistance);
                 obj.RushingAttackPercentChance = eval(this.RushingAttackPercentChance);
                 obj.RushingAttackDistanceMult = eval(this.RushingAttackDistanceMult);
-                obj.Versioning = eval(this.Versioning);
             }
             #endregion
 
@@ -754,6 +754,10 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Versioning ?? true)
+                    {
+                        fg.AppendItem(Versioning, "Versioning");
+                    }
                     if (printMask?.DodgePercentChance ?? true)
                     {
                         fg.AppendItem(DodgePercentChance, "DodgePercentChance");
@@ -898,10 +902,6 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendItem(RushingAttackDistanceMult, "RushingAttackDistanceMult");
                     }
-                    if (printMask?.Versioning ?? true)
-                    {
-                        fg.AppendItem(Versioning, "Versioning");
-                    }
                 }
                 fg.AppendLine("]");
             }
@@ -927,6 +927,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return _warnings;
                 }
             }
+            public Exception? Versioning;
             public Exception? DodgePercentChance;
             public Exception? LeftRightPercentChance;
             public Exception? DodgeLeftRightTimerMin;
@@ -963,7 +964,6 @@ namespace Mutagen.Bethesda.Oblivion
             public Exception? GroupStandoffDistance;
             public Exception? RushingAttackPercentChance;
             public Exception? RushingAttackDistanceMult;
-            public Exception? Versioning;
             #endregion
 
             #region IErrorMask
@@ -972,6 +972,8 @@ namespace Mutagen.Bethesda.Oblivion
                 CombatStyleData_FieldIndex enu = (CombatStyleData_FieldIndex)index;
                 switch (enu)
                 {
+                    case CombatStyleData_FieldIndex.Versioning:
+                        return Versioning;
                     case CombatStyleData_FieldIndex.DodgePercentChance:
                         return DodgePercentChance;
                     case CombatStyleData_FieldIndex.LeftRightPercentChance:
@@ -1044,8 +1046,6 @@ namespace Mutagen.Bethesda.Oblivion
                         return RushingAttackPercentChance;
                     case CombatStyleData_FieldIndex.RushingAttackDistanceMult:
                         return RushingAttackDistanceMult;
-                    case CombatStyleData_FieldIndex.Versioning:
-                        return Versioning;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1056,6 +1056,9 @@ namespace Mutagen.Bethesda.Oblivion
                 CombatStyleData_FieldIndex enu = (CombatStyleData_FieldIndex)index;
                 switch (enu)
                 {
+                    case CombatStyleData_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
                     case CombatStyleData_FieldIndex.DodgePercentChance:
                         this.DodgePercentChance = ex;
                         break;
@@ -1164,9 +1167,6 @@ namespace Mutagen.Bethesda.Oblivion
                     case CombatStyleData_FieldIndex.RushingAttackDistanceMult:
                         this.RushingAttackDistanceMult = ex;
                         break;
-                    case CombatStyleData_FieldIndex.Versioning:
-                        this.Versioning = ex;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1177,6 +1177,9 @@ namespace Mutagen.Bethesda.Oblivion
                 CombatStyleData_FieldIndex enu = (CombatStyleData_FieldIndex)index;
                 switch (enu)
                 {
+                    case CombatStyleData_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
                     case CombatStyleData_FieldIndex.DodgePercentChance:
                         this.DodgePercentChance = (Exception?)obj;
                         break;
@@ -1285,9 +1288,6 @@ namespace Mutagen.Bethesda.Oblivion
                     case CombatStyleData_FieldIndex.RushingAttackDistanceMult:
                         this.RushingAttackDistanceMult = (Exception?)obj;
                         break;
-                    case CombatStyleData_FieldIndex.Versioning:
-                        this.Versioning = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1296,6 +1296,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Versioning != null) return true;
                 if (DodgePercentChance != null) return true;
                 if (LeftRightPercentChance != null) return true;
                 if (DodgeLeftRightTimerMin != null) return true;
@@ -1332,7 +1333,6 @@ namespace Mutagen.Bethesda.Oblivion
                 if (GroupStandoffDistance != null) return true;
                 if (RushingAttackPercentChance != null) return true;
                 if (RushingAttackDistanceMult != null) return true;
-                if (Versioning != null) return true;
                 return false;
             }
             #endregion
@@ -1367,6 +1367,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
+                fg.AppendItem(Versioning, "Versioning");
                 fg.AppendItem(DodgePercentChance, "DodgePercentChance");
                 fg.AppendItem(LeftRightPercentChance, "LeftRightPercentChance");
                 fg.AppendItem(DodgeLeftRightTimerMin, "DodgeLeftRightTimerMin");
@@ -1403,7 +1404,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(GroupStandoffDistance, "GroupStandoffDistance");
                 fg.AppendItem(RushingAttackPercentChance, "RushingAttackPercentChance");
                 fg.AppendItem(RushingAttackDistanceMult, "RushingAttackDistanceMult");
-                fg.AppendItem(Versioning, "Versioning");
             }
             #endregion
 
@@ -1412,6 +1412,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.DodgePercentChance = this.DodgePercentChance.Combine(rhs.DodgePercentChance);
                 ret.LeftRightPercentChance = this.LeftRightPercentChance.Combine(rhs.LeftRightPercentChance);
                 ret.DodgeLeftRightTimerMin = this.DodgeLeftRightTimerMin.Combine(rhs.DodgeLeftRightTimerMin);
@@ -1448,7 +1449,6 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.GroupStandoffDistance = this.GroupStandoffDistance.Combine(rhs.GroupStandoffDistance);
                 ret.RushingAttackPercentChance = this.RushingAttackPercentChance.Combine(rhs.RushingAttackPercentChance);
                 ret.RushingAttackDistanceMult = this.RushingAttackDistanceMult.Combine(rhs.RushingAttackDistanceMult);
-                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1470,6 +1470,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public bool Versioning;
             public bool DodgePercentChance;
             public bool LeftRightPercentChance;
             public bool DodgeLeftRightTimerMin;
@@ -1506,12 +1507,12 @@ namespace Mutagen.Bethesda.Oblivion
             public bool GroupStandoffDistance;
             public bool RushingAttackPercentChance;
             public bool RushingAttackDistanceMult;
-            public bool Versioning;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.Versioning = defaultOn;
                 this.DodgePercentChance = defaultOn;
                 this.LeftRightPercentChance = defaultOn;
                 this.DodgeLeftRightTimerMin = defaultOn;
@@ -1548,7 +1549,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.GroupStandoffDistance = defaultOn;
                 this.RushingAttackPercentChance = defaultOn;
                 this.RushingAttackDistanceMult = defaultOn;
-                this.Versioning = defaultOn;
             }
 
             #endregion
@@ -1564,6 +1564,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Versioning, null));
                 ret.Add((DodgePercentChance, null));
                 ret.Add((LeftRightPercentChance, null));
                 ret.Add((DodgeLeftRightTimerMin, null));
@@ -1600,7 +1601,6 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((GroupStandoffDistance, null));
                 ret.Add((RushingAttackPercentChance, null));
                 ret.Add((RushingAttackDistanceMult, null));
-                ret.Add((Versioning, null));
             }
         }
         #endregion
@@ -1679,6 +1679,7 @@ namespace Mutagen.Bethesda.Oblivion
         ICombatStyleDataGetter,
         ILoquiObjectSetter<ICombatStyleData>
     {
+        new CombatStyleData.VersioningBreaks Versioning { get; set; }
         new Byte DodgePercentChance { get; set; }
         new Byte LeftRightPercentChance { get; set; }
         new Single DodgeLeftRightTimerMin { get; set; }
@@ -1715,7 +1716,6 @@ namespace Mutagen.Bethesda.Oblivion
         new Single GroupStandoffDistance { get; set; }
         new Byte RushingAttackPercentChance { get; set; }
         new Single RushingAttackDistanceMult { get; set; }
-        new CombatStyleData.VersioningBreaks Versioning { get; set; }
     }
 
     public partial interface ICombatStyleDataGetter :
@@ -1730,6 +1730,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        CombatStyleData.VersioningBreaks Versioning { get; }
         Byte DodgePercentChance { get; }
         Byte LeftRightPercentChance { get; }
         Single DodgeLeftRightTimerMin { get; }
@@ -1766,7 +1767,6 @@ namespace Mutagen.Bethesda.Oblivion
         Single GroupStandoffDistance { get; }
         Byte RushingAttackPercentChance { get; }
         Single RushingAttackDistanceMult { get; }
-        CombatStyleData.VersioningBreaks Versioning { get; }
 
     }
 
@@ -2073,43 +2073,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum CombatStyleData_FieldIndex
     {
-        DodgePercentChance = 0,
-        LeftRightPercentChance = 1,
-        DodgeLeftRightTimerMin = 2,
-        DodgeLeftRightTimerMax = 3,
-        DodgeForwardTimerMin = 4,
-        DodgeForwardTimerMax = 5,
-        DodgeBackTimerMin = 6,
-        DodgeBackTimerMax = 7,
-        IdleTimerMin = 8,
-        IdleTimerMax = 9,
-        BlockPercentChance = 10,
-        AttackPercentChance = 11,
-        RecoilStaggerBonusToAttack = 12,
-        UnconsciousBonusToAttack = 13,
-        HandToHandBonusToAttack = 14,
-        PowerAttackPercentChance = 15,
-        RecoilStaggerBonusToPowerAttack = 16,
-        UnconsciousBonusToPowerAttack = 17,
-        PowerAttackNormal = 18,
-        PowerAttackForward = 19,
-        PowerAttackBack = 20,
-        PowerAttackLeft = 21,
-        PowerAttackRight = 22,
-        HoldTimerMin = 23,
-        HoldTimerMax = 24,
-        Flags = 25,
-        AcrobaticDodgePercentChance = 26,
-        RangeMultOptimal = 27,
-        RangeMultMax = 28,
-        SwitchDistanceMelee = 29,
-        SwitchDistanceRanged = 30,
-        BuffStandoffDistance = 31,
-        RangedStandoffDistance = 32,
-        GroupStandoffDistance = 33,
-        RushingAttackPercentChance = 34,
-        RushingAttackDistanceMult = 35,
-        Versioning = 36,
+        Versioning = 0,
+        DodgePercentChance = 1,
+        LeftRightPercentChance = 2,
+        DodgeLeftRightTimerMin = 3,
+        DodgeLeftRightTimerMax = 4,
+        DodgeForwardTimerMin = 5,
+        DodgeForwardTimerMax = 6,
+        DodgeBackTimerMin = 7,
+        DodgeBackTimerMax = 8,
+        IdleTimerMin = 9,
+        IdleTimerMax = 10,
+        BlockPercentChance = 11,
+        AttackPercentChance = 12,
+        RecoilStaggerBonusToAttack = 13,
+        UnconsciousBonusToAttack = 14,
+        HandToHandBonusToAttack = 15,
+        PowerAttackPercentChance = 16,
+        RecoilStaggerBonusToPowerAttack = 17,
+        UnconsciousBonusToPowerAttack = 18,
+        PowerAttackNormal = 19,
+        PowerAttackForward = 20,
+        PowerAttackBack = 21,
+        PowerAttackLeft = 22,
+        PowerAttackRight = 23,
+        HoldTimerMin = 24,
+        HoldTimerMax = 25,
+        Flags = 26,
+        AcrobaticDodgePercentChance = 27,
+        RangeMultOptimal = 28,
+        RangeMultMax = 29,
+        SwitchDistanceMelee = 30,
+        SwitchDistanceRanged = 31,
+        BuffStandoffDistance = 32,
+        RangedStandoffDistance = 33,
+        GroupStandoffDistance = 34,
+        RushingAttackPercentChance = 35,
+        RushingAttackDistanceMult = 36,
     }
     #endregion
 
@@ -2159,6 +2159,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
+                case "VERSIONING":
+                    return (ushort)CombatStyleData_FieldIndex.Versioning;
                 case "DODGEPERCENTCHANCE":
                     return (ushort)CombatStyleData_FieldIndex.DodgePercentChance;
                 case "LEFTRIGHTPERCENTCHANCE":
@@ -2231,8 +2233,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)CombatStyleData_FieldIndex.RushingAttackPercentChance;
                 case "RUSHINGATTACKDISTANCEMULT":
                     return (ushort)CombatStyleData_FieldIndex.RushingAttackDistanceMult;
-                case "VERSIONING":
-                    return (ushort)CombatStyleData_FieldIndex.Versioning;
                 default:
                     return null;
             }
@@ -2243,6 +2243,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CombatStyleData_FieldIndex enu = (CombatStyleData_FieldIndex)index;
             switch (enu)
             {
+                case CombatStyleData_FieldIndex.Versioning:
                 case CombatStyleData_FieldIndex.DodgePercentChance:
                 case CombatStyleData_FieldIndex.LeftRightPercentChance:
                 case CombatStyleData_FieldIndex.DodgeLeftRightTimerMin:
@@ -2279,7 +2280,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case CombatStyleData_FieldIndex.GroupStandoffDistance:
                 case CombatStyleData_FieldIndex.RushingAttackPercentChance:
                 case CombatStyleData_FieldIndex.RushingAttackDistanceMult:
-                case CombatStyleData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2291,6 +2291,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CombatStyleData_FieldIndex enu = (CombatStyleData_FieldIndex)index;
             switch (enu)
             {
+                case CombatStyleData_FieldIndex.Versioning:
                 case CombatStyleData_FieldIndex.DodgePercentChance:
                 case CombatStyleData_FieldIndex.LeftRightPercentChance:
                 case CombatStyleData_FieldIndex.DodgeLeftRightTimerMin:
@@ -2327,7 +2328,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case CombatStyleData_FieldIndex.GroupStandoffDistance:
                 case CombatStyleData_FieldIndex.RushingAttackPercentChance:
                 case CombatStyleData_FieldIndex.RushingAttackDistanceMult:
-                case CombatStyleData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2339,6 +2339,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CombatStyleData_FieldIndex enu = (CombatStyleData_FieldIndex)index;
             switch (enu)
             {
+                case CombatStyleData_FieldIndex.Versioning:
                 case CombatStyleData_FieldIndex.DodgePercentChance:
                 case CombatStyleData_FieldIndex.LeftRightPercentChance:
                 case CombatStyleData_FieldIndex.DodgeLeftRightTimerMin:
@@ -2375,7 +2376,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case CombatStyleData_FieldIndex.GroupStandoffDistance:
                 case CombatStyleData_FieldIndex.RushingAttackPercentChance:
                 case CombatStyleData_FieldIndex.RushingAttackDistanceMult:
-                case CombatStyleData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2387,6 +2387,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CombatStyleData_FieldIndex enu = (CombatStyleData_FieldIndex)index;
             switch (enu)
             {
+                case CombatStyleData_FieldIndex.Versioning:
+                    return "Versioning";
                 case CombatStyleData_FieldIndex.DodgePercentChance:
                     return "DodgePercentChance";
                 case CombatStyleData_FieldIndex.LeftRightPercentChance:
@@ -2459,8 +2461,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "RushingAttackPercentChance";
                 case CombatStyleData_FieldIndex.RushingAttackDistanceMult:
                     return "RushingAttackDistanceMult";
-                case CombatStyleData_FieldIndex.Versioning:
-                    return "Versioning";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2471,6 +2471,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CombatStyleData_FieldIndex enu = (CombatStyleData_FieldIndex)index;
             switch (enu)
             {
+                case CombatStyleData_FieldIndex.Versioning:
                 case CombatStyleData_FieldIndex.DodgePercentChance:
                 case CombatStyleData_FieldIndex.LeftRightPercentChance:
                 case CombatStyleData_FieldIndex.DodgeLeftRightTimerMin:
@@ -2507,7 +2508,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case CombatStyleData_FieldIndex.GroupStandoffDistance:
                 case CombatStyleData_FieldIndex.RushingAttackPercentChance:
                 case CombatStyleData_FieldIndex.RushingAttackDistanceMult:
-                case CombatStyleData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2519,6 +2519,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CombatStyleData_FieldIndex enu = (CombatStyleData_FieldIndex)index;
             switch (enu)
             {
+                case CombatStyleData_FieldIndex.Versioning:
                 case CombatStyleData_FieldIndex.DodgePercentChance:
                 case CombatStyleData_FieldIndex.LeftRightPercentChance:
                 case CombatStyleData_FieldIndex.DodgeLeftRightTimerMin:
@@ -2555,7 +2556,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case CombatStyleData_FieldIndex.GroupStandoffDistance:
                 case CombatStyleData_FieldIndex.RushingAttackPercentChance:
                 case CombatStyleData_FieldIndex.RushingAttackDistanceMult:
-                case CombatStyleData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2567,6 +2567,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             CombatStyleData_FieldIndex enu = (CombatStyleData_FieldIndex)index;
             switch (enu)
             {
+                case CombatStyleData_FieldIndex.Versioning:
+                    return typeof(CombatStyleData.VersioningBreaks);
                 case CombatStyleData_FieldIndex.DodgePercentChance:
                     return typeof(Byte);
                 case CombatStyleData_FieldIndex.LeftRightPercentChance:
@@ -2639,8 +2641,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Byte);
                 case CombatStyleData_FieldIndex.RushingAttackDistanceMult:
                     return typeof(Single);
-                case CombatStyleData_FieldIndex.Versioning:
-                    return typeof(CombatStyleData.VersioningBreaks);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2693,6 +2693,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(ICombatStyleData item)
         {
             ClearPartial();
+            item.Versioning = default;
             item.DodgePercentChance = default;
             item.LeftRightPercentChance = default;
             item.DodgeLeftRightTimerMin = default;
@@ -2729,7 +2730,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.GroupStandoffDistance = default;
             item.RushingAttackPercentChance = default;
             item.RushingAttackDistanceMult = default;
-            item.Versioning = default;
         }
         
         #region Xml Translation
@@ -2881,6 +2881,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.DodgePercentChance = item.DodgePercentChance == rhs.DodgePercentChance;
             ret.LeftRightPercentChance = item.LeftRightPercentChance == rhs.LeftRightPercentChance;
             ret.DodgeLeftRightTimerMin = item.DodgeLeftRightTimerMin.EqualsWithin(rhs.DodgeLeftRightTimerMin);
@@ -2917,7 +2918,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.GroupStandoffDistance = item.GroupStandoffDistance.EqualsWithin(rhs.GroupStandoffDistance);
             ret.RushingAttackPercentChance = item.RushingAttackPercentChance == rhs.RushingAttackPercentChance;
             ret.RushingAttackDistanceMult = item.RushingAttackDistanceMult.EqualsWithin(rhs.RushingAttackDistanceMult);
-            ret.Versioning = item.Versioning == rhs.Versioning;
         }
         
         public string ToString(
@@ -2964,6 +2964,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             CombatStyleData.Mask<bool>? printMask = null)
         {
+            if (printMask?.Versioning ?? true)
+            {
+                fg.AppendItem(item.Versioning, "Versioning");
+            }
             if (printMask?.DodgePercentChance ?? true)
             {
                 fg.AppendItem(item.DodgePercentChance, "DodgePercentChance");
@@ -3108,10 +3112,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(item.RushingAttackDistanceMult, "RushingAttackDistanceMult");
             }
-            if (printMask?.Versioning ?? true)
-            {
-                fg.AppendItem(item.Versioning, "Versioning");
-            }
         }
         
         public bool HasBeenSet(
@@ -3125,6 +3125,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICombatStyleDataGetter item,
             CombatStyleData.Mask<bool> mask)
         {
+            mask.Versioning = true;
             mask.DodgePercentChance = true;
             mask.LeftRightPercentChance = true;
             mask.DodgeLeftRightTimerMin = true;
@@ -3161,7 +3162,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.GroupStandoffDistance = true;
             mask.RushingAttackPercentChance = true;
             mask.RushingAttackDistanceMult = true;
-            mask.Versioning = true;
         }
         
         #region Equals and Hash
@@ -3171,6 +3171,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
+            if (lhs.Versioning != rhs.Versioning) return false;
             if (lhs.DodgePercentChance != rhs.DodgePercentChance) return false;
             if (lhs.LeftRightPercentChance != rhs.LeftRightPercentChance) return false;
             if (!lhs.DodgeLeftRightTimerMin.EqualsWithin(rhs.DodgeLeftRightTimerMin)) return false;
@@ -3207,13 +3208,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!lhs.GroupStandoffDistance.EqualsWithin(rhs.GroupStandoffDistance)) return false;
             if (lhs.RushingAttackPercentChance != rhs.RushingAttackPercentChance) return false;
             if (!lhs.RushingAttackDistanceMult.EqualsWithin(rhs.RushingAttackDistanceMult)) return false;
-            if (lhs.Versioning != rhs.Versioning) return false;
             return true;
         }
         
         public virtual int GetHashCode(ICombatStyleDataGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Versioning);
             hash.Add(item.DodgePercentChance);
             hash.Add(item.LeftRightPercentChance);
             hash.Add(item.DodgeLeftRightTimerMin);
@@ -3250,7 +3251,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             hash.Add(item.GroupStandoffDistance);
             hash.Add(item.RushingAttackPercentChance);
             hash.Add(item.RushingAttackDistanceMult);
-            hash.Add(item.Versioning);
             return hash.ToHashCode();
         }
         
@@ -3282,6 +3282,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
+            if ((copyMask?.GetShouldTranslate((int)CombatStyleData_FieldIndex.Versioning) ?? true))
+            {
+                item.Versioning = rhs.Versioning;
+            }
             if ((copyMask?.GetShouldTranslate((int)CombatStyleData_FieldIndex.DodgePercentChance) ?? true))
             {
                 item.DodgePercentChance = rhs.DodgePercentChance;
@@ -3390,6 +3394,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.AcrobaticDodgePercentChance = rhs.AcrobaticDodgePercentChance;
             }
+            if (rhs.Versioning.HasFlag(CombatStyleData.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)CombatStyleData_FieldIndex.RangeMultOptimal) ?? true))
             {
                 item.RangeMultOptimal = rhs.RangeMultOptimal;
@@ -3398,6 +3403,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.RangeMultMax = rhs.RangeMultMax;
             }
+            if (rhs.Versioning.HasFlag(CombatStyleData.VersioningBreaks.Break1)) return;
             if ((copyMask?.GetShouldTranslate((int)CombatStyleData_FieldIndex.SwitchDistanceMelee) ?? true))
             {
                 item.SwitchDistanceMelee = rhs.SwitchDistanceMelee;
@@ -3410,6 +3416,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.BuffStandoffDistance = rhs.BuffStandoffDistance;
             }
+            if (rhs.Versioning.HasFlag(CombatStyleData.VersioningBreaks.Break2)) return;
             if ((copyMask?.GetShouldTranslate((int)CombatStyleData_FieldIndex.RangedStandoffDistance) ?? true))
             {
                 item.RangedStandoffDistance = rhs.RangedStandoffDistance;
@@ -3418,6 +3425,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.GroupStandoffDistance = rhs.GroupStandoffDistance;
             }
+            if (rhs.Versioning.HasFlag(CombatStyleData.VersioningBreaks.Break3)) return;
             if ((copyMask?.GetShouldTranslate((int)CombatStyleData_FieldIndex.RushingAttackPercentChance) ?? true))
             {
                 item.RushingAttackPercentChance = rhs.RushingAttackPercentChance;
@@ -3426,10 +3434,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.RushingAttackDistanceMult = rhs.RushingAttackDistanceMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyleData_FieldIndex.Versioning) ?? true))
-            {
-                item.Versioning = rhs.Versioning;
-            }
+            if (rhs.Versioning.HasFlag(CombatStyleData.VersioningBreaks.Break4)) return;
         }
         
         #endregion
@@ -3519,6 +3524,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
+            if ((translationMask?.GetShouldTranslate((int)CombatStyleData_FieldIndex.Versioning) ?? true))
+            {
+                EnumXmlTranslation<CombatStyleData.VersioningBreaks>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Versioning),
+                    item: item.Versioning,
+                    fieldIndex: (int)CombatStyleData_FieldIndex.Versioning,
+                    errorMask: errorMask);
+            }
             if ((translationMask?.GetShouldTranslate((int)CombatStyleData_FieldIndex.DodgePercentChance) ?? true))
             {
                 ByteXmlTranslation.Instance.Write(
@@ -3843,15 +3857,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)CombatStyleData_FieldIndex.RushingAttackDistanceMult,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)CombatStyleData_FieldIndex.Versioning) ?? true))
-            {
-                EnumXmlTranslation<CombatStyleData.VersioningBreaks>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Versioning),
-                    item: item.Versioning,
-                    fieldIndex: (int)CombatStyleData_FieldIndex.Versioning,
-                    errorMask: errorMask);
-            }
         }
 
         public void Write(
@@ -3958,6 +3963,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
+                case "Versioning":
+                    errorMask?.PushIndex((int)CombatStyleData_FieldIndex.Versioning);
+                    try
+                    {
+                        item.Versioning = EnumXmlTranslation<CombatStyleData.VersioningBreaks>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "DodgePercentChance":
                     errorMask?.PushIndex((int)CombatStyleData_FieldIndex.DodgePercentChance);
                     try
@@ -4593,24 +4616,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         item.RushingAttackDistanceMult = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Versioning":
-                    errorMask?.PushIndex((int)CombatStyleData_FieldIndex.Versioning);
-                    try
-                    {
-                        item.Versioning = EnumXmlTranslation<CombatStyleData.VersioningBreaks>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

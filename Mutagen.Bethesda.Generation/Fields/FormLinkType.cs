@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override string EqualsMaskAccessor(string accessor) => accessor;
 
-        public override string SkipCheck(string copyMaskAccessor, bool deepCopy)
+        public override string SkipCheck(Accessor copyMaskAccessor, bool deepCopy)
         {
             return _rawFormID.SkipCheck(copyMaskAccessor, deepCopy);
         }
@@ -115,24 +115,28 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"if (!{accessor.PropertyOrDirectAccess}.Equals({rhsAccessor.PropertyOrDirectAccess})) return false;");
         }
 
-        public override void GenerateForCopy(FileGeneration fg, Accessor accessor, Accessor rhs, Accessor copyMaskAccessor, bool protectedMembers, bool getter)
+        public override void GenerateForCopy(FileGeneration fg, Accessor accessor, Accessor rhs, Accessor copyMaskAccessor, bool protectedMembers, bool deepCopy)
         {
-            if (this.HasBeenSet)
+            fg.AppendLine($"if ({(deepCopy ? this.GetTranslationIfAccessor(copyMaskAccessor) : this.SkipCheck(copyMaskAccessor, deepCopy))})");
+            using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"{accessor.PropertyOrDirectAccess}.{FormIDTypeString} = {rhs}.{FormIDTypeString};");
-            }
-            else
-            {
-                if (getter)
+                if (this.HasBeenSet)
                 {
                     fg.AppendLine($"{accessor.PropertyOrDirectAccess}.{FormIDTypeString} = {rhs}.{FormIDTypeString};");
                 }
                 else
                 {
-                    using (var args = new ArgsWrapper(fg,
-                        $"{accessor.PropertyOrDirectAccess}.SetLink"))
+                    if (deepCopy)
                     {
-                        args.Add($"value: {rhs}");
+                        fg.AppendLine($"{accessor.PropertyOrDirectAccess}.{FormIDTypeString} = {rhs}.{FormIDTypeString};");
+                    }
+                    else
+                    {
+                        using (var args = new ArgsWrapper(fg,
+                            $"{accessor.PropertyOrDirectAccess}.SetLink"))
+                        {
+                            args.Add($"value: {rhs}");
+                        }
                     }
                 }
             }

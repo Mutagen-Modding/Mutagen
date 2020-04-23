@@ -263,7 +263,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override bool IsNullable() => true;
 
-        public override string SkipCheck(string copyMaskAccessor, bool deepCopy)
+        public override string SkipCheck(Accessor copyMaskAccessor, bool deepCopy)
         {
             throw new NotImplementedException();
         }

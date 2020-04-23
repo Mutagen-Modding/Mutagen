@@ -17,12 +17,12 @@ namespace Mutagen.Bethesda.Generation
 
         public override async Task GenerateCopyIn(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor readerAccessor, Accessor itemAccessor, Accessor errorMaskAccessor, Accessor translationAccessor)
         {
-            var fieldData = typeGen.GetFieldData();
-            if (fieldData.BreakIndex == null) return;
+            var breakType = typeGen as BreakType;
+            if (breakType == null) return;
             fg.AppendLine($"if (dataFrame.Complete)");
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"item.{VersioningModule.VersioningFieldName} |= {objGen.ObjectName}.{VersioningModule.VersioningEnumName}.Break{fieldData.BreakIndex};");
+                fg.AppendLine($"item.{VersioningModule.VersioningFieldName} |= {objGen.ObjectName}.{VersioningModule.VersioningEnumName}.Break{breakType.Index};");
                 string enumName = null;
                 var startIndex = objGen.Fields.IndexOf(typeGen);
                 for (int i = startIndex - 1; i >= 0; i--)

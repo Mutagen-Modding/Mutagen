@@ -46,6 +46,9 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
+        #region Versioning
+        public MagicEffectData.VersioningBreaks Versioning { get; set; } = default;
+        #endregion
         #region Flags
         public MagicEffect.MagicFlag Flags { get; set; } = default;
         #endregion
@@ -99,9 +102,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IMagicEffectSubDataGetter? IMagicEffectDataGetter.SubData => this.SubData;
-        #endregion
-        #region Versioning
-        public MagicEffectData.VersioningBreaks Versioning { get; set; } = default;
         #endregion
 
         #region To String
@@ -273,6 +273,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Versioning = initialValue;
                 this.Flags = initialValue;
                 this.BaseCost = initialValue;
                 this.Unused = initialValue;
@@ -283,10 +284,10 @@ namespace Mutagen.Bethesda.Oblivion
                 this.ProjectileSpeed = initialValue;
                 this.EffectShader = initialValue;
                 this.SubData = new MaskItem<TItem, MagicEffectSubData.Mask<TItem>?>(initialValue, new MagicEffectSubData.Mask<TItem>(initialValue));
-                this.Versioning = initialValue;
             }
 
             public Mask(
+                TItem Versioning,
                 TItem Flags,
                 TItem BaseCost,
                 TItem Unused,
@@ -296,9 +297,9 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Light,
                 TItem ProjectileSpeed,
                 TItem EffectShader,
-                TItem SubData,
-                TItem Versioning)
+                TItem SubData)
             {
+                this.Versioning = Versioning;
                 this.Flags = Flags;
                 this.BaseCost = BaseCost;
                 this.Unused = Unused;
@@ -309,7 +310,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.ProjectileSpeed = ProjectileSpeed;
                 this.EffectShader = EffectShader;
                 this.SubData = new MaskItem<TItem, MagicEffectSubData.Mask<TItem>?>(SubData, new MagicEffectSubData.Mask<TItem>(SubData));
-                this.Versioning = Versioning;
             }
 
             #pragma warning disable CS8618
@@ -321,6 +321,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
+            public TItem Versioning;
             public TItem Flags;
             public TItem BaseCost;
             public TItem Unused;
@@ -331,7 +332,6 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem ProjectileSpeed;
             public TItem EffectShader;
             public MaskItem<TItem, MagicEffectSubData.Mask<TItem>?>? SubData { get; set; }
-            public TItem Versioning;
             #endregion
 
             #region Equals
@@ -344,6 +344,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.BaseCost, rhs.BaseCost)) return false;
                 if (!object.Equals(this.Unused, rhs.Unused)) return false;
@@ -354,12 +355,12 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.ProjectileSpeed, rhs.ProjectileSpeed)) return false;
                 if (!object.Equals(this.EffectShader, rhs.EffectShader)) return false;
                 if (!object.Equals(this.SubData, rhs.SubData)) return false;
-                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Versioning);
                 hash.Add(this.Flags);
                 hash.Add(this.BaseCost);
                 hash.Add(this.Unused);
@@ -370,7 +371,6 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.ProjectileSpeed);
                 hash.Add(this.EffectShader);
                 hash.Add(this.SubData);
-                hash.Add(this.Versioning);
                 return hash.ToHashCode();
             }
 
@@ -379,6 +379,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Versioning)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.BaseCost)) return false;
                 if (!eval(this.Unused)) return false;
@@ -393,7 +394,6 @@ namespace Mutagen.Bethesda.Oblivion
                     if (!eval(this.SubData.Overall)) return false;
                     if (this.SubData.Specific != null && !this.SubData.Specific.All(eval)) return false;
                 }
-                if (!eval(this.Versioning)) return false;
                 return true;
             }
             #endregion
@@ -401,6 +401,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Versioning)) return true;
                 if (eval(this.Flags)) return true;
                 if (eval(this.BaseCost)) return true;
                 if (eval(this.Unused)) return true;
@@ -415,7 +416,6 @@ namespace Mutagen.Bethesda.Oblivion
                     if (eval(this.SubData.Overall)) return true;
                     if (this.SubData.Specific != null && this.SubData.Specific.Any(eval)) return true;
                 }
-                if (eval(this.Versioning)) return true;
                 return false;
             }
             #endregion
@@ -430,6 +430,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Versioning = eval(this.Versioning);
                 obj.Flags = eval(this.Flags);
                 obj.BaseCost = eval(this.BaseCost);
                 obj.Unused = eval(this.Unused);
@@ -440,7 +441,6 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.ProjectileSpeed = eval(this.ProjectileSpeed);
                 obj.EffectShader = eval(this.EffectShader);
                 obj.SubData = this.SubData == null ? null : new MaskItem<R, MagicEffectSubData.Mask<R>?>(eval(this.SubData.Overall), this.SubData.Specific?.Translate(eval));
-                obj.Versioning = eval(this.Versioning);
             }
             #endregion
 
@@ -463,6 +463,10 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Versioning ?? true)
+                    {
+                        fg.AppendItem(Versioning, "Versioning");
+                    }
                     if (printMask?.Flags ?? true)
                     {
                         fg.AppendItem(Flags, "Flags");
@@ -503,10 +507,6 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         SubData?.ToString(fg);
                     }
-                    if (printMask?.Versioning ?? true)
-                    {
-                        fg.AppendItem(Versioning, "Versioning");
-                    }
                 }
                 fg.AppendLine("]");
             }
@@ -532,6 +532,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return _warnings;
                 }
             }
+            public Exception? Versioning;
             public Exception? Flags;
             public Exception? BaseCost;
             public Exception? Unused;
@@ -542,7 +543,6 @@ namespace Mutagen.Bethesda.Oblivion
             public Exception? ProjectileSpeed;
             public Exception? EffectShader;
             public MaskItem<Exception?, MagicEffectSubData.ErrorMask?>? SubData;
-            public Exception? Versioning;
             #endregion
 
             #region IErrorMask
@@ -551,6 +551,8 @@ namespace Mutagen.Bethesda.Oblivion
                 MagicEffectData_FieldIndex enu = (MagicEffectData_FieldIndex)index;
                 switch (enu)
                 {
+                    case MagicEffectData_FieldIndex.Versioning:
+                        return Versioning;
                     case MagicEffectData_FieldIndex.Flags:
                         return Flags;
                     case MagicEffectData_FieldIndex.BaseCost:
@@ -571,8 +573,6 @@ namespace Mutagen.Bethesda.Oblivion
                         return EffectShader;
                     case MagicEffectData_FieldIndex.SubData:
                         return SubData;
-                    case MagicEffectData_FieldIndex.Versioning:
-                        return Versioning;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -583,6 +583,9 @@ namespace Mutagen.Bethesda.Oblivion
                 MagicEffectData_FieldIndex enu = (MagicEffectData_FieldIndex)index;
                 switch (enu)
                 {
+                    case MagicEffectData_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
                     case MagicEffectData_FieldIndex.Flags:
                         this.Flags = ex;
                         break;
@@ -613,9 +616,6 @@ namespace Mutagen.Bethesda.Oblivion
                     case MagicEffectData_FieldIndex.SubData:
                         this.SubData = new MaskItem<Exception?, MagicEffectSubData.ErrorMask?>(ex, null);
                         break;
-                    case MagicEffectData_FieldIndex.Versioning:
-                        this.Versioning = ex;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -626,6 +626,9 @@ namespace Mutagen.Bethesda.Oblivion
                 MagicEffectData_FieldIndex enu = (MagicEffectData_FieldIndex)index;
                 switch (enu)
                 {
+                    case MagicEffectData_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
                     case MagicEffectData_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
@@ -656,9 +659,6 @@ namespace Mutagen.Bethesda.Oblivion
                     case MagicEffectData_FieldIndex.SubData:
                         this.SubData = (MaskItem<Exception?, MagicEffectSubData.ErrorMask?>?)obj;
                         break;
-                    case MagicEffectData_FieldIndex.Versioning:
-                        this.Versioning = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -667,6 +667,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Versioning != null) return true;
                 if (Flags != null) return true;
                 if (BaseCost != null) return true;
                 if (Unused != null) return true;
@@ -677,7 +678,6 @@ namespace Mutagen.Bethesda.Oblivion
                 if (ProjectileSpeed != null) return true;
                 if (EffectShader != null) return true;
                 if (SubData != null) return true;
-                if (Versioning != null) return true;
                 return false;
             }
             #endregion
@@ -712,6 +712,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
+                fg.AppendItem(Versioning, "Versioning");
                 fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(BaseCost, "BaseCost");
                 fg.AppendItem(Unused, "Unused");
@@ -722,7 +723,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(ProjectileSpeed, "ProjectileSpeed");
                 fg.AppendItem(EffectShader, "EffectShader");
                 SubData?.ToString(fg);
-                fg.AppendItem(Versioning, "Versioning");
             }
             #endregion
 
@@ -731,6 +731,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.BaseCost = this.BaseCost.Combine(rhs.BaseCost);
                 ret.Unused = this.Unused.Combine(rhs.Unused);
@@ -741,7 +742,6 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.ProjectileSpeed = this.ProjectileSpeed.Combine(rhs.ProjectileSpeed);
                 ret.EffectShader = this.EffectShader.Combine(rhs.EffectShader);
                 ret.SubData = this.SubData.Combine(rhs.SubData, (l, r) => l.Combine(r));
-                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -763,6 +763,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public bool Versioning;
             public bool Flags;
             public bool BaseCost;
             public bool Unused;
@@ -773,12 +774,12 @@ namespace Mutagen.Bethesda.Oblivion
             public bool ProjectileSpeed;
             public bool EffectShader;
             public MaskItem<bool, MagicEffectSubData.TranslationMask?> SubData;
-            public bool Versioning;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.Versioning = defaultOn;
                 this.Flags = defaultOn;
                 this.BaseCost = defaultOn;
                 this.Unused = defaultOn;
@@ -789,7 +790,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.ProjectileSpeed = defaultOn;
                 this.EffectShader = defaultOn;
                 this.SubData = new MaskItem<bool, MagicEffectSubData.TranslationMask?>(defaultOn, null);
-                this.Versioning = defaultOn;
             }
 
             #endregion
@@ -805,6 +805,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Versioning, null));
                 ret.Add((Flags, null));
                 ret.Add((BaseCost, null));
                 ret.Add((Unused, null));
@@ -815,7 +816,6 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((ProjectileSpeed, null));
                 ret.Add((EffectShader, null));
                 ret.Add((SubData?.Overall ?? true, SubData?.Specific?.GetCrystal()));
-                ret.Add((Versioning, null));
             }
         }
         #endregion
@@ -892,6 +892,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMagicEffectDataGetter,
         ILoquiObjectSetter<IMagicEffectData>
     {
+        new MagicEffectData.VersioningBreaks Versioning { get; set; }
         new MagicEffect.MagicFlag Flags { get; set; }
         new Single BaseCost { get; set; }
         new Byte[] Unused { get; set; }
@@ -902,7 +903,6 @@ namespace Mutagen.Bethesda.Oblivion
         new Single ProjectileSpeed { get; set; }
         new IFormLink<EffectShader> EffectShader { get; }
         new MagicEffectSubData? SubData { get; set; }
-        new MagicEffectData.VersioningBreaks Versioning { get; set; }
     }
 
     public partial interface IMagicEffectDataGetter :
@@ -918,6 +918,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        MagicEffectData.VersioningBreaks Versioning { get; }
         MagicEffect.MagicFlag Flags { get; }
         Single BaseCost { get; }
         ReadOnlyMemorySlice<Byte> Unused { get; }
@@ -928,7 +929,6 @@ namespace Mutagen.Bethesda.Oblivion
         Single ProjectileSpeed { get; }
         IFormLinkGetter<IEffectShaderGetter> EffectShader { get; }
         IMagicEffectSubDataGetter? SubData { get; }
-        MagicEffectData.VersioningBreaks Versioning { get; }
 
     }
 
@@ -1235,17 +1235,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum MagicEffectData_FieldIndex
     {
-        Flags = 0,
-        BaseCost = 1,
-        Unused = 2,
-        MagicSchool = 3,
-        Resistance = 4,
-        CounterEffectCount = 5,
-        Light = 6,
-        ProjectileSpeed = 7,
-        EffectShader = 8,
-        SubData = 9,
-        Versioning = 10,
+        Versioning = 0,
+        Flags = 1,
+        BaseCost = 2,
+        Unused = 3,
+        MagicSchool = 4,
+        Resistance = 5,
+        CounterEffectCount = 6,
+        Light = 7,
+        ProjectileSpeed = 8,
+        EffectShader = 9,
+        SubData = 10,
     }
     #endregion
 
@@ -1295,6 +1295,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
+                case "VERSIONING":
+                    return (ushort)MagicEffectData_FieldIndex.Versioning;
                 case "FLAGS":
                     return (ushort)MagicEffectData_FieldIndex.Flags;
                 case "BASECOST":
@@ -1315,8 +1317,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)MagicEffectData_FieldIndex.EffectShader;
                 case "SUBDATA":
                     return (ushort)MagicEffectData_FieldIndex.SubData;
-                case "VERSIONING":
-                    return (ushort)MagicEffectData_FieldIndex.Versioning;
                 default:
                     return null;
             }
@@ -1327,6 +1327,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MagicEffectData_FieldIndex enu = (MagicEffectData_FieldIndex)index;
             switch (enu)
             {
+                case MagicEffectData_FieldIndex.Versioning:
                 case MagicEffectData_FieldIndex.Flags:
                 case MagicEffectData_FieldIndex.BaseCost:
                 case MagicEffectData_FieldIndex.Unused:
@@ -1337,7 +1338,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffectData_FieldIndex.ProjectileSpeed:
                 case MagicEffectData_FieldIndex.EffectShader:
                 case MagicEffectData_FieldIndex.SubData:
-                case MagicEffectData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1351,6 +1351,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case MagicEffectData_FieldIndex.SubData:
                     return true;
+                case MagicEffectData_FieldIndex.Versioning:
                 case MagicEffectData_FieldIndex.Flags:
                 case MagicEffectData_FieldIndex.BaseCost:
                 case MagicEffectData_FieldIndex.Unused:
@@ -1360,7 +1361,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffectData_FieldIndex.Light:
                 case MagicEffectData_FieldIndex.ProjectileSpeed:
                 case MagicEffectData_FieldIndex.EffectShader:
-                case MagicEffectData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1372,6 +1372,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MagicEffectData_FieldIndex enu = (MagicEffectData_FieldIndex)index;
             switch (enu)
             {
+                case MagicEffectData_FieldIndex.Versioning:
                 case MagicEffectData_FieldIndex.Flags:
                 case MagicEffectData_FieldIndex.BaseCost:
                 case MagicEffectData_FieldIndex.Unused:
@@ -1382,7 +1383,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffectData_FieldIndex.ProjectileSpeed:
                 case MagicEffectData_FieldIndex.EffectShader:
                 case MagicEffectData_FieldIndex.SubData:
-                case MagicEffectData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1394,6 +1394,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MagicEffectData_FieldIndex enu = (MagicEffectData_FieldIndex)index;
             switch (enu)
             {
+                case MagicEffectData_FieldIndex.Versioning:
+                    return "Versioning";
                 case MagicEffectData_FieldIndex.Flags:
                     return "Flags";
                 case MagicEffectData_FieldIndex.BaseCost:
@@ -1414,8 +1416,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "EffectShader";
                 case MagicEffectData_FieldIndex.SubData:
                     return "SubData";
-                case MagicEffectData_FieldIndex.Versioning:
-                    return "Versioning";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1426,6 +1426,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MagicEffectData_FieldIndex enu = (MagicEffectData_FieldIndex)index;
             switch (enu)
             {
+                case MagicEffectData_FieldIndex.Versioning:
                 case MagicEffectData_FieldIndex.Flags:
                 case MagicEffectData_FieldIndex.BaseCost:
                 case MagicEffectData_FieldIndex.Unused:
@@ -1436,7 +1437,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffectData_FieldIndex.ProjectileSpeed:
                 case MagicEffectData_FieldIndex.EffectShader:
                 case MagicEffectData_FieldIndex.SubData:
-                case MagicEffectData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1448,6 +1448,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MagicEffectData_FieldIndex enu = (MagicEffectData_FieldIndex)index;
             switch (enu)
             {
+                case MagicEffectData_FieldIndex.Versioning:
                 case MagicEffectData_FieldIndex.Flags:
                 case MagicEffectData_FieldIndex.BaseCost:
                 case MagicEffectData_FieldIndex.Unused:
@@ -1458,7 +1459,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffectData_FieldIndex.ProjectileSpeed:
                 case MagicEffectData_FieldIndex.EffectShader:
                 case MagicEffectData_FieldIndex.SubData:
-                case MagicEffectData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1470,6 +1470,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MagicEffectData_FieldIndex enu = (MagicEffectData_FieldIndex)index;
             switch (enu)
             {
+                case MagicEffectData_FieldIndex.Versioning:
+                    return typeof(MagicEffectData.VersioningBreaks);
                 case MagicEffectData_FieldIndex.Flags:
                     return typeof(MagicEffect.MagicFlag);
                 case MagicEffectData_FieldIndex.BaseCost:
@@ -1490,8 +1492,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(IFormLink<EffectShader>);
                 case MagicEffectData_FieldIndex.SubData:
                     return typeof(MagicEffectSubData);
-                case MagicEffectData_FieldIndex.Versioning:
-                    return typeof(MagicEffectData.VersioningBreaks);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1544,6 +1544,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IMagicEffectData item)
         {
             ClearPartial();
+            item.Versioning = default;
             item.Flags = default;
             item.BaseCost = default;
             item.Unused = new byte[4];
@@ -1554,7 +1555,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ProjectileSpeed = default;
             item.EffectShader.FormKey = FormKey.Null;
             item.SubData = null;
-            item.Versioning = default;
         }
         
         #region Xml Translation
@@ -1656,6 +1656,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Flags = item.Flags == rhs.Flags;
             ret.BaseCost = item.BaseCost.EqualsWithin(rhs.BaseCost);
             ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
@@ -1670,7 +1671,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.SubData,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Versioning = item.Versioning == rhs.Versioning;
         }
         
         public string ToString(
@@ -1717,6 +1717,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             MagicEffectData.Mask<bool>? printMask = null)
         {
+            if (printMask?.Versioning ?? true)
+            {
+                fg.AppendItem(item.Versioning, "Versioning");
+            }
             if (printMask?.Flags ?? true)
             {
                 fg.AppendItem(item.Flags, "Flags");
@@ -1758,10 +1762,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 SubDataItem?.ToString(fg, "SubData");
             }
-            if (printMask?.Versioning ?? true)
-            {
-                fg.AppendItem(item.Versioning, "Versioning");
-            }
         }
         
         public bool HasBeenSet(
@@ -1777,6 +1777,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMagicEffectDataGetter item,
             MagicEffectData.Mask<bool> mask)
         {
+            mask.Versioning = true;
             mask.Flags = true;
             mask.BaseCost = true;
             mask.Unused = true;
@@ -1788,7 +1789,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.EffectShader = true;
             var itemSubData = item.SubData;
             mask.SubData = new MaskItem<bool, MagicEffectSubData.Mask<bool>?>(itemSubData != null, itemSubData?.GetHasBeenSetMask());
-            mask.Versioning = true;
         }
         
         #region Equals and Hash
@@ -1798,6 +1798,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
+            if (lhs.Versioning != rhs.Versioning) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (!lhs.BaseCost.EqualsWithin(rhs.BaseCost)) return false;
             if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
@@ -1808,13 +1809,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!lhs.ProjectileSpeed.EqualsWithin(rhs.ProjectileSpeed)) return false;
             if (!lhs.EffectShader.Equals(rhs.EffectShader)) return false;
             if (!object.Equals(lhs.SubData, rhs.SubData)) return false;
-            if (lhs.Versioning != rhs.Versioning) return false;
             return true;
         }
         
         public virtual int GetHashCode(IMagicEffectDataGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Versioning);
             hash.Add(item.Flags);
             hash.Add(item.BaseCost);
             hash.Add(item.Unused);
@@ -1828,7 +1829,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(SubDataitem);
             }
-            hash.Add(item.Versioning);
             return hash.ToHashCode();
         }
         
@@ -1869,6 +1869,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
+            if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Versioning) ?? true))
+            {
+                item.Versioning = rhs.Versioning;
+            }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
@@ -1905,6 +1909,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.EffectShader.FormKey = rhs.EffectShader.FormKey;
             }
+            if (rhs.Versioning.HasFlag(MagicEffectData.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.SubData) ?? true))
             {
                 errorMask?.PushIndex((int)MagicEffectData_FieldIndex.SubData);
@@ -1930,10 +1935,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     errorMask?.PopIndex();
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Versioning) ?? true))
-            {
-                item.Versioning = rhs.Versioning;
             }
         }
         
@@ -2024,6 +2025,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
+            if ((translationMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Versioning) ?? true))
+            {
+                EnumXmlTranslation<MagicEffectData.VersioningBreaks>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Versioning),
+                    item: item.Versioning,
+                    fieldIndex: (int)MagicEffectData_FieldIndex.Versioning,
+                    errorMask: errorMask);
+            }
             if ((translationMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<MagicEffect.MagicFlag>.Instance.Write(
@@ -2118,15 +2128,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask,
                         translationMask: translationMask?.GetSubCrystal((int)MagicEffectData_FieldIndex.SubData));
                 }
-            }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Versioning) ?? true))
-            {
-                EnumXmlTranslation<MagicEffectData.VersioningBreaks>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Versioning),
-                    item: item.Versioning,
-                    fieldIndex: (int)MagicEffectData_FieldIndex.Versioning,
-                    errorMask: errorMask);
             }
         }
 
@@ -2234,6 +2235,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
+                case "Versioning":
+                    errorMask?.PushIndex((int)MagicEffectData_FieldIndex.Versioning);
+                    try
+                    {
+                        item.Versioning = EnumXmlTranslation<MagicEffectData.VersioningBreaks>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "Flags":
                     errorMask?.PushIndex((int)MagicEffectData_FieldIndex.Flags);
                     try
@@ -2405,24 +2424,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             node: node,
                             errorMask: errorMask,
                             translationMask: translationMask?.GetSubCrystal((int)MagicEffectData_FieldIndex.SubData));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Versioning":
-                    errorMask?.PushIndex((int)MagicEffectData_FieldIndex.Versioning);
-                    try
-                    {
-                        item.Versioning = EnumXmlTranslation<MagicEffectData.VersioningBreaks>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

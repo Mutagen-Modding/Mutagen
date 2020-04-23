@@ -46,6 +46,9 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
+        #region Versioning
+        public ClassData.VersioningBreaks Versioning { get; set; } = default;
+        #endregion
         #region PrimaryAttributes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ActorValue[] _PrimaryAttributes = new ActorValue[2];
@@ -87,9 +90,6 @@ namespace Mutagen.Bethesda.Oblivion
         public ClassTraining Training { get; set; } = new ClassTraining();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IClassTrainingGetter IClassDataGetter.Training => Training;
-        #endregion
-        #region Versioning
-        public ClassData.VersioningBreaks Versioning { get; set; } = default;
         #endregion
 
         #region To String
@@ -261,31 +261,31 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Versioning = initialValue;
                 this.PrimaryAttributes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Specialization = initialValue;
                 this.SecondaryAttributes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Flags = initialValue;
                 this.ClassServices = initialValue;
                 this.Training = new MaskItem<TItem, ClassTraining.Mask<TItem>?>(initialValue, new ClassTraining.Mask<TItem>(initialValue));
-                this.Versioning = initialValue;
             }
 
             public Mask(
+                TItem Versioning,
                 TItem PrimaryAttributes,
                 TItem Specialization,
                 TItem SecondaryAttributes,
                 TItem Flags,
                 TItem ClassServices,
-                TItem Training,
-                TItem Versioning)
+                TItem Training)
             {
+                this.Versioning = Versioning;
                 this.PrimaryAttributes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PrimaryAttributes, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Specialization = Specialization;
                 this.SecondaryAttributes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SecondaryAttributes, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Flags = Flags;
                 this.ClassServices = ClassServices;
                 this.Training = new MaskItem<TItem, ClassTraining.Mask<TItem>?>(Training, new ClassTraining.Mask<TItem>(Training));
-                this.Versioning = Versioning;
             }
 
             #pragma warning disable CS8618
@@ -297,13 +297,13 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
+            public TItem Versioning;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? PrimaryAttributes;
             public TItem Specialization;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? SecondaryAttributes;
             public TItem Flags;
             public TItem ClassServices;
             public MaskItem<TItem, ClassTraining.Mask<TItem>?>? Training { get; set; }
-            public TItem Versioning;
             #endregion
 
             #region Equals
@@ -316,25 +316,25 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.PrimaryAttributes, rhs.PrimaryAttributes)) return false;
                 if (!object.Equals(this.Specialization, rhs.Specialization)) return false;
                 if (!object.Equals(this.SecondaryAttributes, rhs.SecondaryAttributes)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.ClassServices, rhs.ClassServices)) return false;
                 if (!object.Equals(this.Training, rhs.Training)) return false;
-                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Versioning);
                 hash.Add(this.PrimaryAttributes);
                 hash.Add(this.Specialization);
                 hash.Add(this.SecondaryAttributes);
                 hash.Add(this.Flags);
                 hash.Add(this.ClassServices);
                 hash.Add(this.Training);
-                hash.Add(this.Versioning);
                 return hash.ToHashCode();
             }
 
@@ -343,6 +343,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Versioning)) return false;
                 if (this.PrimaryAttributes != null)
                 {
                     if (!eval(this.PrimaryAttributes.Overall)) return false;
@@ -373,7 +374,6 @@ namespace Mutagen.Bethesda.Oblivion
                     if (!eval(this.Training.Overall)) return false;
                     if (this.Training.Specific != null && !this.Training.Specific.All(eval)) return false;
                 }
-                if (!eval(this.Versioning)) return false;
                 return true;
             }
             #endregion
@@ -381,6 +381,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Versioning)) return true;
                 if (this.PrimaryAttributes != null)
                 {
                     if (eval(this.PrimaryAttributes.Overall)) return true;
@@ -411,7 +412,6 @@ namespace Mutagen.Bethesda.Oblivion
                     if (eval(this.Training.Overall)) return true;
                     if (this.Training.Specific != null && this.Training.Specific.Any(eval)) return true;
                 }
-                if (eval(this.Versioning)) return true;
                 return false;
             }
             #endregion
@@ -426,6 +426,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Versioning = eval(this.Versioning);
                 if (PrimaryAttributes != null)
                 {
                     obj.PrimaryAttributes = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.PrimaryAttributes.Overall), Enumerable.Empty<(int Index, R Value)>());
@@ -458,7 +459,6 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Flags = eval(this.Flags);
                 obj.ClassServices = eval(this.ClassServices);
                 obj.Training = this.Training == null ? null : new MaskItem<R, ClassTraining.Mask<R>?>(eval(this.Training.Overall), this.Training.Specific?.Translate(eval));
-                obj.Versioning = eval(this.Versioning);
             }
             #endregion
 
@@ -481,6 +481,10 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Versioning ?? true)
+                    {
+                        fg.AppendItem(Versioning, "Versioning");
+                    }
                     if ((printMask?.PrimaryAttributes?.Overall ?? true)
                         && PrimaryAttributes.TryGet(out var PrimaryAttributesItem))
                     {
@@ -543,10 +547,6 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         Training?.ToString(fg);
                     }
-                    if (printMask?.Versioning ?? true)
-                    {
-                        fg.AppendItem(Versioning, "Versioning");
-                    }
                 }
                 fg.AppendLine("]");
             }
@@ -572,13 +572,13 @@ namespace Mutagen.Bethesda.Oblivion
                     return _warnings;
                 }
             }
+            public Exception? Versioning;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? PrimaryAttributes;
             public Exception? Specialization;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SecondaryAttributes;
             public Exception? Flags;
             public Exception? ClassServices;
             public MaskItem<Exception?, ClassTraining.ErrorMask?>? Training;
-            public Exception? Versioning;
             #endregion
 
             #region IErrorMask
@@ -587,6 +587,8 @@ namespace Mutagen.Bethesda.Oblivion
                 ClassData_FieldIndex enu = (ClassData_FieldIndex)index;
                 switch (enu)
                 {
+                    case ClassData_FieldIndex.Versioning:
+                        return Versioning;
                     case ClassData_FieldIndex.PrimaryAttributes:
                         return PrimaryAttributes;
                     case ClassData_FieldIndex.Specialization:
@@ -599,8 +601,6 @@ namespace Mutagen.Bethesda.Oblivion
                         return ClassServices;
                     case ClassData_FieldIndex.Training:
                         return Training;
-                    case ClassData_FieldIndex.Versioning:
-                        return Versioning;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -611,6 +611,9 @@ namespace Mutagen.Bethesda.Oblivion
                 ClassData_FieldIndex enu = (ClassData_FieldIndex)index;
                 switch (enu)
                 {
+                    case ClassData_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
                     case ClassData_FieldIndex.PrimaryAttributes:
                         this.PrimaryAttributes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
@@ -629,9 +632,6 @@ namespace Mutagen.Bethesda.Oblivion
                     case ClassData_FieldIndex.Training:
                         this.Training = new MaskItem<Exception?, ClassTraining.ErrorMask?>(ex, null);
                         break;
-                    case ClassData_FieldIndex.Versioning:
-                        this.Versioning = ex;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -642,6 +642,9 @@ namespace Mutagen.Bethesda.Oblivion
                 ClassData_FieldIndex enu = (ClassData_FieldIndex)index;
                 switch (enu)
                 {
+                    case ClassData_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
                     case ClassData_FieldIndex.PrimaryAttributes:
                         this.PrimaryAttributes = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
@@ -660,9 +663,6 @@ namespace Mutagen.Bethesda.Oblivion
                     case ClassData_FieldIndex.Training:
                         this.Training = (MaskItem<Exception?, ClassTraining.ErrorMask?>?)obj;
                         break;
-                    case ClassData_FieldIndex.Versioning:
-                        this.Versioning = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -671,13 +671,13 @@ namespace Mutagen.Bethesda.Oblivion
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Versioning != null) return true;
                 if (PrimaryAttributes != null) return true;
                 if (Specialization != null) return true;
                 if (SecondaryAttributes != null) return true;
                 if (Flags != null) return true;
                 if (ClassServices != null) return true;
                 if (Training != null) return true;
-                if (Versioning != null) return true;
                 return false;
             }
             #endregion
@@ -712,6 +712,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
+                fg.AppendItem(Versioning, "Versioning");
                 if (PrimaryAttributes.TryGet(out var PrimaryAttributesItem))
                 {
                     fg.AppendLine("PrimaryAttributes =>");
@@ -760,7 +761,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(ClassServices, "ClassServices");
                 Training?.ToString(fg);
-                fg.AppendItem(Versioning, "Versioning");
             }
             #endregion
 
@@ -769,13 +769,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.PrimaryAttributes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.PrimaryAttributes?.Overall, rhs.PrimaryAttributes?.Overall), ExceptionExt.Combine(this.PrimaryAttributes?.Specific, rhs.PrimaryAttributes?.Specific));
                 ret.Specialization = this.Specialization.Combine(rhs.Specialization);
                 ret.SecondaryAttributes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SecondaryAttributes?.Overall, rhs.SecondaryAttributes?.Overall), ExceptionExt.Combine(this.SecondaryAttributes?.Specific, rhs.SecondaryAttributes?.Specific));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.ClassServices = this.ClassServices.Combine(rhs.ClassServices);
                 ret.Training = this.Training.Combine(rhs.Training, (l, r) => l.Combine(r));
-                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -797,25 +797,25 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public bool Versioning;
             public bool PrimaryAttributes;
             public bool Specialization;
             public bool SecondaryAttributes;
             public bool Flags;
             public bool ClassServices;
             public MaskItem<bool, ClassTraining.TranslationMask?> Training;
-            public bool Versioning;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.Versioning = defaultOn;
                 this.PrimaryAttributes = defaultOn;
                 this.Specialization = defaultOn;
                 this.SecondaryAttributes = defaultOn;
                 this.Flags = defaultOn;
                 this.ClassServices = defaultOn;
                 this.Training = new MaskItem<bool, ClassTraining.TranslationMask?>(defaultOn, null);
-                this.Versioning = defaultOn;
             }
 
             #endregion
@@ -831,13 +831,13 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Versioning, null));
                 ret.Add((PrimaryAttributes, null));
                 ret.Add((Specialization, null));
                 ret.Add((SecondaryAttributes, null));
                 ret.Add((Flags, null));
                 ret.Add((ClassServices, null));
                 ret.Add((Training?.Overall ?? true, Training?.Specific?.GetCrystal()));
-                ret.Add((Versioning, null));
             }
         }
         #endregion
@@ -912,13 +912,13 @@ namespace Mutagen.Bethesda.Oblivion
         IClassDataGetter,
         ILoquiObjectSetter<IClassData>
     {
+        new ClassData.VersioningBreaks Versioning { get; set; }
         new ActorValue[] PrimaryAttributes { get; }
         new Class.SpecializationFlag Specialization { get; set; }
         new ActorValue[] SecondaryAttributes { get; }
         new ClassFlag Flags { get; set; }
         new ClassService ClassServices { get; set; }
         new ClassTraining Training { get; set; }
-        new ClassData.VersioningBreaks Versioning { get; set; }
     }
 
     public partial interface IClassDataGetter :
@@ -933,13 +933,13 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        ClassData.VersioningBreaks Versioning { get; }
         ReadOnlyMemorySlice<ActorValue> PrimaryAttributes { get; }
         Class.SpecializationFlag Specialization { get; }
         ReadOnlyMemorySlice<ActorValue> SecondaryAttributes { get; }
         ClassFlag Flags { get; }
         ClassService ClassServices { get; }
         IClassTrainingGetter Training { get; }
-        ClassData.VersioningBreaks Versioning { get; }
 
     }
 
@@ -1246,13 +1246,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum ClassData_FieldIndex
     {
-        PrimaryAttributes = 0,
-        Specialization = 1,
-        SecondaryAttributes = 2,
-        Flags = 3,
-        ClassServices = 4,
-        Training = 5,
-        Versioning = 6,
+        Versioning = 0,
+        PrimaryAttributes = 1,
+        Specialization = 2,
+        SecondaryAttributes = 3,
+        Flags = 4,
+        ClassServices = 5,
+        Training = 6,
     }
     #endregion
 
@@ -1302,6 +1302,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
+                case "VERSIONING":
+                    return (ushort)ClassData_FieldIndex.Versioning;
                 case "PRIMARYATTRIBUTES":
                     return (ushort)ClassData_FieldIndex.PrimaryAttributes;
                 case "SPECIALIZATION":
@@ -1314,8 +1316,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)ClassData_FieldIndex.ClassServices;
                 case "TRAINING":
                     return (ushort)ClassData_FieldIndex.Training;
-                case "VERSIONING":
-                    return (ushort)ClassData_FieldIndex.Versioning;
                 default:
                     return null;
             }
@@ -1329,11 +1329,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ClassData_FieldIndex.PrimaryAttributes:
                 case ClassData_FieldIndex.SecondaryAttributes:
                     return true;
+                case ClassData_FieldIndex.Versioning:
                 case ClassData_FieldIndex.Specialization:
                 case ClassData_FieldIndex.Flags:
                 case ClassData_FieldIndex.ClassServices:
                 case ClassData_FieldIndex.Training:
-                case ClassData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1347,12 +1347,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case ClassData_FieldIndex.Training:
                     return true;
+                case ClassData_FieldIndex.Versioning:
                 case ClassData_FieldIndex.PrimaryAttributes:
                 case ClassData_FieldIndex.Specialization:
                 case ClassData_FieldIndex.SecondaryAttributes:
                 case ClassData_FieldIndex.Flags:
                 case ClassData_FieldIndex.ClassServices:
-                case ClassData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1364,13 +1364,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClassData_FieldIndex enu = (ClassData_FieldIndex)index;
             switch (enu)
             {
+                case ClassData_FieldIndex.Versioning:
                 case ClassData_FieldIndex.PrimaryAttributes:
                 case ClassData_FieldIndex.Specialization:
                 case ClassData_FieldIndex.SecondaryAttributes:
                 case ClassData_FieldIndex.Flags:
                 case ClassData_FieldIndex.ClassServices:
                 case ClassData_FieldIndex.Training:
-                case ClassData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1382,6 +1382,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClassData_FieldIndex enu = (ClassData_FieldIndex)index;
             switch (enu)
             {
+                case ClassData_FieldIndex.Versioning:
+                    return "Versioning";
                 case ClassData_FieldIndex.PrimaryAttributes:
                     return "PrimaryAttributes";
                 case ClassData_FieldIndex.Specialization:
@@ -1394,8 +1396,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "ClassServices";
                 case ClassData_FieldIndex.Training:
                     return "Training";
-                case ClassData_FieldIndex.Versioning:
-                    return "Versioning";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1406,13 +1406,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClassData_FieldIndex enu = (ClassData_FieldIndex)index;
             switch (enu)
             {
+                case ClassData_FieldIndex.Versioning:
                 case ClassData_FieldIndex.PrimaryAttributes:
                 case ClassData_FieldIndex.Specialization:
                 case ClassData_FieldIndex.SecondaryAttributes:
                 case ClassData_FieldIndex.Flags:
                 case ClassData_FieldIndex.ClassServices:
                 case ClassData_FieldIndex.Training:
-                case ClassData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1424,13 +1424,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClassData_FieldIndex enu = (ClassData_FieldIndex)index;
             switch (enu)
             {
+                case ClassData_FieldIndex.Versioning:
                 case ClassData_FieldIndex.PrimaryAttributes:
                 case ClassData_FieldIndex.Specialization:
                 case ClassData_FieldIndex.SecondaryAttributes:
                 case ClassData_FieldIndex.Flags:
                 case ClassData_FieldIndex.ClassServices:
                 case ClassData_FieldIndex.Training:
-                case ClassData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1442,6 +1442,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClassData_FieldIndex enu = (ClassData_FieldIndex)index;
             switch (enu)
             {
+                case ClassData_FieldIndex.Versioning:
+                    return typeof(ClassData.VersioningBreaks);
                 case ClassData_FieldIndex.PrimaryAttributes:
                     return typeof(ActorValue[]);
                 case ClassData_FieldIndex.Specialization:
@@ -1454,8 +1456,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(ClassService);
                 case ClassData_FieldIndex.Training:
                     return typeof(ClassTraining);
-                case ClassData_FieldIndex.Versioning:
-                    return typeof(ClassData.VersioningBreaks);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1508,13 +1508,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IClassData item)
         {
             ClearPartial();
+            item.Versioning = default;
             item.PrimaryAttributes.Reset();
             item.Specialization = default;
             item.SecondaryAttributes.Reset();
             item.Flags = default;
             item.ClassServices = default;
             item.Training.Clear();
-            item.Versioning = default;
         }
         
         #region Xml Translation
@@ -1625,6 +1625,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.PrimaryAttributes = item.PrimaryAttributes.SpanEqualsHelper(
                 rhs.PrimaryAttributes,
                 (l, r) => l == r,
@@ -1637,7 +1638,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Flags = item.Flags == rhs.Flags;
             ret.ClassServices = item.ClassServices == rhs.ClassServices;
             ret.Training = MaskItemExt.Factory(item.Training.GetEqualsMask(rhs.Training, include), include);
-            ret.Versioning = item.Versioning == rhs.Versioning;
         }
         
         public string ToString(
@@ -1684,6 +1684,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             ClassData.Mask<bool>? printMask = null)
         {
+            if (printMask?.Versioning ?? true)
+            {
+                fg.AppendItem(item.Versioning, "Versioning");
+            }
             if (printMask?.PrimaryAttributes?.Overall ?? true)
             {
                 fg.AppendLine("PrimaryAttributes =>");
@@ -1736,10 +1740,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.Training?.ToString(fg, "Training");
             }
-            if (printMask?.Versioning ?? true)
-            {
-                fg.AppendItem(item.Versioning, "Versioning");
-            }
         }
         
         public bool HasBeenSet(
@@ -1753,13 +1753,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClassDataGetter item,
             ClassData.Mask<bool> mask)
         {
+            mask.Versioning = true;
             mask.PrimaryAttributes = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
             mask.Specialization = true;
             mask.SecondaryAttributes = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
             mask.Flags = true;
             mask.ClassServices = true;
             mask.Training = new MaskItem<bool, ClassTraining.Mask<bool>?>(true, item.Training?.GetHasBeenSetMask());
-            mask.Versioning = true;
         }
         
         #region Equals and Hash
@@ -1769,26 +1769,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
+            if (lhs.Versioning != rhs.Versioning) return false;
             if (!lhs.PrimaryAttributes.SequenceEqual(rhs.PrimaryAttributes)) return false;
             if (lhs.Specialization != rhs.Specialization) return false;
             if (!lhs.SecondaryAttributes.SequenceEqual(rhs.SecondaryAttributes)) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (lhs.ClassServices != rhs.ClassServices) return false;
             if (!object.Equals(lhs.Training, rhs.Training)) return false;
-            if (lhs.Versioning != rhs.Versioning) return false;
             return true;
         }
         
         public virtual int GetHashCode(IClassDataGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Versioning);
             hash.Add(item.PrimaryAttributes);
             hash.Add(item.Specialization);
             hash.Add(item.SecondaryAttributes);
             hash.Add(item.Flags);
             hash.Add(item.ClassServices);
             hash.Add(item.Training);
-            hash.Add(item.Versioning);
             return hash.ToHashCode();
         }
         
@@ -1820,6 +1820,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
+            if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.Versioning) ?? true))
+            {
+                item.Versioning = rhs.Versioning;
+            }
             if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.PrimaryAttributes) ?? true))
             {
                 item.PrimaryAttributes.SetTo(rhs.PrimaryAttributes);
@@ -1840,6 +1844,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.ClassServices = rhs.ClassServices;
             }
+            if (rhs.Versioning.HasFlag(ClassData.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.Training) ?? true))
             {
                 errorMask?.PushIndex((int)ClassData_FieldIndex.Training);
@@ -1861,10 +1866,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     errorMask?.PopIndex();
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.Versioning) ?? true))
-            {
-                item.Versioning = rhs.Versioning;
             }
         }
         
@@ -1955,6 +1956,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
+            if ((translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.Versioning) ?? true))
+            {
+                EnumXmlTranslation<ClassData.VersioningBreaks>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Versioning),
+                    item: item.Versioning,
+                    fieldIndex: (int)ClassData_FieldIndex.Versioning,
+                    errorMask: errorMask);
+            }
             if ((translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.PrimaryAttributes) ?? true))
             {
                 ListXmlTranslation<ActorValue>.Instance.Write(
@@ -2028,15 +2038,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)ClassData_FieldIndex.Training,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)ClassData_FieldIndex.Training));
-            }
-            if ((translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.Versioning) ?? true))
-            {
-                EnumXmlTranslation<ClassData.VersioningBreaks>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Versioning),
-                    item: item.Versioning,
-                    fieldIndex: (int)ClassData_FieldIndex.Versioning,
-                    errorMask: errorMask);
             }
         }
 
@@ -2144,6 +2145,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
+                case "Versioning":
+                    errorMask?.PushIndex((int)ClassData_FieldIndex.Versioning);
+                    try
+                    {
+                        item.Versioning = EnumXmlTranslation<ClassData.VersioningBreaks>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "PrimaryAttributes":
                     errorMask?.PushIndex((int)ClassData_FieldIndex.PrimaryAttributes);
                     try
@@ -2262,24 +2281,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             node: node,
                             errorMask: errorMask,
                             translationMask: translationMask?.GetSubCrystal((int)ClassData_FieldIndex.Training));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Versioning":
-                    errorMask?.PushIndex((int)ClassData_FieldIndex.Versioning);
-                    try
-                    {
-                        item.Versioning = EnumXmlTranslation<ClassData.VersioningBreaks>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)

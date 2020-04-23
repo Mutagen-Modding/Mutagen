@@ -13,6 +13,8 @@ namespace Mutagen.Bethesda.Generation
     {
         public bool Static;
 
+        public override bool Copy => false;
+
         public override async Task Load(XElement node, bool requireName = true)
         {
             this.Singleton = SingletonLevel.NotNull;

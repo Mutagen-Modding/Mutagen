@@ -46,6 +46,9 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
+        #region Versioning
+        public LightData.VersioningBreaks Versioning { get; set; } = default;
+        #endregion
         #region Time
         public readonly static Int32 _Time_Default = -1;
         public Int32 Time { get; set; } = default;
@@ -72,9 +75,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Weight
         public Single Weight { get; set; } = default;
-        #endregion
-        #region Versioning
-        public LightData.VersioningBreaks Versioning { get; set; } = default;
         #endregion
 
         #region To String
@@ -246,6 +246,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Versioning = initialValue;
                 this.Time = initialValue;
                 this.Radius = initialValue;
                 this.Color = initialValue;
@@ -254,10 +255,10 @@ namespace Mutagen.Bethesda.Oblivion
                 this.FOV = initialValue;
                 this.Value = initialValue;
                 this.Weight = initialValue;
-                this.Versioning = initialValue;
             }
 
             public Mask(
+                TItem Versioning,
                 TItem Time,
                 TItem Radius,
                 TItem Color,
@@ -265,9 +266,9 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem FalloffExponent,
                 TItem FOV,
                 TItem Value,
-                TItem Weight,
-                TItem Versioning)
+                TItem Weight)
             {
+                this.Versioning = Versioning;
                 this.Time = Time;
                 this.Radius = Radius;
                 this.Color = Color;
@@ -276,7 +277,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.FOV = FOV;
                 this.Value = Value;
                 this.Weight = Weight;
-                this.Versioning = Versioning;
             }
 
             #pragma warning disable CS8618
@@ -288,6 +288,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
+            public TItem Versioning;
             public TItem Time;
             public TItem Radius;
             public TItem Color;
@@ -296,7 +297,6 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem FOV;
             public TItem Value;
             public TItem Weight;
-            public TItem Versioning;
             #endregion
 
             #region Equals
@@ -309,6 +309,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.Time, rhs.Time)) return false;
                 if (!object.Equals(this.Radius, rhs.Radius)) return false;
                 if (!object.Equals(this.Color, rhs.Color)) return false;
@@ -317,12 +318,12 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.FOV, rhs.FOV)) return false;
                 if (!object.Equals(this.Value, rhs.Value)) return false;
                 if (!object.Equals(this.Weight, rhs.Weight)) return false;
-                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Versioning);
                 hash.Add(this.Time);
                 hash.Add(this.Radius);
                 hash.Add(this.Color);
@@ -331,7 +332,6 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.FOV);
                 hash.Add(this.Value);
                 hash.Add(this.Weight);
-                hash.Add(this.Versioning);
                 return hash.ToHashCode();
             }
 
@@ -340,6 +340,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Versioning)) return false;
                 if (!eval(this.Time)) return false;
                 if (!eval(this.Radius)) return false;
                 if (!eval(this.Color)) return false;
@@ -348,7 +349,6 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.FOV)) return false;
                 if (!eval(this.Value)) return false;
                 if (!eval(this.Weight)) return false;
-                if (!eval(this.Versioning)) return false;
                 return true;
             }
             #endregion
@@ -356,6 +356,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Versioning)) return true;
                 if (eval(this.Time)) return true;
                 if (eval(this.Radius)) return true;
                 if (eval(this.Color)) return true;
@@ -364,7 +365,6 @@ namespace Mutagen.Bethesda.Oblivion
                 if (eval(this.FOV)) return true;
                 if (eval(this.Value)) return true;
                 if (eval(this.Weight)) return true;
-                if (eval(this.Versioning)) return true;
                 return false;
             }
             #endregion
@@ -379,6 +379,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Versioning = eval(this.Versioning);
                 obj.Time = eval(this.Time);
                 obj.Radius = eval(this.Radius);
                 obj.Color = eval(this.Color);
@@ -387,7 +388,6 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.FOV = eval(this.FOV);
                 obj.Value = eval(this.Value);
                 obj.Weight = eval(this.Weight);
-                obj.Versioning = eval(this.Versioning);
             }
             #endregion
 
@@ -410,6 +410,10 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Versioning ?? true)
+                    {
+                        fg.AppendItem(Versioning, "Versioning");
+                    }
                     if (printMask?.Time ?? true)
                     {
                         fg.AppendItem(Time, "Time");
@@ -442,10 +446,6 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendItem(Weight, "Weight");
                     }
-                    if (printMask?.Versioning ?? true)
-                    {
-                        fg.AppendItem(Versioning, "Versioning");
-                    }
                 }
                 fg.AppendLine("]");
             }
@@ -471,6 +471,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return _warnings;
                 }
             }
+            public Exception? Versioning;
             public Exception? Time;
             public Exception? Radius;
             public Exception? Color;
@@ -479,7 +480,6 @@ namespace Mutagen.Bethesda.Oblivion
             public Exception? FOV;
             public Exception? Value;
             public Exception? Weight;
-            public Exception? Versioning;
             #endregion
 
             #region IErrorMask
@@ -488,6 +488,8 @@ namespace Mutagen.Bethesda.Oblivion
                 LightData_FieldIndex enu = (LightData_FieldIndex)index;
                 switch (enu)
                 {
+                    case LightData_FieldIndex.Versioning:
+                        return Versioning;
                     case LightData_FieldIndex.Time:
                         return Time;
                     case LightData_FieldIndex.Radius:
@@ -504,8 +506,6 @@ namespace Mutagen.Bethesda.Oblivion
                         return Value;
                     case LightData_FieldIndex.Weight:
                         return Weight;
-                    case LightData_FieldIndex.Versioning:
-                        return Versioning;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -516,6 +516,9 @@ namespace Mutagen.Bethesda.Oblivion
                 LightData_FieldIndex enu = (LightData_FieldIndex)index;
                 switch (enu)
                 {
+                    case LightData_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
                     case LightData_FieldIndex.Time:
                         this.Time = ex;
                         break;
@@ -540,9 +543,6 @@ namespace Mutagen.Bethesda.Oblivion
                     case LightData_FieldIndex.Weight:
                         this.Weight = ex;
                         break;
-                    case LightData_FieldIndex.Versioning:
-                        this.Versioning = ex;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -553,6 +553,9 @@ namespace Mutagen.Bethesda.Oblivion
                 LightData_FieldIndex enu = (LightData_FieldIndex)index;
                 switch (enu)
                 {
+                    case LightData_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
                     case LightData_FieldIndex.Time:
                         this.Time = (Exception?)obj;
                         break;
@@ -577,9 +580,6 @@ namespace Mutagen.Bethesda.Oblivion
                     case LightData_FieldIndex.Weight:
                         this.Weight = (Exception?)obj;
                         break;
-                    case LightData_FieldIndex.Versioning:
-                        this.Versioning = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -588,6 +588,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Versioning != null) return true;
                 if (Time != null) return true;
                 if (Radius != null) return true;
                 if (Color != null) return true;
@@ -596,7 +597,6 @@ namespace Mutagen.Bethesda.Oblivion
                 if (FOV != null) return true;
                 if (Value != null) return true;
                 if (Weight != null) return true;
-                if (Versioning != null) return true;
                 return false;
             }
             #endregion
@@ -631,6 +631,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
+                fg.AppendItem(Versioning, "Versioning");
                 fg.AppendItem(Time, "Time");
                 fg.AppendItem(Radius, "Radius");
                 fg.AppendItem(Color, "Color");
@@ -639,7 +640,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(FOV, "FOV");
                 fg.AppendItem(Value, "Value");
                 fg.AppendItem(Weight, "Weight");
-                fg.AppendItem(Versioning, "Versioning");
             }
             #endregion
 
@@ -648,6 +648,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.Time = this.Time.Combine(rhs.Time);
                 ret.Radius = this.Radius.Combine(rhs.Radius);
                 ret.Color = this.Color.Combine(rhs.Color);
@@ -656,7 +657,6 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.FOV = this.FOV.Combine(rhs.FOV);
                 ret.Value = this.Value.Combine(rhs.Value);
                 ret.Weight = this.Weight.Combine(rhs.Weight);
-                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -678,6 +678,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public bool Versioning;
             public bool Time;
             public bool Radius;
             public bool Color;
@@ -686,12 +687,12 @@ namespace Mutagen.Bethesda.Oblivion
             public bool FOV;
             public bool Value;
             public bool Weight;
-            public bool Versioning;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.Versioning = defaultOn;
                 this.Time = defaultOn;
                 this.Radius = defaultOn;
                 this.Color = defaultOn;
@@ -700,7 +701,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.FOV = defaultOn;
                 this.Value = defaultOn;
                 this.Weight = defaultOn;
-                this.Versioning = defaultOn;
             }
 
             #endregion
@@ -716,6 +716,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Versioning, null));
                 ret.Add((Time, null));
                 ret.Add((Radius, null));
                 ret.Add((Color, null));
@@ -724,7 +725,6 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((FOV, null));
                 ret.Add((Value, null));
                 ret.Add((Weight, null));
-                ret.Add((Versioning, null));
             }
         }
         #endregion
@@ -799,6 +799,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILightDataGetter,
         ILoquiObjectSetter<ILightData>
     {
+        new LightData.VersioningBreaks Versioning { get; set; }
         new Int32 Time { get; set; }
         new UInt32 Radius { get; set; }
         new Color Color { get; set; }
@@ -807,7 +808,6 @@ namespace Mutagen.Bethesda.Oblivion
         new Single FOV { get; set; }
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
-        new LightData.VersioningBreaks Versioning { get; set; }
     }
 
     public partial interface ILightDataGetter :
@@ -822,6 +822,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        LightData.VersioningBreaks Versioning { get; }
         Int32 Time { get; }
         UInt32 Radius { get; }
         Color Color { get; }
@@ -830,7 +831,6 @@ namespace Mutagen.Bethesda.Oblivion
         Single FOV { get; }
         UInt32 Value { get; }
         Single Weight { get; }
-        LightData.VersioningBreaks Versioning { get; }
 
     }
 
@@ -1137,15 +1137,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum LightData_FieldIndex
     {
-        Time = 0,
-        Radius = 1,
-        Color = 2,
-        Flags = 3,
-        FalloffExponent = 4,
-        FOV = 5,
-        Value = 6,
-        Weight = 7,
-        Versioning = 8,
+        Versioning = 0,
+        Time = 1,
+        Radius = 2,
+        Color = 3,
+        Flags = 4,
+        FalloffExponent = 5,
+        FOV = 6,
+        Value = 7,
+        Weight = 8,
     }
     #endregion
 
@@ -1195,6 +1195,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
+                case "VERSIONING":
+                    return (ushort)LightData_FieldIndex.Versioning;
                 case "TIME":
                     return (ushort)LightData_FieldIndex.Time;
                 case "RADIUS":
@@ -1211,8 +1213,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)LightData_FieldIndex.Value;
                 case "WEIGHT":
                     return (ushort)LightData_FieldIndex.Weight;
-                case "VERSIONING":
-                    return (ushort)LightData_FieldIndex.Versioning;
                 default:
                     return null;
             }
@@ -1223,6 +1223,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LightData_FieldIndex enu = (LightData_FieldIndex)index;
             switch (enu)
             {
+                case LightData_FieldIndex.Versioning:
                 case LightData_FieldIndex.Time:
                 case LightData_FieldIndex.Radius:
                 case LightData_FieldIndex.Color:
@@ -1231,7 +1232,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LightData_FieldIndex.FOV:
                 case LightData_FieldIndex.Value:
                 case LightData_FieldIndex.Weight:
-                case LightData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1243,6 +1243,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LightData_FieldIndex enu = (LightData_FieldIndex)index;
             switch (enu)
             {
+                case LightData_FieldIndex.Versioning:
                 case LightData_FieldIndex.Time:
                 case LightData_FieldIndex.Radius:
                 case LightData_FieldIndex.Color:
@@ -1251,7 +1252,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LightData_FieldIndex.FOV:
                 case LightData_FieldIndex.Value:
                 case LightData_FieldIndex.Weight:
-                case LightData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1263,6 +1263,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LightData_FieldIndex enu = (LightData_FieldIndex)index;
             switch (enu)
             {
+                case LightData_FieldIndex.Versioning:
                 case LightData_FieldIndex.Time:
                 case LightData_FieldIndex.Radius:
                 case LightData_FieldIndex.Color:
@@ -1271,7 +1272,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LightData_FieldIndex.FOV:
                 case LightData_FieldIndex.Value:
                 case LightData_FieldIndex.Weight:
-                case LightData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1283,6 +1283,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LightData_FieldIndex enu = (LightData_FieldIndex)index;
             switch (enu)
             {
+                case LightData_FieldIndex.Versioning:
+                    return "Versioning";
                 case LightData_FieldIndex.Time:
                     return "Time";
                 case LightData_FieldIndex.Radius:
@@ -1299,8 +1301,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Value";
                 case LightData_FieldIndex.Weight:
                     return "Weight";
-                case LightData_FieldIndex.Versioning:
-                    return "Versioning";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1311,6 +1311,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LightData_FieldIndex enu = (LightData_FieldIndex)index;
             switch (enu)
             {
+                case LightData_FieldIndex.Versioning:
                 case LightData_FieldIndex.Time:
                 case LightData_FieldIndex.Radius:
                 case LightData_FieldIndex.Color:
@@ -1319,7 +1320,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LightData_FieldIndex.FOV:
                 case LightData_FieldIndex.Value:
                 case LightData_FieldIndex.Weight:
-                case LightData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1331,6 +1331,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LightData_FieldIndex enu = (LightData_FieldIndex)index;
             switch (enu)
             {
+                case LightData_FieldIndex.Versioning:
                 case LightData_FieldIndex.Time:
                 case LightData_FieldIndex.Radius:
                 case LightData_FieldIndex.Color:
@@ -1339,7 +1340,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LightData_FieldIndex.FOV:
                 case LightData_FieldIndex.Value:
                 case LightData_FieldIndex.Weight:
-                case LightData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1351,6 +1351,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LightData_FieldIndex enu = (LightData_FieldIndex)index;
             switch (enu)
             {
+                case LightData_FieldIndex.Versioning:
+                    return typeof(LightData.VersioningBreaks);
                 case LightData_FieldIndex.Time:
                     return typeof(Int32);
                 case LightData_FieldIndex.Radius:
@@ -1367,8 +1369,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(UInt32);
                 case LightData_FieldIndex.Weight:
                     return typeof(Single);
-                case LightData_FieldIndex.Versioning:
-                    return typeof(LightData.VersioningBreaks);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1421,6 +1421,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(ILightData item)
         {
             ClearPartial();
+            item.Versioning = default;
             item.Time = LightData._Time_Default;
             item.Radius = default;
             item.Color = default;
@@ -1429,7 +1430,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.FOV = LightData._FOV_Default;
             item.Value = default;
             item.Weight = default;
-            item.Versioning = default;
         }
         
         #region Xml Translation
@@ -1526,6 +1526,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Time = item.Time == rhs.Time;
             ret.Radius = item.Radius == rhs.Radius;
             ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
@@ -1534,7 +1535,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.FOV = item.FOV.EqualsWithin(rhs.FOV);
             ret.Value = item.Value == rhs.Value;
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
-            ret.Versioning = item.Versioning == rhs.Versioning;
         }
         
         public string ToString(
@@ -1581,6 +1581,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             LightData.Mask<bool>? printMask = null)
         {
+            if (printMask?.Versioning ?? true)
+            {
+                fg.AppendItem(item.Versioning, "Versioning");
+            }
             if (printMask?.Time ?? true)
             {
                 fg.AppendItem(item.Time, "Time");
@@ -1613,10 +1617,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(item.Weight, "Weight");
             }
-            if (printMask?.Versioning ?? true)
-            {
-                fg.AppendItem(item.Versioning, "Versioning");
-            }
         }
         
         public bool HasBeenSet(
@@ -1630,6 +1630,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILightDataGetter item,
             LightData.Mask<bool> mask)
         {
+            mask.Versioning = true;
             mask.Time = true;
             mask.Radius = true;
             mask.Color = true;
@@ -1638,7 +1639,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.FOV = true;
             mask.Value = true;
             mask.Weight = true;
-            mask.Versioning = true;
         }
         
         #region Equals and Hash
@@ -1648,6 +1648,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
+            if (lhs.Versioning != rhs.Versioning) return false;
             if (lhs.Time != rhs.Time) return false;
             if (lhs.Radius != rhs.Radius) return false;
             if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
@@ -1656,13 +1657,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!lhs.FOV.EqualsWithin(rhs.FOV)) return false;
             if (lhs.Value != rhs.Value) return false;
             if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
-            if (lhs.Versioning != rhs.Versioning) return false;
             return true;
         }
         
         public virtual int GetHashCode(ILightDataGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Versioning);
             hash.Add(item.Time);
             hash.Add(item.Radius);
             hash.Add(item.Color);
@@ -1671,7 +1672,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             hash.Add(item.FOV);
             hash.Add(item.Value);
             hash.Add(item.Weight);
-            hash.Add(item.Versioning);
             return hash.ToHashCode();
         }
         
@@ -1703,6 +1703,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
+            if ((copyMask?.GetShouldTranslate((int)LightData_FieldIndex.Versioning) ?? true))
+            {
+                item.Versioning = rhs.Versioning;
+            }
             if ((copyMask?.GetShouldTranslate((int)LightData_FieldIndex.Time) ?? true))
             {
                 item.Time = rhs.Time;
@@ -1727,6 +1731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.FOV = rhs.FOV;
             }
+            if (rhs.Versioning.HasFlag(LightData.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)LightData_FieldIndex.Value) ?? true))
             {
                 item.Value = rhs.Value;
@@ -1734,10 +1739,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((copyMask?.GetShouldTranslate((int)LightData_FieldIndex.Weight) ?? true))
             {
                 item.Weight = rhs.Weight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)LightData_FieldIndex.Versioning) ?? true))
-            {
-                item.Versioning = rhs.Versioning;
             }
         }
         
@@ -1828,6 +1829,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
+            if ((translationMask?.GetShouldTranslate((int)LightData_FieldIndex.Versioning) ?? true))
+            {
+                EnumXmlTranslation<LightData.VersioningBreaks>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Versioning),
+                    item: item.Versioning,
+                    fieldIndex: (int)LightData_FieldIndex.Versioning,
+                    errorMask: errorMask);
+            }
             if ((translationMask?.GetShouldTranslate((int)LightData_FieldIndex.Time) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
@@ -1898,15 +1908,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     name: nameof(item.Weight),
                     item: item.Weight,
                     fieldIndex: (int)LightData_FieldIndex.Weight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)LightData_FieldIndex.Versioning) ?? true))
-            {
-                EnumXmlTranslation<LightData.VersioningBreaks>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Versioning),
-                    item: item.Versioning,
-                    fieldIndex: (int)LightData_FieldIndex.Versioning,
                     errorMask: errorMask);
             }
         }
@@ -2015,6 +2016,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
+                case "Versioning":
+                    errorMask?.PushIndex((int)LightData_FieldIndex.Versioning);
+                    try
+                    {
+                        item.Versioning = EnumXmlTranslation<LightData.VersioningBreaks>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "Time":
                     errorMask?.PushIndex((int)LightData_FieldIndex.Time);
                     try
@@ -2146,24 +2165,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         item.Weight = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Versioning":
-                    errorMask?.PushIndex((int)LightData_FieldIndex.Versioning);
-                    try
-                    {
-                        item.Versioning = EnumXmlTranslation<LightData.VersioningBreaks>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

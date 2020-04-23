@@ -3272,44 +3272,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Fluff = rhs.Fluff.ToArray();
             }
-            if ((copyMask?.GetShouldTranslate((int)RaceData_FieldIndex.Height) ?? true))
-            {
-                errorMask?.PushIndex((int)RaceData_FieldIndex.Height);
-                try
-                {
-                    item.Height = new GenderedItem<Single>(
-                        male: rhs.Height.Male,
-                        female: rhs.Height.Female);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)RaceData_FieldIndex.Weight) ?? true))
-            {
-                errorMask?.PushIndex((int)RaceData_FieldIndex.Weight);
-                try
-                {
-                    item.Weight = new GenderedItem<Single>(
-                        male: rhs.Weight.Male,
-                        female: rhs.Weight.Female);
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
+            item.Height = new GenderedItem<Single>(
+                male: rhs.Height.Male,
+                female: rhs.Height.Female);
+            item.Weight = new GenderedItem<Single>(
+                male: rhs.Weight.Male,
+                female: rhs.Weight.Female);
             if ((copyMask?.GetShouldTranslate((int)RaceData_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;

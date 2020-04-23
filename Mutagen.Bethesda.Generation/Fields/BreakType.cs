@@ -16,6 +16,10 @@ namespace Mutagen.Bethesda.Generation
 
         public override bool CopyNeedsTryCatch => throw new NotImplementedException();
 
+        public override bool Copy => true;
+
+        public int Index;
+
         public BreakType()
         {
             IntegrateField = false;
@@ -38,7 +42,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateForCopy(FileGeneration fg, Accessor accessor, Accessor rhs, Accessor copyMaskAccessor, bool protectedMembers, bool deepCopy)
         {
-            throw new NotImplementedException();
+            fg.AppendLine($"if ({rhs}.{VersioningModule.VersioningFieldName}.HasFlag({this.ObjectGen.ObjectName}.{VersioningModule.VersioningEnumName}.Break{Index})) return;");
         }
 
         public override void GenerateForEquals(FileGeneration fg, Accessor accessor, Accessor rhsAccessor)
@@ -106,7 +110,7 @@ namespace Mutagen.Bethesda.Generation
             throw new NotImplementedException();
         }
 
-        public override string SkipCheck(string copyMaskAccessor, bool deepCopy)
+        public override string SkipCheck(Accessor copyMaskAccessor, bool deepCopy)
         {
             throw new NotImplementedException();
         }

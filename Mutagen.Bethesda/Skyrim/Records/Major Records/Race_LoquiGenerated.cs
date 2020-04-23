@@ -5605,35 +5605,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SkeletalModel) ?? true))
+            if (!rhs.SkeletalModel.TryGet(out var rhsSkeletalModelitem))
             {
-                errorMask?.PushIndex((int)Race_FieldIndex.SkeletalModel);
-                try
-                {
-                    if (!rhs.SkeletalModel.TryGet(out var rhsSkeletalModelitem))
-                    {
-                        item.SkeletalModel = null;
-                    }
-                    else
-                    {
-                        item.SkeletalModel = new GenderedItem<SimpleModel?>(
-                            male: rhsSkeletalModelitem.Male?.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal)),
-                            female: rhsSkeletalModelitem.Female?.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal)));
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.SkeletalModel = null;
+            }
+            else
+            {
+                item.SkeletalModel = new GenderedItem<SimpleModel?>(
+                    male: rhsSkeletalModelitem.Male?.DeepCopy(
+                        errorMask: errorMask,
+                        default(TranslationCrystal)),
+                    female: rhsSkeletalModelitem.Female?.DeepCopy(
+                        errorMask: errorMask,
+                        default(TranslationCrystal)));
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.MovementTypeNames) ?? true))
             {
@@ -5661,83 +5645,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Voices) ?? true))
+            if (!rhs.Voices.TryGet(out var rhsVoicesitem))
             {
-                errorMask?.PushIndex((int)Race_FieldIndex.Voices);
-                try
-                {
-                    if (!rhs.Voices.TryGet(out var rhsVoicesitem))
-                    {
-                        item.Voices = null;
-                    }
-                    else
-                    {
-                        item.Voices = new GenderedItem<IFormLink<VoiceType>>(
-                            male: new FormLink<VoiceType>(rhsVoicesitem.Male.FormKey),
-                            female: new FormLink<VoiceType>(rhsVoicesitem.Female.FormKey));
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Voices = null;
             }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.DecapitateArmors) ?? true))
+            else
             {
-                errorMask?.PushIndex((int)Race_FieldIndex.DecapitateArmors);
-                try
-                {
-                    if (!rhs.DecapitateArmors.TryGet(out var rhsDecapitateArmorsitem))
-                    {
-                        item.DecapitateArmors = null;
-                    }
-                    else
-                    {
-                        item.DecapitateArmors = new GenderedItem<IFormLink<Armor>>(
-                            male: new FormLink<Armor>(rhsDecapitateArmorsitem.Male.FormKey),
-                            female: new FormLink<Armor>(rhsDecapitateArmorsitem.Female.FormKey));
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Voices = new GenderedItem<IFormLink<VoiceType>>(
+                    male: new FormLink<VoiceType>(rhsVoicesitem.Male.FormKey),
+                    female: new FormLink<VoiceType>(rhsVoicesitem.Female.FormKey));
             }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.DefaultHairColors) ?? true))
+            if (!rhs.DecapitateArmors.TryGet(out var rhsDecapitateArmorsitem))
             {
-                errorMask?.PushIndex((int)Race_FieldIndex.DefaultHairColors);
-                try
-                {
-                    if (!rhs.DefaultHairColors.TryGet(out var rhsDefaultHairColorsitem))
-                    {
-                        item.DefaultHairColors = null;
-                    }
-                    else
-                    {
-                        item.DefaultHairColors = new GenderedItem<IFormLink<ColorRecord>>(
-                            male: new FormLink<ColorRecord>(rhsDefaultHairColorsitem.Male.FormKey),
-                            female: new FormLink<ColorRecord>(rhsDefaultHairColorsitem.Female.FormKey));
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.DecapitateArmors = null;
+            }
+            else
+            {
+                item.DecapitateArmors = new GenderedItem<IFormLink<Armor>>(
+                    male: new FormLink<Armor>(rhsDecapitateArmorsitem.Male.FormKey),
+                    female: new FormLink<Armor>(rhsDecapitateArmorsitem.Female.FormKey));
+            }
+            if (!rhs.DefaultHairColors.TryGet(out var rhsDefaultHairColorsitem))
+            {
+                item.DefaultHairColors = null;
+            }
+            else
+            {
+                item.DefaultHairColors = new GenderedItem<IFormLink<ColorRecord>>(
+                    male: new FormLink<ColorRecord>(rhsDefaultHairColorsitem.Male.FormKey),
+                    female: new FormLink<ColorRecord>(rhsDefaultHairColorsitem.Female.FormKey));
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.NumberOfTintsInList) ?? true))
             {
@@ -5779,35 +5715,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BodyData) ?? true))
+            if (!rhs.BodyData.TryGet(out var rhsBodyDataitem))
             {
-                errorMask?.PushIndex((int)Race_FieldIndex.BodyData);
-                try
-                {
-                    if (!rhs.BodyData.TryGet(out var rhsBodyDataitem))
-                    {
-                        item.BodyData = null;
-                    }
-                    else
-                    {
-                        item.BodyData = new GenderedItem<BodyData?>(
-                            male: rhsBodyDataitem.Male?.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal)),
-                            female: rhsBodyDataitem.Female?.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal)));
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.BodyData = null;
+            }
+            else
+            {
+                item.BodyData = new GenderedItem<BodyData?>(
+                    male: rhsBodyDataitem.Male?.DeepCopy(
+                        errorMask: errorMask,
+                        default(TranslationCrystal)),
+                    female: rhsBodyDataitem.Female?.DeepCopy(
+                        errorMask: errorMask,
+                        default(TranslationCrystal)));
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Hairs) ?? true))
             {
@@ -5867,35 +5787,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.BodyPartData.FormKey = rhs.BodyPartData.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BehaviorGraph) ?? true))
+            if (!rhs.BehaviorGraph.TryGet(out var rhsBehaviorGraphitem))
             {
-                errorMask?.PushIndex((int)Race_FieldIndex.BehaviorGraph);
-                try
-                {
-                    if (!rhs.BehaviorGraph.TryGet(out var rhsBehaviorGraphitem))
-                    {
-                        item.BehaviorGraph = null;
-                    }
-                    else
-                    {
-                        item.BehaviorGraph = new GenderedItem<Model?>(
-                            male: rhsBehaviorGraphitem.Male?.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal)),
-                            female: rhsBehaviorGraphitem.Female?.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal)));
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.BehaviorGraph = null;
+            }
+            else
+            {
+                item.BehaviorGraph = new GenderedItem<Model?>(
+                    male: rhsBehaviorGraphitem.Male?.DeepCopy(
+                        errorMask: errorMask,
+                        default(TranslationCrystal)),
+                    female: rhsBehaviorGraphitem.Female?.DeepCopy(
+                        errorMask: errorMask,
+                        default(TranslationCrystal)));
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.MaterialType) ?? true))
             {
@@ -6039,35 +5943,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.BaseMovementDefaultSprint.FormKey = rhs.BaseMovementDefaultSprint.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.HeadData) ?? true))
+            if (!rhs.HeadData.TryGet(out var rhsHeadDataitem))
             {
-                errorMask?.PushIndex((int)Race_FieldIndex.HeadData);
-                try
-                {
-                    if (!rhs.HeadData.TryGet(out var rhsHeadDataitem))
-                    {
-                        item.HeadData = null;
-                    }
-                    else
-                    {
-                        item.HeadData = new GenderedItem<HeadData?>(
-                            male: rhsHeadDataitem.Male?.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal)),
-                            female: rhsHeadDataitem.Female?.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal)));
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.HeadData = null;
+            }
+            else
+            {
+                item.HeadData = new GenderedItem<HeadData?>(
+                    male: rhsHeadDataitem.Male?.DeepCopy(
+                        errorMask: errorMask,
+                        default(TranslationCrystal)),
+                    female: rhsHeadDataitem.Female?.DeepCopy(
+                        errorMask: errorMask,
+                        default(TranslationCrystal)));
             }
         }
         

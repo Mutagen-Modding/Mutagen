@@ -46,6 +46,9 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
+        #region Versioning
+        public WaterData.VersioningBreaks Versioning { get; set; } = default;
+        #endregion
         #region WindVelocity
         public Single WindVelocity { get; set; } = default;
         #endregion
@@ -123,9 +126,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Damage
         public UInt16 Damage { get; set; } = default;
-        #endregion
-        #region Versioning
-        public WaterData.VersioningBreaks Versioning { get; set; } = default;
         #endregion
 
         #region To String
@@ -297,6 +297,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Versioning = initialValue;
                 this.WindVelocity = initialValue;
                 this.WindDirection = initialValue;
                 this.WaveAmplitude = initialValue;
@@ -323,10 +324,10 @@ namespace Mutagen.Bethesda.Oblivion
                 this.DisplacementSimulatorDampner = initialValue;
                 this.DisplacementSimulatorStartingSize = initialValue;
                 this.Damage = initialValue;
-                this.Versioning = initialValue;
             }
 
             public Mask(
+                TItem Versioning,
                 TItem WindVelocity,
                 TItem WindDirection,
                 TItem WaveAmplitude,
@@ -352,9 +353,9 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem DisplacementSimulatorFalloff,
                 TItem DisplacementSimulatorDampner,
                 TItem DisplacementSimulatorStartingSize,
-                TItem Damage,
-                TItem Versioning)
+                TItem Damage)
             {
+                this.Versioning = Versioning;
                 this.WindVelocity = WindVelocity;
                 this.WindDirection = WindDirection;
                 this.WaveAmplitude = WaveAmplitude;
@@ -381,7 +382,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.DisplacementSimulatorDampner = DisplacementSimulatorDampner;
                 this.DisplacementSimulatorStartingSize = DisplacementSimulatorStartingSize;
                 this.Damage = Damage;
-                this.Versioning = Versioning;
             }
 
             #pragma warning disable CS8618
@@ -393,6 +393,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
+            public TItem Versioning;
             public TItem WindVelocity;
             public TItem WindDirection;
             public TItem WaveAmplitude;
@@ -419,7 +420,6 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem DisplacementSimulatorDampner;
             public TItem DisplacementSimulatorStartingSize;
             public TItem Damage;
-            public TItem Versioning;
             #endregion
 
             #region Equals
@@ -432,6 +432,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.WindVelocity, rhs.WindVelocity)) return false;
                 if (!object.Equals(this.WindDirection, rhs.WindDirection)) return false;
                 if (!object.Equals(this.WaveAmplitude, rhs.WaveAmplitude)) return false;
@@ -458,12 +459,12 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.DisplacementSimulatorDampner, rhs.DisplacementSimulatorDampner)) return false;
                 if (!object.Equals(this.DisplacementSimulatorStartingSize, rhs.DisplacementSimulatorStartingSize)) return false;
                 if (!object.Equals(this.Damage, rhs.Damage)) return false;
-                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Versioning);
                 hash.Add(this.WindVelocity);
                 hash.Add(this.WindDirection);
                 hash.Add(this.WaveAmplitude);
@@ -490,7 +491,6 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.DisplacementSimulatorDampner);
                 hash.Add(this.DisplacementSimulatorStartingSize);
                 hash.Add(this.Damage);
-                hash.Add(this.Versioning);
                 return hash.ToHashCode();
             }
 
@@ -499,6 +499,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Versioning)) return false;
                 if (!eval(this.WindVelocity)) return false;
                 if (!eval(this.WindDirection)) return false;
                 if (!eval(this.WaveAmplitude)) return false;
@@ -525,7 +526,6 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.DisplacementSimulatorDampner)) return false;
                 if (!eval(this.DisplacementSimulatorStartingSize)) return false;
                 if (!eval(this.Damage)) return false;
-                if (!eval(this.Versioning)) return false;
                 return true;
             }
             #endregion
@@ -533,6 +533,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Versioning)) return true;
                 if (eval(this.WindVelocity)) return true;
                 if (eval(this.WindDirection)) return true;
                 if (eval(this.WaveAmplitude)) return true;
@@ -559,7 +560,6 @@ namespace Mutagen.Bethesda.Oblivion
                 if (eval(this.DisplacementSimulatorDampner)) return true;
                 if (eval(this.DisplacementSimulatorStartingSize)) return true;
                 if (eval(this.Damage)) return true;
-                if (eval(this.Versioning)) return true;
                 return false;
             }
             #endregion
@@ -574,6 +574,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Versioning = eval(this.Versioning);
                 obj.WindVelocity = eval(this.WindVelocity);
                 obj.WindDirection = eval(this.WindDirection);
                 obj.WaveAmplitude = eval(this.WaveAmplitude);
@@ -600,7 +601,6 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.DisplacementSimulatorDampner = eval(this.DisplacementSimulatorDampner);
                 obj.DisplacementSimulatorStartingSize = eval(this.DisplacementSimulatorStartingSize);
                 obj.Damage = eval(this.Damage);
-                obj.Versioning = eval(this.Versioning);
             }
             #endregion
 
@@ -623,6 +623,10 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Versioning ?? true)
+                    {
+                        fg.AppendItem(Versioning, "Versioning");
+                    }
                     if (printMask?.WindVelocity ?? true)
                     {
                         fg.AppendItem(WindVelocity, "WindVelocity");
@@ -727,10 +731,6 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendItem(Damage, "Damage");
                     }
-                    if (printMask?.Versioning ?? true)
-                    {
-                        fg.AppendItem(Versioning, "Versioning");
-                    }
                 }
                 fg.AppendLine("]");
             }
@@ -756,6 +756,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return _warnings;
                 }
             }
+            public Exception? Versioning;
             public Exception? WindVelocity;
             public Exception? WindDirection;
             public Exception? WaveAmplitude;
@@ -782,7 +783,6 @@ namespace Mutagen.Bethesda.Oblivion
             public Exception? DisplacementSimulatorDampner;
             public Exception? DisplacementSimulatorStartingSize;
             public Exception? Damage;
-            public Exception? Versioning;
             #endregion
 
             #region IErrorMask
@@ -791,6 +791,8 @@ namespace Mutagen.Bethesda.Oblivion
                 WaterData_FieldIndex enu = (WaterData_FieldIndex)index;
                 switch (enu)
                 {
+                    case WaterData_FieldIndex.Versioning:
+                        return Versioning;
                     case WaterData_FieldIndex.WindVelocity:
                         return WindVelocity;
                     case WaterData_FieldIndex.WindDirection:
@@ -843,8 +845,6 @@ namespace Mutagen.Bethesda.Oblivion
                         return DisplacementSimulatorStartingSize;
                     case WaterData_FieldIndex.Damage:
                         return Damage;
-                    case WaterData_FieldIndex.Versioning:
-                        return Versioning;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -855,6 +855,9 @@ namespace Mutagen.Bethesda.Oblivion
                 WaterData_FieldIndex enu = (WaterData_FieldIndex)index;
                 switch (enu)
                 {
+                    case WaterData_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
                     case WaterData_FieldIndex.WindVelocity:
                         this.WindVelocity = ex;
                         break;
@@ -933,9 +936,6 @@ namespace Mutagen.Bethesda.Oblivion
                     case WaterData_FieldIndex.Damage:
                         this.Damage = ex;
                         break;
-                    case WaterData_FieldIndex.Versioning:
-                        this.Versioning = ex;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -946,6 +946,9 @@ namespace Mutagen.Bethesda.Oblivion
                 WaterData_FieldIndex enu = (WaterData_FieldIndex)index;
                 switch (enu)
                 {
+                    case WaterData_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
                     case WaterData_FieldIndex.WindVelocity:
                         this.WindVelocity = (Exception?)obj;
                         break;
@@ -1024,9 +1027,6 @@ namespace Mutagen.Bethesda.Oblivion
                     case WaterData_FieldIndex.Damage:
                         this.Damage = (Exception?)obj;
                         break;
-                    case WaterData_FieldIndex.Versioning:
-                        this.Versioning = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1035,6 +1035,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Versioning != null) return true;
                 if (WindVelocity != null) return true;
                 if (WindDirection != null) return true;
                 if (WaveAmplitude != null) return true;
@@ -1061,7 +1062,6 @@ namespace Mutagen.Bethesda.Oblivion
                 if (DisplacementSimulatorDampner != null) return true;
                 if (DisplacementSimulatorStartingSize != null) return true;
                 if (Damage != null) return true;
-                if (Versioning != null) return true;
                 return false;
             }
             #endregion
@@ -1096,6 +1096,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
+                fg.AppendItem(Versioning, "Versioning");
                 fg.AppendItem(WindVelocity, "WindVelocity");
                 fg.AppendItem(WindDirection, "WindDirection");
                 fg.AppendItem(WaveAmplitude, "WaveAmplitude");
@@ -1122,7 +1123,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(DisplacementSimulatorDampner, "DisplacementSimulatorDampner");
                 fg.AppendItem(DisplacementSimulatorStartingSize, "DisplacementSimulatorStartingSize");
                 fg.AppendItem(Damage, "Damage");
-                fg.AppendItem(Versioning, "Versioning");
             }
             #endregion
 
@@ -1131,6 +1131,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.WindVelocity = this.WindVelocity.Combine(rhs.WindVelocity);
                 ret.WindDirection = this.WindDirection.Combine(rhs.WindDirection);
                 ret.WaveAmplitude = this.WaveAmplitude.Combine(rhs.WaveAmplitude);
@@ -1157,7 +1158,6 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.DisplacementSimulatorDampner = this.DisplacementSimulatorDampner.Combine(rhs.DisplacementSimulatorDampner);
                 ret.DisplacementSimulatorStartingSize = this.DisplacementSimulatorStartingSize.Combine(rhs.DisplacementSimulatorStartingSize);
                 ret.Damage = this.Damage.Combine(rhs.Damage);
-                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1179,6 +1179,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public bool Versioning;
             public bool WindVelocity;
             public bool WindDirection;
             public bool WaveAmplitude;
@@ -1205,12 +1206,12 @@ namespace Mutagen.Bethesda.Oblivion
             public bool DisplacementSimulatorDampner;
             public bool DisplacementSimulatorStartingSize;
             public bool Damage;
-            public bool Versioning;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.Versioning = defaultOn;
                 this.WindVelocity = defaultOn;
                 this.WindDirection = defaultOn;
                 this.WaveAmplitude = defaultOn;
@@ -1237,7 +1238,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.DisplacementSimulatorDampner = defaultOn;
                 this.DisplacementSimulatorStartingSize = defaultOn;
                 this.Damage = defaultOn;
-                this.Versioning = defaultOn;
             }
 
             #endregion
@@ -1253,6 +1253,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Versioning, null));
                 ret.Add((WindVelocity, null));
                 ret.Add((WindDirection, null));
                 ret.Add((WaveAmplitude, null));
@@ -1279,7 +1280,6 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((DisplacementSimulatorDampner, null));
                 ret.Add((DisplacementSimulatorStartingSize, null));
                 ret.Add((Damage, null));
-                ret.Add((Versioning, null));
             }
         }
         #endregion
@@ -1357,6 +1357,7 @@ namespace Mutagen.Bethesda.Oblivion
         IWaterDataGetter,
         ILoquiObjectSetter<IWaterData>
     {
+        new WaterData.VersioningBreaks Versioning { get; set; }
         new Single WindVelocity { get; set; }
         new Single WindDirection { get; set; }
         new Single WaveAmplitude { get; set; }
@@ -1383,7 +1384,6 @@ namespace Mutagen.Bethesda.Oblivion
         new Single DisplacementSimulatorDampner { get; set; }
         new Single DisplacementSimulatorStartingSize { get; set; }
         new UInt16 Damage { get; set; }
-        new WaterData.VersioningBreaks Versioning { get; set; }
     }
 
     public partial interface IWaterDataGetter :
@@ -1398,6 +1398,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        WaterData.VersioningBreaks Versioning { get; }
         Single WindVelocity { get; }
         Single WindDirection { get; }
         Single WaveAmplitude { get; }
@@ -1424,7 +1425,6 @@ namespace Mutagen.Bethesda.Oblivion
         Single DisplacementSimulatorDampner { get; }
         Single DisplacementSimulatorStartingSize { get; }
         UInt16 Damage { get; }
-        WaterData.VersioningBreaks Versioning { get; }
 
     }
 
@@ -1731,33 +1731,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum WaterData_FieldIndex
     {
-        WindVelocity = 0,
-        WindDirection = 1,
-        WaveAmplitude = 2,
-        WaveFrequency = 3,
-        SunPower = 4,
-        ReflectivityAmount = 5,
-        FresnelAmount = 6,
-        ScrollXSpeed = 7,
-        ScrollYSpeed = 8,
-        FogDistanceNearPlane = 9,
-        FogDistanceFarPlane = 10,
-        ShallowColor = 11,
-        DeepColor = 12,
-        ReflectionColor = 13,
-        TextureBlend = 14,
-        RainSimulatorForce = 15,
-        RainSimulatorVelocity = 16,
-        RainSimulatorFalloff = 17,
-        RainSimulatorDampner = 18,
-        RainSimulatorStartingSize = 19,
-        DisplacementSimulatorForce = 20,
-        DisplacementSimulatorVelocity = 21,
-        DisplacementSimulatorFalloff = 22,
-        DisplacementSimulatorDampner = 23,
-        DisplacementSimulatorStartingSize = 24,
-        Damage = 25,
-        Versioning = 26,
+        Versioning = 0,
+        WindVelocity = 1,
+        WindDirection = 2,
+        WaveAmplitude = 3,
+        WaveFrequency = 4,
+        SunPower = 5,
+        ReflectivityAmount = 6,
+        FresnelAmount = 7,
+        ScrollXSpeed = 8,
+        ScrollYSpeed = 9,
+        FogDistanceNearPlane = 10,
+        FogDistanceFarPlane = 11,
+        ShallowColor = 12,
+        DeepColor = 13,
+        ReflectionColor = 14,
+        TextureBlend = 15,
+        RainSimulatorForce = 16,
+        RainSimulatorVelocity = 17,
+        RainSimulatorFalloff = 18,
+        RainSimulatorDampner = 19,
+        RainSimulatorStartingSize = 20,
+        DisplacementSimulatorForce = 21,
+        DisplacementSimulatorVelocity = 22,
+        DisplacementSimulatorFalloff = 23,
+        DisplacementSimulatorDampner = 24,
+        DisplacementSimulatorStartingSize = 25,
+        Damage = 26,
     }
     #endregion
 
@@ -1807,6 +1807,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
+                case "VERSIONING":
+                    return (ushort)WaterData_FieldIndex.Versioning;
                 case "WINDVELOCITY":
                     return (ushort)WaterData_FieldIndex.WindVelocity;
                 case "WINDDIRECTION":
@@ -1859,8 +1861,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)WaterData_FieldIndex.DisplacementSimulatorStartingSize;
                 case "DAMAGE":
                     return (ushort)WaterData_FieldIndex.Damage;
-                case "VERSIONING":
-                    return (ushort)WaterData_FieldIndex.Versioning;
                 default:
                     return null;
             }
@@ -1871,6 +1871,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WaterData_FieldIndex enu = (WaterData_FieldIndex)index;
             switch (enu)
             {
+                case WaterData_FieldIndex.Versioning:
                 case WaterData_FieldIndex.WindVelocity:
                 case WaterData_FieldIndex.WindDirection:
                 case WaterData_FieldIndex.WaveAmplitude:
@@ -1897,7 +1898,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case WaterData_FieldIndex.DisplacementSimulatorDampner:
                 case WaterData_FieldIndex.DisplacementSimulatorStartingSize:
                 case WaterData_FieldIndex.Damage:
-                case WaterData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1909,6 +1909,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WaterData_FieldIndex enu = (WaterData_FieldIndex)index;
             switch (enu)
             {
+                case WaterData_FieldIndex.Versioning:
                 case WaterData_FieldIndex.WindVelocity:
                 case WaterData_FieldIndex.WindDirection:
                 case WaterData_FieldIndex.WaveAmplitude:
@@ -1935,7 +1936,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case WaterData_FieldIndex.DisplacementSimulatorDampner:
                 case WaterData_FieldIndex.DisplacementSimulatorStartingSize:
                 case WaterData_FieldIndex.Damage:
-                case WaterData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1947,6 +1947,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WaterData_FieldIndex enu = (WaterData_FieldIndex)index;
             switch (enu)
             {
+                case WaterData_FieldIndex.Versioning:
                 case WaterData_FieldIndex.WindVelocity:
                 case WaterData_FieldIndex.WindDirection:
                 case WaterData_FieldIndex.WaveAmplitude:
@@ -1973,7 +1974,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case WaterData_FieldIndex.DisplacementSimulatorDampner:
                 case WaterData_FieldIndex.DisplacementSimulatorStartingSize:
                 case WaterData_FieldIndex.Damage:
-                case WaterData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1985,6 +1985,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WaterData_FieldIndex enu = (WaterData_FieldIndex)index;
             switch (enu)
             {
+                case WaterData_FieldIndex.Versioning:
+                    return "Versioning";
                 case WaterData_FieldIndex.WindVelocity:
                     return "WindVelocity";
                 case WaterData_FieldIndex.WindDirection:
@@ -2037,8 +2039,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "DisplacementSimulatorStartingSize";
                 case WaterData_FieldIndex.Damage:
                     return "Damage";
-                case WaterData_FieldIndex.Versioning:
-                    return "Versioning";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2049,6 +2049,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WaterData_FieldIndex enu = (WaterData_FieldIndex)index;
             switch (enu)
             {
+                case WaterData_FieldIndex.Versioning:
                 case WaterData_FieldIndex.WindVelocity:
                 case WaterData_FieldIndex.WindDirection:
                 case WaterData_FieldIndex.WaveAmplitude:
@@ -2075,7 +2076,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case WaterData_FieldIndex.DisplacementSimulatorDampner:
                 case WaterData_FieldIndex.DisplacementSimulatorStartingSize:
                 case WaterData_FieldIndex.Damage:
-                case WaterData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2087,6 +2087,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WaterData_FieldIndex enu = (WaterData_FieldIndex)index;
             switch (enu)
             {
+                case WaterData_FieldIndex.Versioning:
                 case WaterData_FieldIndex.WindVelocity:
                 case WaterData_FieldIndex.WindDirection:
                 case WaterData_FieldIndex.WaveAmplitude:
@@ -2113,7 +2114,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case WaterData_FieldIndex.DisplacementSimulatorDampner:
                 case WaterData_FieldIndex.DisplacementSimulatorStartingSize:
                 case WaterData_FieldIndex.Damage:
-                case WaterData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2125,6 +2125,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WaterData_FieldIndex enu = (WaterData_FieldIndex)index;
             switch (enu)
             {
+                case WaterData_FieldIndex.Versioning:
+                    return typeof(WaterData.VersioningBreaks);
                 case WaterData_FieldIndex.WindVelocity:
                     return typeof(Single);
                 case WaterData_FieldIndex.WindDirection:
@@ -2177,8 +2179,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Single);
                 case WaterData_FieldIndex.Damage:
                     return typeof(UInt16);
-                case WaterData_FieldIndex.Versioning:
-                    return typeof(WaterData.VersioningBreaks);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2231,6 +2231,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IWaterData item)
         {
             ClearPartial();
+            item.Versioning = default;
             item.WindVelocity = default;
             item.WindDirection = default;
             item.WaveAmplitude = default;
@@ -2257,7 +2258,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.DisplacementSimulatorDampner = default;
             item.DisplacementSimulatorStartingSize = default;
             item.Damage = default;
-            item.Versioning = default;
         }
         
         #region Xml Translation
@@ -2401,6 +2401,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.WindVelocity = item.WindVelocity.EqualsWithin(rhs.WindVelocity);
             ret.WindDirection = item.WindDirection.EqualsWithin(rhs.WindDirection);
             ret.WaveAmplitude = item.WaveAmplitude.EqualsWithin(rhs.WaveAmplitude);
@@ -2427,7 +2428,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.DisplacementSimulatorDampner = item.DisplacementSimulatorDampner.EqualsWithin(rhs.DisplacementSimulatorDampner);
             ret.DisplacementSimulatorStartingSize = item.DisplacementSimulatorStartingSize.EqualsWithin(rhs.DisplacementSimulatorStartingSize);
             ret.Damage = item.Damage == rhs.Damage;
-            ret.Versioning = item.Versioning == rhs.Versioning;
         }
         
         public string ToString(
@@ -2474,6 +2474,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             WaterData.Mask<bool>? printMask = null)
         {
+            if (printMask?.Versioning ?? true)
+            {
+                fg.AppendItem(item.Versioning, "Versioning");
+            }
             if (printMask?.WindVelocity ?? true)
             {
                 fg.AppendItem(item.WindVelocity, "WindVelocity");
@@ -2578,10 +2582,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(item.Damage, "Damage");
             }
-            if (printMask?.Versioning ?? true)
-            {
-                fg.AppendItem(item.Versioning, "Versioning");
-            }
         }
         
         public bool HasBeenSet(
@@ -2595,6 +2595,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWaterDataGetter item,
             WaterData.Mask<bool> mask)
         {
+            mask.Versioning = true;
             mask.WindVelocity = true;
             mask.WindDirection = true;
             mask.WaveAmplitude = true;
@@ -2621,7 +2622,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.DisplacementSimulatorDampner = true;
             mask.DisplacementSimulatorStartingSize = true;
             mask.Damage = true;
-            mask.Versioning = true;
         }
         
         #region Equals and Hash
@@ -2631,6 +2631,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
+            if (lhs.Versioning != rhs.Versioning) return false;
             if (!lhs.WindVelocity.EqualsWithin(rhs.WindVelocity)) return false;
             if (!lhs.WindDirection.EqualsWithin(rhs.WindDirection)) return false;
             if (!lhs.WaveAmplitude.EqualsWithin(rhs.WaveAmplitude)) return false;
@@ -2657,13 +2658,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!lhs.DisplacementSimulatorDampner.EqualsWithin(rhs.DisplacementSimulatorDampner)) return false;
             if (!lhs.DisplacementSimulatorStartingSize.EqualsWithin(rhs.DisplacementSimulatorStartingSize)) return false;
             if (lhs.Damage != rhs.Damage) return false;
-            if (lhs.Versioning != rhs.Versioning) return false;
             return true;
         }
         
         public virtual int GetHashCode(IWaterDataGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Versioning);
             hash.Add(item.WindVelocity);
             hash.Add(item.WindDirection);
             hash.Add(item.WaveAmplitude);
@@ -2690,7 +2691,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             hash.Add(item.DisplacementSimulatorDampner);
             hash.Add(item.DisplacementSimulatorStartingSize);
             hash.Add(item.Damage);
-            hash.Add(item.Versioning);
             return hash.ToHashCode();
         }
         
@@ -2722,6 +2722,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
+            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.Versioning) ?? true))
+            {
+                item.Versioning = rhs.Versioning;
+            }
+            if (rhs.Versioning.HasFlag(WaterData.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.WindVelocity) ?? true))
             {
                 item.WindVelocity = rhs.WindVelocity;
@@ -2762,6 +2767,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.FogDistanceNearPlane = rhs.FogDistanceNearPlane;
             }
+            if (rhs.Versioning.HasFlag(WaterData.VersioningBreaks.Break1)) return;
             if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.FogDistanceFarPlane) ?? true))
             {
                 item.FogDistanceFarPlane = rhs.FogDistanceFarPlane;
@@ -2782,6 +2788,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.TextureBlend = rhs.TextureBlend;
             }
+            if (rhs.Versioning.HasFlag(WaterData.VersioningBreaks.Break2)) return;
             if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.RainSimulatorForce) ?? true))
             {
                 item.RainSimulatorForce = rhs.RainSimulatorForce;
@@ -2806,6 +2813,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.DisplacementSimulatorForce = rhs.DisplacementSimulatorForce;
             }
+            if (rhs.Versioning.HasFlag(WaterData.VersioningBreaks.Break3)) return;
             if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.DisplacementSimulatorVelocity) ?? true))
             {
                 item.DisplacementSimulatorVelocity = rhs.DisplacementSimulatorVelocity;
@@ -2825,10 +2833,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.Damage) ?? true))
             {
                 item.Damage = rhs.Damage;
-            }
-            if ((copyMask?.GetShouldTranslate((int)WaterData_FieldIndex.Versioning) ?? true))
-            {
-                item.Versioning = rhs.Versioning;
             }
         }
         
@@ -2919,6 +2923,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
+            if ((translationMask?.GetShouldTranslate((int)WaterData_FieldIndex.Versioning) ?? true))
+            {
+                EnumXmlTranslation<WaterData.VersioningBreaks>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Versioning),
+                    item: item.Versioning,
+                    fieldIndex: (int)WaterData_FieldIndex.Versioning,
+                    errorMask: errorMask);
+            }
             if ((translationMask?.GetShouldTranslate((int)WaterData_FieldIndex.WindVelocity) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
@@ -3153,15 +3166,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)WaterData_FieldIndex.Damage,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)WaterData_FieldIndex.Versioning) ?? true))
-            {
-                EnumXmlTranslation<WaterData.VersioningBreaks>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Versioning),
-                    item: item.Versioning,
-                    fieldIndex: (int)WaterData_FieldIndex.Versioning,
-                    errorMask: errorMask);
-            }
         }
 
         public void Write(
@@ -3268,6 +3272,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
+                case "Versioning":
+                    errorMask?.PushIndex((int)WaterData_FieldIndex.Versioning);
+                    try
+                    {
+                        item.Versioning = EnumXmlTranslation<WaterData.VersioningBreaks>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "WindVelocity":
                     errorMask?.PushIndex((int)WaterData_FieldIndex.WindVelocity);
                     try
@@ -3723,24 +3745,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         item.Damage = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Versioning":
-                    errorMask?.PushIndex((int)WaterData_FieldIndex.Versioning);
-                    try
-                    {
-                        item.Versioning = EnumXmlTranslation<WaterData.VersioningBreaks>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

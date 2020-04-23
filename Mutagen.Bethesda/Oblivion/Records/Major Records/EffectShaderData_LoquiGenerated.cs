@@ -46,6 +46,9 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
+        #region Versioning
+        public EffectShaderData.VersioningBreaks Versioning { get; set; } = default;
+        #endregion
         #region Flags
         public EffectShader.Flag Flags { get; set; } = default;
         #endregion
@@ -213,9 +216,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region ColorKey3ColorKeyTime
         public Single ColorKey3ColorKeyTime { get; set; } = default;
-        #endregion
-        #region Versioning
-        public EffectShaderData.VersioningBreaks Versioning { get; set; } = default;
         #endregion
 
         #region To String
@@ -387,6 +387,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Versioning = initialValue;
                 this.Flags = initialValue;
                 this.MembraneShaderSourceBlendMode = initialValue;
                 this.MembraneShaderBlendOperation = initialValue;
@@ -443,10 +444,10 @@ namespace Mutagen.Bethesda.Oblivion
                 this.ColorKey1ColorKeyTime = initialValue;
                 this.ColorKey2ColorKeyTime = initialValue;
                 this.ColorKey3ColorKeyTime = initialValue;
-                this.Versioning = initialValue;
             }
 
             public Mask(
+                TItem Versioning,
                 TItem Flags,
                 TItem MembraneShaderSourceBlendMode,
                 TItem MembraneShaderBlendOperation,
@@ -502,9 +503,9 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem ColorKey3ColorAlpha,
                 TItem ColorKey1ColorKeyTime,
                 TItem ColorKey2ColorKeyTime,
-                TItem ColorKey3ColorKeyTime,
-                TItem Versioning)
+                TItem ColorKey3ColorKeyTime)
             {
+                this.Versioning = Versioning;
                 this.Flags = Flags;
                 this.MembraneShaderSourceBlendMode = MembraneShaderSourceBlendMode;
                 this.MembraneShaderBlendOperation = MembraneShaderBlendOperation;
@@ -561,7 +562,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.ColorKey1ColorKeyTime = ColorKey1ColorKeyTime;
                 this.ColorKey2ColorKeyTime = ColorKey2ColorKeyTime;
                 this.ColorKey3ColorKeyTime = ColorKey3ColorKeyTime;
-                this.Versioning = Versioning;
             }
 
             #pragma warning disable CS8618
@@ -573,6 +573,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
+            public TItem Versioning;
             public TItem Flags;
             public TItem MembraneShaderSourceBlendMode;
             public TItem MembraneShaderBlendOperation;
@@ -629,7 +630,6 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem ColorKey1ColorKeyTime;
             public TItem ColorKey2ColorKeyTime;
             public TItem ColorKey3ColorKeyTime;
-            public TItem Versioning;
             #endregion
 
             #region Equals
@@ -642,6 +642,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.MembraneShaderSourceBlendMode, rhs.MembraneShaderSourceBlendMode)) return false;
                 if (!object.Equals(this.MembraneShaderBlendOperation, rhs.MembraneShaderBlendOperation)) return false;
@@ -698,12 +699,12 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.ColorKey1ColorKeyTime, rhs.ColorKey1ColorKeyTime)) return false;
                 if (!object.Equals(this.ColorKey2ColorKeyTime, rhs.ColorKey2ColorKeyTime)) return false;
                 if (!object.Equals(this.ColorKey3ColorKeyTime, rhs.ColorKey3ColorKeyTime)) return false;
-                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Versioning);
                 hash.Add(this.Flags);
                 hash.Add(this.MembraneShaderSourceBlendMode);
                 hash.Add(this.MembraneShaderBlendOperation);
@@ -760,7 +761,6 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.ColorKey1ColorKeyTime);
                 hash.Add(this.ColorKey2ColorKeyTime);
                 hash.Add(this.ColorKey3ColorKeyTime);
-                hash.Add(this.Versioning);
                 return hash.ToHashCode();
             }
 
@@ -769,6 +769,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Versioning)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.MembraneShaderSourceBlendMode)) return false;
                 if (!eval(this.MembraneShaderBlendOperation)) return false;
@@ -825,7 +826,6 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.ColorKey1ColorKeyTime)) return false;
                 if (!eval(this.ColorKey2ColorKeyTime)) return false;
                 if (!eval(this.ColorKey3ColorKeyTime)) return false;
-                if (!eval(this.Versioning)) return false;
                 return true;
             }
             #endregion
@@ -833,6 +833,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Versioning)) return true;
                 if (eval(this.Flags)) return true;
                 if (eval(this.MembraneShaderSourceBlendMode)) return true;
                 if (eval(this.MembraneShaderBlendOperation)) return true;
@@ -889,7 +890,6 @@ namespace Mutagen.Bethesda.Oblivion
                 if (eval(this.ColorKey1ColorKeyTime)) return true;
                 if (eval(this.ColorKey2ColorKeyTime)) return true;
                 if (eval(this.ColorKey3ColorKeyTime)) return true;
-                if (eval(this.Versioning)) return true;
                 return false;
             }
             #endregion
@@ -904,6 +904,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Versioning = eval(this.Versioning);
                 obj.Flags = eval(this.Flags);
                 obj.MembraneShaderSourceBlendMode = eval(this.MembraneShaderSourceBlendMode);
                 obj.MembraneShaderBlendOperation = eval(this.MembraneShaderBlendOperation);
@@ -960,7 +961,6 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.ColorKey1ColorKeyTime = eval(this.ColorKey1ColorKeyTime);
                 obj.ColorKey2ColorKeyTime = eval(this.ColorKey2ColorKeyTime);
                 obj.ColorKey3ColorKeyTime = eval(this.ColorKey3ColorKeyTime);
-                obj.Versioning = eval(this.Versioning);
             }
             #endregion
 
@@ -983,6 +983,10 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Versioning ?? true)
+                    {
+                        fg.AppendItem(Versioning, "Versioning");
+                    }
                     if (printMask?.Flags ?? true)
                     {
                         fg.AppendItem(Flags, "Flags");
@@ -1207,10 +1211,6 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendItem(ColorKey3ColorKeyTime, "ColorKey3ColorKeyTime");
                     }
-                    if (printMask?.Versioning ?? true)
-                    {
-                        fg.AppendItem(Versioning, "Versioning");
-                    }
                 }
                 fg.AppendLine("]");
             }
@@ -1236,6 +1236,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return _warnings;
                 }
             }
+            public Exception? Versioning;
             public Exception? Flags;
             public Exception? MembraneShaderSourceBlendMode;
             public Exception? MembraneShaderBlendOperation;
@@ -1292,7 +1293,6 @@ namespace Mutagen.Bethesda.Oblivion
             public Exception? ColorKey1ColorKeyTime;
             public Exception? ColorKey2ColorKeyTime;
             public Exception? ColorKey3ColorKeyTime;
-            public Exception? Versioning;
             #endregion
 
             #region IErrorMask
@@ -1301,6 +1301,8 @@ namespace Mutagen.Bethesda.Oblivion
                 EffectShaderData_FieldIndex enu = (EffectShaderData_FieldIndex)index;
                 switch (enu)
                 {
+                    case EffectShaderData_FieldIndex.Versioning:
+                        return Versioning;
                     case EffectShaderData_FieldIndex.Flags:
                         return Flags;
                     case EffectShaderData_FieldIndex.MembraneShaderSourceBlendMode:
@@ -1413,8 +1415,6 @@ namespace Mutagen.Bethesda.Oblivion
                         return ColorKey2ColorKeyTime;
                     case EffectShaderData_FieldIndex.ColorKey3ColorKeyTime:
                         return ColorKey3ColorKeyTime;
-                    case EffectShaderData_FieldIndex.Versioning:
-                        return Versioning;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1425,6 +1425,9 @@ namespace Mutagen.Bethesda.Oblivion
                 EffectShaderData_FieldIndex enu = (EffectShaderData_FieldIndex)index;
                 switch (enu)
                 {
+                    case EffectShaderData_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
                     case EffectShaderData_FieldIndex.Flags:
                         this.Flags = ex;
                         break;
@@ -1593,9 +1596,6 @@ namespace Mutagen.Bethesda.Oblivion
                     case EffectShaderData_FieldIndex.ColorKey3ColorKeyTime:
                         this.ColorKey3ColorKeyTime = ex;
                         break;
-                    case EffectShaderData_FieldIndex.Versioning:
-                        this.Versioning = ex;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1606,6 +1606,9 @@ namespace Mutagen.Bethesda.Oblivion
                 EffectShaderData_FieldIndex enu = (EffectShaderData_FieldIndex)index;
                 switch (enu)
                 {
+                    case EffectShaderData_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
                     case EffectShaderData_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
@@ -1774,9 +1777,6 @@ namespace Mutagen.Bethesda.Oblivion
                     case EffectShaderData_FieldIndex.ColorKey3ColorKeyTime:
                         this.ColorKey3ColorKeyTime = (Exception?)obj;
                         break;
-                    case EffectShaderData_FieldIndex.Versioning:
-                        this.Versioning = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1785,6 +1785,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Versioning != null) return true;
                 if (Flags != null) return true;
                 if (MembraneShaderSourceBlendMode != null) return true;
                 if (MembraneShaderBlendOperation != null) return true;
@@ -1841,7 +1842,6 @@ namespace Mutagen.Bethesda.Oblivion
                 if (ColorKey1ColorKeyTime != null) return true;
                 if (ColorKey2ColorKeyTime != null) return true;
                 if (ColorKey3ColorKeyTime != null) return true;
-                if (Versioning != null) return true;
                 return false;
             }
             #endregion
@@ -1876,6 +1876,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
+                fg.AppendItem(Versioning, "Versioning");
                 fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(MembraneShaderSourceBlendMode, "MembraneShaderSourceBlendMode");
                 fg.AppendItem(MembraneShaderBlendOperation, "MembraneShaderBlendOperation");
@@ -1932,7 +1933,6 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(ColorKey1ColorKeyTime, "ColorKey1ColorKeyTime");
                 fg.AppendItem(ColorKey2ColorKeyTime, "ColorKey2ColorKeyTime");
                 fg.AppendItem(ColorKey3ColorKeyTime, "ColorKey3ColorKeyTime");
-                fg.AppendItem(Versioning, "Versioning");
             }
             #endregion
 
@@ -1941,6 +1941,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.MembraneShaderSourceBlendMode = this.MembraneShaderSourceBlendMode.Combine(rhs.MembraneShaderSourceBlendMode);
                 ret.MembraneShaderBlendOperation = this.MembraneShaderBlendOperation.Combine(rhs.MembraneShaderBlendOperation);
@@ -1997,7 +1998,6 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.ColorKey1ColorKeyTime = this.ColorKey1ColorKeyTime.Combine(rhs.ColorKey1ColorKeyTime);
                 ret.ColorKey2ColorKeyTime = this.ColorKey2ColorKeyTime.Combine(rhs.ColorKey2ColorKeyTime);
                 ret.ColorKey3ColorKeyTime = this.ColorKey3ColorKeyTime.Combine(rhs.ColorKey3ColorKeyTime);
-                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2019,6 +2019,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public bool Versioning;
             public bool Flags;
             public bool MembraneShaderSourceBlendMode;
             public bool MembraneShaderBlendOperation;
@@ -2075,12 +2076,12 @@ namespace Mutagen.Bethesda.Oblivion
             public bool ColorKey1ColorKeyTime;
             public bool ColorKey2ColorKeyTime;
             public bool ColorKey3ColorKeyTime;
-            public bool Versioning;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.Versioning = defaultOn;
                 this.Flags = defaultOn;
                 this.MembraneShaderSourceBlendMode = defaultOn;
                 this.MembraneShaderBlendOperation = defaultOn;
@@ -2137,7 +2138,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.ColorKey1ColorKeyTime = defaultOn;
                 this.ColorKey2ColorKeyTime = defaultOn;
                 this.ColorKey3ColorKeyTime = defaultOn;
-                this.Versioning = defaultOn;
             }
 
             #endregion
@@ -2153,6 +2153,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Versioning, null));
                 ret.Add((Flags, null));
                 ret.Add((MembraneShaderSourceBlendMode, null));
                 ret.Add((MembraneShaderBlendOperation, null));
@@ -2209,7 +2210,6 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((ColorKey1ColorKeyTime, null));
                 ret.Add((ColorKey2ColorKeyTime, null));
                 ret.Add((ColorKey3ColorKeyTime, null));
-                ret.Add((Versioning, null));
             }
         }
         #endregion
@@ -2284,6 +2284,7 @@ namespace Mutagen.Bethesda.Oblivion
         IEffectShaderDataGetter,
         ILoquiObjectSetter<IEffectShaderData>
     {
+        new EffectShaderData.VersioningBreaks Versioning { get; set; }
         new EffectShader.Flag Flags { get; set; }
         new EffectShader.SourceBlendMode MembraneShaderSourceBlendMode { get; set; }
         new EffectShader.BlendOperation MembraneShaderBlendOperation { get; set; }
@@ -2340,7 +2341,6 @@ namespace Mutagen.Bethesda.Oblivion
         new Single ColorKey1ColorKeyTime { get; set; }
         new Single ColorKey2ColorKeyTime { get; set; }
         new Single ColorKey3ColorKeyTime { get; set; }
-        new EffectShaderData.VersioningBreaks Versioning { get; set; }
     }
 
     public partial interface IEffectShaderDataGetter :
@@ -2355,6 +2355,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        EffectShaderData.VersioningBreaks Versioning { get; }
         EffectShader.Flag Flags { get; }
         EffectShader.SourceBlendMode MembraneShaderSourceBlendMode { get; }
         EffectShader.BlendOperation MembraneShaderBlendOperation { get; }
@@ -2411,7 +2412,6 @@ namespace Mutagen.Bethesda.Oblivion
         Single ColorKey1ColorKeyTime { get; }
         Single ColorKey2ColorKeyTime { get; }
         Single ColorKey3ColorKeyTime { get; }
-        EffectShaderData.VersioningBreaks Versioning { get; }
 
     }
 
@@ -2718,63 +2718,63 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum EffectShaderData_FieldIndex
     {
-        Flags = 0,
-        MembraneShaderSourceBlendMode = 1,
-        MembraneShaderBlendOperation = 2,
-        MembraneShaderZTestFunction = 3,
-        FillTextureEffectColor = 4,
-        FillTextureEffectAlphaFadeInTime = 5,
-        FillTextureEffectFullAlphaTime = 6,
-        FillTextureEffectAlphaFadeOutTime = 7,
-        FillTextureEffectPersistentAlphaRatio = 8,
-        FillTextureEffectAlphaPulseAmplitude = 9,
-        FillTextureEffectAlphaPulseFrequency = 10,
-        FillTextureEffectTextureAnimationSpeedU = 11,
-        FillTextureEffectTextureAnimationSpeedV = 12,
-        EdgeEffectFallOff = 13,
-        EdgeEffectColor = 14,
-        EdgeEffectAlphaFadeInTime = 15,
-        EdgeEffectFullAlphaTime = 16,
-        EdgeEffectAlphaFadeOutTime = 17,
-        EdgeEffectPersistentAlphaRatio = 18,
-        EdgeEffectAlphaPulseAmplitude = 19,
-        EdgeEffectAlphaPulseFrequency = 20,
-        FillTextureEffectFullAlphaRatio = 21,
-        EdgeEffectFullAlphaRatio = 22,
-        MembraneShaderDestBlendMode = 23,
-        ParticleShaderSourceBlendMode = 24,
-        ParticleShaderBlendOperation = 25,
-        ParticleShaderZTestFunction = 26,
-        ParticleShaderDestBlendMode = 27,
-        ParticleShaderParticleBirthRampUpTime = 28,
-        ParticleShaderFullParticleBirthTime = 29,
-        ParticleShaderParticleBirthRampDownTime = 30,
-        ParticleShaderFullParticleBirthRatio = 31,
-        ParticleShaderPersistentParticleBirthRatio = 32,
-        ParticleShaderParticleLifetime = 33,
-        ParticleShaderParticleLifetimePlusMinus = 34,
-        ParticleShaderInitialSpeedAlongNormal = 35,
-        ParticleShaderAccelerationAlongNormal = 36,
-        ParticleShaderInitialVelocity1 = 37,
-        ParticleShaderInitialVelocity2 = 38,
-        ParticleShaderInitialVelocity3 = 39,
-        ParticleShaderAcceleration1 = 40,
-        ParticleShaderAcceleration2 = 41,
-        ParticleShaderAcceleration3 = 42,
-        ParticleShaderScaleKey1 = 43,
-        ParticleShaderScaleKey2 = 44,
-        ParticleShaderScaleKey1Time = 45,
-        ParticleShaderScaleKey2Time = 46,
-        ColorKey1Color = 47,
-        ColorKey2Color = 48,
-        ColorKey3Color = 49,
-        ColorKey1ColorAlpha = 50,
-        ColorKey2ColorAlpha = 51,
-        ColorKey3ColorAlpha = 52,
-        ColorKey1ColorKeyTime = 53,
-        ColorKey2ColorKeyTime = 54,
-        ColorKey3ColorKeyTime = 55,
-        Versioning = 56,
+        Versioning = 0,
+        Flags = 1,
+        MembraneShaderSourceBlendMode = 2,
+        MembraneShaderBlendOperation = 3,
+        MembraneShaderZTestFunction = 4,
+        FillTextureEffectColor = 5,
+        FillTextureEffectAlphaFadeInTime = 6,
+        FillTextureEffectFullAlphaTime = 7,
+        FillTextureEffectAlphaFadeOutTime = 8,
+        FillTextureEffectPersistentAlphaRatio = 9,
+        FillTextureEffectAlphaPulseAmplitude = 10,
+        FillTextureEffectAlphaPulseFrequency = 11,
+        FillTextureEffectTextureAnimationSpeedU = 12,
+        FillTextureEffectTextureAnimationSpeedV = 13,
+        EdgeEffectFallOff = 14,
+        EdgeEffectColor = 15,
+        EdgeEffectAlphaFadeInTime = 16,
+        EdgeEffectFullAlphaTime = 17,
+        EdgeEffectAlphaFadeOutTime = 18,
+        EdgeEffectPersistentAlphaRatio = 19,
+        EdgeEffectAlphaPulseAmplitude = 20,
+        EdgeEffectAlphaPulseFrequency = 21,
+        FillTextureEffectFullAlphaRatio = 22,
+        EdgeEffectFullAlphaRatio = 23,
+        MembraneShaderDestBlendMode = 24,
+        ParticleShaderSourceBlendMode = 25,
+        ParticleShaderBlendOperation = 26,
+        ParticleShaderZTestFunction = 27,
+        ParticleShaderDestBlendMode = 28,
+        ParticleShaderParticleBirthRampUpTime = 29,
+        ParticleShaderFullParticleBirthTime = 30,
+        ParticleShaderParticleBirthRampDownTime = 31,
+        ParticleShaderFullParticleBirthRatio = 32,
+        ParticleShaderPersistentParticleBirthRatio = 33,
+        ParticleShaderParticleLifetime = 34,
+        ParticleShaderParticleLifetimePlusMinus = 35,
+        ParticleShaderInitialSpeedAlongNormal = 36,
+        ParticleShaderAccelerationAlongNormal = 37,
+        ParticleShaderInitialVelocity1 = 38,
+        ParticleShaderInitialVelocity2 = 39,
+        ParticleShaderInitialVelocity3 = 40,
+        ParticleShaderAcceleration1 = 41,
+        ParticleShaderAcceleration2 = 42,
+        ParticleShaderAcceleration3 = 43,
+        ParticleShaderScaleKey1 = 44,
+        ParticleShaderScaleKey2 = 45,
+        ParticleShaderScaleKey1Time = 46,
+        ParticleShaderScaleKey2Time = 47,
+        ColorKey1Color = 48,
+        ColorKey2Color = 49,
+        ColorKey3Color = 50,
+        ColorKey1ColorAlpha = 51,
+        ColorKey2ColorAlpha = 52,
+        ColorKey3ColorAlpha = 53,
+        ColorKey1ColorKeyTime = 54,
+        ColorKey2ColorKeyTime = 55,
+        ColorKey3ColorKeyTime = 56,
     }
     #endregion
 
@@ -2824,6 +2824,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
+                case "VERSIONING":
+                    return (ushort)EffectShaderData_FieldIndex.Versioning;
                 case "FLAGS":
                     return (ushort)EffectShaderData_FieldIndex.Flags;
                 case "MEMBRANESHADERSOURCEBLENDMODE":
@@ -2936,8 +2938,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)EffectShaderData_FieldIndex.ColorKey2ColorKeyTime;
                 case "COLORKEY3COLORKEYTIME":
                     return (ushort)EffectShaderData_FieldIndex.ColorKey3ColorKeyTime;
-                case "VERSIONING":
-                    return (ushort)EffectShaderData_FieldIndex.Versioning;
                 default:
                     return null;
             }
@@ -2948,6 +2948,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EffectShaderData_FieldIndex enu = (EffectShaderData_FieldIndex)index;
             switch (enu)
             {
+                case EffectShaderData_FieldIndex.Versioning:
                 case EffectShaderData_FieldIndex.Flags:
                 case EffectShaderData_FieldIndex.MembraneShaderSourceBlendMode:
                 case EffectShaderData_FieldIndex.MembraneShaderBlendOperation:
@@ -3004,7 +3005,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case EffectShaderData_FieldIndex.ColorKey1ColorKeyTime:
                 case EffectShaderData_FieldIndex.ColorKey2ColorKeyTime:
                 case EffectShaderData_FieldIndex.ColorKey3ColorKeyTime:
-                case EffectShaderData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3016,6 +3016,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EffectShaderData_FieldIndex enu = (EffectShaderData_FieldIndex)index;
             switch (enu)
             {
+                case EffectShaderData_FieldIndex.Versioning:
                 case EffectShaderData_FieldIndex.Flags:
                 case EffectShaderData_FieldIndex.MembraneShaderSourceBlendMode:
                 case EffectShaderData_FieldIndex.MembraneShaderBlendOperation:
@@ -3072,7 +3073,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case EffectShaderData_FieldIndex.ColorKey1ColorKeyTime:
                 case EffectShaderData_FieldIndex.ColorKey2ColorKeyTime:
                 case EffectShaderData_FieldIndex.ColorKey3ColorKeyTime:
-                case EffectShaderData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3084,6 +3084,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EffectShaderData_FieldIndex enu = (EffectShaderData_FieldIndex)index;
             switch (enu)
             {
+                case EffectShaderData_FieldIndex.Versioning:
                 case EffectShaderData_FieldIndex.Flags:
                 case EffectShaderData_FieldIndex.MembraneShaderSourceBlendMode:
                 case EffectShaderData_FieldIndex.MembraneShaderBlendOperation:
@@ -3140,7 +3141,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case EffectShaderData_FieldIndex.ColorKey1ColorKeyTime:
                 case EffectShaderData_FieldIndex.ColorKey2ColorKeyTime:
                 case EffectShaderData_FieldIndex.ColorKey3ColorKeyTime:
-                case EffectShaderData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3152,6 +3152,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EffectShaderData_FieldIndex enu = (EffectShaderData_FieldIndex)index;
             switch (enu)
             {
+                case EffectShaderData_FieldIndex.Versioning:
+                    return "Versioning";
                 case EffectShaderData_FieldIndex.Flags:
                     return "Flags";
                 case EffectShaderData_FieldIndex.MembraneShaderSourceBlendMode:
@@ -3264,8 +3266,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "ColorKey2ColorKeyTime";
                 case EffectShaderData_FieldIndex.ColorKey3ColorKeyTime:
                     return "ColorKey3ColorKeyTime";
-                case EffectShaderData_FieldIndex.Versioning:
-                    return "Versioning";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3276,6 +3276,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EffectShaderData_FieldIndex enu = (EffectShaderData_FieldIndex)index;
             switch (enu)
             {
+                case EffectShaderData_FieldIndex.Versioning:
                 case EffectShaderData_FieldIndex.Flags:
                 case EffectShaderData_FieldIndex.MembraneShaderSourceBlendMode:
                 case EffectShaderData_FieldIndex.MembraneShaderBlendOperation:
@@ -3332,7 +3333,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case EffectShaderData_FieldIndex.ColorKey1ColorKeyTime:
                 case EffectShaderData_FieldIndex.ColorKey2ColorKeyTime:
                 case EffectShaderData_FieldIndex.ColorKey3ColorKeyTime:
-                case EffectShaderData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3344,6 +3344,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EffectShaderData_FieldIndex enu = (EffectShaderData_FieldIndex)index;
             switch (enu)
             {
+                case EffectShaderData_FieldIndex.Versioning:
                 case EffectShaderData_FieldIndex.Flags:
                 case EffectShaderData_FieldIndex.MembraneShaderSourceBlendMode:
                 case EffectShaderData_FieldIndex.MembraneShaderBlendOperation:
@@ -3400,7 +3401,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case EffectShaderData_FieldIndex.ColorKey1ColorKeyTime:
                 case EffectShaderData_FieldIndex.ColorKey2ColorKeyTime:
                 case EffectShaderData_FieldIndex.ColorKey3ColorKeyTime:
-                case EffectShaderData_FieldIndex.Versioning:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3412,6 +3412,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EffectShaderData_FieldIndex enu = (EffectShaderData_FieldIndex)index;
             switch (enu)
             {
+                case EffectShaderData_FieldIndex.Versioning:
+                    return typeof(EffectShaderData.VersioningBreaks);
                 case EffectShaderData_FieldIndex.Flags:
                     return typeof(EffectShader.Flag);
                 case EffectShaderData_FieldIndex.MembraneShaderSourceBlendMode:
@@ -3524,8 +3526,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Single);
                 case EffectShaderData_FieldIndex.ColorKey3ColorKeyTime:
                     return typeof(Single);
-                case EffectShaderData_FieldIndex.Versioning:
-                    return typeof(EffectShaderData.VersioningBreaks);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3578,6 +3578,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IEffectShaderData item)
         {
             ClearPartial();
+            item.Versioning = default;
             item.Flags = default;
             item.MembraneShaderSourceBlendMode = default;
             item.MembraneShaderBlendOperation = default;
@@ -3634,7 +3635,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ColorKey1ColorKeyTime = default;
             item.ColorKey2ColorKeyTime = default;
             item.ColorKey3ColorKeyTime = default;
-            item.Versioning = default;
         }
         
         #region Xml Translation
@@ -3787,6 +3787,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Flags = item.Flags == rhs.Flags;
             ret.MembraneShaderSourceBlendMode = item.MembraneShaderSourceBlendMode == rhs.MembraneShaderSourceBlendMode;
             ret.MembraneShaderBlendOperation = item.MembraneShaderBlendOperation == rhs.MembraneShaderBlendOperation;
@@ -3843,7 +3844,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ColorKey1ColorKeyTime = item.ColorKey1ColorKeyTime.EqualsWithin(rhs.ColorKey1ColorKeyTime);
             ret.ColorKey2ColorKeyTime = item.ColorKey2ColorKeyTime.EqualsWithin(rhs.ColorKey2ColorKeyTime);
             ret.ColorKey3ColorKeyTime = item.ColorKey3ColorKeyTime.EqualsWithin(rhs.ColorKey3ColorKeyTime);
-            ret.Versioning = item.Versioning == rhs.Versioning;
         }
         
         public string ToString(
@@ -3890,6 +3890,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             EffectShaderData.Mask<bool>? printMask = null)
         {
+            if (printMask?.Versioning ?? true)
+            {
+                fg.AppendItem(item.Versioning, "Versioning");
+            }
             if (printMask?.Flags ?? true)
             {
                 fg.AppendItem(item.Flags, "Flags");
@@ -4114,10 +4118,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(item.ColorKey3ColorKeyTime, "ColorKey3ColorKeyTime");
             }
-            if (printMask?.Versioning ?? true)
-            {
-                fg.AppendItem(item.Versioning, "Versioning");
-            }
         }
         
         public bool HasBeenSet(
@@ -4131,6 +4131,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEffectShaderDataGetter item,
             EffectShaderData.Mask<bool> mask)
         {
+            mask.Versioning = true;
             mask.Flags = true;
             mask.MembraneShaderSourceBlendMode = true;
             mask.MembraneShaderBlendOperation = true;
@@ -4187,7 +4188,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.ColorKey1ColorKeyTime = true;
             mask.ColorKey2ColorKeyTime = true;
             mask.ColorKey3ColorKeyTime = true;
-            mask.Versioning = true;
         }
         
         #region Equals and Hash
@@ -4197,6 +4197,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
+            if (lhs.Versioning != rhs.Versioning) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (lhs.MembraneShaderSourceBlendMode != rhs.MembraneShaderSourceBlendMode) return false;
             if (lhs.MembraneShaderBlendOperation != rhs.MembraneShaderBlendOperation) return false;
@@ -4253,13 +4254,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!lhs.ColorKey1ColorKeyTime.EqualsWithin(rhs.ColorKey1ColorKeyTime)) return false;
             if (!lhs.ColorKey2ColorKeyTime.EqualsWithin(rhs.ColorKey2ColorKeyTime)) return false;
             if (!lhs.ColorKey3ColorKeyTime.EqualsWithin(rhs.ColorKey3ColorKeyTime)) return false;
-            if (lhs.Versioning != rhs.Versioning) return false;
             return true;
         }
         
         public virtual int GetHashCode(IEffectShaderDataGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Versioning);
             hash.Add(item.Flags);
             hash.Add(item.MembraneShaderSourceBlendMode);
             hash.Add(item.MembraneShaderBlendOperation);
@@ -4316,7 +4317,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             hash.Add(item.ColorKey1ColorKeyTime);
             hash.Add(item.ColorKey2ColorKeyTime);
             hash.Add(item.ColorKey3ColorKeyTime);
-            hash.Add(item.Versioning);
             return hash.ToHashCode();
         }
         
@@ -4348,6 +4348,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
+            if ((copyMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.Versioning) ?? true))
+            {
+                item.Versioning = rhs.Versioning;
+            }
             if ((copyMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
@@ -4444,6 +4448,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.MembraneShaderDestBlendMode = rhs.MembraneShaderDestBlendMode;
             }
+            if (rhs.Versioning.HasFlag(EffectShaderData.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.ParticleShaderSourceBlendMode) ?? true))
             {
                 item.ParticleShaderSourceBlendMode = rhs.ParticleShaderSourceBlendMode;
@@ -4572,10 +4577,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.ColorKey3ColorKeyTime = rhs.ColorKey3ColorKeyTime;
             }
-            if ((copyMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.Versioning) ?? true))
-            {
-                item.Versioning = rhs.Versioning;
-            }
         }
         
         #endregion
@@ -4665,6 +4666,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
+            if ((translationMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.Versioning) ?? true))
+            {
+                EnumXmlTranslation<EffectShaderData.VersioningBreaks>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Versioning),
+                    item: item.Versioning,
+                    fieldIndex: (int)EffectShaderData_FieldIndex.Versioning,
+                    errorMask: errorMask);
+            }
             if ((translationMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<EffectShader.Flag>.Instance.Write(
@@ -5169,15 +5179,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)EffectShaderData_FieldIndex.ColorKey3ColorKeyTime,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)EffectShaderData_FieldIndex.Versioning) ?? true))
-            {
-                EnumXmlTranslation<EffectShaderData.VersioningBreaks>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Versioning),
-                    item: item.Versioning,
-                    fieldIndex: (int)EffectShaderData_FieldIndex.Versioning,
-                    errorMask: errorMask);
-            }
         }
 
         public void Write(
@@ -5284,6 +5285,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
+                case "Versioning":
+                    errorMask?.PushIndex((int)EffectShaderData_FieldIndex.Versioning);
+                    try
+                    {
+                        item.Versioning = EnumXmlTranslation<EffectShaderData.VersioningBreaks>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "Flags":
                     errorMask?.PushIndex((int)EffectShaderData_FieldIndex.Flags);
                     try
@@ -6279,24 +6298,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     try
                     {
                         item.ColorKey3ColorKeyTime = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Versioning":
-                    errorMask?.PushIndex((int)EffectShaderData_FieldIndex.Versioning);
-                    try
-                    {
-                        item.Versioning = EnumXmlTranslation<EffectShaderData.VersioningBreaks>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
