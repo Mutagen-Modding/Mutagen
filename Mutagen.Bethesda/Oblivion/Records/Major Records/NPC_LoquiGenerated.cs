@@ -2923,7 +2923,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4C444F4D: // MODL
                 {
-                    item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(frame: frame);
+                    item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Model);
                 }
                 case 0x53424341: // ACBS

@@ -2094,14 +2094,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4C444F4D: // MODL
                 {
-                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(frame: frame);
+                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Scroll_FieldIndex.Model);
                 }
                 case 0x54534544: // DEST
                 case 0x44545344: // DSTD
                 case 0x4C444D44: // DMDL
                 {
-                    item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(frame: frame);
+                    item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Scroll_FieldIndex.Destructible);
                 }
                 case 0x4D414E59: // YNAM

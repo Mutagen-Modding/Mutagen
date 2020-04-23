@@ -1421,7 +1421,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x52484353: // SCHR
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.ResultScript) return TryGet<int?>.Failure;
-                    item.ResultScript = Mutagen.Bethesda.Oblivion.ScriptFields.CreateFromBinary(frame: frame);
+                    item.ResultScript = Mutagen.Bethesda.Oblivion.ScriptFields.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)LogEntry_FieldIndex.ResultScript);
                 }
                 default:

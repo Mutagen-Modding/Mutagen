@@ -1762,7 +1762,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4C444F4D: // MODL
                 {
-                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(frame: frame);
+                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Model);
                 }
                 case 0x41544144: // DATA

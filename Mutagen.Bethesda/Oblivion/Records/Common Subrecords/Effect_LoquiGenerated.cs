@@ -1213,7 +1213,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x54494353: // SCIT
                 case 0x4C4C5546: // FULL
                 {
-                    item.ScriptEffect = Mutagen.Bethesda.Oblivion.ScriptEffect.CreateFromBinary(frame: frame);
+                    item.ScriptEffect = Mutagen.Bethesda.Oblivion.ScriptEffect.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Effect_FieldIndex.ScriptEffect);
                 }
                 default:

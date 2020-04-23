@@ -163,16 +163,16 @@ namespace Mutagen.Bethesda.Generation
             Accessor errorMaskAccessor,
             Accessor translationMaskAccessor)
         {
-            var loquiGen = typeGen as LoquiType;
-            if (loquiGen.TryGetFieldData(out var data)
+            var loqui = typeGen as LoquiType;
+            if (loqui.TryGetFieldData(out var data)
                 && data.MarkerType.HasValue)
             {
                 fg.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)} + contentLength; // Skip marker");
             }
-            if (loquiGen.TargetObjectGeneration != null)
+            if (loqui.TargetObjectGeneration != null)
             {
-                if (loquiGen.SetterInterfaceType == LoquiInterfaceType.IGetter) return;
-                if (loquiGen.SingletonType == SingletonLevel.Singleton)
+                if (loqui.SetterInterfaceType == LoquiInterfaceType.IGetter) return;
+                if (loqui.SingletonType == SingletonLevel.Singleton)
                 {
                     using (var args = new ArgsWrapper(fg,
                         $"{Loqui.Generation.Utility.Await(this.IsAsync(typeGen, read: true))}{itemAccessor.DirectAccess}.{this.Module.CopyInFromPrefix}{ModNickname}"))
@@ -180,19 +180,19 @@ namespace Mutagen.Bethesda.Generation
                         args.Add($"frame: {frameAccessor}");
                         args.Add($"recordTypeConverter: null");
                     }
-                    if (loquiGen.Name == "ModHeader")
+                    if (loqui.Name == "ModHeader")
                     {
                         fg.AppendLine($"{frameAccessor}.MasterReferences!.SetTo(item.ModHeader.MasterReferences);");
                     }
                 }
                 else
                 {
-                    if (NeedsHeaderProcessing(loquiGen))
+                    if (NeedsHeaderProcessing(loqui))
                     {
                         fg.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)}; // Skip header");
                     }
                     using (var args = new ArgsWrapper(fg,
-                        $"{itemAccessor.DirectAccess} = {loquiGen.TargetObjectGeneration.Namespace}.{loquiGen.TypeName(getter: false, internalInterface: true)}.{this.Module.CreateFromPrefix}{this.Module.ModuleNickname}"))
+                        $"{itemAccessor.DirectAccess} = {loqui.TargetObjectGeneration.Namespace}.{loqui.TypeName(getter: false, internalInterface: true)}.{this.Module.CreateFromPrefix}{this.Module.ModuleNickname}"))
                     {
                         args.Add($"frame: {frameAccessor}");
                         if (data?.RecordTypeConverter != null
@@ -200,7 +200,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
                         }
-                        else if (await NeedsRecordTypeConverter(objGen))
+                        else if (await NeedsRecordTypeConverter(loqui))
                         {
                             args.AddPassArg($"recordTypeConverter");
                         }
@@ -213,9 +213,13 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public static async Task<bool> NeedsRecordTypeConverter(ObjectGeneration objGen)
+        public static async Task<bool> NeedsRecordTypeConverter(LoquiType loqui)
         {
-            foreach (var subObj in await objGen.InheritingObjects())
+            foreach (var field in loqui.TargetObjectGeneration.IterateFields(includeBaseClass: true))
+            {
+                if (field.GetFieldData().HasTrigger) return true;
+            }
+            foreach (var subObj in await loqui.ObjectGen.InheritingObjects())
             {
                 if (subObj.GetObjectData().BaseRecordTypeConverter != null) return true;
             }

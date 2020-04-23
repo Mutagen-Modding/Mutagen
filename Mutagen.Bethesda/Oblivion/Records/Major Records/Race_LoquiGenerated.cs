@@ -2645,7 +2645,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x41474746: // FGGA
                 case 0x53544746: // FGTS
                 {
-                    item.FaceGenData = Mutagen.Bethesda.Oblivion.FaceGenData.CreateFromBinary(frame: frame);
+                    item.FaceGenData = Mutagen.Bethesda.Oblivion.FaceGenData.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceGenData);
                 }
                 case 0x4D414E53: // SNAM

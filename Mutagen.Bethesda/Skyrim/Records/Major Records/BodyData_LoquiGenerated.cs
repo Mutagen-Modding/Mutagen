@@ -1197,7 +1197,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4C444F4D: // MODL
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Part) return TryGet<int?>.Failure;
-                    item.Part = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(frame: frame);
+                    item.Part = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)BodyData_FieldIndex.Part);
                 }
                 default:

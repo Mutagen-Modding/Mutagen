@@ -1854,7 +1854,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4C444F4D: // MODL
                 {
-                    item.MaleBipedModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(frame: frame);
+                    item.MaleBipedModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)AClothing_FieldIndex.MaleBipedModel);
                 }
                 case 0x32444F4D: // MOD2

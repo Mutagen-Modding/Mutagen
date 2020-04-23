@@ -2593,7 +2593,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4B524D58: // XMRK
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength + contentLength; // Skip marker
-                    item.MapMarker = Mutagen.Bethesda.Oblivion.MapMarker.CreateFromBinary(frame: frame);
+                    item.MapMarker = Mutagen.Bethesda.Oblivion.MapMarker.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.MapMarker);
                 }
                 case 0x4D414E4F: // ONAM

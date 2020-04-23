@@ -1403,7 +1403,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x36305854: // TX06
                 case 0x37305854: // TX07
                 {
-                    item.Textures = Mutagen.Bethesda.Skyrim.Textures.CreateFromBinary(frame: frame);
+                    item.Textures = Mutagen.Bethesda.Skyrim.Textures.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Textures);
                 }
                 case 0x54444F44: // DODT
