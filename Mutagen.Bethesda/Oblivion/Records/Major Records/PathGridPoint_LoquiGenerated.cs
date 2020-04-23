@@ -2179,7 +2179,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new PathGridPointBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 16),
+                bytes: stream.RemainingMemory.Slice(0, 0x10),
                 package: package);
             int offset = stream.Position;
             ret.CustomCtor(

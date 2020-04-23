@@ -2100,7 +2100,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new RoadPointBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 15),
+                bytes: stream.RemainingMemory.Slice(0, 0xF),
                 package: package);
             int offset = stream.Position;
             ret.CustomCtor(

@@ -1969,7 +1969,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new RegionSoundBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 12),
+                bytes: stream.RemainingMemory.Slice(0, 0xC),
                 package: package);
             int offset = stream.Position;
             ret.CustomCtor(

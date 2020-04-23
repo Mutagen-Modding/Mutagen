@@ -1862,7 +1862,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new SkillBoostBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 2),
+                bytes: stream.RemainingMemory.Slice(0, 0x2),
                 package: package);
             int offset = stream.Position;
             ret.CustomCtor(

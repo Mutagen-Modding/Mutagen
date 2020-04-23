@@ -1962,7 +1962,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new ClassTrainingBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 4),
+                bytes: stream.RemainingMemory.Slice(0, 0x4),
                 package: package);
             int offset = stream.Position;
             ret.CustomCtor(

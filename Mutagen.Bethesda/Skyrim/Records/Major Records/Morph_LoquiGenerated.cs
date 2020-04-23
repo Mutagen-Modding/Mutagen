@@ -1776,7 +1776,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new MorphBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 32),
+                bytes: stream.RemainingMemory.Slice(0, 0x20),
                 package: package);
             int offset = stream.Position;
             ret.CustomCtor(

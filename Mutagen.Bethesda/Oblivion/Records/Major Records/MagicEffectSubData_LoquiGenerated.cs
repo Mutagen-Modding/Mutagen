@@ -2355,7 +2355,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new MagicEffectSubDataBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 28),
+                bytes: stream.RemainingMemory.Slice(0, 0x1C),
                 package: package);
             int offset = stream.Position;
             ret.CustomCtor(

@@ -1642,7 +1642,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new MagicEffectSpellArchetypeBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0),
+                bytes: stream.RemainingMemory.Slice(0, 0x0),
                 package: package);
             int offset = stream.Position;
             ret.CustomCtor(

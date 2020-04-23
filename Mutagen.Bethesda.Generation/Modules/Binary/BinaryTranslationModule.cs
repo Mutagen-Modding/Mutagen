@@ -1699,7 +1699,7 @@ namespace Mutagen.Bethesda.Generation
                                 }
                                 else
                                 {
-                                    args.Add($"bytes: stream.RemainingMemory.Slice(0, {passedLength})");
+                                    args.Add($"bytes: stream.RemainingMemory.Slice(0, 0x{passedLength:X})");
                                 }
                             }
                             else

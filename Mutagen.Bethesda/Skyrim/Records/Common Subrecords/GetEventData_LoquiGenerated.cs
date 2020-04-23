@@ -2282,7 +2282,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new GetEventDataBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 22),
+                bytes: stream.RemainingMemory.Slice(0, 0x16),
                 package: package);
             int offset = stream.Position;
             ret.CustomCtor(

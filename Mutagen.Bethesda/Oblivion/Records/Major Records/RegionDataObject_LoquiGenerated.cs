@@ -3234,7 +3234,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new RegionDataObjectBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 52),
+                bytes: stream.RemainingMemory.Slice(0, 0x34),
                 package: package);
             int offset = stream.Position;
             ret.CustomCtor(

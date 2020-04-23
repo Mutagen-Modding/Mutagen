@@ -1933,7 +1933,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new ScriptObjectPropertyBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 8),
+                bytes: stream.RemainingMemory.Slice(0, 0x8),
                 package: package);
             int offset = stream.Position;
             ret.CustomCtor(
