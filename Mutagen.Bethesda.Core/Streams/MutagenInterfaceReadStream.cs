@@ -110,16 +110,16 @@ namespace Mutagen.Bethesda
         public sbyte GetInt8(int offset) => _readStream.GetInt8(offset);
 
         /// <inheritdoc />
-        public ReadOnlyMemorySlice<byte> GetMemory(int amount) => _readStream.GetMemory(amount);
+        public ReadOnlyMemorySlice<byte> GetMemory(int amount, bool readSafe = true) => _readStream.GetMemory(amount, readSafe);
 
         /// <inheritdoc />
-        public ReadOnlyMemorySlice<byte> GetMemory(int amount, int offset) => _readStream.GetMemory(amount, offset);
+        public ReadOnlyMemorySlice<byte> GetMemory(int amount, int offset, bool readSafe = true) => _readStream.GetMemory(amount, offset, readSafe);
 
         /// <inheritdoc />
-        public ReadOnlySpan<byte> GetSpan(int amount) => _readStream.GetSpan(amount);
+        public ReadOnlySpan<byte> GetSpan(int amount, bool readSafe = true) => _readStream.GetSpan(amount, readSafe);
 
         /// <inheritdoc />
-        public ReadOnlySpan<byte> GetSpan(int amount, int offset) => _readStream.GetSpan(amount, offset);
+        public ReadOnlySpan<byte> GetSpan(int amount, int offset, bool readSafe = true) => _readStream.GetSpan(amount, offset, readSafe);
 
         /// <inheritdoc />
         public string GetStringUTF8(int amount) => _readStream.GetStringUTF8(amount);
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda
         public IMutagenReadStream ReadAndReframe(int length)
         {
             var offset = this.OffsetReference + this.Position;
-            return new MutagenMemoryReadStream(this.ReadBytes(length), this.MetaData, this.MasterReferences, offsetReference: offset);
+            return new MutagenMemoryReadStream(this.ReadMemory(length, readSafe: true), this.MetaData, this.MasterReferences, offsetReference: offset);
         }
 
         /// <inheritdoc />
@@ -189,16 +189,16 @@ namespace Mutagen.Bethesda
         public sbyte ReadInt8() => _readStream.ReadInt8();
 
         /// <inheritdoc />
-        public ReadOnlyMemorySlice<byte> ReadMemory(int amount) => _readStream.ReadMemory(amount);
+        public ReadOnlyMemorySlice<byte> ReadMemory(int amount, bool readSafe = true) => _readStream.ReadMemory(amount, readSafe);
 
         /// <inheritdoc />
-        public ReadOnlyMemorySlice<byte> ReadMemory(int amount, int offset) => _readStream.ReadMemory(amount, offset);
+        public ReadOnlyMemorySlice<byte> ReadMemory(int amount, int offset, bool readSafe = true) => _readStream.ReadMemory(amount, offset, readSafe);
 
         /// <inheritdoc />
-        public ReadOnlySpan<byte> ReadSpan(int amount) => _readStream.ReadSpan(amount);
+        public ReadOnlySpan<byte> ReadSpan(int amount, bool readSafe = true) => _readStream.ReadSpan(amount, readSafe);
 
         /// <inheritdoc />
-        public ReadOnlySpan<byte> ReadSpan(int amount, int offset) => _readStream.ReadSpan(amount, offset);
+        public ReadOnlySpan<byte> ReadSpan(int amount, int offset, bool readSafe = true) => _readStream.ReadSpan(amount, offset, readSafe);
 
         /// <inheritdoc />
         public string ReadStringUTF8(int amount) => _readStream.ReadStringUTF8(amount);

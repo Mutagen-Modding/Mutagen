@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Binary
         public IMutagenReadStream ReadAndReframe(int length)
         {
             var offset = this.OffsetReference + this.Position;
-            return new MutagenMemoryReadStream(this.ReadBytes(length), this.MetaData, this.MasterReferences, offsetReference: offset);
+            return new MutagenMemoryReadStream(this.ReadMemory(length, readSafe: true), this.MetaData, this.MasterReferences, offsetReference: offset);
         }
 
         public override string ToString()

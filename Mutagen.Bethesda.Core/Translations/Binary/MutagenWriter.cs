@@ -1,4 +1,5 @@
 using Mutagen.Bethesda.Internals;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -105,6 +106,11 @@ namespace Mutagen.Bethesda.Binary
         {
             if (b == null) return;
             this.Writer.Write(b);
+        }
+
+        public void Write(ReadOnlyMemorySlice<byte> b)
+        {
+            this.Writer.Write(b.Span);
         }
 
         /// <inheritdoc/>

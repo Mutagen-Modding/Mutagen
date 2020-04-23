@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Tests
         {
             public abstract RecordType RecordType { get; }
 
-            public abstract byte[] GetBytes(IMutagenReadStream inputStream);
+            public abstract ReadOnlyMemorySlice<byte> GetBytes(IMutagenReadStream inputStream);
         }
 
         public class AlignmentStraightRecord : AlignmentRule
@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Tests
 
             public override RecordType RecordType => _recordType;
 
-            public override byte[] GetBytes(IMutagenReadStream inputStream)
+            public override ReadOnlyMemorySlice<byte> GetBytes(IMutagenReadStream inputStream)
             {
                 var subType = HeaderTranslation.ReadNextSubrecordType(
                     inputStream,
@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.Tests
 
             public override RecordType RecordType => SubTypes[0];
 
-            public override byte[] GetBytes(IMutagenReadStream inputStream)
+            public override ReadOnlyMemorySlice<byte> GetBytes(IMutagenReadStream inputStream)
             {
                 Dictionary<RecordType, byte[]> dataDict = new Dictionary<RecordType, byte[]>();
                 MutagenWriter stream;
@@ -271,8 +271,8 @@ namespace Mutagen.Bethesda.Tests
                 writer.Write(len);
                 inputStream.WriteTo(writer.BaseStream, 12);
                 var endPos = inputStream.Position + len;
-                Dictionary<RecordType, byte[]> dataDict = new Dictionary<RecordType, byte[]>();
-                byte[] rest = null;
+                var dataDict = new Dictionary<RecordType, ReadOnlyMemorySlice<byte>>();
+                ReadOnlyMemorySlice<byte>? rest = null;
                 while (inputStream.Position < endPos)
                 {
                     var subType = HeaderTranslation.GetNextSubrecordType(
@@ -280,7 +280,7 @@ namespace Mutagen.Bethesda.Tests
                         out var subLen);
                     if (stopMarkers?.Contains(subType) ?? false)
                     {
-                        rest = inputStream.ReadBytes((int)(endPos - inputStream.Position));
+                        rest = inputStream.ReadMemory((int)(endPos - inputStream.Position), readSafe: true);
                         break;
                     }
                     if (!alignments.TryGetValue(subType, out var rule))
@@ -305,7 +305,7 @@ namespace Mutagen.Bethesda.Tests
                 }
                 if (rest != null)
                 {
-                    writer.Write(rest);
+                    writer.Write(rest.Value);
                 }
             }
         }
@@ -340,18 +340,18 @@ namespace Mutagen.Bethesda.Tests
                 {
                     throw new ArgumentException();
                 }
-                writer.Write(inputStream.ReadBytes(groupMeta.HeaderLength));
+                writer.Write(inputStream.ReadSpan(groupMeta.HeaderLength));
 
                 if (!alignmentRules.GroupAlignment.TryGetValue((GroupTypeEnum)groupMeta.GroupType, out var groupRules)) continue;
 
-                Dictionary<RecordType, List<byte[]>> storage = new Dictionary<RecordType, List<byte[]>>();
-                List<byte[]> rest = new List<byte[]>();
+                var storage = new Dictionary<RecordType, List<ReadOnlyMemorySlice<byte>>>();
+                var rest = new List<ReadOnlyMemorySlice<byte>>();
                 using (var frame = MutagenFrame.ByLength(inputStream, groupMeta.ContentLength))
                 {
                     while (!frame.Complete)
                     {
                         var majorMeta = inputStream.GetMajorRecord();
-                        var bytes = inputStream.ReadBytes(checked((int)majorMeta.TotalLength));
+                        var bytes = inputStream.ReadMemory(checked((int)majorMeta.TotalLength));
                         var type = majorMeta.RecordType;
                         if (groupRules.Contains(type))
                         {
@@ -384,8 +384,8 @@ namespace Mutagen.Bethesda.Tests
             BinaryReadStream mutaReader,
             MutagenWriter writer)
         {
-            writer.Write(mutaReader.ReadBytes(4));
-            Dictionary<GroupTypeEnum, byte[]> storage = new Dictionary<GroupTypeEnum, byte[]>();
+            writer.Write(mutaReader.ReadSpan(4, readSafe: false));
+            var storage = new Dictionary<GroupTypeEnum, ReadOnlyMemorySlice<byte>>();
             for (int i = 0; i < 3; i++)
             {
                 mutaReader.Position += 4;
@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Tests
                         i = 3; // end loop
                         continue;
                 }
-                storage[subGrupType] = mutaReader.ReadBytes(subLen);
+                storage[subGrupType] = mutaReader.ReadMemory(subLen, readSafe: true);
             }
             if (storage.TryGetValue(GroupTypeEnum.CellPersistentChildren, out var content))
             {
@@ -424,16 +424,16 @@ namespace Mutagen.Bethesda.Tests
             MutagenWriter writer)
         {
             reader.WriteTo(writer.BaseStream, 4);
-            byte[] roadStorage = null;
-            byte[] cellStorage = null;
-            List<byte[]> grupBytes = new List<byte[]>();
+            ReadOnlyMemorySlice<byte>? roadStorage = null;
+            ReadOnlyMemorySlice<byte>? cellStorage = null;
+            List<ReadOnlyMemorySlice<byte>> grupBytes = new List<ReadOnlyMemorySlice<byte>>();
             for (int i = 0; i < 3; i++)
             {
                 RecordType type = HeaderTranslation.GetNextRecordType(reader);
                 switch (type.Type)
                 {
                     case "ROAD":
-                        roadStorage = reader.ReadBytes(checked((int)reader.GetMajorRecord().TotalLength));
+                        roadStorage = reader.ReadMemory(checked((int)reader.GetMajorRecord().TotalLength));
                         break;
                     case "CELL":
                         if (cellStorage != null)
@@ -452,7 +452,7 @@ namespace Mutagen.Bethesda.Tests
                             cellGroupLen = cellSubGroupMeta.TotalLength;
                         }
                         reader.Position = startPos;
-                        cellStorage = reader.ReadBytes(checked((int)(cellMajorMeta.TotalLength + cellGroupLen)));
+                        cellStorage = reader.ReadMemory(checked((int)(cellMajorMeta.TotalLength + cellGroupLen)));
                         break;
                     case "GRUP":
                         if (roadStorage != null
@@ -461,7 +461,7 @@ namespace Mutagen.Bethesda.Tests
                             i = 3; // end loop
                             continue;
                         }
-                        grupBytes.Add(reader.ReadBytes(checked((int)reader.GetGroup().TotalLength)));
+                        grupBytes.Add(reader.ReadMemory(checked((int)reader.GetGroup().TotalLength)));
                         break;
                     case "WRLD":
                         i = 3; // end loop
@@ -472,11 +472,11 @@ namespace Mutagen.Bethesda.Tests
             }
             if (roadStorage != null)
             {
-                writer.Write(roadStorage);
+                writer.Write(roadStorage.Value);
             }
             if (cellStorage != null)
             {
-                writer.Write(cellStorage);
+                writer.Write(cellStorage.Value);
             }
             foreach (var item in grupBytes)
             {

@@ -566,16 +566,16 @@
         <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetInt8(System.Int32)">
             <inheritdoc />
         </member>
-        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetMemory(System.Int32)">
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetMemory(System.Int32,System.Boolean)">
             <inheritdoc />
         </member>
-        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetMemory(System.Int32,System.Int32)">
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetMemory(System.Int32,System.Int32,System.Boolean)">
             <inheritdoc />
         </member>
-        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetSpan(System.Int32)">
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetSpan(System.Int32,System.Boolean)">
             <inheritdoc />
         </member>
-        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetSpan(System.Int32,System.Int32)">
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetSpan(System.Int32,System.Int32,System.Boolean)">
             <inheritdoc />
         </member>
         <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.GetStringUTF8(System.Int32)">
@@ -641,16 +641,16 @@
         <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.ReadInt8">
             <inheritdoc />
         </member>
-        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.ReadMemory(System.Int32)">
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.ReadMemory(System.Int32,System.Boolean)">
             <inheritdoc />
         </member>
-        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.ReadMemory(System.Int32,System.Int32)">
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.ReadMemory(System.Int32,System.Int32,System.Boolean)">
             <inheritdoc />
         </member>
-        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.ReadSpan(System.Int32)">
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.ReadSpan(System.Int32,System.Boolean)">
             <inheritdoc />
         </member>
-        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.ReadSpan(System.Int32,System.Int32)">
+        <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.ReadSpan(System.Int32,System.Int32,System.Boolean)">
             <inheritdoc />
         </member>
         <member name="M:Mutagen.Bethesda.MutagenInterfaceReadStream.ReadStringUTF8(System.Int32)">
@@ -2083,7 +2083,13 @@
         <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.SetToFinalPosition">
             <inheritdoc/>
         </member>
-        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadRemaining">
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadRemainingBytes">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadRemainingSpan(System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadRemainingMemory(System.Boolean)">
             <inheritdoc/>
         </member>
         <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ToString">
@@ -2277,28 +2283,28 @@
         <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetStringUTF8(System.Int32)">
             <inheritdoc/>
         </member>
-        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadSpan(System.Int32)">
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadSpan(System.Int32,System.Boolean)">
             <inheritdoc/>
         </member>
-        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadSpan(System.Int32,System.Int32)">
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadSpan(System.Int32,System.Int32,System.Boolean)">
             <inheritdoc/>
         </member>
-        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetSpan(System.Int32)">
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetSpan(System.Int32,System.Boolean)">
             <inheritdoc/>
         </member>
-        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetSpan(System.Int32,System.Int32)">
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetSpan(System.Int32,System.Int32,System.Boolean)">
             <inheritdoc/>
         </member>
-        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadMemory(System.Int32)">
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadMemory(System.Int32,System.Boolean)">
             <inheritdoc/>
         </member>
-        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadMemory(System.Int32,System.Int32)">
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.ReadMemory(System.Int32,System.Int32,System.Boolean)">
             <inheritdoc/>
         </member>
-        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetMemory(System.Int32)">
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetMemory(System.Int32,System.Boolean)">
             <inheritdoc/>
         </member>
-        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetMemory(System.Int32,System.Int32)">
+        <member name="M:Mutagen.Bethesda.Binary.MutagenFrame.GetMemory(System.Int32,System.Int32,System.Boolean)">
             <inheritdoc/>
         </member>
         <member name="T:Mutagen.Bethesda.Binary.MutagenWriter">

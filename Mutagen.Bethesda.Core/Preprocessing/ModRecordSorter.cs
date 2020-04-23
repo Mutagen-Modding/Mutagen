@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Preprocessing
                                     throw new ArgumentException();
                                 }
 
-                                Dictionary<FormID, List<byte[]>> storage = new Dictionary<FormID, List<byte[]>>();
+                                var storage = new Dictionary<FormID, List<ReadOnlyMemorySlice<byte>>>();
                                 using (var grupFrame = new MutagenFrame(inputStream).SpawnWithLength(groupMeta.TotalLength))
                                 {
                                     inputStream.WriteTo(writer.BaseStream, meta.GroupConstants.HeaderLength);
@@ -50,12 +50,12 @@ namespace Mutagen.Bethesda.Preprocessing
                                     foreach (var rec in RecordLocator.ParseTopLevelGRUP(locatorStream))
                                     {
                                         MajorRecordHeader majorMeta = inputStream.GetMajorRecord();
-                                        storage.TryCreateValue(rec.FormID).Add(inputStream.ReadBytes(checked((int)majorMeta.TotalLength)));
+                                        storage.TryCreateValue(rec.FormID).Add(inputStream.ReadMemory(checked((int)majorMeta.TotalLength), readSafe: true));
                                         if (grupFrame.Complete) continue;
                                         GroupHeader subGroupMeta = inputStream.GetGroup();
                                         if (subGroupMeta.IsGroup)
                                         {
-                                            storage.TryCreateValue(rec.FormID).Add(inputStream.ReadBytes(checked((int)subGroupMeta.TotalLength)));
+                                            storage.TryCreateValue(rec.FormID).Add(inputStream.ReadMemory(checked((int)subGroupMeta.TotalLength), readSafe: true));
                                         }
                                     }
                                 }

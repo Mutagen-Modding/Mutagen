@@ -906,7 +906,7 @@ namespace Mutagen.Bethesda.Tests
             IEnumerable<RecordType> rectypes)
         {
             stream.Position = loc.Min;
-            var bytes = stream.ReadBytes((int)loc.Width);
+            var bytes = stream.ReadSpan((int)loc.Width, readSafe: false);
             var str = BinaryStringUtility.ToZString(bytes);
             List<(RecordType rec, int sourceIndex, int loc)> list = new List<(RecordType rec, int sourceIndex, int loc)>();
             int recTypeIndex = -1;

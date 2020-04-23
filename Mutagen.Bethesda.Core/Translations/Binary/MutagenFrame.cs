@@ -165,9 +165,21 @@ namespace Mutagen.Bethesda.Binary
         }
 
         /// <inheritdoc/>
-        public byte[] ReadRemaining()
+        public byte[] ReadRemainingBytes()
         {
             return this.Reader.ReadBytes(checked((int)this.Remaining));
+        }
+
+        /// <inheritdoc/>
+        public ReadOnlySpan<byte> ReadRemainingSpan(bool readSafe)
+        {
+            return this.Reader.ReadSpan(checked((int)this.Remaining), readSafe: readSafe);
+        }
+
+        /// <inheritdoc/>
+        public ReadOnlyMemorySlice<byte> ReadRemainingMemory(bool readSafe)
+        {
+            return this.Reader.ReadMemory(checked((int)this.Remaining), readSafe: readSafe);
         }
 
         /// <inheritdoc/>
@@ -257,6 +269,8 @@ namespace Mutagen.Bethesda.Binary
         /// <returns>New frame with a new backing stream with uncompressed content</returns>
         public MutagenFrame Decompress(uint resultLen)
         {
+            // ToDo
+            // Swap to span version if Zlib updates
             var bytes = this.Reader.ReadBytes((int)this.Remaining);
             try
             {
@@ -278,7 +292,7 @@ namespace Mutagen.Bethesda.Binary
         public MutagenFrame ReadAndReframe(int length)
         {
             var offset = this.PositionWithOffset;
-            return new MutagenFrame(new MutagenMemoryReadStream(this.ReadBytes(length), this.MetaData, this.MasterReferences, offsetReference: offset));
+            return new MutagenFrame(new MutagenMemoryReadStream(this.ReadMemory(length, readSafe: true), this.MetaData, this.MasterReferences, offsetReference: offset));
         }
 
         /// <inheritdoc/>
@@ -549,51 +563,51 @@ namespace Mutagen.Bethesda.Binary
         }
 
         /// <inheritdoc/>
-        public ReadOnlySpan<byte> ReadSpan(int amount)
+        public ReadOnlySpan<byte> ReadSpan(int amount, bool readSafe = true)
         {
-            return Reader.ReadSpan(amount);
+            return Reader.ReadSpan(amount, readSafe);
         }
 
         /// <inheritdoc/>
-        public ReadOnlySpan<byte> ReadSpan(int amount, int offset)
+        public ReadOnlySpan<byte> ReadSpan(int amount, int offset, bool readSafe = true)
         {
-            return Reader.ReadSpan(amount, offset);
+            return Reader.ReadSpan(amount, offset, readSafe);
         }
 
         /// <inheritdoc/>
-        public ReadOnlySpan<byte> GetSpan(int amount)
+        public ReadOnlySpan<byte> GetSpan(int amount, bool readSafe = true)
         {
-            return Reader.GetSpan(amount);
+            return Reader.GetSpan(amount, readSafe);
         }
 
         /// <inheritdoc/>
-        public ReadOnlySpan<byte> GetSpan(int amount, int offset)
+        public ReadOnlySpan<byte> GetSpan(int amount, int offset, bool readSafe = true)
         {
-            return Reader.GetSpan(amount, offset);
+            return Reader.GetSpan(amount, offset, readSafe);
         }
 
         /// <inheritdoc/>
-        public ReadOnlyMemorySlice<byte> ReadMemory(int amount)
+        public ReadOnlyMemorySlice<byte> ReadMemory(int amount, bool readSafe = true)
         {
-            return Reader.ReadMemory(amount);
+            return Reader.ReadMemory(amount, readSafe);
         }
 
         /// <inheritdoc/>
-        public ReadOnlyMemorySlice<byte> ReadMemory(int amount, int offset)
+        public ReadOnlyMemorySlice<byte> ReadMemory(int amount, int offset, bool readSafe = true)
         {
-            return Reader.ReadMemory(amount, offset);
+            return Reader.ReadMemory(amount, offset, readSafe);
         }
 
         /// <inheritdoc/>
-        public ReadOnlyMemorySlice<byte> GetMemory(int amount)
+        public ReadOnlyMemorySlice<byte> GetMemory(int amount, bool readSafe = true)
         {
-            return Reader.GetMemory(amount);
+            return Reader.GetMemory(amount, readSafe);
         }
 
         /// <inheritdoc/>
-        public ReadOnlyMemorySlice<byte> GetMemory(int amount, int offset)
+        public ReadOnlyMemorySlice<byte> GetMemory(int amount, int offset, bool readSafe = true)
         {
-            return Reader.GetMemory(amount, offset);
+            return Reader.GetMemory(amount, offset, readSafe);
         }
     }
 }

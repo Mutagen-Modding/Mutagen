@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Preprocessing
                     writableMajorMeta.IsCompressed = false;
                     writableMajorMeta.RecordLength = (uint)(len + lengthDiff);
                     writer.Write(majorMetaSpan);
-                    writer.Write(decompressed.ReadRemaining());
+                    writer.Write(decompressed.ReadRemainingSpan(readSafe: false));
 
                     // If no difference in lengths, move on
                     if (lengthDiff == 0) continue;

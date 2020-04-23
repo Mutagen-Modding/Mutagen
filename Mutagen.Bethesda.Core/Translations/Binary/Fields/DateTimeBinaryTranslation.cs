@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.Binary
 
         public override DateTime ParseValue(MutagenFrame reader)
         {
-            reader.Reader.ReadBytes(4);
+            reader.Reader.Position += 4;
             return DateTime.Now;
         }
 

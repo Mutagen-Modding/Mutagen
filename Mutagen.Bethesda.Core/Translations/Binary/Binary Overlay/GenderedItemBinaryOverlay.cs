@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Binary
                 throw new ArgumentException("Expected things to be read.");
             }
             return new GenderedItemBinaryOverlay<T>(
-                stream.ReadBytes(readLen),
+                stream.ReadMemory(readLen),
                 package,
                 maleLoc,
                 femaleLoc,
