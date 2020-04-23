@@ -197,7 +197,8 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen,
             TypeGeneration typeGen,
             Accessor dataAccessor,
-            int? currentPosition)
+            int? currentPosition,
+            string passedLengthAccessor)
         {
             var data = typeGen.GetFieldData();
             switch (data.BinaryOverlayFallback)
@@ -240,12 +241,14 @@ namespace Mutagen.Bethesda.Generation
                     }
                     else
                     {
-                        fg.AppendLine($"public {typeGen.TypeName(getter: true)}? {typeGen.Name} => {dataAccessor}.Length >= {(currentPosition + this.ExpectedLength(objGen, typeGen).Value)} ? {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Slice(0x{currentPosition:X}{(expectedLen != null ? $", 0x{this.ExpectedLength(objGen, typeGen).Value:X}" : null)})", "_package")} : {typeGen.GetDefault()};");
+                        var expected = this.ExpectedLength(objGen, typeGen).Value;
+                        string passed = int.TryParse(passedLengthAccessor.TrimStart("0x"), System.Globalization.NumberStyles.HexNumber, null, out var passedInt) ? (passedInt + expected).ToString() : $"({passedLengthAccessor} + {expected})";
+                        fg.AppendLine($"public {typeGen.TypeName(getter: true)}? {typeGen.Name} => {dataAccessor}.Length >= {passed} ? {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Slice({passedLengthAccessor}{(expectedLen != null ? $", 0x{this.ExpectedLength(objGen, typeGen).Value:X}" : null)})", "_package")} : {typeGen.GetDefault()};");
                     }
                 }
                 else
                 {
-                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Slice(0x{currentPosition:X}{(expectedLen != null ? $", 0x{this.ExpectedLength(objGen, typeGen).Value:X}" : null)})", "_package")};");
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Slice({passedLengthAccessor}{(expectedLen != null ? $", 0x{this.ExpectedLength(objGen, typeGen).Value:X}" : null)})", "_package")};");
                 }
             }
         }

@@ -22,7 +22,8 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen, 
             TypeGeneration typeGen,
             Accessor dataAccessor, 
-            int? currentPosition)
+            int? currentPosition,
+            string passedLengthAccessor)
         {
             var data = typeGen.GetFieldData();
             switch (data.BinaryOverlayFallback)
@@ -60,7 +61,7 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {dataAccessor}.Span[0x{currentPosition:X}];");
+                fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {dataAccessor}.Span[{passedLengthAccessor}];");
             }
         }
 

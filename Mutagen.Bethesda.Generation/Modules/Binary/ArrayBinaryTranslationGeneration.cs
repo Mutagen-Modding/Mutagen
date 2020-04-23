@@ -16,13 +16,14 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen, 
             TypeGeneration typeGen, 
             Accessor dataAccessor, 
-            int? currentPosition)
+            int? currentPosition,
+            string passedLengthAccessor)
         {
             ArrayType arr = typeGen as ArrayType;
             var data = arr.GetFieldData();
             if (data.BinaryOverlayFallback != BinaryGenerationType.Normal)
             {
-                base.GenerateWrapperFields(fg, objGen, typeGen, dataAccessor, currentPosition);
+                base.GenerateWrapperFields(fg, objGen, typeGen, dataAccessor, currentPosition, passedLengthAccessor);
                 return;
             }
             var subGen = this.Module.GetTypeGeneration(arr.SubTypeGeneration.GetType());
@@ -30,8 +31,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (arr.SubTypeGeneration is EnumType e)
                 {
-                    var posStr = currentPosition == null ? null : $"{currentPosition}";
-                    fg.AppendLine($"public {arr.Interface(getter: true, internalInterface: true)} {typeGen.Name} => BinaryOverlayArrayHelper.EnumSliceFromFixedSize<{arr.SubTypeGeneration.TypeName(getter: true)}>({dataAccessor}.Slice({posStr}), amount: {arr.FixedSize.Value}, enumLength: {e.ByteLength});");
+                    fg.AppendLine($"public {arr.Interface(getter: true, internalInterface: true)} {typeGen.Name} => BinaryOverlayArrayHelper.EnumSliceFromFixedSize<{arr.SubTypeGeneration.TypeName(getter: true)}>({dataAccessor}.Slice({passedLengthAccessor}), amount: {arr.FixedSize.Value}, enumLength: {e.ByteLength});");
                 }
                 else
                 {

@@ -261,7 +261,8 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen, 
             TypeGeneration typeGen, 
             Accessor dataAccessor, 
-            int? passedLength)
+            int? passedLength,
+            string passedLengthAccessor)
         {
             using (var args = new ArgsWrapper(fg,
                 $"partial void {(typeGen.Name == null ? typeGen.GetFieldData().RecordType?.ToString() : typeGen.Name)}CustomParse"))

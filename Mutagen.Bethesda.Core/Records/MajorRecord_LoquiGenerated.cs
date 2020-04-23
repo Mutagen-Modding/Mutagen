@@ -2413,7 +2413,7 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public Int32 MajorRecordFlagsRaw => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public FormKey FormKey => FormKeyBinaryTranslation.Instance.Parse(_data.Span.Slice(4, 4), this._package.MasterReferences!);
+        public FormKey FormKey => FormKeyBinaryTranslation.Instance.Parse(_data.Span.Slice(0x4, 4), this._package.MasterReferences!);
         public UInt32 Version => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x8, 0x4));
         #region EditorID
         private int? _EditorIDLocation;

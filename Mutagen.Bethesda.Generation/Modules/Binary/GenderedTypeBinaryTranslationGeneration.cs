@@ -208,7 +208,8 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen,
             TypeGeneration typeGen,
             Accessor dataAccessor,
-            int? currentPosition)
+            int? currentPosition,
+            string passedLengthAccessor)
         {
             var data = typeGen.GetFieldData();
             switch (data.BinaryOverlayFallback)
@@ -279,7 +280,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 fg.AppendLine($"if (!_{typeGen.Name}Location.HasValue) return {typeGen.GetDefault()};");
                             }
-                            fg.AppendLine($"var data = {dataAccessor}.Span.Slice({currentPosition}, {subLen * 2});");
+                            fg.AppendLine($"var data = {dataAccessor}.Span.Slice({passedLengthAccessor}, {subLen * 2});");
                             using (var args = new ArgsWrapper(fg,
                                 $"return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true)}>"))
                             {

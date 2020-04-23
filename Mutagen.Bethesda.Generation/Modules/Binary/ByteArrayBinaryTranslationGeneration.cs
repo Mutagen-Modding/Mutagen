@@ -119,7 +119,8 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen,
             TypeGeneration typeGen,
             Accessor dataAccessor, 
-            int? currentPosition)
+            int? currentPosition,
+            string passedLengthAccessor)
         {
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             switch (data.BinaryOverlayFallback)

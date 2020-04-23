@@ -261,7 +261,8 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen,
             TypeGeneration typeGen,
             Accessor dataAccessor,
-            int? currentPosition)
+            int? currentPosition,
+            string passedLengthAccessor)
         {
             LoquiType loqui = typeGen as LoquiType;
             var data = typeGen.GetFieldData();
@@ -406,7 +407,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (loqui.SingletonType == SingletonLevel.None)
                 {
-                    fg.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)} {typeGen.Name} => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({dataAccessor}.Slice({currentPosition})), _package, {recConverter});");
+                    fg.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)} {typeGen.Name} => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({dataAccessor}.Slice({passedLengthAccessor})), _package, {recConverter});");
                 }
                 else
                 {

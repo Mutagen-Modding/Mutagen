@@ -1493,7 +1493,8 @@ namespace Mutagen.Bethesda.Generation
                             obj,
                             field,
                             dataAccessor,
-                            passedLength);
+                            passedLength,
+                            $"0x{passedLength:X}");
                         if (!data.HasTrigger)
                         {
                             if (data.Length.HasValue)

@@ -124,7 +124,8 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen, 
             TypeGeneration typeGen, 
             Accessor dataAccessor,
-            int? currentPosition)
+            int? currentPosition,
+            string passedLengthAccessor)
         {
             var eType = typeGen as EnumType;
             var data = typeGen.GetFieldData();
@@ -159,7 +160,7 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                slice = $"{dataAccessor}.Span.Slice(0x{currentPosition:X}, 0x{eType.ByteLength:X})";
+                slice = $"{dataAccessor}.Span.Slice({passedLengthAccessor}, 0x{eType.ByteLength:X})";
             }
             var getType = GenerateForTypicalWrapper(objGen, typeGen, slice, "_package");
 

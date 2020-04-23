@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "Flag Flags => GetFlagsCustom(location: 80);";
+            string testString = "ength >= (0x8 + 2) ? BinaryPr";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

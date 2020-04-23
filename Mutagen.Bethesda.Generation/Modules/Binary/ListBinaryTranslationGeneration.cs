@@ -439,7 +439,8 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen,
             TypeGeneration typeGen,
             Accessor dataAccessor,
-            int? currentPosition)
+            int? currentPosition,
+            string passedLengthAccessor)
         {
             ListType list = typeGen as ListType;
             var data = list.GetFieldData();
