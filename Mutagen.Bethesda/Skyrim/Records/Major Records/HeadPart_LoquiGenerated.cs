@@ -320,7 +320,6 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem FormKey,
                 TItem Version,
                 TItem EditorID,
-                TItem SkyrimMajorRecordFlags,
                 TItem FormVersion,
                 TItem Version2,
                 TItem Name,
@@ -336,7 +335,6 @@ namespace Mutagen.Bethesda.Skyrim
                 FormKey: FormKey,
                 Version: Version,
                 EditorID: EditorID,
-                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags,
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
@@ -1334,17 +1332,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        SkyrimMajorRecordFlags = 4,
-        FormVersion = 5,
-        Version2 = 6,
-        Name = 7,
-        Model = 8,
-        Flags = 9,
-        Type = 10,
-        ExtraParts = 11,
-        Parts = 12,
-        TextureSet = 13,
-        ValidRaces = 14,
+        FormVersion = 4,
+        Version2 = 5,
+        Name = 6,
+        Model = 7,
+        Flags = 8,
+        Type = 9,
+        ExtraParts = 10,
+        Parts = 11,
+        TextureSet = 12,
+        ValidRaces = 13,
     }
     #endregion
 
@@ -1364,7 +1361,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(HeadPart.Mask<>);
 
@@ -2070,8 +2067,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMajorRecord_FieldIndex.Version:
                     return (HeadPart_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
-                    return (HeadPart_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (HeadPart_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (HeadPart_FieldIndex)((int)index);

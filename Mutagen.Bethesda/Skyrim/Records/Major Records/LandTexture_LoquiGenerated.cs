@@ -280,7 +280,6 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem FormKey,
                 TItem Version,
                 TItem EditorID,
-                TItem SkyrimMajorRecordFlags,
                 TItem FormVersion,
                 TItem Version2,
                 TItem TextureSet,
@@ -293,7 +292,6 @@ namespace Mutagen.Bethesda.Skyrim
                 FormKey: FormKey,
                 Version: Version,
                 EditorID: EditorID,
-                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags,
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
@@ -1131,14 +1129,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        SkyrimMajorRecordFlags = 4,
-        FormVersion = 5,
-        Version2 = 6,
-        TextureSet = 7,
-        MaterialType = 8,
-        HavokData = 9,
-        TextureSpecularExponent = 10,
-        Grasses = 11,
+        FormVersion = 4,
+        Version2 = 5,
+        TextureSet = 6,
+        MaterialType = 7,
+        HavokData = 8,
+        TextureSpecularExponent = 9,
+        Grasses = 10,
     }
     #endregion
 
@@ -1158,7 +1155,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(LandTexture.Mask<>);
 
@@ -1753,8 +1750,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMajorRecord_FieldIndex.Version:
                     return (LandTexture_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
-                    return (LandTexture_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (LandTexture_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (LandTexture_FieldIndex)((int)index);

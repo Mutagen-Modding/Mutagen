@@ -261,7 +261,6 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem FormKey,
                 TItem Version,
                 TItem EditorID,
-                TItem SkyrimMajorRecordFlags,
                 TItem FormVersion,
                 TItem Version2,
                 TItem ObjectBounds,
@@ -273,7 +272,6 @@ namespace Mutagen.Bethesda.Skyrim
                 FormKey: FormKey,
                 Version: Version,
                 EditorID: EditorID,
-                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags,
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
@@ -1010,13 +1008,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        SkyrimMajorRecordFlags = 4,
-        FormVersion = 5,
-        Version2 = 6,
-        ObjectBounds = 7,
-        AmbientSound = 8,
-        UseSoundFromRegion = 9,
-        EnvironmentType = 10,
+        FormVersion = 4,
+        Version2 = 5,
+        ObjectBounds = 6,
+        AmbientSound = 7,
+        UseSoundFromRegion = 8,
+        EnvironmentType = 9,
     }
     #endregion
 
@@ -1036,7 +1033,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(AcousticSpace.Mask<>);
 
@@ -1575,8 +1572,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMajorRecord_FieldIndex.Version:
                     return (AcousticSpace_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
-                    return (AcousticSpace_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (AcousticSpace_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (AcousticSpace_FieldIndex)((int)index);

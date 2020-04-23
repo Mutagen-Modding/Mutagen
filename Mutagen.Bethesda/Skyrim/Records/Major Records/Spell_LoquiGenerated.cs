@@ -320,7 +320,6 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem FormKey,
                 TItem Version,
                 TItem EditorID,
-                TItem SkyrimMajorRecordFlags,
                 TItem FormVersion,
                 TItem Version2,
                 TItem ObjectBounds,
@@ -336,7 +335,6 @@ namespace Mutagen.Bethesda.Skyrim
                 FormKey: FormKey,
                 Version: Version,
                 EditorID: EditorID,
-                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags,
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
@@ -1342,17 +1340,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        SkyrimMajorRecordFlags = 4,
-        FormVersion = 5,
-        Version2 = 6,
-        ObjectBounds = 7,
-        Name = 8,
-        Keywords = 9,
-        MenuDisplayObject = 10,
-        EquipmentType = 11,
-        Description = 12,
-        Data = 13,
-        Effects = 14,
+        FormVersion = 4,
+        Version2 = 5,
+        ObjectBounds = 6,
+        Name = 7,
+        Keywords = 8,
+        MenuDisplayObject = 9,
+        EquipmentType = 10,
+        Description = 11,
+        Data = 12,
+        Effects = 13,
     }
     #endregion
 
@@ -1372,7 +1369,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(Spell.Mask<>);
 
@@ -2112,8 +2109,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (Spell_FieldIndex)((int)index);
                 case ASpell_FieldIndex.EditorID:
                     return (Spell_FieldIndex)((int)index);
-                case ASpell_FieldIndex.SkyrimMajorRecordFlags:
-                    return (Spell_FieldIndex)((int)index);
                 case ASpell_FieldIndex.FormVersion:
                     return (Spell_FieldIndex)((int)index);
                 case ASpell_FieldIndex.Version2:
@@ -2134,8 +2129,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMajorRecord_FieldIndex.Version:
                     return (Spell_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
-                    return (Spell_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (Spell_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (Spell_FieldIndex)((int)index);

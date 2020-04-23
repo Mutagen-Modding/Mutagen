@@ -228,7 +228,6 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem FormKey,
                 TItem Version,
                 TItem EditorID,
-                TItem SkyrimMajorRecordFlags,
                 TItem FormVersion,
                 TItem Version2)
             : base(
@@ -236,7 +235,6 @@ namespace Mutagen.Bethesda.Skyrim
                 FormKey: FormKey,
                 Version: Version,
                 EditorID: EditorID,
-                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags,
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
@@ -814,9 +812,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        SkyrimMajorRecordFlags = 4,
-        FormVersion = 5,
-        Version2 = 6,
+        FormVersion = 4,
+        Version2 = 5,
     }
     #endregion
 
@@ -836,7 +833,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort AdditionalFieldCount = 0;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(Global.Mask<>);
 
@@ -1250,8 +1247,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMajorRecord_FieldIndex.Version:
                     return (Global_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
-                    return (Global_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (Global_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (Global_FieldIndex)((int)index);

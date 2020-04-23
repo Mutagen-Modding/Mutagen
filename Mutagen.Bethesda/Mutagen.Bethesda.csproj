@@ -1065,9 +1065,6 @@
     <Compile Include="Skyrim\Records\ModStats_LoquiGenerated.cs">
       <DependentUpon>ModHeader.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\SkyrimMajorRecord.cs">
-      <DependentUpon>SkyrimMajorRecord.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\SkyrimMajorRecord_LoquiGenerated.cs">
       <DependentUpon>SkyrimMajorRecord.xml</DependentUpon>
     </Compile>
@@ -1450,7 +1447,7 @@
   <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.13.7" />
     <PackageReference Include="Loqui" Version="1.1.4" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.0.8" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.0.9" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />

@@ -372,7 +372,6 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem FormKey,
                 TItem Version,
                 TItem EditorID,
-                TItem SkyrimMajorRecordFlags,
                 TItem FormVersion,
                 TItem Version2,
                 TItem ObjectBounds,
@@ -393,7 +392,6 @@ namespace Mutagen.Bethesda.Skyrim
                 FormKey: FormKey,
                 Version: Version,
                 EditorID: EditorID,
-                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags,
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
@@ -1563,22 +1561,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        SkyrimMajorRecordFlags = 4,
-        FormVersion = 5,
-        Version2 = 6,
-        ObjectBounds = 7,
-        Name = 8,
-        Keywords = 9,
-        MenuDisplayObject = 10,
-        EquipmentType = 11,
-        Description = 12,
-        Model = 13,
-        Destructible = 14,
-        SoundPickUp = 15,
-        SoundPutDown = 16,
-        Data = 17,
-        SpellData = 18,
-        Effects = 19,
+        FormVersion = 4,
+        Version2 = 5,
+        ObjectBounds = 6,
+        Name = 7,
+        Keywords = 8,
+        MenuDisplayObject = 9,
+        EquipmentType = 10,
+        Description = 11,
+        Model = 12,
+        Destructible = 13,
+        SoundPickUp = 14,
+        SoundPutDown = 15,
+        Data = 16,
+        SpellData = 17,
+        Effects = 18,
     }
     #endregion
 
@@ -1598,7 +1595,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 20;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(Scroll.Mask<>);
 
@@ -2466,8 +2463,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMajorRecord_FieldIndex.Version:
                     return (Scroll_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
-                    return (Scroll_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (Scroll_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (Scroll_FieldIndex)((int)index);

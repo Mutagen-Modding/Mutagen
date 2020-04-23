@@ -395,7 +395,6 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem FormKey,
                 TItem Version,
                 TItem EditorID,
-                TItem SkyrimMajorRecordFlags,
                 TItem FormVersion,
                 TItem Version2,
                 TItem Name,
@@ -419,7 +418,6 @@ namespace Mutagen.Bethesda.Skyrim
                 FormKey: FormKey,
                 Version: Version,
                 EditorID: EditorID,
-                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags,
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
@@ -1736,25 +1734,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        SkyrimMajorRecordFlags = 4,
-        FormVersion = 5,
-        Version2 = 6,
-        Name = 7,
-        Relations = 8,
-        Flags = 9,
-        PrisonMarker = 10,
-        FollowerWaitMarker = 11,
-        EvidenceChest = 12,
-        PlayerBelongingsChest = 13,
-        CrimeGroup = 14,
-        JailOutfit = 15,
-        CrimeValues = 16,
-        Ranks = 17,
-        VendorList = 18,
-        VendorChest = 19,
-        VendorValues = 20,
-        VendorLocation = 21,
-        Conditions = 22,
+        FormVersion = 4,
+        Version2 = 5,
+        Name = 6,
+        Relations = 7,
+        Flags = 8,
+        PrisonMarker = 9,
+        FollowerWaitMarker = 10,
+        EvidenceChest = 11,
+        PlayerBelongingsChest = 12,
+        CrimeGroup = 13,
+        JailOutfit = 14,
+        CrimeValues = 15,
+        Ranks = 16,
+        VendorList = 17,
+        VendorChest = 18,
+        VendorValues = 19,
+        VendorLocation = 20,
+        Conditions = 21,
     }
     #endregion
 
@@ -1774,7 +1771,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort AdditionalFieldCount = 16;
 
-        public const ushort FieldCount = 23;
+        public const ushort FieldCount = 22;
 
         public static readonly Type MaskType = typeof(Faction.Mask<>);
 
@@ -2746,8 +2743,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMajorRecord_FieldIndex.Version:
                     return (Faction_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
-                    return (Faction_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (Faction_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (Faction_FieldIndex)((int)index);

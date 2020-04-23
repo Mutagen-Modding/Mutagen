@@ -27,12 +27,6 @@ namespace Mutagen.Bethesda
     [DebuggerDisplay("{GetType().Name} {this.EditorID?.ToString()} {this.FormKey.ToString()}")]
     public partial class MajorRecord : ILinkContainer
     {
-        public MajorRecordFlag MajorRecordFlags
-        {
-            get => (MajorRecordFlag)this.MajorRecordFlagsRaw;
-            set => this.MajorRecordFlagsRaw = (int)value;
-        }
-
         #region EditorID
         public virtual String? EditorID { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -40,35 +34,20 @@ namespace Mutagen.Bethesda
         #endregion
 
         /// <summary>
-        /// Common MajorRecord flags
-        /// </summary>
-        [Flags]
-        public enum MajorRecordFlag
-        {
-            /// <summary>
-            /// True if record content should be compressed
-            /// </summary>
-            Compressed = 0x00040000,
-        }
-
-        /// <summary>
         /// A convenience property to print "EditorID - FormKey"
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public string TitleString => $"{this.EditorID} - {this.FormKey.ToString()}";
+        public string TitleString => $"{this.EditorID} - {this.FormKey}";
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IMajorRecordCommon.IsCompressed
+        public bool IsCompressed
         {
-            get => this.MajorRecordFlags.HasFlag(MajorRecordFlag.Compressed);
-            set => this.MajorRecordFlags = this.MajorRecordFlags.SetFlag(MajorRecordFlag.Compressed, value);
+            get => EnumExt.HasFlag(this.MajorRecordFlagsRaw, Mutagen.Bethesda.Internals.Constants.CompressedFlag);
+            set => this.MajorRecordFlagsRaw = EnumExt.SetFlag(this.MajorRecordFlagsRaw, Mutagen.Bethesda.Internals.Constants.CompressedFlag, value);
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        bool IMajorRecordCommonGetter.IsCompressed
-        {
-            get => this.MajorRecordFlags.HasFlag(MajorRecordFlag.Compressed);
-        }
+        bool IMajorRecordCommonGetter.IsCompressed => this.IsCompressed;
 
         object IDuplicatable.Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecordTracker)
         {
@@ -81,7 +60,7 @@ namespace Mutagen.Bethesda.Internals
 {
     public partial class MajorRecordBinaryOverlay : IMajorRecordCommonGetter
     {
-        public bool IsCompressed => ((MajorRecord.MajorRecordFlag)this.MajorRecordFlagsRaw).HasFlag(MajorRecord.MajorRecordFlag.Compressed);
+        public bool IsCompressed => EnumExt.HasFlag(this.MajorRecordFlagsRaw, Mutagen.Bethesda.Internals.Constants.CompressedFlag);
 
         object IDuplicatable.Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecordTracker)
         {

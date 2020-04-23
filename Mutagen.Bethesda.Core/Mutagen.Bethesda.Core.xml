@@ -3591,16 +3591,6 @@
             The top level Mod object that contains all records
             </summary>
         </member>
-        <member name="T:Mutagen.Bethesda.MajorRecord.MajorRecordFlag">
-            <summary>
-            Common MajorRecord flags
-            </summary>
-        </member>
-        <member name="F:Mutagen.Bethesda.MajorRecord.MajorRecordFlag.Compressed">
-            <summary>
-            True if record content should be compressed
-            </summary>
-        </member>
         <member name="P:Mutagen.Bethesda.MajorRecord.TitleString">
             <summary>
             A convenience property to print "EditorID - FormKey"

@@ -226,7 +226,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.SkyrimMajorRecordFlags = initialValue;
                 this.FormVersion = initialValue;
                 this.Version2 = initialValue;
             }
@@ -236,7 +235,6 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem FormKey,
                 TItem Version,
                 TItem EditorID,
-                TItem SkyrimMajorRecordFlags,
                 TItem FormVersion,
                 TItem Version2)
             : base(
@@ -245,7 +243,6 @@ namespace Mutagen.Bethesda.Skyrim
                 Version: Version,
                 EditorID: EditorID)
             {
-                this.SkyrimMajorRecordFlags = SkyrimMajorRecordFlags;
                 this.FormVersion = FormVersion;
                 this.Version2 = Version2;
             }
@@ -259,7 +256,6 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem SkyrimMajorRecordFlags;
             public TItem FormVersion;
             public TItem Version2;
             #endregion
@@ -275,7 +271,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.SkyrimMajorRecordFlags, rhs.SkyrimMajorRecordFlags)) return false;
                 if (!object.Equals(this.FormVersion, rhs.FormVersion)) return false;
                 if (!object.Equals(this.Version2, rhs.Version2)) return false;
                 return true;
@@ -283,7 +278,6 @@ namespace Mutagen.Bethesda.Skyrim
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.SkyrimMajorRecordFlags);
                 hash.Add(this.FormVersion);
                 hash.Add(this.Version2);
                 hash.Add(base.GetHashCode());
@@ -296,7 +290,6 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.SkyrimMajorRecordFlags)) return false;
                 if (!eval(this.FormVersion)) return false;
                 if (!eval(this.Version2)) return false;
                 return true;
@@ -307,7 +300,6 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.SkyrimMajorRecordFlags)) return true;
                 if (eval(this.FormVersion)) return true;
                 if (eval(this.Version2)) return true;
                 return false;
@@ -325,7 +317,6 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.SkyrimMajorRecordFlags = eval(this.SkyrimMajorRecordFlags);
                 obj.FormVersion = eval(this.FormVersion);
                 obj.Version2 = eval(this.Version2);
             }
@@ -350,10 +341,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.SkyrimMajorRecordFlags ?? true)
-                    {
-                        fg.AppendItem(SkyrimMajorRecordFlags, "SkyrimMajorRecordFlags");
-                    }
                     if (printMask?.FormVersion ?? true)
                     {
                         fg.AppendItem(FormVersion, "FormVersion");
@@ -374,7 +361,6 @@ namespace Mutagen.Bethesda.Skyrim
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? SkyrimMajorRecordFlags;
             public Exception? FormVersion;
             public Exception? Version2;
             #endregion
@@ -385,8 +371,6 @@ namespace Mutagen.Bethesda.Skyrim
                 SkyrimMajorRecord_FieldIndex enu = (SkyrimMajorRecord_FieldIndex)index;
                 switch (enu)
                 {
-                    case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
-                        return SkyrimMajorRecordFlags;
                     case SkyrimMajorRecord_FieldIndex.FormVersion:
                         return FormVersion;
                     case SkyrimMajorRecord_FieldIndex.Version2:
@@ -401,9 +385,6 @@ namespace Mutagen.Bethesda.Skyrim
                 SkyrimMajorRecord_FieldIndex enu = (SkyrimMajorRecord_FieldIndex)index;
                 switch (enu)
                 {
-                    case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
-                        this.SkyrimMajorRecordFlags = ex;
-                        break;
                     case SkyrimMajorRecord_FieldIndex.FormVersion:
                         this.FormVersion = ex;
                         break;
@@ -421,9 +402,6 @@ namespace Mutagen.Bethesda.Skyrim
                 SkyrimMajorRecord_FieldIndex enu = (SkyrimMajorRecord_FieldIndex)index;
                 switch (enu)
                 {
-                    case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
-                        this.SkyrimMajorRecordFlags = (Exception?)obj;
-                        break;
                     case SkyrimMajorRecord_FieldIndex.FormVersion:
                         this.FormVersion = (Exception?)obj;
                         break;
@@ -439,7 +417,6 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (SkyrimMajorRecordFlags != null) return true;
                 if (FormVersion != null) return true;
                 if (Version2 != null) return true;
                 return false;
@@ -477,7 +454,6 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendItem(SkyrimMajorRecordFlags, "SkyrimMajorRecordFlags");
                 fg.AppendItem(FormVersion, "FormVersion");
                 fg.AppendItem(Version2, "Version2");
             }
@@ -488,7 +464,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.SkyrimMajorRecordFlags = this.SkyrimMajorRecordFlags.Combine(rhs.SkyrimMajorRecordFlags);
                 ret.FormVersion = this.FormVersion.Combine(rhs.FormVersion);
                 ret.Version2 = this.Version2.Combine(rhs.Version2);
                 return ret;
@@ -513,7 +488,6 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public bool SkyrimMajorRecordFlags;
             public bool FormVersion;
             public bool Version2;
             #endregion
@@ -522,7 +496,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.SkyrimMajorRecordFlags = defaultOn;
                 this.FormVersion = defaultOn;
                 this.Version2 = defaultOn;
             }
@@ -532,7 +505,6 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((SkyrimMajorRecordFlags, null));
                 ret.Add((FormVersion, null));
                 ret.Add((Version2, null));
             }
@@ -598,7 +570,6 @@ namespace Mutagen.Bethesda.Skyrim
         IMajorRecord,
         ILoquiObjectSetter<ISkyrimMajorRecordInternal>
     {
-        new SkyrimMajorRecord.SkyrimMajorRecordFlag SkyrimMajorRecordFlags { get; set; }
         new UInt16 FormVersion { get; set; }
         new UInt16 Version2 { get; set; }
     }
@@ -617,7 +588,6 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkContainer,
         IBinaryItem
     {
-        SkyrimMajorRecord.SkyrimMajorRecordFlag SkyrimMajorRecordFlags { get; }
         UInt16 FormVersion { get; }
         UInt16 Version2 { get; }
 
@@ -918,9 +888,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        SkyrimMajorRecordFlags = 4,
-        FormVersion = 5,
-        Version2 = 6,
+        FormVersion = 4,
+        Version2 = 5,
     }
     #endregion
 
@@ -938,9 +907,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "7fb2c257-4be7-4aaf-a3c8-4e7f76deaa60";
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(SkyrimMajorRecord.Mask<>);
 
@@ -970,8 +939,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "SKYRIMMAJORRECORDFLAGS":
-                    return (ushort)SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags;
                 case "FORMVERSION":
                     return (ushort)SkyrimMajorRecord_FieldIndex.FormVersion;
                 case "VERSION2":
@@ -986,7 +953,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SkyrimMajorRecord_FieldIndex enu = (SkyrimMajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return false;
@@ -1000,7 +966,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SkyrimMajorRecord_FieldIndex enu = (SkyrimMajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return false;
@@ -1014,7 +979,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SkyrimMajorRecord_FieldIndex enu = (SkyrimMajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return false;
@@ -1028,8 +992,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SkyrimMajorRecord_FieldIndex enu = (SkyrimMajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
-                    return "SkyrimMajorRecordFlags";
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return "FormVersion";
                 case SkyrimMajorRecord_FieldIndex.Version2:
@@ -1044,7 +1006,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SkyrimMajorRecord_FieldIndex enu = (SkyrimMajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return false;
@@ -1058,7 +1019,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SkyrimMajorRecord_FieldIndex enu = (SkyrimMajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                 case SkyrimMajorRecord_FieldIndex.Version2:
                     return false;
@@ -1072,8 +1032,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SkyrimMajorRecord_FieldIndex enu = (SkyrimMajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
-                    return typeof(SkyrimMajorRecord.SkyrimMajorRecordFlag);
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return typeof(UInt16);
                 case SkyrimMajorRecord_FieldIndex.Version2:
@@ -1234,7 +1192,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void Clear(ISkyrimMajorRecordInternal item)
         {
             ClearPartial();
-            item.SkyrimMajorRecordFlags = default;
             item.FormVersion = default;
             item.Version2 = default;
             base.Clear(item);
@@ -1371,7 +1328,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.SkyrimMajorRecordFlags = item.SkyrimMajorRecordFlags == rhs.SkyrimMajorRecordFlags;
             ret.FormVersion = item.FormVersion == rhs.FormVersion;
             ret.Version2 = item.Version2 == rhs.Version2;
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1425,10 +1381,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.SkyrimMajorRecordFlags ?? true)
-            {
-                fg.AppendItem(item.SkyrimMajorRecordFlags, "SkyrimMajorRecordFlags");
-            }
             if (printMask?.FormVersion ?? true)
             {
                 fg.AppendItem(item.FormVersion, "FormVersion");
@@ -1452,7 +1404,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimMajorRecordGetter item,
             SkyrimMajorRecord.Mask<bool> mask)
         {
-            mask.SkyrimMajorRecordFlags = true;
             mask.FormVersion = true;
             mask.Version2 = true;
             base.FillHasBeenSetMask(
@@ -1485,7 +1436,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (lhs.SkyrimMajorRecordFlags != rhs.SkyrimMajorRecordFlags) return false;
             if (lhs.FormVersion != rhs.FormVersion) return false;
             if (lhs.Version2 != rhs.Version2) return false;
             return true;
@@ -1503,7 +1453,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ISkyrimMajorRecordGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.SkyrimMajorRecordFlags);
             hash.Add(item.FormVersion);
             hash.Add(item.Version2);
             hash.Add(base.GetHashCode());
@@ -1572,10 +1521,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs,
                 errorMask,
                 copyMask);
-            if ((copyMask?.GetShouldTranslate((int)SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags) ?? true))
-            {
-                item.SkyrimMajorRecordFlags = rhs.SkyrimMajorRecordFlags;
-            }
             if ((copyMask?.GetShouldTranslate((int)SkyrimMajorRecord_FieldIndex.FormVersion) ?? true))
             {
                 item.FormVersion = rhs.FormVersion;
@@ -1700,15 +1645,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags) ?? true))
-            {
-                EnumXmlTranslation<SkyrimMajorRecord.SkyrimMajorRecordFlag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.SkyrimMajorRecordFlags),
-                    item: item.SkyrimMajorRecordFlags,
-                    fieldIndex: (int)SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags,
-                    errorMask: errorMask);
-            }
             if ((translationMask?.GetShouldTranslate((int)SkyrimMajorRecord_FieldIndex.FormVersion) ?? true))
             {
                 UInt16XmlTranslation.Instance.Write(
@@ -1819,24 +1755,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
-                case "SkyrimMajorRecordFlags":
-                    errorMask?.PushIndex((int)SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags);
-                    try
-                    {
-                        item.SkyrimMajorRecordFlags = EnumXmlTranslation<SkyrimMajorRecord.SkyrimMajorRecordFlag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 case "FormVersion":
                     errorMask?.PushIndex((int)SkyrimMajorRecord_FieldIndex.FormVersion);
                     try

@@ -16,6 +16,6 @@ namespace Mutagen.Bethesda.Internals
         public const string Esp = "esp";
         public static readonly RecordType EditorID = new RecordType("EDID");
         public static readonly RecordType Group = new RecordType("GRUP");
-        public const int CompressedFlag = 0x00040000;
+        public const int CompressedFlag = 0x0004_0000;
     }
 }

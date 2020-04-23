@@ -342,7 +342,6 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem FormKey,
                 TItem Version,
                 TItem EditorID,
-                TItem SkyrimMajorRecordFlags,
                 TItem FormVersion,
                 TItem Version2,
                 TItem VirtualMachineAdapter,
@@ -359,7 +358,6 @@ namespace Mutagen.Bethesda.Skyrim
                 FormKey: FormKey,
                 Version: Version,
                 EditorID: EditorID,
-                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags,
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
@@ -1542,18 +1540,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        SkyrimMajorRecordFlags = 4,
-        FormVersion = 5,
-        Version2 = 6,
-        VirtualMachineAdapter = 7,
-        Name = 8,
-        MenuDisplayObject = 9,
-        Keywords = 10,
-        Data = 11,
-        CounterEffects = 12,
-        Sounds = 13,
-        MagicItemDescription = 14,
-        Conditions = 15,
+        FormVersion = 4,
+        Version2 = 5,
+        VirtualMachineAdapter = 6,
+        Name = 7,
+        MenuDisplayObject = 8,
+        Keywords = 9,
+        Data = 10,
+        CounterEffects = 11,
+        Sounds = 12,
+        MagicItemDescription = 13,
+        Conditions = 14,
     }
     #endregion
 
@@ -1573,7 +1570,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 16;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(MagicEffect.Mask<>);
 
@@ -2354,8 +2351,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMajorRecord_FieldIndex.Version:
                     return (MagicEffect_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
-                    return (MagicEffect_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (MagicEffect_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (MagicEffect_FieldIndex)((int)index);

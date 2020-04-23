@@ -613,7 +613,6 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem FormKey,
                 TItem Version,
                 TItem EditorID,
-                TItem SkyrimMajorRecordFlags,
                 TItem FormVersion,
                 TItem Version2,
                 TItem Name,
@@ -661,7 +660,6 @@ namespace Mutagen.Bethesda.Skyrim
                 FormKey: FormKey,
                 Version: Version,
                 EditorID: EditorID,
-                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags,
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
@@ -3200,49 +3198,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        SkyrimMajorRecordFlags = 4,
-        FormVersion = 5,
-        Version2 = 6,
-        Name = 7,
-        Description = 8,
-        ActorEffect = 9,
-        Skin = 10,
-        BodyTemplate = 11,
-        Keywords = 12,
-        Data = 13,
-        SkeletalModel = 14,
-        MovementTypeNames = 15,
-        Voices = 16,
-        DecapitateArmors = 17,
-        DefaultHairColors = 18,
-        NumberOfTintsInList = 19,
-        FacegenMainClamp = 20,
-        FacegenFaceClamp = 21,
-        AttackRace = 22,
-        Attacks = 23,
-        BodyData = 24,
-        Hairs = 25,
-        Eyes = 26,
-        BodyPartData = 27,
-        BehaviorGraph = 28,
-        MaterialType = 29,
-        ImpactDataSet = 30,
-        DecapitationFX = 31,
-        OpenLootSound = 32,
-        CloseLootSound = 33,
-        BipedObjectNames = 34,
-        MovementTypes = 35,
-        EquipmentFlags = 36,
-        EquipmentSlots = 37,
-        UnarmedEquipSlot = 38,
-        FaceFxPhonemes = 39,
-        BaseMovementDefaultWalk = 40,
-        BaseMovementDefaultRun = 41,
-        BaseMovementDefaultSwim = 42,
-        BaseMovementDefaultFly = 43,
-        BaseMovementDefaultSneak = 44,
-        BaseMovementDefaultSprint = 45,
-        HeadData = 46,
+        FormVersion = 4,
+        Version2 = 5,
+        Name = 6,
+        Description = 7,
+        ActorEffect = 8,
+        Skin = 9,
+        BodyTemplate = 10,
+        Keywords = 11,
+        Data = 12,
+        SkeletalModel = 13,
+        MovementTypeNames = 14,
+        Voices = 15,
+        DecapitateArmors = 16,
+        DefaultHairColors = 17,
+        NumberOfTintsInList = 18,
+        FacegenMainClamp = 19,
+        FacegenFaceClamp = 20,
+        AttackRace = 21,
+        Attacks = 22,
+        BodyData = 23,
+        Hairs = 24,
+        Eyes = 25,
+        BodyPartData = 26,
+        BehaviorGraph = 27,
+        MaterialType = 28,
+        ImpactDataSet = 29,
+        DecapitationFX = 30,
+        OpenLootSound = 31,
+        CloseLootSound = 32,
+        BipedObjectNames = 33,
+        MovementTypes = 34,
+        EquipmentFlags = 35,
+        EquipmentSlots = 36,
+        UnarmedEquipSlot = 37,
+        FaceFxPhonemes = 38,
+        BaseMovementDefaultWalk = 39,
+        BaseMovementDefaultRun = 40,
+        BaseMovementDefaultSwim = 41,
+        BaseMovementDefaultFly = 42,
+        BaseMovementDefaultSneak = 43,
+        BaseMovementDefaultSprint = 44,
+        HeadData = 45,
     }
     #endregion
 
@@ -3262,7 +3259,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort AdditionalFieldCount = 40;
 
-        public const ushort FieldCount = 47;
+        public const ushort FieldCount = 46;
 
         public static readonly Type MaskType = typeof(Race.Mask<>);
 
@@ -5123,8 +5120,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMajorRecord_FieldIndex.Version:
                     return (Race_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
-                    return (Race_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (Race_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (Race_FieldIndex)((int)index);

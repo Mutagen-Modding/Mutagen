@@ -369,7 +369,6 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem FormKey,
                 TItem Version,
                 TItem EditorID,
-                TItem SkyrimMajorRecordFlags,
                 TItem FormVersion,
                 TItem Version2,
                 TItem VirtualMachineAdapter,
@@ -390,7 +389,6 @@ namespace Mutagen.Bethesda.Skyrim
                 FormKey: FormKey,
                 Version: Version,
                 EditorID: EditorID,
-                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags,
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
@@ -1476,22 +1474,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         FormKey = 1,
         Version = 2,
         EditorID = 3,
-        SkyrimMajorRecordFlags = 4,
-        FormVersion = 5,
-        Version2 = 6,
-        VirtualMachineAdapter = 7,
-        ObjectBounds = 8,
-        Name = 9,
-        Model = 10,
-        Destructible = 11,
-        Keywords = 12,
-        MarkerColor = 13,
-        LoopingSound = 14,
-        ActivationSound = 15,
-        WaterType = 16,
-        ActivateTextOverride = 17,
-        Flags = 18,
-        InteractionKeyword = 19,
+        FormVersion = 4,
+        Version2 = 5,
+        VirtualMachineAdapter = 6,
+        ObjectBounds = 7,
+        Name = 8,
+        Model = 9,
+        Destructible = 10,
+        Keywords = 11,
+        MarkerColor = 12,
+        LoopingSound = 13,
+        ActivationSound = 14,
+        WaterType = 15,
+        ActivateTextOverride = 16,
+        Flags = 17,
+        InteractionKeyword = 18,
     }
     #endregion
 
@@ -1511,7 +1508,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 20;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(Activator.Mask<>);
 
@@ -2346,8 +2343,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMajorRecord_FieldIndex.Version:
                     return (Activator_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
-                    return (Activator_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
                     return (Activator_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
                     return (Activator_FieldIndex)((int)index);
