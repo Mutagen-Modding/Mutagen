@@ -102,9 +102,9 @@ namespace Mutagen.Bethesda.Binary
         /// True if GroupType is marked as top level. (GroupType == 0)
         /// </summary>
         public bool IsTopLevel => this.GroupType == 0;
-        
+
         /// <inheritdoc/>
-        public override string ToString() => $"{RecordType} => {ContentLength}";
+        public override string ToString() => $"{RecordType} => 0x{ContentLength:X}";
     }
 
     /// <summary>
@@ -190,9 +190,9 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         /// <param name="header">Existing GroupHeader struct</param>
         /// <param name="span">Span to overlay on, aligned to the start of the Group's header</param>
-        public GroupMemoryFrame(GroupHeader meta, ReadOnlyMemorySlice<byte> span)
+        public GroupMemoryFrame(GroupHeader header, ReadOnlyMemorySlice<byte> span)
         {
-            this.Header = meta;
+            this.Header = header;
             this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
         

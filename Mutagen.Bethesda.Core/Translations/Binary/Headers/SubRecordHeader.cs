@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Binary
         public int TotalLength => this.HeaderLength + this.ContentLength;
 
         /// <inheritdoc/>
-        public override string ToString() => $"{RecordType} => {ContentLength}";
+        public override string ToString() => $"{RecordType} =>0x{ContentLength:X}";
     }
 
     /// <summary>
@@ -105,9 +105,9 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         /// <param name="header">Existing SubrecordHeader struct</param>
         /// <param name="span">Span to overlay on, aligned to the start of the header</param>
-        public SubrecordFrame(SubrecordHeader meta, ReadOnlySpan<byte> span)
+        public SubrecordFrame(SubrecordHeader header, ReadOnlySpan<byte> span)
         {
-            this.Header = meta;
+            this.Header = header;
             this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
 
@@ -152,9 +152,9 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         /// <param name="header">Existing SubrecordHeader struct</param>
         /// <param name="span">Span to overlay on, aligned to the start of the header</param>
-        public SubrecordMemoryFrame(SubrecordHeader meta, ReadOnlyMemorySlice<byte> span)
+        public SubrecordMemoryFrame(SubrecordHeader header, ReadOnlyMemorySlice<byte> span)
         {
-            this.Header = meta;
+            this.Header = header;
             this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
         

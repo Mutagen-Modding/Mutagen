@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Binary
         public bool IsCompressed => (this.MajorRecordFlags & Mutagen.Bethesda.Internals.Constants.CompressedFlag) > 0;
 
         /// <inheritdoc/>
-        public override string ToString() => $"{RecordType} => {ContentLength}";
+        public override string ToString() => $"{RecordType} =>0x{ContentLength:X}";
     }
 
     /// <summary>
@@ -195,7 +195,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         /// <inheritdoc/>
-        public override string ToString() => $"{RecordType} => {ContentLength}";
+        public override string ToString() => $"{RecordType} => 0x{ContentLength:X}";
     }
     
     /// <summary>
@@ -234,9 +234,9 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         /// <param name="header">Existing MajorRecordHeader struct</param>
         /// <param name="span">Span to overlay on, aligned to the start of the header</param>
-        public MajorRecordFrame(MajorRecordHeader meta, ReadOnlySpan<byte> span)
+        public MajorRecordFrame(MajorRecordHeader header, ReadOnlySpan<byte> span)
         {
-            this.Header = meta;
+            this.Header = header;
             this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
 
@@ -281,9 +281,9 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         /// <param name="header">Existing MajorRecordHeader struct</param>
         /// <param name="span">Span to overlay on, aligned to the start of the header</param>
-        public MajorRecordMemoryFrame(MajorRecordHeader meta, ReadOnlyMemorySlice<byte> span)
+        public MajorRecordMemoryFrame(MajorRecordHeader header, ReadOnlyMemorySlice<byte> span)
         {
-            this.Header = meta;
+            this.Header = header;
             this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
         }
     }
