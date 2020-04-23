@@ -1,4 +1,4 @@
-using Loqui;
+﻿using Loqui;
 using Loqui.Generation;
 using Noggog;
 using Mutagen.Bethesda.Binary;
@@ -185,6 +185,22 @@ namespace Mutagen.Bethesda.Generation
                         }
                         break;
                     case ListBinaryType.PrependCount:
+                        if (data.HasTrigger && !subData.HasTrigger)
+                        {
+                            args.Add($"recordType: recordTypeConverter.ConvertToCustom({data.TriggeringRecordSetAccessor})");
+                        }
+                        byte countLen = (byte)list.CustomData[PrependCountType];
+                        switch (countLen)
+                        {
+                            case 2:
+                                args.Add("countLengthLength: 2");
+                                break;
+                            case 4:
+                                args.Add("countLengthLength: 4");
+                                break;
+                            default:
+                                throw new NotImplementedException();
+                        }
                         break;
                     case ListBinaryType.Frame:
                         break;
@@ -255,7 +271,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)} + contentLength; // Skip marker");
             }
-            else if (listBinaryType == ListBinaryType.Trigger)
+            else if (listBinaryType == ListBinaryType.Trigger || (data.HasTrigger && !subData.HasTrigger))
             {
                 fg.AppendLine($"frame.Position += frame.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
             }
@@ -805,7 +821,68 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine("stream.Position += subLen;");
                     break;
                 case ListBinaryType.PrependCount:
-                    fg.AppendLine("throw new NotImplementedException();");
+                    if (data.HasTrigger)
+                    {
+                        fg.AppendLine("stream.Position += _package.Meta.SubConstants.HeaderLength;");
+                    }
+                    byte countLen = (byte)list.CustomData[PrependCountType];
+                    switch (countLen)
+                    {
+                        case 2:
+                            fg.AppendLine($"var count = stream.ReadUInt16();");
+                            break;
+                        case 4:
+                            fg.AppendLine($"var count = stream.ReadUInt32();");
+                            break;
+                        default:
+                            throw new NotImplementedException();
+                    }
+                    using (var args = new ArgsWrapper(fg,
+                        $"this.{typeGen.Name} = BinaryOverlaySetList<{typeName}>.FactoryByCount"))
+                    {
+                        args.AddPassArg($"stream");
+                        args.Add($"package: _package");
+                        if (expectedLen != null)
+                        {
+                            args.Add($"itemLength: {expectedLen}");
+                        }
+                        args.AddPassArg($"count");
+                        if (subGenTypes.Count <= 1)
+                        {
+                            args.Add($"getter: (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")}");
+                        }
+                        else
+                        {
+                            args.Add((subFg) =>
+                            {
+                                subFg.AppendLine("getter: (s, r, p) =>");
+                                using (new BraceWrapper(subFg))
+                                {
+                                    subFg.AppendLine("switch (r.TypeInt)");
+                                    using (new BraceWrapper(subFg))
+                                    {
+                                        foreach (var item in subGenTypes)
+                                        {
+                                            foreach (var trigger in item.Key)
+                                            {
+                                                subFg.AppendLine($"case 0x{trigger.TypeInt:X}: // {trigger.Type}");
+                                            }
+                                            using (new DepthWrapper(subFg))
+                                            {
+                                                LoquiType specificLoqui = item.Value as LoquiType;
+                                                subFg.AppendLine($"return {subGen.GenerateForTypicalWrapper(objGen, specificLoqui, "s", "p")};");
+                                            }
+                                        }
+                                        subFg.AppendLine("default:");
+                                        using (new DepthWrapper(subFg))
+                                        {
+                                            subFg.AppendLine("throw new NotImplementedException();");
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }
                     break;
                 default:
                     throw new NotImplementedException();

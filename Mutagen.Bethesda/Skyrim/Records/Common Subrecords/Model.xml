@@ -8,7 +8,7 @@
   </Object>
   <Object name="Model" objType="Subrecord" baseClass="SimpleModel" GUID="b5deaeea-11c5-4c34-94e4-3db4c24be832" ID="42">
     <Fields>
-      <RefList name="AlternateTextures" refName="AlternateTexture" prependCount="True" recordType="MODS" />
+      <RefList name="AlternateTextures" refName="AlternateTexture" prependCount="4" recordType="MODS" />
     </Fields>
   </Object>
   <Object name="AlternateTexture" objType="Subrecord" GUID="8001a465-c267-45ee-81b5-a51613668e74" ID="43">

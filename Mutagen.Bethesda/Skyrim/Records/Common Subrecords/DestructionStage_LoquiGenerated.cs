@@ -1088,6 +1088,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(DestructionStageXmlWriteTranslation);
         public static readonly RecordType DSTD_HEADER = new RecordType("DSTD");
         public static readonly RecordType DMDL_HEADER = new RecordType("DMDL");
+        public static readonly RecordType DSTF_HEADER = new RecordType("DSTF");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1104,6 +1105,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             new KeyValuePair<RecordType, RecordType>(
                 new RecordType("MODL"),
                 new RecordType("DMDL")),
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("MODT"),
+                new RecordType("DMDT")),
             new KeyValuePair<RecordType, RecordType>(
                 new RecordType("MODS"),
                 new RecordType("DMDS")));
@@ -1214,6 +1218,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame,
                         recordTypeConverter: DestructionStage_Registration.ModelConverter);
                     return TryGet<int?>.Succeed((int)DestructionStage_FieldIndex.Model);
+                }
+                case 0x46545344: // DSTF: End Marker
+                {
+                    frame.ReadSubrecordFrame();
+                    return TryGet<int?>.Failure;
                 }
                 default:
                     return TryGet<int?>.Failure;
@@ -1921,6 +1930,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: DestructionStage_Registration.ModelConverter);
             }
+            using (HeaderExport.ExportSubrecordHeader(writer, DestructionStage_Registration.DSTF_HEADER)) { } // End Marker
         }
 
         public void Write(
@@ -2115,6 +2125,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         package: _package,
                         recordTypeConverter: DestructionStage_Registration.ModelConverter);
                     return TryGet<int?>.Succeed((int)DestructionStage_FieldIndex.Model);
+                }
+                case 0x46545344: // DSTF: End Marker
+                {
+                    _package.Meta.ReadSubrecordFrame(stream);
+                    return TryGet<int?>.Failure;
                 }
                 default:
                     return TryGet<int?>.Failure;

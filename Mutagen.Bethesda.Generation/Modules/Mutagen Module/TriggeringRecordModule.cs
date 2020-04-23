@@ -71,6 +71,11 @@ namespace Mutagen.Bethesda.Generation
                 data.MarkerType = markerTypeRec;
                 data.RecordType = markerTypeRec;
             }
+            if (obj.Node.TryGetAttribute("endMarkerType", out var endMarker))
+            {
+                var markerTypeRec = new RecordType(endMarker.Value);
+                data.EndMarkerType = markerTypeRec;
+            }
             return base.PreLoad(obj);
         }
 
@@ -107,22 +112,27 @@ namespace Mutagen.Bethesda.Generation
             {
                 recordTypes.Add(recType);
             }
+            var data = obj.GetObjectData();
             var trigRecTypes = await obj.GetObjectData().GenerationTypes;
             trigRecordTypes.Add(trigRecTypes.SelectMany((kv) => kv.Key));
             recordTypes.Add(trigRecordTypes);
+            if (data.EndMarkerType.HasValue)
+            {
+                recordTypes.Add(data.EndMarkerType.Value);
+            }
             foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
             {
-                var data = field.GetFieldData();
-                if (data.RecordType.HasValue)
+                var fieldData = field.GetFieldData();
+                if (fieldData.RecordType.HasValue)
                 {
-                    recordTypes.Add(data.RecordType.Value);
+                    recordTypes.Add(fieldData.RecordType.Value);
                 }
-                recordTypes.Add(data.TriggeringRecordTypes);
-                if (data.MarkerType.HasValue)
+                recordTypes.Add(fieldData.TriggeringRecordTypes);
+                if (fieldData.MarkerType.HasValue)
                 {
-                    recordTypes.Add(data.MarkerType.Value);
+                    recordTypes.Add(fieldData.MarkerType.Value);
                 }
-                foreach (var subType in data.SubLoquiTypes.Keys)
+                foreach (var subType in fieldData.SubLoquiTypes.Keys)
                 {
                     recordTypes.Add(subType);
                 }

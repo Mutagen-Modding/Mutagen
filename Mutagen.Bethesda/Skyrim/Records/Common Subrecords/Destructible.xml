@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Destructible" recordType="DEST" objType="Subrecord" GUID="ac14ba89-a6ef-4b9a-ba7d-3c0d46d02ccf" ID="138">
+  <Object name="Destructible" objType="Subrecord" GUID="ac14ba89-a6ef-4b9a-ba7d-3c0d46d02ccf" ID="138">
+    <Fields>
+      <RefDirect name="Data" refName="DestructableData" />
+      <RefList name="Stages" refName="DestructionStage" />
+    </Fields>
+  </Object>
+  <Object name="DestructableData" objType="Subrecord" recordType="DEST" GUID="8708bc55-aa73-4a26-acfe-643ad2546c98" ID="149">
     <Fields>
       <Int32 name="Health" />
       <UInt8 name="DESTCount" />
@@ -8,12 +14,13 @@
       <ByteArray name="Unknown" byteLength="2" nullable="NotNull" />
     </Fields>
   </Object>
-  <Object name="DestructionStage" objType="Subrecord" endMarker="DSTF" GUID="8f5dd48b-9ae2-4626-838c-c0821263148a" ID="140">
+  <Object name="DestructionStage" objType="Subrecord" endMarkerType="DSTF" GUID="8f5dd48b-9ae2-4626-838c-c0821263148a" ID="140">
     <Fields>
       <RefDirect name="Data" refName="DestructionStageData" />
       <RefDirect name="Model" refName="Model">
         <RecordTypeOverrides>
           <Mapping From="MODL" To="DMDL" />
+          <Mapping From="MODT" To="DMDT" />
           <Mapping From="MODS" To="DMDS" />
         </RecordTypeOverrides>
       </RefDirect>

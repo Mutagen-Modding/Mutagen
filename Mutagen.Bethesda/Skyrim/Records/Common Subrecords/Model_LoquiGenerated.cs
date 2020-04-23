@@ -1189,7 +1189,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.AlternateTextures = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<AlternateTexture>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            amount: frame.ReadInt32(),
+                            frame: frame,
                             transl: (MutagenFrame r, out AlternateTexture listSubItem) =>
                             {
                                 return LoquiBinaryTranslation<AlternateTexture>.Instance.Parse(
@@ -1828,6 +1829,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.AlternateTextures,
                 recordType: recordTypeConverter.ConvertToCustom(Model_Registration.MODS_HEADER),
+                countLengthLength: 4,
                 transl: (MutagenWriter subWriter, IAlternateTextureGetter subItem, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;
@@ -2000,14 +2002,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x53444F4D: // MODS
                 {
-                    var subMeta = _package.Meta.ReadSubrecord(stream);
-                    var subLen = subMeta.ContentLength;
-                    this.AlternateTextures = BinaryOverlaySetList<AlternateTextureBinaryOverlay>.FactoryByStartIndex(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    stream.Position += _package.Meta.SubConstants.HeaderLength;
+                    var count = stream.ReadUInt32();
+                    this.AlternateTextures = BinaryOverlaySetList<AlternateTextureBinaryOverlay>.FactoryByCount(
+                        stream: stream,
                         package: _package,
-                        itemLength: 8,
+                        count: count,
                         getter: (s, p) => AlternateTextureBinaryOverlay.AlternateTextureFactory(s, p));
-                    stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)Model_FieldIndex.AlternateTextures);
                 }
                 default:

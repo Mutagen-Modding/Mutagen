@@ -170,5 +170,18 @@ namespace Mutagen.Bethesda.Generation
                     throw new NotImplementedException();
             }
         }
+
+        public override void GenerateWrapperUnknownLengthParse(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, int? passedLength, string passedLengthAccessor)
+        {
+            StringType str = typeGen as StringType;
+            switch (str.BinaryType)
+            {
+                case StringBinaryType.PrependLength:
+                    fg.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}BinaryPrimitives.ReadInt32LittleEndian(ret._data{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}) + 4;");
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
     }
 }

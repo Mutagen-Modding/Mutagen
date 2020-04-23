@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
+using System.Drawing;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -59,6 +60,17 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? IActivatorGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
+        #region ObjectBounds
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ObjectBounds _ObjectBounds = new ObjectBounds();
+        public ObjectBounds ObjectBounds
+        {
+            get => _ObjectBounds;
+            set => _ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IActivatorGetter.ObjectBounds => _ObjectBounds;
+        #endregion
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private String? _Name;
@@ -70,16 +82,102 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IActivatorGetter.Name => this.Name;
         #endregion
-        #region ObjectBounds
+        #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ObjectBounds _ObjectBounds = new ObjectBounds();
-        public ObjectBounds ObjectBounds
+        private Model? _Model;
+        public Model? Model
         {
-            get => _ObjectBounds;
-            set => _ObjectBounds = value ?? new ObjectBounds();
+            get => _Model;
+            set => _Model = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter IActivatorGetter.ObjectBounds => _ObjectBounds;
+        IModelGetter? IActivatorGetter.Model => this.Model;
+        #endregion
+        #region Destructible
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Destructible? _Destructible;
+        public Destructible? Destructible
+        {
+            get => _Destructible;
+            set => _Destructible = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IActivatorGetter.Destructible => this.Destructible;
+        #endregion
+        #region Keywords
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLink<Keyword>>? _Keywords;
+        public ExtendedList<IFormLink<Keyword>>? Keywords
+        {
+            get => this._Keywords;
+            set => this._Keywords = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IActivatorGetter.Keywords => _Keywords;
+        #endregion
+
+        #endregion
+        #region MarkerColor
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Color? _MarkerColor;
+        public Color? MarkerColor
+        {
+            get => this._MarkerColor;
+            set => this._MarkerColor = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Color? IActivatorGetter.MarkerColor => this.MarkerColor;
+        #endregion
+        #region LoopingSound
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormLinkNullable<SoundDescriptor> _LoopingSound = new FormLinkNullable<SoundDescriptor>();
+        public IFormLinkNullable<SoundDescriptor> LoopingSound => this._LoopingSound;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IActivatorGetter.LoopingSound => this.LoopingSound;
+        #endregion
+        #region ActivationSound
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormLinkNullable<SoundDescriptor> _ActivationSound = new FormLinkNullable<SoundDescriptor>();
+        public IFormLinkNullable<SoundDescriptor> ActivationSound => this._ActivationSound;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IActivatorGetter.ActivationSound => this.ActivationSound;
+        #endregion
+        #region WaterType
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormLinkNullable<Water> _WaterType = new FormLinkNullable<Water>();
+        public IFormLinkNullable<Water> WaterType => this._WaterType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IWaterGetter> IActivatorGetter.WaterType => this.WaterType;
+        #endregion
+        #region ActivateTextOverride
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String? _ActivateTextOverride;
+        public String? ActivateTextOverride
+        {
+            get => this._ActivateTextOverride;
+            set => this._ActivateTextOverride = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IActivatorGetter.ActivateTextOverride => this.ActivateTextOverride;
+        #endregion
+        #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Activator.Flag? _Flags;
+        public Activator.Flag? Flags
+        {
+            get => this._Flags;
+            set => this._Flags = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Activator.Flag? IActivatorGetter.Flags => this.Flags;
+        #endregion
+        #region InteractionKeyword
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormLinkNullable<Keyword> _InteractionKeyword = new FormLinkNullable<Keyword>();
+        public IFormLinkNullable<Keyword> InteractionKeyword => this._InteractionKeyword;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IKeywordGetter> IActivatorGetter.InteractionKeyword => this.InteractionKeyword;
         #endregion
 
         #region To String
@@ -252,8 +350,18 @@ namespace Mutagen.Bethesda.Skyrim
             : base(initialValue)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
-                this.Name = initialValue;
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.Name = initialValue;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.MarkerColor = initialValue;
+                this.LoopingSound = initialValue;
+                this.ActivationSound = initialValue;
+                this.WaterType = initialValue;
+                this.ActivateTextOverride = initialValue;
+                this.Flags = initialValue;
+                this.InteractionKeyword = initialValue;
             }
 
             public Mask(
@@ -265,8 +373,18 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem FormVersion,
                 TItem Version2,
                 TItem VirtualMachineAdapter,
+                TItem ObjectBounds,
                 TItem Name,
-                TItem ObjectBounds)
+                TItem Model,
+                TItem Destructible,
+                TItem Keywords,
+                TItem MarkerColor,
+                TItem LoopingSound,
+                TItem ActivationSound,
+                TItem WaterType,
+                TItem ActivateTextOverride,
+                TItem Flags,
+                TItem InteractionKeyword)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -277,8 +395,18 @@ namespace Mutagen.Bethesda.Skyrim
                 Version2: Version2)
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
-                this.Name = Name;
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.Name = Name;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.MarkerColor = MarkerColor;
+                this.LoopingSound = LoopingSound;
+                this.ActivationSound = ActivationSound;
+                this.WaterType = WaterType;
+                this.ActivateTextOverride = ActivateTextOverride;
+                this.Flags = Flags;
+                this.InteractionKeyword = InteractionKeyword;
             }
 
             #pragma warning disable CS8618
@@ -291,8 +419,18 @@ namespace Mutagen.Bethesda.Skyrim
 
             #region Members
             public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
-            public TItem Name;
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem Name;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
+            public TItem MarkerColor;
+            public TItem LoopingSound;
+            public TItem ActivationSound;
+            public TItem WaterType;
+            public TItem ActivateTextOverride;
+            public TItem Flags;
+            public TItem InteractionKeyword;
             #endregion
 
             #region Equals
@@ -307,16 +445,36 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
-                if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
+                if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+                if (!object.Equals(this.MarkerColor, rhs.MarkerColor)) return false;
+                if (!object.Equals(this.LoopingSound, rhs.LoopingSound)) return false;
+                if (!object.Equals(this.ActivationSound, rhs.ActivationSound)) return false;
+                if (!object.Equals(this.WaterType, rhs.WaterType)) return false;
+                if (!object.Equals(this.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.InteractionKeyword, rhs.InteractionKeyword)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.VirtualMachineAdapter);
-                hash.Add(this.Name);
                 hash.Add(this.ObjectBounds);
+                hash.Add(this.Name);
+                hash.Add(this.Model);
+                hash.Add(this.Destructible);
+                hash.Add(this.Keywords);
+                hash.Add(this.MarkerColor);
+                hash.Add(this.LoopingSound);
+                hash.Add(this.ActivationSound);
+                hash.Add(this.WaterType);
+                hash.Add(this.ActivateTextOverride);
+                hash.Add(this.Flags);
+                hash.Add(this.InteractionKeyword);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -332,12 +490,40 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.VirtualMachineAdapter.Overall)) return false;
                     if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
                 }
-                if (!eval(this.Name)) return false;
                 if (ObjectBounds != null)
                 {
                     if (!eval(this.ObjectBounds.Overall)) return false;
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
+                if (!eval(this.Name)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (Destructible != null)
+                {
+                    if (!eval(this.Destructible.Overall)) return false;
+                    if (this.Destructible.Specific != null && !this.Destructible.Specific.All(eval)) return false;
+                }
+                if (this.Keywords != null)
+                {
+                    if (!eval(this.Keywords.Overall)) return false;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.MarkerColor)) return false;
+                if (!eval(this.LoopingSound)) return false;
+                if (!eval(this.ActivationSound)) return false;
+                if (!eval(this.WaterType)) return false;
+                if (!eval(this.ActivateTextOverride)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.InteractionKeyword)) return false;
                 return true;
             }
             #endregion
@@ -351,12 +537,40 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.VirtualMachineAdapter.Overall)) return true;
                     if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
                 }
-                if (eval(this.Name)) return true;
                 if (ObjectBounds != null)
                 {
                     if (eval(this.ObjectBounds.Overall)) return true;
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
+                if (eval(this.Name)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (Destructible != null)
+                {
+                    if (eval(this.Destructible.Overall)) return true;
+                    if (this.Destructible.Specific != null && this.Destructible.Specific.Any(eval)) return true;
+                }
+                if (this.Keywords != null)
+                {
+                    if (eval(this.Keywords.Overall)) return true;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.MarkerColor)) return true;
+                if (eval(this.LoopingSound)) return true;
+                if (eval(this.ActivationSound)) return true;
+                if (eval(this.WaterType)) return true;
+                if (eval(this.ActivateTextOverride)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.InteractionKeyword)) return true;
                 return false;
             }
             #endregion
@@ -373,8 +587,31 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
-                obj.Name = eval(this.Name);
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.Name = eval(this.Name);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
+                if (Keywords != null)
+                {
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Keywords.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Keywords.Specific = l;
+                        foreach (var item in Keywords.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.MarkerColor = eval(this.MarkerColor);
+                obj.LoopingSound = eval(this.LoopingSound);
+                obj.ActivationSound = eval(this.ActivationSound);
+                obj.WaterType = eval(this.WaterType);
+                obj.ActivateTextOverride = eval(this.ActivateTextOverride);
+                obj.Flags = eval(this.Flags);
+                obj.InteractionKeyword = eval(this.InteractionKeyword);
             }
             #endregion
 
@@ -401,13 +638,72 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         VirtualMachineAdapter?.ToString(fg);
                     }
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.ToString(fg);
+                    }
                     if (printMask?.Name ?? true)
                     {
                         fg.AppendItem(Name, "Name");
                     }
-                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    if (printMask?.Model?.Overall ?? true)
                     {
-                        ObjectBounds?.ToString(fg);
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.Destructible?.Overall ?? true)
+                    {
+                        Destructible?.ToString(fg);
+                    }
+                    if ((printMask?.Keywords?.Overall ?? true)
+                        && Keywords.TryGet(out var KeywordsItem))
+                    {
+                        fg.AppendLine("Keywords =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(KeywordsItem.Overall);
+                            if (KeywordsItem.Specific != null)
+                            {
+                                foreach (var subItem in KeywordsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.MarkerColor ?? true)
+                    {
+                        fg.AppendItem(MarkerColor, "MarkerColor");
+                    }
+                    if (printMask?.LoopingSound ?? true)
+                    {
+                        fg.AppendItem(LoopingSound, "LoopingSound");
+                    }
+                    if (printMask?.ActivationSound ?? true)
+                    {
+                        fg.AppendItem(ActivationSound, "ActivationSound");
+                    }
+                    if (printMask?.WaterType ?? true)
+                    {
+                        fg.AppendItem(WaterType, "WaterType");
+                    }
+                    if (printMask?.ActivateTextOverride ?? true)
+                    {
+                        fg.AppendItem(ActivateTextOverride, "ActivateTextOverride");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.InteractionKeyword ?? true)
+                    {
+                        fg.AppendItem(InteractionKeyword, "InteractionKeyword");
                     }
                 }
                 fg.AppendLine("]");
@@ -422,8 +718,18 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
-            public Exception? Name;
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? Name;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
+            public Exception? MarkerColor;
+            public Exception? LoopingSound;
+            public Exception? ActivationSound;
+            public Exception? WaterType;
+            public Exception? ActivateTextOverride;
+            public Exception? Flags;
+            public Exception? InteractionKeyword;
             #endregion
 
             #region IErrorMask
@@ -434,10 +740,30 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     case Activator_FieldIndex.VirtualMachineAdapter:
                         return VirtualMachineAdapter;
-                    case Activator_FieldIndex.Name:
-                        return Name;
                     case Activator_FieldIndex.ObjectBounds:
                         return ObjectBounds;
+                    case Activator_FieldIndex.Name:
+                        return Name;
+                    case Activator_FieldIndex.Model:
+                        return Model;
+                    case Activator_FieldIndex.Destructible:
+                        return Destructible;
+                    case Activator_FieldIndex.Keywords:
+                        return Keywords;
+                    case Activator_FieldIndex.MarkerColor:
+                        return MarkerColor;
+                    case Activator_FieldIndex.LoopingSound:
+                        return LoopingSound;
+                    case Activator_FieldIndex.ActivationSound:
+                        return ActivationSound;
+                    case Activator_FieldIndex.WaterType:
+                        return WaterType;
+                    case Activator_FieldIndex.ActivateTextOverride:
+                        return ActivateTextOverride;
+                    case Activator_FieldIndex.Flags:
+                        return Flags;
+                    case Activator_FieldIndex.InteractionKeyword:
+                        return InteractionKeyword;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -451,11 +777,41 @@ namespace Mutagen.Bethesda.Skyrim
                     case Activator_FieldIndex.VirtualMachineAdapter:
                         this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
                         break;
+                    case Activator_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
                     case Activator_FieldIndex.Name:
                         this.Name = ex;
                         break;
-                    case Activator_FieldIndex.ObjectBounds:
-                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                    case Activator_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Activator_FieldIndex.Destructible:
+                        this.Destructible = new MaskItem<Exception?, Destructible.ErrorMask?>(ex, null);
+                        break;
+                    case Activator_FieldIndex.Keywords:
+                        this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Activator_FieldIndex.MarkerColor:
+                        this.MarkerColor = ex;
+                        break;
+                    case Activator_FieldIndex.LoopingSound:
+                        this.LoopingSound = ex;
+                        break;
+                    case Activator_FieldIndex.ActivationSound:
+                        this.ActivationSound = ex;
+                        break;
+                    case Activator_FieldIndex.WaterType:
+                        this.WaterType = ex;
+                        break;
+                    case Activator_FieldIndex.ActivateTextOverride:
+                        this.ActivateTextOverride = ex;
+                        break;
+                    case Activator_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Activator_FieldIndex.InteractionKeyword:
+                        this.InteractionKeyword = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -471,11 +827,41 @@ namespace Mutagen.Bethesda.Skyrim
                     case Activator_FieldIndex.VirtualMachineAdapter:
                         this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
                         break;
+                    case Activator_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
                     case Activator_FieldIndex.Name:
                         this.Name = (Exception?)obj;
                         break;
-                    case Activator_FieldIndex.ObjectBounds:
-                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                    case Activator_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Activator_FieldIndex.Destructible:
+                        this.Destructible = (MaskItem<Exception?, Destructible.ErrorMask?>?)obj;
+                        break;
+                    case Activator_FieldIndex.Keywords:
+                        this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Activator_FieldIndex.MarkerColor:
+                        this.MarkerColor = (Exception?)obj;
+                        break;
+                    case Activator_FieldIndex.LoopingSound:
+                        this.LoopingSound = (Exception?)obj;
+                        break;
+                    case Activator_FieldIndex.ActivationSound:
+                        this.ActivationSound = (Exception?)obj;
+                        break;
+                    case Activator_FieldIndex.WaterType:
+                        this.WaterType = (Exception?)obj;
+                        break;
+                    case Activator_FieldIndex.ActivateTextOverride:
+                        this.ActivateTextOverride = (Exception?)obj;
+                        break;
+                    case Activator_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case Activator_FieldIndex.InteractionKeyword:
+                        this.InteractionKeyword = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -487,8 +873,18 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (Overall != null) return true;
                 if (VirtualMachineAdapter != null) return true;
-                if (Name != null) return true;
                 if (ObjectBounds != null) return true;
+                if (Name != null) return true;
+                if (Model != null) return true;
+                if (Destructible != null) return true;
+                if (Keywords != null) return true;
+                if (MarkerColor != null) return true;
+                if (LoopingSound != null) return true;
+                if (ActivationSound != null) return true;
+                if (WaterType != null) return true;
+                if (ActivateTextOverride != null) return true;
+                if (Flags != null) return true;
+                if (InteractionKeyword != null) return true;
                 return false;
             }
             #endregion
@@ -525,8 +921,39 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.ToString_FillInternal(fg);
                 VirtualMachineAdapter?.ToString(fg);
-                fg.AppendItem(Name, "Name");
                 ObjectBounds?.ToString(fg);
+                fg.AppendItem(Name, "Name");
+                Model?.ToString(fg);
+                Destructible?.ToString(fg);
+                if (Keywords.TryGet(out var KeywordsItem))
+                {
+                    fg.AppendLine("Keywords =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(KeywordsItem.Overall);
+                        if (KeywordsItem.Specific != null)
+                        {
+                            foreach (var subItem in KeywordsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(MarkerColor, "MarkerColor");
+                fg.AppendItem(LoopingSound, "LoopingSound");
+                fg.AppendItem(ActivationSound, "ActivationSound");
+                fg.AppendItem(WaterType, "WaterType");
+                fg.AppendItem(ActivateTextOverride, "ActivateTextOverride");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(InteractionKeyword, "InteractionKeyword");
             }
             #endregion
 
@@ -536,8 +963,18 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
-                ret.Name = this.Name.Combine(rhs.Name);
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.MarkerColor = this.MarkerColor.Combine(rhs.MarkerColor);
+                ret.LoopingSound = this.LoopingSound.Combine(rhs.LoopingSound);
+                ret.ActivationSound = this.ActivationSound.Combine(rhs.ActivationSound);
+                ret.WaterType = this.WaterType.Combine(rhs.WaterType);
+                ret.ActivateTextOverride = this.ActivateTextOverride.Combine(rhs.ActivateTextOverride);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.InteractionKeyword = this.InteractionKeyword.Combine(rhs.InteractionKeyword);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -561,8 +998,18 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public MaskItem<bool, VirtualMachineAdapter.TranslationMask?> VirtualMachineAdapter;
-            public bool Name;
             public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
+            public bool Name;
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public MaskItem<bool, Destructible.TranslationMask?> Destructible;
+            public bool Keywords;
+            public bool MarkerColor;
+            public bool LoopingSound;
+            public bool ActivationSound;
+            public bool WaterType;
+            public bool ActivateTextOverride;
+            public bool Flags;
+            public bool InteractionKeyword;
             #endregion
 
             #region Ctors
@@ -570,8 +1017,18 @@ namespace Mutagen.Bethesda.Skyrim
                 : base(defaultOn)
             {
                 this.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.TranslationMask?>(defaultOn, null);
-                this.Name = defaultOn;
                 this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
+                this.Name = defaultOn;
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.Destructible = new MaskItem<bool, Destructible.TranslationMask?>(defaultOn, null);
+                this.Keywords = defaultOn;
+                this.MarkerColor = defaultOn;
+                this.LoopingSound = defaultOn;
+                this.ActivationSound = defaultOn;
+                this.WaterType = defaultOn;
+                this.ActivateTextOverride = defaultOn;
+                this.Flags = defaultOn;
+                this.InteractionKeyword = defaultOn;
             }
 
             #endregion
@@ -580,8 +1037,18 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.GetCrystal(ret);
                 ret.Add((VirtualMachineAdapter?.Overall ?? true, VirtualMachineAdapter?.Specific?.GetCrystal()));
-                ret.Add((Name, null));
                 ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
+                ret.Add((Name, null));
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Destructible?.Overall ?? true, Destructible?.Specific?.GetCrystal()));
+                ret.Add((Keywords, null));
+                ret.Add((MarkerColor, null));
+                ret.Add((LoopingSound, null));
+                ret.Add((ActivationSound, null));
+                ret.Add((WaterType, null));
+                ret.Add((ActivateTextOverride, null));
+                ret.Add((Flags, null));
+                ret.Add((InteractionKeyword, null));
             }
         }
         #endregion
@@ -670,8 +1137,18 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IActivatorInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
-        new String? Name { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
+        new String? Name { get; set; }
+        new Model? Model { get; set; }
+        new Destructible? Destructible { get; set; }
+        new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new Color? MarkerColor { get; set; }
+        new IFormLinkNullable<SoundDescriptor> LoopingSound { get; }
+        new IFormLinkNullable<SoundDescriptor> ActivationSound { get; }
+        new IFormLinkNullable<Water> WaterType { get; }
+        new String? ActivateTextOverride { get; set; }
+        new Activator.Flag? Flags { get; set; }
+        new IFormLinkNullable<Keyword> InteractionKeyword { get; }
     }
 
     public partial interface IActivatorInternal :
@@ -689,8 +1166,18 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
-        String? Name { get; }
         IObjectBoundsGetter ObjectBounds { get; }
+        String? Name { get; }
+        IModelGetter? Model { get; }
+        IDestructibleGetter? Destructible { get; }
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
+        Color? MarkerColor { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> LoopingSound { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> ActivationSound { get; }
+        IFormLinkNullableGetter<IWaterGetter> WaterType { get; }
+        String? ActivateTextOverride { get; }
+        Activator.Flag? Flags { get; }
+        IFormLinkNullableGetter<IKeywordGetter> InteractionKeyword { get; }
 
     }
 
@@ -993,8 +1480,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         FormVersion = 5,
         Version2 = 6,
         VirtualMachineAdapter = 7,
-        Name = 8,
-        ObjectBounds = 9,
+        ObjectBounds = 8,
+        Name = 9,
+        Model = 10,
+        Destructible = 11,
+        Keywords = 12,
+        MarkerColor = 13,
+        LoopingSound = 14,
+        ActivationSound = 15,
+        WaterType = 16,
+        ActivateTextOverride = 17,
+        Flags = 18,
+        InteractionKeyword = 19,
     }
     #endregion
 
@@ -1012,9 +1509,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "ec45e095-71e5-410d-a22b-ad98bead29c6";
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 20;
 
         public static readonly Type MaskType = typeof(Activator.Mask<>);
 
@@ -1046,10 +1543,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case "VIRTUALMACHINEADAPTER":
                     return (ushort)Activator_FieldIndex.VirtualMachineAdapter;
-                case "NAME":
-                    return (ushort)Activator_FieldIndex.Name;
                 case "OBJECTBOUNDS":
                     return (ushort)Activator_FieldIndex.ObjectBounds;
+                case "NAME":
+                    return (ushort)Activator_FieldIndex.Name;
+                case "MODEL":
+                    return (ushort)Activator_FieldIndex.Model;
+                case "DESTRUCTIBLE":
+                    return (ushort)Activator_FieldIndex.Destructible;
+                case "KEYWORDS":
+                    return (ushort)Activator_FieldIndex.Keywords;
+                case "MARKERCOLOR":
+                    return (ushort)Activator_FieldIndex.MarkerColor;
+                case "LOOPINGSOUND":
+                    return (ushort)Activator_FieldIndex.LoopingSound;
+                case "ACTIVATIONSOUND":
+                    return (ushort)Activator_FieldIndex.ActivationSound;
+                case "WATERTYPE":
+                    return (ushort)Activator_FieldIndex.WaterType;
+                case "ACTIVATETEXTOVERRIDE":
+                    return (ushort)Activator_FieldIndex.ActivateTextOverride;
+                case "FLAGS":
+                    return (ushort)Activator_FieldIndex.Flags;
+                case "INTERACTIONKEYWORD":
+                    return (ushort)Activator_FieldIndex.InteractionKeyword;
                 default:
                     return null;
             }
@@ -1060,9 +1577,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Activator_FieldIndex enu = (Activator_FieldIndex)index;
             switch (enu)
             {
+                case Activator_FieldIndex.Keywords:
+                    return true;
                 case Activator_FieldIndex.VirtualMachineAdapter:
-                case Activator_FieldIndex.Name:
                 case Activator_FieldIndex.ObjectBounds:
+                case Activator_FieldIndex.Name:
+                case Activator_FieldIndex.Model:
+                case Activator_FieldIndex.Destructible:
+                case Activator_FieldIndex.MarkerColor:
+                case Activator_FieldIndex.LoopingSound:
+                case Activator_FieldIndex.ActivationSound:
+                case Activator_FieldIndex.WaterType:
+                case Activator_FieldIndex.ActivateTextOverride:
+                case Activator_FieldIndex.Flags:
+                case Activator_FieldIndex.InteractionKeyword:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1076,8 +1604,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case Activator_FieldIndex.VirtualMachineAdapter:
                 case Activator_FieldIndex.ObjectBounds:
+                case Activator_FieldIndex.Model:
+                case Activator_FieldIndex.Destructible:
                     return true;
                 case Activator_FieldIndex.Name:
+                case Activator_FieldIndex.Keywords:
+                case Activator_FieldIndex.MarkerColor:
+                case Activator_FieldIndex.LoopingSound:
+                case Activator_FieldIndex.ActivationSound:
+                case Activator_FieldIndex.WaterType:
+                case Activator_FieldIndex.ActivateTextOverride:
+                case Activator_FieldIndex.Flags:
+                case Activator_FieldIndex.InteractionKeyword:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1090,8 +1628,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case Activator_FieldIndex.VirtualMachineAdapter:
-                case Activator_FieldIndex.Name:
                 case Activator_FieldIndex.ObjectBounds:
+                case Activator_FieldIndex.Name:
+                case Activator_FieldIndex.Model:
+                case Activator_FieldIndex.Destructible:
+                case Activator_FieldIndex.Keywords:
+                case Activator_FieldIndex.MarkerColor:
+                case Activator_FieldIndex.LoopingSound:
+                case Activator_FieldIndex.ActivationSound:
+                case Activator_FieldIndex.WaterType:
+                case Activator_FieldIndex.ActivateTextOverride:
+                case Activator_FieldIndex.Flags:
+                case Activator_FieldIndex.InteractionKeyword:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1105,10 +1653,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case Activator_FieldIndex.VirtualMachineAdapter:
                     return "VirtualMachineAdapter";
-                case Activator_FieldIndex.Name:
-                    return "Name";
                 case Activator_FieldIndex.ObjectBounds:
                     return "ObjectBounds";
+                case Activator_FieldIndex.Name:
+                    return "Name";
+                case Activator_FieldIndex.Model:
+                    return "Model";
+                case Activator_FieldIndex.Destructible:
+                    return "Destructible";
+                case Activator_FieldIndex.Keywords:
+                    return "Keywords";
+                case Activator_FieldIndex.MarkerColor:
+                    return "MarkerColor";
+                case Activator_FieldIndex.LoopingSound:
+                    return "LoopingSound";
+                case Activator_FieldIndex.ActivationSound:
+                    return "ActivationSound";
+                case Activator_FieldIndex.WaterType:
+                    return "WaterType";
+                case Activator_FieldIndex.ActivateTextOverride:
+                    return "ActivateTextOverride";
+                case Activator_FieldIndex.Flags:
+                    return "Flags";
+                case Activator_FieldIndex.InteractionKeyword:
+                    return "InteractionKeyword";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -1120,8 +1688,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case Activator_FieldIndex.VirtualMachineAdapter:
-                case Activator_FieldIndex.Name:
                 case Activator_FieldIndex.ObjectBounds:
+                case Activator_FieldIndex.Name:
+                case Activator_FieldIndex.Model:
+                case Activator_FieldIndex.Destructible:
+                case Activator_FieldIndex.Keywords:
+                case Activator_FieldIndex.MarkerColor:
+                case Activator_FieldIndex.LoopingSound:
+                case Activator_FieldIndex.ActivationSound:
+                case Activator_FieldIndex.WaterType:
+                case Activator_FieldIndex.ActivateTextOverride:
+                case Activator_FieldIndex.Flags:
+                case Activator_FieldIndex.InteractionKeyword:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
@@ -1134,8 +1712,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case Activator_FieldIndex.VirtualMachineAdapter:
-                case Activator_FieldIndex.Name:
                 case Activator_FieldIndex.ObjectBounds:
+                case Activator_FieldIndex.Name:
+                case Activator_FieldIndex.Model:
+                case Activator_FieldIndex.Destructible:
+                case Activator_FieldIndex.Keywords:
+                case Activator_FieldIndex.MarkerColor:
+                case Activator_FieldIndex.LoopingSound:
+                case Activator_FieldIndex.ActivationSound:
+                case Activator_FieldIndex.WaterType:
+                case Activator_FieldIndex.ActivateTextOverride:
+                case Activator_FieldIndex.Flags:
+                case Activator_FieldIndex.InteractionKeyword:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
@@ -1149,10 +1737,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case Activator_FieldIndex.VirtualMachineAdapter:
                     return typeof(VirtualMachineAdapter);
-                case Activator_FieldIndex.Name:
-                    return typeof(String);
                 case Activator_FieldIndex.ObjectBounds:
                     return typeof(ObjectBounds);
+                case Activator_FieldIndex.Name:
+                    return typeof(String);
+                case Activator_FieldIndex.Model:
+                    return typeof(Model);
+                case Activator_FieldIndex.Destructible:
+                    return typeof(Destructible);
+                case Activator_FieldIndex.Keywords:
+                    return typeof(ExtendedList<IFormLink<Keyword>>);
+                case Activator_FieldIndex.MarkerColor:
+                    return typeof(Color);
+                case Activator_FieldIndex.LoopingSound:
+                    return typeof(IFormLinkNullable<SoundDescriptor>);
+                case Activator_FieldIndex.ActivationSound:
+                    return typeof(IFormLinkNullable<SoundDescriptor>);
+                case Activator_FieldIndex.WaterType:
+                    return typeof(IFormLinkNullable<Water>);
+                case Activator_FieldIndex.ActivateTextOverride:
+                    return typeof(String);
+                case Activator_FieldIndex.Flags:
+                    return typeof(Activator.Flag);
+                case Activator_FieldIndex.InteractionKeyword:
+                    return typeof(IFormLinkNullable<Keyword>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1161,11 +1769,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(ActivatorXmlWriteTranslation);
         public static readonly RecordType ACTI_HEADER = new RecordType("ACTI");
         public static readonly RecordType VMAD_HEADER = new RecordType("VMAD");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType OBND_HEADER = new RecordType("OBND");
+        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
+        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
+        public static readonly RecordType DEST_HEADER = new RecordType("DEST");
+        public static readonly RecordType DSTD_HEADER = new RecordType("DSTD");
+        public static readonly RecordType DMDL_HEADER = new RecordType("DMDL");
+        public static readonly RecordType KWDA_HEADER = new RecordType("KWDA");
+        public static readonly RecordType KSIZ_HEADER = new RecordType("KSIZ");
+        public static readonly RecordType PNAM_HEADER = new RecordType("PNAM");
+        public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
+        public static readonly RecordType VNAM_HEADER = new RecordType("VNAM");
+        public static readonly RecordType WNAM_HEADER = new RecordType("WNAM");
+        public static readonly RecordType RNAM_HEADER = new RecordType("RNAM");
+        public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
+        public static readonly RecordType KNAM_HEADER = new RecordType("KNAM");
         public static readonly RecordType TriggeringRecordType = ACTI_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 3;
+        public const int NumTypedFields = 13;
         public static readonly Type BinaryWriteTranslation = typeof(ActivatorBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1209,8 +1830,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.VirtualMachineAdapter = null;
-            item.Name = default;
             item.ObjectBounds = new ObjectBounds();
+            item.Name = default;
+            item.Model = null;
+            item.Destructible = null;
+            item.Keywords = null;
+            item.MarkerColor = default;
+            item.LoopingSound.FormKey = null;
+            item.ActivationSound.FormKey = null;
+            item.WaterType.FormKey = null;
+            item.ActivateTextOverride = default;
+            item.Flags = default;
+            item.InteractionKeyword.FormKey = null;
             base.Clear(item);
         }
         
@@ -1330,6 +1961,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Activator_FieldIndex.VirtualMachineAdapter);
                 }
+                case 0x444E424F: // OBND
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.ObjectBounds);
+                }
                 case 0x4C4C5546: // FULL
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
@@ -1338,10 +1974,84 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Activator_FieldIndex.Name);
                 }
-                case 0x444E424F: // OBND
+                case 0x4C444F4D: // MODL
                 {
-                    item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.ObjectBounds);
+                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.Model);
+                }
+                case 0x54534544: // DEST
+                case 0x44545344: // DSTD
+                case 0x4C444D44: // DMDL
+                {
+                    item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.Destructible);
+                }
+                case 0x5A49534B: // KSIZ
+                {
+                    var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.ReadSubrecordFrame().Content);
+                    item.Keywords = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
+                            frame: frame,
+                            amount: amount,
+                            triggeringRecord: Activator_Registration.KWDA_HEADER,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<IFormLink<Keyword>>();
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.Keywords);
+                }
+                case 0x4D414E50: // PNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.MarkerColor = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        extraByte: true);
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.MarkerColor);
+                }
+                case 0x4D414E53: // SNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.LoopingSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.LoopingSound);
+                }
+                case 0x4D414E56: // VNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.ActivationSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.ActivationSound);
+                }
+                case 0x4D414E57: // WNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.WaterType.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.WaterType);
+                }
+                case 0x4D414E52: // RNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.ActivateTextOverride = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.ActivateTextOverride);
+                }
+                case 0x4D414E46: // FNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<Activator.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.Flags);
+                }
+                case 0x4D414E4B: // KNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.InteractionKeyword.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.InteractionKeyword);
                 }
                 default:
                     return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
@@ -1422,8 +2132,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.VirtualMachineAdapter,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Name = string.Equals(item.Name, rhs.Name);
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Destructible = EqualsMaskHelper.EqualsHelper(
+                item.Destructible,
+                rhs.Destructible,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Keywords = item.Keywords.CollectionEqualsHelper(
+                rhs.Keywords,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.MarkerColor = item.MarkerColor.ColorOnlyEquals(rhs.MarkerColor);
+            ret.LoopingSound = object.Equals(item.LoopingSound, rhs.LoopingSound);
+            ret.ActivationSound = object.Equals(item.ActivationSound, rhs.ActivationSound);
+            ret.WaterType = object.Equals(item.WaterType, rhs.WaterType);
+            ret.ActivateTextOverride = string.Equals(item.ActivateTextOverride, rhs.ActivateTextOverride);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.InteractionKeyword = object.Equals(item.InteractionKeyword, rhs.InteractionKeyword);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1480,14 +2211,78 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
             }
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+            }
             if ((printMask?.Name ?? true)
                 && item.Name.TryGet(out var NameItem))
             {
                 fg.AppendItem(NameItem, "Name");
             }
-            if (printMask?.ObjectBounds?.Overall ?? true)
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
             {
-                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+                ModelItem?.ToString(fg, "Model");
+            }
+            if ((printMask?.Destructible?.Overall ?? true)
+                && item.Destructible.TryGet(out var DestructibleItem))
+            {
+                DestructibleItem?.ToString(fg, "Destructible");
+            }
+            if ((printMask?.Keywords?.Overall ?? true)
+                && item.Keywords.TryGet(out var KeywordsItem))
+            {
+                fg.AppendLine("Keywords =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in KeywordsItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.MarkerColor ?? true)
+                && item.MarkerColor.TryGet(out var MarkerColorItem))
+            {
+                fg.AppendItem(MarkerColorItem, "MarkerColor");
+            }
+            if ((printMask?.LoopingSound ?? true)
+                && item.LoopingSound.TryGet(out var LoopingSoundItem))
+            {
+                fg.AppendItem(LoopingSoundItem, "LoopingSound");
+            }
+            if ((printMask?.ActivationSound ?? true)
+                && item.ActivationSound.TryGet(out var ActivationSoundItem))
+            {
+                fg.AppendItem(ActivationSoundItem, "ActivationSound");
+            }
+            if ((printMask?.WaterType ?? true)
+                && item.WaterType.TryGet(out var WaterTypeItem))
+            {
+                fg.AppendItem(WaterTypeItem, "WaterType");
+            }
+            if ((printMask?.ActivateTextOverride ?? true)
+                && item.ActivateTextOverride.TryGet(out var ActivateTextOverrideItem))
+            {
+                fg.AppendItem(ActivateTextOverrideItem, "ActivateTextOverride");
+            }
+            if ((printMask?.Flags ?? true)
+                && item.Flags.TryGet(out var FlagsItem))
+            {
+                fg.AppendItem(FlagsItem, "Flags");
+            }
+            if ((printMask?.InteractionKeyword ?? true)
+                && item.InteractionKeyword.TryGet(out var InteractionKeywordItem))
+            {
+                fg.AppendItem(InteractionKeywordItem, "InteractionKeyword");
             }
         }
         
@@ -1498,6 +2293,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.VirtualMachineAdapter?.Overall.HasValue ?? false && checkMask.VirtualMachineAdapter.Overall.Value != (item.VirtualMachineAdapter != null)) return false;
             if (checkMask.VirtualMachineAdapter?.Specific != null && (item.VirtualMachineAdapter == null || !item.VirtualMachineAdapter.HasBeenSet(checkMask.VirtualMachineAdapter.Specific))) return false;
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
+            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
+            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.Destructible?.Overall.HasValue ?? false && checkMask.Destructible.Overall.Value != (item.Destructible != null)) return false;
+            if (checkMask.Destructible?.Specific != null && (item.Destructible == null || !item.Destructible.HasBeenSet(checkMask.Destructible.Specific))) return false;
+            if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
+            if (checkMask.MarkerColor.HasValue && checkMask.MarkerColor.Value != (item.MarkerColor != null)) return false;
+            if (checkMask.LoopingSound.HasValue && checkMask.LoopingSound.Value != (item.LoopingSound.FormKey != null)) return false;
+            if (checkMask.ActivationSound.HasValue && checkMask.ActivationSound.Value != (item.ActivationSound.FormKey != null)) return false;
+            if (checkMask.WaterType.HasValue && checkMask.WaterType.Value != (item.WaterType.FormKey != null)) return false;
+            if (checkMask.ActivateTextOverride.HasValue && checkMask.ActivateTextOverride.Value != (item.ActivateTextOverride != null)) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
+            if (checkMask.InteractionKeyword.HasValue && checkMask.InteractionKeyword.Value != (item.InteractionKeyword.FormKey != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1509,8 +2316,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var itemVirtualMachineAdapter = item.VirtualMachineAdapter;
             mask.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
-            mask.Name = (item.Name != null);
             mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
+            mask.Name = (item.Name != null);
+            var itemModel = item.Model;
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            var itemDestructible = item.Destructible;
+            mask.Destructible = new MaskItem<bool, Destructible.Mask<bool>?>(itemDestructible != null, itemDestructible?.GetHasBeenSetMask());
+            mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
+            mask.MarkerColor = (item.MarkerColor != null);
+            mask.LoopingSound = (item.LoopingSound.FormKey != null);
+            mask.ActivationSound = (item.ActivationSound.FormKey != null);
+            mask.WaterType = (item.WaterType.FormKey != null);
+            mask.ActivateTextOverride = (item.ActivateTextOverride != null);
+            mask.Flags = (item.Flags != null);
+            mask.InteractionKeyword = (item.InteractionKeyword.FormKey != null);
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1565,8 +2384,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
             if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
+            if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
+            if (!lhs.MarkerColor.ColorOnlyEquals(rhs.MarkerColor)) return false;
+            if (!lhs.LoopingSound.Equals(rhs.LoopingSound)) return false;
+            if (!lhs.ActivationSound.Equals(rhs.ActivationSound)) return false;
+            if (!lhs.WaterType.Equals(rhs.WaterType)) return false;
+            if (!string.Equals(lhs.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (!lhs.InteractionKeyword.Equals(rhs.InteractionKeyword)) return false;
             return true;
         }
         
@@ -1595,11 +2424,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(VirtualMachineAdapteritem);
             }
+            hash.Add(item.ObjectBounds);
             if (item.Name.TryGet(out var Nameitem))
             {
                 hash.Add(Nameitem);
             }
-            hash.Add(item.ObjectBounds);
+            if (item.Model.TryGet(out var Modelitem))
+            {
+                hash.Add(Modelitem);
+            }
+            if (item.Destructible.TryGet(out var Destructibleitem))
+            {
+                hash.Add(Destructibleitem);
+            }
+            hash.Add(item.Keywords);
+            if (item.MarkerColor.TryGet(out var MarkerColoritem))
+            {
+                hash.Add(MarkerColoritem);
+            }
+            if (item.LoopingSound.TryGet(out var LoopingSounditem))
+            {
+                hash.Add(LoopingSounditem);
+            }
+            if (item.ActivationSound.TryGet(out var ActivationSounditem))
+            {
+                hash.Add(ActivationSounditem);
+            }
+            if (item.WaterType.TryGet(out var WaterTypeitem))
+            {
+                hash.Add(WaterTypeitem);
+            }
+            if (item.ActivateTextOverride.TryGet(out var ActivateTextOverrideitem))
+            {
+                hash.Add(ActivateTextOverrideitem);
+            }
+            if (item.Flags.TryGet(out var Flagsitem))
+            {
+                hash.Add(Flagsitem);
+            }
+            if (item.InteractionKeyword.TryGet(out var InteractionKeyworditem))
+            {
+                hash.Add(InteractionKeyworditem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1636,6 +2502,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.Model != null)
+            {
+                foreach (var item in obj.Model.Links)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible != null)
+            {
+                foreach (var item in obj.Destructible.Links)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Keywords != null)
+            {
+                foreach (var item in obj.Keywords)
+                {
+                    yield return item;
+                }
+            }
+            yield return obj.LoopingSound;
+            yield return obj.ActivationSound;
+            yield return obj.WaterType;
+            yield return obj.InteractionKeyword;
             yield break;
         }
         
@@ -1708,10 +2599,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.Name) ?? true))
-            {
-                item.Name = rhs.Name;
-            }
             if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.ObjectBounds) ?? true))
             {
                 errorMask?.PushIndex((int)Activator_FieldIndex.ObjectBounds);
@@ -1733,6 +2620,117 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)Activator_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model.TryGet(out var rhsModel))
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Activator_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.Destructible) ?? true))
+            {
+                errorMask?.PushIndex((int)Activator_FieldIndex.Destructible);
+                try
+                {
+                    if(rhs.Destructible.TryGet(out var rhsDestructible))
+                    {
+                        item.Destructible = rhsDestructible.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Activator_FieldIndex.Destructible));
+                    }
+                    else
+                    {
+                        item.Destructible = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.Keywords) ?? true))
+            {
+                errorMask?.PushIndex((int)Activator_FieldIndex.Keywords);
+                try
+                {
+                    if ((rhs.Keywords != null))
+                    {
+                        item.Keywords = 
+                            rhs.Keywords
+                            .Select(r => new FormLink<Keyword>(r.FormKey))
+                            .ToExtendedList<IFormLink<Keyword>>();
+                    }
+                    else
+                    {
+                        item.Keywords = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.MarkerColor) ?? true))
+            {
+                item.MarkerColor = rhs.MarkerColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.LoopingSound) ?? true))
+            {
+                item.LoopingSound.FormKey = rhs.LoopingSound.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.ActivationSound) ?? true))
+            {
+                item.ActivationSound.FormKey = rhs.ActivationSound.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.WaterType) ?? true))
+            {
+                item.WaterType.FormKey = rhs.WaterType.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.ActivateTextOverride) ?? true))
+            {
+                item.ActivateTextOverride = rhs.ActivateTextOverride;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.InteractionKeyword) ?? true))
+            {
+                item.InteractionKeyword.FormKey = rhs.InteractionKeyword.FormKey;
             }
         }
         
@@ -1890,16 +2888,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         translationMask: translationMask?.GetSubCrystal((int)Activator_FieldIndex.VirtualMachineAdapter));
                 }
             }
-            if ((item.Name != null)
-                && (translationMask?.GetShouldTranslate((int)Activator_FieldIndex.Name) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Name),
-                    item: item.Name,
-                    fieldIndex: (int)Activator_FieldIndex.Name,
-                    errorMask: errorMask);
-            }
             if ((translationMask?.GetShouldTranslate((int)Activator_FieldIndex.ObjectBounds) ?? true))
             {
                 var ObjectBoundsItem = item.ObjectBounds;
@@ -1910,6 +2898,133 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Activator_FieldIndex.ObjectBounds,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Activator_FieldIndex.ObjectBounds));
+            }
+            if ((item.Name != null)
+                && (translationMask?.GetShouldTranslate((int)Activator_FieldIndex.Name) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)Activator_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if ((item.Model != null)
+                && (translationMask?.GetShouldTranslate((int)Activator_FieldIndex.Model) ?? true))
+            {
+                if (item.Model.TryGet(out var ModelItem))
+                {
+                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                        item: ModelItem,
+                        node: node,
+                        name: nameof(item.Model),
+                        fieldIndex: (int)Activator_FieldIndex.Model,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Activator_FieldIndex.Model));
+                }
+            }
+            if ((item.Destructible != null)
+                && (translationMask?.GetShouldTranslate((int)Activator_FieldIndex.Destructible) ?? true))
+            {
+                if (item.Destructible.TryGet(out var DestructibleItem))
+                {
+                    ((DestructibleXmlWriteTranslation)((IXmlItem)DestructibleItem).XmlWriteTranslator).Write(
+                        item: DestructibleItem,
+                        node: node,
+                        name: nameof(item.Destructible),
+                        fieldIndex: (int)Activator_FieldIndex.Destructible,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Activator_FieldIndex.Destructible));
+                }
+            }
+            if ((item.Keywords != null)
+                && (translationMask?.GetShouldTranslate((int)Activator_FieldIndex.Keywords) ?? true))
+            {
+                ListXmlTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Keywords),
+                    item: item.Keywords,
+                    fieldIndex: (int)Activator_FieldIndex.Keywords,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Activator_FieldIndex.Keywords),
+                    transl: (XElement subNode, IFormLinkGetter<IKeywordGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem.FormKey,
+                            errorMask: listSubMask);
+                    });
+            }
+            if ((item.MarkerColor != null)
+                && (translationMask?.GetShouldTranslate((int)Activator_FieldIndex.MarkerColor) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.MarkerColor),
+                    item: item.MarkerColor.Value,
+                    fieldIndex: (int)Activator_FieldIndex.MarkerColor,
+                    errorMask: errorMask);
+            }
+            if ((item.LoopingSound.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Activator_FieldIndex.LoopingSound) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.LoopingSound),
+                    item: item.LoopingSound.FormKey.Value,
+                    fieldIndex: (int)Activator_FieldIndex.LoopingSound,
+                    errorMask: errorMask);
+            }
+            if ((item.ActivationSound.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Activator_FieldIndex.ActivationSound) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ActivationSound),
+                    item: item.ActivationSound.FormKey.Value,
+                    fieldIndex: (int)Activator_FieldIndex.ActivationSound,
+                    errorMask: errorMask);
+            }
+            if ((item.WaterType.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Activator_FieldIndex.WaterType) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.WaterType),
+                    item: item.WaterType.FormKey.Value,
+                    fieldIndex: (int)Activator_FieldIndex.WaterType,
+                    errorMask: errorMask);
+            }
+            if ((item.ActivateTextOverride != null)
+                && (translationMask?.GetShouldTranslate((int)Activator_FieldIndex.ActivateTextOverride) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ActivateTextOverride),
+                    item: item.ActivateTextOverride,
+                    fieldIndex: (int)Activator_FieldIndex.ActivateTextOverride,
+                    errorMask: errorMask);
+            }
+            if ((item.Flags != null)
+                && (translationMask?.GetShouldTranslate((int)Activator_FieldIndex.Flags) ?? true))
+            {
+                EnumXmlTranslation<Activator.Flag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)Activator_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
+            if ((item.InteractionKeyword.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Activator_FieldIndex.InteractionKeyword) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.InteractionKeyword),
+                    item: item.InteractionKeyword.FormKey.Value,
+                    fieldIndex: (int)Activator_FieldIndex.InteractionKeyword,
+                    errorMask: errorMask);
             }
         }
 
@@ -2037,6 +3152,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "ObjectBounds":
+                    errorMask?.PushIndex((int)Activator_FieldIndex.ObjectBounds);
+                    try
+                    {
+                        item.ObjectBounds = LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Activator_FieldIndex.ObjectBounds));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "Name":
                     errorMask?.PushIndex((int)Activator_FieldIndex.Name);
                     try
@@ -2055,14 +3189,187 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "ObjectBounds":
-                    errorMask?.PushIndex((int)Activator_FieldIndex.ObjectBounds);
+                case "Model":
+                    errorMask?.PushIndex((int)Activator_FieldIndex.Model);
                     try
                     {
-                        item.ObjectBounds = LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
+                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Activator_FieldIndex.ObjectBounds));
+                            translationMask: translationMask?.GetSubCrystal((int)Activator_FieldIndex.Model));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Destructible":
+                    errorMask?.PushIndex((int)Activator_FieldIndex.Destructible);
+                    try
+                    {
+                        item.Destructible = LoquiXmlTranslation<Destructible>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Activator_FieldIndex.Destructible));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Keywords":
+                    errorMask?.PushIndex((int)Activator_FieldIndex.Keywords);
+                    try
+                    {
+                        if (ListXmlTranslation<IFormLink<Keyword>>.Instance.Parse(
+                            node: node,
+                            enumer: out var KeywordsItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Keywords = KeywordsItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Keywords = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MarkerColor":
+                    errorMask?.PushIndex((int)Activator_FieldIndex.MarkerColor);
+                    try
+                    {
+                        item.MarkerColor = ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LoopingSound":
+                    errorMask?.PushIndex((int)Activator_FieldIndex.LoopingSound);
+                    try
+                    {
+                        item.LoopingSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ActivationSound":
+                    errorMask?.PushIndex((int)Activator_FieldIndex.ActivationSound);
+                    try
+                    {
+                        item.ActivationSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "WaterType":
+                    errorMask?.PushIndex((int)Activator_FieldIndex.WaterType);
+                    try
+                    {
+                        item.WaterType.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ActivateTextOverride":
+                    errorMask?.PushIndex((int)Activator_FieldIndex.ActivateTextOverride);
+                    try
+                    {
+                        item.ActivateTextOverride = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    errorMask?.PushIndex((int)Activator_FieldIndex.Flags);
+                    try
+                    {
+                        item.Flags = EnumXmlTranslation<Activator.Flag>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "InteractionKeyword":
+                    errorMask?.PushIndex((int)Activator_FieldIndex.InteractionKeyword);
+                    try
+                    {
+                        item.InteractionKeyword.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2176,16 +3483,72 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(Activator_Registration.FULL_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
             var ObjectBoundsItem = item.ObjectBounds;
             ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
                 item: ObjectBoundsItem,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: recordTypeConverter.ConvertToCustom(Activator_Registration.FULL_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            if (item.Model.TryGet(out var ModelItem))
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            if (item.Destructible.TryGet(out var DestructibleItem))
+            {
+                ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
+                    item: DestructibleItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Keywords,
+                counterType: Activator_Registration.KSIZ_HEADER,
+                recordType: recordTypeConverter.ConvertToCustom(Activator_Registration.KWDA_HEADER),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
+                {
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.MarkerColor,
+                header: recordTypeConverter.ConvertToCustom(Activator_Registration.PNAM_HEADER),
+                extraByte: true);
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.LoopingSound,
+                header: recordTypeConverter.ConvertToCustom(Activator_Registration.SNAM_HEADER));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ActivationSound,
+                header: recordTypeConverter.ConvertToCustom(Activator_Registration.VNAM_HEADER));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.WaterType,
+                header: recordTypeConverter.ConvertToCustom(Activator_Registration.WNAM_HEADER));
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ActivateTextOverride,
+                header: recordTypeConverter.ConvertToCustom(Activator_Registration.RNAM_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Activator.Flag>.Instance.WriteNullable(
+                writer,
+                item.Flags,
+                length: 2,
+                header: recordTypeConverter.ConvertToCustom(Activator_Registration.FNAM_HEADER));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.InteractionKeyword,
+                header: recordTypeConverter.ConvertToCustom(Activator_Registration.KNAM_HEADER));
         }
 
         public void Write(
@@ -2315,15 +3678,57 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapter_IsSet ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
         #endregion
-        #region Name
-        private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
-        #endregion
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
         private bool _ObjectBounds_IsSet => _ObjectBoundsLocation.HasValue;
         private IObjectBoundsGetter? _ObjectBounds => _ObjectBounds_IsSet ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation!.Value.Min)), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
+        #endregion
+        #region Model
+        public IModelGetter? Model { get; private set; }
+        public bool Model_IsSet => Model != null;
+        #endregion
+        #region Destructible
+        public IDestructibleGetter? Destructible { get; private set; }
+        public bool Destructible_IsSet => Destructible != null;
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        #region MarkerColor
+        private int? _MarkerColorLocation;
+        public Color? MarkerColor => _MarkerColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _MarkerColorLocation.Value, _package.Meta).ReadColor() : default(Color?);
+        #endregion
+        #region LoopingSound
+        private int? _LoopingSoundLocation;
+        public bool LoopingSound_IsSet => _LoopingSoundLocation.HasValue;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> LoopingSound => _LoopingSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LoopingSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Empty;
+        #endregion
+        #region ActivationSound
+        private int? _ActivationSoundLocation;
+        public bool ActivationSound_IsSet => _ActivationSoundLocation.HasValue;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> ActivationSound => _ActivationSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ActivationSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Empty;
+        #endregion
+        #region WaterType
+        private int? _WaterTypeLocation;
+        public bool WaterType_IsSet => _WaterTypeLocation.HasValue;
+        public IFormLinkNullableGetter<IWaterGetter> WaterType => _WaterTypeLocation.HasValue ? new FormLinkNullable<IWaterGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _WaterTypeLocation.Value, _package.Meta)))) : FormLinkNullable<IWaterGetter>.Empty;
+        #endregion
+        #region ActivateTextOverride
+        private int? _ActivateTextOverrideLocation;
+        public String? ActivateTextOverride => _ActivateTextOverrideLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ActivateTextOverrideLocation.Value, _package.Meta)) : default(string?);
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        private bool Flags_IsSet => _FlagsLocation.HasValue;
+        public Activator.Flag? Flags => Flags_IsSet ? (Activator.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)) : default(Activator.Flag?);
+        #endregion
+        #region InteractionKeyword
+        private int? _InteractionKeywordLocation;
+        public bool InteractionKeyword_IsSet => _InteractionKeywordLocation.HasValue;
+        public IFormLinkNullableGetter<IKeywordGetter> InteractionKeyword => _InteractionKeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _InteractionKeywordLocation.Value, _package.Meta)))) : FormLinkNullable<IKeywordGetter>.Empty;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
@@ -2391,15 +3796,82 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Activator_FieldIndex.VirtualMachineAdapter);
                 }
+                case 0x444E424F: // OBND
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.ObjectBounds);
+                }
                 case 0x4C4C5546: // FULL
                 {
                     _NameLocation = (ushort)(stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Activator_FieldIndex.Name);
                 }
-                case 0x444E424F: // OBND
+                case 0x4C444F4D: // MODL
                 {
-                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.ObjectBounds);
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.Model);
+                }
+                case 0x54534544: // DEST
+                case 0x44545344: // DSTD
+                case 0x4C444D44: // DMDL
+                {
+                    this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.Destructible);
+                }
+                case 0x5A49534B: // KSIZ
+                {
+                    var count = BinaryPrimitives.ReadUInt32LittleEndian(_package.Meta.ReadSubrecordFrame(stream).Content);
+                    var subMeta = _package.Meta.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.Keywords = BinaryOverlaySetList<IFormLinkGetter<IKeywordGetter>>.FactoryByCount(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        count: count,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.Keywords);
+                }
+                case 0x4D414E50: // PNAM
+                {
+                    _MarkerColorLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.MarkerColor);
+                }
+                case 0x4D414E53: // SNAM
+                {
+                    _LoopingSoundLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.LoopingSound);
+                }
+                case 0x4D414E56: // VNAM
+                {
+                    _ActivationSoundLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.ActivationSound);
+                }
+                case 0x4D414E57: // WNAM
+                {
+                    _WaterTypeLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.WaterType);
+                }
+                case 0x4D414E52: // RNAM
+                {
+                    _ActivateTextOverrideLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.ActivateTextOverride);
+                }
+                case 0x4D414E46: // FNAM
+                {
+                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.Flags);
+                }
+                case 0x4D414E4B: // KNAM
+                {
+                    _InteractionKeywordLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.InteractionKeyword);
                 }
                 default:
                     return base.FillRecordType(

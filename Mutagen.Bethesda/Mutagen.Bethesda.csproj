@@ -25,6 +25,9 @@
     <Compile Include="Skyrim\Records\Common Subrecords\Effect.cs">
       <DependentUpon>Effect.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Activator.cs">
+      <DependentUpon>Activator.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\ObjectEffect.cs">
       <DependentUpon>ObjectEffect.xml</DependentUpon>
     </Compile>
@@ -1436,6 +1439,12 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Shout_LoquiGenerated.cs">
       <DependentUpon>Shout.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Water_LoquiGenerated.cs">
+      <DependentUpon>Water.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\DestructableData_LoquiGenerated.cs">
+      <DependentUpon>Destructible.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

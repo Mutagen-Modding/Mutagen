@@ -15,6 +15,7 @@ using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Mutagen.Bethesda.Skyrim;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -45,25 +46,30 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
-        #region Health
-        public Int32 Health { get; set; } = default;
-        #endregion
-        #region DESTCount
-        public Byte DESTCount { get; set; } = default;
-        #endregion
-        #region VATSTargetable
-        public Boolean VATSTargetable { get; set; } = default;
-        #endregion
-        #region Unknown
+        #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Unknown = new byte[2];
-        public Byte[] Unknown
+        private DestructableData? _Data;
+        public DestructableData? Data
         {
-            get => _Unknown;
-            set => this._Unknown = value ?? new byte[2];
+            get => _Data;
+            set => _Data = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IDestructibleGetter.Unknown => this.Unknown;
+        IDestructableDataGetter? IDestructibleGetter.Data => this.Data;
+        #endregion
+        #region Stages
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<DestructionStage> _Stages = new ExtendedList<DestructionStage>();
+        public ExtendedList<DestructionStage> Stages
+        {
+            get => this._Stages;
+            protected set => this._Stages = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IDestructionStageGetter> IDestructibleGetter.Stages => _Stages;
+        #endregion
+
         #endregion
 
         #region To String
@@ -235,22 +241,16 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Health = initialValue;
-                this.DESTCount = initialValue;
-                this.VATSTargetable = initialValue;
-                this.Unknown = initialValue;
+                this.Data = new MaskItem<TItem, DestructableData.Mask<TItem>?>(initialValue, new DestructableData.Mask<TItem>(initialValue));
+                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DestructionStage.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DestructionStage.Mask<TItem>?>>());
             }
 
             public Mask(
-                TItem Health,
-                TItem DESTCount,
-                TItem VATSTargetable,
-                TItem Unknown)
+                TItem Data,
+                TItem Stages)
             {
-                this.Health = Health;
-                this.DESTCount = DESTCount;
-                this.VATSTargetable = VATSTargetable;
-                this.Unknown = Unknown;
+                this.Data = new MaskItem<TItem, DestructableData.Mask<TItem>?>(Data, new DestructableData.Mask<TItem>(Data));
+                this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DestructionStage.Mask<TItem>?>>?>(Stages, Enumerable.Empty<MaskItemIndexed<TItem, DestructionStage.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -262,10 +262,8 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem Health;
-            public TItem DESTCount;
-            public TItem VATSTargetable;
-            public TItem Unknown;
+            public MaskItem<TItem, DestructableData.Mask<TItem>?>? Data { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DestructionStage.Mask<TItem>?>>?>? Stages;
             #endregion
 
             #region Equals
@@ -278,19 +276,15 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Health, rhs.Health)) return false;
-                if (!object.Equals(this.DESTCount, rhs.DESTCount)) return false;
-                if (!object.Equals(this.VATSTargetable, rhs.VATSTargetable)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.Stages, rhs.Stages)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Health);
-                hash.Add(this.DESTCount);
-                hash.Add(this.VATSTargetable);
-                hash.Add(this.Unknown);
+                hash.Add(this.Data);
+                hash.Add(this.Stages);
                 return hash.ToHashCode();
             }
 
@@ -299,10 +293,23 @@ namespace Mutagen.Bethesda.Skyrim
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Health)) return false;
-                if (!eval(this.DESTCount)) return false;
-                if (!eval(this.VATSTargetable)) return false;
-                if (!eval(this.Unknown)) return false;
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
+                if (this.Stages != null)
+                {
+                    if (!eval(this.Stages.Overall)) return false;
+                    if (this.Stages.Specific != null)
+                    {
+                        foreach (var item in this.Stages.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -310,10 +317,23 @@ namespace Mutagen.Bethesda.Skyrim
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Health)) return true;
-                if (eval(this.DESTCount)) return true;
-                if (eval(this.VATSTargetable)) return true;
-                if (eval(this.Unknown)) return true;
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
+                if (this.Stages != null)
+                {
+                    if (eval(this.Stages.Overall)) return true;
+                    if (this.Stages.Specific != null)
+                    {
+                        foreach (var item in this.Stages.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -328,10 +348,22 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Health = eval(this.Health);
-                obj.DESTCount = eval(this.DESTCount);
-                obj.VATSTargetable = eval(this.VATSTargetable);
-                obj.Unknown = eval(this.Unknown);
+                obj.Data = this.Data == null ? null : new MaskItem<R, DestructableData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
+                if (Stages != null)
+                {
+                    obj.Stages = new MaskItem<R, IEnumerable<MaskItemIndexed<R, DestructionStage.Mask<R>?>>?>(eval(this.Stages.Overall), Enumerable.Empty<MaskItemIndexed<R, DestructionStage.Mask<R>?>>());
+                    if (Stages.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, DestructionStage.Mask<R>?>>();
+                        obj.Stages.Specific = l;
+                        foreach (var item in Stages.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, DestructionStage.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, DestructionStage.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -354,21 +386,32 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Health ?? true)
+                    if (printMask?.Data?.Overall ?? true)
                     {
-                        fg.AppendItem(Health, "Health");
+                        Data?.ToString(fg);
                     }
-                    if (printMask?.DESTCount ?? true)
+                    if ((printMask?.Stages?.Overall ?? true)
+                        && Stages.TryGet(out var StagesItem))
                     {
-                        fg.AppendItem(DESTCount, "DESTCount");
-                    }
-                    if (printMask?.VATSTargetable ?? true)
-                    {
-                        fg.AppendItem(VATSTargetable, "VATSTargetable");
-                    }
-                    if (printMask?.Unknown ?? true)
-                    {
-                        fg.AppendItem(Unknown, "Unknown");
+                        fg.AppendLine("Stages =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(StagesItem.Overall);
+                            if (StagesItem.Specific != null)
+                            {
+                                foreach (var subItem in StagesItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
                     }
                 }
                 fg.AppendLine("]");
@@ -395,10 +438,8 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
-            public Exception? Health;
-            public Exception? DESTCount;
-            public Exception? VATSTargetable;
-            public Exception? Unknown;
+            public MaskItem<Exception?, DestructableData.ErrorMask?>? Data;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DestructionStage.ErrorMask?>>?>? Stages;
             #endregion
 
             #region IErrorMask
@@ -407,14 +448,10 @@ namespace Mutagen.Bethesda.Skyrim
                 Destructible_FieldIndex enu = (Destructible_FieldIndex)index;
                 switch (enu)
                 {
-                    case Destructible_FieldIndex.Health:
-                        return Health;
-                    case Destructible_FieldIndex.DESTCount:
-                        return DESTCount;
-                    case Destructible_FieldIndex.VATSTargetable:
-                        return VATSTargetable;
-                    case Destructible_FieldIndex.Unknown:
-                        return Unknown;
+                    case Destructible_FieldIndex.Data:
+                        return Data;
+                    case Destructible_FieldIndex.Stages:
+                        return Stages;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -425,17 +462,11 @@ namespace Mutagen.Bethesda.Skyrim
                 Destructible_FieldIndex enu = (Destructible_FieldIndex)index;
                 switch (enu)
                 {
-                    case Destructible_FieldIndex.Health:
-                        this.Health = ex;
+                    case Destructible_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, DestructableData.ErrorMask?>(ex, null);
                         break;
-                    case Destructible_FieldIndex.DESTCount:
-                        this.DESTCount = ex;
-                        break;
-                    case Destructible_FieldIndex.VATSTargetable:
-                        this.VATSTargetable = ex;
-                        break;
-                    case Destructible_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case Destructible_FieldIndex.Stages:
+                        this.Stages = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DestructionStage.ErrorMask?>>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -447,17 +478,11 @@ namespace Mutagen.Bethesda.Skyrim
                 Destructible_FieldIndex enu = (Destructible_FieldIndex)index;
                 switch (enu)
                 {
-                    case Destructible_FieldIndex.Health:
-                        this.Health = (Exception?)obj;
+                    case Destructible_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, DestructableData.ErrorMask?>?)obj;
                         break;
-                    case Destructible_FieldIndex.DESTCount:
-                        this.DESTCount = (Exception?)obj;
-                        break;
-                    case Destructible_FieldIndex.VATSTargetable:
-                        this.VATSTargetable = (Exception?)obj;
-                        break;
-                    case Destructible_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case Destructible_FieldIndex.Stages:
+                        this.Stages = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DestructionStage.ErrorMask?>>?>)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -467,10 +492,8 @@ namespace Mutagen.Bethesda.Skyrim
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Health != null) return true;
-                if (DESTCount != null) return true;
-                if (VATSTargetable != null) return true;
-                if (Unknown != null) return true;
+                if (Data != null) return true;
+                if (Stages != null) return true;
                 return false;
             }
             #endregion
@@ -505,10 +528,29 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendItem(Health, "Health");
-                fg.AppendItem(DESTCount, "DESTCount");
-                fg.AppendItem(VATSTargetable, "VATSTargetable");
-                fg.AppendItem(Unknown, "Unknown");
+                Data?.ToString(fg);
+                if (Stages.TryGet(out var StagesItem))
+                {
+                    fg.AppendLine("Stages =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(StagesItem.Overall);
+                        if (StagesItem.Specific != null)
+                        {
+                            foreach (var subItem in StagesItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
             }
             #endregion
 
@@ -517,10 +559,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Health = this.Health.Combine(rhs.Health);
-                ret.DESTCount = this.DESTCount.Combine(rhs.DESTCount);
-                ret.VATSTargetable = this.VATSTargetable.Combine(rhs.VATSTargetable);
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
+                ret.Stages = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DestructionStage.ErrorMask?>>?>(ExceptionExt.Combine(this.Stages?.Overall, rhs.Stages?.Overall), ExceptionExt.Combine(this.Stages?.Specific, rhs.Stages?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -542,19 +582,15 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public bool Health;
-            public bool DESTCount;
-            public bool VATSTargetable;
-            public bool Unknown;
+            public MaskItem<bool, DestructableData.TranslationMask?> Data;
+            public MaskItem<bool, DestructionStage.TranslationMask?> Stages;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.Health = defaultOn;
-                this.DESTCount = defaultOn;
-                this.VATSTargetable = defaultOn;
-                this.Unknown = defaultOn;
+                this.Data = new MaskItem<bool, DestructableData.TranslationMask?>(defaultOn, null);
+                this.Stages = new MaskItem<bool, DestructionStage.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -570,16 +606,15 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Health, null));
-                ret.Add((DESTCount, null));
-                ret.Add((VATSTargetable, null));
-                ret.Add((Unknown, null));
+                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((Stages?.Overall ?? true, Stages?.Specific?.GetCrystal()));
             }
         }
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Destructible_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IEnumerable<ILinkGetter> Links => DestructibleCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
@@ -643,16 +678,15 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter,
         ILoquiObjectSetter<IDestructible>
     {
-        new Int32 Health { get; set; }
-        new Byte DESTCount { get; set; }
-        new Boolean VATSTargetable { get; set; }
-        new Byte[] Unknown { get; set; }
+        new DestructableData? Data { get; set; }
+        new ExtendedList<DestructionStage> Stages { get; }
     }
 
     public partial interface IDestructibleGetter :
         ILoquiObject,
         ILoquiObject<IDestructibleGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -661,10 +695,8 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        Int32 Health { get; }
-        Byte DESTCount { get; }
-        Boolean VATSTargetable { get; }
-        ReadOnlyMemorySlice<Byte> Unknown { get; }
+        IDestructableDataGetter? Data { get; }
+        IReadOnlyList<IDestructionStageGetter> Stages { get; }
 
     }
 
@@ -971,10 +1003,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Field Index
     public enum Destructible_FieldIndex
     {
-        Health = 0,
-        DESTCount = 1,
-        VATSTargetable = 2,
-        Unknown = 3,
+        Data = 0,
+        Stages = 1,
     }
     #endregion
 
@@ -992,9 +1022,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "ac14ba89-a6ef-4b9a-ba7d-3c0d46d02ccf";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 2;
 
         public static readonly Type MaskType = typeof(Destructible.Mask<>);
 
@@ -1024,14 +1054,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "HEALTH":
-                    return (ushort)Destructible_FieldIndex.Health;
-                case "DESTCOUNT":
-                    return (ushort)Destructible_FieldIndex.DESTCount;
-                case "VATSTARGETABLE":
-                    return (ushort)Destructible_FieldIndex.VATSTargetable;
-                case "UNKNOWN":
-                    return (ushort)Destructible_FieldIndex.Unknown;
+                case "DATA":
+                    return (ushort)Destructible_FieldIndex.Data;
+                case "STAGES":
+                    return (ushort)Destructible_FieldIndex.Stages;
                 default:
                     return null;
             }
@@ -1042,10 +1068,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Destructible_FieldIndex enu = (Destructible_FieldIndex)index;
             switch (enu)
             {
-                case Destructible_FieldIndex.Health:
-                case Destructible_FieldIndex.DESTCount:
-                case Destructible_FieldIndex.VATSTargetable:
-                case Destructible_FieldIndex.Unknown:
+                case Destructible_FieldIndex.Stages:
+                    return true;
+                case Destructible_FieldIndex.Data:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1057,11 +1082,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Destructible_FieldIndex enu = (Destructible_FieldIndex)index;
             switch (enu)
             {
-                case Destructible_FieldIndex.Health:
-                case Destructible_FieldIndex.DESTCount:
-                case Destructible_FieldIndex.VATSTargetable:
-                case Destructible_FieldIndex.Unknown:
-                    return false;
+                case Destructible_FieldIndex.Data:
+                case Destructible_FieldIndex.Stages:
+                    return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1072,10 +1095,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Destructible_FieldIndex enu = (Destructible_FieldIndex)index;
             switch (enu)
             {
-                case Destructible_FieldIndex.Health:
-                case Destructible_FieldIndex.DESTCount:
-                case Destructible_FieldIndex.VATSTargetable:
-                case Destructible_FieldIndex.Unknown:
+                case Destructible_FieldIndex.Data:
+                case Destructible_FieldIndex.Stages:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1087,14 +1108,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Destructible_FieldIndex enu = (Destructible_FieldIndex)index;
             switch (enu)
             {
-                case Destructible_FieldIndex.Health:
-                    return "Health";
-                case Destructible_FieldIndex.DESTCount:
-                    return "DESTCount";
-                case Destructible_FieldIndex.VATSTargetable:
-                    return "VATSTargetable";
-                case Destructible_FieldIndex.Unknown:
-                    return "Unknown";
+                case Destructible_FieldIndex.Data:
+                    return "Data";
+                case Destructible_FieldIndex.Stages:
+                    return "Stages";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1105,10 +1122,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Destructible_FieldIndex enu = (Destructible_FieldIndex)index;
             switch (enu)
             {
-                case Destructible_FieldIndex.Health:
-                case Destructible_FieldIndex.DESTCount:
-                case Destructible_FieldIndex.VATSTargetable:
-                case Destructible_FieldIndex.Unknown:
+                case Destructible_FieldIndex.Data:
+                case Destructible_FieldIndex.Stages:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1120,10 +1135,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Destructible_FieldIndex enu = (Destructible_FieldIndex)index;
             switch (enu)
             {
-                case Destructible_FieldIndex.Health:
-                case Destructible_FieldIndex.DESTCount:
-                case Destructible_FieldIndex.VATSTargetable:
-                case Destructible_FieldIndex.Unknown:
+                case Destructible_FieldIndex.Data:
+                case Destructible_FieldIndex.Stages:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1135,14 +1148,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Destructible_FieldIndex enu = (Destructible_FieldIndex)index;
             switch (enu)
             {
-                case Destructible_FieldIndex.Health:
-                    return typeof(Int32);
-                case Destructible_FieldIndex.DESTCount:
-                    return typeof(Byte);
-                case Destructible_FieldIndex.VATSTargetable:
-                    return typeof(Boolean);
-                case Destructible_FieldIndex.Unknown:
-                    return typeof(Byte[]);
+                case Destructible_FieldIndex.Data:
+                    return typeof(DestructableData);
+                case Destructible_FieldIndex.Stages:
+                    return typeof(ExtendedList<DestructionStage>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1150,9 +1159,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(DestructibleXmlWriteTranslation);
         public static readonly RecordType DEST_HEADER = new RecordType("DEST");
-        public static readonly RecordType TriggeringRecordType = DEST_HEADER;
-        public const int NumStructFields = 4;
-        public const int NumTypedFields = 0;
+        public static readonly RecordType DSTD_HEADER = new RecordType("DSTD");
+        public static readonly RecordType DMDL_HEADER = new RecordType("DMDL");
+        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        {
+            return new CollectionGetterWrapper<RecordType>(
+                new HashSet<RecordType>(
+                    new RecordType[]
+                    {
+                        DEST_HEADER,
+                        DSTD_HEADER,
+                        DMDL_HEADER
+                    })
+            );
+        });
+        public const int NumStructFields = 0;
+        public const int NumTypedFields = 2;
         public static readonly Type BinaryWriteTranslation = typeof(DestructibleBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1195,10 +1218,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IDestructible item)
         {
             ClearPartial();
-            item.Health = default;
-            item.DESTCount = default;
-            item.VATSTargetable = default;
-            item.Unknown = new byte[2];
+            item.Data = null;
+            item.Stages.Clear();
         }
         
         #region Xml Translation
@@ -1234,10 +1255,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDestructible item,
             MutagenFrame frame)
         {
-            item.Health = frame.ReadInt32();
-            item.DESTCount = frame.ReadUInt8();
-            item.VATSTargetable = frame.ReadBoolean();
-            item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(2));
+        }
+        
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            IDestructible item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x54534544: // DEST
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Destructible_FieldIndex.Data) return TryGet<int?>.Failure;
+                    item.Data = Mutagen.Bethesda.Skyrim.DestructableData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Destructible_FieldIndex.Data);
+                }
+                case 0x44545344: // DSTD
+                case 0x4C444D44: // DMDL
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Destructible_FieldIndex.Stages) return TryGet<int?>.Failure;
+                    item.Stages.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<DestructionStage>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: DestructionStage_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out DestructionStage listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<DestructionStage>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)Destructible_FieldIndex.Stages);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
         }
         
         public virtual void CopyInFromBinary(
@@ -1245,14 +1302,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                frame.Reader,
-                recordTypeConverter.ConvertToCustom(Destructible_Registration.DEST_HEADER)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
         }
         
         #endregion
@@ -1283,10 +1338,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Health = item.Health == rhs.Health;
-            ret.DESTCount = item.DESTCount == rhs.DESTCount;
-            ret.VATSTargetable = item.VATSTargetable == rhs.VATSTargetable;
-            ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Stages = item.Stages.CollectionEqualsHelper(
+                rhs.Stages,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
         }
         
         public string ToString(
@@ -1333,21 +1393,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             Destructible.Mask<bool>? printMask = null)
         {
-            if (printMask?.Health ?? true)
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data.TryGet(out var DataItem))
             {
-                fg.AppendItem(item.Health, "Health");
+                DataItem?.ToString(fg, "Data");
             }
-            if (printMask?.DESTCount ?? true)
+            if (printMask?.Stages?.Overall ?? true)
             {
-                fg.AppendItem(item.DESTCount, "DESTCount");
-            }
-            if (printMask?.VATSTargetable ?? true)
-            {
-                fg.AppendItem(item.VATSTargetable, "VATSTargetable");
-            }
-            if (printMask?.Unknown ?? true)
-            {
-                fg.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
+                fg.AppendLine("Stages =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Stages)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
             }
         }
         
@@ -1355,6 +1422,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDestructibleGetter item,
             Destructible.Mask<bool?> checkMask)
         {
+            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
+            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
             return true;
         }
         
@@ -1362,10 +1431,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDestructibleGetter item,
             Destructible.Mask<bool> mask)
         {
-            mask.Health = true;
-            mask.DESTCount = true;
-            mask.VATSTargetable = true;
-            mask.Unknown = true;
+            var itemData = item.Data;
+            mask.Data = new MaskItem<bool, DestructableData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
+            var StagesItem = item.Stages;
+            mask.Stages = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, DestructionStage.Mask<bool>?>>?>(true, StagesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, DestructionStage.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
         }
         
         #region Equals and Hash
@@ -1375,20 +1444,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Health != rhs.Health) return false;
-            if (lhs.DESTCount != rhs.DESTCount) return false;
-            if (lhs.VATSTargetable != rhs.VATSTargetable) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
+            if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            if (!lhs.Stages.SequenceEqual(rhs.Stages)) return false;
             return true;
         }
         
         public virtual int GetHashCode(IDestructibleGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Health);
-            hash.Add(item.DESTCount);
-            hash.Add(item.VATSTargetable);
-            hash.Add(item.Unknown);
+            if (item.Data.TryGet(out var Dataitem))
+            {
+                hash.Add(Dataitem);
+            }
+            hash.Add(item.Stages);
             return hash.ToHashCode();
         }
         
@@ -1403,6 +1471,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<ILinkGetter> GetLinks(IDestructibleGetter obj)
         {
+            foreach (var item in obj.Stages.SelectMany(f => f.Links))
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -1420,21 +1492,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)Destructible_FieldIndex.Health) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Destructible_FieldIndex.Data) ?? true))
             {
-                item.Health = rhs.Health;
+                errorMask?.PushIndex((int)Destructible_FieldIndex.Data);
+                try
+                {
+                    if(rhs.Data.TryGet(out var rhsData))
+                    {
+                        item.Data = rhsData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Destructible_FieldIndex.Data));
+                    }
+                    else
+                    {
+                        item.Data = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
-            if ((copyMask?.GetShouldTranslate((int)Destructible_FieldIndex.DESTCount) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Destructible_FieldIndex.Stages) ?? true))
             {
-                item.DESTCount = rhs.DESTCount;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Destructible_FieldIndex.VATSTargetable) ?? true))
-            {
-                item.VATSTargetable = rhs.VATSTargetable;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Destructible_FieldIndex.Unknown) ?? true))
-            {
-                item.Unknown = rhs.Unknown.ToArray();
+                errorMask?.PushIndex((int)Destructible_FieldIndex.Stages);
+                try
+                {
+                    item.Stages.SetTo(
+                        rhs.Stages
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
         }
         
@@ -1525,41 +1631,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)Destructible_FieldIndex.Health) ?? true))
+            if ((item.Data != null)
+                && (translationMask?.GetShouldTranslate((int)Destructible_FieldIndex.Data) ?? true))
             {
-                Int32XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Health),
-                    item: item.Health,
-                    fieldIndex: (int)Destructible_FieldIndex.Health,
-                    errorMask: errorMask);
+                if (item.Data.TryGet(out var DataItem))
+                {
+                    ((DestructableDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                        item: DataItem,
+                        node: node,
+                        name: nameof(item.Data),
+                        fieldIndex: (int)Destructible_FieldIndex.Data,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Destructible_FieldIndex.Data));
+                }
             }
-            if ((translationMask?.GetShouldTranslate((int)Destructible_FieldIndex.DESTCount) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Destructible_FieldIndex.Stages) ?? true))
             {
-                ByteXmlTranslation.Instance.Write(
+                ListXmlTranslation<IDestructionStageGetter>.Instance.Write(
                     node: node,
-                    name: nameof(item.DESTCount),
-                    item: item.DESTCount,
-                    fieldIndex: (int)Destructible_FieldIndex.DESTCount,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Destructible_FieldIndex.VATSTargetable) ?? true))
-            {
-                BooleanXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.VATSTargetable),
-                    item: item.VATSTargetable,
-                    fieldIndex: (int)Destructible_FieldIndex.VATSTargetable,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Destructible_FieldIndex.Unknown) ?? true))
-            {
-                ByteArrayXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown,
-                    fieldIndex: (int)Destructible_FieldIndex.Unknown,
-                    errorMask: errorMask);
+                    name: nameof(item.Stages),
+                    item: item.Stages,
+                    fieldIndex: (int)Destructible_FieldIndex.Stages,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Destructible_FieldIndex.Stages),
+                    transl: (XElement subNode, IDestructionStageGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        if (subItem.TryGet(out var Item))
+                        {
+                            ((DestructionStageXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                                item: Item,
+                                node: subNode,
+                                name: null,
+                                errorMask: listSubMask,
+                                translationMask: listTranslMask);
+                        }
+                    });
             }
         }
 
@@ -1667,13 +1773,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
-                case "Health":
-                    errorMask?.PushIndex((int)Destructible_FieldIndex.Health);
+                case "Data":
+                    errorMask?.PushIndex((int)Destructible_FieldIndex.Data);
                     try
                     {
-                        item.Health = Int32XmlTranslation.Instance.Parse(
+                        item.Data = LoquiXmlTranslation<DestructableData>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Destructible_FieldIndex.Data));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1685,50 +1792,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "DESTCount":
-                    errorMask?.PushIndex((int)Destructible_FieldIndex.DESTCount);
+                case "Stages":
+                    errorMask?.PushIndex((int)Destructible_FieldIndex.Stages);
                     try
                     {
-                        item.DESTCount = ByteXmlTranslation.Instance.Parse(
+                        if (ListXmlTranslation<DestructionStage>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "VATSTargetable":
-                    errorMask?.PushIndex((int)Destructible_FieldIndex.VATSTargetable);
-                    try
-                    {
-                        item.VATSTargetable = BooleanXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Unknown":
-                    errorMask?.PushIndex((int)Destructible_FieldIndex.Unknown);
-                    try
-                    {
-                        item.Unknown = ByteArrayXmlTranslation.Instance.Parse(
-                            node: node,
-                            fallbackLength: 2,
-                            errorMask: errorMask);
+                            enumer: out var StagesItem,
+                            transl: LoquiXmlTranslation<DestructionStage>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Stages.SetTo(StagesItem);
+                        }
+                        else
+                        {
+                            item.Stages.Clear();
+                        }
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1911,16 +1991,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static DestructibleBinaryWriteTranslation Instance = new DestructibleBinaryWriteTranslation();
 
-        public static void WriteEmbedded(
+        public static void WriteRecordTypes(
             IDestructibleGetter item,
-            MutagenWriter writer)
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
         {
-            writer.Write(item.Health);
-            writer.Write(item.DESTCount);
-            writer.Write(item.VATSTargetable);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            if (item.Data.TryGet(out var DataItem))
+            {
+                ((DestructableDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                    item: DataItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IDestructionStageGetter>.Instance.Write(
                 writer: writer,
-                item: item.Unknown);
+                items: item.Stages,
+                transl: (MutagenWriter subWriter, IDestructionStageGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    if (subItem.TryGet(out var Item))
+                    {
+                        ((DestructionStageBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            recordTypeConverter: conv);
+                    }
+                });
         }
 
         public void Write(
@@ -1928,15 +2023,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDestructibleGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            WriteRecordTypes(
+                item: item,
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Destructible_Registration.DEST_HEADER),
-                type: ObjectType.Subrecord))
-            {
-                WriteEmbedded(
-                    item: item,
-                    writer: writer);
-            }
+                recordTypeConverter: recordTypeConverter);
         }
 
         public void Write(
@@ -2006,6 +2096,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDestructibleGetter)rhs, include);
 
+        public IEnumerable<ILinkGetter> Links => DestructibleCommon.Instance.GetLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => DestructibleXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2037,10 +2128,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Int32 Health => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public Byte DESTCount => _data.Span[0x4];
-        public Boolean VATSTargetable => _data.Slice(0x5, 0x1)[0] == 1;
-        public ReadOnlyMemorySlice<Byte> Unknown => _data.Span.Slice(0x6, 0x2).ToArray();
+        #region Data
+        private RangeInt32? _DataLocation;
+        private bool _Data_IsSet => _DataLocation.HasValue;
+        public IDestructableDataGetter? Data => _Data_IsSet ? DestructableDataBinaryOverlay.DestructableDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Data_IsSet => _DataLocation.HasValue;
+        #endregion
+        public IReadOnlyList<IDestructionStageGetter> Stages { get; private set; } = ListExt.Empty<DestructionStageBinaryOverlay>();
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -2061,15 +2155,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new DestructibleBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.Meta),
+                bytes: stream.RemainingMemory,
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.Meta.Subrecord(stream.RemainingSpan).TotalLength));
-            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
-            stream.Position += 0x8 + package.Meta.SubConstants.HeaderLength;
+            int offset = stream.Position;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,
-                offset: offset);
+                offset: 0);
+            ret.FillTypelessSubrecordTypes(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                fill: ret.FillRecordType);
             return ret;
         }
 
@@ -2084,6 +2182,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case 0x54534544: // DEST
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Destructible_FieldIndex.Data) return TryGet<int?>.Failure;
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Destructible_FieldIndex.Data);
+                }
+                case 0x44545344: // DSTD
+                case 0x4C444D44: // DMDL
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Destructible_FieldIndex.Stages) return TryGet<int?>.Failure;
+                    this.Stages = this.ParseRepeatedTypelessSubrecord<DestructionStageBinaryOverlay>(
+                        stream: stream,
+                        recordTypeConverter: recordTypeConverter,
+                        trigger: DestructionStage_Registration.TriggeringRecordTypes,
+                        factory:  DestructionStageBinaryOverlay.DestructionStageFactory);
+                    return TryGet<int?>.Succeed((int)Destructible_FieldIndex.Stages);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
         #region To String
 
         public void ToString(

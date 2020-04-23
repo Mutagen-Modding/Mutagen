@@ -88,6 +88,20 @@ namespace Mutagen.Bethesda.Binary
                 itemLength);
         }
 
+        public static IReadOnlyList<T> FactoryByCount(
+            BinaryMemoryReadStream stream,
+            BinaryOverlayFactoryPackage package,
+            uint count,
+            BinaryOverlay.StreamFactory<T> getter)
+        {
+            var ret = new List<T>(checked((int)count));
+            for (uint i = 0; i < count; i++)
+            {
+                ret.Add(getter(stream, package));
+            }
+            return ret;
+        }
+
         public static IReadOnlyList<T> FactoryByLazyParse(
             ReadOnlyMemorySlice<byte> mem,
             BinaryOverlayFactoryPackage package,

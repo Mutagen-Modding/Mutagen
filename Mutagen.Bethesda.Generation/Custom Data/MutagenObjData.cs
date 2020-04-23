@@ -25,6 +25,7 @@ namespace Mutagen.Bethesda.Generation
         public Task<IEnumerable<KeyValuePair<IEnumerable<RecordType>, ObjectGeneration>>> GenerationTypes => GetGenerationTypes();
         public TaskCompletionSource WiringComplete = new TaskCompletionSource();
         public RecordTypeConverter BaseRecordTypeConverter;
+        public RecordType? EndMarkerType;
         public GameMode? GameMode
         {
             get

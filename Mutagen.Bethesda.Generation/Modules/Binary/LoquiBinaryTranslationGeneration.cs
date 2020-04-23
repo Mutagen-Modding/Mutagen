@@ -433,7 +433,9 @@ namespace Mutagen.Bethesda.Generation
             foreach (var item in loqui.TargetObjectGeneration.IterateFields(includeBaseClass: true))
             {
                 if (!this.Module.TryGetTypeGeneration(item.GetType(), out var gen)) continue;
-                sum += gen.ExpectedLength(objGen, item) ?? 0;
+                var len = gen.ExpectedLength(objGen, item);
+                if (len == null) return null;
+                sum += len.Value;
             }
             return sum;
         }

@@ -22,6 +22,7 @@
       <Group name="ObjectEffects" refName="ObjectEffect" />
       <Group name="Spells" refName="Spell" />
       <Group name="Scrolls" refName="Scroll" />
+      <Group name="Activators" refName="Activator" />
     </Fields>
   </Object>
 </Loqui>

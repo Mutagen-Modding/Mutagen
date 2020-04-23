@@ -55,7 +55,7 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
-          <xs:attribute name="endMarker" type="xs:string" >
+          <xs:attribute name="endMarkerType" type="xs:string" >
             <xs:annotation>
               <xs:documentation>
                 Optional ending marker

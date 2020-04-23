@@ -75,6 +75,15 @@ namespace Mutagen.Bethesda.Generation
         {
         }
 
+        public virtual void GenerateWrapperUnknownLengthParse(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            int? passedLength,
+            string passedLengthAccessor)
+        {
+        }
+
         public virtual void GenerateWrapperCtor(
             FileGeneration fg,
             ObjectGeneration objGen,
@@ -87,7 +96,7 @@ namespace Mutagen.Bethesda.Generation
             var data = typeGen.GetFieldData();
             if (!data.HasTrigger)
             {
-                return this.ExpectedLength(objGen, typeGen) ?? 0;
+                return this.ExpectedLength(objGen, typeGen);
             }
             return null;
         }

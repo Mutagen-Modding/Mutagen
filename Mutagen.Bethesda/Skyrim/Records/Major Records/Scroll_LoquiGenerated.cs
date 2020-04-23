@@ -1864,6 +1864,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType DESC_HEADER = new RecordType("DESC");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType DEST_HEADER = new RecordType("DEST");
+        public static readonly RecordType DSTD_HEADER = new RecordType("DSTD");
+        public static readonly RecordType DMDL_HEADER = new RecordType("DMDL");
         public static readonly RecordType YNAM_HEADER = new RecordType("YNAM");
         public static readonly RecordType ZNAM_HEADER = new RecordType("ZNAM");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
@@ -2099,6 +2101,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return TryGet<int?>.Succeed((int)Scroll_FieldIndex.Model);
                 }
                 case 0x54534544: // DEST
+                case 0x44545344: // DSTD
+                case 0x4C444D44: // DMDL
                 {
                     item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Scroll_FieldIndex.Destructible);
@@ -2620,6 +2624,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (obj.Model != null)
             {
                 foreach (var item in obj.Model.Links)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible != null)
+            {
+                foreach (var item in obj.Destructible.Links)
                 {
                     yield return item;
                 }
@@ -3891,10 +3902,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool Model_IsSet => Model != null;
         #endregion
         #region Destructible
-        private RangeInt32? _DestructibleLocation;
-        private bool _Destructible_IsSet => _DestructibleLocation.HasValue;
-        public IDestructibleGetter? Destructible => _Destructible_IsSet ? DestructibleBinaryOverlay.DestructibleFactory(new BinaryMemoryReadStream(_data.Slice(_DestructibleLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
-        public bool Destructible_IsSet => _DestructibleLocation.HasValue;
+        public IDestructibleGetter? Destructible { get; private set; }
+        public bool Destructible_IsSet => Destructible != null;
         #endregion
         #region SoundPickUp
         private int? _SoundPickUpLocation;
@@ -4028,8 +4037,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return TryGet<int?>.Succeed((int)Scroll_FieldIndex.Model);
                 }
                 case 0x54534544: // DEST
+                case 0x44545344: // DSTD
+                case 0x4C444D44: // DMDL
                 {
-                    _DestructibleLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Scroll_FieldIndex.Destructible);
                 }
                 case 0x4D414E59: // YNAM

@@ -496,7 +496,7 @@ namespace Mutagen.Bethesda.Generation
                                 if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
                                 foreach (var trigger in gen.Key)
                                 {
-                                    fg.AppendLine($"case 0x{trigger.TypeInt.ToString("X")}: // {trigger.Type}");
+                                    fg.AppendLine($"case 0x{trigger.TypeInt:X}: // {trigger.Type}");
                                 }
                                 using (new BraceWrapper(fg))
                                 {
@@ -529,6 +529,15 @@ namespace Mutagen.Bethesda.Generation
                                             }
                                         });
                                 }
+                            }
+                        }
+                        if (data.EndMarkerType.HasValue)
+                        {
+                            fg.AppendLine($"case 0x{data.EndMarkerType.Value.TypeInt:X}: // {data.EndMarkerType}: End Marker");
+                            using (new BraceWrapper(fg))
+                            {
+                                fg.AppendLine($"frame.ReadSubrecordFrame();");
+                                fg.AppendLine($"return TryGet<int?>.Failure;");
                             }
                         }
                         fg.AppendLine($"default:");
@@ -978,12 +987,19 @@ namespace Mutagen.Bethesda.Generation
                         case ObjectType.Subrecord:
                             if (obj.TryGetRecordType(out var recType))
                             {
-                                using (var args = new ArgsWrapper(fg,
-                                    $"frame = frame.SpawnWithFinalPosition({nameof(HeaderTranslation)}.ParseSubrecord",
-                                    suffixLine: ")"))
+                                if (obj.Fields.Any(f => f.GetFieldData().HasTrigger))
                                 {
-                                    args.Add("frame.Reader");
-                                    args.Add($"recordTypeConverter.ConvertToCustom({obj.RecordTypeHeaderName(obj.GetRecordType())})");
+                                    fg.AppendLine("frame.Position += frame.MetaData.SubConstants.HeaderLength;");
+                                }
+                                else
+                                {
+                                    using (var args = new ArgsWrapper(fg,
+                                        $"frame = frame.SpawnWithFinalPosition({nameof(HeaderTranslation)}.ParseSubrecord",
+                                        suffixLine: ")"))
+                                    {
+                                        args.Add("frame.Reader");
+                                        args.Add($"recordTypeConverter.ConvertToCustom({obj.RecordTypeHeaderName(obj.GetRecordType())})");
+                                    }
                                 }
                             }
                             break;
@@ -1363,6 +1379,11 @@ namespace Mutagen.Bethesda.Generation
                                 converterAccessor: "recordTypeConverter");
                         }
                     }
+
+                    if (data.EndMarkerType.HasValue)
+                    {
+                        fg.AppendLine($"using (HeaderExport.ExportSubrecordHeader(writer, {obj.RecordTypeHeaderName(data.EndMarkerType.Value)})) {{ }} // End Marker");
+                    }
                 }
                 fg.AppendLine();
             }
@@ -1477,6 +1498,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"public {obj.ObjectName}.{VersioningModule.VersioningEnumName} {VersioningModule.VersioningFieldName} {{ get; private set; }}");
                 }
 
+                TypeGeneration lastUnknownField = null;
                 foreach (var field in obj.IterateFields(
                     expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
                     nonIntegrated: true))
@@ -1501,13 +1523,22 @@ namespace Mutagen.Bethesda.Generation
                             default:
                                 break;
                         }
+                        var passedAccessor = $"0x{passedLength:X}";
+                        if (lastUnknownField != null)
+                        {
+                            passedAccessor = $"{lastUnknownField.Name}EndingPos";
+                            if (passedLength.HasValue)
+                            {
+                                passedAccessor += $" + 0x{passedLength.Value:X}";
+                            }
+                        }
                         typeGen.GenerateWrapperFields(
                             fg,
                             obj,
                             field,
                             dataAccessor,
                             passedLength,
-                            $"0x{passedLength:X}");
+                            passedAccessor);
                         if (!data.HasTrigger)
                         {
                             if (data.Length.HasValue)
@@ -1517,33 +1548,65 @@ namespace Mutagen.Bethesda.Generation
                             else
                             {
                                 var amount = typeGen.GetPassedAmount(obj, field);
-                                passedLength += amount.Value;
+                                if (amount == null)
+                                {
+                                    passedLength = null;
+                                    lastUnknownField = field;
+                                }
+                                else if (passedLength != null)
+                                {
+                                    passedLength += amount.Value;
+                                }
+                                else
+                                {
+                                    passedLength = amount.Value;
+                                }
                             }
                         }
                     }
                 }
 
                 // Get complete passed length of all fields
+                // Generate passed length markers
                 passedLength = 0;
-                foreach (var field in obj.IterateFields(
-                    expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
-                    nonIntegrated: true,
-                    includeBaseClass: true))
+                foreach (var field in obj.IterateFieldIndices(
+                        expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
+                        nonIntegrated: true,
+                        includeBaseClass: true)
+                    .Where(field =>
+                    {
+                        if (!this.TryGetTypeGeneration(field.Field.GetType(), out var _)) return false;
+                        var data = field.Field.GetFieldData();
+                        switch (data.BinaryOverlayFallback)
+                        {
+                            case BinaryGenerationType.Normal:
+                            case BinaryGenerationType.Custom:
+                                return true;
+                            default:
+                                return false;
+                        }
+                    })
+                    .IterateMarkLast())
                 {
-                    if (!this.TryGetTypeGeneration(field.GetType(), out var typeGen)) continue;
-                    var data = field.GetFieldData();
-                    switch (data.BinaryOverlayFallback)
+                    if (!this.TryGetTypeGeneration(field.Item.Field.GetType(), out var typeGen)) continue;
+                    var data = field.Item.Field.GetFieldData();
+                    if (!data.HasTrigger && passedLength != null)
                     {
-                        case BinaryGenerationType.Normal:
-                        case BinaryGenerationType.Custom:
-                            break;
-                        default:
-                            continue;
-                    }
-                    if (!data.HasTrigger)
-                    {
-                        var amount = typeGen.GetPassedAmount(obj, field);
-                        passedLength += amount.Value;
+                        var amount = typeGen.GetPassedAmount(obj, field.Item.Field);
+                        if (amount == null)
+                        {
+                            passedLength = null;
+                            if (!field.Last
+                                && field.Item.InternalIndex < (obj.Fields.Count - 1)
+                                && !obj.Fields[field.Item.InternalIndex + 1].GetFieldData().HasTrigger)
+                            {
+                                fg.AppendLine($"private int {field.Item.Field.Name}EndingPos;");
+                            }
+                        }
+                        else if (passedLength != null)
+                        {
+                            passedLength += amount.Value;
+                        }
                     }
                 }
 
@@ -1693,7 +1756,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             if (obj.IsTypelessStruct())
                             {
-                                if (anyHasRecordTypes)
+                                if (anyHasRecordTypes || passedLength == null)
                                 {
                                     args.Add($"bytes: stream.RemainingMemory");
                                 }
@@ -1758,26 +1821,99 @@ namespace Mutagen.Bethesda.Generation
                                     throw new NotImplementedException();
                             }
                         }
+
+                        // Parse ending positions
+                        lastUnknownField = null;
+                        TypeGeneration lastUnknownFieldParse = null;
+                        passedLength = 0;
+                        foreach (var field in obj.IterateFieldIndices(
+                                expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
+                                nonIntegrated: true,
+                                includeBaseClass: true)
+                            .Where(field =>
+                            {
+                                if (!this.TryGetTypeGeneration(field.Field.GetType(), out var _)) return false;
+                                var data = field.Field.GetFieldData();
+                                switch (data.BinaryOverlayFallback)
+                                {
+                                    case BinaryGenerationType.Normal:
+                                    case BinaryGenerationType.Custom:
+                                        return true;
+                                    default:
+                                        return false;
+                                }
+                            })
+                            .IterateMarkLast())
+                        {
+                            if (!this.TryGetTypeGeneration(field.Item.Field.GetType(), out var typeGen)) continue;
+                            var data = field.Item.Field.GetFieldData();
+                            if (!data.HasTrigger)
+                            {
+                                var amount = typeGen.GetPassedAmount(obj, field.Item.Field);
+                                if (amount == null)
+                                {
+                                    if (field.Item.Field is CustomLogic) continue;
+                                    passedLength = null;
+                                    if (!field.Last
+                                        && field.Item.InternalIndex < (obj.Fields.Count - 1)
+                                        && !obj.Fields[field.Item.InternalIndex + 1].GetFieldData().HasTrigger)
+                                    {
+                                        var passedAccessor = passedLength == null ? null : $"0x{passedLength:X}";
+                                        if (lastUnknownField != null)
+                                        {
+                                            passedAccessor = $"{lastUnknownField.Name}EndingPos";
+                                            if (passedLength.HasValue)
+                                            {
+                                                passedAccessor += $" + 0x{passedLength:X}";
+                                            }
+                                        }
+                                        typeGen.GenerateWrapperUnknownLengthParse(
+                                            fg,
+                                            obj,
+                                            field.Item.Field,
+                                            passedLength,
+                                            passedAccessor);
+                                        lastUnknownFieldParse = field.Item.Field;
+                                    }
+                                    lastUnknownField = field.Item.Field;
+                                }
+                                else
+                                {
+                                    if (passedLength == null)
+                                    {
+                                        passedLength = amount.Value;
+                                    }
+                                    else
+                                    {
+                                        passedLength += amount.Value;
+                                    }
+                                }
+                            }
+                        }
+
                         if (anyHasRecordTypes)
                         {
                             if (obj.GetObjectType() != ObjectType.Mod
                                 && !obj.IsTypelessStruct())
                             {
-                                switch (obj.GetObjectType())
+                                if (passedLength != null)
                                 {
-                                    case ObjectType.Subrecord:
-                                        fg.AppendLine($"stream.Position += 0x{passedLength.Value:X} + package.Meta.SubConstants.TypeAndLengthLength;");
-                                        break;
-                                    case ObjectType.Record:
-                                        fg.AppendLine($"stream.Position += 0x{passedLength.Value:X} + package.Meta.MajorConstants.TypeAndLengthLength;");
-                                        break;
-                                    case ObjectType.Group:
-                                        fg.AppendLine($"stream.Position += 0x{passedLength.Value:X} + package.Meta.GroupConstants.TypeAndLengthLength;");
-                                        break;
-                                    case ObjectType.Mod:
-                                        break;
-                                    default:
-                                        throw new NotImplementedException();
+                                    switch (obj.GetObjectType())
+                                    {
+                                        case ObjectType.Subrecord:
+                                            fg.AppendLine($"stream.Position += 0x{passedLength.Value:X} + package.Meta.SubConstants.TypeAndLengthLength;");
+                                            break;
+                                        case ObjectType.Record:
+                                            fg.AppendLine($"stream.Position += 0x{passedLength.Value:X} + package.Meta.MajorConstants.TypeAndLengthLength;");
+                                            break;
+                                        case ObjectType.Group:
+                                            fg.AppendLine($"stream.Position += 0x{passedLength.Value:X} + package.Meta.GroupConstants.TypeAndLengthLength;");
+                                            break;
+                                        case ObjectType.Mod:
+                                            break;
+                                        default:
+                                            throw new NotImplementedException();
+                                    }
                                 }
                                 using (var args = new ArgsWrapper(fg,
                                     $"ret.CustomCtor"))
@@ -1857,7 +1993,17 @@ namespace Mutagen.Bethesda.Generation
                         {
                             if (obj.IsTypelessStruct())
                             {
-                                fg.AppendLine($"stream.Position += 0x{passedLength:X};");
+                                if (passedLength != null || lastUnknownFieldParse != null)
+                                {
+                                    if (lastUnknownFieldParse == null)
+                                    {
+                                        fg.AppendLine($"stream.Position += 0x{passedLength:X};");
+                                    }
+                                    else
+                                    {
+                                        fg.AppendLine($"stream.Position += ret.{lastUnknownFieldParse.Name}EndingPos{(passedLength == null ? null : $" + 0x{passedLength:X}")};");
+                                    }
+                                }
                             }
                             else
                             {
@@ -1908,7 +2054,7 @@ namespace Mutagen.Bethesda.Generation
                                     // Not advancing stream position, but only because breaks only occur in situations
                                     // that stream position doesn't matter
                                 }
-                                else
+                                else if (passedLength != null)
                                 {
                                     fg.AppendLine($"stream.Position += 0x{passedLength.Value:X}{headerAddition};");
                                 }
@@ -1967,7 +2113,7 @@ namespace Mutagen.Bethesda.Generation
                                 args.Add($"stream: new {nameof(BinaryMemoryReadStream)}(slice)");
                                 args.AddPassArg("package");
                                 args.AddPassArg("recordTypeConverter");
-                            }    
+                            }
                         }
                     }
                 }
@@ -2061,6 +2207,16 @@ namespace Mutagen.Bethesda.Generation
                                     }
                                 }
                             }
+                            var endMarkerType = obj.GetObjectData().EndMarkerType;
+                            if (endMarkerType.HasValue)
+                            {
+                                fg.AppendLine($"case 0x{endMarkerType.Value.TypeInt:X}: // {endMarkerType}: End Marker");
+                                using (new BraceWrapper(fg))
+                                {
+                                    fg.AppendLine($"_package.Meta.ReadSubrecordFrame(stream);");
+                                    fg.AppendLine($"return TryGet<int?>.Failure;");
+                                }
+                            }
                             fg.AppendLine("default:");
                             using (new DepthWrapper(fg))
                             {
@@ -2094,7 +2250,7 @@ namespace Mutagen.Bethesda.Generation
                                     else if (failOnUnknown)
                                     {
                                         fg.AppendLine("throw new ArgumentException($\"Unexpected header {nextRecordType.Type} at position {frame.Position}\");");
-                                }
+                                    }
                                     else
                                     {
                                         fg.AppendLine($"return TryGet<int?>.Succeed(null);");

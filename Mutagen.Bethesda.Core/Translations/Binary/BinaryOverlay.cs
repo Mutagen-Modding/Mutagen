@@ -416,6 +416,10 @@ namespace Mutagen.Bethesda.Binary
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter);
 
+        public delegate T StreamFactory<T>(
+            BinaryMemoryReadStream stream,
+            BinaryOverlayFactoryPackage package);
+
         public delegate T StreamTypedFactory<T>(
             BinaryMemoryReadStream stream,
             RecordType recordType,

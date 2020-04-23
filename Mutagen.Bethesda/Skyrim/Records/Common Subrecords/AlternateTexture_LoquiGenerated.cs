@@ -1946,8 +1946,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public String Name => BinaryStringUtility.ParsePrependedString(_data.Slice(0x0), lengthLength: 4);
-        public IFormLinkGetter<ITextureSetGetter> NewTexture => new FormLink<ITextureSetGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public Int32 Index => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
+        public IFormLinkGetter<ITextureSetGetter> NewTexture => new FormLink<ITextureSetGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(NameEndingPos, 0x4))));
+        public Int32 Index => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(NameEndingPos + 0x4, 0x4));
+        private int NameEndingPos;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -1968,10 +1969,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new AlternateTextureBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x8),
+                bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
-            stream.Position += 0x8;
+            ret.NameEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._data) + 4;
+            stream.Position += ret.NameEndingPos + 0x8;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,

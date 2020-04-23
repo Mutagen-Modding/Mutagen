@@ -16,6 +16,8 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda;
+using Mutagen.Bethesda.Internals;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -25,31 +27,27 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
-using Mutagen.Bethesda.Internals;
 #endregion
 
 #nullable enable
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class ScriptStringProperty :
-        ScriptProperty,
-        IScriptStringProperty,
-        ILoquiObjectSetter<ScriptStringProperty>,
-        IEquatable<ScriptStringProperty>,
+    public partial class Water :
+        SkyrimMajorRecord,
+        IWaterInternal,
+        ILoquiObjectSetter<Water>,
+        IEquatable<Water>,
         IEqualsMask
     {
         #region Ctor
-        public ScriptStringProperty()
+        protected Water()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Data
-        public String Data { get; set; } = string.Empty;
-        #endregion
 
         #region To String
 
@@ -57,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            ScriptStringPropertyMixIn.ToString(
+            WaterMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -67,29 +65,29 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IScriptStringPropertyGetter rhs)) return false;
-            return ((ScriptStringPropertyCommon)((IScriptStringPropertyGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IWaterGetter rhs)) return false;
+            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ScriptStringProperty obj)
+        public bool Equals(Water obj)
         {
-            return ((ScriptStringPropertyCommon)((IScriptStringPropertyGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ScriptStringPropertyCommon)((IScriptStringPropertyGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((WaterCommon)((IWaterGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ScriptStringPropertyXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => WaterXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((ScriptStringPropertyXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((WaterXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -98,9 +96,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static new ScriptStringProperty CreateFromXml(
+        public static new Water CreateFromXml(
             XElement node,
-            ScriptStringProperty.TranslationMask? translationMask = null)
+            Water.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -109,27 +107,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static ScriptStringProperty CreateFromXml(
+        public static Water CreateFromXml(
             XElement node,
-            out ScriptStringProperty.ErrorMask errorMask,
-            ScriptStringProperty.TranslationMask? translationMask = null)
+            out Water.ErrorMask errorMask,
+            Water.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptStringProperty.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Water.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public new static ScriptStringProperty CreateFromXml(
+        public new static Water CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new ScriptStringProperty();
-            ((ScriptStringPropertySetterCommon)((IScriptStringPropertyGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new Water();
+            ((WaterSetterCommon)((IWaterGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -137,9 +135,9 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ScriptStringProperty CreateFromXml(
+        public static Water CreateFromXml(
             string path,
-            ScriptStringProperty.TranslationMask? translationMask = null)
+            Water.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -147,10 +145,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static ScriptStringProperty CreateFromXml(
+        public static Water CreateFromXml(
             string path,
-            out ScriptStringProperty.ErrorMask errorMask,
-            ScriptStringProperty.TranslationMask? translationMask = null)
+            out Water.ErrorMask errorMask,
+            Water.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -159,10 +157,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static ScriptStringProperty CreateFromXml(
+        public static Water CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            ScriptStringProperty.TranslationMask? translationMask = null)
+            Water.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -171,9 +169,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static ScriptStringProperty CreateFromXml(
+        public static Water CreateFromXml(
             Stream stream,
-            ScriptStringProperty.TranslationMask? translationMask = null)
+            Water.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -181,10 +179,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static ScriptStringProperty CreateFromXml(
+        public static Water CreateFromXml(
             Stream stream,
-            out ScriptStringProperty.ErrorMask errorMask,
-            ScriptStringProperty.TranslationMask? translationMask = null)
+            out Water.ErrorMask errorMask,
+            Water.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -193,10 +191,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static ScriptStringProperty CreateFromXml(
+        public static Water CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ScriptStringProperty.TranslationMask? translationMask = null)
+            Water.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -211,7 +209,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public new class Mask<TItem> :
-            ScriptProperty.Mask<TItem>,
+            SkyrimMajorRecord.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
             where TItem : notnull
@@ -220,18 +218,25 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Data = initialValue;
             }
 
             public Mask(
-                TItem Name,
-                TItem Flags,
-                TItem Data)
+                TItem MajorRecordFlagsRaw,
+                TItem FormKey,
+                TItem Version,
+                TItem EditorID,
+                TItem SkyrimMajorRecordFlags,
+                TItem FormVersion,
+                TItem Version2)
             : base(
-                Name: Name,
-                Flags: Flags)
+                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
+                FormKey: FormKey,
+                Version: Version,
+                EditorID: EditorID,
+                SkyrimMajorRecordFlags: SkyrimMajorRecordFlags,
+                FormVersion: FormVersion,
+                Version2: Version2)
             {
-                this.Data = Data;
             }
 
             #pragma warning disable CS8618
@@ -240,10 +245,6 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
-            #endregion
-
-            #region Members
-            public TItem Data;
             #endregion
 
             #region Equals
@@ -257,13 +258,11 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.Data, rhs.Data)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Data);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -274,7 +273,6 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.Data)) return false;
                 return true;
             }
             #endregion
@@ -283,7 +281,6 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.Data)) return true;
                 return false;
             }
             #endregion
@@ -291,7 +288,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new ScriptStringProperty.Mask<R>();
+                var ret = new Water.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -299,7 +296,6 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.Data = eval(this.Data);
             }
             #endregion
 
@@ -309,23 +305,19 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(ScriptStringProperty.Mask<bool>? printMask = null)
+            public string ToString(Water.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, ScriptStringProperty.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, Water.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ScriptStringProperty.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(Water.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Data ?? true)
-                    {
-                        fg.AppendItem(Data, "Data");
-                    }
                 }
                 fg.AppendLine("]");
             }
@@ -334,21 +326,15 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public new class ErrorMask :
-            ScriptProperty.ErrorMask,
+            SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
-            #region Members
-            public Exception? Data;
-            #endregion
-
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                ScriptStringProperty_FieldIndex enu = (ScriptStringProperty_FieldIndex)index;
+                Water_FieldIndex enu = (Water_FieldIndex)index;
                 switch (enu)
                 {
-                    case ScriptStringProperty_FieldIndex.Data:
-                        return Data;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -356,12 +342,9 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthException(int index, Exception ex)
             {
-                ScriptStringProperty_FieldIndex enu = (ScriptStringProperty_FieldIndex)index;
+                Water_FieldIndex enu = (Water_FieldIndex)index;
                 switch (enu)
                 {
-                    case ScriptStringProperty_FieldIndex.Data:
-                        this.Data = ex;
-                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -370,12 +353,9 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthMask(int index, object obj)
             {
-                ScriptStringProperty_FieldIndex enu = (ScriptStringProperty_FieldIndex)index;
+                Water_FieldIndex enu = (Water_FieldIndex)index;
                 switch (enu)
                 {
-                    case ScriptStringProperty_FieldIndex.Data:
-                        this.Data = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -385,7 +365,6 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Data != null) return true;
                 return false;
             }
             #endregion
@@ -421,7 +400,6 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendItem(Data, "Data");
             }
             #endregion
 
@@ -430,7 +408,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Data = this.Data.Combine(rhs.Data);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -449,57 +426,68 @@ namespace Mutagen.Bethesda.Skyrim
 
         }
         public new class TranslationMask :
-            ScriptProperty.TranslationMask,
+            SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
-            #region Members
-            public bool Data;
-            #endregion
-
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Data = defaultOn;
             }
 
             #endregion
 
-            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-            {
-                base.GetCrystal(ret);
-                ret.Add((Data, null));
-            }
         }
+        #endregion
+
+        #region Mutagen
+        public new static readonly RecordType GrupRecordType = Water_Registration.TriggeringRecordType;
+        public Water(FormKey formKey)
+        {
+            this.FormKey = formKey;
+            CustomCtor();
+        }
+
+        public Water(IMod mod)
+            : this(mod.GetNextFormKey())
+        {
+        }
+
+        public Water(IMod mod, string editorID)
+            : this(mod.GetNextFormKey(editorID))
+        {
+            this.EditorID = editorID;
+        }
+
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ScriptStringPropertyBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => WaterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((ScriptStringPropertyBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((WaterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static new ScriptStringProperty CreateFromBinary(MutagenFrame frame)
+        public static new Water CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public new static ScriptStringProperty CreateFromBinary(
+        public new static Water CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new ScriptStringProperty();
-            ((ScriptStringPropertySetterCommon)((IScriptStringPropertyGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new Water();
+            ((WaterSetterCommon)((IWaterGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -512,79 +500,84 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptStringPropertyGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWaterGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((ScriptStringPropertySetterCommon)((IScriptStringPropertyGetter)this).CommonSetterInstance()!).Clear(this);
+            ((WaterSetterCommon)((IWaterGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new ScriptStringProperty GetNew()
+        internal static new Water GetNew()
         {
-            return new ScriptStringProperty();
+            return new Water();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IScriptStringProperty :
-        IScriptStringPropertyGetter,
-        IScriptProperty,
-        ILoquiObjectSetter<IScriptStringProperty>
+    public partial interface IWater :
+        IWaterGetter,
+        ISkyrimMajorRecord,
+        ILoquiObjectSetter<IWaterInternal>
     {
-        new String Data { get; set; }
     }
 
-    public partial interface IScriptStringPropertyGetter :
-        IScriptPropertyGetter,
-        ILoquiObject<IScriptStringPropertyGetter>,
+    public partial interface IWaterInternal :
+        ISkyrimMajorRecordInternal,
+        IWater,
+        IWaterGetter
+    {
+    }
+
+    public partial interface IWaterGetter :
+        ISkyrimMajorRecordGetter,
+        ILoquiObject<IWaterGetter>,
         IXmlItem,
         IBinaryItem
     {
-        String Data { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class ScriptStringPropertyMixIn
+    public static partial class WaterMixIn
     {
-        public static void Clear(this IScriptStringProperty item)
+        public static void Clear(this IWaterInternal item)
         {
-            ((ScriptStringPropertySetterCommon)((IScriptStringPropertyGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((WaterSetterCommon)((IWaterGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ScriptStringProperty.Mask<bool> GetEqualsMask(
-            this IScriptStringPropertyGetter item,
-            IScriptStringPropertyGetter rhs,
+        public static Water.Mask<bool> GetEqualsMask(
+            this IWaterGetter item,
+            IWaterGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ScriptStringPropertyCommon)((IScriptStringPropertyGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((WaterCommon)((IWaterGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IScriptStringPropertyGetter item,
+            this IWaterGetter item,
             string? name = null,
-            ScriptStringProperty.Mask<bool>? printMask = null)
+            Water.Mask<bool>? printMask = null)
         {
-            return ((ScriptStringPropertyCommon)((IScriptStringPropertyGetter)item).CommonInstance()!).ToString(
+            return ((WaterCommon)((IWaterGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IScriptStringPropertyGetter item,
+            this IWaterGetter item,
             FileGeneration fg,
             string? name = null,
-            ScriptStringProperty.Mask<bool>? printMask = null)
+            Water.Mask<bool>? printMask = null)
         {
-            ((ScriptStringPropertyCommon)((IScriptStringPropertyGetter)item).CommonInstance()!).ToString(
+            ((WaterCommon)((IWaterGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -592,86 +585,86 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this IScriptStringPropertyGetter item,
-            ScriptStringProperty.Mask<bool?> checkMask)
+            this IWaterGetter item,
+            Water.Mask<bool?> checkMask)
         {
-            return ((ScriptStringPropertyCommon)((IScriptStringPropertyGetter)item).CommonInstance()!).HasBeenSet(
+            return ((WaterCommon)((IWaterGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static ScriptStringProperty.Mask<bool> GetHasBeenSetMask(this IScriptStringPropertyGetter item)
+        public static Water.Mask<bool> GetHasBeenSetMask(this IWaterGetter item)
         {
-            var ret = new ScriptStringProperty.Mask<bool>(false);
-            ((ScriptStringPropertyCommon)((IScriptStringPropertyGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new Water.Mask<bool>(false);
+            ((WaterCommon)((IWaterGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IScriptStringPropertyGetter item,
-            IScriptStringPropertyGetter rhs)
+            this IWaterGetter item,
+            IWaterGetter rhs)
         {
-            return ((ScriptStringPropertyCommon)((IScriptStringPropertyGetter)item).CommonInstance()!).Equals(
+            return ((WaterCommon)((IWaterGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this IScriptStringProperty lhs,
-            IScriptStringPropertyGetter rhs,
-            out ScriptStringProperty.ErrorMask errorMask,
-            ScriptStringProperty.TranslationMask? copyMask = null)
+            this IWaterInternal lhs,
+            IWaterGetter rhs,
+            out Water.ErrorMask errorMask,
+            Water.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ScriptStringPropertySetterTranslationCommon)((IScriptStringPropertyGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WaterSetterTranslationCommon)((IWaterGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = ScriptStringProperty.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Water.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IScriptStringProperty lhs,
-            IScriptStringPropertyGetter rhs,
+            this IWaterInternal lhs,
+            IWaterGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ScriptStringPropertySetterTranslationCommon)((IScriptStringPropertyGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WaterSetterTranslationCommon)((IWaterGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static ScriptStringProperty DeepCopy(
-            this IScriptStringPropertyGetter item,
-            ScriptStringProperty.TranslationMask? copyMask = null)
+        public static Water DeepCopy(
+            this IWaterGetter item,
+            Water.TranslationMask? copyMask = null)
         {
-            return ((ScriptStringPropertySetterTranslationCommon)((IScriptStringPropertyGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WaterSetterTranslationCommon)((IWaterGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static ScriptStringProperty DeepCopy(
-            this IScriptStringPropertyGetter item,
-            out ScriptStringProperty.ErrorMask errorMask,
-            ScriptStringProperty.TranslationMask? copyMask = null)
+        public static Water DeepCopy(
+            this IWaterGetter item,
+            out Water.ErrorMask errorMask,
+            Water.TranslationMask? copyMask = null)
         {
-            return ((ScriptStringPropertySetterTranslationCommon)((IScriptStringPropertyGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WaterSetterTranslationCommon)((IWaterGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static ScriptStringProperty DeepCopy(
-            this IScriptStringPropertyGetter item,
+        public static Water DeepCopy(
+            this IWaterGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((ScriptStringPropertySetterTranslationCommon)((IScriptStringPropertyGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WaterSetterTranslationCommon)((IWaterGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -680,9 +673,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IScriptStringProperty item,
+            this IWaterInternal item,
             XElement node,
-            ScriptStringProperty.TranslationMask? translationMask = null)
+            Water.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -693,10 +686,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IScriptStringProperty item,
+            this IWaterInternal item,
             XElement node,
-            out ScriptStringProperty.ErrorMask errorMask,
-            ScriptStringProperty.TranslationMask? translationMask = null)
+            out Water.ErrorMask errorMask,
+            Water.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -704,16 +697,16 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptStringProperty.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Water.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this IScriptStringProperty item,
+            this IWaterInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((ScriptStringPropertySetterCommon)((IScriptStringPropertyGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((WaterSetterCommon)((IWaterGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -721,9 +714,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IScriptStringProperty item,
+            this IWaterInternal item,
             string path,
-            ScriptStringProperty.TranslationMask? translationMask = null)
+            Water.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -733,10 +726,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IScriptStringProperty item,
+            this IWaterInternal item,
             string path,
-            out ScriptStringProperty.ErrorMask errorMask,
-            ScriptStringProperty.TranslationMask? translationMask = null)
+            out Water.ErrorMask errorMask,
+            Water.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -747,10 +740,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IScriptStringProperty item,
+            this IWaterInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            ScriptStringProperty.TranslationMask? translationMask = null)
+            Water.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -761,9 +754,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IScriptStringProperty item,
+            this IWaterInternal item,
             Stream stream,
-            ScriptStringProperty.TranslationMask? translationMask = null)
+            Water.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -773,10 +766,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IScriptStringProperty item,
+            this IWaterInternal item,
             Stream stream,
-            out ScriptStringProperty.ErrorMask errorMask,
-            ScriptStringProperty.TranslationMask? translationMask = null)
+            out Water.ErrorMask errorMask,
+            Water.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -787,10 +780,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IScriptStringProperty item,
+            this IWaterInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ScriptStringProperty.TranslationMask? translationMask = null)
+            Water.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -805,7 +798,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IScriptStringProperty item,
+            this IWaterInternal item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -815,11 +808,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromBinary(
-            this IScriptStringProperty item,
+            this IWaterInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((ScriptStringPropertySetterCommon)((IScriptStringPropertyGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((WaterSetterCommon)((IWaterGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -835,49 +828,53 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum ScriptStringProperty_FieldIndex
+    public enum Water_FieldIndex
     {
-        Name = 0,
-        Flags = 1,
-        Data = 2,
+        MajorRecordFlagsRaw = 0,
+        FormKey = 1,
+        Version = 2,
+        EditorID = 3,
+        SkyrimMajorRecordFlags = 4,
+        FormVersion = 5,
+        Version2 = 6,
     }
     #endregion
 
     #region Registration
-    public partial class ScriptStringProperty_Registration : ILoquiRegistration
+    public partial class Water_Registration : ILoquiRegistration
     {
-        public static readonly ScriptStringProperty_Registration Instance = new ScriptStringProperty_Registration();
+        public static readonly Water_Registration Instance = new Water_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 95,
+            msgID: 148,
             version: 0);
 
-        public const string GUID = "f1cdd730-282a-4fb4-99e9-b0262ed2b037";
+        public const string GUID = "cf1e41d5-72e0-47c6-82ca-e1289b290653";
 
-        public const ushort AdditionalFieldCount = 1;
+        public const ushort AdditionalFieldCount = 0;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 7;
 
-        public static readonly Type MaskType = typeof(ScriptStringProperty.Mask<>);
+        public static readonly Type MaskType = typeof(Water.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ScriptStringProperty.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Water.ErrorMask);
 
-        public static readonly Type ClassType = typeof(ScriptStringProperty);
+        public static readonly Type ClassType = typeof(Water);
 
-        public static readonly Type GetterType = typeof(IScriptStringPropertyGetter);
+        public static readonly Type GetterType = typeof(IWaterGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IScriptStringProperty);
+        public static readonly Type SetterType = typeof(IWater);
 
-        public static readonly Type? InternalSetterType = null;
+        public static readonly Type? InternalSetterType = typeof(IWaterInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.ScriptStringProperty";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.Water";
 
-        public const string Name = "ScriptStringProperty";
+        public const string Name = "Water";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -889,8 +886,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "DATA":
-                    return (ushort)ScriptStringProperty_FieldIndex.Data;
                 default:
                     return null;
             }
@@ -898,92 +893,80 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            ScriptStringProperty_FieldIndex enu = (ScriptStringProperty_FieldIndex)index;
+            Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
             {
-                case ScriptStringProperty_FieldIndex.Data:
-                    return false;
                 default:
-                    return ScriptProperty_Registration.GetNthIsEnumerable(index);
+                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            ScriptStringProperty_FieldIndex enu = (ScriptStringProperty_FieldIndex)index;
+            Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
             {
-                case ScriptStringProperty_FieldIndex.Data:
-                    return false;
                 default:
-                    return ScriptProperty_Registration.GetNthIsLoqui(index);
+                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            ScriptStringProperty_FieldIndex enu = (ScriptStringProperty_FieldIndex)index;
+            Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
             {
-                case ScriptStringProperty_FieldIndex.Data:
-                    return false;
                 default:
-                    return ScriptProperty_Registration.GetNthIsSingleton(index);
+                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
         public static string GetNthName(ushort index)
         {
-            ScriptStringProperty_FieldIndex enu = (ScriptStringProperty_FieldIndex)index;
+            Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
             {
-                case ScriptStringProperty_FieldIndex.Data:
-                    return "Data";
                 default:
-                    return ScriptProperty_Registration.GetNthName(index);
+                    return SkyrimMajorRecord_Registration.GetNthName(index);
             }
         }
 
         public static bool IsNthDerivative(ushort index)
         {
-            ScriptStringProperty_FieldIndex enu = (ScriptStringProperty_FieldIndex)index;
+            Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
             {
-                case ScriptStringProperty_FieldIndex.Data:
-                    return false;
                 default:
-                    return ScriptProperty_Registration.IsNthDerivative(index);
+                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
         public static bool IsProtected(ushort index)
         {
-            ScriptStringProperty_FieldIndex enu = (ScriptStringProperty_FieldIndex)index;
+            Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
             {
-                case ScriptStringProperty_FieldIndex.Data:
-                    return false;
                 default:
-                    return ScriptProperty_Registration.IsProtected(index);
+                    return SkyrimMajorRecord_Registration.IsProtected(index);
             }
         }
 
         public static Type GetNthType(ushort index)
         {
-            ScriptStringProperty_FieldIndex enu = (ScriptStringProperty_FieldIndex)index;
+            Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
             {
-                case ScriptStringProperty_FieldIndex.Data:
-                    return typeof(String);
                 default:
-                    return ScriptProperty_Registration.GetNthType(index);
+                    return SkyrimMajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(ScriptStringPropertyXmlWriteTranslation);
-        public const int NumStructFields = 1;
+        public static readonly Type XmlWriteTranslation = typeof(WaterXmlWriteTranslation);
+        public static readonly RecordType ACTI_HEADER = new RecordType("ACTI");
+        public static readonly RecordType TriggeringRecordType = ACTI_HEADER;
+        public const int NumStructFields = 0;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryWriteTranslation = typeof(ScriptStringPropertyBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(WaterBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1016,27 +999,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ScriptStringPropertySetterCommon : ScriptPropertySetterCommon
+    public partial class WaterSetterCommon : SkyrimMajorRecordSetterCommon
     {
-        public new static readonly ScriptStringPropertySetterCommon Instance = new ScriptStringPropertySetterCommon();
+        public new static readonly WaterSetterCommon Instance = new WaterSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IScriptStringProperty item)
+        public void Clear(IWaterInternal item)
         {
             ClearPartial();
-            item.Data = string.Empty;
             base.Clear(item);
         }
         
-        public override void Clear(IScriptProperty item)
+        public override void Clear(ISkyrimMajorRecordInternal item)
         {
-            Clear(item: (IScriptStringProperty)item);
+            Clear(item: (IWaterInternal)item);
+        }
+        
+        public override void Clear(IMajorRecordInternal item)
+        {
+            Clear(item: (IWaterInternal)item);
         }
         
         #region Xml Translation
+        protected static void FillPrivateElementXml(
+            IWaterInternal item,
+            XElement node,
+            string name,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
+        {
+            switch (name)
+            {
+                default:
+                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
+                        item: item,
+                        node: node,
+                        name: name,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    break;
+            }
+        }
+        
         public virtual void CopyInFromXml(
-            IScriptStringProperty item,
+            IWaterInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1045,7 +1052,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    ScriptStringPropertyXmlCreateTranslation.FillPublicElementXml(
+                    FillPrivateElementXml(
+                        item: item,
+                        node: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask,
+                        translationMask: translationMask);
+                    WaterXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1061,13 +1074,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override void CopyInFromXml(
-            IScriptProperty item,
+            ISkyrimMajorRecordInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
             CopyInFromXml(
-                item: (ScriptStringProperty)item,
+                item: (Water)item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        
+        public override void CopyInFromXml(
+            IMajorRecordInternal item,
+            XElement node,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
+        {
+            CopyInFromXml(
+                item: (Water)item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1076,37 +1102,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
+        public override RecordType RecordType => Water_Registration.ACTI_HEADER;
         protected static void FillBinaryStructs(
-            IScriptStringProperty item,
+            IWaterInternal item,
             MutagenFrame frame)
         {
-            ScriptPropertySetterCommon.FillBinaryStructs(
+            SkyrimMajorRecordSetterCommon.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.Data = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                frame: frame,
-                stringBinaryType: StringBinaryType.PrependLengthUShort);
         }
         
         public virtual void CopyInFromBinary(
-            IScriptStringProperty item,
+            IWaterInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            UtilityTranslation.MajorRecordParse<IWaterInternal>(
                 record: item,
                 frame: frame,
+                recType: RecordType,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
-            IScriptProperty item,
+            ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (ScriptStringProperty)item,
+                item: (Water)item,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
+        }
+        
+        public override void CopyInFromBinary(
+            IMajorRecordInternal item,
+            MutagenFrame frame,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            CopyInFromBinary(
+                item: (Water)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1114,17 +1151,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ScriptStringPropertyCommon : ScriptPropertyCommon
+    public partial class WaterCommon : SkyrimMajorRecordCommon
     {
-        public new static readonly ScriptStringPropertyCommon Instance = new ScriptStringPropertyCommon();
+        public new static readonly WaterCommon Instance = new WaterCommon();
 
-        public ScriptStringProperty.Mask<bool> GetEqualsMask(
-            IScriptStringPropertyGetter item,
-            IScriptStringPropertyGetter rhs,
+        public Water.Mask<bool> GetEqualsMask(
+            IWaterGetter item,
+            IWaterGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ScriptStringProperty.Mask<bool>(false);
-            ((ScriptStringPropertyCommon)((IScriptStringPropertyGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new Water.Mask<bool>(false);
+            ((WaterCommon)((IWaterGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1133,20 +1170,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IScriptStringPropertyGetter item,
-            IScriptStringPropertyGetter rhs,
-            ScriptStringProperty.Mask<bool> ret,
+            IWaterGetter item,
+            IWaterGetter rhs,
+            Water.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Data = string.Equals(item.Data, rhs.Data);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string ToString(
-            IScriptStringPropertyGetter item,
+            IWaterGetter item,
             string? name = null,
-            ScriptStringProperty.Mask<bool>? printMask = null)
+            Water.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1158,18 +1194,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IScriptStringPropertyGetter item,
+            IWaterGetter item,
             FileGeneration fg,
             string? name = null,
-            ScriptStringProperty.Mask<bool>? printMask = null)
+            Water.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ScriptStringProperty =>");
+                fg.AppendLine($"Water =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ScriptStringProperty) =>");
+                fg.AppendLine($"{name} (Water) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1183,23 +1219,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IScriptStringPropertyGetter item,
+            IWaterGetter item,
             FileGeneration fg,
-            ScriptStringProperty.Mask<bool>? printMask = null)
+            Water.Mask<bool>? printMask = null)
         {
-            ScriptPropertyCommon.ToStringFields(
+            SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Data ?? true)
-            {
-                fg.AppendItem(item.Data, "Data");
-            }
         }
         
         public bool HasBeenSet(
-            IScriptStringPropertyGetter item,
-            ScriptStringProperty.Mask<bool?> checkMask)
+            IWaterGetter item,
+            Water.Mask<bool?> checkMask)
         {
             return base.HasBeenSet(
                 item: item,
@@ -1207,23 +1239,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillHasBeenSetMask(
-            IScriptStringPropertyGetter item,
-            ScriptStringProperty.Mask<bool> mask)
+            IWaterGetter item,
+            Water.Mask<bool> mask)
         {
-            mask.Data = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
         }
         
-        public static ScriptStringProperty_FieldIndex ConvertFieldIndex(ScriptProperty_FieldIndex index)
+        public static Water_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
             {
-                case ScriptProperty_FieldIndex.Name:
-                    return (ScriptStringProperty_FieldIndex)((int)index);
-                case ScriptProperty_FieldIndex.Flags:
-                    return (ScriptStringProperty_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Water_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.FormKey:
+                    return (Water_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.Version:
+                    return (Water_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.EditorID:
+                    return (Water_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.SkyrimMajorRecordFlags:
+                    return (Water_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.FormVersion:
+                    return (Water_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (Water_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static new Water_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (Water_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormKey:
+                    return (Water_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Water_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Water_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1231,36 +1289,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IScriptStringPropertyGetter? lhs,
-            IScriptStringPropertyGetter? rhs)
+            IWaterGetter? lhs,
+            IWaterGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (!string.Equals(lhs.Data, rhs.Data)) return false;
             return true;
         }
         
         public override bool Equals(
-            IScriptPropertyGetter? lhs,
-            IScriptPropertyGetter? rhs)
+            ISkyrimMajorRecordGetter? lhs,
+            ISkyrimMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IScriptStringPropertyGetter?)lhs,
-                rhs: rhs as IScriptStringPropertyGetter);
+                lhs: (IWaterGetter?)lhs,
+                rhs: rhs as IWaterGetter);
         }
         
-        public virtual int GetHashCode(IScriptStringPropertyGetter item)
+        public override bool Equals(
+            IMajorRecordGetter? lhs,
+            IMajorRecordGetter? rhs)
+        {
+            return Equals(
+                lhs: (IWaterGetter?)lhs,
+                rhs: rhs as IWaterGetter);
+        }
+        
+        public virtual int GetHashCode(IWaterGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Data);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
-        public override int GetHashCode(IScriptPropertyGetter item)
+        public override int GetHashCode(ISkyrimMajorRecordGetter item)
         {
-            return GetHashCode(item: (IScriptStringPropertyGetter)item);
+            return GetHashCode(item: (IWaterGetter)item);
+        }
+        
+        public override int GetHashCode(IMajorRecordGetter item)
+        {
+            return GetHashCode(item: (IWaterGetter)item);
         }
         
         #endregion
@@ -1268,11 +1338,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override object GetNew()
         {
-            return ScriptStringProperty.GetNew();
+            return Water.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IScriptStringPropertyGetter obj)
+        public IEnumerable<ILinkGetter> GetLinks(IWaterGetter obj)
         {
             foreach (var item in base.GetLinks(obj))
             {
@@ -1281,17 +1351,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
+        partial void PostDuplicate(Water obj, Water rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
+        
+        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
+        {
+            var ret = new Water(getNextFormKey());
+            ret.DeepCopyIn((Water)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (Water)item, getNextFormKey, duplicatedRecords);
+            return ret;
+        }
+        
         #endregion
         
     }
-    public partial class ScriptStringPropertySetterTranslationCommon : ScriptPropertySetterTranslationCommon
+    public partial class WaterSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
-        public new static readonly ScriptStringPropertySetterTranslationCommon Instance = new ScriptStringPropertySetterTranslationCommon();
+        public new static readonly WaterSetterTranslationCommon Instance = new WaterSetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            IScriptStringProperty item,
-            IScriptStringPropertyGetter rhs,
+            IWaterInternal item,
+            IWaterGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1300,45 +1381,92 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs,
                 errorMask,
                 copyMask);
-            if ((copyMask?.GetShouldTranslate((int)ScriptStringProperty_FieldIndex.Data) ?? true))
-            {
-                item.Data = rhs.Data;
-            }
         }
         
+        public void DeepCopyIn(
+            IWater item,
+            IWaterGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
+        {
+            base.DeepCopyIn(
+                item,
+                rhs,
+                errorMask,
+                copyMask);
+        }
         
         public override void DeepCopyIn(
-            IScriptProperty item,
-            IScriptPropertyGetter rhs,
+            ISkyrimMajorRecordInternal item,
+            ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IScriptStringProperty)item,
-                rhs: (IScriptStringPropertyGetter)rhs,
+                item: (IWaterInternal)item,
+                rhs: (IWaterGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyIn(
+            ISkyrimMajorRecord item,
+            ISkyrimMajorRecordGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
+        {
+            this.DeepCopyIn(
+                item: (IWater)item,
+                rhs: (IWaterGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyIn(
+            IMajorRecordInternal item,
+            IMajorRecordGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
+        {
+            this.DeepCopyIn(
+                item: (IWaterInternal)item,
+                rhs: (IWaterGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyIn(
+            IMajorRecord item,
+            IMajorRecordGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
+        {
+            this.DeepCopyIn(
+                item: (IWater)item,
+                rhs: (IWaterGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
         #endregion
         
-        public ScriptStringProperty DeepCopy(
-            IScriptStringPropertyGetter item,
-            ScriptStringProperty.TranslationMask? copyMask = null)
+        public Water DeepCopy(
+            IWaterGetter item,
+            Water.TranslationMask? copyMask = null)
         {
-            ScriptStringProperty ret = (ScriptStringProperty)((ScriptStringPropertyCommon)((IScriptStringPropertyGetter)item).CommonInstance()!).GetNew();
+            Water ret = (Water)((WaterCommon)((IWaterGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public ScriptStringProperty DeepCopy(
-            IScriptStringPropertyGetter item,
-            out ScriptStringProperty.ErrorMask errorMask,
-            ScriptStringProperty.TranslationMask? copyMask = null)
+        public Water DeepCopy(
+            IWaterGetter item,
+            out Water.ErrorMask errorMask,
+            Water.TranslationMask? copyMask = null)
         {
-            ScriptStringProperty ret = (ScriptStringProperty)((ScriptStringPropertyCommon)((IScriptStringPropertyGetter)item).CommonInstance()!).GetNew();
+            Water ret = (Water)((WaterCommon)((IWaterGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1346,12 +1474,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public ScriptStringProperty DeepCopy(
-            IScriptStringPropertyGetter item,
+        public Water DeepCopy(
+            IWaterGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            ScriptStringProperty ret = (ScriptStringProperty)((ScriptStringPropertyCommon)((IScriptStringPropertyGetter)item).CommonInstance()!).GetNew();
+            Water ret = (Water)((WaterCommon)((IWaterGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1366,21 +1494,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ScriptStringProperty
+    public partial class Water
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ScriptStringProperty_Registration.Instance;
-        public new static ScriptStringProperty_Registration Registration => ScriptStringProperty_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Water_Registration.Instance;
+        public new static Water_Registration Registration => Water_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ScriptStringPropertyCommon.Instance;
+        protected override object CommonInstance() => WaterCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return ScriptStringPropertySetterCommon.Instance;
+            return WaterSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ScriptStringPropertySetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => WaterSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1391,46 +1519,37 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ScriptStringPropertyXmlWriteTranslation :
-        ScriptPropertyXmlWriteTranslation,
+    public partial class WaterXmlWriteTranslation :
+        SkyrimMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
     {
-        public new readonly static ScriptStringPropertyXmlWriteTranslation Instance = new ScriptStringPropertyXmlWriteTranslation();
+        public new readonly static WaterXmlWriteTranslation Instance = new WaterXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IScriptStringPropertyGetter item,
+            IWaterGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ScriptPropertyXmlWriteTranslation.WriteToNodeXml(
+            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)ScriptStringProperty_FieldIndex.Data) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Data),
-                    item: item.Data,
-                    fieldIndex: (int)ScriptStringProperty_FieldIndex.Data,
-                    errorMask: errorMask);
-            }
         }
 
         public void Write(
             XElement node,
-            IScriptStringPropertyGetter item,
+            IWaterGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.ScriptStringProperty");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Water");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.ScriptStringProperty");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Water");
             }
             WriteToNodeXml(
                 item: item,
@@ -1447,7 +1566,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IScriptStringPropertyGetter)item,
+                item: (IWaterGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1456,13 +1575,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public override void Write(
             XElement node,
-            IScriptPropertyGetter item,
+            ISkyrimMajorRecordGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
             Write(
-                item: (IScriptStringPropertyGetter)item,
+                item: (IWaterGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IMajorRecordGetter item,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
+        {
+            Write(
+                item: (IWaterGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1471,12 +1605,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ScriptStringPropertyXmlCreateTranslation : ScriptPropertyXmlCreateTranslation
+    public partial class WaterXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
     {
-        public new readonly static ScriptStringPropertyXmlCreateTranslation Instance = new ScriptStringPropertyXmlCreateTranslation();
+        public new readonly static WaterXmlCreateTranslation Instance = new WaterXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IScriptStringProperty item,
+            IWaterInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1485,7 +1619,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    ScriptStringPropertyXmlCreateTranslation.FillPublicElementXml(
+                    WaterXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1501,7 +1635,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            IScriptStringProperty item,
+            IWaterInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1509,26 +1643,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
-                case "Data":
-                    errorMask?.PushIndex((int)ScriptStringProperty_FieldIndex.Data);
-                    try
-                    {
-                        item.Data = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    ScriptPropertyXmlCreateTranslation.FillPublicElementXml(
+                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -1544,30 +1660,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Xml Write Mixins
-    public static class ScriptStringPropertyXmlTranslationMixIn
+    public static class WaterXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IScriptStringPropertyGetter item,
+            this IWaterGetter item,
             XElement node,
-            out ScriptStringProperty.ErrorMask errorMask,
-            ScriptStringProperty.TranslationMask? translationMask = null,
+            out Water.ErrorMask errorMask,
+            Water.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((ScriptStringPropertyXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((WaterXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ScriptStringProperty.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Water.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this IScriptStringPropertyGetter item,
+            this IWaterGetter item,
             string path,
-            out ScriptStringProperty.ErrorMask errorMask,
-            ScriptStringProperty.TranslationMask? translationMask = null,
+            out Water.ErrorMask errorMask,
+            Water.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1581,10 +1697,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IScriptStringPropertyGetter item,
+            this IWaterGetter item,
             Stream stream,
-            out ScriptStringProperty.ErrorMask errorMask,
-            ScriptStringProperty.TranslationMask? translationMask = null,
+            out Water.ErrorMask errorMask,
+            Water.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1607,33 +1723,30 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ScriptStringPropertyBinaryWriteTranslation :
-        ScriptPropertyBinaryWriteTranslation,
+    public partial class WaterBinaryWriteTranslation :
+        SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ScriptStringPropertyBinaryWriteTranslation Instance = new ScriptStringPropertyBinaryWriteTranslation();
-
-        public static void WriteEmbedded(
-            IScriptStringPropertyGetter item,
-            MutagenWriter writer)
-        {
-            ScriptPropertyBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Data,
-                binaryType: StringBinaryType.PrependLengthUShort);
-        }
+        public new readonly static WaterBinaryWriteTranslation Instance = new WaterBinaryWriteTranslation();
 
         public void Write(
             MutagenWriter writer,
-            IScriptStringPropertyGetter item,
+            IWaterGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: recordTypeConverter.ConvertToCustom(Water_Registration.ACTI_HEADER),
+                type: ObjectType.Record))
+            {
+                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    item: item,
+                    writer: writer);
+                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
         }
 
         public override void Write(
@@ -1642,27 +1755,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IScriptStringPropertyGetter)item,
+                item: (IWaterGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public override void Write(
             MutagenWriter writer,
-            IScriptPropertyGetter item,
+            ISkyrimMajorRecordGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IScriptStringPropertyGetter)item,
+                item: (IWaterGetter)item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IMajorRecordGetter item,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            Write(
+                item: (IWaterGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class ScriptStringPropertyBinaryCreateTranslation : ScriptPropertyBinaryCreateTranslation
+    public partial class WaterBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static ScriptStringPropertyBinaryCreateTranslation Instance = new ScriptStringPropertyBinaryCreateTranslation();
+        public new readonly static WaterBinaryCreateTranslation Instance = new WaterBinaryCreateTranslation();
 
     }
 
@@ -1670,7 +1794,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class ScriptStringPropertyBinaryTranslationMixIn
+    public static class WaterBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1679,34 +1803,34 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ScriptStringPropertyBinaryOverlay :
-        ScriptPropertyBinaryOverlay,
-        IScriptStringPropertyGetter
+    public partial class WaterBinaryOverlay :
+        SkyrimMajorRecordBinaryOverlay,
+        IWaterGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ScriptStringProperty_Registration.Instance;
-        public new static ScriptStringProperty_Registration Registration => ScriptStringProperty_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Water_Registration.Instance;
+        public new static Water_Registration Registration => Water_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ScriptStringPropertyCommon.Instance;
+        protected override object CommonInstance() => WaterCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ScriptStringPropertySetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => WaterSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptStringPropertyGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWaterGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ScriptStringPropertyXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => WaterXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((ScriptStringPropertyXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((WaterXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -1714,24 +1838,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ScriptStringPropertyBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => WaterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((ScriptStringPropertyBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((WaterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public String Data => BinaryStringUtility.ParsePrependedString(_data.Slice(0x0), lengthLength: 2);
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected ScriptStringPropertyBinaryOverlay(
+        protected WaterBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1740,28 +1863,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static ScriptStringPropertyBinaryOverlay ScriptStringPropertyFactory(
+        public static WaterBinaryOverlay WaterFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new ScriptStringPropertyBinaryOverlay(
-                bytes: stream.RemainingMemory,
+            stream = UtilityTranslation.DecompressStream(stream, package.Meta);
+            var ret = new WaterBinaryOverlay(
+                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.Meta),
                 package: package);
-            int offset = stream.Position;
+            var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0x10 + package.Meta.MajorConstants.TypeAndLengthLength;
             ret.CustomCtor(
                 stream: stream,
-                finalPos: stream.Length,
+                finalPos: finalPos,
                 offset: offset);
+            ret.FillSubrecordTypes(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                fill: ret.FillRecordType);
             return ret;
         }
 
-        public static ScriptStringPropertyBinaryOverlay ScriptStringPropertyFactory(
+        public static WaterBinaryOverlay WaterFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            return ScriptStringPropertyFactory(
+            return WaterFactory(
                 stream: new BinaryMemoryReadStream(slice),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
@@ -1773,7 +1905,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             string? name = null)
         {
-            ScriptStringPropertyMixIn.ToString(
+            WaterMixIn.ToString(
                 item: this,
                 name: name);
         }

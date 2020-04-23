@@ -2661,7 +2661,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new FunctionConditionDataBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x4),
+                bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
             stream.Position += 0x4;

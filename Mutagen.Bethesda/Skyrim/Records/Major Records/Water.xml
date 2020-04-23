@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Water" objType="Record" recordType="ACTI" baseClass="SkyrimMajorRecord" GUID="cf1e41d5-72e0-47c6-82ca-e1289b290653" ID="148">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

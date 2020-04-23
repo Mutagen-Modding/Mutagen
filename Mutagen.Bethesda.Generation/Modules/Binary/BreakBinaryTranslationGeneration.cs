@@ -10,10 +10,7 @@ namespace Mutagen.Bethesda.Generation
 {
     public class BreakBinaryTranslationGeneration : BinaryTranslationGeneration
     {
-        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
-        {
-            return null;
-        }
+        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen) => 0;
 
         public override async Task GenerateCopyIn(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor readerAccessor, Accessor itemAccessor, Accessor errorMaskAccessor, Accessor translationAccessor)
         {
