@@ -1049,6 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType ARMA_HEADER = new RecordType("ARMA");
         public static readonly RecordType ARTO_HEADER = new RecordType("ARTO");
         public static readonly RecordType BPTD_HEADER = new RecordType("BPTD");
+        public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
         public static readonly RecordType CLFM_HEADER = new RecordType("CLFM");
         public static readonly RecordType DEBR_HEADER = new RecordType("DEBR");
@@ -1107,6 +1108,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         ARMA_HEADER,
                         ARTO_HEADER,
                         BPTD_HEADER,
+                        BOOK_HEADER,
                         CLAS_HEADER,
                         CLFM_HEADER,
                         DEBR_HEADER,

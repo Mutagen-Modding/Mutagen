@@ -32,6 +32,9 @@
     <Compile Include="Skyrim\Records\Major Records\Armor.cs">
       <DependentUpon>Armor.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\BookData.cs">
+      <DependentUpon>Book.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\ObjectEffect.cs">
       <DependentUpon>ObjectEffect.xml</DependentUpon>
     </Compile>
@@ -1461,6 +1464,24 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\ArmorAddon_LoquiGenerated.cs">
       <DependentUpon>ArmorAddon.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Book_LoquiGenerated.cs">
+      <DependentUpon>Book.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\BookData_LoquiGenerated.cs">
+      <DependentUpon>Book.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\BookTeachTarget_LoquiGenerated.cs">
+      <DependentUpon>Book.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\BookSkill_LoquiGenerated.cs">
+      <DependentUpon>Book.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\BookSpell_LoquiGenerated.cs">
+      <DependentUpon>Book.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\BookTeachesNothing_LoquiGenerated.cs">
+      <DependentUpon>Book.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

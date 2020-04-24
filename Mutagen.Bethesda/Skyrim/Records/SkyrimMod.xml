@@ -25,6 +25,7 @@
       <Group name="Activators" refName="Activator" />
       <Group name="TalkingActivators" refName="TalkingActivator" />
       <Group name="Armors" refName="Armor" />
+      <Group name="Books" refName="Book" />
     </Fields>
   </Object>
 </Loqui>

@@ -16,6 +16,7 @@ namespace Mutagen.Bethesda.Binary
             UInt,
             Long,
             ULong,
+            Byte,
         }
 
         static EnumBinaryTranslation()
@@ -36,6 +37,10 @@ namespace Mutagen.Bethesda.Binary
             else if (underlying == typeof(ulong))
             {
                 Underlying = UnderlyingType.ULong;
+            }
+            else if (underlying == typeof(byte))
+            {
+                Underlying = UnderlyingType.Byte;
             }
             else
             {
@@ -147,6 +152,9 @@ namespace Mutagen.Bethesda.Binary
                     break;
                 case UnderlyingType.ULong:
                     i = (long)item.ToUInt64(null);
+                    break;
+                case UnderlyingType.Byte:
+                    i = (byte)item.ToByte(null);
                     break;
                 default:
                     throw new NotImplementedException();

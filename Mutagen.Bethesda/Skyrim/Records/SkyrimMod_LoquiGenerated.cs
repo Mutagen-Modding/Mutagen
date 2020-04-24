@@ -65,6 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
             _Activators_Object = new Group<Activator>(this);
             _TalkingActivators_Object = new Group<TalkingActivator>(this);
             _Armors_Object = new Group<Armor>(this);
+            _Books_Object = new Group<Book>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -230,6 +231,13 @@ namespace Mutagen.Bethesda.Skyrim
         public Group<Armor> Armors => _Armors_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IArmorGetter> ISkyrimModGetter.Armors => _Armors_Object;
+        #endregion
+        #region Books
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Book> _Books_Object;
+        public Group<Book> Books => _Books_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IBookGetter> ISkyrimModGetter.Books => _Books_Object;
         #endregion
 
         #region To String
@@ -424,6 +432,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Activators = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.TalkingActivators = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Armors = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Books = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -449,7 +458,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Scrolls,
                 TItem Activators,
                 TItem TalkingActivators,
-                TItem Armors)
+                TItem Armors,
+                TItem Books)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -474,6 +484,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Activators = new MaskItem<TItem, Group.Mask<TItem>?>(Activators, new Group.Mask<TItem>(Activators));
                 this.TalkingActivators = new MaskItem<TItem, Group.Mask<TItem>?>(TalkingActivators, new Group.Mask<TItem>(TalkingActivators));
                 this.Armors = new MaskItem<TItem, Group.Mask<TItem>?>(Armors, new Group.Mask<TItem>(Armors));
+                this.Books = new MaskItem<TItem, Group.Mask<TItem>?>(Books, new Group.Mask<TItem>(Books));
             }
 
             #pragma warning disable CS8618
@@ -508,6 +519,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? Activators { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? TalkingActivators { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Armors { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Books { get; set; }
             #endregion
 
             #region Equals
@@ -543,6 +555,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Activators, rhs.Activators)) return false;
                 if (!object.Equals(this.TalkingActivators, rhs.TalkingActivators)) return false;
                 if (!object.Equals(this.Armors, rhs.Armors)) return false;
+                if (!object.Equals(this.Books, rhs.Books)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -571,6 +584,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Activators);
                 hash.Add(this.TalkingActivators);
                 hash.Add(this.Armors);
+                hash.Add(this.Books);
                 return hash.ToHashCode();
             }
 
@@ -694,6 +708,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Armors.Overall)) return false;
                     if (this.Armors.Specific != null && !this.Armors.Specific.All(eval)) return false;
                 }
+                if (Books != null)
+                {
+                    if (!eval(this.Books.Overall)) return false;
+                    if (this.Books.Specific != null && !this.Books.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -816,6 +835,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Armors.Overall)) return true;
                     if (this.Armors.Specific != null && this.Armors.Specific.Any(eval)) return true;
                 }
+                if (Books != null)
+                {
+                    if (eval(this.Books.Overall)) return true;
+                    if (this.Books.Specific != null && this.Books.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -853,6 +877,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Activators = this.Activators == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Activators.Overall), this.Activators.Specific?.Translate(eval));
                 obj.TalkingActivators = this.TalkingActivators == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.TalkingActivators.Overall), this.TalkingActivators.Specific?.Translate(eval));
                 obj.Armors = this.Armors == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Armors.Overall), this.Armors.Specific?.Translate(eval));
+                obj.Books = this.Books == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Books.Overall), this.Books.Specific?.Translate(eval));
             }
             #endregion
 
@@ -967,6 +992,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Armors?.ToString(fg);
                     }
+                    if (printMask?.Books?.Overall ?? true)
+                    {
+                        Books?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -1015,6 +1044,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<Activator.ErrorMask>?>? Activators;
             public MaskItem<Exception?, Group.ErrorMask<TalkingActivator.ErrorMask>?>? TalkingActivators;
             public MaskItem<Exception?, Group.ErrorMask<Armor.ErrorMask>?>? Armors;
+            public MaskItem<Exception?, Group.ErrorMask<Book.ErrorMask>?>? Books;
             #endregion
 
             #region IErrorMask
@@ -1069,6 +1099,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return TalkingActivators;
                     case SkyrimMod_FieldIndex.Armors:
                         return Armors;
+                    case SkyrimMod_FieldIndex.Books:
+                        return Books;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1147,6 +1179,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.Armors:
                         this.Armors = new MaskItem<Exception?, Group.ErrorMask<Armor.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Books:
+                        this.Books = new MaskItem<Exception?, Group.ErrorMask<Book.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1227,6 +1262,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.Armors:
                         this.Armors = (MaskItem<Exception?, Group.ErrorMask<Armor.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.Books:
+                        this.Books = (MaskItem<Exception?, Group.ErrorMask<Book.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1258,6 +1296,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Activators != null) return true;
                 if (TalkingActivators != null) return true;
                 if (Armors != null) return true;
+                if (Books != null) return true;
                 return false;
             }
             #endregion
@@ -1315,6 +1354,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Activators?.ToString(fg);
                 TalkingActivators?.ToString(fg);
                 Armors?.ToString(fg);
+                Books?.ToString(fg);
             }
             #endregion
 
@@ -1346,6 +1386,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Activators = this.Activators.Combine(rhs.Activators, (l, r) => l.Combine(r));
                 ret.TalkingActivators = this.TalkingActivators.Combine(rhs.TalkingActivators, (l, r) => l.Combine(r));
                 ret.Armors = this.Armors.Combine(rhs.Armors, (l, r) => l.Combine(r));
+                ret.Books = this.Books.Combine(rhs.Books, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1390,6 +1431,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<Activator.TranslationMask>?> Activators;
             public MaskItem<bool, Group.TranslationMask<TalkingActivator.TranslationMask>?> TalkingActivators;
             public MaskItem<bool, Group.TranslationMask<Armor.TranslationMask>?> Armors;
+            public MaskItem<bool, Group.TranslationMask<Book.TranslationMask>?> Books;
             #endregion
 
             #region Ctors
@@ -1418,6 +1460,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Activators = new MaskItem<bool, Group.TranslationMask<Activator.TranslationMask>?>(defaultOn, null);
                 this.TalkingActivators = new MaskItem<bool, Group.TranslationMask<TalkingActivator.TranslationMask>?>(defaultOn, null);
                 this.Armors = new MaskItem<bool, Group.TranslationMask<Armor.TranslationMask>?>(defaultOn, null);
+                this.Books = new MaskItem<bool, Group.TranslationMask<Book.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -1456,6 +1499,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Activators?.Overall ?? true, Activators?.Specific?.GetCrystal()));
                 ret.Add((TalkingActivators?.Overall ?? true, TalkingActivators?.Specific?.GetCrystal()));
                 ret.Add((Armors?.Overall ?? true, Armors?.Specific?.GetCrystal()));
+                ret.Add((Books?.Overall ?? true, Books?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -1492,6 +1536,7 @@ namespace Mutagen.Bethesda.Skyrim
             _Activators_Object = new Group<Activator>(this);
             _TalkingActivators_Object = new Group<TalkingActivator>(this);
             _Armors_Object = new Group<Armor>(this);
+            _Books_Object = new Group<Book>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -1584,6 +1629,10 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.Armors ?? true)
             {
                 this.Armors.RecordCache.Set(rhsMod.Armors.RecordCache.Items);
+            }
+            if (mask?.Books ?? true)
+            {
+                this.Books.RecordCache.Set(rhsMod.Books.RecordCache.Items);
             }
         }
 
@@ -1746,6 +1795,13 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Armor>());
             }
+            if (mask?.Books ?? true)
+            {
+                this.Books.RecordCache.Set(
+                    rhs.Books.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Book>());
+            }
             Dictionary<FormKey, IMajorRecordCommon> router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var package = this.CreateLinkCache();
@@ -1793,6 +1849,7 @@ namespace Mutagen.Bethesda.Skyrim
             count += Activators.RecordCache.Count > 0 ? 1 : 0;
             count += TalkingActivators.RecordCache.Count > 0 ? 1 : 0;
             count += Armors.RecordCache.Count > 0 ? 1 : 0;
+            count += Books.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -1989,6 +2046,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<Activator> Activators { get; }
         new Group<TalkingActivator> TalkingActivators { get; }
         new Group<Armor> Armors { get; }
+        new Group<Book> Books { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -2028,6 +2086,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IActivatorGetter> Activators { get; }
         IGroupGetter<ITalkingActivatorGetter> TalkingActivators { get; }
         IGroupGetter<IArmorGetter> Armors { get; }
+        IGroupGetter<IBookGetter> Books { get; }
 
     }
 
@@ -2472,6 +2531,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Activators = 20,
         TalkingActivators = 21,
         Armors = 22,
+        Books = 23,
     }
     #endregion
 
@@ -2489,9 +2549,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 23;
+        public const ushort AdditionalFieldCount = 24;
 
-        public const ushort FieldCount = 23;
+        public const ushort FieldCount = 24;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -2567,6 +2627,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.TalkingActivators;
                 case "ARMORS":
                     return (ushort)SkyrimMod_FieldIndex.Armors;
+                case "BOOKS":
+                    return (ushort)SkyrimMod_FieldIndex.Books;
                 default:
                     return null;
             }
@@ -2600,6 +2662,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Activators:
                 case SkyrimMod_FieldIndex.TalkingActivators:
                 case SkyrimMod_FieldIndex.Armors:
+                case SkyrimMod_FieldIndex.Books:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2634,6 +2697,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Activators:
                 case SkyrimMod_FieldIndex.TalkingActivators:
                 case SkyrimMod_FieldIndex.Armors:
+                case SkyrimMod_FieldIndex.Books:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2668,6 +2732,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Activators:
                 case SkyrimMod_FieldIndex.TalkingActivators:
                 case SkyrimMod_FieldIndex.Armors:
+                case SkyrimMod_FieldIndex.Books:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2725,6 +2790,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "TalkingActivators";
                 case SkyrimMod_FieldIndex.Armors:
                     return "Armors";
+                case SkyrimMod_FieldIndex.Books:
+                    return "Books";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2758,6 +2825,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Activators:
                 case SkyrimMod_FieldIndex.TalkingActivators:
                 case SkyrimMod_FieldIndex.Armors:
+                case SkyrimMod_FieldIndex.Books:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2793,6 +2861,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Activators:
                 case SkyrimMod_FieldIndex.TalkingActivators:
                 case SkyrimMod_FieldIndex.Armors:
+                case SkyrimMod_FieldIndex.Books:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2850,6 +2919,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<TalkingActivator>);
                 case SkyrimMod_FieldIndex.Armors:
                     return typeof(Group<Armor>);
+                case SkyrimMod_FieldIndex.Books:
+                    return typeof(Group<Book>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2879,9 +2950,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType ACTI_HEADER = new RecordType("ACTI");
         public static readonly RecordType TACT_HEADER = new RecordType("TACT");
         public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
+        public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
         public static readonly RecordType TriggeringRecordType = TES4_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 23;
+        public const int NumTypedFields = 24;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2946,6 +3018,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Activators.Clear();
             item.TalkingActivators.Clear();
             item.Armors.Clear();
+            item.Books.Clear();
         }
         
         #region Xml Translation
@@ -3369,6 +3442,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Armors);
                 }
+                case 0x4B4F4F42: // BOOK
+                {
+                    if (importMask?.Books ?? true)
+                    {
+                        item.Books.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Books);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -3443,6 +3530,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Activators = MaskItemExt.Factory(item.Activators.GetEqualsMask(rhs.Activators, include), include);
             ret.TalkingActivators = MaskItemExt.Factory(item.TalkingActivators.GetEqualsMask(rhs.TalkingActivators, include), include);
             ret.Armors = MaskItemExt.Factory(item.Armors.GetEqualsMask(rhs.Armors, include), include);
+            ret.Books = MaskItemExt.Factory(item.Books.GetEqualsMask(rhs.Books, include), include);
         }
         
         public string ToString(
@@ -3581,6 +3669,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Armors?.ToString(fg, "Armors");
             }
+            if (printMask?.Books?.Overall ?? true)
+            {
+                item.Books?.ToString(fg, "Books");
+            }
         }
         
         public bool HasBeenSet(
@@ -3617,6 +3709,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Activators = new MaskItem<bool, Group.Mask<bool>?>(true, item.Activators?.GetHasBeenSetMask());
             mask.TalkingActivators = new MaskItem<bool, Group.Mask<bool>?>(true, item.TalkingActivators?.GetHasBeenSetMask());
             mask.Armors = new MaskItem<bool, Group.Mask<bool>?>(true, item.Armors?.GetHasBeenSetMask());
+            mask.Books = new MaskItem<bool, Group.Mask<bool>?>(true, item.Books?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -3649,6 +3742,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Activators, rhs.Activators)) return false;
             if (!object.Equals(lhs.TalkingActivators, rhs.TalkingActivators)) return false;
             if (!object.Equals(lhs.Armors, rhs.Armors)) return false;
+            if (!object.Equals(lhs.Books, rhs.Books)) return false;
             return true;
         }
         
@@ -3678,6 +3772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Activators);
             hash.Add(item.TalkingActivators);
             hash.Add(item.Armors);
+            hash.Add(item.Books);
             return hash.ToHashCode();
         }
         
@@ -3805,6 +3900,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IArmor":
                 case "IArmorInternal":
                     return obj.Armors.RecordCache;
+                case "Book":
+                case "IBookGetter":
+                case "IBook":
+                case "IBookInternal":
+                    return obj.Books.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown group type: {typeof(T)}");
             }
@@ -3821,7 +3921,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var modHeader = item.ModHeader.DeepCopy() as ModHeader;
             modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
             modHeader.WriteToBinary(new MutagenWriter(stream, GameConstants.Skyrim, masterRefs));
-            Stream[] outputStreams = new Stream[22];
+            Stream[] outputStreams = new Stream[23];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams));
@@ -3845,6 +3945,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.Activators, masterRefs, 19, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.TalkingActivators, masterRefs, 20, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Armors, masterRefs, 21, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Books, masterRefs, 22, outputStreams));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -4046,6 +4147,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.Books is ILinkContainer BookslinkCont)
+            {
+                foreach (var item in BookslinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -4136,6 +4244,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.Armors.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Books.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -4351,6 +4463,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IArmor":
                 case "IArmorInternal":
                     foreach (var item in obj.Armors.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Book":
+                case "IBookGetter":
+                case "IBook":
+                case "IBookInternal":
+                    foreach (var item in obj.Books.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -4834,6 +4955,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Books) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Books);
+                try
+                {
+                    item.Books.DeepCopyIn(
+                        rhs: rhs.Books,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Books));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -5175,6 +5316,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.Armors,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Armors));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Books) ?? true))
+            {
+                var BooksItem = item.Books;
+                ((GroupXmlWriteTranslation)((IXmlItem)BooksItem).XmlWriteTranslator).Write<IBookGetter>(
+                    item: BooksItem,
+                    node: node,
+                    name: nameof(item.Books),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Books,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Books));
             }
         }
 
@@ -5700,6 +5852,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "Books":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Books);
+                    try
+                    {
+                        item.Books.CopyInFromXml<Book>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -5891,6 +6062,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Activators;
         public bool TalkingActivators;
         public bool Armors;
+        public bool Books;
         public GroupMask()
         {
         }
@@ -5918,6 +6090,7 @@ namespace Mutagen.Bethesda.Skyrim
             Activators = defaultValue;
             TalkingActivators = defaultValue;
             Armors = defaultValue;
+            Books = defaultValue;
         }
     }
 
@@ -6185,6 +6358,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ArmorsItem).BinaryWriteTranslator).Write<IArmorGetter>(
                         item: ArmorsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Books ?? true)
+            {
+                var BooksItem = item.Books;
+                if (BooksItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)BooksItem).BinaryWriteTranslator).Write<IBookGetter>(
+                        item: BooksItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
                 }
@@ -6511,6 +6695,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IArmorGetter>? _Armors => _Armors_IsSet ? GroupBinaryOverlay<IArmorGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ArmorsLocation!.Value.Min, _ArmorsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IArmorGetter> Armors => _Armors ?? new Group<Armor>(this);
         #endregion
+        #region Books
+        private RangeInt64? _BooksLocation;
+        private bool _Books_IsSet => _BooksLocation.HasValue;
+        private IGroupGetter<IBookGetter>? _Books => _Books_IsSet ? GroupBinaryOverlay<IBookGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _BooksLocation!.Value.Min, _BooksLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IBookGetter> Books => _Books ?? new Group<Book>(this);
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             long finalPos,
@@ -6690,6 +6880,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _ArmorsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Armors);
+                }
+                case 0x4B4F4F42: // BOOK
+                {
+                    _BooksLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Books);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

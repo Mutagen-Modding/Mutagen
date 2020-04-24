@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Book" objType="Record" recordType="BOOK" baseClass="SkyrimMajorRecord" GUID="75309913-652c-4e97-9cf4-6ccb493d3143" ID="154">
+    <Interface>INamed</Interface>
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <String name="LargeIconFilename" recordType="ICON" />
+      <String name="SmallIconFilename" recordType="MICO" />
+      <String name="BookText" recordType="DESC" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
+      <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
+      <List name="Keywords" counterRecType="KSIZ">
+        <FormLink refName="Keyword" recordType="KWDA" />
+      </List>
+      <RefDirect name="Data" refName="BookData" />
+      <FormLink name="InventoryArt" refName="Static" recordType="INAM" />
+      <String name="Description" recordType="CNAM" />
+    </Fields>
+  </Object>
+  <Object name="BookData" objType="Subrecord" recordType="DATA" GUID="f1791f92-2bbd-4dfb-8f79-7b1fdd52fe99" ID="155">
+    <Fields>
+      <Enum name="Flags" enumName="BookData.Flag" byteLength="1" binary="Custom" />
+      <Enum name="Type" enumName="BookData.BookType" byteLength="1" />
+      <UInt16 name="Unused" />
+      <RefDirect name="Teaches" objType="Subrecord" hasBeenSet="True" refName="BookTeachTarget" binary="Custom" byteLength="4" />
+      <UInt32 name="Value" />
+      <Float name="Weight" />
+    </Fields>
+  </Object>
+  <Object name="BookTeachTarget" abstract="true" objType="Subrecord" GUID="a95689cb-bc18-4276-b852-755a8d728d04" ID="156" />
+  <Object name="BookSkill" objType="Subrecord" baseClass="BookTeachTarget" GUID="4b9c1ac7-82ca-47b8-af25-dae58cb74d14" ID="157">
+    <Fields>
+      <Enum name="Skill" enumName="Skill" byteLength="4" />
+    </Fields>
+  </Object>
+  <Object name="BookSpell" objType="Subrecord" baseClass="BookTeachTarget" GUID="fef00688-7772-4c2a-894c-7748d1688013" ID="158">
+    <Fields>
+      <FormLink name="Spell" refName="Spell" />
+    </Fields>
+  </Object>
+  <Object name="BookTeachesNothing" objType="Subrecord" baseClass="BookTeachTarget" GUID="4939e2c7-7d9f-4a37-bb2f-a3ef4b104e85" ID="159">
+    <Fields>
+      <UInt32 name="RawContent" />
+    </Fields>
+  </Object>
+</Loqui>
