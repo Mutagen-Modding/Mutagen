@@ -19,6 +19,7 @@
     <DocumentationFile>C:\Users\Levia\Documents\Repos\Mutagen\Mutagen.Bethesda\Mutagen.Bethesda.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Skyrim\Interfaces\IEffectRecord.cs" />
     <Compile Include="Skyrim\Records\Common Subrecords\DestructionStageData.cs">
       <DependentUpon>Destructible.xml</DependentUpon>
     </Compile>
@@ -28,11 +29,17 @@
     <Compile Include="Skyrim\Records\Major Records\Activator.cs">
       <DependentUpon>Activator.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Armor.cs">
+      <DependentUpon>Armor.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\ObjectEffect.cs">
       <DependentUpon>ObjectEffect.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\SpellData.cs">
       <DependentUpon>Spell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\TalkingActivator.cs">
+      <DependentUpon>TalkingActivator.xml</DependentUpon>
     </Compile>
     <Compile Include="Warmup.cs" />
     <Compile Include="Oblivion\Constants.cs" />
@@ -825,8 +832,8 @@
     <Compile Include="Skyrim\Records\Major Records\BodyPartData_LoquiGenerated.cs">
       <DependentUpon>BodyPartData.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\BodyTemplate.cs">
-      <DependentUpon>Race.xml</DependentUpon>
+    <Compile Include="Skyrim\Records\Common Subrecords\BodyTemplate.cs">
+      <DependentUpon>BodyTemplate.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Class_LoquiGenerated.cs">
       <DependentUpon>Class.xml</DependentUpon>
@@ -1097,9 +1104,6 @@
     </Compile>
     <Compile Include="Oblivion\Records\Major Records\PlacedNpc_LoquiGenerated.cs">
       <DependentUpon>PlacedNpc.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Major Records\BodyTemplate_LoquiGenerated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Phoneme_LoquiGenerated.cs">
       <DependentUpon>Race.xml</DependentUpon>
@@ -1443,11 +1447,26 @@
     <Compile Include="Skyrim\Records\Major Records\Eyes_LoquiGenerated.cs">
       <DependentUpon>Eyes.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\TalkingActivator_LoquiGenerated.cs">
+      <DependentUpon>TalkingActivator.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ArmorModel_LoquiGenerated.cs">
+      <DependentUpon>Armor.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\BodyTemplate_LoquiGenerated.cs">
+      <DependentUpon>BodyTemplate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ArmorData_LoquiGenerated.cs">
+      <DependentUpon>Armor.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ArmorAddon_LoquiGenerated.cs">
+      <DependentUpon>ArmorAddon.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.13.7" />
     <PackageReference Include="Loqui" Version="1.1.5" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.0.10" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.0.11" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />

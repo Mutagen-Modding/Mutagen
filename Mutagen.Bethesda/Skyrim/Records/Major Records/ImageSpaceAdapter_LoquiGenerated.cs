@@ -959,8 +959,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(ImageSpaceAdapterXmlWriteTranslation);
-        public static readonly RecordType IPDS_HEADER = new RecordType("IPDS");
-        public static readonly RecordType TriggeringRecordType = IPDS_HEADER;
+        public static readonly RecordType IMAD_HEADER = new RecordType("IMAD");
+        public static readonly RecordType TriggeringRecordType = IMAD_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(ImageSpaceAdapterBinaryWriteTranslation);
@@ -1099,7 +1099,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => ImageSpaceAdapter_Registration.IPDS_HEADER;
+        public override RecordType RecordType => ImageSpaceAdapter_Registration.IMAD_HEADER;
         protected static void FillBinaryStructs(
             IImageSpaceAdapterInternal item,
             MutagenFrame frame)
@@ -1731,7 +1731,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(ImageSpaceAdapter_Registration.IPDS_HEADER),
+                record: recordTypeConverter.ConvertToCustom(ImageSpaceAdapter_Registration.IMAD_HEADER),
                 type: ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(

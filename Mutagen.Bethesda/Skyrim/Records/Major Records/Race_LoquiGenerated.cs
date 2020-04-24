@@ -8823,7 +8823,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         marker: Race_Registration.NAM0_HEADER,
                         stream: stream,
                         creator: (s, p, r) => HeadDataBinaryOverlay.HeadDataFactory(s, p, r),
-                        recordTypeConverter: recordTypeConverter,
                         femaleRecordConverter: Race_Registration.HeadDataFemaleConverter);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.HeadData);
                 }

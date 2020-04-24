@@ -84,6 +84,10 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"femaleRecordConverter: {objGen.RegistrationName}.{typeGen.Name}FemaleConverter");
                 }
+                if (gender.MaleConversions != null)
+                {
+                    args.Add($"maleRecordConverter: {objGen.RegistrationName}.{typeGen.Name}MaleConverter");
+                }
                 if (loqui != null
                     && !loqui.CanStronglyType)
                 {
@@ -170,6 +174,10 @@ namespace Mutagen.Bethesda.Generation
                 if (gendered.FemaleConversions != null)
                 {
                     args.Add($"femaleRecordConverter: {objGen.RegistrationName}.{typeGen.Name}FemaleConverter");
+                }
+                if (gendered.MaleConversions != null)
+                {
+                    args.Add($"maleRecordConverter: {objGen.RegistrationName}.{typeGen.Name}MaleConverter");
                 }
                 if (allowDirectWrite)
                 {
@@ -310,7 +318,6 @@ namespace Mutagen.Bethesda.Generation
             Accessor converterAccessor)
         {
             var gendered = typeGen as GenderedType;
-            bool isLoqui = gendered.SubTypeGeneration is LoquiType;
             if (typeGen.GetFieldData().MarkerType.HasValue && !gendered.MarkerPerGender)
             {
                 fg.AppendLine($"stream.Position += _package.Meta.SubConstants.HeaderLength; // Skip marker");
@@ -320,12 +327,26 @@ namespace Mutagen.Bethesda.Generation
                 case BinaryGenerationType.Normal:
                     if (gendered.ItemHasBeenSet)
                     {
+                        string callName;
+                        if (gendered.SubTypeGeneration is LoquiType
+                            && gendered.MaleMarker.HasValue
+                            || gendered.GetFieldData().MarkerType.HasValue)
+                        {
+                            callName = "FactorySkipMarkersPreRead";
+                        }
+                        else
+                        {
+                            callName = "Factory";
+                        }
                         using (var args = new ArgsWrapper(fg,
-                            $"_{typeGen.Name}Overlay = GenderedItemBinaryOverlay.{(isLoqui ? "FactorySkipMarkersPreRead" : "Factory")}<{gendered.SubTypeGeneration.TypeName(getter: true)}>"))
+                            $"_{typeGen.Name}Overlay = GenderedItemBinaryOverlay.{callName}<{gendered.SubTypeGeneration.TypeName(getter: true)}>"))
                         {
                             args.Add("package: _package");
-                            args.Add($"male: {objGen.RecordTypeHeaderName(gendered.MaleMarker.Value)}");
-                            args.Add($"female: {objGen.RecordTypeHeaderName(gendered.FemaleMarker.Value)}");
+                            if (gendered.MaleMarker.HasValue)
+                            {
+                                args.Add($"male: {objGen.RecordTypeHeaderName(gendered.MaleMarker.Value)}");
+                                args.Add($"female: {objGen.RecordTypeHeaderName(gendered.FemaleMarker.Value)}");
+                            }
                             if (gendered.MarkerPerGender)
                             {
                                 args.Add($"marker: {objGen.RecordTypeHeaderName(typeGen.GetFieldData().MarkerType.Value)}");
@@ -340,7 +361,9 @@ namespace Mutagen.Bethesda.Generation
                                 {
                                     args.Add($"recordTypeConverter: {objGen.RegistrationName}.{(typeGen.Name ?? typeGen.Parent?.Name)}Converter");
                                 }
-                                else if (converterAccessor != null)
+                                else if (converterAccessor != null
+                                    && gendered.FemaleConversions == null
+                                    && gendered.MaleConversions == null)
                                 {
                                     args.Add($"recordTypeConverter: {converterAccessor}");
                                 }
@@ -354,6 +377,10 @@ namespace Mutagen.Bethesda.Generation
                             if (gendered.FemaleConversions != null)
                             {
                                 args.Add($"femaleRecordConverter: {objGen.RegistrationName}.{typeGen.Name}FemaleConverter");
+                            }
+                            if (gendered.MaleConversions != null)
+                            {
+                                args.Add($"maleRecordConverter: {objGen.RegistrationName}.{typeGen.Name}MaleConverter");
                             }
                         }
                     }

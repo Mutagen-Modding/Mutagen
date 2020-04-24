@@ -13,8 +13,8 @@
       <String name="Description" recordType="DESC" />
       <RefDirect name="Model" refName="Model" />
       <RefDirect name="Destructible" refName="Destructible" />
-      <FormLink name="SoundPickUp" refName="SoundDescriptor" recordType="YNAM" />
-      <FormLink name="SoundPutDown" refName="SoundDescriptor" recordType="ZNAM" />
+      <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
+      <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
       <RefDirect name="Data" refName="ScrollData" />
       <RefDirect name="SpellData" refName="SpellData" />
       <RefList name="Effects" refName="Effect" />

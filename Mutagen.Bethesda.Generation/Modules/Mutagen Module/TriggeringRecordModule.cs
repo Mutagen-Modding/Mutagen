@@ -274,6 +274,16 @@ namespace Mutagen.Bethesda.Generation
                         throw new NotImplementedException();
                 }
             }
+            else if (field is GenderedType gendered)
+            {
+                if (gendered.SubTypeGeneration is LoquiType loqui)
+                {
+                    await SetRecordTrigger(
+                        obj,
+                        loqui,
+                        loqui.GetFieldData());
+                }
+            }
         }
 
         private async Task SetRecordTrigger(
@@ -401,12 +411,39 @@ namespace Mutagen.Bethesda.Generation
             else if (field is GenderedType gendered)
             {
                 if (!data.MarkerType.HasValue
+                    && gendered.MaleMarker.HasValue
                     && gendered.ItemHasBeenSet)
                 {
                     data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(gendered.MaleMarker.Value));
                     data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(gendered.FemaleMarker.Value));
                     data.TriggeringRecordTypes.Add(gendered.MaleMarker.Value);
                     data.TriggeringRecordTypes.Add(gendered.FemaleMarker.Value);
+                }
+                else if (gendered.SubTypeGeneration is LoquiType genderedLoqui)
+                {
+                    foreach (var gen in genderedLoqui.GetFieldData().GenerationTypes)
+                    {
+                        foreach (var recordType in gen.Key)
+                        {
+                            bool subbedFemale = false, subbedMale = false;
+                            if (gendered.MaleConversions != null 
+                                && gendered.MaleConversions.FromConversions.TryGetValue(recordType, out var maleSub))
+                            {
+                                subbedMale = true;
+                                data.TriggeringRecordTypes.Add(maleSub);
+                            }
+                            if (gendered.FemaleConversions != null
+                                && gendered.FemaleConversions.FromConversions.TryGetValue(recordType, out var femaleSub))
+                            {
+                                subbedFemale = true;
+                                data.TriggeringRecordTypes.Add(femaleSub);
+                            }
+                            if (!subbedFemale || !subbedMale)
+                            {
+                                data.TriggeringRecordTypes.Add(recordType);
+                            }
+                        }
+                    }
                 }
             }
 

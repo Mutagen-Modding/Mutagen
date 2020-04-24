@@ -15,6 +15,7 @@ using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -32,27 +33,21 @@ using System.Buffers.Binary;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public abstract partial class SkyrimMajorRecord :
-        MajorRecord,
-        ISkyrimMajorRecordInternal,
-        ILoquiObjectSetter<SkyrimMajorRecord>,
-        IEquatable<SkyrimMajorRecord>,
+    public partial class ArmorAddon :
+        SkyrimMajorRecord,
+        IArmorAddonInternal,
+        ILoquiObjectSetter<ArmorAddon>,
+        IEquatable<ArmorAddon>,
         IEqualsMask
     {
         #region Ctor
-        protected SkyrimMajorRecord()
+        protected ArmorAddon()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region FormVersion
-        public UInt16 FormVersion { get; set; } = default;
-        #endregion
-        #region Version2
-        public UInt16 Version2 { get; set; } = default;
-        #endregion
 
         #region To String
 
@@ -60,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            SkyrimMajorRecordMixIn.ToString(
+            ArmorAddonMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -70,29 +65,29 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISkyrimMajorRecordGetter rhs)) return false;
-            return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IArmorAddonGetter rhs)) return false;
+            return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(SkyrimMajorRecord obj)
+        public bool Equals(ArmorAddon obj)
         {
-            return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ArmorAddonCommon)((IArmorAddonGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => SkyrimMajorRecordXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => ArmorAddonXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((SkyrimMajorRecordXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((ArmorAddonXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -101,9 +96,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static new SkyrimMajorRecord CreateFromXml(
+        public static new ArmorAddon CreateFromXml(
             XElement node,
-            SkyrimMajorRecord.TranslationMask? translationMask = null)
+            ArmorAddon.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -112,30 +107,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static SkyrimMajorRecord CreateFromXml(
+        public static ArmorAddon CreateFromXml(
             XElement node,
-            out SkyrimMajorRecord.ErrorMask errorMask,
-            SkyrimMajorRecord.TranslationMask? translationMask = null)
+            out ArmorAddon.ErrorMask errorMask,
+            ArmorAddon.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = SkyrimMajorRecord.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ArmorAddon.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public new static SkyrimMajorRecord CreateFromXml(
+        public new static ArmorAddon CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if (!LoquiXmlTranslation.Instance.TryCreate<SkyrimMajorRecord>(node, out var ret, errorMask, translationMask))
-            {
-                throw new ArgumentException($"Unknown SkyrimMajorRecord subclass: {node.Name.LocalName}");
-            }
-            ((SkyrimMajorRecordSetterCommon)((ISkyrimMajorRecordGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new ArmorAddon();
+            ((ArmorAddonSetterCommon)((IArmorAddonGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -143,9 +135,9 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static SkyrimMajorRecord CreateFromXml(
+        public static ArmorAddon CreateFromXml(
             string path,
-            SkyrimMajorRecord.TranslationMask? translationMask = null)
+            ArmorAddon.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -153,10 +145,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static SkyrimMajorRecord CreateFromXml(
+        public static ArmorAddon CreateFromXml(
             string path,
-            out SkyrimMajorRecord.ErrorMask errorMask,
-            SkyrimMajorRecord.TranslationMask? translationMask = null)
+            out ArmorAddon.ErrorMask errorMask,
+            ArmorAddon.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -165,10 +157,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static SkyrimMajorRecord CreateFromXml(
+        public static ArmorAddon CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            SkyrimMajorRecord.TranslationMask? translationMask = null)
+            ArmorAddon.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -177,9 +169,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static SkyrimMajorRecord CreateFromXml(
+        public static ArmorAddon CreateFromXml(
             Stream stream,
-            SkyrimMajorRecord.TranslationMask? translationMask = null)
+            ArmorAddon.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -187,10 +179,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static SkyrimMajorRecord CreateFromXml(
+        public static ArmorAddon CreateFromXml(
             Stream stream,
-            out SkyrimMajorRecord.ErrorMask errorMask,
-            SkyrimMajorRecord.TranslationMask? translationMask = null)
+            out ArmorAddon.ErrorMask errorMask,
+            ArmorAddon.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -199,10 +191,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static SkyrimMajorRecord CreateFromXml(
+        public static ArmorAddon CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            SkyrimMajorRecord.TranslationMask? translationMask = null)
+            ArmorAddon.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -217,7 +209,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public new class Mask<TItem> :
-            MajorRecord.Mask<TItem>,
+            SkyrimMajorRecord.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
             where TItem : notnull
@@ -226,8 +218,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.FormVersion = initialValue;
-                this.Version2 = initialValue;
             }
 
             public Mask(
@@ -241,10 +231,10 @@ namespace Mutagen.Bethesda.Skyrim
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 Version: Version,
-                EditorID: EditorID)
+                EditorID: EditorID,
+                FormVersion: FormVersion,
+                Version2: Version2)
             {
-                this.FormVersion = FormVersion;
-                this.Version2 = Version2;
             }
 
             #pragma warning disable CS8618
@@ -253,11 +243,6 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
-            #endregion
-
-            #region Members
-            public TItem FormVersion;
-            public TItem Version2;
             #endregion
 
             #region Equals
@@ -271,15 +256,11 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.FormVersion, rhs.FormVersion)) return false;
-                if (!object.Equals(this.Version2, rhs.Version2)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.FormVersion);
-                hash.Add(this.Version2);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -290,8 +271,6 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.FormVersion)) return false;
-                if (!eval(this.Version2)) return false;
                 return true;
             }
             #endregion
@@ -300,8 +279,6 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.FormVersion)) return true;
-                if (eval(this.Version2)) return true;
                 return false;
             }
             #endregion
@@ -309,7 +286,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new SkyrimMajorRecord.Mask<R>();
+                var ret = new ArmorAddon.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -317,8 +294,6 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.FormVersion = eval(this.FormVersion);
-                obj.Version2 = eval(this.Version2);
             }
             #endregion
 
@@ -328,27 +303,19 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(SkyrimMajorRecord.Mask<bool>? printMask = null)
+            public string ToString(ArmorAddon.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, SkyrimMajorRecord.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, ArmorAddon.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(SkyrimMajorRecord.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(ArmorAddon.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.FormVersion ?? true)
-                    {
-                        fg.AppendItem(FormVersion, "FormVersion");
-                    }
-                    if (printMask?.Version2 ?? true)
-                    {
-                        fg.AppendItem(Version2, "Version2");
-                    }
                 }
                 fg.AppendLine("]");
             }
@@ -357,24 +324,15 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public new class ErrorMask :
-            MajorRecord.ErrorMask,
+            SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
-            #region Members
-            public Exception? FormVersion;
-            public Exception? Version2;
-            #endregion
-
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                SkyrimMajorRecord_FieldIndex enu = (SkyrimMajorRecord_FieldIndex)index;
+                ArmorAddon_FieldIndex enu = (ArmorAddon_FieldIndex)index;
                 switch (enu)
                 {
-                    case SkyrimMajorRecord_FieldIndex.FormVersion:
-                        return FormVersion;
-                    case SkyrimMajorRecord_FieldIndex.Version2:
-                        return Version2;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -382,15 +340,9 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthException(int index, Exception ex)
             {
-                SkyrimMajorRecord_FieldIndex enu = (SkyrimMajorRecord_FieldIndex)index;
+                ArmorAddon_FieldIndex enu = (ArmorAddon_FieldIndex)index;
                 switch (enu)
                 {
-                    case SkyrimMajorRecord_FieldIndex.FormVersion:
-                        this.FormVersion = ex;
-                        break;
-                    case SkyrimMajorRecord_FieldIndex.Version2:
-                        this.Version2 = ex;
-                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -399,15 +351,9 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthMask(int index, object obj)
             {
-                SkyrimMajorRecord_FieldIndex enu = (SkyrimMajorRecord_FieldIndex)index;
+                ArmorAddon_FieldIndex enu = (ArmorAddon_FieldIndex)index;
                 switch (enu)
                 {
-                    case SkyrimMajorRecord_FieldIndex.FormVersion:
-                        this.FormVersion = (Exception?)obj;
-                        break;
-                    case SkyrimMajorRecord_FieldIndex.Version2:
-                        this.Version2 = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -417,8 +363,6 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (FormVersion != null) return true;
-                if (Version2 != null) return true;
                 return false;
             }
             #endregion
@@ -454,8 +398,6 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendItem(FormVersion, "FormVersion");
-                fg.AppendItem(Version2, "Version2");
             }
             #endregion
 
@@ -464,8 +406,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.FormVersion = this.FormVersion.Combine(rhs.FormVersion);
-                ret.Version2 = this.Version2.Combine(rhs.Version2);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -484,48 +424,34 @@ namespace Mutagen.Bethesda.Skyrim
 
         }
         public new class TranslationMask :
-            MajorRecord.TranslationMask,
+            SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
-            #region Members
-            public bool FormVersion;
-            public bool Version2;
-            #endregion
-
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.FormVersion = defaultOn;
-                this.Version2 = defaultOn;
             }
 
             #endregion
 
-            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-            {
-                base.GetCrystal(ret);
-                ret.Add((FormVersion, null));
-                ret.Add((Version2, null));
-            }
         }
         #endregion
 
         #region Mutagen
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public override IEnumerable<ILinkGetter> Links => SkyrimMajorRecordCommon.Instance.GetLinks(this);
-        public SkyrimMajorRecord(FormKey formKey)
+        public new static readonly RecordType GrupRecordType = ArmorAddon_Registration.TriggeringRecordType;
+        public ArmorAddon(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        public SkyrimMajorRecord(IMod mod)
+        public ArmorAddon(IMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public SkyrimMajorRecord(IMod mod, string editorID)
+        public ArmorAddon(IMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -535,103 +461,121 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => SkyrimMajorRecordBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ArmorAddonBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((SkyrimMajorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ArmorAddonBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
+        #region Binary Create
+        [DebuggerStepThrough]
+        public static new ArmorAddon CreateFromBinary(MutagenFrame frame)
+        {
+            return CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: null);
+        }
+
+        public new static ArmorAddon CreateFromBinary(
+            MutagenFrame frame,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            var ret = new ArmorAddon();
+            ((ArmorAddonSetterCommon)((IArmorAddonGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+                item: ret,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
+            return ret;
+        }
+
+        #endregion
+
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkyrimMajorRecordGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IArmorAddonGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((SkyrimMajorRecordSetterCommon)((ISkyrimMajorRecordGetter)this).CommonSetterInstance()!).Clear(this);
+            ((ArmorAddonSetterCommon)((IArmorAddonGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new SkyrimMajorRecord GetNew()
+        internal static new ArmorAddon GetNew()
         {
-            throw new ArgumentException("New called on an abstract class.");
+            return new ArmorAddon();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface ISkyrimMajorRecord :
-        ISkyrimMajorRecordGetter,
-        IMajorRecord,
-        ILoquiObjectSetter<ISkyrimMajorRecordInternal>
-    {
-        new UInt16 FormVersion { get; set; }
-        new UInt16 Version2 { get; set; }
-    }
-
-    public partial interface ISkyrimMajorRecordInternal :
-        IMajorRecordInternal,
+    public partial interface IArmorAddon :
+        IArmorAddonGetter,
         ISkyrimMajorRecord,
-        ISkyrimMajorRecordGetter
+        ILoquiObjectSetter<IArmorAddonInternal>
     {
     }
 
-    public partial interface ISkyrimMajorRecordGetter :
-        IMajorRecordGetter,
-        ILoquiObject<ISkyrimMajorRecordGetter>,
+    public partial interface IArmorAddonInternal :
+        ISkyrimMajorRecordInternal,
+        IArmorAddon,
+        IArmorAddonGetter
+    {
+    }
+
+    public partial interface IArmorAddonGetter :
+        ISkyrimMajorRecordGetter,
+        ILoquiObject<IArmorAddonGetter>,
         IXmlItem,
-        ILinkContainer,
         IBinaryItem
     {
-        UInt16 FormVersion { get; }
-        UInt16 Version2 { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class SkyrimMajorRecordMixIn
+    public static partial class ArmorAddonMixIn
     {
-        public static void Clear(this ISkyrimMajorRecordInternal item)
+        public static void Clear(this IArmorAddonInternal item)
         {
-            ((SkyrimMajorRecordSetterCommon)((ISkyrimMajorRecordGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((ArmorAddonSetterCommon)((IArmorAddonGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static SkyrimMajorRecord.Mask<bool> GetEqualsMask(
-            this ISkyrimMajorRecordGetter item,
-            ISkyrimMajorRecordGetter rhs,
+        public static ArmorAddon.Mask<bool> GetEqualsMask(
+            this IArmorAddonGetter item,
+            IArmorAddonGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((ArmorAddonCommon)((IArmorAddonGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this ISkyrimMajorRecordGetter item,
+            this IArmorAddonGetter item,
             string? name = null,
-            SkyrimMajorRecord.Mask<bool>? printMask = null)
+            ArmorAddon.Mask<bool>? printMask = null)
         {
-            return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)item).CommonInstance()!).ToString(
+            return ((ArmorAddonCommon)((IArmorAddonGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this ISkyrimMajorRecordGetter item,
+            this IArmorAddonGetter item,
             FileGeneration fg,
             string? name = null,
-            SkyrimMajorRecord.Mask<bool>? printMask = null)
+            ArmorAddon.Mask<bool>? printMask = null)
         {
-            ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)item).CommonInstance()!).ToString(
+            ((ArmorAddonCommon)((IArmorAddonGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -639,86 +583,86 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this ISkyrimMajorRecordGetter item,
-            SkyrimMajorRecord.Mask<bool?> checkMask)
+            this IArmorAddonGetter item,
+            ArmorAddon.Mask<bool?> checkMask)
         {
-            return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)item).CommonInstance()!).HasBeenSet(
+            return ((ArmorAddonCommon)((IArmorAddonGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static SkyrimMajorRecord.Mask<bool> GetHasBeenSetMask(this ISkyrimMajorRecordGetter item)
+        public static ArmorAddon.Mask<bool> GetHasBeenSetMask(this IArmorAddonGetter item)
         {
-            var ret = new SkyrimMajorRecord.Mask<bool>(false);
-            ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new ArmorAddon.Mask<bool>(false);
+            ((ArmorAddonCommon)((IArmorAddonGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this ISkyrimMajorRecordGetter item,
-            ISkyrimMajorRecordGetter rhs)
+            this IArmorAddonGetter item,
+            IArmorAddonGetter rhs)
         {
-            return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)item).CommonInstance()!).Equals(
+            return ((ArmorAddonCommon)((IArmorAddonGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this ISkyrimMajorRecordInternal lhs,
-            ISkyrimMajorRecordGetter rhs,
-            out SkyrimMajorRecord.ErrorMask errorMask,
-            SkyrimMajorRecord.TranslationMask? copyMask = null)
+            this IArmorAddonInternal lhs,
+            IArmorAddonGetter rhs,
+            out ArmorAddon.ErrorMask errorMask,
+            ArmorAddon.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((SkyrimMajorRecordSetterTranslationCommon)((ISkyrimMajorRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ArmorAddonSetterTranslationCommon)((IArmorAddonGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = SkyrimMajorRecord.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ArmorAddon.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this ISkyrimMajorRecordInternal lhs,
-            ISkyrimMajorRecordGetter rhs,
+            this IArmorAddonInternal lhs,
+            IArmorAddonGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((SkyrimMajorRecordSetterTranslationCommon)((ISkyrimMajorRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ArmorAddonSetterTranslationCommon)((IArmorAddonGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static SkyrimMajorRecord DeepCopy(
-            this ISkyrimMajorRecordGetter item,
-            SkyrimMajorRecord.TranslationMask? copyMask = null)
+        public static ArmorAddon DeepCopy(
+            this IArmorAddonGetter item,
+            ArmorAddon.TranslationMask? copyMask = null)
         {
-            return ((SkyrimMajorRecordSetterTranslationCommon)((ISkyrimMajorRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ArmorAddonSetterTranslationCommon)((IArmorAddonGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static SkyrimMajorRecord DeepCopy(
-            this ISkyrimMajorRecordGetter item,
-            out SkyrimMajorRecord.ErrorMask errorMask,
-            SkyrimMajorRecord.TranslationMask? copyMask = null)
+        public static ArmorAddon DeepCopy(
+            this IArmorAddonGetter item,
+            out ArmorAddon.ErrorMask errorMask,
+            ArmorAddon.TranslationMask? copyMask = null)
         {
-            return ((SkyrimMajorRecordSetterTranslationCommon)((ISkyrimMajorRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ArmorAddonSetterTranslationCommon)((IArmorAddonGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static SkyrimMajorRecord DeepCopy(
-            this ISkyrimMajorRecordGetter item,
+        public static ArmorAddon DeepCopy(
+            this IArmorAddonGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((SkyrimMajorRecordSetterTranslationCommon)((ISkyrimMajorRecordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ArmorAddonSetterTranslationCommon)((IArmorAddonGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -727,9 +671,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this ISkyrimMajorRecordInternal item,
+            this IArmorAddonInternal item,
             XElement node,
-            SkyrimMajorRecord.TranslationMask? translationMask = null)
+            ArmorAddon.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -740,10 +684,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this ISkyrimMajorRecordInternal item,
+            this IArmorAddonInternal item,
             XElement node,
-            out SkyrimMajorRecord.ErrorMask errorMask,
-            SkyrimMajorRecord.TranslationMask? translationMask = null)
+            out ArmorAddon.ErrorMask errorMask,
+            ArmorAddon.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -751,16 +695,16 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = SkyrimMajorRecord.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ArmorAddon.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this ISkyrimMajorRecordInternal item,
+            this IArmorAddonInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((SkyrimMajorRecordSetterCommon)((ISkyrimMajorRecordGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((ArmorAddonSetterCommon)((IArmorAddonGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -768,9 +712,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this ISkyrimMajorRecordInternal item,
+            this IArmorAddonInternal item,
             string path,
-            SkyrimMajorRecord.TranslationMask? translationMask = null)
+            ArmorAddon.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -780,10 +724,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this ISkyrimMajorRecordInternal item,
+            this IArmorAddonInternal item,
             string path,
-            out SkyrimMajorRecord.ErrorMask errorMask,
-            SkyrimMajorRecord.TranslationMask? translationMask = null)
+            out ArmorAddon.ErrorMask errorMask,
+            ArmorAddon.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -794,10 +738,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this ISkyrimMajorRecordInternal item,
+            this IArmorAddonInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            SkyrimMajorRecord.TranslationMask? translationMask = null)
+            ArmorAddon.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -808,9 +752,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this ISkyrimMajorRecordInternal item,
+            this IArmorAddonInternal item,
             Stream stream,
-            SkyrimMajorRecord.TranslationMask? translationMask = null)
+            ArmorAddon.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -820,10 +764,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this ISkyrimMajorRecordInternal item,
+            this IArmorAddonInternal item,
             Stream stream,
-            out SkyrimMajorRecord.ErrorMask errorMask,
-            SkyrimMajorRecord.TranslationMask? translationMask = null)
+            out ArmorAddon.ErrorMask errorMask,
+            ArmorAddon.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -834,10 +778,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this ISkyrimMajorRecordInternal item,
+            this IArmorAddonInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            SkyrimMajorRecord.TranslationMask? translationMask = null)
+            ArmorAddon.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -852,7 +796,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this ISkyrimMajorRecordInternal item,
+            this IArmorAddonInternal item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -862,11 +806,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromBinary(
-            this ISkyrimMajorRecordInternal item,
+            this IArmorAddonInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((SkyrimMajorRecordSetterCommon)((ISkyrimMajorRecordGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((ArmorAddonSetterCommon)((IArmorAddonGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -882,7 +826,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum SkyrimMajorRecord_FieldIndex
+    public enum ArmorAddon_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -894,40 +838,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class SkyrimMajorRecord_Registration : ILoquiRegistration
+    public partial class ArmorAddon_Registration : ILoquiRegistration
     {
-        public static readonly SkyrimMajorRecord_Registration Instance = new SkyrimMajorRecord_Registration();
+        public static readonly ArmorAddon_Registration Instance = new ArmorAddon_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 65,
+            msgID: 153,
             version: 0);
 
-        public const string GUID = "7fb2c257-4be7-4aaf-a3c8-4e7f76deaa60";
+        public const string GUID = "4b6db51f-a0b8-4378-8e8b-8103dfdcd353";
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 0;
 
         public const ushort FieldCount = 6;
 
-        public static readonly Type MaskType = typeof(SkyrimMajorRecord.Mask<>);
+        public static readonly Type MaskType = typeof(ArmorAddon.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(SkyrimMajorRecord.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ArmorAddon.ErrorMask);
 
-        public static readonly Type ClassType = typeof(SkyrimMajorRecord);
+        public static readonly Type ClassType = typeof(ArmorAddon);
 
-        public static readonly Type GetterType = typeof(ISkyrimMajorRecordGetter);
+        public static readonly Type GetterType = typeof(IArmorAddonGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(ISkyrimMajorRecord);
+        public static readonly Type SetterType = typeof(IArmorAddon);
 
-        public static readonly Type? InternalSetterType = typeof(ISkyrimMajorRecordInternal);
+        public static readonly Type? InternalSetterType = typeof(IArmorAddonInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.SkyrimMajorRecord";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.ArmorAddon";
 
-        public const string Name = "SkyrimMajorRecord";
+        public const string Name = "ArmorAddon";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -939,10 +883,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "FORMVERSION":
-                    return (ushort)SkyrimMajorRecord_FieldIndex.FormVersion;
-                case "VERSION2":
-                    return (ushort)SkyrimMajorRecord_FieldIndex.Version2;
                 default:
                     return null;
             }
@@ -950,213 +890,80 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            SkyrimMajorRecord_FieldIndex enu = (SkyrimMajorRecord_FieldIndex)index;
+            ArmorAddon_FieldIndex enu = (ArmorAddon_FieldIndex)index;
             switch (enu)
             {
-                case SkyrimMajorRecord_FieldIndex.FormVersion:
-                case SkyrimMajorRecord_FieldIndex.Version2:
-                    return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            SkyrimMajorRecord_FieldIndex enu = (SkyrimMajorRecord_FieldIndex)index;
+            ArmorAddon_FieldIndex enu = (ArmorAddon_FieldIndex)index;
             switch (enu)
             {
-                case SkyrimMajorRecord_FieldIndex.FormVersion:
-                case SkyrimMajorRecord_FieldIndex.Version2:
-                    return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            SkyrimMajorRecord_FieldIndex enu = (SkyrimMajorRecord_FieldIndex)index;
+            ArmorAddon_FieldIndex enu = (ArmorAddon_FieldIndex)index;
             switch (enu)
             {
-                case SkyrimMajorRecord_FieldIndex.FormVersion:
-                case SkyrimMajorRecord_FieldIndex.Version2:
-                    return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
         public static string GetNthName(ushort index)
         {
-            SkyrimMajorRecord_FieldIndex enu = (SkyrimMajorRecord_FieldIndex)index;
+            ArmorAddon_FieldIndex enu = (ArmorAddon_FieldIndex)index;
             switch (enu)
             {
-                case SkyrimMajorRecord_FieldIndex.FormVersion:
-                    return "FormVersion";
-                case SkyrimMajorRecord_FieldIndex.Version2:
-                    return "Version2";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return SkyrimMajorRecord_Registration.GetNthName(index);
             }
         }
 
         public static bool IsNthDerivative(ushort index)
         {
-            SkyrimMajorRecord_FieldIndex enu = (SkyrimMajorRecord_FieldIndex)index;
+            ArmorAddon_FieldIndex enu = (ArmorAddon_FieldIndex)index;
             switch (enu)
             {
-                case SkyrimMajorRecord_FieldIndex.FormVersion:
-                case SkyrimMajorRecord_FieldIndex.Version2:
-                    return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
         public static bool IsProtected(ushort index)
         {
-            SkyrimMajorRecord_FieldIndex enu = (SkyrimMajorRecord_FieldIndex)index;
+            ArmorAddon_FieldIndex enu = (ArmorAddon_FieldIndex)index;
             switch (enu)
             {
-                case SkyrimMajorRecord_FieldIndex.FormVersion:
-                case SkyrimMajorRecord_FieldIndex.Version2:
-                    return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return SkyrimMajorRecord_Registration.IsProtected(index);
             }
         }
 
         public static Type GetNthType(ushort index)
         {
-            SkyrimMajorRecord_FieldIndex enu = (SkyrimMajorRecord_FieldIndex)index;
+            ArmorAddon_FieldIndex enu = (ArmorAddon_FieldIndex)index;
             switch (enu)
             {
-                case SkyrimMajorRecord_FieldIndex.FormVersion:
-                    return typeof(UInt16);
-                case SkyrimMajorRecord_FieldIndex.Version2:
-                    return typeof(UInt16);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return SkyrimMajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(SkyrimMajorRecordXmlWriteTranslation);
-        public static readonly RecordType ASPC_HEADER = new RecordType("ASPC");
-        public static readonly RecordType AACT_HEADER = new RecordType("AACT");
-        public static readonly RecordType ACTI_HEADER = new RecordType("ACTI");
-        public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
+        public static readonly Type XmlWriteTranslation = typeof(ArmorAddonXmlWriteTranslation);
         public static readonly RecordType ARMA_HEADER = new RecordType("ARMA");
-        public static readonly RecordType ARTO_HEADER = new RecordType("ARTO");
-        public static readonly RecordType BPTD_HEADER = new RecordType("BPTD");
-        public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
-        public static readonly RecordType CLFM_HEADER = new RecordType("CLFM");
-        public static readonly RecordType DEBR_HEADER = new RecordType("DEBR");
-        public static readonly RecordType DUAL_HEADER = new RecordType("DUAL");
-        public static readonly RecordType EFSH_HEADER = new RecordType("EFSH");
-        public static readonly RecordType EQUP_HEADER = new RecordType("EQUP");
-        public static readonly RecordType EXPL_HEADER = new RecordType("EXPL");
-        public static readonly RecordType EYES_HEADER = new RecordType("EYES");
-        public static readonly RecordType FACT_HEADER = new RecordType("FACT");
-        public static readonly RecordType FLST_HEADER = new RecordType("FLST");
-        public static readonly RecordType GMST_HEADER = new RecordType("GMST");
-        public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
-        public static readonly RecordType GRAS_HEADER = new RecordType("GRAS");
-        public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
-        public static readonly RecordType HAZD_HEADER = new RecordType("HAZD");
-        public static readonly RecordType HDPT_HEADER = new RecordType("HDPT");
-        public static readonly RecordType IMAD_HEADER = new RecordType("IMAD");
-        public static readonly RecordType IPDS_HEADER = new RecordType("IPDS");
-        public static readonly RecordType KYWD_HEADER = new RecordType("KYWD");
-        public static readonly RecordType LTEX_HEADER = new RecordType("LTEX");
-        public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
-        public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
-        public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
-        public static readonly RecordType MATT_HEADER = new RecordType("MATT");
-        public static readonly RecordType MOVT_HEADER = new RecordType("MOVT");
-        public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
-        public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
-        public static readonly RecordType OTFT_HEADER = new RecordType("OTFT");
-        public static readonly RecordType PERK_HEADER = new RecordType("PERK");
-        public static readonly RecordType REFR_HEADER = new RecordType("REFR");
-        public static readonly RecordType PROJ_HEADER = new RecordType("PROJ");
-        public static readonly RecordType RACE_HEADER = new RecordType("RACE");
-        public static readonly RecordType REGN_HEADER = new RecordType("REGN");
-        public static readonly RecordType REVB_HEADER = new RecordType("REVB");
-        public static readonly RecordType SCRL_HEADER = new RecordType("SCRL");
-        public static readonly RecordType SNDR_HEADER = new RecordType("SNDR");
-        public static readonly RecordType SOUN_HEADER = new RecordType("SOUN");
-        public static readonly RecordType STAT_HEADER = new RecordType("STAT");
-        public static readonly RecordType TACT_HEADER = new RecordType("TACT");
-        public static readonly RecordType TXST_HEADER = new RecordType("TXST");
-        public static readonly RecordType VTYP_HEADER = new RecordType("VTYP");
-        public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
-        public static readonly RecordType SHOU_HEADER = new RecordType("SHOU");
-        public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
-        {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        ASPC_HEADER,
-                        AACT_HEADER,
-                        ACTI_HEADER,
-                        ARMO_HEADER,
-                        ARMA_HEADER,
-                        ARTO_HEADER,
-                        BPTD_HEADER,
-                        CLAS_HEADER,
-                        CLFM_HEADER,
-                        DEBR_HEADER,
-                        DUAL_HEADER,
-                        EFSH_HEADER,
-                        EQUP_HEADER,
-                        EXPL_HEADER,
-                        EYES_HEADER,
-                        FACT_HEADER,
-                        FLST_HEADER,
-                        GMST_HEADER,
-                        GLOB_HEADER,
-                        GRAS_HEADER,
-                        HAIR_HEADER,
-                        HAZD_HEADER,
-                        HDPT_HEADER,
-                        IMAD_HEADER,
-                        IPDS_HEADER,
-                        KYWD_HEADER,
-                        LTEX_HEADER,
-                        LIGH_HEADER,
-                        LCRT_HEADER,
-                        MGEF_HEADER,
-                        MATT_HEADER,
-                        MOVT_HEADER,
-                        NPC__HEADER,
-                        ENCH_HEADER,
-                        OTFT_HEADER,
-                        PERK_HEADER,
-                        REFR_HEADER,
-                        PROJ_HEADER,
-                        RACE_HEADER,
-                        REGN_HEADER,
-                        REVB_HEADER,
-                        SCRL_HEADER,
-                        SNDR_HEADER,
-                        SOUN_HEADER,
-                        STAT_HEADER,
-                        TACT_HEADER,
-                        TXST_HEADER,
-                        VTYP_HEADER,
-                        LVSP_HEADER,
-                        SHOU_HEADER,
-                        SPEL_HEADER
-                    })
-            );
-        });
-        public const int NumStructFields = 2;
+        public static readonly RecordType TriggeringRecordType = ARMA_HEADER;
+        public const int NumStructFields = 0;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryWriteTranslation = typeof(SkyrimMajorRecordBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(ArmorAddonBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1189,28 +996,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class SkyrimMajorRecordSetterCommon : MajorRecordSetterCommon
+    public partial class ArmorAddonSetterCommon : SkyrimMajorRecordSetterCommon
     {
-        public new static readonly SkyrimMajorRecordSetterCommon Instance = new SkyrimMajorRecordSetterCommon();
+        public new static readonly ArmorAddonSetterCommon Instance = new ArmorAddonSetterCommon();
 
         partial void ClearPartial();
         
-        public virtual void Clear(ISkyrimMajorRecordInternal item)
+        public void Clear(IArmorAddonInternal item)
         {
             ClearPartial();
-            item.FormVersion = default;
-            item.Version2 = default;
             base.Clear(item);
+        }
+        
+        public override void Clear(ISkyrimMajorRecordInternal item)
+        {
+            Clear(item: (IArmorAddonInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (ISkyrimMajorRecordInternal)item);
+            Clear(item: (IArmorAddonInternal)item);
         }
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
-            ISkyrimMajorRecordInternal item,
+            IArmorAddonInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1219,7 +1029,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 default:
-                    MajorRecordSetterCommon.FillPrivateElementXml(
+                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -1230,7 +1040,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public virtual void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
+            IArmorAddonInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1245,7 +1055,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
+                    ArmorAddonXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1261,13 +1071,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override void CopyInFromXml(
+            ISkyrimMajorRecordInternal item,
+            XElement node,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
+        {
+            CopyInFromXml(
+                item: (ArmorAddon)item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        
+        public override void CopyInFromXml(
             IMajorRecordInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
             CopyInFromXml(
-                item: (SkyrimMajorRecord)item,
+                item: (ArmorAddon)item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1276,23 +1099,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => throw new ArgumentException();
+        public override RecordType RecordType => ArmorAddon_Registration.ARMA_HEADER;
         protected static void FillBinaryStructs(
-            ISkyrimMajorRecordInternal item,
+            IArmorAddonInternal item,
             MutagenFrame frame)
         {
-            MajorRecordSetterCommon.FillBinaryStructs(
+            SkyrimMajorRecordSetterCommon.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.FormVersion = frame.ReadUInt16();
-            item.Version2 = frame.ReadUInt16();
         }
         
         public virtual void CopyInFromBinary(
+            IArmorAddonInternal item,
+            MutagenFrame frame,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            UtilityTranslation.MajorRecordParse<IArmorAddonInternal>(
+                record: item,
+                frame: frame,
+                recType: RecordType,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
+        }
+        
+        public override void CopyInFromBinary(
             ISkyrimMajorRecordInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
+            CopyInFromBinary(
+                item: (ArmorAddon)item,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
         }
         
         public override void CopyInFromBinary(
@@ -1301,7 +1140,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (SkyrimMajorRecord)item,
+                item: (ArmorAddon)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1309,17 +1148,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class SkyrimMajorRecordCommon : MajorRecordCommon
+    public partial class ArmorAddonCommon : SkyrimMajorRecordCommon
     {
-        public new static readonly SkyrimMajorRecordCommon Instance = new SkyrimMajorRecordCommon();
+        public new static readonly ArmorAddonCommon Instance = new ArmorAddonCommon();
 
-        public SkyrimMajorRecord.Mask<bool> GetEqualsMask(
-            ISkyrimMajorRecordGetter item,
-            ISkyrimMajorRecordGetter rhs,
+        public ArmorAddon.Mask<bool> GetEqualsMask(
+            IArmorAddonGetter item,
+            IArmorAddonGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new SkyrimMajorRecord.Mask<bool>(false);
-            ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new ArmorAddon.Mask<bool>(false);
+            ((ArmorAddonCommon)((IArmorAddonGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1328,21 +1167,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            ISkyrimMajorRecordGetter item,
-            ISkyrimMajorRecordGetter rhs,
-            SkyrimMajorRecord.Mask<bool> ret,
+            IArmorAddonGetter item,
+            IArmorAddonGetter rhs,
+            ArmorAddon.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.FormVersion = item.FormVersion == rhs.FormVersion;
-            ret.Version2 = item.Version2 == rhs.Version2;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string ToString(
-            ISkyrimMajorRecordGetter item,
+            IArmorAddonGetter item,
             string? name = null,
-            SkyrimMajorRecord.Mask<bool>? printMask = null)
+            ArmorAddon.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1354,18 +1191,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            ISkyrimMajorRecordGetter item,
+            IArmorAddonGetter item,
             FileGeneration fg,
             string? name = null,
-            SkyrimMajorRecord.Mask<bool>? printMask = null)
+            ArmorAddon.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"SkyrimMajorRecord =>");
+                fg.AppendLine($"ArmorAddon =>");
             }
             else
             {
-                fg.AppendLine($"{name} (SkyrimMajorRecord) =>");
+                fg.AppendLine($"{name} (ArmorAddon) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1379,27 +1216,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            ISkyrimMajorRecordGetter item,
+            IArmorAddonGetter item,
             FileGeneration fg,
-            SkyrimMajorRecord.Mask<bool>? printMask = null)
+            ArmorAddon.Mask<bool>? printMask = null)
         {
-            MajorRecordCommon.ToStringFields(
+            SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.FormVersion ?? true)
-            {
-                fg.AppendItem(item.FormVersion, "FormVersion");
-            }
-            if (printMask?.Version2 ?? true)
-            {
-                fg.AppendItem(item.Version2, "Version2");
-            }
         }
         
         public bool HasBeenSet(
-            ISkyrimMajorRecordGetter item,
-            SkyrimMajorRecord.Mask<bool?> checkMask)
+            IArmorAddonGetter item,
+            ArmorAddon.Mask<bool?> checkMask)
         {
             return base.HasBeenSet(
                 item: item,
@@ -1407,28 +1236,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillHasBeenSetMask(
-            ISkyrimMajorRecordGetter item,
-            SkyrimMajorRecord.Mask<bool> mask)
+            IArmorAddonGetter item,
+            ArmorAddon.Mask<bool> mask)
         {
-            mask.FormVersion = true;
-            mask.Version2 = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
         }
         
-        public static SkyrimMajorRecord_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static ArmorAddon_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case SkyrimMajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (ArmorAddon_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.FormKey:
+                    return (ArmorAddon_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.Version:
+                    return (ArmorAddon_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.EditorID:
+                    return (ArmorAddon_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.FormVersion:
+                    return (ArmorAddon_FieldIndex)((int)index);
+                case SkyrimMajorRecord_FieldIndex.Version2:
+                    return (ArmorAddon_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static new ArmorAddon_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (SkyrimMajorRecord_FieldIndex)((int)index);
+                    return (ArmorAddon_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (SkyrimMajorRecord_FieldIndex)((int)index);
+                    return (ArmorAddon_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
-                    return (SkyrimMajorRecord_FieldIndex)((int)index);
+                    return (ArmorAddon_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (SkyrimMajorRecord_FieldIndex)((int)index);
+                    return (ArmorAddon_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1436,15 +1284,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            IArmorAddonGetter? lhs,
+            IArmorAddonGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (lhs.FormVersion != rhs.FormVersion) return false;
-            if (lhs.Version2 != rhs.Version2) return false;
             return true;
+        }
+        
+        public override bool Equals(
+            ISkyrimMajorRecordGetter? lhs,
+            ISkyrimMajorRecordGetter? rhs)
+        {
+            return Equals(
+                lhs: (IArmorAddonGetter?)lhs,
+                rhs: rhs as IArmorAddonGetter);
         }
         
         public override bool Equals(
@@ -1452,22 +1307,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (ISkyrimMajorRecordGetter?)lhs,
-                rhs: rhs as ISkyrimMajorRecordGetter);
+                lhs: (IArmorAddonGetter?)lhs,
+                rhs: rhs as IArmorAddonGetter);
         }
         
-        public virtual int GetHashCode(ISkyrimMajorRecordGetter item)
+        public virtual int GetHashCode(IArmorAddonGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.FormVersion);
-            hash.Add(item.Version2);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
+        public override int GetHashCode(ISkyrimMajorRecordGetter item)
+        {
+            return GetHashCode(item: (IArmorAddonGetter)item);
+        }
+        
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (ISkyrimMajorRecordGetter)item);
+            return GetHashCode(item: (IArmorAddonGetter)item);
         }
         
         #endregion
@@ -1475,11 +1333,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override object GetNew()
         {
-            return SkyrimMajorRecord.GetNew();
+            return ArmorAddon.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(ISkyrimMajorRecordGetter obj)
+        public IEnumerable<ILinkGetter> GetLinks(IArmorAddonGetter obj)
         {
             foreach (var item in base.GetLinks(obj))
             {
@@ -1488,24 +1346,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        partial void PostDuplicate(SkyrimMajorRecord obj, SkyrimMajorRecord rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
+        partial void PostDuplicate(ArmorAddon obj, ArmorAddon rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            throw new NotImplementedException();
+            var ret = new ArmorAddon(getNextFormKey());
+            ret.DeepCopyIn((ArmorAddon)item);
+            duplicatedRecords?.Add((ret, item.FormKey));
+            PostDuplicate(ret, (ArmorAddon)item, getNextFormKey, duplicatedRecords);
+            return ret;
         }
         
         #endregion
         
     }
-    public partial class SkyrimMajorRecordSetterTranslationCommon : MajorRecordSetterTranslationCommon
+    public partial class ArmorAddonSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
-        public new static readonly SkyrimMajorRecordSetterTranslationCommon Instance = new SkyrimMajorRecordSetterTranslationCommon();
+        public new static readonly ArmorAddonSetterTranslationCommon Instance = new ArmorAddonSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public virtual void DeepCopyIn(
-            ISkyrimMajorRecordInternal item,
-            ISkyrimMajorRecordGetter rhs,
+        public void DeepCopyIn(
+            IArmorAddonInternal item,
+            IArmorAddonGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1516,9 +1378,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
         }
         
-        public virtual void DeepCopyIn(
-            ISkyrimMajorRecord item,
-            ISkyrimMajorRecordGetter rhs,
+        public void DeepCopyIn(
+            IArmorAddon item,
+            IArmorAddonGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1527,14 +1389,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs,
                 errorMask,
                 copyMask);
-            if ((copyMask?.GetShouldTranslate((int)SkyrimMajorRecord_FieldIndex.FormVersion) ?? true))
-            {
-                item.FormVersion = rhs.FormVersion;
-            }
-            if ((copyMask?.GetShouldTranslate((int)SkyrimMajorRecord_FieldIndex.Version2) ?? true))
-            {
-                item.Version2 = rhs.Version2;
-            }
+        }
+        
+        public override void DeepCopyIn(
+            ISkyrimMajorRecordInternal item,
+            ISkyrimMajorRecordGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
+        {
+            this.DeepCopyIn(
+                item: (IArmorAddonInternal)item,
+                rhs: (IArmorAddonGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyIn(
+            ISkyrimMajorRecord item,
+            ISkyrimMajorRecordGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
+        {
+            this.DeepCopyIn(
+                item: (IArmorAddon)item,
+                rhs: (IArmorAddonGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
         
         public override void DeepCopyIn(
@@ -1544,8 +1424,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (ISkyrimMajorRecordInternal)item,
-                rhs: (ISkyrimMajorRecordGetter)rhs,
+                item: (IArmorAddonInternal)item,
+                rhs: (IArmorAddonGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1557,31 +1437,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (ISkyrimMajorRecord)item,
-                rhs: (ISkyrimMajorRecordGetter)rhs,
+                item: (IArmorAddon)item,
+                rhs: (IArmorAddonGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
         #endregion
         
-        public SkyrimMajorRecord DeepCopy(
-            ISkyrimMajorRecordGetter item,
-            SkyrimMajorRecord.TranslationMask? copyMask = null)
+        public ArmorAddon DeepCopy(
+            IArmorAddonGetter item,
+            ArmorAddon.TranslationMask? copyMask = null)
         {
-            SkyrimMajorRecord ret = (SkyrimMajorRecord)((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)item).CommonInstance()!).GetNew();
+            ArmorAddon ret = (ArmorAddon)((ArmorAddonCommon)((IArmorAddonGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public SkyrimMajorRecord DeepCopy(
-            ISkyrimMajorRecordGetter item,
-            out SkyrimMajorRecord.ErrorMask errorMask,
-            SkyrimMajorRecord.TranslationMask? copyMask = null)
+        public ArmorAddon DeepCopy(
+            IArmorAddonGetter item,
+            out ArmorAddon.ErrorMask errorMask,
+            ArmorAddon.TranslationMask? copyMask = null)
         {
-            SkyrimMajorRecord ret = (SkyrimMajorRecord)((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)item).CommonInstance()!).GetNew();
+            ArmorAddon ret = (ArmorAddon)((ArmorAddonCommon)((IArmorAddonGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1589,12 +1469,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public SkyrimMajorRecord DeepCopy(
-            ISkyrimMajorRecordGetter item,
+        public ArmorAddon DeepCopy(
+            IArmorAddonGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            SkyrimMajorRecord ret = (SkyrimMajorRecord)((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)item).CommonInstance()!).GetNew();
+            ArmorAddon ret = (ArmorAddon)((ArmorAddonCommon)((IArmorAddonGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1609,21 +1489,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class SkyrimMajorRecord
+    public partial class ArmorAddon
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => SkyrimMajorRecord_Registration.Instance;
-        public new static SkyrimMajorRecord_Registration Registration => SkyrimMajorRecord_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ArmorAddon_Registration.Instance;
+        public new static ArmorAddon_Registration Registration => ArmorAddon_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => SkyrimMajorRecordCommon.Instance;
+        protected override object CommonInstance() => ArmorAddonCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return SkyrimMajorRecordSetterCommon.Instance;
+            return ArmorAddonSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => SkyrimMajorRecordSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => ArmorAddonSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1634,55 +1514,37 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class SkyrimMajorRecordXmlWriteTranslation :
-        MajorRecordXmlWriteTranslation,
+    public partial class ArmorAddonXmlWriteTranslation :
+        SkyrimMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
     {
-        public new readonly static SkyrimMajorRecordXmlWriteTranslation Instance = new SkyrimMajorRecordXmlWriteTranslation();
+        public new readonly static ArmorAddonXmlWriteTranslation Instance = new ArmorAddonXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            ISkyrimMajorRecordGetter item,
+            IArmorAddonGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            MajorRecordXmlWriteTranslation.WriteToNodeXml(
+            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMajorRecord_FieldIndex.FormVersion) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.FormVersion),
-                    item: item.FormVersion,
-                    fieldIndex: (int)SkyrimMajorRecord_FieldIndex.FormVersion,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)SkyrimMajorRecord_FieldIndex.Version2) ?? true))
-            {
-                UInt16XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Version2),
-                    item: item.Version2,
-                    fieldIndex: (int)SkyrimMajorRecord_FieldIndex.Version2,
-                    errorMask: errorMask);
-            }
         }
 
-        public virtual void Write(
+        public void Write(
             XElement node,
-            ISkyrimMajorRecordGetter item,
+            IArmorAddonGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.SkyrimMajorRecord");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.ArmorAddon");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.SkyrimMajorRecord");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.ArmorAddon");
             }
             WriteToNodeXml(
                 item: item,
@@ -1699,7 +1561,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (ISkyrimMajorRecordGetter)item,
+                item: (IArmorAddonGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            ISkyrimMajorRecordGetter item,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
+        {
+            Write(
+                item: (IArmorAddonGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1714,7 +1591,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (ISkyrimMajorRecordGetter)item,
+                item: (IArmorAddonGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1723,12 +1600,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class SkyrimMajorRecordXmlCreateTranslation : MajorRecordXmlCreateTranslation
+    public partial class ArmorAddonXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
     {
-        public new readonly static SkyrimMajorRecordXmlCreateTranslation Instance = new SkyrimMajorRecordXmlCreateTranslation();
+        public new readonly static ArmorAddonXmlCreateTranslation Instance = new ArmorAddonXmlCreateTranslation();
 
         public static void FillPublicXml(
-            ISkyrimMajorRecordInternal item,
+            IArmorAddonInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1737,7 +1614,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
+                    ArmorAddonXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1753,7 +1630,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            ISkyrimMajorRecordInternal item,
+            IArmorAddonInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1761,44 +1638,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
-                case "FormVersion":
-                    errorMask?.PushIndex((int)SkyrimMajorRecord_FieldIndex.FormVersion);
-                    try
-                    {
-                        item.FormVersion = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Version2":
-                    errorMask?.PushIndex((int)SkyrimMajorRecord_FieldIndex.Version2);
-                    try
-                    {
-                        item.Version2 = UInt16XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
-                    MajorRecordXmlCreateTranslation.FillPublicElementXml(
+                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -1814,30 +1655,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Xml Write Mixins
-    public static class SkyrimMajorRecordXmlTranslationMixIn
+    public static class ArmorAddonXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this ISkyrimMajorRecordGetter item,
+            this IArmorAddonGetter item,
             XElement node,
-            out SkyrimMajorRecord.ErrorMask errorMask,
-            SkyrimMajorRecord.TranslationMask? translationMask = null,
+            out ArmorAddon.ErrorMask errorMask,
+            ArmorAddon.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((SkyrimMajorRecordXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((ArmorAddonXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = SkyrimMajorRecord.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ArmorAddon.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this ISkyrimMajorRecordGetter item,
+            this IArmorAddonGetter item,
             string path,
-            out SkyrimMajorRecord.ErrorMask errorMask,
-            SkyrimMajorRecord.TranslationMask? translationMask = null,
+            out ArmorAddon.ErrorMask errorMask,
+            ArmorAddon.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1851,10 +1692,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this ISkyrimMajorRecordGetter item,
+            this IArmorAddonGetter item,
             Stream stream,
-            out SkyrimMajorRecord.ErrorMask errorMask,
-            SkyrimMajorRecord.TranslationMask? translationMask = null,
+            out ArmorAddon.ErrorMask errorMask,
+            ArmorAddon.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1877,35 +1718,30 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class SkyrimMajorRecordBinaryWriteTranslation :
-        MajorRecordBinaryWriteTranslation,
+    public partial class ArmorAddonBinaryWriteTranslation :
+        SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static SkyrimMajorRecordBinaryWriteTranslation Instance = new SkyrimMajorRecordBinaryWriteTranslation();
+        public new readonly static ArmorAddonBinaryWriteTranslation Instance = new ArmorAddonBinaryWriteTranslation();
 
-        public static void WriteEmbedded(
-            ISkyrimMajorRecordGetter item,
-            MutagenWriter writer)
-        {
-            MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-            writer.Write(item.FormVersion);
-            writer.Write(item.Version2);
-        }
-
-        public virtual void Write(
+        public void Write(
             MutagenWriter writer,
-            ISkyrimMajorRecordGetter item,
+            IArmorAddonGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
-            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
-                item: item,
+            using (HeaderExport.ExportHeader(
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                record: recordTypeConverter.ConvertToCustom(ArmorAddon_Registration.ARMA_HEADER),
+                type: ObjectType.Record))
+            {
+                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                    item: item,
+                    writer: writer);
+                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                    item: item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
         }
 
         public override void Write(
@@ -1914,7 +1750,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (ISkyrimMajorRecordGetter)item,
+                item: (IArmorAddonGetter)item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            ISkyrimMajorRecordGetter item,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            Write(
+                item: (IArmorAddonGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1925,16 +1772,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (ISkyrimMajorRecordGetter)item,
+                item: (IArmorAddonGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class SkyrimMajorRecordBinaryCreateTranslation : MajorRecordBinaryCreateTranslation
+    public partial class ArmorAddonBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static SkyrimMajorRecordBinaryCreateTranslation Instance = new SkyrimMajorRecordBinaryCreateTranslation();
+        public new readonly static ArmorAddonBinaryCreateTranslation Instance = new ArmorAddonBinaryCreateTranslation();
 
     }
 
@@ -1942,7 +1789,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class SkyrimMajorRecordBinaryTranslationMixIn
+    public static class ArmorAddonBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1951,35 +1798,34 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class SkyrimMajorRecordBinaryOverlay :
-        MajorRecordBinaryOverlay,
-        ISkyrimMajorRecordGetter
+    public partial class ArmorAddonBinaryOverlay :
+        SkyrimMajorRecordBinaryOverlay,
+        IArmorAddonGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => SkyrimMajorRecord_Registration.Instance;
-        public new static SkyrimMajorRecord_Registration Registration => SkyrimMajorRecord_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ArmorAddon_Registration.Instance;
+        public new static ArmorAddon_Registration Registration => ArmorAddon_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => SkyrimMajorRecordCommon.Instance;
+        protected override object CommonInstance() => ArmorAddonCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => SkyrimMajorRecordSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => ArmorAddonSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkyrimMajorRecordGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IArmorAddonGetter)rhs, include);
 
-        public override IEnumerable<ILinkGetter> Links => SkyrimMajorRecordCommon.Instance.GetLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => SkyrimMajorRecordXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => ArmorAddonXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((SkyrimMajorRecordXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((ArmorAddonXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -1987,25 +1833,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => SkyrimMajorRecordBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ArmorAddonBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((SkyrimMajorRecordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ArmorAddonBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public UInt16 FormVersion => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xC, 0x2));
-        public UInt16 Version2 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xE, 0x2));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected SkyrimMajorRecordBinaryOverlay(
+        protected ArmorAddonBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -2014,6 +1858,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
+        public static ArmorAddonBinaryOverlay ArmorAddonFactory(
+            BinaryMemoryReadStream stream,
+            BinaryOverlayFactoryPackage package,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            stream = UtilityTranslation.DecompressStream(stream, package.Meta);
+            var ret = new ArmorAddonBinaryOverlay(
+                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.Meta),
+                package: package);
+            var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
+            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
+            stream.Position += 0x10 + package.Meta.MajorConstants.TypeAndLengthLength;
+            ret.CustomCtor(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset);
+            ret.FillSubrecordTypes(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public static ArmorAddonBinaryOverlay ArmorAddonFactory(
+            ReadOnlyMemorySlice<byte> slice,
+            BinaryOverlayFactoryPackage package,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            return ArmorAddonFactory(
+                stream: new BinaryMemoryReadStream(slice),
+                package: package,
+                recordTypeConverter: recordTypeConverter);
+        }
 
         #region To String
 
@@ -2021,7 +1900,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             string? name = null)
         {
-            SkyrimMajorRecordMixIn.ToString(
+            ArmorAddonMixIn.ToString(
                 item: this,
                 name: name);
         }

@@ -63,6 +63,8 @@ namespace Mutagen.Bethesda.Skyrim
             _Spells_Object = new Group<Spell>(this);
             _Scrolls_Object = new Group<Scroll>(this);
             _Activators_Object = new Group<Activator>(this);
+            _TalkingActivators_Object = new Group<TalkingActivator>(this);
+            _Armors_Object = new Group<Armor>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -214,6 +216,20 @@ namespace Mutagen.Bethesda.Skyrim
         public Group<Activator> Activators => _Activators_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IActivatorGetter> ISkyrimModGetter.Activators => _Activators_Object;
+        #endregion
+        #region TalkingActivators
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<TalkingActivator> _TalkingActivators_Object;
+        public Group<TalkingActivator> TalkingActivators => _TalkingActivators_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<ITalkingActivatorGetter> ISkyrimModGetter.TalkingActivators => _TalkingActivators_Object;
+        #endregion
+        #region Armors
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Armor> _Armors_Object;
+        public Group<Armor> Armors => _Armors_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IArmorGetter> ISkyrimModGetter.Armors => _Armors_Object;
         #endregion
 
         #region To String
@@ -406,6 +422,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Spells = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Scrolls = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Activators = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.TalkingActivators = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Armors = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -429,7 +447,9 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem ObjectEffects,
                 TItem Spells,
                 TItem Scrolls,
-                TItem Activators)
+                TItem Activators,
+                TItem TalkingActivators,
+                TItem Armors)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -452,6 +472,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Spells = new MaskItem<TItem, Group.Mask<TItem>?>(Spells, new Group.Mask<TItem>(Spells));
                 this.Scrolls = new MaskItem<TItem, Group.Mask<TItem>?>(Scrolls, new Group.Mask<TItem>(Scrolls));
                 this.Activators = new MaskItem<TItem, Group.Mask<TItem>?>(Activators, new Group.Mask<TItem>(Activators));
+                this.TalkingActivators = new MaskItem<TItem, Group.Mask<TItem>?>(TalkingActivators, new Group.Mask<TItem>(TalkingActivators));
+                this.Armors = new MaskItem<TItem, Group.Mask<TItem>?>(Armors, new Group.Mask<TItem>(Armors));
             }
 
             #pragma warning disable CS8618
@@ -484,6 +506,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? Spells { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Scrolls { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Activators { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? TalkingActivators { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Armors { get; set; }
             #endregion
 
             #region Equals
@@ -517,6 +541,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Spells, rhs.Spells)) return false;
                 if (!object.Equals(this.Scrolls, rhs.Scrolls)) return false;
                 if (!object.Equals(this.Activators, rhs.Activators)) return false;
+                if (!object.Equals(this.TalkingActivators, rhs.TalkingActivators)) return false;
+                if (!object.Equals(this.Armors, rhs.Armors)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -543,6 +569,8 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Spells);
                 hash.Add(this.Scrolls);
                 hash.Add(this.Activators);
+                hash.Add(this.TalkingActivators);
+                hash.Add(this.Armors);
                 return hash.ToHashCode();
             }
 
@@ -656,6 +684,16 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Activators.Overall)) return false;
                     if (this.Activators.Specific != null && !this.Activators.Specific.All(eval)) return false;
                 }
+                if (TalkingActivators != null)
+                {
+                    if (!eval(this.TalkingActivators.Overall)) return false;
+                    if (this.TalkingActivators.Specific != null && !this.TalkingActivators.Specific.All(eval)) return false;
+                }
+                if (Armors != null)
+                {
+                    if (!eval(this.Armors.Overall)) return false;
+                    if (this.Armors.Specific != null && !this.Armors.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -768,6 +806,16 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Activators.Overall)) return true;
                     if (this.Activators.Specific != null && this.Activators.Specific.Any(eval)) return true;
                 }
+                if (TalkingActivators != null)
+                {
+                    if (eval(this.TalkingActivators.Overall)) return true;
+                    if (this.TalkingActivators.Specific != null && this.TalkingActivators.Specific.Any(eval)) return true;
+                }
+                if (Armors != null)
+                {
+                    if (eval(this.Armors.Overall)) return true;
+                    if (this.Armors.Specific != null && this.Armors.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -803,6 +851,8 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Spells = this.Spells == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Spells.Overall), this.Spells.Specific?.Translate(eval));
                 obj.Scrolls = this.Scrolls == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Scrolls.Overall), this.Scrolls.Specific?.Translate(eval));
                 obj.Activators = this.Activators == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Activators.Overall), this.Activators.Specific?.Translate(eval));
+                obj.TalkingActivators = this.TalkingActivators == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.TalkingActivators.Overall), this.TalkingActivators.Specific?.Translate(eval));
+                obj.Armors = this.Armors == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Armors.Overall), this.Armors.Specific?.Translate(eval));
             }
             #endregion
 
@@ -909,6 +959,14 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Activators?.ToString(fg);
                     }
+                    if (printMask?.TalkingActivators?.Overall ?? true)
+                    {
+                        TalkingActivators?.ToString(fg);
+                    }
+                    if (printMask?.Armors?.Overall ?? true)
+                    {
+                        Armors?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -955,6 +1013,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<Spell.ErrorMask>?>? Spells;
             public MaskItem<Exception?, Group.ErrorMask<Scroll.ErrorMask>?>? Scrolls;
             public MaskItem<Exception?, Group.ErrorMask<Activator.ErrorMask>?>? Activators;
+            public MaskItem<Exception?, Group.ErrorMask<TalkingActivator.ErrorMask>?>? TalkingActivators;
+            public MaskItem<Exception?, Group.ErrorMask<Armor.ErrorMask>?>? Armors;
             #endregion
 
             #region IErrorMask
@@ -1005,6 +1065,10 @@ namespace Mutagen.Bethesda.Skyrim
                         return Scrolls;
                     case SkyrimMod_FieldIndex.Activators:
                         return Activators;
+                    case SkyrimMod_FieldIndex.TalkingActivators:
+                        return TalkingActivators;
+                    case SkyrimMod_FieldIndex.Armors:
+                        return Armors;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1077,6 +1141,12 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.Activators:
                         this.Activators = new MaskItem<Exception?, Group.ErrorMask<Activator.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.TalkingActivators:
+                        this.TalkingActivators = new MaskItem<Exception?, Group.ErrorMask<TalkingActivator.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Armors:
+                        this.Armors = new MaskItem<Exception?, Group.ErrorMask<Armor.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1151,6 +1221,12 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.Activators:
                         this.Activators = (MaskItem<Exception?, Group.ErrorMask<Activator.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.TalkingActivators:
+                        this.TalkingActivators = (MaskItem<Exception?, Group.ErrorMask<TalkingActivator.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.Armors:
+                        this.Armors = (MaskItem<Exception?, Group.ErrorMask<Armor.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1180,6 +1256,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Spells != null) return true;
                 if (Scrolls != null) return true;
                 if (Activators != null) return true;
+                if (TalkingActivators != null) return true;
+                if (Armors != null) return true;
                 return false;
             }
             #endregion
@@ -1235,6 +1313,8 @@ namespace Mutagen.Bethesda.Skyrim
                 Spells?.ToString(fg);
                 Scrolls?.ToString(fg);
                 Activators?.ToString(fg);
+                TalkingActivators?.ToString(fg);
+                Armors?.ToString(fg);
             }
             #endregion
 
@@ -1264,6 +1344,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Spells = this.Spells.Combine(rhs.Spells, (l, r) => l.Combine(r));
                 ret.Scrolls = this.Scrolls.Combine(rhs.Scrolls, (l, r) => l.Combine(r));
                 ret.Activators = this.Activators.Combine(rhs.Activators, (l, r) => l.Combine(r));
+                ret.TalkingActivators = this.TalkingActivators.Combine(rhs.TalkingActivators, (l, r) => l.Combine(r));
+                ret.Armors = this.Armors.Combine(rhs.Armors, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1306,6 +1388,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<Spell.TranslationMask>?> Spells;
             public MaskItem<bool, Group.TranslationMask<Scroll.TranslationMask>?> Scrolls;
             public MaskItem<bool, Group.TranslationMask<Activator.TranslationMask>?> Activators;
+            public MaskItem<bool, Group.TranslationMask<TalkingActivator.TranslationMask>?> TalkingActivators;
+            public MaskItem<bool, Group.TranslationMask<Armor.TranslationMask>?> Armors;
             #endregion
 
             #region Ctors
@@ -1332,6 +1416,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Spells = new MaskItem<bool, Group.TranslationMask<Spell.TranslationMask>?>(defaultOn, null);
                 this.Scrolls = new MaskItem<bool, Group.TranslationMask<Scroll.TranslationMask>?>(defaultOn, null);
                 this.Activators = new MaskItem<bool, Group.TranslationMask<Activator.TranslationMask>?>(defaultOn, null);
+                this.TalkingActivators = new MaskItem<bool, Group.TranslationMask<TalkingActivator.TranslationMask>?>(defaultOn, null);
+                this.Armors = new MaskItem<bool, Group.TranslationMask<Armor.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -1368,6 +1454,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Spells?.Overall ?? true, Spells?.Specific?.GetCrystal()));
                 ret.Add((Scrolls?.Overall ?? true, Scrolls?.Specific?.GetCrystal()));
                 ret.Add((Activators?.Overall ?? true, Activators?.Specific?.GetCrystal()));
+                ret.Add((TalkingActivators?.Overall ?? true, TalkingActivators?.Specific?.GetCrystal()));
+                ret.Add((Armors?.Overall ?? true, Armors?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -1402,6 +1490,8 @@ namespace Mutagen.Bethesda.Skyrim
             _Spells_Object = new Group<Spell>(this);
             _Scrolls_Object = new Group<Scroll>(this);
             _Activators_Object = new Group<Activator>(this);
+            _TalkingActivators_Object = new Group<TalkingActivator>(this);
+            _Armors_Object = new Group<Armor>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -1486,6 +1576,14 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.Activators ?? true)
             {
                 this.Activators.RecordCache.Set(rhsMod.Activators.RecordCache.Items);
+            }
+            if (mask?.TalkingActivators ?? true)
+            {
+                this.TalkingActivators.RecordCache.Set(rhsMod.TalkingActivators.RecordCache.Items);
+            }
+            if (mask?.Armors ?? true)
+            {
+                this.Armors.RecordCache.Set(rhsMod.Armors.RecordCache.Items);
             }
         }
 
@@ -1634,6 +1732,20 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Activator>());
             }
+            if (mask?.TalkingActivators ?? true)
+            {
+                this.TalkingActivators.RecordCache.Set(
+                    rhs.TalkingActivators.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<TalkingActivator>());
+            }
+            if (mask?.Armors ?? true)
+            {
+                this.Armors.RecordCache.Set(
+                    rhs.Armors.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Armor>());
+            }
             Dictionary<FormKey, IMajorRecordCommon> router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var package = this.CreateLinkCache();
@@ -1679,6 +1791,8 @@ namespace Mutagen.Bethesda.Skyrim
             count += Spells.RecordCache.Count > 0 ? 1 : 0;
             count += Scrolls.RecordCache.Count > 0 ? 1 : 0;
             count += Activators.RecordCache.Count > 0 ? 1 : 0;
+            count += TalkingActivators.RecordCache.Count > 0 ? 1 : 0;
+            count += Armors.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -1873,6 +1987,8 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<Spell> Spells { get; }
         new Group<Scroll> Scrolls { get; }
         new Group<Activator> Activators { get; }
+        new Group<TalkingActivator> TalkingActivators { get; }
+        new Group<Armor> Armors { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -1910,6 +2026,8 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<ISpellGetter> Spells { get; }
         IGroupGetter<IScrollGetter> Scrolls { get; }
         IGroupGetter<IActivatorGetter> Activators { get; }
+        IGroupGetter<ITalkingActivatorGetter> TalkingActivators { get; }
+        IGroupGetter<IArmorGetter> Armors { get; }
 
     }
 
@@ -2352,6 +2470,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Spells = 18,
         Scrolls = 19,
         Activators = 20,
+        TalkingActivators = 21,
+        Armors = 22,
     }
     #endregion
 
@@ -2369,9 +2489,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 21;
+        public const ushort AdditionalFieldCount = 23;
 
-        public const ushort FieldCount = 21;
+        public const ushort FieldCount = 23;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -2443,6 +2563,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.Scrolls;
                 case "ACTIVATORS":
                     return (ushort)SkyrimMod_FieldIndex.Activators;
+                case "TALKINGACTIVATORS":
+                    return (ushort)SkyrimMod_FieldIndex.TalkingActivators;
+                case "ARMORS":
+                    return (ushort)SkyrimMod_FieldIndex.Armors;
                 default:
                     return null;
             }
@@ -2474,6 +2598,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Spells:
                 case SkyrimMod_FieldIndex.Scrolls:
                 case SkyrimMod_FieldIndex.Activators:
+                case SkyrimMod_FieldIndex.TalkingActivators:
+                case SkyrimMod_FieldIndex.Armors:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2506,6 +2632,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Spells:
                 case SkyrimMod_FieldIndex.Scrolls:
                 case SkyrimMod_FieldIndex.Activators:
+                case SkyrimMod_FieldIndex.TalkingActivators:
+                case SkyrimMod_FieldIndex.Armors:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2538,6 +2666,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Spells:
                 case SkyrimMod_FieldIndex.Scrolls:
                 case SkyrimMod_FieldIndex.Activators:
+                case SkyrimMod_FieldIndex.TalkingActivators:
+                case SkyrimMod_FieldIndex.Armors:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2591,6 +2721,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Scrolls";
                 case SkyrimMod_FieldIndex.Activators:
                     return "Activators";
+                case SkyrimMod_FieldIndex.TalkingActivators:
+                    return "TalkingActivators";
+                case SkyrimMod_FieldIndex.Armors:
+                    return "Armors";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2622,6 +2756,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Spells:
                 case SkyrimMod_FieldIndex.Scrolls:
                 case SkyrimMod_FieldIndex.Activators:
+                case SkyrimMod_FieldIndex.TalkingActivators:
+                case SkyrimMod_FieldIndex.Armors:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2655,6 +2791,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Spells:
                 case SkyrimMod_FieldIndex.Scrolls:
                 case SkyrimMod_FieldIndex.Activators:
+                case SkyrimMod_FieldIndex.TalkingActivators:
+                case SkyrimMod_FieldIndex.Armors:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2708,6 +2846,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<Scroll>);
                 case SkyrimMod_FieldIndex.Activators:
                     return typeof(Group<Activator>);
+                case SkyrimMod_FieldIndex.TalkingActivators:
+                    return typeof(Group<TalkingActivator>);
+                case SkyrimMod_FieldIndex.Armors:
+                    return typeof(Group<Armor>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2735,9 +2877,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
         public static readonly RecordType SCRL_HEADER = new RecordType("SCRL");
         public static readonly RecordType ACTI_HEADER = new RecordType("ACTI");
+        public static readonly RecordType TACT_HEADER = new RecordType("TACT");
+        public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
         public static readonly RecordType TriggeringRecordType = TES4_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 21;
+        public const int NumTypedFields = 23;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2800,6 +2944,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Spells.Clear();
             item.Scrolls.Clear();
             item.Activators.Clear();
+            item.TalkingActivators.Clear();
+            item.Armors.Clear();
         }
         
         #region Xml Translation
@@ -3195,6 +3341,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Activators);
                 }
+                case 0x54434154: // TACT
+                {
+                    if (importMask?.TalkingActivators ?? true)
+                    {
+                        item.TalkingActivators.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.TalkingActivators);
+                }
+                case 0x4F4D5241: // ARMO
+                {
+                    if (importMask?.Armors ?? true)
+                    {
+                        item.Armors.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Armors);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -3267,6 +3441,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Spells = MaskItemExt.Factory(item.Spells.GetEqualsMask(rhs.Spells, include), include);
             ret.Scrolls = MaskItemExt.Factory(item.Scrolls.GetEqualsMask(rhs.Scrolls, include), include);
             ret.Activators = MaskItemExt.Factory(item.Activators.GetEqualsMask(rhs.Activators, include), include);
+            ret.TalkingActivators = MaskItemExt.Factory(item.TalkingActivators.GetEqualsMask(rhs.TalkingActivators, include), include);
+            ret.Armors = MaskItemExt.Factory(item.Armors.GetEqualsMask(rhs.Armors, include), include);
         }
         
         public string ToString(
@@ -3397,6 +3573,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Activators?.ToString(fg, "Activators");
             }
+            if (printMask?.TalkingActivators?.Overall ?? true)
+            {
+                item.TalkingActivators?.ToString(fg, "TalkingActivators");
+            }
+            if (printMask?.Armors?.Overall ?? true)
+            {
+                item.Armors?.ToString(fg, "Armors");
+            }
         }
         
         public bool HasBeenSet(
@@ -3431,6 +3615,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Spells = new MaskItem<bool, Group.Mask<bool>?>(true, item.Spells?.GetHasBeenSetMask());
             mask.Scrolls = new MaskItem<bool, Group.Mask<bool>?>(true, item.Scrolls?.GetHasBeenSetMask());
             mask.Activators = new MaskItem<bool, Group.Mask<bool>?>(true, item.Activators?.GetHasBeenSetMask());
+            mask.TalkingActivators = new MaskItem<bool, Group.Mask<bool>?>(true, item.TalkingActivators?.GetHasBeenSetMask());
+            mask.Armors = new MaskItem<bool, Group.Mask<bool>?>(true, item.Armors?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -3461,6 +3647,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Spells, rhs.Spells)) return false;
             if (!object.Equals(lhs.Scrolls, rhs.Scrolls)) return false;
             if (!object.Equals(lhs.Activators, rhs.Activators)) return false;
+            if (!object.Equals(lhs.TalkingActivators, rhs.TalkingActivators)) return false;
+            if (!object.Equals(lhs.Armors, rhs.Armors)) return false;
             return true;
         }
         
@@ -3488,6 +3676,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Spells);
             hash.Add(item.Scrolls);
             hash.Add(item.Activators);
+            hash.Add(item.TalkingActivators);
+            hash.Add(item.Armors);
             return hash.ToHashCode();
         }
         
@@ -3605,6 +3795,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IActivator":
                 case "IActivatorInternal":
                     return obj.Activators.RecordCache;
+                case "TalkingActivator":
+                case "ITalkingActivatorGetter":
+                case "ITalkingActivator":
+                case "ITalkingActivatorInternal":
+                    return obj.TalkingActivators.RecordCache;
+                case "Armor":
+                case "IArmorGetter":
+                case "IArmor":
+                case "IArmorInternal":
+                    return obj.Armors.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown group type: {typeof(T)}");
             }
@@ -3621,7 +3821,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var modHeader = item.ModHeader.DeepCopy() as ModHeader;
             modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
             modHeader.WriteToBinary(new MutagenWriter(stream, GameConstants.Skyrim, masterRefs));
-            Stream[] outputStreams = new Stream[20];
+            Stream[] outputStreams = new Stream[22];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams));
@@ -3643,6 +3843,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.Spells, masterRefs, 17, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Scrolls, masterRefs, 18, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Activators, masterRefs, 19, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.TalkingActivators, masterRefs, 20, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Armors, masterRefs, 21, outputStreams));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -3830,6 +4032,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.TalkingActivators is ILinkContainer TalkingActivatorslinkCont)
+            {
+                foreach (var item in TalkingActivatorslinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Armors is ILinkContainer ArmorslinkCont)
+            {
+                foreach (var item in ArmorslinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -3912,6 +4128,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.Activators.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.TalkingActivators.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Armors.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -4109,6 +4333,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IActivator":
                 case "IActivatorInternal":
                     foreach (var item in obj.Activators.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "TalkingActivator":
+                case "ITalkingActivatorGetter":
+                case "ITalkingActivator":
+                case "ITalkingActivatorInternal":
+                    foreach (var item in obj.TalkingActivators.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Armor":
+                case "IArmorGetter":
+                case "IArmor":
+                case "IArmorInternal":
+                    foreach (var item in obj.Armors.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -4552,6 +4794,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.TalkingActivators) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.TalkingActivators);
+                try
+                {
+                    item.TalkingActivators.DeepCopyIn(
+                        rhs: rhs.TalkingActivators,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.TalkingActivators));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Armors) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Armors);
+                try
+                {
+                    item.Armors.DeepCopyIn(
+                        rhs: rhs.Armors,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Armors));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -4871,6 +5153,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.Activators,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Activators));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.TalkingActivators) ?? true))
+            {
+                var TalkingActivatorsItem = item.TalkingActivators;
+                ((GroupXmlWriteTranslation)((IXmlItem)TalkingActivatorsItem).XmlWriteTranslator).Write<ITalkingActivatorGetter>(
+                    item: TalkingActivatorsItem,
+                    node: node,
+                    name: nameof(item.TalkingActivators),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.TalkingActivators,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.TalkingActivators));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Armors) ?? true))
+            {
+                var ArmorsItem = item.Armors;
+                ((GroupXmlWriteTranslation)((IXmlItem)ArmorsItem).XmlWriteTranslator).Write<IArmorGetter>(
+                    item: ArmorsItem,
+                    node: node,
+                    name: nameof(item.Armors),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Armors,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Armors));
             }
         }
 
@@ -5358,6 +5662,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "TalkingActivators":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.TalkingActivators);
+                    try
+                    {
+                        item.TalkingActivators.CopyInFromXml<TalkingActivator>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Armors":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Armors);
+                    try
+                    {
+                        item.Armors.CopyInFromXml<Armor>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -5547,6 +5889,8 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Spells;
         public bool Scrolls;
         public bool Activators;
+        public bool TalkingActivators;
+        public bool Armors;
         public GroupMask()
         {
         }
@@ -5572,6 +5916,8 @@ namespace Mutagen.Bethesda.Skyrim
             Spells = defaultValue;
             Scrolls = defaultValue;
             Activators = defaultValue;
+            TalkingActivators = defaultValue;
+            Armors = defaultValue;
         }
     }
 
@@ -5817,6 +6163,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ActivatorsItem).BinaryWriteTranslator).Write<IActivatorGetter>(
                         item: ActivatorsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.TalkingActivators ?? true)
+            {
+                var TalkingActivatorsItem = item.TalkingActivators;
+                if (TalkingActivatorsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)TalkingActivatorsItem).BinaryWriteTranslator).Write<ITalkingActivatorGetter>(
+                        item: TalkingActivatorsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Armors ?? true)
+            {
+                var ArmorsItem = item.Armors;
+                if (ArmorsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)ArmorsItem).BinaryWriteTranslator).Write<IArmorGetter>(
+                        item: ArmorsItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
                 }
@@ -6131,6 +6499,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IActivatorGetter>? _Activators => _Activators_IsSet ? GroupBinaryOverlay<IActivatorGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ActivatorsLocation!.Value.Min, _ActivatorsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IActivatorGetter> Activators => _Activators ?? new Group<Activator>(this);
         #endregion
+        #region TalkingActivators
+        private RangeInt64? _TalkingActivatorsLocation;
+        private bool _TalkingActivators_IsSet => _TalkingActivatorsLocation.HasValue;
+        private IGroupGetter<ITalkingActivatorGetter>? _TalkingActivators => _TalkingActivators_IsSet ? GroupBinaryOverlay<ITalkingActivatorGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _TalkingActivatorsLocation!.Value.Min, _TalkingActivatorsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<ITalkingActivatorGetter> TalkingActivators => _TalkingActivators ?? new Group<TalkingActivator>(this);
+        #endregion
+        #region Armors
+        private RangeInt64? _ArmorsLocation;
+        private bool _Armors_IsSet => _ArmorsLocation.HasValue;
+        private IGroupGetter<IArmorGetter>? _Armors => _Armors_IsSet ? GroupBinaryOverlay<IArmorGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ArmorsLocation!.Value.Min, _ArmorsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IArmorGetter> Armors => _Armors ?? new Group<Armor>(this);
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             long finalPos,
@@ -6300,6 +6680,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _ActivatorsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Activators);
+                }
+                case 0x54434154: // TACT
+                {
+                    _TalkingActivatorsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.TalkingActivators);
+                }
+                case 0x4F4D5241: // ARMO
+                {
+                    _ArmorsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Armors);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

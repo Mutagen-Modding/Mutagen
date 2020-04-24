@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="BodyTemplate" recordType="BODT" objType="Subrecord" GUID="8f6a5735-ee64-4fe6-b024-fffabb2bd8e4" ID="51">
+    <Fields>
+      <Enum name="FirstPersonFlags" enumName="BipedObjectFlag" byteLength="4" />
+      <Enum name="Flags" enumName="BodyTemplate.Flag" byteLength="4" />
+      <Break />
+      <Enum name="ArmorType" enumName="ArmorType" byteLength="4" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -15,6 +15,7 @@ using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Mutagen.Bethesda.Skyrim;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -31,28 +32,52 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class BodyTemplate :
-        IBodyTemplate,
-        ILoquiObjectSetter<BodyTemplate>,
-        IEquatable<BodyTemplate>,
+    public partial class ArmorModel :
+        IArmorModel,
+        ILoquiObjectSetter<ArmorModel>,
+        IEquatable<ArmorModel>,
         IEqualsMask
     {
         #region Ctor
-        public BodyTemplate()
+        public ArmorModel()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region FirstPersonFlags
-        public BipedObjectFlag FirstPersonFlags { get; set; } = default;
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IArmorModelGetter.Model => this.Model;
         #endregion
-        #region Flags
-        public BodyTemplate.Flag Flags { get; set; } = default;
+        #region LargeIconFilename
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String? _LargeIconFilename;
+        public String? LargeIconFilename
+        {
+            get => this._LargeIconFilename;
+            set => this._LargeIconFilename = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IArmorModelGetter.LargeIconFilename => this.LargeIconFilename;
         #endregion
-        #region ArmorType
-        public ArmorType ArmorType { get; set; } = default;
+        #region SmallIconFilename
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String? _SmallIconFilename;
+        public String? SmallIconFilename
+        {
+            get => this._SmallIconFilename;
+            set => this._SmallIconFilename = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IArmorModelGetter.SmallIconFilename => this.SmallIconFilename;
         #endregion
 
         #region To String
@@ -61,7 +86,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            BodyTemplateMixIn.ToString(
+            ArmorModelMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -71,22 +96,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IBodyTemplateGetter rhs)) return false;
-            return ((BodyTemplateCommon)((IBodyTemplateGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IArmorModelGetter rhs)) return false;
+            return ((ArmorModelCommon)((IArmorModelGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(BodyTemplate obj)
+        public bool Equals(ArmorModel obj)
         {
-            return ((BodyTemplateCommon)((IBodyTemplateGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ArmorModelCommon)((IArmorModelGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((BodyTemplateCommon)((IBodyTemplateGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ArmorModelCommon)((IArmorModelGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => BodyTemplateXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => ArmorModelXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -95,7 +120,7 @@ namespace Mutagen.Bethesda.Skyrim
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((BodyTemplateXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((ArmorModelXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -104,9 +129,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static BodyTemplate CreateFromXml(
+        public static ArmorModel CreateFromXml(
             XElement node,
-            BodyTemplate.TranslationMask? translationMask = null)
+            ArmorModel.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -115,27 +140,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static BodyTemplate CreateFromXml(
+        public static ArmorModel CreateFromXml(
             XElement node,
-            out BodyTemplate.ErrorMask errorMask,
-            BodyTemplate.TranslationMask? translationMask = null)
+            out ArmorModel.ErrorMask errorMask,
+            ArmorModel.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = BodyTemplate.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ArmorModel.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public static BodyTemplate CreateFromXml(
+        public static ArmorModel CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new BodyTemplate();
-            ((BodyTemplateSetterCommon)((IBodyTemplateGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new ArmorModel();
+            ((ArmorModelSetterCommon)((IArmorModelGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -143,9 +168,9 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static BodyTemplate CreateFromXml(
+        public static ArmorModel CreateFromXml(
             string path,
-            BodyTemplate.TranslationMask? translationMask = null)
+            ArmorModel.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -153,10 +178,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static BodyTemplate CreateFromXml(
+        public static ArmorModel CreateFromXml(
             string path,
-            out BodyTemplate.ErrorMask errorMask,
-            BodyTemplate.TranslationMask? translationMask = null)
+            out ArmorModel.ErrorMask errorMask,
+            ArmorModel.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -165,10 +190,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static BodyTemplate CreateFromXml(
+        public static ArmorModel CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            BodyTemplate.TranslationMask? translationMask = null)
+            ArmorModel.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -177,9 +202,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static BodyTemplate CreateFromXml(
+        public static ArmorModel CreateFromXml(
             Stream stream,
-            BodyTemplate.TranslationMask? translationMask = null)
+            ArmorModel.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -187,10 +212,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static BodyTemplate CreateFromXml(
+        public static ArmorModel CreateFromXml(
             Stream stream,
-            out BodyTemplate.ErrorMask errorMask,
-            BodyTemplate.TranslationMask? translationMask = null)
+            out ArmorModel.ErrorMask errorMask,
+            ArmorModel.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -199,10 +224,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static BodyTemplate CreateFromXml(
+        public static ArmorModel CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            BodyTemplate.TranslationMask? translationMask = null)
+            ArmorModel.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -224,19 +249,19 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.FirstPersonFlags = initialValue;
-                this.Flags = initialValue;
-                this.ArmorType = initialValue;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.LargeIconFilename = initialValue;
+                this.SmallIconFilename = initialValue;
             }
 
             public Mask(
-                TItem FirstPersonFlags,
-                TItem Flags,
-                TItem ArmorType)
+                TItem Model,
+                TItem LargeIconFilename,
+                TItem SmallIconFilename)
             {
-                this.FirstPersonFlags = FirstPersonFlags;
-                this.Flags = Flags;
-                this.ArmorType = ArmorType;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.LargeIconFilename = LargeIconFilename;
+                this.SmallIconFilename = SmallIconFilename;
             }
 
             #pragma warning disable CS8618
@@ -248,9 +273,9 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem FirstPersonFlags;
-            public TItem Flags;
-            public TItem ArmorType;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public TItem LargeIconFilename;
+            public TItem SmallIconFilename;
             #endregion
 
             #region Equals
@@ -263,17 +288,17 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.FirstPersonFlags, rhs.FirstPersonFlags)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.ArmorType, rhs.ArmorType)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.LargeIconFilename, rhs.LargeIconFilename)) return false;
+                if (!object.Equals(this.SmallIconFilename, rhs.SmallIconFilename)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.FirstPersonFlags);
-                hash.Add(this.Flags);
-                hash.Add(this.ArmorType);
+                hash.Add(this.Model);
+                hash.Add(this.LargeIconFilename);
+                hash.Add(this.SmallIconFilename);
                 return hash.ToHashCode();
             }
 
@@ -282,9 +307,13 @@ namespace Mutagen.Bethesda.Skyrim
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.FirstPersonFlags)) return false;
-                if (!eval(this.Flags)) return false;
-                if (!eval(this.ArmorType)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (!eval(this.LargeIconFilename)) return false;
+                if (!eval(this.SmallIconFilename)) return false;
                 return true;
             }
             #endregion
@@ -292,9 +321,13 @@ namespace Mutagen.Bethesda.Skyrim
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.FirstPersonFlags)) return true;
-                if (eval(this.Flags)) return true;
-                if (eval(this.ArmorType)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (eval(this.LargeIconFilename)) return true;
+                if (eval(this.SmallIconFilename)) return true;
                 return false;
             }
             #endregion
@@ -302,16 +335,16 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new BodyTemplate.Mask<R>();
+                var ret = new ArmorModel.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.FirstPersonFlags = eval(this.FirstPersonFlags);
-                obj.Flags = eval(this.Flags);
-                obj.ArmorType = eval(this.ArmorType);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.LargeIconFilename = eval(this.LargeIconFilename);
+                obj.SmallIconFilename = eval(this.SmallIconFilename);
             }
             #endregion
 
@@ -321,30 +354,30 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(BodyTemplate.Mask<bool>? printMask = null)
+            public string ToString(ArmorModel.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, BodyTemplate.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, ArmorModel.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(BodyTemplate.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(ArmorModel.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.FirstPersonFlags ?? true)
+                    if (printMask?.Model?.Overall ?? true)
                     {
-                        fg.AppendItem(FirstPersonFlags, "FirstPersonFlags");
+                        Model?.ToString(fg);
                     }
-                    if (printMask?.Flags ?? true)
+                    if (printMask?.LargeIconFilename ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        fg.AppendItem(LargeIconFilename, "LargeIconFilename");
                     }
-                    if (printMask?.ArmorType ?? true)
+                    if (printMask?.SmallIconFilename ?? true)
                     {
-                        fg.AppendItem(ArmorType, "ArmorType");
+                        fg.AppendItem(SmallIconFilename, "SmallIconFilename");
                     }
                 }
                 fg.AppendLine("]");
@@ -371,23 +404,23 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
-            public Exception? FirstPersonFlags;
-            public Exception? Flags;
-            public Exception? ArmorType;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? LargeIconFilename;
+            public Exception? SmallIconFilename;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
+                ArmorModel_FieldIndex enu = (ArmorModel_FieldIndex)index;
                 switch (enu)
                 {
-                    case BodyTemplate_FieldIndex.FirstPersonFlags:
-                        return FirstPersonFlags;
-                    case BodyTemplate_FieldIndex.Flags:
-                        return Flags;
-                    case BodyTemplate_FieldIndex.ArmorType:
-                        return ArmorType;
+                    case ArmorModel_FieldIndex.Model:
+                        return Model;
+                    case ArmorModel_FieldIndex.LargeIconFilename:
+                        return LargeIconFilename;
+                    case ArmorModel_FieldIndex.SmallIconFilename:
+                        return SmallIconFilename;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -395,17 +428,17 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void SetNthException(int index, Exception ex)
             {
-                BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
+                ArmorModel_FieldIndex enu = (ArmorModel_FieldIndex)index;
                 switch (enu)
                 {
-                    case BodyTemplate_FieldIndex.FirstPersonFlags:
-                        this.FirstPersonFlags = ex;
+                    case ArmorModel_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
-                    case BodyTemplate_FieldIndex.Flags:
-                        this.Flags = ex;
+                    case ArmorModel_FieldIndex.LargeIconFilename:
+                        this.LargeIconFilename = ex;
                         break;
-                    case BodyTemplate_FieldIndex.ArmorType:
-                        this.ArmorType = ex;
+                    case ArmorModel_FieldIndex.SmallIconFilename:
+                        this.SmallIconFilename = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -414,17 +447,17 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void SetNthMask(int index, object obj)
             {
-                BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
+                ArmorModel_FieldIndex enu = (ArmorModel_FieldIndex)index;
                 switch (enu)
                 {
-                    case BodyTemplate_FieldIndex.FirstPersonFlags:
-                        this.FirstPersonFlags = (Exception?)obj;
+                    case ArmorModel_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
-                    case BodyTemplate_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
+                    case ArmorModel_FieldIndex.LargeIconFilename:
+                        this.LargeIconFilename = (Exception?)obj;
                         break;
-                    case BodyTemplate_FieldIndex.ArmorType:
-                        this.ArmorType = (Exception?)obj;
+                    case ArmorModel_FieldIndex.SmallIconFilename:
+                        this.SmallIconFilename = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -434,9 +467,9 @@ namespace Mutagen.Bethesda.Skyrim
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (FirstPersonFlags != null) return true;
-                if (Flags != null) return true;
-                if (ArmorType != null) return true;
+                if (Model != null) return true;
+                if (LargeIconFilename != null) return true;
+                if (SmallIconFilename != null) return true;
                 return false;
             }
             #endregion
@@ -471,9 +504,9 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendItem(FirstPersonFlags, "FirstPersonFlags");
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(ArmorType, "ArmorType");
+                Model?.ToString(fg);
+                fg.AppendItem(LargeIconFilename, "LargeIconFilename");
+                fg.AppendItem(SmallIconFilename, "SmallIconFilename");
             }
             #endregion
 
@@ -482,9 +515,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.FirstPersonFlags = this.FirstPersonFlags.Combine(rhs.FirstPersonFlags);
-                ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.ArmorType = this.ArmorType.Combine(rhs.ArmorType);
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.LargeIconFilename = this.LargeIconFilename.Combine(rhs.LargeIconFilename);
+                ret.SmallIconFilename = this.SmallIconFilename.Combine(rhs.SmallIconFilename);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -506,17 +539,17 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public bool FirstPersonFlags;
-            public bool Flags;
-            public bool ArmorType;
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public bool LargeIconFilename;
+            public bool SmallIconFilename;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.FirstPersonFlags = defaultOn;
-                this.Flags = defaultOn;
-                this.ArmorType = defaultOn;
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.LargeIconFilename = defaultOn;
+                this.SmallIconFilename = defaultOn;
             }
 
             #endregion
@@ -532,46 +565,47 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((FirstPersonFlags, null));
-                ret.Add((Flags, null));
-                ret.Add((ArmorType, null));
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((LargeIconFilename, null));
+                ret.Add((SmallIconFilename, null));
             }
         }
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = BodyTemplate_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IEnumerable<ILinkGetter> Links => ArmorModelCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => BodyTemplateBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ArmorModelBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((BodyTemplateBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ArmorModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static BodyTemplate CreateFromBinary(MutagenFrame frame)
+        public static ArmorModel CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public static BodyTemplate CreateFromBinary(
+        public static ArmorModel CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new BodyTemplate();
-            ((BodyTemplateSetterCommon)((IBodyTemplateGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new ArmorModel();
+            ((ArmorModelSetterCommon)((IArmorModelGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -584,35 +618,36 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBodyTemplateGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IArmorModelGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((BodyTemplateSetterCommon)((IBodyTemplateGetter)this).CommonSetterInstance()!).Clear(this);
+            ((ArmorModelSetterCommon)((IArmorModelGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static BodyTemplate GetNew()
+        internal static ArmorModel GetNew()
         {
-            return new BodyTemplate();
+            return new ArmorModel();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IBodyTemplate :
-        IBodyTemplateGetter,
-        ILoquiObjectSetter<IBodyTemplate>
+    public partial interface IArmorModel :
+        IArmorModelGetter,
+        ILoquiObjectSetter<IArmorModel>
     {
-        new BipedObjectFlag FirstPersonFlags { get; set; }
-        new BodyTemplate.Flag Flags { get; set; }
-        new ArmorType ArmorType { get; set; }
+        new Model? Model { get; set; }
+        new String? LargeIconFilename { get; set; }
+        new String? SmallIconFilename { get; set; }
     }
 
-    public partial interface IBodyTemplateGetter :
+    public partial interface IArmorModelGetter :
         ILoquiObject,
-        ILoquiObject<IBodyTemplateGetter>,
+        ILoquiObject<IArmorModelGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -621,51 +656,51 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        BipedObjectFlag FirstPersonFlags { get; }
-        BodyTemplate.Flag Flags { get; }
-        ArmorType ArmorType { get; }
+        IModelGetter? Model { get; }
+        String? LargeIconFilename { get; }
+        String? SmallIconFilename { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class BodyTemplateMixIn
+    public static partial class ArmorModelMixIn
     {
-        public static void Clear(this IBodyTemplate item)
+        public static void Clear(this IArmorModel item)
         {
-            ((BodyTemplateSetterCommon)((IBodyTemplateGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((ArmorModelSetterCommon)((IArmorModelGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static BodyTemplate.Mask<bool> GetEqualsMask(
-            this IBodyTemplateGetter item,
-            IBodyTemplateGetter rhs,
+        public static ArmorModel.Mask<bool> GetEqualsMask(
+            this IArmorModelGetter item,
+            IArmorModelGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((BodyTemplateCommon)((IBodyTemplateGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((ArmorModelCommon)((IArmorModelGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IBodyTemplateGetter item,
+            this IArmorModelGetter item,
             string? name = null,
-            BodyTemplate.Mask<bool>? printMask = null)
+            ArmorModel.Mask<bool>? printMask = null)
         {
-            return ((BodyTemplateCommon)((IBodyTemplateGetter)item).CommonInstance()!).ToString(
+            return ((ArmorModelCommon)((IArmorModelGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IBodyTemplateGetter item,
+            this IArmorModelGetter item,
             FileGeneration fg,
             string? name = null,
-            BodyTemplate.Mask<bool>? printMask = null)
+            ArmorModel.Mask<bool>? printMask = null)
         {
-            ((BodyTemplateCommon)((IBodyTemplateGetter)item).CommonInstance()!).ToString(
+            ((ArmorModelCommon)((IArmorModelGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -673,38 +708,38 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this IBodyTemplateGetter item,
-            BodyTemplate.Mask<bool?> checkMask)
+            this IArmorModelGetter item,
+            ArmorModel.Mask<bool?> checkMask)
         {
-            return ((BodyTemplateCommon)((IBodyTemplateGetter)item).CommonInstance()!).HasBeenSet(
+            return ((ArmorModelCommon)((IArmorModelGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static BodyTemplate.Mask<bool> GetHasBeenSetMask(this IBodyTemplateGetter item)
+        public static ArmorModel.Mask<bool> GetHasBeenSetMask(this IArmorModelGetter item)
         {
-            var ret = new BodyTemplate.Mask<bool>(false);
-            ((BodyTemplateCommon)((IBodyTemplateGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new ArmorModel.Mask<bool>(false);
+            ((ArmorModelCommon)((IArmorModelGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IBodyTemplateGetter item,
-            IBodyTemplateGetter rhs)
+            this IArmorModelGetter item,
+            IArmorModelGetter rhs)
         {
-            return ((BodyTemplateCommon)((IBodyTemplateGetter)item).CommonInstance()!).Equals(
+            return ((ArmorModelCommon)((IArmorModelGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this IBodyTemplate lhs,
-            IBodyTemplateGetter rhs,
-            BodyTemplate.TranslationMask? copyMask = null)
+            this IArmorModel lhs,
+            IArmorModelGetter rhs,
+            ArmorModel.TranslationMask? copyMask = null)
         {
-            ((BodyTemplateSetterTranslationCommon)((IBodyTemplateGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ArmorModelSetterTranslationCommon)((IArmorModelGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -712,59 +747,59 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this IBodyTemplate lhs,
-            IBodyTemplateGetter rhs,
-            out BodyTemplate.ErrorMask errorMask,
-            BodyTemplate.TranslationMask? copyMask = null)
+            this IArmorModel lhs,
+            IArmorModelGetter rhs,
+            out ArmorModel.ErrorMask errorMask,
+            ArmorModel.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((BodyTemplateSetterTranslationCommon)((IBodyTemplateGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ArmorModelSetterTranslationCommon)((IArmorModelGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = BodyTemplate.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ArmorModel.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IBodyTemplate lhs,
-            IBodyTemplateGetter rhs,
+            this IArmorModel lhs,
+            IArmorModelGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((BodyTemplateSetterTranslationCommon)((IBodyTemplateGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ArmorModelSetterTranslationCommon)((IArmorModelGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static BodyTemplate DeepCopy(
-            this IBodyTemplateGetter item,
-            BodyTemplate.TranslationMask? copyMask = null)
+        public static ArmorModel DeepCopy(
+            this IArmorModelGetter item,
+            ArmorModel.TranslationMask? copyMask = null)
         {
-            return ((BodyTemplateSetterTranslationCommon)((IBodyTemplateGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ArmorModelSetterTranslationCommon)((IArmorModelGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static BodyTemplate DeepCopy(
-            this IBodyTemplateGetter item,
-            out BodyTemplate.ErrorMask errorMask,
-            BodyTemplate.TranslationMask? copyMask = null)
+        public static ArmorModel DeepCopy(
+            this IArmorModelGetter item,
+            out ArmorModel.ErrorMask errorMask,
+            ArmorModel.TranslationMask? copyMask = null)
         {
-            return ((BodyTemplateSetterTranslationCommon)((IBodyTemplateGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ArmorModelSetterTranslationCommon)((IArmorModelGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static BodyTemplate DeepCopy(
-            this IBodyTemplateGetter item,
+        public static ArmorModel DeepCopy(
+            this IArmorModelGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((BodyTemplateSetterTranslationCommon)((IBodyTemplateGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ArmorModelSetterTranslationCommon)((IArmorModelGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -773,9 +808,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IBodyTemplate item,
+            this IArmorModel item,
             XElement node,
-            BodyTemplate.TranslationMask? translationMask = null)
+            ArmorModel.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -786,10 +821,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IBodyTemplate item,
+            this IArmorModel item,
             XElement node,
-            out BodyTemplate.ErrorMask errorMask,
-            BodyTemplate.TranslationMask? translationMask = null)
+            out ArmorModel.ErrorMask errorMask,
+            ArmorModel.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -797,16 +832,16 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = BodyTemplate.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ArmorModel.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this IBodyTemplate item,
+            this IArmorModel item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((BodyTemplateSetterCommon)((IBodyTemplateGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((ArmorModelSetterCommon)((IArmorModelGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -814,9 +849,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IBodyTemplate item,
+            this IArmorModel item,
             string path,
-            BodyTemplate.TranslationMask? translationMask = null)
+            ArmorModel.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -826,10 +861,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IBodyTemplate item,
+            this IArmorModel item,
             string path,
-            out BodyTemplate.ErrorMask errorMask,
-            BodyTemplate.TranslationMask? translationMask = null)
+            out ArmorModel.ErrorMask errorMask,
+            ArmorModel.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -840,10 +875,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IBodyTemplate item,
+            this IArmorModel item,
             string path,
             ErrorMaskBuilder? errorMask,
-            BodyTemplate.TranslationMask? translationMask = null)
+            ArmorModel.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -854,9 +889,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IBodyTemplate item,
+            this IArmorModel item,
             Stream stream,
-            BodyTemplate.TranslationMask? translationMask = null)
+            ArmorModel.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -866,10 +901,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IBodyTemplate item,
+            this IArmorModel item,
             Stream stream,
-            out BodyTemplate.ErrorMask errorMask,
-            BodyTemplate.TranslationMask? translationMask = null)
+            out ArmorModel.ErrorMask errorMask,
+            ArmorModel.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -880,10 +915,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IBodyTemplate item,
+            this IArmorModel item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            BodyTemplate.TranslationMask? translationMask = null)
+            ArmorModel.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -898,7 +933,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IBodyTemplate item,
+            this IArmorModel item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -908,11 +943,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromBinary(
-            this IBodyTemplate item,
+            this IArmorModel item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((BodyTemplateSetterCommon)((IBodyTemplateGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((ArmorModelSetterCommon)((IArmorModelGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -928,49 +963,49 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum BodyTemplate_FieldIndex
+    public enum ArmorModel_FieldIndex
     {
-        FirstPersonFlags = 0,
-        Flags = 1,
-        ArmorType = 2,
+        Model = 0,
+        LargeIconFilename = 1,
+        SmallIconFilename = 2,
     }
     #endregion
 
     #region Registration
-    public partial class BodyTemplate_Registration : ILoquiRegistration
+    public partial class ArmorModel_Registration : ILoquiRegistration
     {
-        public static readonly BodyTemplate_Registration Instance = new BodyTemplate_Registration();
+        public static readonly ArmorModel_Registration Instance = new ArmorModel_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 51,
+            msgID: 151,
             version: 0);
 
-        public const string GUID = "8f6a5735-ee64-4fe6-b024-fffabb2bd8e4";
+        public const string GUID = "39a3a83f-68bd-473a-aa14-10efdb07031b";
 
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(BodyTemplate.Mask<>);
+        public static readonly Type MaskType = typeof(ArmorModel.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(BodyTemplate.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ArmorModel.ErrorMask);
 
-        public static readonly Type ClassType = typeof(BodyTemplate);
+        public static readonly Type ClassType = typeof(ArmorModel);
 
-        public static readonly Type GetterType = typeof(IBodyTemplateGetter);
+        public static readonly Type GetterType = typeof(IArmorModelGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IBodyTemplate);
+        public static readonly Type SetterType = typeof(IArmorModel);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.BodyTemplate";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.ArmorModel";
 
-        public const string Name = "BodyTemplate";
+        public const string Name = "ArmorModel";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -982,12 +1017,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "FIRSTPERSONFLAGS":
-                    return (ushort)BodyTemplate_FieldIndex.FirstPersonFlags;
-                case "FLAGS":
-                    return (ushort)BodyTemplate_FieldIndex.Flags;
-                case "ARMORTYPE":
-                    return (ushort)BodyTemplate_FieldIndex.ArmorType;
+                case "MODEL":
+                    return (ushort)ArmorModel_FieldIndex.Model;
+                case "LARGEICONFILENAME":
+                    return (ushort)ArmorModel_FieldIndex.LargeIconFilename;
+                case "SMALLICONFILENAME":
+                    return (ushort)ArmorModel_FieldIndex.SmallIconFilename;
                 default:
                     return null;
             }
@@ -995,12 +1030,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
+            ArmorModel_FieldIndex enu = (ArmorModel_FieldIndex)index;
             switch (enu)
             {
-                case BodyTemplate_FieldIndex.FirstPersonFlags:
-                case BodyTemplate_FieldIndex.Flags:
-                case BodyTemplate_FieldIndex.ArmorType:
+                case ArmorModel_FieldIndex.Model:
+                case ArmorModel_FieldIndex.LargeIconFilename:
+                case ArmorModel_FieldIndex.SmallIconFilename:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1009,12 +1044,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
+            ArmorModel_FieldIndex enu = (ArmorModel_FieldIndex)index;
             switch (enu)
             {
-                case BodyTemplate_FieldIndex.FirstPersonFlags:
-                case BodyTemplate_FieldIndex.Flags:
-                case BodyTemplate_FieldIndex.ArmorType:
+                case ArmorModel_FieldIndex.Model:
+                    return true;
+                case ArmorModel_FieldIndex.LargeIconFilename:
+                case ArmorModel_FieldIndex.SmallIconFilename:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1023,12 +1059,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
+            ArmorModel_FieldIndex enu = (ArmorModel_FieldIndex)index;
             switch (enu)
             {
-                case BodyTemplate_FieldIndex.FirstPersonFlags:
-                case BodyTemplate_FieldIndex.Flags:
-                case BodyTemplate_FieldIndex.ArmorType:
+                case ArmorModel_FieldIndex.Model:
+                case ArmorModel_FieldIndex.LargeIconFilename:
+                case ArmorModel_FieldIndex.SmallIconFilename:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1037,15 +1073,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static string GetNthName(ushort index)
         {
-            BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
+            ArmorModel_FieldIndex enu = (ArmorModel_FieldIndex)index;
             switch (enu)
             {
-                case BodyTemplate_FieldIndex.FirstPersonFlags:
-                    return "FirstPersonFlags";
-                case BodyTemplate_FieldIndex.Flags:
-                    return "Flags";
-                case BodyTemplate_FieldIndex.ArmorType:
-                    return "ArmorType";
+                case ArmorModel_FieldIndex.Model:
+                    return "Model";
+                case ArmorModel_FieldIndex.LargeIconFilename:
+                    return "LargeIconFilename";
+                case ArmorModel_FieldIndex.SmallIconFilename:
+                    return "SmallIconFilename";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1053,12 +1089,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
+            ArmorModel_FieldIndex enu = (ArmorModel_FieldIndex)index;
             switch (enu)
             {
-                case BodyTemplate_FieldIndex.FirstPersonFlags:
-                case BodyTemplate_FieldIndex.Flags:
-                case BodyTemplate_FieldIndex.ArmorType:
+                case ArmorModel_FieldIndex.Model:
+                case ArmorModel_FieldIndex.LargeIconFilename:
+                case ArmorModel_FieldIndex.SmallIconFilename:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1067,12 +1103,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsProtected(ushort index)
         {
-            BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
+            ArmorModel_FieldIndex enu = (ArmorModel_FieldIndex)index;
             switch (enu)
             {
-                case BodyTemplate_FieldIndex.FirstPersonFlags:
-                case BodyTemplate_FieldIndex.Flags:
-                case BodyTemplate_FieldIndex.ArmorType:
+                case ArmorModel_FieldIndex.Model:
+                case ArmorModel_FieldIndex.LargeIconFilename:
+                case ArmorModel_FieldIndex.SmallIconFilename:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1081,26 +1117,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static Type GetNthType(ushort index)
         {
-            BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
+            ArmorModel_FieldIndex enu = (ArmorModel_FieldIndex)index;
             switch (enu)
             {
-                case BodyTemplate_FieldIndex.FirstPersonFlags:
-                    return typeof(BipedObjectFlag);
-                case BodyTemplate_FieldIndex.Flags:
-                    return typeof(BodyTemplate.Flag);
-                case BodyTemplate_FieldIndex.ArmorType:
-                    return typeof(ArmorType);
+                case ArmorModel_FieldIndex.Model:
+                    return typeof(Model);
+                case ArmorModel_FieldIndex.LargeIconFilename:
+                    return typeof(String);
+                case ArmorModel_FieldIndex.SmallIconFilename:
+                    return typeof(String);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(BodyTemplateXmlWriteTranslation);
-        public static readonly RecordType BODT_HEADER = new RecordType("BODT");
-        public static readonly RecordType TriggeringRecordType = BODT_HEADER;
-        public const int NumStructFields = 3;
-        public const int NumTypedFields = 0;
-        public static readonly Type BinaryWriteTranslation = typeof(BodyTemplateBinaryWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(ArmorModelXmlWriteTranslation);
+        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
+        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
+        public static readonly RecordType MICO_HEADER = new RecordType("MICO");
+        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        {
+            return new CollectionGetterWrapper<RecordType>(
+                new HashSet<RecordType>(
+                    new RecordType[]
+                    {
+                        MODL_HEADER,
+                        ICON_HEADER,
+                        MICO_HEADER
+                    })
+            );
+        });
+        public const int NumStructFields = 0;
+        public const int NumTypedFields = 3;
+        public static readonly Type BinaryWriteTranslation = typeof(ArmorModelBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1133,23 +1183,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class BodyTemplateSetterCommon
+    public partial class ArmorModelSetterCommon
     {
-        public static readonly BodyTemplateSetterCommon Instance = new BodyTemplateSetterCommon();
+        public static readonly ArmorModelSetterCommon Instance = new ArmorModelSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IBodyTemplate item)
+        public void Clear(IArmorModel item)
         {
             ClearPartial();
-            item.FirstPersonFlags = default;
-            item.Flags = default;
-            item.ArmorType = default;
+            item.Model = null;
+            item.LargeIconFilename = default;
+            item.SmallIconFilename = default;
         }
         
         #region Xml Translation
         public virtual void CopyInFromXml(
-            IBodyTemplate item,
+            IArmorModel item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1158,7 +1208,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    BodyTemplateXmlCreateTranslation.FillPublicElementXml(
+                    ArmorModelXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1177,43 +1227,80 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Binary Translation
         protected static void FillBinaryStructs(
-            IBodyTemplate item,
+            IArmorModel item,
             MutagenFrame frame)
         {
-            item.FirstPersonFlags = EnumBinaryTranslation<BipedObjectFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Flags = EnumBinaryTranslation<BodyTemplate.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.ArmorType = EnumBinaryTranslation<ArmorType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+        }
+        
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            IArmorModel item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x4C444F4D: // MODL
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ArmorModel_FieldIndex.Model) return TryGet<int?>.Failure;
+                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)ArmorModel_FieldIndex.Model);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ArmorModel_FieldIndex.LargeIconFilename) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.LargeIconFilename = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)ArmorModel_FieldIndex.LargeIconFilename);
+                }
+                case 0x4F43494D: // MICO
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ArmorModel_FieldIndex.SmallIconFilename) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.SmallIconFilename = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)ArmorModel_FieldIndex.SmallIconFilename);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
         }
         
         public virtual void CopyInFromBinary(
-            IBodyTemplate item,
+            IArmorModel item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                frame.Reader,
-                recordTypeConverter.ConvertToCustom(BodyTemplate_Registration.BODT_HEADER)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs);
+                fillStructs: FillBinaryStructs,
+                fillTyped: FillBinaryRecordTypes);
         }
         
         #endregion
         
     }
-    public partial class BodyTemplateCommon
+    public partial class ArmorModelCommon
     {
-        public static readonly BodyTemplateCommon Instance = new BodyTemplateCommon();
+        public static readonly ArmorModelCommon Instance = new ArmorModelCommon();
 
-        public BodyTemplate.Mask<bool> GetEqualsMask(
-            IBodyTemplateGetter item,
-            IBodyTemplateGetter rhs,
+        public ArmorModel.Mask<bool> GetEqualsMask(
+            IArmorModelGetter item,
+            IArmorModelGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new BodyTemplate.Mask<bool>(false);
-            ((BodyTemplateCommon)((IBodyTemplateGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new ArmorModel.Mask<bool>(false);
+            ((ArmorModelCommon)((IArmorModelGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1222,21 +1309,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IBodyTemplateGetter item,
-            IBodyTemplateGetter rhs,
-            BodyTemplate.Mask<bool> ret,
+            IArmorModelGetter item,
+            IArmorModelGetter rhs,
+            ArmorModel.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.FirstPersonFlags = item.FirstPersonFlags == rhs.FirstPersonFlags;
-            ret.Flags = item.Flags == rhs.Flags;
-            ret.ArmorType = item.ArmorType == rhs.ArmorType;
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.LargeIconFilename = string.Equals(item.LargeIconFilename, rhs.LargeIconFilename);
+            ret.SmallIconFilename = string.Equals(item.SmallIconFilename, rhs.SmallIconFilename);
         }
         
         public string ToString(
-            IBodyTemplateGetter item,
+            IArmorModelGetter item,
             string? name = null,
-            BodyTemplate.Mask<bool>? printMask = null)
+            ArmorModel.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1248,18 +1339,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IBodyTemplateGetter item,
+            IArmorModelGetter item,
             FileGeneration fg,
             string? name = null,
-            BodyTemplate.Mask<bool>? printMask = null)
+            ArmorModel.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"BodyTemplate =>");
+                fg.AppendLine($"ArmorModel =>");
             }
             else
             {
-                fg.AppendLine($"{name} (BodyTemplate) =>");
+                fg.AppendLine($"{name} (ArmorModel) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1273,59 +1364,76 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IBodyTemplateGetter item,
+            IArmorModelGetter item,
             FileGeneration fg,
-            BodyTemplate.Mask<bool>? printMask = null)
+            ArmorModel.Mask<bool>? printMask = null)
         {
-            if (printMask?.FirstPersonFlags ?? true)
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
             {
-                fg.AppendItem(item.FirstPersonFlags, "FirstPersonFlags");
+                ModelItem?.ToString(fg, "Model");
             }
-            if (printMask?.Flags ?? true)
+            if ((printMask?.LargeIconFilename ?? true)
+                && item.LargeIconFilename.TryGet(out var LargeIconFilenameItem))
             {
-                fg.AppendItem(item.Flags, "Flags");
+                fg.AppendItem(LargeIconFilenameItem, "LargeIconFilename");
             }
-            if (printMask?.ArmorType ?? true)
+            if ((printMask?.SmallIconFilename ?? true)
+                && item.SmallIconFilename.TryGet(out var SmallIconFilenameItem))
             {
-                fg.AppendItem(item.ArmorType, "ArmorType");
+                fg.AppendItem(SmallIconFilenameItem, "SmallIconFilename");
             }
         }
         
         public bool HasBeenSet(
-            IBodyTemplateGetter item,
-            BodyTemplate.Mask<bool?> checkMask)
+            IArmorModelGetter item,
+            ArmorModel.Mask<bool?> checkMask)
         {
+            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
+            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.LargeIconFilename.HasValue && checkMask.LargeIconFilename.Value != (item.LargeIconFilename != null)) return false;
+            if (checkMask.SmallIconFilename.HasValue && checkMask.SmallIconFilename.Value != (item.SmallIconFilename != null)) return false;
             return true;
         }
         
         public void FillHasBeenSetMask(
-            IBodyTemplateGetter item,
-            BodyTemplate.Mask<bool> mask)
+            IArmorModelGetter item,
+            ArmorModel.Mask<bool> mask)
         {
-            mask.FirstPersonFlags = true;
-            mask.Flags = true;
-            mask.ArmorType = true;
+            var itemModel = item.Model;
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            mask.LargeIconFilename = (item.LargeIconFilename != null);
+            mask.SmallIconFilename = (item.SmallIconFilename != null);
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IBodyTemplateGetter? lhs,
-            IBodyTemplateGetter? rhs)
+            IArmorModelGetter? lhs,
+            IArmorModelGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.FirstPersonFlags != rhs.FirstPersonFlags) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.ArmorType != rhs.ArmorType) return false;
+            if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            if (!string.Equals(lhs.LargeIconFilename, rhs.LargeIconFilename)) return false;
+            if (!string.Equals(lhs.SmallIconFilename, rhs.SmallIconFilename)) return false;
             return true;
         }
         
-        public virtual int GetHashCode(IBodyTemplateGetter item)
+        public virtual int GetHashCode(IArmorModelGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.FirstPersonFlags);
-            hash.Add(item.Flags);
-            hash.Add(item.ArmorType);
+            if (item.Model.TryGet(out var Modelitem))
+            {
+                hash.Add(Modelitem);
+            }
+            if (item.LargeIconFilename.TryGet(out var LargeIconFilenameitem))
+            {
+                hash.Add(LargeIconFilenameitem);
+            }
+            if (item.SmallIconFilename.TryGet(out var SmallIconFilenameitem))
+            {
+                hash.Add(SmallIconFilenameitem);
+            }
             return hash.ToHashCode();
         }
         
@@ -1334,62 +1442,91 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public object GetNew()
         {
-            return BodyTemplate.GetNew();
+            return ArmorModel.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IBodyTemplateGetter obj)
+        public IEnumerable<ILinkGetter> GetLinks(IArmorModelGetter obj)
         {
+            if (obj.Model != null)
+            {
+                foreach (var item in obj.Model.Links)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
         #endregion
         
     }
-    public partial class BodyTemplateSetterTranslationCommon
+    public partial class ArmorModelSetterTranslationCommon
     {
-        public static readonly BodyTemplateSetterTranslationCommon Instance = new BodyTemplateSetterTranslationCommon();
+        public static readonly ArmorModelSetterTranslationCommon Instance = new ArmorModelSetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            IBodyTemplate item,
-            IBodyTemplateGetter rhs,
+            IArmorModel item,
+            IArmorModelGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)BodyTemplate_FieldIndex.FirstPersonFlags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ArmorModel_FieldIndex.Model) ?? true))
             {
-                item.FirstPersonFlags = rhs.FirstPersonFlags;
+                errorMask?.PushIndex((int)ArmorModel_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model.TryGet(out var rhsModel))
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)ArmorModel_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
-            if ((copyMask?.GetShouldTranslate((int)BodyTemplate_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ArmorModel_FieldIndex.LargeIconFilename) ?? true))
             {
-                item.Flags = rhs.Flags;
+                item.LargeIconFilename = rhs.LargeIconFilename;
             }
-            if ((copyMask?.GetShouldTranslate((int)BodyTemplate_FieldIndex.ArmorType) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ArmorModel_FieldIndex.SmallIconFilename) ?? true))
             {
-                item.ArmorType = rhs.ArmorType;
+                item.SmallIconFilename = rhs.SmallIconFilename;
             }
         }
         
         #endregion
         
-        public BodyTemplate DeepCopy(
-            IBodyTemplateGetter item,
-            BodyTemplate.TranslationMask? copyMask = null)
+        public ArmorModel DeepCopy(
+            IArmorModelGetter item,
+            ArmorModel.TranslationMask? copyMask = null)
         {
-            BodyTemplate ret = (BodyTemplate)((BodyTemplateCommon)((IBodyTemplateGetter)item).CommonInstance()!).GetNew();
+            ArmorModel ret = (ArmorModel)((ArmorModelCommon)((IArmorModelGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public BodyTemplate DeepCopy(
-            IBodyTemplateGetter item,
-            out BodyTemplate.ErrorMask errorMask,
-            BodyTemplate.TranslationMask? copyMask = null)
+        public ArmorModel DeepCopy(
+            IArmorModelGetter item,
+            out ArmorModel.ErrorMask errorMask,
+            ArmorModel.TranslationMask? copyMask = null)
         {
-            BodyTemplate ret = (BodyTemplate)((BodyTemplateCommon)((IBodyTemplateGetter)item).CommonInstance()!).GetNew();
+            ArmorModel ret = (ArmorModel)((ArmorModelCommon)((IArmorModelGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1397,12 +1534,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public BodyTemplate DeepCopy(
-            IBodyTemplateGetter item,
+        public ArmorModel DeepCopy(
+            IArmorModelGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            BodyTemplate ret = (BodyTemplate)((BodyTemplateCommon)((IBodyTemplateGetter)item).CommonInstance()!).GetNew();
+            ArmorModel ret = (ArmorModel)((ArmorModelCommon)((IArmorModelGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1417,27 +1554,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class BodyTemplate
+    public partial class ArmorModel
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BodyTemplate_Registration.Instance;
-        public static BodyTemplate_Registration Registration => BodyTemplate_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ArmorModel_Registration.Instance;
+        public static ArmorModel_Registration Registration => ArmorModel_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => BodyTemplateCommon.Instance;
+        protected object CommonInstance() => ArmorModelCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return BodyTemplateSetterCommon.Instance;
+            return ArmorModelSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => BodyTemplateSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ArmorModelSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IBodyTemplateGetter.CommonInstance() => this.CommonInstance();
+        object IArmorModelGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IBodyTemplateGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IArmorModelGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IBodyTemplateGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IArmorModelGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1448,57 +1585,64 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class BodyTemplateXmlWriteTranslation : IXmlWriteTranslator
+    public partial class ArmorModelXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static BodyTemplateXmlWriteTranslation Instance = new BodyTemplateXmlWriteTranslation();
+        public readonly static ArmorModelXmlWriteTranslation Instance = new ArmorModelXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IBodyTemplateGetter item,
+            IArmorModelGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)BodyTemplate_FieldIndex.FirstPersonFlags) ?? true))
+            if ((item.Model != null)
+                && (translationMask?.GetShouldTranslate((int)ArmorModel_FieldIndex.Model) ?? true))
             {
-                EnumXmlTranslation<BipedObjectFlag>.Instance.Write(
+                if (item.Model.TryGet(out var ModelItem))
+                {
+                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                        item: ModelItem,
+                        node: node,
+                        name: nameof(item.Model),
+                        fieldIndex: (int)ArmorModel_FieldIndex.Model,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)ArmorModel_FieldIndex.Model));
+                }
+            }
+            if ((item.LargeIconFilename != null)
+                && (translationMask?.GetShouldTranslate((int)ArmorModel_FieldIndex.LargeIconFilename) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.FirstPersonFlags),
-                    item: item.FirstPersonFlags,
-                    fieldIndex: (int)BodyTemplate_FieldIndex.FirstPersonFlags,
+                    name: nameof(item.LargeIconFilename),
+                    item: item.LargeIconFilename,
+                    fieldIndex: (int)ArmorModel_FieldIndex.LargeIconFilename,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)BodyTemplate_FieldIndex.Flags) ?? true))
+            if ((item.SmallIconFilename != null)
+                && (translationMask?.GetShouldTranslate((int)ArmorModel_FieldIndex.SmallIconFilename) ?? true))
             {
-                EnumXmlTranslation<BodyTemplate.Flag>.Instance.Write(
+                StringXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)BodyTemplate_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)BodyTemplate_FieldIndex.ArmorType) ?? true))
-            {
-                EnumXmlTranslation<ArmorType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.ArmorType),
-                    item: item.ArmorType,
-                    fieldIndex: (int)BodyTemplate_FieldIndex.ArmorType,
+                    name: nameof(item.SmallIconFilename),
+                    item: item.SmallIconFilename,
+                    fieldIndex: (int)ArmorModel_FieldIndex.SmallIconFilename,
                     errorMask: errorMask);
             }
         }
 
         public void Write(
             XElement node,
-            IBodyTemplateGetter item,
+            IArmorModelGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.BodyTemplate");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.ArmorModel");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.BodyTemplate");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.ArmorModel");
             }
             WriteToNodeXml(
                 item: item,
@@ -1515,7 +1659,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IBodyTemplateGetter)item,
+                item: (IArmorModelGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1524,7 +1668,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public void Write(
             XElement node,
-            IBodyTemplateGetter item,
+            IArmorModelGetter item,
             ErrorMaskBuilder? errorMask,
             int fieldIndex,
             TranslationCrystal? translationMask,
@@ -1534,7 +1678,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             try
             {
                 Write(
-                    item: (IBodyTemplateGetter)item,
+                    item: (IArmorModelGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1553,12 +1697,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class BodyTemplateXmlCreateTranslation
+    public partial class ArmorModelXmlCreateTranslation
     {
-        public readonly static BodyTemplateXmlCreateTranslation Instance = new BodyTemplateXmlCreateTranslation();
+        public readonly static ArmorModelXmlCreateTranslation Instance = new ArmorModelXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IBodyTemplate item,
+            IArmorModel item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1567,7 +1711,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    BodyTemplateXmlCreateTranslation.FillPublicElementXml(
+                    ArmorModelXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1583,7 +1727,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            IBodyTemplate item,
+            IArmorModel item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1591,11 +1735,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
-                case "FirstPersonFlags":
-                    errorMask?.PushIndex((int)BodyTemplate_FieldIndex.FirstPersonFlags);
+                case "Model":
+                    errorMask?.PushIndex((int)ArmorModel_FieldIndex.Model);
                     try
                     {
-                        item.FirstPersonFlags = EnumXmlTranslation<BipedObjectFlag>.Instance.Parse(
+                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)ArmorModel_FieldIndex.Model));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LargeIconFilename":
+                    errorMask?.PushIndex((int)ArmorModel_FieldIndex.LargeIconFilename);
+                    try
+                    {
+                        item.LargeIconFilename = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1609,29 +1772,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Flags":
-                    errorMask?.PushIndex((int)BodyTemplate_FieldIndex.Flags);
+                case "SmallIconFilename":
+                    errorMask?.PushIndex((int)ArmorModel_FieldIndex.SmallIconFilename);
                     try
                     {
-                        item.Flags = EnumXmlTranslation<BodyTemplate.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ArmorType":
-                    errorMask?.PushIndex((int)BodyTemplate_FieldIndex.ArmorType);
-                    try
-                    {
-                        item.ArmorType = EnumXmlTranslation<ArmorType>.Instance.Parse(
+                        item.SmallIconFilename = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1656,30 +1801,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Xml Write Mixins
-    public static class BodyTemplateXmlTranslationMixIn
+    public static class ArmorModelXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IBodyTemplateGetter item,
+            this IArmorModelGetter item,
             XElement node,
-            out BodyTemplate.ErrorMask errorMask,
-            BodyTemplate.TranslationMask? translationMask = null,
+            out ArmorModel.ErrorMask errorMask,
+            ArmorModel.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((BodyTemplateXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((ArmorModelXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = BodyTemplate.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ArmorModel.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this IBodyTemplateGetter item,
+            this IArmorModelGetter item,
             string path,
-            out BodyTemplate.ErrorMask errorMask,
-            BodyTemplate.TranslationMask? translationMask = null,
+            out ArmorModel.ErrorMask errorMask,
+            ArmorModel.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1693,7 +1838,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IBodyTemplateGetter item,
+            this IArmorModelGetter item,
             string path,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1710,10 +1855,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IBodyTemplateGetter item,
+            this IArmorModelGetter item,
             Stream stream,
-            out BodyTemplate.ErrorMask errorMask,
-            BodyTemplate.TranslationMask? translationMask = null,
+            out ArmorModel.ErrorMask errorMask,
+            ArmorModel.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1727,7 +1872,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IBodyTemplateGetter item,
+            this IArmorModelGetter item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1744,13 +1889,13 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IBodyTemplateGetter item,
+            this IArmorModelGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
             string? name = null)
         {
-            ((BodyTemplateXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((ArmorModelXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1759,12 +1904,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IBodyTemplateGetter item,
+            this IArmorModelGetter item,
             XElement node,
             string? name = null,
-            BodyTemplate.TranslationMask? translationMask = null)
+            ArmorModel.TranslationMask? translationMask = null)
         {
-            ((BodyTemplateXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((ArmorModelXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1773,12 +1918,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IBodyTemplateGetter item,
+            this IArmorModelGetter item,
             string path,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((BodyTemplateXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((ArmorModelXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1788,12 +1933,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IBodyTemplateGetter item,
+            this IArmorModelGetter item,
             Stream stream,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((BodyTemplateXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((ArmorModelXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1812,42 +1957,43 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class BodyTemplateBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class ArmorModelBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static BodyTemplateBinaryWriteTranslation Instance = new BodyTemplateBinaryWriteTranslation();
+        public readonly static ArmorModelBinaryWriteTranslation Instance = new ArmorModelBinaryWriteTranslation();
 
-        public static void WriteEmbedded(
-            IBodyTemplateGetter item,
-            MutagenWriter writer)
+        public static void WriteRecordTypes(
+            IArmorModelGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<BipedObjectFlag>.Instance.Write(
-                writer,
-                item.FirstPersonFlags,
-                length: 4);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<BodyTemplate.Flag>.Instance.Write(
-                writer,
-                item.Flags,
-                length: 4);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ArmorType>.Instance.Write(
-                writer,
-                item.ArmorType,
-                length: 4);
+            if (item.Model.TryGet(out var ModelItem))
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.LargeIconFilename,
+                header: recordTypeConverter.ConvertToCustom(ArmorModel_Registration.ICON_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SmallIconFilename,
+                header: recordTypeConverter.ConvertToCustom(ArmorModel_Registration.MICO_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
         }
 
         public void Write(
             MutagenWriter writer,
-            IBodyTemplateGetter item,
+            IArmorModelGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
+            WriteRecordTypes(
+                item: item,
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(BodyTemplate_Registration.BODT_HEADER),
-                type: ObjectType.Subrecord))
-            {
-                WriteEmbedded(
-                    item: item,
-                    writer: writer);
-            }
+                recordTypeConverter: recordTypeConverter);
         }
 
         public void Write(
@@ -1856,16 +2002,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IBodyTemplateGetter)item,
+                item: (IArmorModelGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class BodyTemplateBinaryCreateTranslation
+    public partial class ArmorModelBinaryCreateTranslation
     {
-        public readonly static BodyTemplateBinaryCreateTranslation Instance = new BodyTemplateBinaryCreateTranslation();
+        public readonly static ArmorModelBinaryCreateTranslation Instance = new ArmorModelBinaryCreateTranslation();
 
     }
 
@@ -1873,13 +2019,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class BodyTemplateBinaryTranslationMixIn
+    public static class ArmorModelBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IBodyTemplateGetter item,
+            this IArmorModelGetter item,
             MutagenWriter writer)
         {
-            ((BodyTemplateBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((ArmorModelBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 recordTypeConverter: null);
@@ -1892,33 +2038,34 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class BodyTemplateBinaryOverlay :
+    public partial class ArmorModelBinaryOverlay :
         BinaryOverlay,
-        IBodyTemplateGetter
+        IArmorModelGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BodyTemplate_Registration.Instance;
-        public static BodyTemplate_Registration Registration => BodyTemplate_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ArmorModel_Registration.Instance;
+        public static ArmorModel_Registration Registration => ArmorModel_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => BodyTemplateCommon.Instance;
+        protected object CommonInstance() => ArmorModelCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => BodyTemplateSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ArmorModelSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IBodyTemplateGetter.CommonInstance() => this.CommonInstance();
+        object IArmorModelGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IBodyTemplateGetter.CommonSetterInstance() => null;
+        object? IArmorModelGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IBodyTemplateGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IArmorModelGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBodyTemplateGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IArmorModelGetter)rhs, include);
 
+        public IEnumerable<ILinkGetter> Links => ArmorModelCommon.Instance.GetLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => BodyTemplateXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => ArmorModelXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -1927,7 +2074,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((BodyTemplateXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((ArmorModelXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -1935,28 +2082,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => BodyTemplateBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ArmorModelBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((BodyTemplateBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ArmorModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public BipedObjectFlag FirstPersonFlags => (BipedObjectFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
-        public BodyTemplate.Flag Flags => (BodyTemplate.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
-        public ArmorType ArmorType => (ArmorType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
+        #region Model
+        public IModelGetter? Model { get; private set; }
+        public bool Model_IsSet => Model != null;
+        #endregion
+        #region LargeIconFilename
+        private int? _LargeIconFilenameLocation;
+        public String? LargeIconFilename => _LargeIconFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _LargeIconFilenameLocation.Value, _package.Meta)) : default(string?);
+        #endregion
+        #region SmallIconFilename
+        private int? _SmallIconFilenameLocation;
+        public String? SmallIconFilename => _SmallIconFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SmallIconFilenameLocation.Value, _package.Meta)) : default(string?);
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected BodyTemplateBinaryOverlay(
+        protected ArmorModelBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1965,42 +2121,82 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static BodyTemplateBinaryOverlay BodyTemplateFactory(
+        public static ArmorModelBinaryOverlay ArmorModelFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new BodyTemplateBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.Meta),
+            var ret = new ArmorModelBinaryOverlay(
+                bytes: stream.RemainingMemory,
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.Meta.Subrecord(stream.RemainingSpan).TotalLength));
-            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
-            stream.Position += 0xC + package.Meta.SubConstants.HeaderLength;
+            int offset = stream.Position;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,
-                offset: offset);
+                offset: 0);
+            ret.FillTypelessSubrecordTypes(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: offset,
+                recordTypeConverter: recordTypeConverter,
+                fill: ret.FillRecordType);
             return ret;
         }
 
-        public static BodyTemplateBinaryOverlay BodyTemplateFactory(
+        public static ArmorModelBinaryOverlay ArmorModelFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            return BodyTemplateFactory(
+            return ArmorModelFactory(
                 stream: new BinaryMemoryReadStream(slice),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case 0x4C444F4D: // MODL
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ArmorModel_FieldIndex.Model) return TryGet<int?>.Failure;
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)ArmorModel_FieldIndex.Model);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ArmorModel_FieldIndex.LargeIconFilename) return TryGet<int?>.Failure;
+                    _LargeIconFilenameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ArmorModel_FieldIndex.LargeIconFilename);
+                }
+                case 0x4F43494D: // MICO
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ArmorModel_FieldIndex.SmallIconFilename) return TryGet<int?>.Failure;
+                    _SmallIconFilenameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ArmorModel_FieldIndex.SmallIconFilename);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
         #region To String
 
         public void ToString(
             FileGeneration fg,
             string? name = null)
         {
-            BodyTemplateMixIn.ToString(
+            ArmorModelMixIn.ToString(
                 item: this,
                 name: name);
         }

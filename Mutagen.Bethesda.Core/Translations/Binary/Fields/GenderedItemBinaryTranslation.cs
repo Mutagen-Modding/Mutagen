@@ -22,6 +22,24 @@ namespace Mutagen.Bethesda.Binary
             return new GenderedItem<TItem>(male, female);
         }
 
+        public static GenderedItem<TItem?> Parse<TItem>(
+            MutagenFrame frame,
+            UtilityTranslation.BinaryMasterParseDelegate<TItem> transl,
+            RecordTypeConverter femaleRecordConverter,
+            RecordTypeConverter? maleRecordConverter = null)
+            where TItem : class
+        {
+            if (!transl(frame, out var male, maleRecordConverter))
+            {
+                male = null;
+            }
+            if (!transl(frame, out var female, femaleRecordConverter))
+            {
+                female = null;
+            }
+            return new GenderedItem<TItem?>(male, female);
+        }
+
         public static GenderedItem<TItem> Parse<TItem>(
             MutagenFrame frame,
             UtilityTranslation.BinaryMasterParseDelegate<TItem> transl,
@@ -240,6 +258,26 @@ namespace Mutagen.Bethesda.Binary
             if (female != null)
             {
                 transl(writer, female);
+            }
+        }
+
+        public static void Write<T>(
+            MutagenWriter writer,
+            IGenderedItemGetter<T>? item,
+            UtilityTranslation.BinaryMasterWriteDelegate<T> transl,
+            RecordTypeConverter femaleRecordConverter,
+            RecordTypeConverter? maleRecordConverter = null)
+        {
+            if (item == null) return;
+            var male = item.Male;
+            if (male != null)
+            {
+                transl(writer, male, maleRecordConverter);
+            }
+            var female = item.Female;
+            if (female != null)
+            {
+                transl(writer, female, femaleRecordConverter);
             }
         }
 

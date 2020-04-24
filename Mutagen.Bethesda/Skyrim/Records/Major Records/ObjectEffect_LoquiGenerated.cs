@@ -38,6 +38,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectEffectInternal,
         ILoquiObjectSetter<ObjectEffect>,
         INamed,
+        IEffectRecord,
         IEquatable<ObjectEffect>,
         IEqualsMask
     {

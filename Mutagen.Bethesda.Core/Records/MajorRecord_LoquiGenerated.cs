@@ -1274,6 +1274,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
         public static readonly RecordType ASPC_HEADER = new RecordType("ASPC");
         public static readonly RecordType AACT_HEADER = new RecordType("AACT");
+        public static readonly RecordType ARMA_HEADER = new RecordType("ARMA");
         public static readonly RecordType ARTO_HEADER = new RecordType("ARTO");
         public static readonly RecordType BPTD_HEADER = new RecordType("BPTD");
         public static readonly RecordType CLFM_HEADER = new RecordType("CLFM");
@@ -1284,6 +1285,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType FLST_HEADER = new RecordType("FLST");
         public static readonly RecordType HAZD_HEADER = new RecordType("HAZD");
         public static readonly RecordType HDPT_HEADER = new RecordType("HDPT");
+        public static readonly RecordType IMAD_HEADER = new RecordType("IMAD");
         public static readonly RecordType IPDS_HEADER = new RecordType("IPDS");
         public static readonly RecordType KYWD_HEADER = new RecordType("KYWD");
         public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
@@ -1295,6 +1297,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType REVB_HEADER = new RecordType("REVB");
         public static readonly RecordType SCRL_HEADER = new RecordType("SCRL");
         public static readonly RecordType SNDR_HEADER = new RecordType("SNDR");
+        public static readonly RecordType TACT_HEADER = new RecordType("TACT");
         public static readonly RecordType TXST_HEADER = new RecordType("TXST");
         public static readonly RecordType VTYP_HEADER = new RecordType("VTYP");
         public static readonly RecordType SHOU_HEADER = new RecordType("SHOU");
@@ -1382,6 +1385,7 @@ namespace Mutagen.Bethesda.Internals
                         WRLD_HEADER,
                         ASPC_HEADER,
                         AACT_HEADER,
+                        ARMA_HEADER,
                         ARTO_HEADER,
                         BPTD_HEADER,
                         CLFM_HEADER,
@@ -1392,6 +1396,7 @@ namespace Mutagen.Bethesda.Internals
                         FLST_HEADER,
                         HAZD_HEADER,
                         HDPT_HEADER,
+                        IMAD_HEADER,
                         IPDS_HEADER,
                         KYWD_HEADER,
                         LCRT_HEADER,
@@ -1403,6 +1408,7 @@ namespace Mutagen.Bethesda.Internals
                         REVB_HEADER,
                         SCRL_HEADER,
                         SNDR_HEADER,
+                        TACT_HEADER,
                         TXST_HEADER,
                         VTYP_HEADER,
                         SHOU_HEADER

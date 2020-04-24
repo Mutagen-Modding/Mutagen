@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ArmorAddon" recordType="ARMA" baseClass="SkyrimMajorRecord" objType="Record" GUID="4b6db51f-a0b8-4378-8e8b-8103dfdcd353" ID="153">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

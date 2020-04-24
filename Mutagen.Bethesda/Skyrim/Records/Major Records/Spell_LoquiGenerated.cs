@@ -38,6 +38,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISpellInternal,
         ILoquiObjectSetter<Spell>,
         INamed,
+        IEffectRecord,
         IEquatable<Spell>,
         IEqualsMask
     {

@@ -43,6 +43,37 @@ namespace Mutagen.Bethesda.Binary
 
     public static class GenderedItemBinaryOverlay
     {
+        public static IGenderedItemGetter<T?> Factory<T>(
+            BinaryMemoryReadStream stream,
+            BinaryOverlayFactoryPackage package,
+            Func<BinaryMemoryReadStream, BinaryOverlayFactoryPackage, RecordTypeConverter?, T> creator,
+            RecordTypeConverter femaleRecordConverter,
+            RecordTypeConverter maleRecordConverter)
+            where T : class
+        {
+            var initialPos = stream.Position;
+            T? maleObj = null, femaleObj = null;
+            for (int i = 0; i < 2; i++)
+            {
+                var subHeader = package.Meta.GetSubrecord(stream);
+                var recType = subHeader.RecordType;
+                if (maleRecordConverter.ToConversions.TryGetValue(recType, out var _))
+                {
+                    maleObj = creator(stream, package, maleRecordConverter);
+                }
+                else if (femaleRecordConverter.ToConversions.TryGetValue(recType, out var _))
+                {
+                    femaleObj = creator(stream, package, femaleRecordConverter);
+                }
+            }
+            var readLen = stream.Position - initialPos;
+            if (readLen == 0)
+            {
+                throw new ArgumentException("Expected things to be read.");
+            }
+            return new GenderedItem<T?>(maleObj, femaleObj);
+        }
+
         public static GenderedItemBinaryOverlay<T> FactorySkipMarkers<T>(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,

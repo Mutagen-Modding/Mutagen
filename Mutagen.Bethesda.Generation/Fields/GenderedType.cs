@@ -17,9 +17,21 @@ namespace Mutagen.Bethesda.Generation
         public override bool CopyNeedsTryCatch => true;
         public override bool IsEnumerable => true;
         public override bool IsClass => true;
-        public bool ItemHasBeenSet => MaleMarker.HasValue;
+        public bool ItemHasBeenSet
+        {
+            get
+            {
+                if (MaleMarker.HasValue) return true;
+                if (this.SubTypeGeneration is LoquiType loqui)
+                {
+                    return loqui.GetFieldData().HasTrigger;
+                }
+                return false;
+            }
+        }
         public override bool CanBeNullable(bool getter) => true;
         public RecordTypeConverter FemaleConversions;
+        public RecordTypeConverter MaleConversions;
 
         public RecordType? MaleMarker;
         public RecordType? FemaleMarker;
@@ -305,12 +317,14 @@ namespace Mutagen.Bethesda.Generation
             }
 
             FemaleConversions = RecordTypeConverterModule.GetConverter(node.Element(XName.Get("FemaleTypeOverrides", LoquiGenerator.Namespace)));
+            MaleConversions = RecordTypeConverterModule.GetConverter(node.Element(XName.Get("MaleTypeOverrides", LoquiGenerator.Namespace)));
         }
 
         public override void GenerateInRegistration(FileGeneration fg)
         {
             base.GenerateInRegistration(fg);
             RecordTypeConverterModule.GenerateConverterMember(fg, this.ObjectGen, this.FemaleConversions, $"{this.Name}Female");
+            RecordTypeConverterModule.GenerateConverterMember(fg, this.ObjectGen, this.MaleConversions, $"{this.Name}Male");
         }
     }
 }

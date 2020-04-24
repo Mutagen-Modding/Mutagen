@@ -132,19 +132,19 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IDestructibleGetter? IScrollGetter.Destructible => this.Destructible;
         #endregion
-        #region SoundPickUp
+        #region PickUpSound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<SoundDescriptor> _SoundPickUp = new FormLinkNullable<SoundDescriptor>();
-        public IFormLinkNullable<SoundDescriptor> SoundPickUp => this._SoundPickUp;
+        protected IFormLinkNullable<SoundDescriptor> _PickUpSound = new FormLinkNullable<SoundDescriptor>();
+        public IFormLinkNullable<SoundDescriptor> PickUpSound => this._PickUpSound;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ISoundDescriptorGetter> IScrollGetter.SoundPickUp => this.SoundPickUp;
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IScrollGetter.PickUpSound => this.PickUpSound;
         #endregion
-        #region SoundPutDown
+        #region PutDownSound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<SoundDescriptor> _SoundPutDown = new FormLinkNullable<SoundDescriptor>();
-        public IFormLinkNullable<SoundDescriptor> SoundPutDown => this._SoundPutDown;
+        protected IFormLinkNullable<SoundDescriptor> _PutDownSound = new FormLinkNullable<SoundDescriptor>();
+        public IFormLinkNullable<SoundDescriptor> PutDownSound => this._PutDownSound;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ISoundDescriptorGetter> IScrollGetter.SoundPutDown => this.SoundPutDown;
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IScrollGetter.PutDownSound => this.PutDownSound;
         #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -360,8 +360,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Description = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
-                this.SoundPickUp = initialValue;
-                this.SoundPutDown = initialValue;
+                this.PickUpSound = initialValue;
+                this.PutDownSound = initialValue;
                 this.Data = new MaskItem<TItem, ScrollData.Mask<TItem>?>(initialValue, new ScrollData.Mask<TItem>(initialValue));
                 this.SpellData = new MaskItem<TItem, SpellData.Mask<TItem>?>(initialValue, new SpellData.Mask<TItem>(initialValue));
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
@@ -382,8 +382,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Description,
                 TItem Model,
                 TItem Destructible,
-                TItem SoundPickUp,
-                TItem SoundPutDown,
+                TItem PickUpSound,
+                TItem PutDownSound,
                 TItem Data,
                 TItem SpellData,
                 TItem Effects)
@@ -403,8 +403,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Description = Description;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
-                this.SoundPickUp = SoundPickUp;
-                this.SoundPutDown = SoundPutDown;
+                this.PickUpSound = PickUpSound;
+                this.PutDownSound = PutDownSound;
                 this.Data = new MaskItem<TItem, ScrollData.Mask<TItem>?>(Data, new ScrollData.Mask<TItem>(Data));
                 this.SpellData = new MaskItem<TItem, SpellData.Mask<TItem>?>(SpellData, new SpellData.Mask<TItem>(SpellData));
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
@@ -427,8 +427,8 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Description;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
-            public TItem SoundPickUp;
-            public TItem SoundPutDown;
+            public TItem PickUpSound;
+            public TItem PutDownSound;
             public MaskItem<TItem, ScrollData.Mask<TItem>?>? Data { get; set; }
             public MaskItem<TItem, SpellData.Mask<TItem>?>? SpellData { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>? Effects;
@@ -453,8 +453,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
                 if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
-                if (!object.Equals(this.SoundPickUp, rhs.SoundPickUp)) return false;
-                if (!object.Equals(this.SoundPutDown, rhs.SoundPutDown)) return false;
+                if (!object.Equals(this.PickUpSound, rhs.PickUpSound)) return false;
+                if (!object.Equals(this.PutDownSound, rhs.PutDownSound)) return false;
                 if (!object.Equals(this.Data, rhs.Data)) return false;
                 if (!object.Equals(this.SpellData, rhs.SpellData)) return false;
                 if (!object.Equals(this.Effects, rhs.Effects)) return false;
@@ -471,8 +471,8 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Description);
                 hash.Add(this.Model);
                 hash.Add(this.Destructible);
-                hash.Add(this.SoundPickUp);
-                hash.Add(this.SoundPutDown);
+                hash.Add(this.PickUpSound);
+                hash.Add(this.PutDownSound);
                 hash.Add(this.Data);
                 hash.Add(this.SpellData);
                 hash.Add(this.Effects);
@@ -516,8 +516,8 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Destructible.Overall)) return false;
                     if (this.Destructible.Specific != null && !this.Destructible.Specific.All(eval)) return false;
                 }
-                if (!eval(this.SoundPickUp)) return false;
-                if (!eval(this.SoundPutDown)) return false;
+                if (!eval(this.PickUpSound)) return false;
+                if (!eval(this.PutDownSound)) return false;
                 if (Data != null)
                 {
                     if (!eval(this.Data.Overall)) return false;
@@ -578,8 +578,8 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Destructible.Overall)) return true;
                     if (this.Destructible.Specific != null && this.Destructible.Specific.Any(eval)) return true;
                 }
-                if (eval(this.SoundPickUp)) return true;
-                if (eval(this.SoundPutDown)) return true;
+                if (eval(this.PickUpSound)) return true;
+                if (eval(this.PutDownSound)) return true;
                 if (Data != null)
                 {
                     if (eval(this.Data.Overall)) return true;
@@ -638,8 +638,8 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Description = eval(this.Description);
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
-                obj.SoundPickUp = eval(this.SoundPickUp);
-                obj.SoundPutDown = eval(this.SoundPutDown);
+                obj.PickUpSound = eval(this.PickUpSound);
+                obj.PutDownSound = eval(this.PutDownSound);
                 obj.Data = this.Data == null ? null : new MaskItem<R, ScrollData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
                 obj.SpellData = this.SpellData == null ? null : new MaskItem<R, SpellData.Mask<R>?>(eval(this.SpellData.Overall), this.SpellData.Specific?.Translate(eval));
                 if (Effects != null)
@@ -730,13 +730,13 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Destructible?.ToString(fg);
                     }
-                    if (printMask?.SoundPickUp ?? true)
+                    if (printMask?.PickUpSound ?? true)
                     {
-                        fg.AppendItem(SoundPickUp, "SoundPickUp");
+                        fg.AppendItem(PickUpSound, "PickUpSound");
                     }
-                    if (printMask?.SoundPutDown ?? true)
+                    if (printMask?.PutDownSound ?? true)
                     {
-                        fg.AppendItem(SoundPutDown, "SoundPutDown");
+                        fg.AppendItem(PutDownSound, "PutDownSound");
                     }
                     if (printMask?.Data?.Overall ?? true)
                     {
@@ -789,8 +789,8 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Description;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
             public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
-            public Exception? SoundPickUp;
-            public Exception? SoundPutDown;
+            public Exception? PickUpSound;
+            public Exception? PutDownSound;
             public MaskItem<Exception?, ScrollData.ErrorMask?>? Data;
             public MaskItem<Exception?, SpellData.ErrorMask?>? SpellData;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>? Effects;
@@ -818,10 +818,10 @@ namespace Mutagen.Bethesda.Skyrim
                         return Model;
                     case Scroll_FieldIndex.Destructible:
                         return Destructible;
-                    case Scroll_FieldIndex.SoundPickUp:
-                        return SoundPickUp;
-                    case Scroll_FieldIndex.SoundPutDown:
-                        return SoundPutDown;
+                    case Scroll_FieldIndex.PickUpSound:
+                        return PickUpSound;
+                    case Scroll_FieldIndex.PutDownSound:
+                        return PutDownSound;
                     case Scroll_FieldIndex.Data:
                         return Data;
                     case Scroll_FieldIndex.SpellData:
@@ -862,11 +862,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case Scroll_FieldIndex.Destructible:
                         this.Destructible = new MaskItem<Exception?, Destructible.ErrorMask?>(ex, null);
                         break;
-                    case Scroll_FieldIndex.SoundPickUp:
-                        this.SoundPickUp = ex;
+                    case Scroll_FieldIndex.PickUpSound:
+                        this.PickUpSound = ex;
                         break;
-                    case Scroll_FieldIndex.SoundPutDown:
-                        this.SoundPutDown = ex;
+                    case Scroll_FieldIndex.PutDownSound:
+                        this.PutDownSound = ex;
                         break;
                     case Scroll_FieldIndex.Data:
                         this.Data = new MaskItem<Exception?, ScrollData.ErrorMask?>(ex, null);
@@ -912,11 +912,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case Scroll_FieldIndex.Destructible:
                         this.Destructible = (MaskItem<Exception?, Destructible.ErrorMask?>?)obj;
                         break;
-                    case Scroll_FieldIndex.SoundPickUp:
-                        this.SoundPickUp = (Exception?)obj;
+                    case Scroll_FieldIndex.PickUpSound:
+                        this.PickUpSound = (Exception?)obj;
                         break;
-                    case Scroll_FieldIndex.SoundPutDown:
-                        this.SoundPutDown = (Exception?)obj;
+                    case Scroll_FieldIndex.PutDownSound:
+                        this.PutDownSound = (Exception?)obj;
                         break;
                     case Scroll_FieldIndex.Data:
                         this.Data = (MaskItem<Exception?, ScrollData.ErrorMask?>?)obj;
@@ -944,8 +944,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Description != null) return true;
                 if (Model != null) return true;
                 if (Destructible != null) return true;
-                if (SoundPickUp != null) return true;
-                if (SoundPutDown != null) return true;
+                if (PickUpSound != null) return true;
+                if (PutDownSound != null) return true;
                 if (Data != null) return true;
                 if (SpellData != null) return true;
                 if (Effects != null) return true;
@@ -1013,8 +1013,8 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Description, "Description");
                 Model?.ToString(fg);
                 Destructible?.ToString(fg);
-                fg.AppendItem(SoundPickUp, "SoundPickUp");
-                fg.AppendItem(SoundPutDown, "SoundPutDown");
+                fg.AppendItem(PickUpSound, "PickUpSound");
+                fg.AppendItem(PutDownSound, "PutDownSound");
                 Data?.ToString(fg);
                 SpellData?.ToString(fg);
                 if (Effects.TryGet(out var EffectsItem))
@@ -1055,8 +1055,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
-                ret.SoundPickUp = this.SoundPickUp.Combine(rhs.SoundPickUp);
-                ret.SoundPutDown = this.SoundPutDown.Combine(rhs.SoundPutDown);
+                ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
+                ret.PutDownSound = this.PutDownSound.Combine(rhs.PutDownSound);
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 ret.SpellData = this.SpellData.Combine(rhs.SpellData, (l, r) => l.Combine(r));
                 ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
@@ -1090,8 +1090,8 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Description;
             public MaskItem<bool, Model.TranslationMask?> Model;
             public MaskItem<bool, Destructible.TranslationMask?> Destructible;
-            public bool SoundPickUp;
-            public bool SoundPutDown;
+            public bool PickUpSound;
+            public bool PutDownSound;
             public MaskItem<bool, ScrollData.TranslationMask?> Data;
             public MaskItem<bool, SpellData.TranslationMask?> SpellData;
             public MaskItem<bool, Effect.TranslationMask?> Effects;
@@ -1109,8 +1109,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Description = defaultOn;
                 this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.Destructible = new MaskItem<bool, Destructible.TranslationMask?>(defaultOn, null);
-                this.SoundPickUp = defaultOn;
-                this.SoundPutDown = defaultOn;
+                this.PickUpSound = defaultOn;
+                this.PutDownSound = defaultOn;
                 this.Data = new MaskItem<bool, ScrollData.TranslationMask?>(defaultOn, null);
                 this.SpellData = new MaskItem<bool, SpellData.TranslationMask?>(defaultOn, null);
                 this.Effects = new MaskItem<bool, Effect.TranslationMask?>(defaultOn, null);
@@ -1129,8 +1129,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Description, null));
                 ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
                 ret.Add((Destructible?.Overall ?? true, Destructible?.Specific?.GetCrystal()));
-                ret.Add((SoundPickUp, null));
-                ret.Add((SoundPutDown, null));
+                ret.Add((PickUpSound, null));
+                ret.Add((PutDownSound, null));
                 ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
                 ret.Add((SpellData?.Overall ?? true, SpellData?.Specific?.GetCrystal()));
                 ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
@@ -1229,8 +1229,8 @@ namespace Mutagen.Bethesda.Skyrim
         new String? Description { get; set; }
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
-        new IFormLinkNullable<SoundDescriptor> SoundPickUp { get; }
-        new IFormLinkNullable<SoundDescriptor> SoundPutDown { get; }
+        new IFormLinkNullable<SoundDescriptor> PickUpSound { get; }
+        new IFormLinkNullable<SoundDescriptor> PutDownSound { get; }
         new ScrollData? Data { get; set; }
         new SpellData? SpellData { get; set; }
         new ExtendedList<Effect> Effects { get; }
@@ -1258,8 +1258,8 @@ namespace Mutagen.Bethesda.Skyrim
         String? Description { get; }
         IModelGetter? Model { get; }
         IDestructibleGetter? Destructible { get; }
-        IFormLinkNullableGetter<ISoundDescriptorGetter> SoundPickUp { get; }
-        IFormLinkNullableGetter<ISoundDescriptorGetter> SoundPutDown { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound { get; }
         IScrollDataGetter? Data { get; }
         ISpellDataGetter? SpellData { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
@@ -1571,8 +1571,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Description = 11,
         Model = 12,
         Destructible = 13,
-        SoundPickUp = 14,
-        SoundPutDown = 15,
+        PickUpSound = 14,
+        PutDownSound = 15,
         Data = 16,
         SpellData = 17,
         Effects = 18,
@@ -1641,10 +1641,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Scroll_FieldIndex.Model;
                 case "DESTRUCTIBLE":
                     return (ushort)Scroll_FieldIndex.Destructible;
-                case "SOUNDPICKUP":
-                    return (ushort)Scroll_FieldIndex.SoundPickUp;
-                case "SOUNDPUTDOWN":
-                    return (ushort)Scroll_FieldIndex.SoundPutDown;
+                case "PICKUPSOUND":
+                    return (ushort)Scroll_FieldIndex.PickUpSound;
+                case "PUTDOWNSOUND":
+                    return (ushort)Scroll_FieldIndex.PutDownSound;
                 case "DATA":
                     return (ushort)Scroll_FieldIndex.Data;
                 case "SPELLDATA":
@@ -1671,8 +1671,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Scroll_FieldIndex.Description:
                 case Scroll_FieldIndex.Model:
                 case Scroll_FieldIndex.Destructible:
-                case Scroll_FieldIndex.SoundPickUp:
-                case Scroll_FieldIndex.SoundPutDown:
+                case Scroll_FieldIndex.PickUpSound:
+                case Scroll_FieldIndex.PutDownSound:
                 case Scroll_FieldIndex.Data:
                 case Scroll_FieldIndex.SpellData:
                     return false;
@@ -1698,8 +1698,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Scroll_FieldIndex.MenuDisplayObject:
                 case Scroll_FieldIndex.EquipmentType:
                 case Scroll_FieldIndex.Description:
-                case Scroll_FieldIndex.SoundPickUp:
-                case Scroll_FieldIndex.SoundPutDown:
+                case Scroll_FieldIndex.PickUpSound:
+                case Scroll_FieldIndex.PutDownSound:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1719,8 +1719,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Scroll_FieldIndex.Description:
                 case Scroll_FieldIndex.Model:
                 case Scroll_FieldIndex.Destructible:
-                case Scroll_FieldIndex.SoundPickUp:
-                case Scroll_FieldIndex.SoundPutDown:
+                case Scroll_FieldIndex.PickUpSound:
+                case Scroll_FieldIndex.PutDownSound:
                 case Scroll_FieldIndex.Data:
                 case Scroll_FieldIndex.SpellData:
                 case Scroll_FieldIndex.Effects:
@@ -1751,10 +1751,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Model";
                 case Scroll_FieldIndex.Destructible:
                     return "Destructible";
-                case Scroll_FieldIndex.SoundPickUp:
-                    return "SoundPickUp";
-                case Scroll_FieldIndex.SoundPutDown:
-                    return "SoundPutDown";
+                case Scroll_FieldIndex.PickUpSound:
+                    return "PickUpSound";
+                case Scroll_FieldIndex.PutDownSound:
+                    return "PutDownSound";
                 case Scroll_FieldIndex.Data:
                     return "Data";
                 case Scroll_FieldIndex.SpellData:
@@ -1779,8 +1779,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Scroll_FieldIndex.Description:
                 case Scroll_FieldIndex.Model:
                 case Scroll_FieldIndex.Destructible:
-                case Scroll_FieldIndex.SoundPickUp:
-                case Scroll_FieldIndex.SoundPutDown:
+                case Scroll_FieldIndex.PickUpSound:
+                case Scroll_FieldIndex.PutDownSound:
                 case Scroll_FieldIndex.Data:
                 case Scroll_FieldIndex.SpellData:
                 case Scroll_FieldIndex.Effects:
@@ -1803,8 +1803,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Scroll_FieldIndex.Description:
                 case Scroll_FieldIndex.Model:
                 case Scroll_FieldIndex.Destructible:
-                case Scroll_FieldIndex.SoundPickUp:
-                case Scroll_FieldIndex.SoundPutDown:
+                case Scroll_FieldIndex.PickUpSound:
+                case Scroll_FieldIndex.PutDownSound:
                 case Scroll_FieldIndex.Data:
                 case Scroll_FieldIndex.SpellData:
                 case Scroll_FieldIndex.Effects:
@@ -1835,9 +1835,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Model);
                 case Scroll_FieldIndex.Destructible:
                     return typeof(Destructible);
-                case Scroll_FieldIndex.SoundPickUp:
+                case Scroll_FieldIndex.PickUpSound:
                     return typeof(IFormLinkNullable<SoundDescriptor>);
-                case Scroll_FieldIndex.SoundPutDown:
+                case Scroll_FieldIndex.PutDownSound:
                     return typeof(IFormLinkNullable<SoundDescriptor>);
                 case Scroll_FieldIndex.Data:
                     return typeof(ScrollData);
@@ -1923,8 +1923,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Description = default;
             item.Model = null;
             item.Destructible = null;
-            item.SoundPickUp.FormKey = null;
-            item.SoundPutDown.FormKey = null;
+            item.PickUpSound.FormKey = null;
+            item.PutDownSound.FormKey = null;
             item.Data = null;
             item.SpellData = null;
             item.Effects.Clear();
@@ -2111,18 +2111,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E59: // YNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.SoundPickUp.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.PickUpSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.SoundPickUp);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.PickUpSound);
                 }
                 case 0x4D414E5A: // ZNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.SoundPutDown.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.PutDownSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.SoundPutDown);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.PutDownSound);
                 }
                 case 0x41544144: // DATA
                 {
@@ -2245,8 +2245,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Destructible,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.SoundPickUp = object.Equals(item.SoundPickUp, rhs.SoundPickUp);
-            ret.SoundPutDown = object.Equals(item.SoundPutDown, rhs.SoundPutDown);
+            ret.PickUpSound = object.Equals(item.PickUpSound, rhs.PickUpSound);
+            ret.PutDownSound = object.Equals(item.PutDownSound, rhs.PutDownSound);
             ret.Data = EqualsMaskHelper.EqualsHelper(
                 item.Data,
                 rhs.Data,
@@ -2365,15 +2365,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 DestructibleItem?.ToString(fg, "Destructible");
             }
-            if ((printMask?.SoundPickUp ?? true)
-                && item.SoundPickUp.TryGet(out var SoundPickUpItem))
+            if ((printMask?.PickUpSound ?? true)
+                && item.PickUpSound.TryGet(out var PickUpSoundItem))
             {
-                fg.AppendItem(SoundPickUpItem, "SoundPickUp");
+                fg.AppendItem(PickUpSoundItem, "PickUpSound");
             }
-            if ((printMask?.SoundPutDown ?? true)
-                && item.SoundPutDown.TryGet(out var SoundPutDownItem))
+            if ((printMask?.PutDownSound ?? true)
+                && item.PutDownSound.TryGet(out var PutDownSoundItem))
             {
-                fg.AppendItem(SoundPutDownItem, "SoundPutDown");
+                fg.AppendItem(PutDownSoundItem, "PutDownSound");
             }
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data.TryGet(out var DataItem))
@@ -2418,8 +2418,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Destructible?.Overall.HasValue ?? false && checkMask.Destructible.Overall.Value != (item.Destructible != null)) return false;
             if (checkMask.Destructible?.Specific != null && (item.Destructible == null || !item.Destructible.HasBeenSet(checkMask.Destructible.Specific))) return false;
-            if (checkMask.SoundPickUp.HasValue && checkMask.SoundPickUp.Value != (item.SoundPickUp.FormKey != null)) return false;
-            if (checkMask.SoundPutDown.HasValue && checkMask.SoundPutDown.Value != (item.SoundPutDown.FormKey != null)) return false;
+            if (checkMask.PickUpSound.HasValue && checkMask.PickUpSound.Value != (item.PickUpSound.FormKey != null)) return false;
+            if (checkMask.PutDownSound.HasValue && checkMask.PutDownSound.Value != (item.PutDownSound.FormKey != null)) return false;
             if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
             if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
             if (checkMask.SpellData?.Overall.HasValue ?? false && checkMask.SpellData.Overall.Value != (item.SpellData != null)) return false;
@@ -2443,8 +2443,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             var itemDestructible = item.Destructible;
             mask.Destructible = new MaskItem<bool, Destructible.Mask<bool>?>(itemDestructible != null, itemDestructible?.GetHasBeenSetMask());
-            mask.SoundPickUp = (item.SoundPickUp.FormKey != null);
-            mask.SoundPutDown = (item.SoundPutDown.FormKey != null);
+            mask.PickUpSound = (item.PickUpSound.FormKey != null);
+            mask.PutDownSound = (item.PutDownSound.FormKey != null);
             var itemData = item.Data;
             mask.Data = new MaskItem<bool, ScrollData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
             var itemSpellData = item.SpellData;
@@ -2510,8 +2510,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
-            if (!lhs.SoundPickUp.Equals(rhs.SoundPickUp)) return false;
-            if (!lhs.SoundPutDown.Equals(rhs.SoundPutDown)) return false;
+            if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
+            if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
             if (!object.Equals(lhs.Data, rhs.Data)) return false;
             if (!object.Equals(lhs.SpellData, rhs.SpellData)) return false;
             if (!lhs.Effects.SequenceEqual(rhs.Effects)) return false;
@@ -2565,13 +2565,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Destructibleitem);
             }
-            if (item.SoundPickUp.TryGet(out var SoundPickUpitem))
+            if (item.PickUpSound.TryGet(out var PickUpSounditem))
             {
-                hash.Add(SoundPickUpitem);
+                hash.Add(PickUpSounditem);
             }
-            if (item.SoundPutDown.TryGet(out var SoundPutDownitem))
+            if (item.PutDownSound.TryGet(out var PutDownSounditem))
             {
-                hash.Add(SoundPutDownitem);
+                hash.Add(PutDownSounditem);
             }
             if (item.Data.TryGet(out var Dataitem))
             {
@@ -2634,8 +2634,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            yield return obj.SoundPickUp;
-            yield return obj.SoundPutDown;
+            yield return obj.PickUpSound;
+            yield return obj.PutDownSound;
             if (obj.SpellData != null)
             {
                 foreach (var item in obj.SpellData.Links)
@@ -2810,13 +2810,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.SoundPickUp) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.PickUpSound) ?? true))
             {
-                item.SoundPickUp.FormKey = rhs.SoundPickUp.FormKey;
+                item.PickUpSound.FormKey = rhs.PickUpSound.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.SoundPutDown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.PutDownSound) ?? true))
             {
-                item.SoundPutDown.FormKey = rhs.SoundPutDown.FormKey;
+                item.PutDownSound.FormKey = rhs.PutDownSound.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Data) ?? true))
             {
@@ -3134,24 +3134,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         translationMask: translationMask?.GetSubCrystal((int)Scroll_FieldIndex.Destructible));
                 }
             }
-            if ((item.SoundPickUp.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.SoundPickUp) ?? true))
+            if ((item.PickUpSound.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.PickUpSound) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.SoundPickUp),
-                    item: item.SoundPickUp.FormKey.Value,
-                    fieldIndex: (int)Scroll_FieldIndex.SoundPickUp,
+                    name: nameof(item.PickUpSound),
+                    item: item.PickUpSound.FormKey.Value,
+                    fieldIndex: (int)Scroll_FieldIndex.PickUpSound,
                     errorMask: errorMask);
             }
-            if ((item.SoundPutDown.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.SoundPutDown) ?? true))
+            if ((item.PutDownSound.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.PutDownSound) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.SoundPutDown),
-                    item: item.SoundPutDown.FormKey.Value,
-                    fieldIndex: (int)Scroll_FieldIndex.SoundPutDown,
+                    name: nameof(item.PutDownSound),
+                    item: item.PutDownSound.FormKey.Value,
+                    fieldIndex: (int)Scroll_FieldIndex.PutDownSound,
                     errorMask: errorMask);
             }
             if ((item.Data != null)
@@ -3468,11 +3468,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "SoundPickUp":
-                    errorMask?.PushIndex((int)Scroll_FieldIndex.SoundPickUp);
+                case "PickUpSound":
+                    errorMask?.PushIndex((int)Scroll_FieldIndex.PickUpSound);
                     try
                     {
-                        item.SoundPickUp.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.PickUpSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3486,11 +3486,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "SoundPutDown":
-                    errorMask?.PushIndex((int)Scroll_FieldIndex.SoundPutDown);
+                case "PutDownSound":
+                    errorMask?.PushIndex((int)Scroll_FieldIndex.PutDownSound);
                     try
                     {
-                        item.SoundPutDown.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.PutDownSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3715,11 +3715,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.SoundPickUp,
+                item: item.PickUpSound,
                 header: recordTypeConverter.ConvertToCustom(Scroll_Registration.YNAM_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.SoundPutDown,
+                item: item.PutDownSound,
                 header: recordTypeConverter.ConvertToCustom(Scroll_Registration.ZNAM_HEADER));
             if (item.Data.TryGet(out var DataItem))
             {
@@ -3904,15 +3904,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IDestructibleGetter? Destructible { get; private set; }
         public bool Destructible_IsSet => Destructible != null;
         #endregion
-        #region SoundPickUp
-        private int? _SoundPickUpLocation;
-        public bool SoundPickUp_IsSet => _SoundPickUpLocation.HasValue;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> SoundPickUp => _SoundPickUpLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundPickUpLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Empty;
+        #region PickUpSound
+        private int? _PickUpSoundLocation;
+        public bool PickUpSound_IsSet => _PickUpSoundLocation.HasValue;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PickUpSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Empty;
         #endregion
-        #region SoundPutDown
-        private int? _SoundPutDownLocation;
-        public bool SoundPutDown_IsSet => _SoundPutDownLocation.HasValue;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> SoundPutDown => _SoundPutDownLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundPutDownLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Empty;
+        #region PutDownSound
+        private int? _PutDownSoundLocation;
+        public bool PutDownSound_IsSet => _PutDownSoundLocation.HasValue;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PutDownSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Empty;
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
@@ -4047,13 +4047,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E59: // YNAM
                 {
-                    _SoundPickUpLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.SoundPickUp);
+                    _PickUpSoundLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.PickUpSound);
                 }
                 case 0x4D414E5A: // ZNAM
                 {
-                    _SoundPutDownLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.SoundPutDown);
+                    _PutDownSoundLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.PutDownSound);
                 }
                 case 0x41544144: // DATA
                 {

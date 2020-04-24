@@ -106,13 +106,6 @@
       </Gendered>
     </Fields>
   </Object>
-  <Object name="BodyTemplate" recordType="BODT" objType="Subrecord" GUID="8f6a5735-ee64-4fe6-b024-fffabb2bd8e4" ID="51">
-    <Fields>
-      <Enum name="FirstPersonFlags" enumName="BipedObjectFlag" byteLength="4" />
-      <Enum name="Flags" enumName="BodyTemplate.Flag" byteLength="4" />
-      <Enum name="ArmorType" enumName="ArmorType" byteLength="4" />
-    </Fields>
-  </Object>
   <Object name="RaceData" recordType="DATA" objType="Subrecord" GUID="b455e069-05b6-4f16-b587-b7f1530d620b" ID="52">
     <Fields>
       <RefDirect name="SkillBoost0" refName="SkillBoost" />
