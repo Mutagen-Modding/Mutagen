@@ -1,4 +1,5 @@
 using Ionic.Zlib;
+using Loqui;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Noggog;
@@ -593,6 +594,11 @@ namespace Mutagen.Bethesda
             while (meta.TryReadSubrecordFrame(stream, recordType, out var _))
             {
             }
+        }
+
+        public static RecordType GetRecordType<T>()
+        {
+            return (RecordType)LoquiRegistration.GetRegister(typeof(T))!.GetType().GetField(Mutagen.Bethesda.Internals.Constants.TriggeringRecordTypeMember).GetValue(null);
         }
     }
 }

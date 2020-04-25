@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         static ListGroup()
         {
-            T_RecordType = (RecordType)LoquiRegistration.GetRegister(typeof(T))!.GetType().GetField(Mutagen.Bethesda.Internals.Constants.TriggeringRecordTypeMember).GetValue(null);
+            T_RecordType = UtilityTranslation.GetRecordType<T>();
         }
 
         #region GroupType
