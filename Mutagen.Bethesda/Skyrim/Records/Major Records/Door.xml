@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Door" recordType="DOOR" baseClass="SkyrimMajorRecord" objType="Record" majorFlag="true" GUID="1ad3c383-f2fa-4248-8d49-fd8d908162d4" ID="178">
+    <Interface>INamed</Interface>
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="OpenSound" refName="SoundDescriptor" recordType="SNAM" />
+      <FormLink name="CloseSound" refName="SoundDescriptor" recordType="ANAM" />
+      <FormLink name="LoopSound" refName="SoundDescriptor" recordType="BNAM" />
+      <Enum name="Flags" enumName="Door.Flag" byteLength="1" recordType="FNAM" />
+    </Fields>
+  </Object>
+</Loqui>

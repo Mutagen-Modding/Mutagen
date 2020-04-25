@@ -1056,6 +1056,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType CLFM_HEADER = new RecordType("CLFM");
         public static readonly RecordType CONT_HEADER = new RecordType("CONT");
         public static readonly RecordType DEBR_HEADER = new RecordType("DEBR");
+        public static readonly RecordType DOOR_HEADER = new RecordType("DOOR");
         public static readonly RecordType DUAL_HEADER = new RecordType("DUAL");
         public static readonly RecordType EFSH_HEADER = new RecordType("EFSH");
         public static readonly RecordType EQUP_HEADER = new RecordType("EQUP");
@@ -1124,6 +1125,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         CLFM_HEADER,
                         CONT_HEADER,
                         DEBR_HEADER,
+                        DOOR_HEADER,
                         DUAL_HEADER,
                         EFSH_HEADER,
                         EQUP_HEADER,

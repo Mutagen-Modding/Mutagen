@@ -46,6 +46,9 @@
     <Compile Include="Skyrim\Records\Major Records\ContainerData.cs">
       <DependentUpon>Container.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Door.cs">
+      <DependentUpon>Door.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\ObjectEffect.cs">
       <DependentUpon>ObjectEffect.xml</DependentUpon>
     </Compile>
@@ -1547,6 +1550,9 @@
     </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\ContainerEntryData_LoquiGenerated.cs">
       <DependentUpon>ContainerEntry.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Door_LoquiGenerated.cs">
+      <DependentUpon>Door.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
