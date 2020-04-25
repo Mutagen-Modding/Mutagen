@@ -44,7 +44,7 @@
       <List name="Armature">
         <FormLink recordType="MODL" refName="ArmorAddon" />
       </List>
-      <RefDirect name="Data" refName="ArmorData" />
+      <RefDirect name="WeightValue" refName="WeightValue" recordType="DATA" />
       <Int32 name="ArmorRatingRaw" recordType="DNAM" />
       <FormLink name="TemplateArmor" recordType="TNAM" refName="Armor" />
     </Fields>
@@ -54,12 +54,6 @@
       <RefDirect name="Model" refName="Model" />
       <String name="LargeIconFilename" recordType="ICON" />
       <String name="SmallIconFilename" recordType="MICO" />
-    </Fields>
-  </Object>
-  <Object name="ArmorData" objType="Subrecord" recordType="DATA" GUID="6fc45223-a958-4bed-b700-b835b9177df8" ID="152">
-    <Fields>
-      <Int32 name="Value" />
-      <Float name="Weight" />
     </Fields>
   </Object>
 </Loqui>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="WeightValue" objType="Subrecord" GUID="5898be6e-6c53-41ce-9abc-85e1fe4c64a0" ID="182">
+    <Fields>
+      <Int32 name="Value" />
+      <Float name="Weight" />
+    </Fields>
+  </Object>
+</Loqui>

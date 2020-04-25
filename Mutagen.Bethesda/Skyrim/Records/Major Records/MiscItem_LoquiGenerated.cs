@@ -48,6 +48,122 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IMiscItemGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #region ObjectBounds
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ObjectBounds _ObjectBounds = new ObjectBounds();
+        public ObjectBounds ObjectBounds
+        {
+            get => _ObjectBounds;
+            set => _ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IMiscItemGetter.ObjectBounds => _ObjectBounds;
+        #endregion
+        #region Name
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String? _Name;
+        public String? Name
+        {
+            get => this._Name;
+            set => this._Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IMiscItemGetter.Name => this.Name;
+        #endregion
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IMiscItemGetter.Model => this.Model;
+        #endregion
+        #region LargeIconFilename
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String? _LargeIconFilename;
+        public String? LargeIconFilename
+        {
+            get => this._LargeIconFilename;
+            set => this._LargeIconFilename = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IMiscItemGetter.LargeIconFilename => this.LargeIconFilename;
+        #endregion
+        #region SmallIconFilename
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String? _SmallIconFilename;
+        public String? SmallIconFilename
+        {
+            get => this._SmallIconFilename;
+            set => this._SmallIconFilename = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IMiscItemGetter.SmallIconFilename => this.SmallIconFilename;
+        #endregion
+        #region Destructible
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Destructible? _Destructible;
+        public Destructible? Destructible
+        {
+            get => _Destructible;
+            set => _Destructible = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IMiscItemGetter.Destructible => this.Destructible;
+        #endregion
+        #region PickUpSound
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormLinkNullable<SoundDescriptor> _PickUpSound = new FormLinkNullable<SoundDescriptor>();
+        public IFormLinkNullable<SoundDescriptor> PickUpSound => this._PickUpSound;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IMiscItemGetter.PickUpSound => this.PickUpSound;
+        #endregion
+        #region PutDownSound
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormLinkNullable<SoundDescriptor> _PutDownSound = new FormLinkNullable<SoundDescriptor>();
+        public IFormLinkNullable<SoundDescriptor> PutDownSound => this._PutDownSound;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IMiscItemGetter.PutDownSound => this.PutDownSound;
+        #endregion
+        #region Keywords
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLink<Keyword>>? _Keywords;
+        public ExtendedList<IFormLink<Keyword>>? Keywords
+        {
+            get => this._Keywords;
+            set => this._Keywords = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IMiscItemGetter.Keywords => _Keywords;
+        #endregion
+
+        #endregion
+        #region WeightValue
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private WeightValue? _WeightValue;
+        public WeightValue? WeightValue
+        {
+            get => _WeightValue;
+            set => _WeightValue = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IWeightValueGetter? IMiscItemGetter.WeightValue => this.WeightValue;
+        #endregion
 
         #region To String
 
@@ -218,6 +334,17 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.Name = initialValue;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.LargeIconFilename = initialValue;
+                this.SmallIconFilename = initialValue;
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
+                this.PickUpSound = initialValue;
+                this.PutDownSound = initialValue;
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.WeightValue = new MaskItem<TItem, WeightValue.Mask<TItem>?>(initialValue, new WeightValue.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -226,7 +353,18 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem VirtualMachineAdapter,
+                TItem ObjectBounds,
+                TItem Name,
+                TItem Model,
+                TItem LargeIconFilename,
+                TItem SmallIconFilename,
+                TItem Destructible,
+                TItem PickUpSound,
+                TItem PutDownSound,
+                TItem Keywords,
+                TItem WeightValue)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -235,6 +373,17 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.Name = Name;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.LargeIconFilename = LargeIconFilename;
+                this.SmallIconFilename = SmallIconFilename;
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
+                this.PickUpSound = PickUpSound;
+                this.PutDownSound = PutDownSound;
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.WeightValue = new MaskItem<TItem, WeightValue.Mask<TItem>?>(WeightValue, new WeightValue.Mask<TItem>(WeightValue));
             }
 
             #pragma warning disable CS8618
@@ -243,6 +392,20 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem Name;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public TItem LargeIconFilename;
+            public TItem SmallIconFilename;
+            public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
+            public TItem PickUpSound;
+            public TItem PutDownSound;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
+            public MaskItem<TItem, WeightValue.Mask<TItem>?>? WeightValue { get; set; }
             #endregion
 
             #region Equals
@@ -256,11 +419,33 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.LargeIconFilename, rhs.LargeIconFilename)) return false;
+                if (!object.Equals(this.SmallIconFilename, rhs.SmallIconFilename)) return false;
+                if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
+                if (!object.Equals(this.PickUpSound, rhs.PickUpSound)) return false;
+                if (!object.Equals(this.PutDownSound, rhs.PutDownSound)) return false;
+                if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+                if (!object.Equals(this.WeightValue, rhs.WeightValue)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.Name);
+                hash.Add(this.Model);
+                hash.Add(this.LargeIconFilename);
+                hash.Add(this.SmallIconFilename);
+                hash.Add(this.Destructible);
+                hash.Add(this.PickUpSound);
+                hash.Add(this.PutDownSound);
+                hash.Add(this.Keywords);
+                hash.Add(this.WeightValue);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -271,6 +456,47 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Name)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (!eval(this.LargeIconFilename)) return false;
+                if (!eval(this.SmallIconFilename)) return false;
+                if (Destructible != null)
+                {
+                    if (!eval(this.Destructible.Overall)) return false;
+                    if (this.Destructible.Specific != null && !this.Destructible.Specific.All(eval)) return false;
+                }
+                if (!eval(this.PickUpSound)) return false;
+                if (!eval(this.PutDownSound)) return false;
+                if (this.Keywords != null)
+                {
+                    if (!eval(this.Keywords.Overall)) return false;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (WeightValue != null)
+                {
+                    if (!eval(this.WeightValue.Overall)) return false;
+                    if (this.WeightValue.Specific != null && !this.WeightValue.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -279,6 +505,47 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Name)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (eval(this.LargeIconFilename)) return true;
+                if (eval(this.SmallIconFilename)) return true;
+                if (Destructible != null)
+                {
+                    if (eval(this.Destructible.Overall)) return true;
+                    if (this.Destructible.Specific != null && this.Destructible.Specific.Any(eval)) return true;
+                }
+                if (eval(this.PickUpSound)) return true;
+                if (eval(this.PutDownSound)) return true;
+                if (this.Keywords != null)
+                {
+                    if (eval(this.Keywords.Overall)) return true;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (WeightValue != null)
+                {
+                    if (eval(this.WeightValue.Overall)) return true;
+                    if (this.WeightValue.Specific != null && this.WeightValue.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -294,6 +561,30 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.Name = eval(this.Name);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.LargeIconFilename = eval(this.LargeIconFilename);
+                obj.SmallIconFilename = eval(this.SmallIconFilename);
+                obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
+                obj.PickUpSound = eval(this.PickUpSound);
+                obj.PutDownSound = eval(this.PutDownSound);
+                if (Keywords != null)
+                {
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Keywords.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Keywords.Specific = l;
+                        foreach (var item in Keywords.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.WeightValue = this.WeightValue == null ? null : new MaskItem<R, WeightValue.Mask<R>?>(eval(this.WeightValue.Overall), this.WeightValue.Specific?.Translate(eval));
             }
             #endregion
 
@@ -316,6 +607,69 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.ToString(fg);
+                    }
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.ToString(fg);
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.LargeIconFilename ?? true)
+                    {
+                        fg.AppendItem(LargeIconFilename, "LargeIconFilename");
+                    }
+                    if (printMask?.SmallIconFilename ?? true)
+                    {
+                        fg.AppendItem(SmallIconFilename, "SmallIconFilename");
+                    }
+                    if (printMask?.Destructible?.Overall ?? true)
+                    {
+                        Destructible?.ToString(fg);
+                    }
+                    if (printMask?.PickUpSound ?? true)
+                    {
+                        fg.AppendItem(PickUpSound, "PickUpSound");
+                    }
+                    if (printMask?.PutDownSound ?? true)
+                    {
+                        fg.AppendItem(PutDownSound, "PutDownSound");
+                    }
+                    if ((printMask?.Keywords?.Overall ?? true)
+                        && Keywords.TryGet(out var KeywordsItem))
+                    {
+                        fg.AppendLine("Keywords =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(KeywordsItem.Overall);
+                            if (KeywordsItem.Specific != null)
+                            {
+                                foreach (var subItem in KeywordsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.WeightValue?.Overall ?? true)
+                    {
+                        WeightValue?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -327,12 +681,48 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? Name;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? LargeIconFilename;
+            public Exception? SmallIconFilename;
+            public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
+            public Exception? PickUpSound;
+            public Exception? PutDownSound;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
+            public MaskItem<Exception?, WeightValue.ErrorMask?>? WeightValue;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 MiscItem_FieldIndex enu = (MiscItem_FieldIndex)index;
                 switch (enu)
                 {
+                    case MiscItem_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
+                    case MiscItem_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case MiscItem_FieldIndex.Name:
+                        return Name;
+                    case MiscItem_FieldIndex.Model:
+                        return Model;
+                    case MiscItem_FieldIndex.LargeIconFilename:
+                        return LargeIconFilename;
+                    case MiscItem_FieldIndex.SmallIconFilename:
+                        return SmallIconFilename;
+                    case MiscItem_FieldIndex.Destructible:
+                        return Destructible;
+                    case MiscItem_FieldIndex.PickUpSound:
+                        return PickUpSound;
+                    case MiscItem_FieldIndex.PutDownSound:
+                        return PutDownSound;
+                    case MiscItem_FieldIndex.Keywords:
+                        return Keywords;
+                    case MiscItem_FieldIndex.WeightValue:
+                        return WeightValue;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -343,6 +733,39 @@ namespace Mutagen.Bethesda.Skyrim
                 MiscItem_FieldIndex enu = (MiscItem_FieldIndex)index;
                 switch (enu)
                 {
+                    case MiscItem_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
+                    case MiscItem_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case MiscItem_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case MiscItem_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case MiscItem_FieldIndex.LargeIconFilename:
+                        this.LargeIconFilename = ex;
+                        break;
+                    case MiscItem_FieldIndex.SmallIconFilename:
+                        this.SmallIconFilename = ex;
+                        break;
+                    case MiscItem_FieldIndex.Destructible:
+                        this.Destructible = new MaskItem<Exception?, Destructible.ErrorMask?>(ex, null);
+                        break;
+                    case MiscItem_FieldIndex.PickUpSound:
+                        this.PickUpSound = ex;
+                        break;
+                    case MiscItem_FieldIndex.PutDownSound:
+                        this.PutDownSound = ex;
+                        break;
+                    case MiscItem_FieldIndex.Keywords:
+                        this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case MiscItem_FieldIndex.WeightValue:
+                        this.WeightValue = new MaskItem<Exception?, WeightValue.ErrorMask?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -354,6 +777,39 @@ namespace Mutagen.Bethesda.Skyrim
                 MiscItem_FieldIndex enu = (MiscItem_FieldIndex)index;
                 switch (enu)
                 {
+                    case MiscItem_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
+                    case MiscItem_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case MiscItem_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case MiscItem_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case MiscItem_FieldIndex.LargeIconFilename:
+                        this.LargeIconFilename = (Exception?)obj;
+                        break;
+                    case MiscItem_FieldIndex.SmallIconFilename:
+                        this.SmallIconFilename = (Exception?)obj;
+                        break;
+                    case MiscItem_FieldIndex.Destructible:
+                        this.Destructible = (MaskItem<Exception?, Destructible.ErrorMask?>?)obj;
+                        break;
+                    case MiscItem_FieldIndex.PickUpSound:
+                        this.PickUpSound = (Exception?)obj;
+                        break;
+                    case MiscItem_FieldIndex.PutDownSound:
+                        this.PutDownSound = (Exception?)obj;
+                        break;
+                    case MiscItem_FieldIndex.Keywords:
+                        this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case MiscItem_FieldIndex.WeightValue:
+                        this.WeightValue = (MaskItem<Exception?, WeightValue.ErrorMask?>?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -363,6 +819,17 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
+                if (ObjectBounds != null) return true;
+                if (Name != null) return true;
+                if (Model != null) return true;
+                if (LargeIconFilename != null) return true;
+                if (SmallIconFilename != null) return true;
+                if (Destructible != null) return true;
+                if (PickUpSound != null) return true;
+                if (PutDownSound != null) return true;
+                if (Keywords != null) return true;
+                if (WeightValue != null) return true;
                 return false;
             }
             #endregion
@@ -398,6 +865,38 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                VirtualMachineAdapter?.ToString(fg);
+                ObjectBounds?.ToString(fg);
+                fg.AppendItem(Name, "Name");
+                Model?.ToString(fg);
+                fg.AppendItem(LargeIconFilename, "LargeIconFilename");
+                fg.AppendItem(SmallIconFilename, "SmallIconFilename");
+                Destructible?.ToString(fg);
+                fg.AppendItem(PickUpSound, "PickUpSound");
+                fg.AppendItem(PutDownSound, "PutDownSound");
+                if (Keywords.TryGet(out var KeywordsItem))
+                {
+                    fg.AppendLine("Keywords =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(KeywordsItem.Overall);
+                        if (KeywordsItem.Specific != null)
+                        {
+                            foreach (var subItem in KeywordsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                WeightValue?.ToString(fg);
             }
             #endregion
 
@@ -406,6 +905,17 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.LargeIconFilename = this.LargeIconFilename.Combine(rhs.LargeIconFilename);
+                ret.SmallIconFilename = this.SmallIconFilename.Combine(rhs.SmallIconFilename);
+                ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
+                ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
+                ret.PutDownSound = this.PutDownSound.Combine(rhs.PutDownSound);
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.WeightValue = this.WeightValue.Combine(rhs.WeightValue, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -427,19 +937,61 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public MaskItem<bool, VirtualMachineAdapter.TranslationMask?> VirtualMachineAdapter;
+            public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
+            public bool Name;
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public bool LargeIconFilename;
+            public bool SmallIconFilename;
+            public MaskItem<bool, Destructible.TranslationMask?> Destructible;
+            public bool PickUpSound;
+            public bool PutDownSound;
+            public bool Keywords;
+            public MaskItem<bool, WeightValue.TranslationMask?> WeightValue;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.TranslationMask?>(defaultOn, null);
+                this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
+                this.Name = defaultOn;
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.LargeIconFilename = defaultOn;
+                this.SmallIconFilename = defaultOn;
+                this.Destructible = new MaskItem<bool, Destructible.TranslationMask?>(defaultOn, null);
+                this.PickUpSound = defaultOn;
+                this.PutDownSound = defaultOn;
+                this.Keywords = defaultOn;
+                this.WeightValue = new MaskItem<bool, WeightValue.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter?.Overall ?? true, VirtualMachineAdapter?.Specific?.GetCrystal()));
+                ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
+                ret.Add((Name, null));
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((LargeIconFilename, null));
+                ret.Add((SmallIconFilename, null));
+                ret.Add((Destructible?.Overall ?? true, Destructible?.Specific?.GetCrystal()));
+                ret.Add((PickUpSound, null));
+                ret.Add((PutDownSound, null));
+                ret.Add((Keywords, null));
+                ret.Add((WeightValue?.Overall ?? true, WeightValue?.Specific?.GetCrystal()));
+            }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = MiscItem_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public override IEnumerable<ILinkGetter> Links => MiscItemCommon.Instance.GetLinks(this);
         public MiscItem(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -457,6 +1009,11 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         #endregion
 
         #region Binary Translation
@@ -517,9 +1074,25 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IMiscItem :
         IMiscItemGetter,
         ISkyrimMajorRecord,
+        INamed,
         IItem,
         ILoquiObjectSetter<IMiscItemInternal>
     {
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
+        new ObjectBounds ObjectBounds { get; set; }
+        new String? Name { get; set; }
+        new Model? Model { get; set; }
+        new String? LargeIconFilename { get; set; }
+        new String? SmallIconFilename { get; set; }
+        new Destructible? Destructible { get; set; }
+        new IFormLinkNullable<SoundDescriptor> PickUpSound { get; }
+        new IFormLinkNullable<SoundDescriptor> PutDownSound { get; }
+        new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new WeightValue? WeightValue { get; set; }
+        #region Mutagen
+        new MiscItem.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IMiscItemInternal :
@@ -531,11 +1104,28 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IMiscItemGetter :
         ISkyrimMajorRecordGetter,
+        INamedGetter,
         IItemGetter,
         ILoquiObject<IMiscItemGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        IObjectBoundsGetter ObjectBounds { get; }
+        String? Name { get; }
+        IModelGetter? Model { get; }
+        String? LargeIconFilename { get; }
+        String? SmallIconFilename { get; }
+        IDestructibleGetter? Destructible { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound { get; }
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
+        IWeightValueGetter? WeightValue { get; }
+
+        #region Mutagen
+        MiscItem.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -836,6 +1426,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        VirtualMachineAdapter = 6,
+        ObjectBounds = 7,
+        Name = 8,
+        Model = 9,
+        LargeIconFilename = 10,
+        SmallIconFilename = 11,
+        Destructible = 12,
+        PickUpSound = 13,
+        PutDownSound = 14,
+        Keywords = 15,
+        WeightValue = 16,
     }
     #endregion
 
@@ -853,9 +1454,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "91d335f8-47e0-4625-928e-ad386acf723b";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 11;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 17;
 
         public static readonly Type MaskType = typeof(MiscItem.Mask<>);
 
@@ -885,6 +1486,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "VIRTUALMACHINEADAPTER":
+                    return (ushort)MiscItem_FieldIndex.VirtualMachineAdapter;
+                case "OBJECTBOUNDS":
+                    return (ushort)MiscItem_FieldIndex.ObjectBounds;
+                case "NAME":
+                    return (ushort)MiscItem_FieldIndex.Name;
+                case "MODEL":
+                    return (ushort)MiscItem_FieldIndex.Model;
+                case "LARGEICONFILENAME":
+                    return (ushort)MiscItem_FieldIndex.LargeIconFilename;
+                case "SMALLICONFILENAME":
+                    return (ushort)MiscItem_FieldIndex.SmallIconFilename;
+                case "DESTRUCTIBLE":
+                    return (ushort)MiscItem_FieldIndex.Destructible;
+                case "PICKUPSOUND":
+                    return (ushort)MiscItem_FieldIndex.PickUpSound;
+                case "PUTDOWNSOUND":
+                    return (ushort)MiscItem_FieldIndex.PutDownSound;
+                case "KEYWORDS":
+                    return (ushort)MiscItem_FieldIndex.Keywords;
+                case "WEIGHTVALUE":
+                    return (ushort)MiscItem_FieldIndex.WeightValue;
                 default:
                     return null;
             }
@@ -895,6 +1518,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MiscItem_FieldIndex enu = (MiscItem_FieldIndex)index;
             switch (enu)
             {
+                case MiscItem_FieldIndex.Keywords:
+                    return true;
+                case MiscItem_FieldIndex.VirtualMachineAdapter:
+                case MiscItem_FieldIndex.ObjectBounds:
+                case MiscItem_FieldIndex.Name:
+                case MiscItem_FieldIndex.Model:
+                case MiscItem_FieldIndex.LargeIconFilename:
+                case MiscItem_FieldIndex.SmallIconFilename:
+                case MiscItem_FieldIndex.Destructible:
+                case MiscItem_FieldIndex.PickUpSound:
+                case MiscItem_FieldIndex.PutDownSound:
+                case MiscItem_FieldIndex.WeightValue:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -905,6 +1541,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MiscItem_FieldIndex enu = (MiscItem_FieldIndex)index;
             switch (enu)
             {
+                case MiscItem_FieldIndex.VirtualMachineAdapter:
+                case MiscItem_FieldIndex.ObjectBounds:
+                case MiscItem_FieldIndex.Model:
+                case MiscItem_FieldIndex.Destructible:
+                case MiscItem_FieldIndex.WeightValue:
+                    return true;
+                case MiscItem_FieldIndex.Name:
+                case MiscItem_FieldIndex.LargeIconFilename:
+                case MiscItem_FieldIndex.SmallIconFilename:
+                case MiscItem_FieldIndex.PickUpSound:
+                case MiscItem_FieldIndex.PutDownSound:
+                case MiscItem_FieldIndex.Keywords:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -915,6 +1564,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MiscItem_FieldIndex enu = (MiscItem_FieldIndex)index;
             switch (enu)
             {
+                case MiscItem_FieldIndex.VirtualMachineAdapter:
+                case MiscItem_FieldIndex.ObjectBounds:
+                case MiscItem_FieldIndex.Name:
+                case MiscItem_FieldIndex.Model:
+                case MiscItem_FieldIndex.LargeIconFilename:
+                case MiscItem_FieldIndex.SmallIconFilename:
+                case MiscItem_FieldIndex.Destructible:
+                case MiscItem_FieldIndex.PickUpSound:
+                case MiscItem_FieldIndex.PutDownSound:
+                case MiscItem_FieldIndex.Keywords:
+                case MiscItem_FieldIndex.WeightValue:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -925,6 +1586,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MiscItem_FieldIndex enu = (MiscItem_FieldIndex)index;
             switch (enu)
             {
+                case MiscItem_FieldIndex.VirtualMachineAdapter:
+                    return "VirtualMachineAdapter";
+                case MiscItem_FieldIndex.ObjectBounds:
+                    return "ObjectBounds";
+                case MiscItem_FieldIndex.Name:
+                    return "Name";
+                case MiscItem_FieldIndex.Model:
+                    return "Model";
+                case MiscItem_FieldIndex.LargeIconFilename:
+                    return "LargeIconFilename";
+                case MiscItem_FieldIndex.SmallIconFilename:
+                    return "SmallIconFilename";
+                case MiscItem_FieldIndex.Destructible:
+                    return "Destructible";
+                case MiscItem_FieldIndex.PickUpSound:
+                    return "PickUpSound";
+                case MiscItem_FieldIndex.PutDownSound:
+                    return "PutDownSound";
+                case MiscItem_FieldIndex.Keywords:
+                    return "Keywords";
+                case MiscItem_FieldIndex.WeightValue:
+                    return "WeightValue";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -935,6 +1618,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MiscItem_FieldIndex enu = (MiscItem_FieldIndex)index;
             switch (enu)
             {
+                case MiscItem_FieldIndex.VirtualMachineAdapter:
+                case MiscItem_FieldIndex.ObjectBounds:
+                case MiscItem_FieldIndex.Name:
+                case MiscItem_FieldIndex.Model:
+                case MiscItem_FieldIndex.LargeIconFilename:
+                case MiscItem_FieldIndex.SmallIconFilename:
+                case MiscItem_FieldIndex.Destructible:
+                case MiscItem_FieldIndex.PickUpSound:
+                case MiscItem_FieldIndex.PutDownSound:
+                case MiscItem_FieldIndex.Keywords:
+                case MiscItem_FieldIndex.WeightValue:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -945,6 +1640,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MiscItem_FieldIndex enu = (MiscItem_FieldIndex)index;
             switch (enu)
             {
+                case MiscItem_FieldIndex.VirtualMachineAdapter:
+                case MiscItem_FieldIndex.ObjectBounds:
+                case MiscItem_FieldIndex.Name:
+                case MiscItem_FieldIndex.Model:
+                case MiscItem_FieldIndex.LargeIconFilename:
+                case MiscItem_FieldIndex.SmallIconFilename:
+                case MiscItem_FieldIndex.Destructible:
+                case MiscItem_FieldIndex.PickUpSound:
+                case MiscItem_FieldIndex.PutDownSound:
+                case MiscItem_FieldIndex.Keywords:
+                case MiscItem_FieldIndex.WeightValue:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -955,6 +1662,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MiscItem_FieldIndex enu = (MiscItem_FieldIndex)index;
             switch (enu)
             {
+                case MiscItem_FieldIndex.VirtualMachineAdapter:
+                    return typeof(VirtualMachineAdapter);
+                case MiscItem_FieldIndex.ObjectBounds:
+                    return typeof(ObjectBounds);
+                case MiscItem_FieldIndex.Name:
+                    return typeof(String);
+                case MiscItem_FieldIndex.Model:
+                    return typeof(Model);
+                case MiscItem_FieldIndex.LargeIconFilename:
+                    return typeof(String);
+                case MiscItem_FieldIndex.SmallIconFilename:
+                    return typeof(String);
+                case MiscItem_FieldIndex.Destructible:
+                    return typeof(Destructible);
+                case MiscItem_FieldIndex.PickUpSound:
+                    return typeof(IFormLinkNullable<SoundDescriptor>);
+                case MiscItem_FieldIndex.PutDownSound:
+                    return typeof(IFormLinkNullable<SoundDescriptor>);
+                case MiscItem_FieldIndex.Keywords:
+                    return typeof(ExtendedList<IFormLink<Keyword>>);
+                case MiscItem_FieldIndex.WeightValue:
+                    return typeof(WeightValue);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -962,9 +1691,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(MiscItemXmlWriteTranslation);
         public static readonly RecordType MISC_HEADER = new RecordType("MISC");
+        public static readonly RecordType VMAD_HEADER = new RecordType("VMAD");
+        public static readonly RecordType OBND_HEADER = new RecordType("OBND");
+        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
+        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
+        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
+        public static readonly RecordType MICO_HEADER = new RecordType("MICO");
+        public static readonly RecordType DEST_HEADER = new RecordType("DEST");
+        public static readonly RecordType DSTD_HEADER = new RecordType("DSTD");
+        public static readonly RecordType DMDL_HEADER = new RecordType("DMDL");
+        public static readonly RecordType YNAM_HEADER = new RecordType("YNAM");
+        public static readonly RecordType ZNAM_HEADER = new RecordType("ZNAM");
+        public static readonly RecordType KWDA_HEADER = new RecordType("KWDA");
+        public static readonly RecordType KSIZ_HEADER = new RecordType("KSIZ");
+        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = MISC_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
+        public const int NumTypedFields = 11;
         public static readonly Type BinaryWriteTranslation = typeof(MiscItemBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1007,6 +1750,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IMiscItemInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
+            item.ObjectBounds = new ObjectBounds();
+            item.Name = default;
+            item.Model = null;
+            item.LargeIconFilename = default;
+            item.SmallIconFilename = default;
+            item.Destructible = null;
+            item.PickUpSound.FormKey = null;
+            item.PutDownSound.FormKey = null;
+            item.Keywords = null;
+            item.WeightValue = null;
             base.Clear(item);
         }
         
@@ -1111,6 +1865,111 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
         
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            IMiscItemInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x44414D56: // VMAD
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)MiscItem_FieldIndex.VirtualMachineAdapter);
+                }
+                case 0x444E424F: // OBND
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)MiscItem_FieldIndex.ObjectBounds);
+                }
+                case 0x4C4C5546: // FULL
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)MiscItem_FieldIndex.Name);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)MiscItem_FieldIndex.Model);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.LargeIconFilename = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)MiscItem_FieldIndex.LargeIconFilename);
+                }
+                case 0x4F43494D: // MICO
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.SmallIconFilename = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)MiscItem_FieldIndex.SmallIconFilename);
+                }
+                case 0x54534544: // DEST
+                case 0x44545344: // DSTD
+                case 0x4C444D44: // DMDL
+                {
+                    item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)MiscItem_FieldIndex.Destructible);
+                }
+                case 0x4D414E59: // YNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.PickUpSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)MiscItem_FieldIndex.PickUpSound);
+                }
+                case 0x4D414E5A: // ZNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.PutDownSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)MiscItem_FieldIndex.PutDownSound);
+                }
+                case 0x5A49534B: // KSIZ
+                {
+                    var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.ReadSubrecordFrame().Content);
+                    item.Keywords = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
+                            frame: frame,
+                            amount: amount,
+                            triggeringRecord: MiscItem_Registration.KWDA_HEADER,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<IFormLink<Keyword>>();
+                    return TryGet<int?>.Succeed((int)MiscItem_FieldIndex.Keywords);
+                }
+                case 0x41544144: // DATA
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength; // Skip header
+                    item.WeightValue = Mutagen.Bethesda.Skyrim.WeightValue.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)MiscItem_FieldIndex.WeightValue);
+                }
+                default:
+                    return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
+        
         public virtual void CopyInFromBinary(
             IMiscItemInternal item,
             MutagenFrame frame,
@@ -1175,6 +2034,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.LargeIconFilename = string.Equals(item.LargeIconFilename, rhs.LargeIconFilename);
+            ret.SmallIconFilename = string.Equals(item.SmallIconFilename, rhs.SmallIconFilename);
+            ret.Destructible = EqualsMaskHelper.EqualsHelper(
+                item.Destructible,
+                rhs.Destructible,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.PickUpSound = object.Equals(item.PickUpSound, rhs.PickUpSound);
+            ret.PutDownSound = object.Equals(item.PutDownSound, rhs.PutDownSound);
+            ret.Keywords = item.Keywords.CollectionEqualsHelper(
+                rhs.Keywords,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.WeightValue = EqualsMaskHelper.EqualsHelper(
+                item.WeightValue,
+                rhs.WeightValue,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1226,12 +2115,94 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+            {
+                VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
+            }
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
+            {
+                fg.AppendItem(NameItem, "Name");
+            }
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
+            {
+                ModelItem?.ToString(fg, "Model");
+            }
+            if ((printMask?.LargeIconFilename ?? true)
+                && item.LargeIconFilename.TryGet(out var LargeIconFilenameItem))
+            {
+                fg.AppendItem(LargeIconFilenameItem, "LargeIconFilename");
+            }
+            if ((printMask?.SmallIconFilename ?? true)
+                && item.SmallIconFilename.TryGet(out var SmallIconFilenameItem))
+            {
+                fg.AppendItem(SmallIconFilenameItem, "SmallIconFilename");
+            }
+            if ((printMask?.Destructible?.Overall ?? true)
+                && item.Destructible.TryGet(out var DestructibleItem))
+            {
+                DestructibleItem?.ToString(fg, "Destructible");
+            }
+            if ((printMask?.PickUpSound ?? true)
+                && item.PickUpSound.TryGet(out var PickUpSoundItem))
+            {
+                fg.AppendItem(PickUpSoundItem, "PickUpSound");
+            }
+            if ((printMask?.PutDownSound ?? true)
+                && item.PutDownSound.TryGet(out var PutDownSoundItem))
+            {
+                fg.AppendItem(PutDownSoundItem, "PutDownSound");
+            }
+            if ((printMask?.Keywords?.Overall ?? true)
+                && item.Keywords.TryGet(out var KeywordsItem))
+            {
+                fg.AppendLine("Keywords =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in KeywordsItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.WeightValue?.Overall ?? true)
+                && item.WeightValue.TryGet(out var WeightValueItem))
+            {
+                WeightValueItem?.ToString(fg, "WeightValue");
+            }
         }
         
         public bool HasBeenSet(
             IMiscItemGetter item,
             MiscItem.Mask<bool?> checkMask)
         {
+            if (checkMask.VirtualMachineAdapter?.Overall.HasValue ?? false && checkMask.VirtualMachineAdapter.Overall.Value != (item.VirtualMachineAdapter != null)) return false;
+            if (checkMask.VirtualMachineAdapter?.Specific != null && (item.VirtualMachineAdapter == null || !item.VirtualMachineAdapter.HasBeenSet(checkMask.VirtualMachineAdapter.Specific))) return false;
+            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
+            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
+            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.LargeIconFilename.HasValue && checkMask.LargeIconFilename.Value != (item.LargeIconFilename != null)) return false;
+            if (checkMask.SmallIconFilename.HasValue && checkMask.SmallIconFilename.Value != (item.SmallIconFilename != null)) return false;
+            if (checkMask.Destructible?.Overall.HasValue ?? false && checkMask.Destructible.Overall.Value != (item.Destructible != null)) return false;
+            if (checkMask.Destructible?.Specific != null && (item.Destructible == null || !item.Destructible.HasBeenSet(checkMask.Destructible.Specific))) return false;
+            if (checkMask.PickUpSound.HasValue && checkMask.PickUpSound.Value != (item.PickUpSound.FormKey != null)) return false;
+            if (checkMask.PutDownSound.HasValue && checkMask.PutDownSound.Value != (item.PutDownSound.FormKey != null)) return false;
+            if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
+            if (checkMask.WeightValue?.Overall.HasValue ?? false && checkMask.WeightValue.Overall.Value != (item.WeightValue != null)) return false;
+            if (checkMask.WeightValue?.Specific != null && (item.WeightValue == null || !item.WeightValue.HasBeenSet(checkMask.WeightValue.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1241,6 +2212,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMiscItemGetter item,
             MiscItem.Mask<bool> mask)
         {
+            var itemVirtualMachineAdapter = item.VirtualMachineAdapter;
+            mask.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
+            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
+            mask.Name = (item.Name != null);
+            var itemModel = item.Model;
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            mask.LargeIconFilename = (item.LargeIconFilename != null);
+            mask.SmallIconFilename = (item.SmallIconFilename != null);
+            var itemDestructible = item.Destructible;
+            mask.Destructible = new MaskItem<bool, Destructible.Mask<bool>?>(itemDestructible != null, itemDestructible?.GetHasBeenSetMask());
+            mask.PickUpSound = (item.PickUpSound.FormKey != null);
+            mask.PutDownSound = (item.PutDownSound.FormKey != null);
+            mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
+            var itemWeightValue = item.WeightValue;
+            mask.WeightValue = new MaskItem<bool, WeightValue.Mask<bool>?>(itemWeightValue != null, itemWeightValue?.GetHasBeenSetMask());
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1292,6 +2278,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            if (!string.Equals(lhs.LargeIconFilename, rhs.LargeIconFilename)) return false;
+            if (!string.Equals(lhs.SmallIconFilename, rhs.SmallIconFilename)) return false;
+            if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
+            if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
+            if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
+            if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
+            if (!object.Equals(lhs.WeightValue, rhs.WeightValue)) return false;
             return true;
         }
         
@@ -1316,6 +2313,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IMiscItemGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapteritem))
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
+            hash.Add(item.ObjectBounds);
+            if (item.Name.TryGet(out var Nameitem))
+            {
+                hash.Add(Nameitem);
+            }
+            if (item.Model.TryGet(out var Modelitem))
+            {
+                hash.Add(Modelitem);
+            }
+            if (item.LargeIconFilename.TryGet(out var LargeIconFilenameitem))
+            {
+                hash.Add(LargeIconFilenameitem);
+            }
+            if (item.SmallIconFilename.TryGet(out var SmallIconFilenameitem))
+            {
+                hash.Add(SmallIconFilenameitem);
+            }
+            if (item.Destructible.TryGet(out var Destructibleitem))
+            {
+                hash.Add(Destructibleitem);
+            }
+            if (item.PickUpSound.TryGet(out var PickUpSounditem))
+            {
+                hash.Add(PickUpSounditem);
+            }
+            if (item.PutDownSound.TryGet(out var PutDownSounditem))
+            {
+                hash.Add(PutDownSounditem);
+            }
+            hash.Add(item.Keywords);
+            if (item.WeightValue.TryGet(out var WeightValueitem))
+            {
+                hash.Add(WeightValueitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1344,6 +2379,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             foreach (var item in base.GetLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is ILinkContainer VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Model != null)
+            {
+                foreach (var item in obj.Model.Links)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible != null)
+            {
+                foreach (var item in obj.Destructible.Links)
+                {
+                    yield return item;
+                }
+            }
+            yield return obj.PickUpSound;
+            yield return obj.PutDownSound;
+            if (obj.Keywords != null)
+            {
+                foreach (var item in obj.Keywords)
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1391,6 +2456,179 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)MiscItem_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter.TryGet(out var rhsVirtualMachineAdapter))
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)MiscItem_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)MiscItem_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)MiscItem_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)MiscItem_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model.TryGet(out var rhsModel))
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)MiscItem_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.LargeIconFilename) ?? true))
+            {
+                item.LargeIconFilename = rhs.LargeIconFilename;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.SmallIconFilename) ?? true))
+            {
+                item.SmallIconFilename = rhs.SmallIconFilename;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Destructible) ?? true))
+            {
+                errorMask?.PushIndex((int)MiscItem_FieldIndex.Destructible);
+                try
+                {
+                    if(rhs.Destructible.TryGet(out var rhsDestructible))
+                    {
+                        item.Destructible = rhsDestructible.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)MiscItem_FieldIndex.Destructible));
+                    }
+                    else
+                    {
+                        item.Destructible = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.PickUpSound) ?? true))
+            {
+                item.PickUpSound.FormKey = rhs.PickUpSound.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.PutDownSound) ?? true))
+            {
+                item.PutDownSound.FormKey = rhs.PutDownSound.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Keywords) ?? true))
+            {
+                errorMask?.PushIndex((int)MiscItem_FieldIndex.Keywords);
+                try
+                {
+                    if ((rhs.Keywords != null))
+                    {
+                        item.Keywords = 
+                            rhs.Keywords
+                            .Select(r => new FormLink<Keyword>(r.FormKey))
+                            .ToExtendedList<IFormLink<Keyword>>();
+                    }
+                    else
+                    {
+                        item.Keywords = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.WeightValue) ?? true))
+            {
+                errorMask?.PushIndex((int)MiscItem_FieldIndex.WeightValue);
+                try
+                {
+                    if(rhs.WeightValue.TryGet(out var rhsWeightValue))
+                    {
+                        item.WeightValue = rhsWeightValue.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)MiscItem_FieldIndex.WeightValue));
+                    }
+                    else
+                    {
+                        item.WeightValue = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1533,6 +2771,142 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((item.VirtualMachineAdapter != null)
+                && (translationMask?.GetShouldTranslate((int)MiscItem_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+                {
+                    ((VirtualMachineAdapterXmlWriteTranslation)((IXmlItem)VirtualMachineAdapterItem).XmlWriteTranslator).Write(
+                        item: VirtualMachineAdapterItem,
+                        node: node,
+                        name: nameof(item.VirtualMachineAdapter),
+                        fieldIndex: (int)MiscItem_FieldIndex.VirtualMachineAdapter,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)MiscItem_FieldIndex.VirtualMachineAdapter));
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)MiscItem_FieldIndex.ObjectBounds) ?? true))
+            {
+                var ObjectBoundsItem = item.ObjectBounds;
+                ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
+                    item: ObjectBoundsItem,
+                    node: node,
+                    name: nameof(item.ObjectBounds),
+                    fieldIndex: (int)MiscItem_FieldIndex.ObjectBounds,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)MiscItem_FieldIndex.ObjectBounds));
+            }
+            if ((item.Name != null)
+                && (translationMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Name) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)MiscItem_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if ((item.Model != null)
+                && (translationMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Model) ?? true))
+            {
+                if (item.Model.TryGet(out var ModelItem))
+                {
+                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                        item: ModelItem,
+                        node: node,
+                        name: nameof(item.Model),
+                        fieldIndex: (int)MiscItem_FieldIndex.Model,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)MiscItem_FieldIndex.Model));
+                }
+            }
+            if ((item.LargeIconFilename != null)
+                && (translationMask?.GetShouldTranslate((int)MiscItem_FieldIndex.LargeIconFilename) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.LargeIconFilename),
+                    item: item.LargeIconFilename,
+                    fieldIndex: (int)MiscItem_FieldIndex.LargeIconFilename,
+                    errorMask: errorMask);
+            }
+            if ((item.SmallIconFilename != null)
+                && (translationMask?.GetShouldTranslate((int)MiscItem_FieldIndex.SmallIconFilename) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.SmallIconFilename),
+                    item: item.SmallIconFilename,
+                    fieldIndex: (int)MiscItem_FieldIndex.SmallIconFilename,
+                    errorMask: errorMask);
+            }
+            if ((item.Destructible != null)
+                && (translationMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Destructible) ?? true))
+            {
+                if (item.Destructible.TryGet(out var DestructibleItem))
+                {
+                    ((DestructibleXmlWriteTranslation)((IXmlItem)DestructibleItem).XmlWriteTranslator).Write(
+                        item: DestructibleItem,
+                        node: node,
+                        name: nameof(item.Destructible),
+                        fieldIndex: (int)MiscItem_FieldIndex.Destructible,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)MiscItem_FieldIndex.Destructible));
+                }
+            }
+            if ((item.PickUpSound.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)MiscItem_FieldIndex.PickUpSound) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.PickUpSound),
+                    item: item.PickUpSound.FormKey.Value,
+                    fieldIndex: (int)MiscItem_FieldIndex.PickUpSound,
+                    errorMask: errorMask);
+            }
+            if ((item.PutDownSound.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)MiscItem_FieldIndex.PutDownSound) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.PutDownSound),
+                    item: item.PutDownSound.FormKey.Value,
+                    fieldIndex: (int)MiscItem_FieldIndex.PutDownSound,
+                    errorMask: errorMask);
+            }
+            if ((item.Keywords != null)
+                && (translationMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Keywords) ?? true))
+            {
+                ListXmlTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Keywords),
+                    item: item.Keywords,
+                    fieldIndex: (int)MiscItem_FieldIndex.Keywords,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)MiscItem_FieldIndex.Keywords),
+                    transl: (XElement subNode, IFormLinkGetter<IKeywordGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem.FormKey,
+                            errorMask: listSubMask);
+                    });
+            }
+            if ((item.WeightValue != null)
+                && (translationMask?.GetShouldTranslate((int)MiscItem_FieldIndex.WeightValue) ?? true))
+            {
+                if (item.WeightValue.TryGet(out var WeightValueItem))
+                {
+                    ((WeightValueXmlWriteTranslation)((IXmlItem)WeightValueItem).XmlWriteTranslator).Write(
+                        item: WeightValueItem,
+                        node: node,
+                        name: nameof(item.WeightValue),
+                        fieldIndex: (int)MiscItem_FieldIndex.WeightValue,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)MiscItem_FieldIndex.WeightValue));
+                }
+            }
         }
 
         public void Write(
@@ -1640,6 +3014,219 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "VirtualMachineAdapter":
+                    errorMask?.PushIndex((int)MiscItem_FieldIndex.VirtualMachineAdapter);
+                    try
+                    {
+                        item.VirtualMachineAdapter = LoquiXmlTranslation<VirtualMachineAdapter>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)MiscItem_FieldIndex.VirtualMachineAdapter));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ObjectBounds":
+                    errorMask?.PushIndex((int)MiscItem_FieldIndex.ObjectBounds);
+                    try
+                    {
+                        item.ObjectBounds = LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)MiscItem_FieldIndex.ObjectBounds));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Name":
+                    errorMask?.PushIndex((int)MiscItem_FieldIndex.Name);
+                    try
+                    {
+                        item.Name = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Model":
+                    errorMask?.PushIndex((int)MiscItem_FieldIndex.Model);
+                    try
+                    {
+                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)MiscItem_FieldIndex.Model));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LargeIconFilename":
+                    errorMask?.PushIndex((int)MiscItem_FieldIndex.LargeIconFilename);
+                    try
+                    {
+                        item.LargeIconFilename = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SmallIconFilename":
+                    errorMask?.PushIndex((int)MiscItem_FieldIndex.SmallIconFilename);
+                    try
+                    {
+                        item.SmallIconFilename = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Destructible":
+                    errorMask?.PushIndex((int)MiscItem_FieldIndex.Destructible);
+                    try
+                    {
+                        item.Destructible = LoquiXmlTranslation<Destructible>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)MiscItem_FieldIndex.Destructible));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "PickUpSound":
+                    errorMask?.PushIndex((int)MiscItem_FieldIndex.PickUpSound);
+                    try
+                    {
+                        item.PickUpSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "PutDownSound":
+                    errorMask?.PushIndex((int)MiscItem_FieldIndex.PutDownSound);
+                    try
+                    {
+                        item.PutDownSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Keywords":
+                    errorMask?.PushIndex((int)MiscItem_FieldIndex.Keywords);
+                    try
+                    {
+                        if (ListXmlTranslation<IFormLink<Keyword>>.Instance.Parse(
+                            node: node,
+                            enumer: out var KeywordsItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Keywords = KeywordsItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Keywords = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "WeightValue":
+                    errorMask?.PushIndex((int)MiscItem_FieldIndex.WeightValue);
+                    try
+                    {
+                        item.WeightValue = LoquiXmlTranslation<WeightValue>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)MiscItem_FieldIndex.WeightValue));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1726,6 +3313,87 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static MiscItemBinaryWriteTranslation Instance = new MiscItemBinaryWriteTranslation();
 
+        public static void WriteRecordTypes(
+            IMiscItemGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: recordTypeConverter.ConvertToCustom(MiscItem_Registration.FULL_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            if (item.Model.TryGet(out var ModelItem))
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.LargeIconFilename,
+                header: recordTypeConverter.ConvertToCustom(MiscItem_Registration.ICON_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SmallIconFilename,
+                header: recordTypeConverter.ConvertToCustom(MiscItem_Registration.MICO_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            if (item.Destructible.TryGet(out var DestructibleItem))
+            {
+                ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
+                    item: DestructibleItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.PickUpSound,
+                header: recordTypeConverter.ConvertToCustom(MiscItem_Registration.YNAM_HEADER));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.PutDownSound,
+                header: recordTypeConverter.ConvertToCustom(MiscItem_Registration.ZNAM_HEADER));
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Keywords,
+                counterType: MiscItem_Registration.KSIZ_HEADER,
+                recordType: recordTypeConverter.ConvertToCustom(MiscItem_Registration.KWDA_HEADER),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
+                {
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            if (item.WeightValue.TryGet(out var WeightValueItem))
+            {
+                using (HeaderExport.ExportHeader(writer, MiscItem_Registration.DATA_HEADER, ObjectType.Subrecord))
+                {
+                    ((WeightValueBinaryWriteTranslation)((IBinaryItem)WeightValueItem).BinaryWriteTranslator).Write(
+                        item: WeightValueItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             IMiscItemGetter item,
@@ -1739,7 +3407,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1819,6 +3487,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMiscItemGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => MiscItemCommon.Instance.GetLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => MiscItemXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
@@ -1845,7 +3514,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
+        public MiscItem.MajorFlag MajorFlags => (MiscItem.MajorFlag)this.MajorRecordFlagsRaw;
 
+        #region VirtualMachineAdapter
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        private bool _VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapter_IsSet ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
+        #endregion
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private bool _ObjectBounds_IsSet => _ObjectBoundsLocation.HasValue;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBounds_IsSet ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation!.Value.Min)), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
+        #endregion
+        #region Model
+        public IModelGetter? Model { get; private set; }
+        public bool Model_IsSet => Model != null;
+        #endregion
+        #region LargeIconFilename
+        private int? _LargeIconFilenameLocation;
+        public String? LargeIconFilename => _LargeIconFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _LargeIconFilenameLocation.Value, _package.Meta)) : default(string?);
+        #endregion
+        #region SmallIconFilename
+        private int? _SmallIconFilenameLocation;
+        public String? SmallIconFilename => _SmallIconFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SmallIconFilenameLocation.Value, _package.Meta)) : default(string?);
+        #endregion
+        #region Destructible
+        public IDestructibleGetter? Destructible { get; private set; }
+        public bool Destructible_IsSet => Destructible != null;
+        #endregion
+        #region PickUpSound
+        private int? _PickUpSoundLocation;
+        public bool PickUpSound_IsSet => _PickUpSoundLocation.HasValue;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PickUpSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Empty;
+        #endregion
+        #region PutDownSound
+        private int? _PutDownSoundLocation;
+        public bool PutDownSound_IsSet => _PutDownSoundLocation.HasValue;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PutDownSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Empty;
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        #region WeightValue
+        public IWeightValueGetter? WeightValue { get; private set; }
+        public bool WeightValue_IsSet => WeightValue != null;
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -1896,6 +3613,103 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case 0x44414D56: // VMAD
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)MiscItem_FieldIndex.VirtualMachineAdapter);
+                }
+                case 0x444E424F: // OBND
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)MiscItem_FieldIndex.ObjectBounds);
+                }
+                case 0x4C4C5546: // FULL
+                {
+                    _NameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)MiscItem_FieldIndex.Name);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)MiscItem_FieldIndex.Model);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    _LargeIconFilenameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)MiscItem_FieldIndex.LargeIconFilename);
+                }
+                case 0x4F43494D: // MICO
+                {
+                    _SmallIconFilenameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)MiscItem_FieldIndex.SmallIconFilename);
+                }
+                case 0x54534544: // DEST
+                case 0x44545344: // DSTD
+                case 0x4C444D44: // DMDL
+                {
+                    this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)MiscItem_FieldIndex.Destructible);
+                }
+                case 0x4D414E59: // YNAM
+                {
+                    _PickUpSoundLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)MiscItem_FieldIndex.PickUpSound);
+                }
+                case 0x4D414E5A: // ZNAM
+                {
+                    _PutDownSoundLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)MiscItem_FieldIndex.PutDownSound);
+                }
+                case 0x5A49534B: // KSIZ
+                {
+                    var count = BinaryPrimitives.ReadUInt32LittleEndian(_package.Meta.ReadSubrecordFrame(stream).Content);
+                    var subMeta = _package.Meta.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.Keywords = BinaryOverlaySetList<IFormLinkGetter<IKeywordGetter>>.FactoryByCount(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        count: count,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)MiscItem_FieldIndex.Keywords);
+                }
+                case 0x41544144: // DATA
+                {
+                    stream.Position += _package.Meta.SubConstants.HeaderLength;
+                    this.WeightValue = WeightValueBinaryOverlay.WeightValueFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)MiscItem_FieldIndex.WeightValue);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
         #region To String
 
         public override void ToString(

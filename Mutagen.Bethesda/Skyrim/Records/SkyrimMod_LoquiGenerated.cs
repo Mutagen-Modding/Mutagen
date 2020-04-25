@@ -69,6 +69,8 @@ namespace Mutagen.Bethesda.Skyrim
             _Containers_Object = new Group<Container>(this);
             _Doors_Object = new Group<Door>(this);
             _Ingredients_Object = new Group<Ingredient>(this);
+            _Lights_Object = new Group<Light>(this);
+            _MiscItems_Object = new Group<MiscItem>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -262,6 +264,20 @@ namespace Mutagen.Bethesda.Skyrim
         public Group<Ingredient> Ingredients => _Ingredients_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IIngredientGetter> ISkyrimModGetter.Ingredients => _Ingredients_Object;
+        #endregion
+        #region Lights
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Light> _Lights_Object;
+        public Group<Light> Lights => _Lights_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<ILightGetter> ISkyrimModGetter.Lights => _Lights_Object;
+        #endregion
+        #region MiscItems
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<MiscItem> _MiscItems_Object;
+        public Group<MiscItem> MiscItems => _MiscItems_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IMiscItemGetter> ISkyrimModGetter.MiscItems => _MiscItems_Object;
         #endregion
 
         #region To String
@@ -460,6 +476,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Containers = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Doors = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Ingredients = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Lights = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.MiscItems = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -489,7 +507,9 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Books,
                 TItem Containers,
                 TItem Doors,
-                TItem Ingredients)
+                TItem Ingredients,
+                TItem Lights,
+                TItem MiscItems)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -518,6 +538,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Containers = new MaskItem<TItem, Group.Mask<TItem>?>(Containers, new Group.Mask<TItem>(Containers));
                 this.Doors = new MaskItem<TItem, Group.Mask<TItem>?>(Doors, new Group.Mask<TItem>(Doors));
                 this.Ingredients = new MaskItem<TItem, Group.Mask<TItem>?>(Ingredients, new Group.Mask<TItem>(Ingredients));
+                this.Lights = new MaskItem<TItem, Group.Mask<TItem>?>(Lights, new Group.Mask<TItem>(Lights));
+                this.MiscItems = new MaskItem<TItem, Group.Mask<TItem>?>(MiscItems, new Group.Mask<TItem>(MiscItems));
             }
 
             #pragma warning disable CS8618
@@ -556,6 +578,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? Containers { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Doors { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Ingredients { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Lights { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? MiscItems { get; set; }
             #endregion
 
             #region Equals
@@ -595,6 +619,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Containers, rhs.Containers)) return false;
                 if (!object.Equals(this.Doors, rhs.Doors)) return false;
                 if (!object.Equals(this.Ingredients, rhs.Ingredients)) return false;
+                if (!object.Equals(this.Lights, rhs.Lights)) return false;
+                if (!object.Equals(this.MiscItems, rhs.MiscItems)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -627,6 +653,8 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Containers);
                 hash.Add(this.Doors);
                 hash.Add(this.Ingredients);
+                hash.Add(this.Lights);
+                hash.Add(this.MiscItems);
                 return hash.ToHashCode();
             }
 
@@ -770,6 +798,16 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Ingredients.Overall)) return false;
                     if (this.Ingredients.Specific != null && !this.Ingredients.Specific.All(eval)) return false;
                 }
+                if (Lights != null)
+                {
+                    if (!eval(this.Lights.Overall)) return false;
+                    if (this.Lights.Specific != null && !this.Lights.Specific.All(eval)) return false;
+                }
+                if (MiscItems != null)
+                {
+                    if (!eval(this.MiscItems.Overall)) return false;
+                    if (this.MiscItems.Specific != null && !this.MiscItems.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -912,6 +950,16 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Ingredients.Overall)) return true;
                     if (this.Ingredients.Specific != null && this.Ingredients.Specific.Any(eval)) return true;
                 }
+                if (Lights != null)
+                {
+                    if (eval(this.Lights.Overall)) return true;
+                    if (this.Lights.Specific != null && this.Lights.Specific.Any(eval)) return true;
+                }
+                if (MiscItems != null)
+                {
+                    if (eval(this.MiscItems.Overall)) return true;
+                    if (this.MiscItems.Specific != null && this.MiscItems.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -953,6 +1001,8 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Containers = this.Containers == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Containers.Overall), this.Containers.Specific?.Translate(eval));
                 obj.Doors = this.Doors == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Doors.Overall), this.Doors.Specific?.Translate(eval));
                 obj.Ingredients = this.Ingredients == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Ingredients.Overall), this.Ingredients.Specific?.Translate(eval));
+                obj.Lights = this.Lights == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Lights.Overall), this.Lights.Specific?.Translate(eval));
+                obj.MiscItems = this.MiscItems == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.MiscItems.Overall), this.MiscItems.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1083,6 +1133,14 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Ingredients?.ToString(fg);
                     }
+                    if (printMask?.Lights?.Overall ?? true)
+                    {
+                        Lights?.ToString(fg);
+                    }
+                    if (printMask?.MiscItems?.Overall ?? true)
+                    {
+                        MiscItems?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -1135,6 +1193,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<Container.ErrorMask>?>? Containers;
             public MaskItem<Exception?, Group.ErrorMask<Door.ErrorMask>?>? Doors;
             public MaskItem<Exception?, Group.ErrorMask<Ingredient.ErrorMask>?>? Ingredients;
+            public MaskItem<Exception?, Group.ErrorMask<Light.ErrorMask>?>? Lights;
+            public MaskItem<Exception?, Group.ErrorMask<MiscItem.ErrorMask>?>? MiscItems;
             #endregion
 
             #region IErrorMask
@@ -1197,6 +1257,10 @@ namespace Mutagen.Bethesda.Skyrim
                         return Doors;
                     case SkyrimMod_FieldIndex.Ingredients:
                         return Ingredients;
+                    case SkyrimMod_FieldIndex.Lights:
+                        return Lights;
+                    case SkyrimMod_FieldIndex.MiscItems:
+                        return MiscItems;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1287,6 +1351,12 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.Ingredients:
                         this.Ingredients = new MaskItem<Exception?, Group.ErrorMask<Ingredient.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Lights:
+                        this.Lights = new MaskItem<Exception?, Group.ErrorMask<Light.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.MiscItems:
+                        this.MiscItems = new MaskItem<Exception?, Group.ErrorMask<MiscItem.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1379,6 +1449,12 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.Ingredients:
                         this.Ingredients = (MaskItem<Exception?, Group.ErrorMask<Ingredient.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.Lights:
+                        this.Lights = (MaskItem<Exception?, Group.ErrorMask<Light.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.MiscItems:
+                        this.MiscItems = (MaskItem<Exception?, Group.ErrorMask<MiscItem.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1414,6 +1490,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Containers != null) return true;
                 if (Doors != null) return true;
                 if (Ingredients != null) return true;
+                if (Lights != null) return true;
+                if (MiscItems != null) return true;
                 return false;
             }
             #endregion
@@ -1475,6 +1553,8 @@ namespace Mutagen.Bethesda.Skyrim
                 Containers?.ToString(fg);
                 Doors?.ToString(fg);
                 Ingredients?.ToString(fg);
+                Lights?.ToString(fg);
+                MiscItems?.ToString(fg);
             }
             #endregion
 
@@ -1510,6 +1590,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Containers = this.Containers.Combine(rhs.Containers, (l, r) => l.Combine(r));
                 ret.Doors = this.Doors.Combine(rhs.Doors, (l, r) => l.Combine(r));
                 ret.Ingredients = this.Ingredients.Combine(rhs.Ingredients, (l, r) => l.Combine(r));
+                ret.Lights = this.Lights.Combine(rhs.Lights, (l, r) => l.Combine(r));
+                ret.MiscItems = this.MiscItems.Combine(rhs.MiscItems, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1558,6 +1640,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<Container.TranslationMask>?> Containers;
             public MaskItem<bool, Group.TranslationMask<Door.TranslationMask>?> Doors;
             public MaskItem<bool, Group.TranslationMask<Ingredient.TranslationMask>?> Ingredients;
+            public MaskItem<bool, Group.TranslationMask<Light.TranslationMask>?> Lights;
+            public MaskItem<bool, Group.TranslationMask<MiscItem.TranslationMask>?> MiscItems;
             #endregion
 
             #region Ctors
@@ -1590,6 +1674,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Containers = new MaskItem<bool, Group.TranslationMask<Container.TranslationMask>?>(defaultOn, null);
                 this.Doors = new MaskItem<bool, Group.TranslationMask<Door.TranslationMask>?>(defaultOn, null);
                 this.Ingredients = new MaskItem<bool, Group.TranslationMask<Ingredient.TranslationMask>?>(defaultOn, null);
+                this.Lights = new MaskItem<bool, Group.TranslationMask<Light.TranslationMask>?>(defaultOn, null);
+                this.MiscItems = new MaskItem<bool, Group.TranslationMask<MiscItem.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -1632,6 +1718,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Containers?.Overall ?? true, Containers?.Specific?.GetCrystal()));
                 ret.Add((Doors?.Overall ?? true, Doors?.Specific?.GetCrystal()));
                 ret.Add((Ingredients?.Overall ?? true, Ingredients?.Specific?.GetCrystal()));
+                ret.Add((Lights?.Overall ?? true, Lights?.Specific?.GetCrystal()));
+                ret.Add((MiscItems?.Overall ?? true, MiscItems?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -1672,6 +1760,8 @@ namespace Mutagen.Bethesda.Skyrim
             _Containers_Object = new Group<Container>(this);
             _Doors_Object = new Group<Door>(this);
             _Ingredients_Object = new Group<Ingredient>(this);
+            _Lights_Object = new Group<Light>(this);
+            _MiscItems_Object = new Group<MiscItem>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -1780,6 +1870,14 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.Ingredients ?? true)
             {
                 this.Ingredients.RecordCache.Set(rhsMod.Ingredients.RecordCache.Items);
+            }
+            if (mask?.Lights ?? true)
+            {
+                this.Lights.RecordCache.Set(rhsMod.Lights.RecordCache.Items);
+            }
+            if (mask?.MiscItems ?? true)
+            {
+                this.MiscItems.RecordCache.Set(rhsMod.MiscItems.RecordCache.Items);
             }
         }
 
@@ -1970,6 +2068,20 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Ingredient>());
             }
+            if (mask?.Lights ?? true)
+            {
+                this.Lights.RecordCache.Set(
+                    rhs.Lights.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Light>());
+            }
+            if (mask?.MiscItems ?? true)
+            {
+                this.MiscItems.RecordCache.Set(
+                    rhs.MiscItems.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<MiscItem>());
+            }
             Dictionary<FormKey, IMajorRecordCommon> router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var package = this.CreateLinkCache();
@@ -2021,6 +2133,8 @@ namespace Mutagen.Bethesda.Skyrim
             count += Containers.RecordCache.Count > 0 ? 1 : 0;
             count += Doors.RecordCache.Count > 0 ? 1 : 0;
             count += Ingredients.RecordCache.Count > 0 ? 1 : 0;
+            count += Lights.RecordCache.Count > 0 ? 1 : 0;
+            count += MiscItems.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -2241,6 +2355,8 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<Container> Containers { get; }
         new Group<Door> Doors { get; }
         new Group<Ingredient> Ingredients { get; }
+        new Group<Light> Lights { get; }
+        new Group<MiscItem> MiscItems { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -2284,6 +2400,8 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IContainerGetter> Containers { get; }
         IGroupGetter<IDoorGetter> Doors { get; }
         IGroupGetter<IIngredientGetter> Ingredients { get; }
+        IGroupGetter<ILightGetter> Lights { get; }
+        IGroupGetter<IMiscItemGetter> MiscItems { get; }
 
     }
 
@@ -2739,6 +2857,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Containers = 24,
         Doors = 25,
         Ingredients = 26,
+        Lights = 27,
+        MiscItems = 28,
     }
     #endregion
 
@@ -2756,9 +2876,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 27;
+        public const ushort AdditionalFieldCount = 29;
 
-        public const ushort FieldCount = 27;
+        public const ushort FieldCount = 29;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -2842,6 +2962,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.Doors;
                 case "INGREDIENTS":
                     return (ushort)SkyrimMod_FieldIndex.Ingredients;
+                case "LIGHTS":
+                    return (ushort)SkyrimMod_FieldIndex.Lights;
+                case "MISCITEMS":
+                    return (ushort)SkyrimMod_FieldIndex.MiscItems;
                 default:
                     return null;
             }
@@ -2879,6 +3003,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Containers:
                 case SkyrimMod_FieldIndex.Doors:
                 case SkyrimMod_FieldIndex.Ingredients:
+                case SkyrimMod_FieldIndex.Lights:
+                case SkyrimMod_FieldIndex.MiscItems:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2917,6 +3043,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Containers:
                 case SkyrimMod_FieldIndex.Doors:
                 case SkyrimMod_FieldIndex.Ingredients:
+                case SkyrimMod_FieldIndex.Lights:
+                case SkyrimMod_FieldIndex.MiscItems:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2955,6 +3083,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Containers:
                 case SkyrimMod_FieldIndex.Doors:
                 case SkyrimMod_FieldIndex.Ingredients:
+                case SkyrimMod_FieldIndex.Lights:
+                case SkyrimMod_FieldIndex.MiscItems:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3020,6 +3150,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Doors";
                 case SkyrimMod_FieldIndex.Ingredients:
                     return "Ingredients";
+                case SkyrimMod_FieldIndex.Lights:
+                    return "Lights";
+                case SkyrimMod_FieldIndex.MiscItems:
+                    return "MiscItems";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3057,6 +3191,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Containers:
                 case SkyrimMod_FieldIndex.Doors:
                 case SkyrimMod_FieldIndex.Ingredients:
+                case SkyrimMod_FieldIndex.Lights:
+                case SkyrimMod_FieldIndex.MiscItems:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3096,6 +3232,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Containers:
                 case SkyrimMod_FieldIndex.Doors:
                 case SkyrimMod_FieldIndex.Ingredients:
+                case SkyrimMod_FieldIndex.Lights:
+                case SkyrimMod_FieldIndex.MiscItems:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3161,6 +3299,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<Door>);
                 case SkyrimMod_FieldIndex.Ingredients:
                     return typeof(Group<Ingredient>);
+                case SkyrimMod_FieldIndex.Lights:
+                    return typeof(Group<Light>);
+                case SkyrimMod_FieldIndex.MiscItems:
+                    return typeof(Group<MiscItem>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3194,9 +3336,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType CONT_HEADER = new RecordType("CONT");
         public static readonly RecordType DOOR_HEADER = new RecordType("DOOR");
         public static readonly RecordType INGR_HEADER = new RecordType("INGR");
+        public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
+        public static readonly RecordType MISC_HEADER = new RecordType("MISC");
         public static readonly RecordType TriggeringRecordType = TES4_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 27;
+        public const int NumTypedFields = 29;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -3265,6 +3409,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Containers.Clear();
             item.Doors.Clear();
             item.Ingredients.Clear();
+            item.Lights.Clear();
+            item.MiscItems.Clear();
         }
         
         #region Xml Translation
@@ -3744,6 +3890,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Ingredients);
                 }
+                case 0x4847494C: // LIGH
+                {
+                    if (importMask?.Lights ?? true)
+                    {
+                        item.Lights.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Lights);
+                }
+                case 0x4353494D: // MISC
+                {
+                    if (importMask?.MiscItems ?? true)
+                    {
+                        item.MiscItems.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MiscItems);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -3822,6 +3996,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Containers = MaskItemExt.Factory(item.Containers.GetEqualsMask(rhs.Containers, include), include);
             ret.Doors = MaskItemExt.Factory(item.Doors.GetEqualsMask(rhs.Doors, include), include);
             ret.Ingredients = MaskItemExt.Factory(item.Ingredients.GetEqualsMask(rhs.Ingredients, include), include);
+            ret.Lights = MaskItemExt.Factory(item.Lights.GetEqualsMask(rhs.Lights, include), include);
+            ret.MiscItems = MaskItemExt.Factory(item.MiscItems.GetEqualsMask(rhs.MiscItems, include), include);
         }
         
         public string ToString(
@@ -3976,6 +4152,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Ingredients?.ToString(fg, "Ingredients");
             }
+            if (printMask?.Lights?.Overall ?? true)
+            {
+                item.Lights?.ToString(fg, "Lights");
+            }
+            if (printMask?.MiscItems?.Overall ?? true)
+            {
+                item.MiscItems?.ToString(fg, "MiscItems");
+            }
         }
         
         public bool HasBeenSet(
@@ -4016,6 +4200,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Containers = new MaskItem<bool, Group.Mask<bool>?>(true, item.Containers?.GetHasBeenSetMask());
             mask.Doors = new MaskItem<bool, Group.Mask<bool>?>(true, item.Doors?.GetHasBeenSetMask());
             mask.Ingredients = new MaskItem<bool, Group.Mask<bool>?>(true, item.Ingredients?.GetHasBeenSetMask());
+            mask.Lights = new MaskItem<bool, Group.Mask<bool>?>(true, item.Lights?.GetHasBeenSetMask());
+            mask.MiscItems = new MaskItem<bool, Group.Mask<bool>?>(true, item.MiscItems?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -4052,6 +4238,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Containers, rhs.Containers)) return false;
             if (!object.Equals(lhs.Doors, rhs.Doors)) return false;
             if (!object.Equals(lhs.Ingredients, rhs.Ingredients)) return false;
+            if (!object.Equals(lhs.Lights, rhs.Lights)) return false;
+            if (!object.Equals(lhs.MiscItems, rhs.MiscItems)) return false;
             return true;
         }
         
@@ -4085,6 +4273,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Containers);
             hash.Add(item.Doors);
             hash.Add(item.Ingredients);
+            hash.Add(item.Lights);
+            hash.Add(item.MiscItems);
             return hash.ToHashCode();
         }
         
@@ -4232,6 +4422,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IIngredient":
                 case "IIngredientInternal":
                     return obj.Ingredients.RecordCache;
+                case "Light":
+                case "ILightGetter":
+                case "ILight":
+                case "ILightInternal":
+                    return obj.Lights.RecordCache;
+                case "MiscItem":
+                case "IMiscItemGetter":
+                case "IMiscItem":
+                case "IMiscItemInternal":
+                    return obj.MiscItems.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown group type: {typeof(T)}");
             }
@@ -4248,7 +4448,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var modHeader = item.ModHeader.DeepCopy() as ModHeader;
             modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
             modHeader.WriteToBinary(new MutagenWriter(stream, GameConstants.Skyrim, masterRefs));
-            Stream[] outputStreams = new Stream[26];
+            Stream[] outputStreams = new Stream[28];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams));
@@ -4276,6 +4476,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.Containers, masterRefs, 23, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Doors, masterRefs, 24, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Ingredients, masterRefs, 25, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Lights, masterRefs, 26, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.MiscItems, masterRefs, 27, outputStreams));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -4505,6 +4707,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.Lights is ILinkContainer LightslinkCont)
+            {
+                foreach (var item in LightslinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.MiscItems is ILinkContainer MiscItemslinkCont)
+            {
+                foreach (var item in MiscItemslinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -4611,6 +4827,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.Ingredients.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Lights.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MiscItems.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -4862,6 +5086,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IIngredient":
                 case "IIngredientInternal":
                     foreach (var item in obj.Ingredients.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Light":
+                case "ILightGetter":
+                case "ILight":
+                case "ILightInternal":
+                    foreach (var item in obj.Lights.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MiscItem":
+                case "IMiscItemGetter":
+                case "IMiscItem":
+                case "IMiscItemInternal":
+                    foreach (var item in obj.MiscItems.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -5425,6 +5667,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Lights) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Lights);
+                try
+                {
+                    item.Lights.DeepCopyIn(
+                        rhs: rhs.Lights,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Lights));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.MiscItems) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.MiscItems);
+                try
+                {
+                    item.MiscItems.DeepCopyIn(
+                        rhs: rhs.MiscItems,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.MiscItems));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -5810,6 +6092,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.Ingredients,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Ingredients));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Lights) ?? true))
+            {
+                var LightsItem = item.Lights;
+                ((GroupXmlWriteTranslation)((IXmlItem)LightsItem).XmlWriteTranslator).Write<ILightGetter>(
+                    item: LightsItem,
+                    node: node,
+                    name: nameof(item.Lights),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Lights,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Lights));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.MiscItems) ?? true))
+            {
+                var MiscItemsItem = item.MiscItems;
+                ((GroupXmlWriteTranslation)((IXmlItem)MiscItemsItem).XmlWriteTranslator).Write<IMiscItemGetter>(
+                    item: MiscItemsItem,
+                    node: node,
+                    name: nameof(item.MiscItems),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.MiscItems,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.MiscItems));
             }
         }
 
@@ -6411,6 +6715,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "Lights":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Lights);
+                    try
+                    {
+                        item.Lights.CopyInFromXml<Light>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MiscItems":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.MiscItems);
+                    try
+                    {
+                        item.MiscItems.CopyInFromXml<MiscItem>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -6606,6 +6948,8 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Containers;
         public bool Doors;
         public bool Ingredients;
+        public bool Lights;
+        public bool MiscItems;
         public GroupMask()
         {
         }
@@ -6637,6 +6981,8 @@ namespace Mutagen.Bethesda.Skyrim
             Containers = defaultValue;
             Doors = defaultValue;
             Ingredients = defaultValue;
+            Lights = defaultValue;
+            MiscItems = defaultValue;
         }
     }
 
@@ -6948,6 +7294,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)IngredientsItem).BinaryWriteTranslator).Write<IIngredientGetter>(
                         item: IngredientsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Lights ?? true)
+            {
+                var LightsItem = item.Lights;
+                if (LightsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)LightsItem).BinaryWriteTranslator).Write<ILightGetter>(
+                        item: LightsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.MiscItems ?? true)
+            {
+                var MiscItemsItem = item.MiscItems;
+                if (MiscItemsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)MiscItemsItem).BinaryWriteTranslator).Write<IMiscItemGetter>(
+                        item: MiscItemsItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
                 }
@@ -7298,6 +7666,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IIngredientGetter>? _Ingredients => _Ingredients_IsSet ? GroupBinaryOverlay<IIngredientGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _IngredientsLocation!.Value.Min, _IngredientsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IIngredientGetter> Ingredients => _Ingredients ?? new Group<Ingredient>(this);
         #endregion
+        #region Lights
+        private RangeInt64? _LightsLocation;
+        private bool _Lights_IsSet => _LightsLocation.HasValue;
+        private IGroupGetter<ILightGetter>? _Lights => _Lights_IsSet ? GroupBinaryOverlay<ILightGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _LightsLocation!.Value.Min, _LightsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<ILightGetter> Lights => _Lights ?? new Group<Light>(this);
+        #endregion
+        #region MiscItems
+        private RangeInt64? _MiscItemsLocation;
+        private bool _MiscItems_IsSet => _MiscItemsLocation.HasValue;
+        private IGroupGetter<IMiscItemGetter>? _MiscItems => _MiscItems_IsSet ? GroupBinaryOverlay<IMiscItemGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _MiscItemsLocation!.Value.Min, _MiscItemsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IMiscItemGetter> MiscItems => _MiscItems ?? new Group<MiscItem>(this);
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             long finalPos,
@@ -7516,6 +7896,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _IngredientsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Ingredients);
+                }
+                case 0x4847494C: // LIGH
+                {
+                    _LightsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Lights);
+                }
+                case 0x4353494D: // MISC
+                {
+                    _MiscItemsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MiscItems);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

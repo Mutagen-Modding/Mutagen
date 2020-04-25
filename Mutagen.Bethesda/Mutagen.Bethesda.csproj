@@ -52,6 +52,15 @@
     <Compile Include="Skyrim\Records\Major Records\IngredientEffectData.cs">
       <DependentUpon>Ingredient.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Light.cs">
+      <DependentUpon>Light.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\LightData.cs">
+      <DependentUpon>Light.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MiscItem.cs">
+      <DependentUpon>MiscItem.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\ObjectEffect.cs">
       <DependentUpon>ObjectEffect.xml</DependentUpon>
     </Compile>
@@ -1562,6 +1571,12 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\IngredientEffectData_LoquiGenerated.cs">
       <DependentUpon>Ingredient.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\LightData_LoquiGenerated.cs">
+      <DependentUpon>Light.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\WeightValue_LoquiGenerated.cs">
+      <DependentUpon>WeightValue.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

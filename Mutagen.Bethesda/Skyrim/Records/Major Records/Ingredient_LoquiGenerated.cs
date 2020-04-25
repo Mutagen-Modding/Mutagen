@@ -106,6 +106,17 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IIngredientGetter.Model => this.Model;
         #endregion
+        #region WeightValue
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private WeightValue? _WeightValue;
+        public WeightValue? WeightValue
+        {
+            get => _WeightValue;
+            set => _WeightValue = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IWeightValueGetter? IIngredientGetter.WeightValue => this.WeightValue;
+        #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IngredientData? _Data;
@@ -116,17 +127,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IIngredientDataGetter? IIngredientGetter.Data => this.Data;
-        #endregion
-        #region IngredientEffectData
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IngredientEffectData? _IngredientEffectData;
-        public IngredientEffectData? IngredientEffectData
-        {
-            get => _IngredientEffectData;
-            set => _IngredientEffectData = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IIngredientEffectDataGetter? IIngredientGetter.IngredientEffectData => this.IngredientEffectData;
         #endregion
         #region LargeIconFilename
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -371,8 +371,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Name = initialValue;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.WeightValue = new MaskItem<TItem, WeightValue.Mask<TItem>?>(initialValue, new WeightValue.Mask<TItem>(initialValue));
                 this.Data = new MaskItem<TItem, IngredientData.Mask<TItem>?>(initialValue, new IngredientData.Mask<TItem>(initialValue));
-                this.IngredientEffectData = new MaskItem<TItem, IngredientEffectData.Mask<TItem>?>(initialValue, new IngredientEffectData.Mask<TItem>(initialValue));
                 this.LargeIconFilename = initialValue;
                 this.SmallIconFilename = initialValue;
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
@@ -394,8 +394,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Name,
                 TItem Keywords,
                 TItem Model,
+                TItem WeightValue,
                 TItem Data,
-                TItem IngredientEffectData,
                 TItem LargeIconFilename,
                 TItem SmallIconFilename,
                 TItem Destructible,
@@ -416,8 +416,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Name = Name;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.WeightValue = new MaskItem<TItem, WeightValue.Mask<TItem>?>(WeightValue, new WeightValue.Mask<TItem>(WeightValue));
                 this.Data = new MaskItem<TItem, IngredientData.Mask<TItem>?>(Data, new IngredientData.Mask<TItem>(Data));
-                this.IngredientEffectData = new MaskItem<TItem, IngredientEffectData.Mask<TItem>?>(IngredientEffectData, new IngredientEffectData.Mask<TItem>(IngredientEffectData));
                 this.LargeIconFilename = LargeIconFilename;
                 this.SmallIconFilename = SmallIconFilename;
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
@@ -441,8 +441,8 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Name;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public MaskItem<TItem, WeightValue.Mask<TItem>?>? WeightValue { get; set; }
             public MaskItem<TItem, IngredientData.Mask<TItem>?>? Data { get; set; }
-            public MaskItem<TItem, IngredientEffectData.Mask<TItem>?>? IngredientEffectData { get; set; }
             public TItem LargeIconFilename;
             public TItem SmallIconFilename;
             public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
@@ -468,8 +468,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.WeightValue, rhs.WeightValue)) return false;
                 if (!object.Equals(this.Data, rhs.Data)) return false;
-                if (!object.Equals(this.IngredientEffectData, rhs.IngredientEffectData)) return false;
                 if (!object.Equals(this.LargeIconFilename, rhs.LargeIconFilename)) return false;
                 if (!object.Equals(this.SmallIconFilename, rhs.SmallIconFilename)) return false;
                 if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
@@ -487,8 +487,8 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Name);
                 hash.Add(this.Keywords);
                 hash.Add(this.Model);
+                hash.Add(this.WeightValue);
                 hash.Add(this.Data);
-                hash.Add(this.IngredientEffectData);
                 hash.Add(this.LargeIconFilename);
                 hash.Add(this.SmallIconFilename);
                 hash.Add(this.Destructible);
@@ -533,15 +533,15 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Model.Overall)) return false;
                     if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
+                if (WeightValue != null)
+                {
+                    if (!eval(this.WeightValue.Overall)) return false;
+                    if (this.WeightValue.Specific != null && !this.WeightValue.Specific.All(eval)) return false;
+                }
                 if (Data != null)
                 {
                     if (!eval(this.Data.Overall)) return false;
                     if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
-                }
-                if (IngredientEffectData != null)
-                {
-                    if (!eval(this.IngredientEffectData.Overall)) return false;
-                    if (this.IngredientEffectData.Specific != null && !this.IngredientEffectData.Specific.All(eval)) return false;
                 }
                 if (!eval(this.LargeIconFilename)) return false;
                 if (!eval(this.SmallIconFilename)) return false;
@@ -600,15 +600,15 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Model.Overall)) return true;
                     if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
                 }
+                if (WeightValue != null)
+                {
+                    if (eval(this.WeightValue.Overall)) return true;
+                    if (this.WeightValue.Specific != null && this.WeightValue.Specific.Any(eval)) return true;
+                }
                 if (Data != null)
                 {
                     if (eval(this.Data.Overall)) return true;
                     if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
-                }
-                if (IngredientEffectData != null)
-                {
-                    if (eval(this.IngredientEffectData.Overall)) return true;
-                    if (this.IngredientEffectData.Specific != null && this.IngredientEffectData.Specific.Any(eval)) return true;
                 }
                 if (eval(this.LargeIconFilename)) return true;
                 if (eval(this.SmallIconFilename)) return true;
@@ -665,8 +665,8 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.WeightValue = this.WeightValue == null ? null : new MaskItem<R, WeightValue.Mask<R>?>(eval(this.WeightValue.Overall), this.WeightValue.Specific?.Translate(eval));
                 obj.Data = this.Data == null ? null : new MaskItem<R, IngredientData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
-                obj.IngredientEffectData = this.IngredientEffectData == null ? null : new MaskItem<R, IngredientEffectData.Mask<R>?>(eval(this.IngredientEffectData.Overall), this.IngredientEffectData.Specific?.Translate(eval));
                 obj.LargeIconFilename = eval(this.LargeIconFilename);
                 obj.SmallIconFilename = eval(this.SmallIconFilename);
                 obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
@@ -749,13 +749,13 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Model?.ToString(fg);
                     }
+                    if (printMask?.WeightValue?.Overall ?? true)
+                    {
+                        WeightValue?.ToString(fg);
+                    }
                     if (printMask?.Data?.Overall ?? true)
                     {
                         Data?.ToString(fg);
-                    }
-                    if (printMask?.IngredientEffectData?.Overall ?? true)
-                    {
-                        IngredientEffectData?.ToString(fg);
                     }
                     if (printMask?.LargeIconFilename ?? true)
                     {
@@ -821,8 +821,8 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Name;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public MaskItem<Exception?, WeightValue.ErrorMask?>? WeightValue;
             public MaskItem<Exception?, IngredientData.ErrorMask?>? Data;
-            public MaskItem<Exception?, IngredientEffectData.ErrorMask?>? IngredientEffectData;
             public Exception? LargeIconFilename;
             public Exception? SmallIconFilename;
             public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
@@ -848,10 +848,10 @@ namespace Mutagen.Bethesda.Skyrim
                         return Keywords;
                     case Ingredient_FieldIndex.Model:
                         return Model;
+                    case Ingredient_FieldIndex.WeightValue:
+                        return WeightValue;
                     case Ingredient_FieldIndex.Data:
                         return Data;
-                    case Ingredient_FieldIndex.IngredientEffectData:
-                        return IngredientEffectData;
                     case Ingredient_FieldIndex.LargeIconFilename:
                         return LargeIconFilename;
                     case Ingredient_FieldIndex.SmallIconFilename:
@@ -891,11 +891,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case Ingredient_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
+                    case Ingredient_FieldIndex.WeightValue:
+                        this.WeightValue = new MaskItem<Exception?, WeightValue.ErrorMask?>(ex, null);
+                        break;
                     case Ingredient_FieldIndex.Data:
                         this.Data = new MaskItem<Exception?, IngredientData.ErrorMask?>(ex, null);
-                        break;
-                    case Ingredient_FieldIndex.IngredientEffectData:
-                        this.IngredientEffectData = new MaskItem<Exception?, IngredientEffectData.ErrorMask?>(ex, null);
                         break;
                     case Ingredient_FieldIndex.LargeIconFilename:
                         this.LargeIconFilename = ex;
@@ -944,11 +944,11 @@ namespace Mutagen.Bethesda.Skyrim
                     case Ingredient_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
+                    case Ingredient_FieldIndex.WeightValue:
+                        this.WeightValue = (MaskItem<Exception?, WeightValue.ErrorMask?>?)obj;
+                        break;
                     case Ingredient_FieldIndex.Data:
                         this.Data = (MaskItem<Exception?, IngredientData.ErrorMask?>?)obj;
-                        break;
-                    case Ingredient_FieldIndex.IngredientEffectData:
-                        this.IngredientEffectData = (MaskItem<Exception?, IngredientEffectData.ErrorMask?>?)obj;
                         break;
                     case Ingredient_FieldIndex.LargeIconFilename:
                         this.LargeIconFilename = (Exception?)obj;
@@ -985,8 +985,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Name != null) return true;
                 if (Keywords != null) return true;
                 if (Model != null) return true;
+                if (WeightValue != null) return true;
                 if (Data != null) return true;
-                if (IngredientEffectData != null) return true;
                 if (LargeIconFilename != null) return true;
                 if (SmallIconFilename != null) return true;
                 if (Destructible != null) return true;
@@ -1055,8 +1055,8 @@ namespace Mutagen.Bethesda.Skyrim
                     fg.AppendLine("]");
                 }
                 Model?.ToString(fg);
+                WeightValue?.ToString(fg);
                 Data?.ToString(fg);
-                IngredientEffectData?.ToString(fg);
                 fg.AppendItem(LargeIconFilename, "LargeIconFilename");
                 fg.AppendItem(SmallIconFilename, "SmallIconFilename");
                 Destructible?.ToString(fg);
@@ -1098,8 +1098,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.WeightValue = this.WeightValue.Combine(rhs.WeightValue, (l, r) => l.Combine(r));
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
-                ret.IngredientEffectData = this.IngredientEffectData.Combine(rhs.IngredientEffectData, (l, r) => l.Combine(r));
                 ret.LargeIconFilename = this.LargeIconFilename.Combine(rhs.LargeIconFilename);
                 ret.SmallIconFilename = this.SmallIconFilename.Combine(rhs.SmallIconFilename);
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
@@ -1134,8 +1134,8 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Name;
             public bool Keywords;
             public MaskItem<bool, Model.TranslationMask?> Model;
+            public MaskItem<bool, WeightValue.TranslationMask?> WeightValue;
             public MaskItem<bool, IngredientData.TranslationMask?> Data;
-            public MaskItem<bool, IngredientEffectData.TranslationMask?> IngredientEffectData;
             public bool LargeIconFilename;
             public bool SmallIconFilename;
             public MaskItem<bool, Destructible.TranslationMask?> Destructible;
@@ -1154,8 +1154,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Name = defaultOn;
                 this.Keywords = defaultOn;
                 this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.WeightValue = new MaskItem<bool, WeightValue.TranslationMask?>(defaultOn, null);
                 this.Data = new MaskItem<bool, IngredientData.TranslationMask?>(defaultOn, null);
-                this.IngredientEffectData = new MaskItem<bool, IngredientEffectData.TranslationMask?>(defaultOn, null);
                 this.LargeIconFilename = defaultOn;
                 this.SmallIconFilename = defaultOn;
                 this.Destructible = new MaskItem<bool, Destructible.TranslationMask?>(defaultOn, null);
@@ -1175,8 +1175,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Name, null));
                 ret.Add((Keywords, null));
                 ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((WeightValue?.Overall ?? true, WeightValue?.Specific?.GetCrystal()));
                 ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
-                ret.Add((IngredientEffectData?.Overall ?? true, IngredientEffectData?.Specific?.GetCrystal()));
                 ret.Add((LargeIconFilename, null));
                 ret.Add((SmallIconFilename, null));
                 ret.Add((Destructible?.Overall ?? true, Destructible?.Specific?.GetCrystal()));
@@ -1278,8 +1278,8 @@ namespace Mutagen.Bethesda.Skyrim
         new String? Name { get; set; }
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new Model? Model { get; set; }
+        new WeightValue? WeightValue { get; set; }
         new IngredientData? Data { get; set; }
-        new IngredientEffectData? IngredientEffectData { get; set; }
         new String? LargeIconFilename { get; set; }
         new String? SmallIconFilename { get; set; }
         new Destructible? Destructible { get; set; }
@@ -1310,8 +1310,8 @@ namespace Mutagen.Bethesda.Skyrim
         String? Name { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         IModelGetter? Model { get; }
+        IWeightValueGetter? WeightValue { get; }
         IIngredientDataGetter? Data { get; }
-        IIngredientEffectDataGetter? IngredientEffectData { get; }
         String? LargeIconFilename { get; }
         String? SmallIconFilename { get; }
         IDestructibleGetter? Destructible { get; }
@@ -1624,8 +1624,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Name = 8,
         Keywords = 9,
         Model = 10,
-        Data = 11,
-        IngredientEffectData = 12,
+        WeightValue = 11,
+        Data = 12,
         LargeIconFilename = 13,
         SmallIconFilename = 14,
         Destructible = 15,
@@ -1692,10 +1692,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Ingredient_FieldIndex.Keywords;
                 case "MODEL":
                     return (ushort)Ingredient_FieldIndex.Model;
+                case "WEIGHTVALUE":
+                    return (ushort)Ingredient_FieldIndex.WeightValue;
                 case "DATA":
                     return (ushort)Ingredient_FieldIndex.Data;
-                case "INGREDIENTEFFECTDATA":
-                    return (ushort)Ingredient_FieldIndex.IngredientEffectData;
                 case "LARGEICONFILENAME":
                     return (ushort)Ingredient_FieldIndex.LargeIconFilename;
                 case "SMALLICONFILENAME":
@@ -1727,8 +1727,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ingredient_FieldIndex.ObjectBounds:
                 case Ingredient_FieldIndex.Name:
                 case Ingredient_FieldIndex.Model:
+                case Ingredient_FieldIndex.WeightValue:
                 case Ingredient_FieldIndex.Data:
-                case Ingredient_FieldIndex.IngredientEffectData:
                 case Ingredient_FieldIndex.LargeIconFilename:
                 case Ingredient_FieldIndex.SmallIconFilename:
                 case Ingredient_FieldIndex.Destructible:
@@ -1749,8 +1749,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ingredient_FieldIndex.VirtualMachineAdapter:
                 case Ingredient_FieldIndex.ObjectBounds:
                 case Ingredient_FieldIndex.Model:
+                case Ingredient_FieldIndex.WeightValue:
                 case Ingredient_FieldIndex.Data:
-                case Ingredient_FieldIndex.IngredientEffectData:
                 case Ingredient_FieldIndex.Destructible:
                 case Ingredient_FieldIndex.Effects:
                     return true;
@@ -1777,8 +1777,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ingredient_FieldIndex.Name:
                 case Ingredient_FieldIndex.Keywords:
                 case Ingredient_FieldIndex.Model:
+                case Ingredient_FieldIndex.WeightValue:
                 case Ingredient_FieldIndex.Data:
-                case Ingredient_FieldIndex.IngredientEffectData:
                 case Ingredient_FieldIndex.LargeIconFilename:
                 case Ingredient_FieldIndex.SmallIconFilename:
                 case Ingredient_FieldIndex.Destructible:
@@ -1807,10 +1807,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Keywords";
                 case Ingredient_FieldIndex.Model:
                     return "Model";
+                case Ingredient_FieldIndex.WeightValue:
+                    return "WeightValue";
                 case Ingredient_FieldIndex.Data:
                     return "Data";
-                case Ingredient_FieldIndex.IngredientEffectData:
-                    return "IngredientEffectData";
                 case Ingredient_FieldIndex.LargeIconFilename:
                     return "LargeIconFilename";
                 case Ingredient_FieldIndex.SmallIconFilename:
@@ -1840,8 +1840,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ingredient_FieldIndex.Name:
                 case Ingredient_FieldIndex.Keywords:
                 case Ingredient_FieldIndex.Model:
+                case Ingredient_FieldIndex.WeightValue:
                 case Ingredient_FieldIndex.Data:
-                case Ingredient_FieldIndex.IngredientEffectData:
                 case Ingredient_FieldIndex.LargeIconFilename:
                 case Ingredient_FieldIndex.SmallIconFilename:
                 case Ingredient_FieldIndex.Destructible:
@@ -1865,8 +1865,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ingredient_FieldIndex.Name:
                 case Ingredient_FieldIndex.Keywords:
                 case Ingredient_FieldIndex.Model:
+                case Ingredient_FieldIndex.WeightValue:
                 case Ingredient_FieldIndex.Data:
-                case Ingredient_FieldIndex.IngredientEffectData:
                 case Ingredient_FieldIndex.LargeIconFilename:
                 case Ingredient_FieldIndex.SmallIconFilename:
                 case Ingredient_FieldIndex.Destructible:
@@ -1895,10 +1895,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(ExtendedList<IFormLink<Keyword>>);
                 case Ingredient_FieldIndex.Model:
                     return typeof(Model);
+                case Ingredient_FieldIndex.WeightValue:
+                    return typeof(WeightValue);
                 case Ingredient_FieldIndex.Data:
                     return typeof(IngredientData);
-                case Ingredient_FieldIndex.IngredientEffectData:
-                    return typeof(IngredientEffectData);
                 case Ingredient_FieldIndex.LargeIconFilename:
                     return typeof(String);
                 case Ingredient_FieldIndex.SmallIconFilename:
@@ -1989,8 +1989,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Name = default;
             item.Keywords = null;
             item.Model = null;
+            item.WeightValue = null;
             item.Data = null;
-            item.IngredientEffectData = null;
             item.LargeIconFilename = default;
             item.SmallIconFilename = default;
             item.Destructible = null;
@@ -2152,13 +2152,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    item.Data = Mutagen.Bethesda.Skyrim.IngredientData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Data);
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength; // Skip header
+                    item.WeightValue = Mutagen.Bethesda.Skyrim.WeightValue.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.WeightValue);
                 }
                 case 0x54494E45: // ENIT
                 {
-                    item.IngredientEffectData = Mutagen.Bethesda.Skyrim.IngredientEffectData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.IngredientEffectData);
+                    item.Data = Mutagen.Bethesda.Skyrim.IngredientData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Data);
                 }
                 case 0x4E4F4349: // ICON
                 {
@@ -2317,14 +2318,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
+            ret.WeightValue = EqualsMaskHelper.EqualsHelper(
+                item.WeightValue,
+                rhs.WeightValue,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Data = EqualsMaskHelper.EqualsHelper(
                 item.Data,
                 rhs.Data,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
-            ret.IngredientEffectData = EqualsMaskHelper.EqualsHelper(
-                item.IngredientEffectData,
-                rhs.IngredientEffectData,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.LargeIconFilename = string.Equals(item.LargeIconFilename, rhs.LargeIconFilename);
@@ -2430,15 +2431,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ModelItem?.ToString(fg, "Model");
             }
+            if ((printMask?.WeightValue?.Overall ?? true)
+                && item.WeightValue.TryGet(out var WeightValueItem))
+            {
+                WeightValueItem?.ToString(fg, "WeightValue");
+            }
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data.TryGet(out var DataItem))
             {
                 DataItem?.ToString(fg, "Data");
-            }
-            if ((printMask?.IngredientEffectData?.Overall ?? true)
-                && item.IngredientEffectData.TryGet(out var IngredientEffectDataItem))
-            {
-                IngredientEffectDataItem?.ToString(fg, "IngredientEffectData");
             }
             if ((printMask?.LargeIconFilename ?? true)
                 && item.LargeIconFilename.TryGet(out var LargeIconFilenameItem))
@@ -2500,10 +2501,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.WeightValue?.Overall.HasValue ?? false && checkMask.WeightValue.Overall.Value != (item.WeightValue != null)) return false;
+            if (checkMask.WeightValue?.Specific != null && (item.WeightValue == null || !item.WeightValue.HasBeenSet(checkMask.WeightValue.Specific))) return false;
             if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
             if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
-            if (checkMask.IngredientEffectData?.Overall.HasValue ?? false && checkMask.IngredientEffectData.Overall.Value != (item.IngredientEffectData != null)) return false;
-            if (checkMask.IngredientEffectData?.Specific != null && (item.IngredientEffectData == null || !item.IngredientEffectData.HasBeenSet(checkMask.IngredientEffectData.Specific))) return false;
             if (checkMask.LargeIconFilename.HasValue && checkMask.LargeIconFilename.Value != (item.LargeIconFilename != null)) return false;
             if (checkMask.SmallIconFilename.HasValue && checkMask.SmallIconFilename.Value != (item.SmallIconFilename != null)) return false;
             if (checkMask.Destructible?.Overall.HasValue ?? false && checkMask.Destructible.Overall.Value != (item.Destructible != null)) return false;
@@ -2527,10 +2528,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
             var itemModel = item.Model;
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            var itemWeightValue = item.WeightValue;
+            mask.WeightValue = new MaskItem<bool, WeightValue.Mask<bool>?>(itemWeightValue != null, itemWeightValue?.GetHasBeenSetMask());
             var itemData = item.Data;
             mask.Data = new MaskItem<bool, IngredientData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
-            var itemIngredientEffectData = item.IngredientEffectData;
-            mask.IngredientEffectData = new MaskItem<bool, IngredientEffectData.Mask<bool>?>(itemIngredientEffectData != null, itemIngredientEffectData?.GetHasBeenSetMask());
             mask.LargeIconFilename = (item.LargeIconFilename != null);
             mask.SmallIconFilename = (item.SmallIconFilename != null);
             var itemDestructible = item.Destructible;
@@ -2596,8 +2597,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            if (!object.Equals(lhs.WeightValue, rhs.WeightValue)) return false;
             if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            if (!object.Equals(lhs.IngredientEffectData, rhs.IngredientEffectData)) return false;
             if (!string.Equals(lhs.LargeIconFilename, rhs.LargeIconFilename)) return false;
             if (!string.Equals(lhs.SmallIconFilename, rhs.SmallIconFilename)) return false;
             if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
@@ -2643,13 +2644,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Modelitem);
             }
+            if (item.WeightValue.TryGet(out var WeightValueitem))
+            {
+                hash.Add(WeightValueitem);
+            }
             if (item.Data.TryGet(out var Dataitem))
             {
                 hash.Add(Dataitem);
-            }
-            if (item.IngredientEffectData.TryGet(out var IngredientEffectDataitem))
-            {
-                hash.Add(IngredientEffectDataitem);
             }
             if (item.LargeIconFilename.TryGet(out var LargeIconFilenameitem))
             {
@@ -2891,6 +2892,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.WeightValue) ?? true))
+            {
+                errorMask?.PushIndex((int)Ingredient_FieldIndex.WeightValue);
+                try
+                {
+                    if(rhs.WeightValue.TryGet(out var rhsWeightValue))
+                    {
+                        item.WeightValue = rhsWeightValue.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Ingredient_FieldIndex.WeightValue));
+                    }
+                    else
+                    {
+                        item.WeightValue = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Data) ?? true))
             {
                 errorMask?.PushIndex((int)Ingredient_FieldIndex.Data);
@@ -2905,32 +2932,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     else
                     {
                         item.Data = default;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.IngredientEffectData) ?? true))
-            {
-                errorMask?.PushIndex((int)Ingredient_FieldIndex.IngredientEffectData);
-                try
-                {
-                    if(rhs.IngredientEffectData.TryGet(out var rhsIngredientEffectData))
-                    {
-                        item.IngredientEffectData = rhsIngredientEffectData.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Ingredient_FieldIndex.IngredientEffectData));
-                    }
-                    else
-                    {
-                        item.IngredientEffectData = default;
                     }
                 }
                 catch (Exception ex)
@@ -3223,6 +3224,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         translationMask: translationMask?.GetSubCrystal((int)Ingredient_FieldIndex.Model));
                 }
             }
+            if ((item.WeightValue != null)
+                && (translationMask?.GetShouldTranslate((int)Ingredient_FieldIndex.WeightValue) ?? true))
+            {
+                if (item.WeightValue.TryGet(out var WeightValueItem))
+                {
+                    ((WeightValueXmlWriteTranslation)((IXmlItem)WeightValueItem).XmlWriteTranslator).Write(
+                        item: WeightValueItem,
+                        node: node,
+                        name: nameof(item.WeightValue),
+                        fieldIndex: (int)Ingredient_FieldIndex.WeightValue,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Ingredient_FieldIndex.WeightValue));
+                }
+            }
             if ((item.Data != null)
                 && (translationMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Data) ?? true))
             {
@@ -3235,20 +3250,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         fieldIndex: (int)Ingredient_FieldIndex.Data,
                         errorMask: errorMask,
                         translationMask: translationMask?.GetSubCrystal((int)Ingredient_FieldIndex.Data));
-                }
-            }
-            if ((item.IngredientEffectData != null)
-                && (translationMask?.GetShouldTranslate((int)Ingredient_FieldIndex.IngredientEffectData) ?? true))
-            {
-                if (item.IngredientEffectData.TryGet(out var IngredientEffectDataItem))
-                {
-                    ((IngredientEffectDataXmlWriteTranslation)((IXmlItem)IngredientEffectDataItem).XmlWriteTranslator).Write(
-                        item: IngredientEffectDataItem,
-                        node: node,
-                        name: nameof(item.IngredientEffectData),
-                        fieldIndex: (int)Ingredient_FieldIndex.IngredientEffectData,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Ingredient_FieldIndex.IngredientEffectData));
                 }
             }
             if ((item.LargeIconFilename != null)
@@ -3545,14 +3546,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Data":
-                    errorMask?.PushIndex((int)Ingredient_FieldIndex.Data);
+                case "WeightValue":
+                    errorMask?.PushIndex((int)Ingredient_FieldIndex.WeightValue);
                     try
                     {
-                        item.Data = LoquiXmlTranslation<IngredientData>.Instance.Parse(
+                        item.WeightValue = LoquiXmlTranslation<WeightValue>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Ingredient_FieldIndex.Data));
+                            translationMask: translationMask?.GetSubCrystal((int)Ingredient_FieldIndex.WeightValue));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3564,14 +3565,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "IngredientEffectData":
-                    errorMask?.PushIndex((int)Ingredient_FieldIndex.IngredientEffectData);
+                case "Data":
+                    errorMask?.PushIndex((int)Ingredient_FieldIndex.Data);
                     try
                     {
-                        item.IngredientEffectData = LoquiXmlTranslation<IngredientEffectData>.Instance.Parse(
+                        item.Data = LoquiXmlTranslation<IngredientData>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Ingredient_FieldIndex.IngredientEffectData));
+                            translationMask: translationMask?.GetSubCrystal((int)Ingredient_FieldIndex.Data));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3850,17 +3851,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
+            if (item.WeightValue.TryGet(out var WeightValueItem))
+            {
+                using (HeaderExport.ExportHeader(writer, Ingredient_Registration.DATA_HEADER, ObjectType.Subrecord))
+                {
+                    ((WeightValueBinaryWriteTranslation)((IBinaryItem)WeightValueItem).BinaryWriteTranslator).Write(
+                        item: WeightValueItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
             if (item.Data.TryGet(out var DataItem))
             {
                 ((IngredientDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
-            }
-            if (item.IngredientEffectData.TryGet(out var IngredientEffectDataItem))
-            {
-                ((IngredientEffectDataBinaryWriteTranslation)((IBinaryItem)IngredientEffectDataItem).BinaryWriteTranslator).Write(
-                    item: IngredientEffectDataItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
@@ -4048,17 +4052,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IModelGetter? Model { get; private set; }
         public bool Model_IsSet => Model != null;
         #endregion
+        #region WeightValue
+        public IWeightValueGetter? WeightValue { get; private set; }
+        public bool WeightValue_IsSet => WeightValue != null;
+        #endregion
         #region Data
         private RangeInt32? _DataLocation;
         private bool _Data_IsSet => _DataLocation.HasValue;
         public IIngredientDataGetter? Data => _Data_IsSet ? IngredientDataBinaryOverlay.IngredientDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
-        #endregion
-        #region IngredientEffectData
-        private RangeInt32? _IngredientEffectDataLocation;
-        private bool _IngredientEffectData_IsSet => _IngredientEffectDataLocation.HasValue;
-        public IIngredientEffectDataGetter? IngredientEffectData => _IngredientEffectData_IsSet ? IngredientEffectDataBinaryOverlay.IngredientEffectDataFactory(new BinaryMemoryReadStream(_data.Slice(_IngredientEffectDataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
-        public bool IngredientEffectData_IsSet => _IngredientEffectDataLocation.HasValue;
         #endregion
         #region LargeIconFilename
         private int? _LargeIconFilenameLocation;
@@ -4188,13 +4190,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Data);
+                    stream.Position += _package.Meta.SubConstants.HeaderLength;
+                    this.WeightValue = WeightValueBinaryOverlay.WeightValueFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.WeightValue);
                 }
                 case 0x54494E45: // ENIT
                 {
-                    _IngredientEffectDataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.IngredientEffectData);
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Data);
                 }
                 case 0x4E4F4349: // ICON
                 {

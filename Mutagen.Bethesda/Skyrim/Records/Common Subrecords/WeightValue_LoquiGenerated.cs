@@ -31,14 +31,14 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class IngredientData :
-        IIngredientData,
-        ILoquiObjectSetter<IngredientData>,
-        IEquatable<IngredientData>,
+    public partial class WeightValue :
+        IWeightValue,
+        ILoquiObjectSetter<WeightValue>,
+        IEquatable<WeightValue>,
         IEqualsMask
     {
         #region Ctor
-        public IngredientData()
+        public WeightValue()
         {
             CustomCtor();
         }
@@ -48,8 +48,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region Value
         public Int32 Value { get; set; } = default;
         #endregion
-        #region Flags
-        public IngredientEffectData.Flag Flags { get; set; } = default;
+        #region Weight
+        public Single Weight { get; set; } = default;
         #endregion
 
         #region To String
@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            IngredientDataMixIn.ToString(
+            WeightValueMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -68,22 +68,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IIngredientDataGetter rhs)) return false;
-            return ((IngredientDataCommon)((IIngredientDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IWeightValueGetter rhs)) return false;
+            return ((WeightValueCommon)((IWeightValueGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(IngredientData obj)
+        public bool Equals(WeightValue obj)
         {
-            return ((IngredientDataCommon)((IIngredientDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WeightValueCommon)((IWeightValueGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((IngredientDataCommon)((IIngredientDataGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((WeightValueCommon)((IWeightValueGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => IngredientDataXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => WeightValueXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.Skyrim
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((IngredientDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((WeightValueXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -101,9 +101,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static IngredientData CreateFromXml(
+        public static WeightValue CreateFromXml(
             XElement node,
-            IngredientData.TranslationMask? translationMask = null)
+            WeightValue.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -112,27 +112,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static IngredientData CreateFromXml(
+        public static WeightValue CreateFromXml(
             XElement node,
-            out IngredientData.ErrorMask errorMask,
-            IngredientData.TranslationMask? translationMask = null)
+            out WeightValue.ErrorMask errorMask,
+            WeightValue.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = IngredientData.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WeightValue.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public static IngredientData CreateFromXml(
+        public static WeightValue CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new IngredientData();
-            ((IngredientDataSetterCommon)((IIngredientDataGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new WeightValue();
+            ((WeightValueSetterCommon)((IWeightValueGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -140,9 +140,9 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static IngredientData CreateFromXml(
+        public static WeightValue CreateFromXml(
             string path,
-            IngredientData.TranslationMask? translationMask = null)
+            WeightValue.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -150,10 +150,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static IngredientData CreateFromXml(
+        public static WeightValue CreateFromXml(
             string path,
-            out IngredientData.ErrorMask errorMask,
-            IngredientData.TranslationMask? translationMask = null)
+            out WeightValue.ErrorMask errorMask,
+            WeightValue.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -162,10 +162,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static IngredientData CreateFromXml(
+        public static WeightValue CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            IngredientData.TranslationMask? translationMask = null)
+            WeightValue.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -174,9 +174,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static IngredientData CreateFromXml(
+        public static WeightValue CreateFromXml(
             Stream stream,
-            IngredientData.TranslationMask? translationMask = null)
+            WeightValue.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -184,10 +184,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static IngredientData CreateFromXml(
+        public static WeightValue CreateFromXml(
             Stream stream,
-            out IngredientData.ErrorMask errorMask,
-            IngredientData.TranslationMask? translationMask = null)
+            out WeightValue.ErrorMask errorMask,
+            WeightValue.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -196,10 +196,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static IngredientData CreateFromXml(
+        public static WeightValue CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            IngredientData.TranslationMask? translationMask = null)
+            WeightValue.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -222,15 +222,15 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             {
                 this.Value = initialValue;
-                this.Flags = initialValue;
+                this.Weight = initialValue;
             }
 
             public Mask(
                 TItem Value,
-                TItem Flags)
+                TItem Weight)
             {
                 this.Value = Value;
-                this.Flags = Flags;
+                this.Weight = Weight;
             }
 
             #pragma warning disable CS8618
@@ -243,7 +243,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             #region Members
             public TItem Value;
-            public TItem Flags;
+            public TItem Weight;
             #endregion
 
             #region Equals
@@ -257,14 +257,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Value, rhs.Value)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Weight, rhs.Weight)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Value);
-                hash.Add(this.Flags);
+                hash.Add(this.Weight);
                 return hash.ToHashCode();
             }
 
@@ -274,7 +274,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Value)) return false;
-                if (!eval(this.Flags)) return false;
+                if (!eval(this.Weight)) return false;
                 return true;
             }
             #endregion
@@ -283,7 +283,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Value)) return true;
-                if (eval(this.Flags)) return true;
+                if (eval(this.Weight)) return true;
                 return false;
             }
             #endregion
@@ -291,7 +291,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new IngredientData.Mask<R>();
+                var ret = new WeightValue.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -299,7 +299,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Value = eval(this.Value);
-                obj.Flags = eval(this.Flags);
+                obj.Weight = eval(this.Weight);
             }
             #endregion
 
@@ -309,16 +309,16 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(IngredientData.Mask<bool>? printMask = null)
+            public string ToString(WeightValue.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, IngredientData.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, WeightValue.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(IngredientData.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(WeightValue.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -326,9 +326,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(Value, "Value");
                     }
-                    if (printMask?.Flags ?? true)
+                    if (printMask?.Weight ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        fg.AppendItem(Weight, "Weight");
                     }
                 }
                 fg.AppendLine("]");
@@ -356,19 +356,19 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
             public Exception? Value;
-            public Exception? Flags;
+            public Exception? Weight;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                IngredientData_FieldIndex enu = (IngredientData_FieldIndex)index;
+                WeightValue_FieldIndex enu = (WeightValue_FieldIndex)index;
                 switch (enu)
                 {
-                    case IngredientData_FieldIndex.Value:
+                    case WeightValue_FieldIndex.Value:
                         return Value;
-                    case IngredientData_FieldIndex.Flags:
-                        return Flags;
+                    case WeightValue_FieldIndex.Weight:
+                        return Weight;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -376,14 +376,14 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void SetNthException(int index, Exception ex)
             {
-                IngredientData_FieldIndex enu = (IngredientData_FieldIndex)index;
+                WeightValue_FieldIndex enu = (WeightValue_FieldIndex)index;
                 switch (enu)
                 {
-                    case IngredientData_FieldIndex.Value:
+                    case WeightValue_FieldIndex.Value:
                         this.Value = ex;
                         break;
-                    case IngredientData_FieldIndex.Flags:
-                        this.Flags = ex;
+                    case WeightValue_FieldIndex.Weight:
+                        this.Weight = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -392,14 +392,14 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void SetNthMask(int index, object obj)
             {
-                IngredientData_FieldIndex enu = (IngredientData_FieldIndex)index;
+                WeightValue_FieldIndex enu = (WeightValue_FieldIndex)index;
                 switch (enu)
                 {
-                    case IngredientData_FieldIndex.Value:
+                    case WeightValue_FieldIndex.Value:
                         this.Value = (Exception?)obj;
                         break;
-                    case IngredientData_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
+                    case WeightValue_FieldIndex.Weight:
+                        this.Weight = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -410,7 +410,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (Overall != null) return true;
                 if (Value != null) return true;
-                if (Flags != null) return true;
+                if (Weight != null) return true;
                 return false;
             }
             #endregion
@@ -446,7 +446,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(Value, "Value");
-                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(Weight, "Weight");
             }
             #endregion
 
@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Value = this.Value.Combine(rhs.Value);
-                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Weight = this.Weight.Combine(rhs.Weight);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -479,14 +479,14 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             private TranslationCrystal? _crystal;
             public bool Value;
-            public bool Flags;
+            public bool Weight;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
                 this.Value = defaultOn;
-                this.Flags = defaultOn;
+                this.Weight = defaultOn;
             }
 
             #endregion
@@ -503,44 +503,40 @@ namespace Mutagen.Bethesda.Skyrim
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Value, null));
-                ret.Add((Flags, null));
+                ret.Add((Weight, null));
             }
         }
         #endregion
 
-        #region Mutagen
-        public new static readonly RecordType GrupRecordType = IngredientData_Registration.TriggeringRecordType;
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => IngredientDataBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => WeightValueBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((IngredientDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((WeightValueBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static IngredientData CreateFromBinary(MutagenFrame frame)
+        public static WeightValue CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public static IngredientData CreateFromBinary(
+        public static WeightValue CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new IngredientData();
-            ((IngredientDataSetterCommon)((IIngredientDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new WeightValue();
+            ((WeightValueSetterCommon)((IWeightValueGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -553,33 +549,33 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IIngredientDataGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeightValueGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((IngredientDataSetterCommon)((IIngredientDataGetter)this).CommonSetterInstance()!).Clear(this);
+            ((WeightValueSetterCommon)((IWeightValueGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static IngredientData GetNew()
+        internal static WeightValue GetNew()
         {
-            return new IngredientData();
+            return new WeightValue();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IIngredientData :
-        IIngredientDataGetter,
-        ILoquiObjectSetter<IIngredientData>
+    public partial interface IWeightValue :
+        IWeightValueGetter,
+        ILoquiObjectSetter<IWeightValue>
     {
         new Int32 Value { get; set; }
-        new IngredientEffectData.Flag Flags { get; set; }
+        new Single Weight { get; set; }
     }
 
-    public partial interface IIngredientDataGetter :
+    public partial interface IWeightValueGetter :
         ILoquiObject,
-        ILoquiObject<IIngredientDataGetter>,
+        ILoquiObject<IWeightValueGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -590,49 +586,49 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         Int32 Value { get; }
-        IngredientEffectData.Flag Flags { get; }
+        Single Weight { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class IngredientDataMixIn
+    public static partial class WeightValueMixIn
     {
-        public static void Clear(this IIngredientData item)
+        public static void Clear(this IWeightValue item)
         {
-            ((IngredientDataSetterCommon)((IIngredientDataGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((WeightValueSetterCommon)((IWeightValueGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static IngredientData.Mask<bool> GetEqualsMask(
-            this IIngredientDataGetter item,
-            IIngredientDataGetter rhs,
+        public static WeightValue.Mask<bool> GetEqualsMask(
+            this IWeightValueGetter item,
+            IWeightValueGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((IngredientDataCommon)((IIngredientDataGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((WeightValueCommon)((IWeightValueGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IIngredientDataGetter item,
+            this IWeightValueGetter item,
             string? name = null,
-            IngredientData.Mask<bool>? printMask = null)
+            WeightValue.Mask<bool>? printMask = null)
         {
-            return ((IngredientDataCommon)((IIngredientDataGetter)item).CommonInstance()!).ToString(
+            return ((WeightValueCommon)((IWeightValueGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IIngredientDataGetter item,
+            this IWeightValueGetter item,
             FileGeneration fg,
             string? name = null,
-            IngredientData.Mask<bool>? printMask = null)
+            WeightValue.Mask<bool>? printMask = null)
         {
-            ((IngredientDataCommon)((IIngredientDataGetter)item).CommonInstance()!).ToString(
+            ((WeightValueCommon)((IWeightValueGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -640,38 +636,38 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this IIngredientDataGetter item,
-            IngredientData.Mask<bool?> checkMask)
+            this IWeightValueGetter item,
+            WeightValue.Mask<bool?> checkMask)
         {
-            return ((IngredientDataCommon)((IIngredientDataGetter)item).CommonInstance()!).HasBeenSet(
+            return ((WeightValueCommon)((IWeightValueGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static IngredientData.Mask<bool> GetHasBeenSetMask(this IIngredientDataGetter item)
+        public static WeightValue.Mask<bool> GetHasBeenSetMask(this IWeightValueGetter item)
         {
-            var ret = new IngredientData.Mask<bool>(false);
-            ((IngredientDataCommon)((IIngredientDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new WeightValue.Mask<bool>(false);
+            ((WeightValueCommon)((IWeightValueGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IIngredientDataGetter item,
-            IIngredientDataGetter rhs)
+            this IWeightValueGetter item,
+            IWeightValueGetter rhs)
         {
-            return ((IngredientDataCommon)((IIngredientDataGetter)item).CommonInstance()!).Equals(
+            return ((WeightValueCommon)((IWeightValueGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this IIngredientData lhs,
-            IIngredientDataGetter rhs,
-            IngredientData.TranslationMask? copyMask = null)
+            this IWeightValue lhs,
+            IWeightValueGetter rhs,
+            WeightValue.TranslationMask? copyMask = null)
         {
-            ((IngredientDataSetterTranslationCommon)((IIngredientDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WeightValueSetterTranslationCommon)((IWeightValueGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -679,59 +675,59 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this IIngredientData lhs,
-            IIngredientDataGetter rhs,
-            out IngredientData.ErrorMask errorMask,
-            IngredientData.TranslationMask? copyMask = null)
+            this IWeightValue lhs,
+            IWeightValueGetter rhs,
+            out WeightValue.ErrorMask errorMask,
+            WeightValue.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((IngredientDataSetterTranslationCommon)((IIngredientDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WeightValueSetterTranslationCommon)((IWeightValueGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = IngredientData.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WeightValue.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IIngredientData lhs,
-            IIngredientDataGetter rhs,
+            this IWeightValue lhs,
+            IWeightValueGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((IngredientDataSetterTranslationCommon)((IIngredientDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WeightValueSetterTranslationCommon)((IWeightValueGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static IngredientData DeepCopy(
-            this IIngredientDataGetter item,
-            IngredientData.TranslationMask? copyMask = null)
+        public static WeightValue DeepCopy(
+            this IWeightValueGetter item,
+            WeightValue.TranslationMask? copyMask = null)
         {
-            return ((IngredientDataSetterTranslationCommon)((IIngredientDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WeightValueSetterTranslationCommon)((IWeightValueGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static IngredientData DeepCopy(
-            this IIngredientDataGetter item,
-            out IngredientData.ErrorMask errorMask,
-            IngredientData.TranslationMask? copyMask = null)
+        public static WeightValue DeepCopy(
+            this IWeightValueGetter item,
+            out WeightValue.ErrorMask errorMask,
+            WeightValue.TranslationMask? copyMask = null)
         {
-            return ((IngredientDataSetterTranslationCommon)((IIngredientDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WeightValueSetterTranslationCommon)((IWeightValueGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static IngredientData DeepCopy(
-            this IIngredientDataGetter item,
+        public static WeightValue DeepCopy(
+            this IWeightValueGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((IngredientDataSetterTranslationCommon)((IIngredientDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WeightValueSetterTranslationCommon)((IWeightValueGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -740,9 +736,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IIngredientData item,
+            this IWeightValue item,
             XElement node,
-            IngredientData.TranslationMask? translationMask = null)
+            WeightValue.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -753,10 +749,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IIngredientData item,
+            this IWeightValue item,
             XElement node,
-            out IngredientData.ErrorMask errorMask,
-            IngredientData.TranslationMask? translationMask = null)
+            out WeightValue.ErrorMask errorMask,
+            WeightValue.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -764,16 +760,16 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = IngredientData.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WeightValue.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this IIngredientData item,
+            this IWeightValue item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((IngredientDataSetterCommon)((IIngredientDataGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((WeightValueSetterCommon)((IWeightValueGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -781,9 +777,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IIngredientData item,
+            this IWeightValue item,
             string path,
-            IngredientData.TranslationMask? translationMask = null)
+            WeightValue.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -793,10 +789,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IIngredientData item,
+            this IWeightValue item,
             string path,
-            out IngredientData.ErrorMask errorMask,
-            IngredientData.TranslationMask? translationMask = null)
+            out WeightValue.ErrorMask errorMask,
+            WeightValue.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -807,10 +803,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IIngredientData item,
+            this IWeightValue item,
             string path,
             ErrorMaskBuilder? errorMask,
-            IngredientData.TranslationMask? translationMask = null)
+            WeightValue.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -821,9 +817,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IIngredientData item,
+            this IWeightValue item,
             Stream stream,
-            IngredientData.TranslationMask? translationMask = null)
+            WeightValue.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -833,10 +829,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IIngredientData item,
+            this IWeightValue item,
             Stream stream,
-            out IngredientData.ErrorMask errorMask,
-            IngredientData.TranslationMask? translationMask = null)
+            out WeightValue.ErrorMask errorMask,
+            WeightValue.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -847,10 +843,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IIngredientData item,
+            this IWeightValue item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            IngredientData.TranslationMask? translationMask = null)
+            WeightValue.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -865,7 +861,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IIngredientData item,
+            this IWeightValue item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -875,11 +871,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromBinary(
-            this IIngredientData item,
+            this IWeightValue item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((IngredientDataSetterCommon)((IIngredientDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((WeightValueSetterCommon)((IWeightValueGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -895,48 +891,48 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum IngredientData_FieldIndex
+    public enum WeightValue_FieldIndex
     {
         Value = 0,
-        Flags = 1,
+        Weight = 1,
     }
     #endregion
 
     #region Registration
-    public partial class IngredientData_Registration : ILoquiRegistration
+    public partial class WeightValue_Registration : ILoquiRegistration
     {
-        public static readonly IngredientData_Registration Instance = new IngredientData_Registration();
+        public static readonly WeightValue_Registration Instance = new WeightValue_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 180,
+            msgID: 182,
             version: 0);
 
-        public const string GUID = "c4118d6d-037a-40c2-959f-692f05695b79";
+        public const string GUID = "5898be6e-6c53-41ce-9abc-85e1fe4c64a0";
 
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(IngredientData.Mask<>);
+        public static readonly Type MaskType = typeof(WeightValue.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(IngredientData.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(WeightValue.ErrorMask);
 
-        public static readonly Type ClassType = typeof(IngredientData);
+        public static readonly Type ClassType = typeof(WeightValue);
 
-        public static readonly Type GetterType = typeof(IIngredientDataGetter);
+        public static readonly Type GetterType = typeof(IWeightValueGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IIngredientData);
+        public static readonly Type SetterType = typeof(IWeightValue);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.IngredientData";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.WeightValue";
 
-        public const string Name = "IngredientData";
+        public const string Name = "WeightValue";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -949,9 +945,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (str.Upper)
             {
                 case "VALUE":
-                    return (ushort)IngredientData_FieldIndex.Value;
-                case "FLAGS":
-                    return (ushort)IngredientData_FieldIndex.Flags;
+                    return (ushort)WeightValue_FieldIndex.Value;
+                case "WEIGHT":
+                    return (ushort)WeightValue_FieldIndex.Weight;
                 default:
                     return null;
             }
@@ -959,11 +955,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            IngredientData_FieldIndex enu = (IngredientData_FieldIndex)index;
+            WeightValue_FieldIndex enu = (WeightValue_FieldIndex)index;
             switch (enu)
             {
-                case IngredientData_FieldIndex.Value:
-                case IngredientData_FieldIndex.Flags:
+                case WeightValue_FieldIndex.Value:
+                case WeightValue_FieldIndex.Weight:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -972,11 +968,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            IngredientData_FieldIndex enu = (IngredientData_FieldIndex)index;
+            WeightValue_FieldIndex enu = (WeightValue_FieldIndex)index;
             switch (enu)
             {
-                case IngredientData_FieldIndex.Value:
-                case IngredientData_FieldIndex.Flags:
+                case WeightValue_FieldIndex.Value:
+                case WeightValue_FieldIndex.Weight:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -985,11 +981,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            IngredientData_FieldIndex enu = (IngredientData_FieldIndex)index;
+            WeightValue_FieldIndex enu = (WeightValue_FieldIndex)index;
             switch (enu)
             {
-                case IngredientData_FieldIndex.Value:
-                case IngredientData_FieldIndex.Flags:
+                case WeightValue_FieldIndex.Value:
+                case WeightValue_FieldIndex.Weight:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -998,13 +994,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static string GetNthName(ushort index)
         {
-            IngredientData_FieldIndex enu = (IngredientData_FieldIndex)index;
+            WeightValue_FieldIndex enu = (WeightValue_FieldIndex)index;
             switch (enu)
             {
-                case IngredientData_FieldIndex.Value:
+                case WeightValue_FieldIndex.Value:
                     return "Value";
-                case IngredientData_FieldIndex.Flags:
-                    return "Flags";
+                case WeightValue_FieldIndex.Weight:
+                    return "Weight";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1012,11 +1008,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            IngredientData_FieldIndex enu = (IngredientData_FieldIndex)index;
+            WeightValue_FieldIndex enu = (WeightValue_FieldIndex)index;
             switch (enu)
             {
-                case IngredientData_FieldIndex.Value:
-                case IngredientData_FieldIndex.Flags:
+                case WeightValue_FieldIndex.Value:
+                case WeightValue_FieldIndex.Weight:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1025,11 +1021,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsProtected(ushort index)
         {
-            IngredientData_FieldIndex enu = (IngredientData_FieldIndex)index;
+            WeightValue_FieldIndex enu = (WeightValue_FieldIndex)index;
             switch (enu)
             {
-                case IngredientData_FieldIndex.Value:
-                case IngredientData_FieldIndex.Flags:
+                case WeightValue_FieldIndex.Value:
+                case WeightValue_FieldIndex.Weight:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1038,24 +1034,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static Type GetNthType(ushort index)
         {
-            IngredientData_FieldIndex enu = (IngredientData_FieldIndex)index;
+            WeightValue_FieldIndex enu = (WeightValue_FieldIndex)index;
             switch (enu)
             {
-                case IngredientData_FieldIndex.Value:
+                case WeightValue_FieldIndex.Value:
                     return typeof(Int32);
-                case IngredientData_FieldIndex.Flags:
-                    return typeof(IngredientEffectData.Flag);
+                case WeightValue_FieldIndex.Weight:
+                    return typeof(Single);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(IngredientDataXmlWriteTranslation);
-        public static readonly RecordType ENIT_HEADER = new RecordType("ENIT");
-        public static readonly RecordType TriggeringRecordType = ENIT_HEADER;
+        public static readonly Type XmlWriteTranslation = typeof(WeightValueXmlWriteTranslation);
         public const int NumStructFields = 2;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryWriteTranslation = typeof(IngredientDataBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(WeightValueBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1088,22 +1082,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class IngredientDataSetterCommon
+    public partial class WeightValueSetterCommon
     {
-        public static readonly IngredientDataSetterCommon Instance = new IngredientDataSetterCommon();
+        public static readonly WeightValueSetterCommon Instance = new WeightValueSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IIngredientData item)
+        public void Clear(IWeightValue item)
         {
             ClearPartial();
             item.Value = default;
-            item.Flags = default;
+            item.Weight = default;
         }
         
         #region Xml Translation
         public virtual void CopyInFromXml(
-            IIngredientData item,
+            IWeightValue item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1112,7 +1106,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    IngredientDataXmlCreateTranslation.FillPublicElementXml(
+                    WeightValueXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1131,21 +1125,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Binary Translation
         protected static void FillBinaryStructs(
-            IIngredientData item,
+            IWeightValue item,
             MutagenFrame frame)
         {
             item.Value = frame.ReadInt32();
-            item.Flags = EnumBinaryTranslation<IngredientEffectData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
         }
         
         public virtual void CopyInFromBinary(
-            IIngredientData item,
+            IWeightValue item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                frame.Reader,
-                recordTypeConverter.ConvertToCustom(IngredientData_Registration.ENIT_HEADER)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1156,17 +1147,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class IngredientDataCommon
+    public partial class WeightValueCommon
     {
-        public static readonly IngredientDataCommon Instance = new IngredientDataCommon();
+        public static readonly WeightValueCommon Instance = new WeightValueCommon();
 
-        public IngredientData.Mask<bool> GetEqualsMask(
-            IIngredientDataGetter item,
-            IIngredientDataGetter rhs,
+        public WeightValue.Mask<bool> GetEqualsMask(
+            IWeightValueGetter item,
+            IWeightValueGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new IngredientData.Mask<bool>(false);
-            ((IngredientDataCommon)((IIngredientDataGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new WeightValue.Mask<bool>(false);
+            ((WeightValueCommon)((IWeightValueGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1175,20 +1166,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IIngredientDataGetter item,
-            IIngredientDataGetter rhs,
-            IngredientData.Mask<bool> ret,
+            IWeightValueGetter item,
+            IWeightValueGetter rhs,
+            WeightValue.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
             ret.Value = item.Value == rhs.Value;
-            ret.Flags = item.Flags == rhs.Flags;
+            ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
         }
         
         public string ToString(
-            IIngredientDataGetter item,
+            IWeightValueGetter item,
             string? name = null,
-            IngredientData.Mask<bool>? printMask = null)
+            WeightValue.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1200,18 +1191,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IIngredientDataGetter item,
+            IWeightValueGetter item,
             FileGeneration fg,
             string? name = null,
-            IngredientData.Mask<bool>? printMask = null)
+            WeightValue.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"IngredientData =>");
+                fg.AppendLine($"WeightValue =>");
             }
             else
             {
-                fg.AppendLine($"{name} (IngredientData) =>");
+                fg.AppendLine($"{name} (WeightValue) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1225,52 +1216,52 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IIngredientDataGetter item,
+            IWeightValueGetter item,
             FileGeneration fg,
-            IngredientData.Mask<bool>? printMask = null)
+            WeightValue.Mask<bool>? printMask = null)
         {
             if (printMask?.Value ?? true)
             {
                 fg.AppendItem(item.Value, "Value");
             }
-            if (printMask?.Flags ?? true)
+            if (printMask?.Weight ?? true)
             {
-                fg.AppendItem(item.Flags, "Flags");
+                fg.AppendItem(item.Weight, "Weight");
             }
         }
         
         public bool HasBeenSet(
-            IIngredientDataGetter item,
-            IngredientData.Mask<bool?> checkMask)
+            IWeightValueGetter item,
+            WeightValue.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
-            IIngredientDataGetter item,
-            IngredientData.Mask<bool> mask)
+            IWeightValueGetter item,
+            WeightValue.Mask<bool> mask)
         {
             mask.Value = true;
-            mask.Flags = true;
+            mask.Weight = true;
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IIngredientDataGetter? lhs,
-            IIngredientDataGetter? rhs)
+            IWeightValueGetter? lhs,
+            IWeightValueGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (lhs.Value != rhs.Value) return false;
-            if (lhs.Flags != rhs.Flags) return false;
+            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             return true;
         }
         
-        public virtual int GetHashCode(IIngredientDataGetter item)
+        public virtual int GetHashCode(IWeightValueGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.Value);
-            hash.Add(item.Flags);
+            hash.Add(item.Weight);
             return hash.ToHashCode();
         }
         
@@ -1279,11 +1270,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public object GetNew()
         {
-            return IngredientData.GetNew();
+            return WeightValue.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IIngredientDataGetter obj)
+        public IEnumerable<ILinkGetter> GetLinks(IWeightValueGetter obj)
         {
             yield break;
         }
@@ -1291,46 +1282,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class IngredientDataSetterTranslationCommon
+    public partial class WeightValueSetterTranslationCommon
     {
-        public static readonly IngredientDataSetterTranslationCommon Instance = new IngredientDataSetterTranslationCommon();
+        public static readonly WeightValueSetterTranslationCommon Instance = new WeightValueSetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            IIngredientData item,
-            IIngredientDataGetter rhs,
+            IWeightValue item,
+            IWeightValueGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)IngredientData_FieldIndex.Value) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WeightValue_FieldIndex.Value) ?? true))
             {
                 item.Value = rhs.Value;
             }
-            if ((copyMask?.GetShouldTranslate((int)IngredientData_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WeightValue_FieldIndex.Weight) ?? true))
             {
-                item.Flags = rhs.Flags;
+                item.Weight = rhs.Weight;
             }
         }
         
         #endregion
         
-        public IngredientData DeepCopy(
-            IIngredientDataGetter item,
-            IngredientData.TranslationMask? copyMask = null)
+        public WeightValue DeepCopy(
+            IWeightValueGetter item,
+            WeightValue.TranslationMask? copyMask = null)
         {
-            IngredientData ret = (IngredientData)((IngredientDataCommon)((IIngredientDataGetter)item).CommonInstance()!).GetNew();
+            WeightValue ret = (WeightValue)((WeightValueCommon)((IWeightValueGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public IngredientData DeepCopy(
-            IIngredientDataGetter item,
-            out IngredientData.ErrorMask errorMask,
-            IngredientData.TranslationMask? copyMask = null)
+        public WeightValue DeepCopy(
+            IWeightValueGetter item,
+            out WeightValue.ErrorMask errorMask,
+            WeightValue.TranslationMask? copyMask = null)
         {
-            IngredientData ret = (IngredientData)((IngredientDataCommon)((IIngredientDataGetter)item).CommonInstance()!).GetNew();
+            WeightValue ret = (WeightValue)((WeightValueCommon)((IWeightValueGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1338,12 +1329,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public IngredientData DeepCopy(
-            IIngredientDataGetter item,
+        public WeightValue DeepCopy(
+            IWeightValueGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            IngredientData ret = (IngredientData)((IngredientDataCommon)((IIngredientDataGetter)item).CommonInstance()!).GetNew();
+            WeightValue ret = (WeightValue)((WeightValueCommon)((IWeightValueGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1358,27 +1349,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class IngredientData
+    public partial class WeightValue
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => IngredientData_Registration.Instance;
-        public static IngredientData_Registration Registration => IngredientData_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => WeightValue_Registration.Instance;
+        public static WeightValue_Registration Registration => WeightValue_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => IngredientDataCommon.Instance;
+        protected object CommonInstance() => WeightValueCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return IngredientDataSetterCommon.Instance;
+            return WeightValueSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => IngredientDataSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => WeightValueSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IIngredientDataGetter.CommonInstance() => this.CommonInstance();
+        object IWeightValueGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IIngredientDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IWeightValueGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IIngredientDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IWeightValueGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1389,48 +1380,48 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class IngredientDataXmlWriteTranslation : IXmlWriteTranslator
+    public partial class WeightValueXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static IngredientDataXmlWriteTranslation Instance = new IngredientDataXmlWriteTranslation();
+        public readonly static WeightValueXmlWriteTranslation Instance = new WeightValueXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IIngredientDataGetter item,
+            IWeightValueGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)IngredientData_FieldIndex.Value) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)WeightValue_FieldIndex.Value) ?? true))
             {
                 Int32XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Value),
                     item: item.Value,
-                    fieldIndex: (int)IngredientData_FieldIndex.Value,
+                    fieldIndex: (int)WeightValue_FieldIndex.Value,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)IngredientData_FieldIndex.Flags) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)WeightValue_FieldIndex.Weight) ?? true))
             {
-                EnumXmlTranslation<IngredientEffectData.Flag>.Instance.Write(
+                FloatXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)IngredientData_FieldIndex.Flags,
+                    name: nameof(item.Weight),
+                    item: item.Weight,
+                    fieldIndex: (int)WeightValue_FieldIndex.Weight,
                     errorMask: errorMask);
             }
         }
 
         public void Write(
             XElement node,
-            IIngredientDataGetter item,
+            IWeightValueGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.IngredientData");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.WeightValue");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.IngredientData");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.WeightValue");
             }
             WriteToNodeXml(
                 item: item,
@@ -1447,7 +1438,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IIngredientDataGetter)item,
+                item: (IWeightValueGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1456,7 +1447,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public void Write(
             XElement node,
-            IIngredientDataGetter item,
+            IWeightValueGetter item,
             ErrorMaskBuilder? errorMask,
             int fieldIndex,
             TranslationCrystal? translationMask,
@@ -1466,7 +1457,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             try
             {
                 Write(
-                    item: (IIngredientDataGetter)item,
+                    item: (IWeightValueGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1485,12 +1476,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class IngredientDataXmlCreateTranslation
+    public partial class WeightValueXmlCreateTranslation
     {
-        public readonly static IngredientDataXmlCreateTranslation Instance = new IngredientDataXmlCreateTranslation();
+        public readonly static WeightValueXmlCreateTranslation Instance = new WeightValueXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IIngredientData item,
+            IWeightValue item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1499,7 +1490,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    IngredientDataXmlCreateTranslation.FillPublicElementXml(
+                    WeightValueXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1515,7 +1506,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            IIngredientData item,
+            IWeightValue item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1524,7 +1515,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "Value":
-                    errorMask?.PushIndex((int)IngredientData_FieldIndex.Value);
+                    errorMask?.PushIndex((int)WeightValue_FieldIndex.Value);
                     try
                     {
                         item.Value = Int32XmlTranslation.Instance.Parse(
@@ -1541,11 +1532,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Flags":
-                    errorMask?.PushIndex((int)IngredientData_FieldIndex.Flags);
+                case "Weight":
+                    errorMask?.PushIndex((int)WeightValue_FieldIndex.Weight);
                     try
                     {
-                        item.Flags = EnumXmlTranslation<IngredientEffectData.Flag>.Instance.Parse(
+                        item.Weight = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1570,30 +1561,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Xml Write Mixins
-    public static class IngredientDataXmlTranslationMixIn
+    public static class WeightValueXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IIngredientDataGetter item,
+            this IWeightValueGetter item,
             XElement node,
-            out IngredientData.ErrorMask errorMask,
-            IngredientData.TranslationMask? translationMask = null,
+            out WeightValue.ErrorMask errorMask,
+            WeightValue.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((IngredientDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((WeightValueXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = IngredientData.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WeightValue.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this IIngredientDataGetter item,
+            this IWeightValueGetter item,
             string path,
-            out IngredientData.ErrorMask errorMask,
-            IngredientData.TranslationMask? translationMask = null,
+            out WeightValue.ErrorMask errorMask,
+            WeightValue.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1607,7 +1598,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IIngredientDataGetter item,
+            this IWeightValueGetter item,
             string path,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1624,10 +1615,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IIngredientDataGetter item,
+            this IWeightValueGetter item,
             Stream stream,
-            out IngredientData.ErrorMask errorMask,
-            IngredientData.TranslationMask? translationMask = null,
+            out WeightValue.ErrorMask errorMask,
+            WeightValue.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1641,7 +1632,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IIngredientDataGetter item,
+            this IWeightValueGetter item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1658,13 +1649,13 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IIngredientDataGetter item,
+            this IWeightValueGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
             string? name = null)
         {
-            ((IngredientDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((WeightValueXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1673,12 +1664,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IIngredientDataGetter item,
+            this IWeightValueGetter item,
             XElement node,
             string? name = null,
-            IngredientData.TranslationMask? translationMask = null)
+            WeightValue.TranslationMask? translationMask = null)
         {
-            ((IngredientDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((WeightValueXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1687,12 +1678,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IIngredientDataGetter item,
+            this IWeightValueGetter item,
             string path,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((IngredientDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((WeightValueXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1702,12 +1693,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IIngredientDataGetter item,
+            this IWeightValueGetter item,
             Stream stream,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((IngredientDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((WeightValueXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1726,35 +1717,28 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class IngredientDataBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class WeightValueBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static IngredientDataBinaryWriteTranslation Instance = new IngredientDataBinaryWriteTranslation();
+        public readonly static WeightValueBinaryWriteTranslation Instance = new WeightValueBinaryWriteTranslation();
 
         public static void WriteEmbedded(
-            IIngredientDataGetter item,
+            IWeightValueGetter item,
             MutagenWriter writer)
         {
             writer.Write(item.Value);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<IngredientEffectData.Flag>.Instance.Write(
-                writer,
-                item.Flags,
-                length: 4);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Weight);
         }
 
         public void Write(
             MutagenWriter writer,
-            IIngredientDataGetter item,
+            IWeightValueGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
-                writer: writer,
-                record: recordTypeConverter.ConvertToCustom(IngredientData_Registration.ENIT_HEADER),
-                type: ObjectType.Subrecord))
-            {
-                WriteEmbedded(
-                    item: item,
-                    writer: writer);
-            }
+            WriteEmbedded(
+                item: item,
+                writer: writer);
         }
 
         public void Write(
@@ -1763,16 +1747,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IIngredientDataGetter)item,
+                item: (IWeightValueGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class IngredientDataBinaryCreateTranslation
+    public partial class WeightValueBinaryCreateTranslation
     {
-        public readonly static IngredientDataBinaryCreateTranslation Instance = new IngredientDataBinaryCreateTranslation();
+        public readonly static WeightValueBinaryCreateTranslation Instance = new WeightValueBinaryCreateTranslation();
 
     }
 
@@ -1780,13 +1764,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class IngredientDataBinaryTranslationMixIn
+    public static class WeightValueBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IIngredientDataGetter item,
+            this IWeightValueGetter item,
             MutagenWriter writer)
         {
-            ((IngredientDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((WeightValueBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 recordTypeConverter: null);
@@ -1799,33 +1783,33 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class IngredientDataBinaryOverlay :
+    public partial class WeightValueBinaryOverlay :
         BinaryOverlay,
-        IIngredientDataGetter
+        IWeightValueGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => IngredientData_Registration.Instance;
-        public static IngredientData_Registration Registration => IngredientData_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => WeightValue_Registration.Instance;
+        public static WeightValue_Registration Registration => WeightValue_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => IngredientDataCommon.Instance;
+        protected object CommonInstance() => WeightValueCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => IngredientDataSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => WeightValueSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IIngredientDataGetter.CommonInstance() => this.CommonInstance();
+        object IWeightValueGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IIngredientDataGetter.CommonSetterInstance() => null;
+        object? IWeightValueGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IIngredientDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IWeightValueGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IIngredientDataGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeightValueGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => IngredientDataXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => WeightValueXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -1834,7 +1818,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((IngredientDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((WeightValueXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -1842,27 +1826,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => IngredientDataBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => WeightValueBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((IngredientDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((WeightValueBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public Int32 Value => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public IngredientEffectData.Flag Flags => (IngredientEffectData.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
+        public Single Weight => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected IngredientDataBinaryOverlay(
+        protected WeightValueBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1871,17 +1855,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static IngredientDataBinaryOverlay IngredientDataFactory(
+        public static WeightValueBinaryOverlay WeightValueFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new IngredientDataBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.Meta),
+            var ret = new WeightValueBinaryOverlay(
+                bytes: stream.RemainingMemory.Slice(0, 0x8),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.Meta.Subrecord(stream.RemainingSpan).TotalLength));
-            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
-            stream.Position += 0x8 + package.Meta.SubConstants.HeaderLength;
+            int offset = stream.Position;
+            stream.Position += 0x8;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1889,12 +1872,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static IngredientDataBinaryOverlay IngredientDataFactory(
+        public static WeightValueBinaryOverlay WeightValueFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            return IngredientDataFactory(
+            return WeightValueFactory(
                 stream: new BinaryMemoryReadStream(slice),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
@@ -1906,7 +1889,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             string? name = null)
         {
-            IngredientDataMixIn.ToString(
+            WeightValueMixIn.ToString(
                 item: this,
                 name: name);
         }

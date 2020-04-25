@@ -11,8 +11,8 @@
         <FormLink refName="Keyword" recordType="KWDA" />
       </List>
       <RefDirect name="Model" refName="Model" />
+      <RefDirect name="WeightValue" refName="WeightValue" recordType="DATA" />
       <RefDirect name="Data" refName="IngredientData" />
-      <RefDirect name="IngredientEffectData" refName="IngredientEffectData" />
       <String name="LargeIconFilename" recordType="ICON" />
       <String name="SmallIconFilename" recordType="MICO" />
       <RefDirect name="Destructible" refName="Destructible" />
@@ -22,13 +22,7 @@
       <RefList name="Effects" refName="Effect" nullable="NotNull" />
     </Fields>
   </Object>
-  <Object name="IngredientData" objType="Subrecord" recordType="DATA" GUID="3a95acbe-7e28-490e-a935-649249c361a2" ID="179">
-    <Fields>
-      <Int32 name="Value" />
-      <Float name="Weight" />
-    </Fields>
-  </Object>
-  <Object name="IngredientEffectData" objType="Subrecord" recordType="ENIT" GUID="c4118d6d-037a-40c2-959f-692f05695b79" ID="180">
+  <Object name="IngredientData" objType="Subrecord" recordType="ENIT" GUID="c4118d6d-037a-40c2-959f-692f05695b79" ID="180">
     <Fields>
       <Int32 name="Value" />
       <Enum name="Flags" enumName="IngredientEffectData.Flag" byteLength="4" />

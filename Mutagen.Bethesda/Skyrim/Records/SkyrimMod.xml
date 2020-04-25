@@ -29,6 +29,8 @@
       <Group name="Containers" refName="Container" />
       <Group name="Doors" refName="Door" />
       <Group name="Ingredients" refName="Ingredient" />
+      <Group name="Lights" refName="Light" />
+      <Group name="MiscItems" refName="MiscItem" />
     </Fields>
   </Object>
 </Loqui>
