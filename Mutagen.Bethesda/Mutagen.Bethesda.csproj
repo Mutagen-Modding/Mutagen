@@ -19,7 +19,12 @@
     <DocumentationFile>C:\Users\Levia\Documents\Repos\Mutagen\Mutagen.Bethesda\Mutagen.Bethesda.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Skyrim\Interfaces\IItem.cs" />
     <Compile Include="Skyrim\Interfaces\IEffectRecord.cs" />
+    <Compile Include="Skyrim\Interfaces\IOwner.cs" />
+    <Compile Include="Skyrim\Records\Common Subrecords\ContainerEntryData.cs">
+      <DependentUpon>ContainerEntry.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\DestructionStageData.cs">
       <DependentUpon>Destructible.xml</DependentUpon>
     </Compile>
@@ -34,6 +39,12 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\BookData.cs">
       <DependentUpon>Book.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Container.cs">
+      <DependentUpon>Container.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ContainerData.cs">
+      <DependentUpon>Container.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\ObjectEffect.cs">
       <DependentUpon>ObjectEffect.xml</DependentUpon>
@@ -1482,6 +1493,60 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\BookTeachesNothing_LoquiGenerated.cs">
       <DependentUpon>Book.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Container_LoquiGenerated.cs">
+      <DependentUpon>Container.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\AlchemicalApparatus_LoquiGenerated.cs">
+      <DependentUpon>AlchemicalApparatus.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Ammo_LoquiGenerated.cs">
+      <DependentUpon>Ammo.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Ingestible_LoquiGenerated.cs">
+      <DependentUpon>Ingestible.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Ingredient_LoquiGenerated.cs">
+      <DependentUpon>Ingredient.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Key_LoquiGenerated.cs">
+      <DependentUpon>Key.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\LeveledItem_LoquiGenerated.cs">
+      <DependentUpon>LeveledItem.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MiscItem_LoquiGenerated.cs">
+      <DependentUpon>MiscItem.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\SoulGem_LoquiGenerated.cs">
+      <DependentUpon>SoulGem.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Weapon_LoquiGenerated.cs">
+      <DependentUpon>Weapon.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ContainerData_LoquiGenerated.cs">
+      <DependentUpon>Container.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ContainerEntry_LoquiGenerated.cs">
+      <DependentUpon>ContainerEntry.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ContainerOwnerTarget_LoquiGenerated.cs">
+      <DependentUpon>ContainerEntry.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ContainerNpcOwner_LoquiGenerated.cs">
+      <DependentUpon>ContainerEntry.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ContainerFactionOwner_LoquiGenerated.cs">
+      <DependentUpon>ContainerEntry.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ContainerNoOwner_LoquiGenerated.cs">
+      <DependentUpon>ContainerEntry.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ContainerItem_LoquiGenerated.cs">
+      <DependentUpon>ContainerEntry.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ContainerEntryData_LoquiGenerated.cs">
+      <DependentUpon>ContainerEntry.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

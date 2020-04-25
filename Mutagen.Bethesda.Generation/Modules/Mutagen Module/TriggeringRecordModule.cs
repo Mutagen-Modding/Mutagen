@@ -241,15 +241,16 @@ namespace Mutagen.Bethesda.Generation
                 && contType.SubTypeGeneration is LoquiType contLoqui)
             {
                 var subData = contLoqui.CustomData.TryCreateValue(Constants.DataKey, () => new MutagenFieldData(contLoqui)) as MutagenFieldData;
-                if (contType.CustomData.TryGetValue(ListBinaryTranslationGeneration.CounterRecordType, out var counterTypeObj)
-                    && counterTypeObj is string counterType)
-                {
-                    subData.TriggeringRecordTypes.Add(new RecordType(counterType));
-                }
                 await SetRecordTrigger(
                     obj,
                     contLoqui,
                     subData);
+                if (contType.CustomData.TryGetValue(ListBinaryTranslationGeneration.CounterRecordType, out var counterTypeObj)
+                    && counterTypeObj is string counterType
+                    && !subData.HasTrigger)
+                {
+                    subData.TriggeringRecordTypes.Add(new RecordType(counterType));
+                }
             }
             else if (field is DictType dictType)
             {

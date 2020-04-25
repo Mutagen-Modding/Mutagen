@@ -22,6 +22,11 @@ namespace Mutagen.Bethesda.Binary
         MasterReferenceReader? MasterReferences { get; set; }
 
         /// <summary>
+        /// Optional RecordInfoCache to reference while reading
+        /// </summary>
+        RecordInfoCache? RecordInfoCache { get; set; }
+
+        /// <summary>
         /// Convenience offset tracker variable for helping print meaningful position information
         /// relative to an original source file.  Only used if a stream gets reframed.
         /// </summary>

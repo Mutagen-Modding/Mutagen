@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MiscItem" recordType="MISC" baseClass="SkyrimMajorRecord" objType="Record" GUID="91d335f8-47e0-4625-928e-ad386acf723b" ID="167">
+    <Interface>IItem</Interface>
+  </Object>
+</Loqui>

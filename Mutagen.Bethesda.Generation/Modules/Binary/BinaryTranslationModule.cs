@@ -144,6 +144,14 @@ namespace Mutagen.Bethesda.Generation
                     if (dir == TranslationDirection.Reader) return false;
                     return obj.GetObjectType() == ObjectType.Mod;
                 });
+            var recordInfoCache = new APILine(
+                nicknameKey: "RecordInfoCache",
+                resolutionString: $"{nameof(RecordInfoCache)} infoCache",
+                when: (obj, dir) =>
+                {
+                    if (dir != TranslationDirection.Reader) return false;
+                    return obj.GetObjectType() == ObjectType.Mod;
+                });
             var recTypeConverter = new APILine(
                 "RecordTypeConverter",
                 $"{nameof(RecordTypeConverter)}? recordTypeConverter = null");
@@ -190,6 +198,7 @@ namespace Mutagen.Bethesda.Generation
                         customAPI: new CustomMethodAPI[]
                         {
                             CustomMethodAPI.FactoryPublic(modKey),
+                            CustomMethodAPI.FactoryPublic(recordInfoCache),
                             CustomMethodAPI.FactoryPublic(writeParamOptional),
                         },
                         optionalAPI: modAPILines))
@@ -240,7 +249,11 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(stream, {nameof(GameMode)}.{obj.GetObjectData().GameMode}))");
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine("var frame = new MutagenFrame(reader);");
+                fg.AppendLine("var frame = new MutagenFrame(reader)");
+                using (new BraceWrapper(fg) { AppendSemicolon = true })
+                {
+                    fg.AppendLine($"{nameof(MutagenFrame.RecordInfoCache)} = infoCache");
+                }
                 internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Reader).ToArray());
             }
         }
@@ -652,7 +665,16 @@ namespace Mutagen.Bethesda.Generation
                 using (var args = new ArgsWrapper(fg,
                     $"return {BinaryOverlayClass(obj)}.{obj.Name}Factory"))
                 {
-                    args.Add($"new {nameof(BinaryMemoryReadStream)}(bytes)");
+                    args.Add(subFg =>
+                    {
+                        using (var subArgs = new FunctionWrapper(subFg,
+                            $"stream: new {nameof(MutagenMemoryReadStream)}"))
+                        {
+                            subArgs.Add("data: bytes");
+                            subArgs.Add($"metaData: {nameof(GameMode)}.{obj.GetObjectData().GameMode}");
+                            subArgs.Add($"infoCache: new {nameof(RecordInfoCache)}(() => new {nameof(MutagenMemoryReadStream)}(bytes, {nameof(GameMode)}.{obj.GetObjectData().GameMode}))");
+                        }
+                    });
                     args.AddPassArg("modKey");
                     args.Add("shouldDispose: false");
                 }
@@ -670,7 +692,16 @@ namespace Mutagen.Bethesda.Generation
                 using (var args = new ArgsWrapper(fg,
                     $"return {BinaryOverlayClass(obj)}.{obj.Name}Factory"))
                 {
-                    args.Add($"stream: new {nameof(BinaryReadStream)}(path)");
+                    args.Add(subFg =>
+                    {
+                        using (var subArgs = new FunctionWrapper(subFg,
+                            $"stream: new {nameof(MutagenBinaryReadStream)}"))
+                        {
+                            subArgs.AddPassArg("path");
+                            subArgs.Add($"metaData: {nameof(GameMode)}.{obj.GetObjectData().GameMode}");
+                            subArgs.Add($"infoCache: new {nameof(RecordInfoCache)}(() => new {nameof(MutagenBinaryReadStream)}(path, {nameof(GameMode)}.{obj.GetObjectData().GameMode}))");
+                        }
+                    });
                     args.Add("modKey: modKeyOverride ?? ModKey.Factory(Path.GetFileName(path))");
                     args.Add("shouldDispose: true");
                 }
@@ -680,7 +711,7 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new FunctionWrapper(fg,
                 $"public{obj.NewOverride()}static I{obj.Name}DisposableGetter {CreateFromPrefix}{ModuleNickname}Overlay"))
             {
-                args.Add($"{nameof(IBinaryReadStream)} stream");
+                args.Add($"{nameof(IMutagenReadStream)} stream");
                 args.Add($"ModKey modKey");
             }
             using (new BraceWrapper(fg))
@@ -876,7 +907,11 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(path, {nameof(GameMode)}.{obj.GetObjectData().GameMode}))");
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine("var frame = new MutagenFrame(reader);");
+                fg.AppendLine("var frame = new MutagenFrame(reader)");
+                using (new BraceWrapper(fg) { AppendSemicolon = true })
+                {
+                    fg.AppendLine($"{nameof(MutagenFrame.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenBinaryReadStream)}(path, {nameof(GameMode)}.{obj.GetObjectData().GameMode}))");
+                }
                 fg.AppendLine("var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));");
                 internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Reader).ToArray());
             }
@@ -1639,7 +1674,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     if (obj.GetObjectType() == ObjectType.Mod)
                     {
-                        args.Add($"{nameof(IBinaryReadStream)} stream");
+                        args.Add($"{nameof(IMutagenReadStream)} stream");
                         args.Add("ModKey modKey");
                         args.Add($"bool shouldDispose");
                     }
@@ -1667,7 +1702,13 @@ namespace Mutagen.Bethesda.Generation
                     {
                         fg.AppendLine("this.ModKey = modKey;");
                         fg.AppendLine("this._data = stream;");
-                        fg.AppendLine($"this._package = new {nameof(BinaryOverlayFactoryPackage)}(modKey, {nameof(GameMode)}.{obj.GetObjectData().GameMode});");
+                        using (var args = new ArgsWrapper(fg,
+                            $"this._package = new {nameof(BinaryOverlayFactoryPackage)}"))
+                        {
+                            args.AddPassArg("modKey");
+                            args.Add($"gameMode: {nameof(GameMode)}.{obj.GetObjectData().GameMode}");
+                            args.Add($"infoCache: stream.{nameof(MutagenBinaryReadStream.RecordInfoCache)}");
+                        }
                         fg.AppendLine("this._shouldDispose = shouldDispose;");
                     }
                     foreach (var field in obj.IterateFields(
@@ -1698,7 +1739,43 @@ namespace Mutagen.Bethesda.Generation
                             using (var args = new ArgsWrapper(fg,
                                 $"return {obj.Name}Factory"))
                             {
-                                args.Add($"stream: new {nameof(BinaryMemoryReadStream)}(data)");
+                                args.Add(subFg =>
+                                {
+                                    using (var subArgs = new FunctionWrapper(subFg,
+                                        $"stream: new {nameof(MutagenMemoryReadStream)}"))
+                                    {
+                                        subArgs.AddPassArg("data");
+                                        subArgs.Add($"metaData: {nameof(GameMode)}.{obj.GetObjectData().GameMode}");
+                                        subArgs.Add($"infoCache: new {nameof(RecordInfoCache)}(() => new {nameof(MutagenMemoryReadStream)}(data, {nameof(GameMode)}.{obj.GetObjectData().GameMode}))");
+                                    }
+                                });
+                                args.AddPassArg("modKey");
+                                args.Add("shouldDispose: false");
+                            }
+                        }
+                        fg.AppendLine();
+
+                        using (var args = new FunctionWrapper(fg,
+                            $"public static {this.BinaryOverlayClass(obj)} {obj.Name}Factory"))
+                        {
+                            args.Add($"string path");
+                            args.Add("ModKey modKey");
+                        }
+                        using (new BraceWrapper(fg))
+                        {
+                            using (var args = new ArgsWrapper(fg,
+                                $"return {obj.Name}Factory"))
+                            {
+                                args.Add(subFg =>
+                                {
+                                    using (var subArgs = new FunctionWrapper(subFg,
+                                        $"stream: new {nameof(MutagenBinaryReadStream)}"))
+                                    {
+                                        subArgs.AddPassArg("path");
+                                        subArgs.Add($"metaData: {nameof(GameMode)}.{obj.GetObjectData().GameMode}");
+                                        subArgs.Add($"infoCache: new {nameof(RecordInfoCache)}(() => new {nameof(MutagenBinaryReadStream)}(path, {nameof(GameMode)}.{obj.GetObjectData().GameMode}))");
+                                    }
+                                });
                                 args.AddPassArg("modKey");
                                 args.Add("shouldDispose: false");
                             }
@@ -1711,7 +1788,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         if (obj.GetObjectType() == ObjectType.Mod)
                         {
-                            args.Add($"{nameof(IBinaryReadStream)} stream");
+                            args.Add($"{nameof(IMutagenReadStream)} stream");
                             args.Add("ModKey modKey");
                             args.Add("bool shouldDispose");
                         }

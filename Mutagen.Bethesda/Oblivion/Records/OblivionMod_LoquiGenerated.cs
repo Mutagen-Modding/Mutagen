@@ -3788,7 +3788,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Oblivion))
             {
-                var frame = new MutagenFrame(reader);
+                var frame = new MutagenFrame(reader)
+                {
+                    RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Oblivion))
+                };
                 var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 return CreateFromBinary(
                     importMask: importMask,
@@ -3805,7 +3808,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Oblivion))
             {
-                var frame = new MutagenFrame(reader);
+                var frame = new MutagenFrame(reader)
+                {
+                    RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Oblivion))
+                };
                 var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 return CreateFromBinary(
                     importMask: importMask,
@@ -3818,11 +3824,15 @@ namespace Mutagen.Bethesda.Oblivion
         public static OblivionMod CreateFromBinary(
             Stream stream,
             ModKey modKey,
+            RecordInfoCache infoCache,
             GroupMask? importMask = null)
         {
             using (var reader = new MutagenBinaryReadStream(stream, GameMode.Oblivion))
             {
-                var frame = new MutagenFrame(reader);
+                var frame = new MutagenFrame(reader)
+                {
+                    RecordInfoCache = infoCache
+                };
                 return CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
@@ -3833,12 +3843,16 @@ namespace Mutagen.Bethesda.Oblivion
         public static OblivionMod CreateFromBinary(
             Stream stream,
             ModKey modKey,
+            RecordInfoCache infoCache,
             ErrorMaskBuilder? errorMask,
             GroupMask? importMask = null)
         {
             using (var reader = new MutagenBinaryReadStream(stream, GameMode.Oblivion))
             {
-                var frame = new MutagenFrame(reader);
+                var frame = new MutagenFrame(reader)
+                {
+                    RecordInfoCache = infoCache
+                };
                 return CreateFromBinary(
                     importMask: importMask,
                     modKey: modKey,
@@ -3854,7 +3868,10 @@ namespace Mutagen.Bethesda.Oblivion
             ModKey modKey)
         {
             return OblivionModBinaryOverlay.OblivionModFactory(
-                new BinaryMemoryReadStream(bytes),
+                stream: new MutagenMemoryReadStream(
+                    data: bytes,
+                    metaData: GameMode.Oblivion,
+                    infoCache: new RecordInfoCache(() => new MutagenMemoryReadStream(bytes, GameMode.Oblivion))),
                 modKey: modKey,
                 shouldDispose: false);
         }
@@ -3864,13 +3881,16 @@ namespace Mutagen.Bethesda.Oblivion
             ModKey? modKeyOverride = null)
         {
             return OblivionModBinaryOverlay.OblivionModFactory(
-                stream: new BinaryReadStream(path),
+                stream: new MutagenBinaryReadStream(
+                    path: path,
+                    metaData: GameMode.Oblivion,
+                    infoCache: new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Oblivion))),
                 modKey: modKeyOverride ?? ModKey.Factory(Path.GetFileName(path)),
                 shouldDispose: true);
         }
 
         public static IOblivionModDisposableGetter CreateFromBinaryOverlay(
-            IBinaryReadStream stream,
+            IMutagenReadStream stream,
             ModKey modKey)
         {
             return OblivionModBinaryOverlay.OblivionModFactory(
@@ -4417,7 +4437,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
             using (var reader = new MutagenBinaryReadStream(path, GameMode.Oblivion))
             {
-                var frame = new MutagenFrame(reader);
+                var frame = new MutagenFrame(reader)
+                {
+                    RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Oblivion))
+                };
                 var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 CopyInFromBinary(
                     item: item,
@@ -4431,11 +4454,15 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionMod item,
             Stream stream,
             ModKey modKey,
+            RecordInfoCache infoCache,
             GroupMask? importMask = null)
         {
             using (var reader = new MutagenBinaryReadStream(stream, GameMode.Oblivion))
             {
-                var frame = new MutagenFrame(reader);
+                var frame = new MutagenFrame(reader)
+                {
+                    RecordInfoCache = infoCache
+                };
                 CopyInFromBinary(
                     item: item,
                     importMask: importMask,
@@ -12968,13 +12995,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset);
 
         protected OblivionModBinaryOverlay(
-            IBinaryReadStream stream,
+            IMutagenReadStream stream,
             ModKey modKey,
             bool shouldDispose)
         {
             this.ModKey = modKey;
             this._data = stream;
-            this._package = new BinaryOverlayFactoryPackage(modKey, GameMode.Oblivion);
+            this._package = new BinaryOverlayFactoryPackage(
+                modKey: modKey,
+                gameMode: GameMode.Oblivion,
+                infoCache: stream.RecordInfoCache);
             this._shouldDispose = shouldDispose;
         }
 
@@ -12983,13 +13013,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ModKey modKey)
         {
             return OblivionModFactory(
-                stream: new BinaryMemoryReadStream(data),
+                stream: new MutagenMemoryReadStream(
+                    data: data,
+                    metaData: GameMode.Oblivion,
+                    infoCache: new RecordInfoCache(() => new MutagenMemoryReadStream(data, GameMode.Oblivion))),
                 modKey: modKey,
                 shouldDispose: false);
         }
 
         public static OblivionModBinaryOverlay OblivionModFactory(
-            IBinaryReadStream stream,
+            string path,
+            ModKey modKey)
+        {
+            return OblivionModFactory(
+                stream: new MutagenBinaryReadStream(
+                    path: path,
+                    metaData: GameMode.Oblivion,
+                    infoCache: new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameMode.Oblivion))),
+                modKey: modKey,
+                shouldDispose: false);
+        }
+
+        public static OblivionModBinaryOverlay OblivionModFactory(
+            IMutagenReadStream stream,
             ModKey modKey,
             bool shouldDispose)
         {

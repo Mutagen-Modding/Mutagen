@@ -50,6 +50,7 @@
     <Compile Include="Links\ILinkCache.cs" />
     <Compile Include="Links\LoadOrderLinkCache.cs" />
     <Compile Include="Load Order\LoadOrder.cs" />
+    <Compile Include="Utility\RecordInfoCache.cs" />
     <Compile Include="Persistance\TextFileFormKeyAllocator.cs" />
     <Compile Include="Records\AMod.cs" />
     <Compile Include="Persistance\SimpleFormKeyAllocator.cs" />

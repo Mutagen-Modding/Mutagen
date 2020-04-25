@@ -73,6 +73,26 @@ namespace Mutagen.Bethesda.Binary
         public static IReadOnlyList<T> FactoryByCount(
             ReadOnlyMemorySlice<byte> mem,
             BinaryOverlayFactoryPackage package,
+            ICollectionGetter<RecordType> subrecordType,
+            int itemLength,
+            uint count,
+            BinaryOverlay.SpanFactory<T> getter)
+        {
+            if ((mem.Length / (itemLength + package.Meta.SubConstants.HeaderLength)) != count)
+            {
+                throw new ArgumentException("Item count and expected size did not match.");
+            }
+            return new BinaryOverlayListByStartIndexWithRecordSet(
+                mem,
+                package,
+                getter,
+                itemLength,
+                subrecordType);
+        }
+
+        public static IReadOnlyList<T> FactoryByCount(
+            ReadOnlyMemorySlice<byte> mem,
+            BinaryOverlayFactoryPackage package,
             int itemLength,
             uint count,
             BinaryOverlay.SpanFactory<T> getter)
@@ -280,6 +300,61 @@ namespace Mutagen.Bethesda.Binary
                     if (subMeta.RecordType != this._recordType)
                     {
                         throw new ArgumentException($"Unexpected record type: {subMeta.RecordType} != {this._recordType}");
+                    }
+                    if (subMeta.ContentLength != this._itemLength)
+                    {
+                        throw new ArgumentException($"Unexpected record length: {subMeta.ContentLength} != {this._itemLength}");
+                    }
+                    return _getter(_mem.Slice(startIndex + _package.Meta.SubConstants.HeaderLength, _itemLength), _package);
+                }
+            }
+
+            public int Count => this._mem.Length / this._totalItemLength;
+
+            public IEnumerator<T> GetEnumerator()
+            {
+                for (int i = 0; i < this.Count; i++)
+                {
+                    yield return this[i];
+                }
+            }
+
+            IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+        }
+
+        public class BinaryOverlayListByStartIndexWithRecordSet : IReadOnlyList<T>
+        {
+            private readonly int _itemLength;
+            private readonly BinaryOverlayFactoryPackage _package;
+            private readonly ReadOnlyMemorySlice<byte> _mem;
+            private readonly BinaryOverlay.SpanFactory<T> _getter;
+            private readonly ICollectionGetter<RecordType> _recordTypes;
+            private readonly int _totalItemLength;
+
+            public BinaryOverlayListByStartIndexWithRecordSet(
+                ReadOnlyMemorySlice<byte> mem,
+                BinaryOverlayFactoryPackage package,
+                BinaryOverlay.SpanFactory<T> getter,
+                int itemLength,
+                ICollectionGetter<RecordType> recordTypes)
+            {
+                this._mem = mem;
+                this._package = package;
+                this._getter = getter;
+                this._itemLength = itemLength;
+                this._recordTypes = recordTypes;
+                this._totalItemLength = itemLength + this._package.Meta.SubConstants.HeaderLength;
+            }
+
+            public T this[int index]
+            {
+                get
+                {
+                    var startIndex = index * this._totalItemLength;
+                    var subMeta = _package.Meta.Subrecord(_mem.Slice(startIndex));
+                    if (!this._recordTypes.Contains(subMeta.RecordType))
+                    {
+                        throw new ArgumentException($"Unexpected record type: {subMeta.RecordType}");
                     }
                     if (subMeta.ContentLength != this._itemLength)
                     {

@@ -2340,6 +2340,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IBookTeachTargetGetter? Teaches => GetTeachesCustom(location: 0x4);
         public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x8, 0x4));
         public Single Weight => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
+        private int TeachesEndingPos;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -2364,7 +2365,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.Subrecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
-            stream.Position += 0xC + package.Meta.SubConstants.HeaderLength;
+            stream.Position += 0x8 + package.Meta.SubConstants.HeaderLength;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,

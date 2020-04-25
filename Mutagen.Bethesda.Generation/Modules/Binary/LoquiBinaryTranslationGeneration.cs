@@ -433,6 +433,10 @@ namespace Mutagen.Bethesda.Generation
         {
             LoquiType loqui = typeGen as LoquiType;
             if (loqui.TargetObjectGeneration == null) return null;
+            // ToDo
+            // Upgrade this to actually find inheriting objects
+            // Abstract is just a good "estimation"
+            if (loqui.TargetObjectGeneration.Abstract) return null;
             var sum = 0;
             foreach (var item in loqui.TargetObjectGeneration.IterateFields(includeBaseClass: true))
             {

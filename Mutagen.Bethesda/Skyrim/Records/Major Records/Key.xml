@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Key" recordType="KEYM" baseClass="SkyrimMajorRecord" objType="Record" GUID="aae23e29-1f5c-44c3-aa51-ae68f15be91b" ID="165">
+    <Interface>IItem</Interface>
+  </Object>
+</Loqui>

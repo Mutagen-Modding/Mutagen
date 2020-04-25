@@ -66,6 +66,13 @@ namespace Mutagen.Bethesda.Binary
         public long OffsetReference => this.Reader.OffsetReference;
 
         /// <inheritdoc/>
+        public RecordInfoCache? RecordInfoCache
+        {
+            get => this.Reader.RecordInfoCache;
+            set => this.Reader.RecordInfoCache = value;
+        }
+
+        /// <inheritdoc/>
         public ReadOnlySpan<byte> RemainingSpan => this.Reader.RemainingSpan;
         
         /// <inheritdoc/>
@@ -292,7 +299,13 @@ namespace Mutagen.Bethesda.Binary
         public MutagenFrame ReadAndReframe(int length)
         {
             var offset = this.PositionWithOffset;
-            return new MutagenFrame(new MutagenMemoryReadStream(this.ReadMemory(length, readSafe: true), this.MetaData, this.MasterReferences, offsetReference: offset));
+            return new MutagenFrame(
+                new MutagenMemoryReadStream(
+                    this.ReadMemory(length, readSafe: true),
+                    this.MetaData,
+                    this.MasterReferences,
+                    offsetReference: offset,
+                    infoCache: this.RecordInfoCache));
         }
 
         /// <inheritdoc/>

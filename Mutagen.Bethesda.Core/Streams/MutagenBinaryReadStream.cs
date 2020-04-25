@@ -14,21 +14,17 @@ namespace Mutagen.Bethesda.Binary
     {
         private readonly string? _path;
 
-        /// <summary>
-        /// Convenience offset tracker variable for helping print meaningful position information
-        /// relative to an original source file.  Only used if a stream gets reframed.
-        /// </summary>
+        /// <inheritdoc/>
         public long OffsetReference { get; }
-        
-        /// <summary>
-        /// Game constants meta object to reference for header length measurements
-        /// </summary>
+
+        /// <inheritdoc/>
         public GameConstants MetaData { get; }
         
-        /// <summary>
-        /// Optional MasterReferenceReader to reference while reading
-        /// </summary>
+        /// <inheritdoc/>
         public MasterReferenceReader? MasterReferences { get; set; }
+
+        /// <inheritdoc/>
+        public RecordInfoCache? RecordInfoCache { get; set; }
 
         /// <summary>
         /// Constructor that opens a read stream to a path
@@ -36,18 +32,21 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="path">Path to read from</param>
         /// <param name="metaData">Game constants meta object to reference for header length measurements</param>
         /// <param name="masterReferences">Optional MasterReferenceReader to reference while reading</param>
+        /// <param name="infoCache">Optional RecordInfoCache to reference while reading</param>
         /// <param name="bufferSize">Size of internal buffer</param>
         /// <param name="offsetReference">Optional offset reference position to use</param>
         public MutagenBinaryReadStream(
             string path, 
             GameConstants metaData, 
             MasterReferenceReader? masterReferences = null,
-            int bufferSize = 4096, 
+            RecordInfoCache? infoCache = null,
+            int bufferSize = 4096,
             long offsetReference = 0)
             : base(path, bufferSize)
         {
             this._path = path;
             this.MetaData = metaData;
+            this.RecordInfoCache = infoCache;
             this.MasterReferences = masterReferences;
             this.OffsetReference = offsetReference;
         }
@@ -58,12 +57,15 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="stream">Stream to wrap and read from</param>
         /// <param name="metaData">Game constants meta object to reference for header length measurements</param>
         /// <param name="masterReferences">Optional MasterReferenceReader to reference while reading</param>
+        /// <param name="infoCache">Optional RecordInfoCache to reference while reading</param>
         /// <param name="bufferSize">Size of internal buffer</param>
+        /// <param name="dispose">Whether to dispose the source stream</param>
         /// <param name="offsetReference">Optional offset reference position to use</param>
         public MutagenBinaryReadStream(
             Stream stream, 
             GameConstants metaData,
             MasterReferenceReader? masterReferences = null,
+            RecordInfoCache? infoCache = null,
             int bufferSize = 4096, 
             bool dispose = true, 
             long offsetReference = 0)
@@ -71,6 +73,7 @@ namespace Mutagen.Bethesda.Binary
         {
             this.MetaData = metaData;
             this.MasterReferences = masterReferences;
+            this.RecordInfoCache = infoCache;
             this.OffsetReference = offsetReference;
         }
 
@@ -85,7 +88,12 @@ namespace Mutagen.Bethesda.Binary
         public IMutagenReadStream ReadAndReframe(int length)
         {
             var offset = this.OffsetReference + this.Position;
-            return new MutagenMemoryReadStream(this.ReadMemory(length, readSafe: true), this.MetaData, this.MasterReferences, offsetReference: offset);
+            return new MutagenMemoryReadStream(
+                this.ReadMemory(length, readSafe: true),
+                this.MetaData, 
+                this.MasterReferences,
+                offsetReference: offset,
+                infoCache: this.RecordInfoCache);
         }
 
         public override string ToString()

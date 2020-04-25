@@ -329,6 +329,41 @@ namespace Mutagen.Bethesda.Binary
             return ret.ToArray();
         }
 
+        public static int[] ParseRecordLocationsByCount(
+            BinaryMemoryReadStream stream,
+            uint count,
+            RecordType trigger,
+            RecordHeaderConstants constants,
+            bool skipHeader)
+        {
+            List<int> ret = new List<int>();
+            var startingPos = stream.Position;
+            for (uint i = 0; i < count; i++)
+            {
+                var varMeta = constants.GetVariableMeta(stream);
+                var recType = varMeta.RecordType;
+                if (trigger == recType)
+                {
+                    if (skipHeader)
+                    {
+                        stream.Position += varMeta.HeaderLength;
+                        ret.Add(stream.Position - startingPos);
+                        stream.Position += (int)varMeta.RecordLength;
+                    }
+                    else
+                    {
+                        ret.Add(stream.Position - startingPos);
+                        stream.Position += (int)varMeta.TotalLength;
+                    }
+                }
+                else
+                {
+                    stream.Position += (int)varMeta.TotalLength;
+                }
+            }
+            return ret.ToArray();
+        }
+
         public static int[] ParseRecordLocations(
             BinaryMemoryReadStream stream,
             long finalPos,

@@ -26,9 +26,8 @@ namespace Mutagen.Bethesda.Tests
         protected override async Task<IModDisposeGetter> ImportBinaryOverlay(FilePath path)
         {
             return SkyrimModBinaryOverlay.SkyrimModFactory(
-                new BinaryReadStream(this.FilePath.Path),
-                this.ModKey,
-                shouldDispose: true);
+                this.FilePath.Path,
+                this.ModKey);
         }
 
         protected override async Task<IMod> ImportBinary(FilePath path)

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="SoulGem" recordType="SLGM" baseClass="SkyrimMajorRecord" objType="Record" GUID="1d5e8cdd-e010-45ed-aca9-7d332b1eb235" ID="168">
+    <Interface>IItem</Interface>
+  </Object>
+</Loqui>

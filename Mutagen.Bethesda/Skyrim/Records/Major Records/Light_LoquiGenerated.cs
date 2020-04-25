@@ -517,6 +517,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILight :
         ILightGetter,
         ISkyrimMajorRecord,
+        IItem,
         ILoquiObjectSetter<ILightInternal>
     {
     }
@@ -530,6 +531,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILightGetter :
         ISkyrimMajorRecordGetter,
+        IItemGetter,
         ILoquiObject<ILightGetter>,
         IXmlItem,
         IBinaryItem

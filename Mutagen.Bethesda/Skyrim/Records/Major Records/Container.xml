@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Container" recordType="CONT" objType="Record" majorFlag="true" baseClass="SkyrimMajorRecord" GUID="9adb9b58-0aef-4cee-a346-0639dd924acd" ID="160">
+    <Interface>INamed</Interface>
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <RefList name="Items" counterRecType="COCT" refName="ContainerEntry" counterSubrecordPerItem="true" />
+      <RefDirect name="Data" refName="ContainerData" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="OpenSound" refName="SoundDescriptor" recordType="SNAM" />
+      <FormLink name="CloseSound" refName="SoundDescriptor" recordType="QNAM" />
+    </Fields>
+  </Object>
+  <Object name="ContainerData" objType="Subrecord" recordType="DATA" GUID="e7182024-0607-4ed3-92df-0af4c66e6091" ID="170">
+    <Fields>
+      <Enum name="Flags" enumName="ContainerData.Flag" byteLength="1" />
+      <Float name="Weight" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -1045,6 +1045,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType ASPC_HEADER = new RecordType("ASPC");
         public static readonly RecordType AACT_HEADER = new RecordType("AACT");
         public static readonly RecordType ACTI_HEADER = new RecordType("ACTI");
+        public static readonly RecordType APPA_HEADER = new RecordType("APPA");
+        public static readonly RecordType AMMO_HEADER = new RecordType("AMMO");
         public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
         public static readonly RecordType ARMA_HEADER = new RecordType("ARMA");
         public static readonly RecordType ARTO_HEADER = new RecordType("ARTO");
@@ -1052,6 +1054,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
         public static readonly RecordType CLFM_HEADER = new RecordType("CLFM");
+        public static readonly RecordType CONT_HEADER = new RecordType("CONT");
         public static readonly RecordType DEBR_HEADER = new RecordType("DEBR");
         public static readonly RecordType DUAL_HEADER = new RecordType("DUAL");
         public static readonly RecordType EFSH_HEADER = new RecordType("EFSH");
@@ -1068,12 +1071,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType HDPT_HEADER = new RecordType("HDPT");
         public static readonly RecordType IMAD_HEADER = new RecordType("IMAD");
         public static readonly RecordType IPDS_HEADER = new RecordType("IPDS");
+        public static readonly RecordType ALCH_HEADER = new RecordType("ALCH");
+        public static readonly RecordType KEYM_HEADER = new RecordType("KEYM");
         public static readonly RecordType KYWD_HEADER = new RecordType("KYWD");
         public static readonly RecordType LTEX_HEADER = new RecordType("LTEX");
+        public static readonly RecordType LVLI_HEADER = new RecordType("LVLI");
         public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
         public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
         public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
         public static readonly RecordType MATT_HEADER = new RecordType("MATT");
+        public static readonly RecordType MISC_HEADER = new RecordType("MISC");
         public static readonly RecordType MOVT_HEADER = new RecordType("MOVT");
         public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
         public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
@@ -1085,12 +1092,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType REGN_HEADER = new RecordType("REGN");
         public static readonly RecordType REVB_HEADER = new RecordType("REVB");
         public static readonly RecordType SCRL_HEADER = new RecordType("SCRL");
+        public static readonly RecordType SLGM_HEADER = new RecordType("SLGM");
         public static readonly RecordType SNDR_HEADER = new RecordType("SNDR");
         public static readonly RecordType SOUN_HEADER = new RecordType("SOUN");
         public static readonly RecordType STAT_HEADER = new RecordType("STAT");
         public static readonly RecordType TACT_HEADER = new RecordType("TACT");
         public static readonly RecordType TXST_HEADER = new RecordType("TXST");
         public static readonly RecordType VTYP_HEADER = new RecordType("VTYP");
+        public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
         public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
         public static readonly RecordType SHOU_HEADER = new RecordType("SHOU");
         public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
@@ -1104,6 +1113,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         ASPC_HEADER,
                         AACT_HEADER,
                         ACTI_HEADER,
+                        APPA_HEADER,
+                        AMMO_HEADER,
                         ARMO_HEADER,
                         ARMA_HEADER,
                         ARTO_HEADER,
@@ -1111,6 +1122,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         BOOK_HEADER,
                         CLAS_HEADER,
                         CLFM_HEADER,
+                        CONT_HEADER,
                         DEBR_HEADER,
                         DUAL_HEADER,
                         EFSH_HEADER,
@@ -1127,12 +1139,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         HDPT_HEADER,
                         IMAD_HEADER,
                         IPDS_HEADER,
+                        ALCH_HEADER,
+                        KEYM_HEADER,
                         KYWD_HEADER,
                         LTEX_HEADER,
+                        LVLI_HEADER,
                         LIGH_HEADER,
                         LCRT_HEADER,
                         MGEF_HEADER,
                         MATT_HEADER,
+                        MISC_HEADER,
                         MOVT_HEADER,
                         NPC__HEADER,
                         ENCH_HEADER,
@@ -1144,12 +1160,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         REGN_HEADER,
                         REVB_HEADER,
                         SCRL_HEADER,
+                        SLGM_HEADER,
                         SNDR_HEADER,
                         SOUN_HEADER,
                         STAT_HEADER,
                         TACT_HEADER,
                         TXST_HEADER,
                         VTYP_HEADER,
+                        WEAP_HEADER,
                         LVSP_HEADER,
                         SHOU_HEADER,
                         SPEL_HEADER

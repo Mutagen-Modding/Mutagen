@@ -365,6 +365,35 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
+        public IEnumerable<T> ParsePerItem(
+            MutagenFrame frame,
+            int amount,
+            BinaryMasterParseDelegate<T> transl,
+            ICollectionGetter<RecordType>? triggeringRecord = null,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            var ret = new List<T>();
+            var startingPos = frame.Position;
+            for (int i = 0; i < amount; i++)
+            {
+                var nextRecord = HeaderTranslation.GetNextRecordType(frame.Reader);
+                if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
+                if (!IsLoqui)
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                }
+                if (transl(frame, out var subIitem, recordTypeConverter))
+                {
+                    ret.Add(subIitem);
+                }
+            }
+            if (frame.Position == startingPos)
+            {
+                throw new ArgumentException($"Parsed item on the list consumed no data.");
+            }
+            return ret;
+        }
+
         public void Write(
             MutagenWriter writer,
             IEnumerable<T>? items,

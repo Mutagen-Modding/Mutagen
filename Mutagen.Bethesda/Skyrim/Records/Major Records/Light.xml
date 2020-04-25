@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Light" recordType="LIGH" objType="Record" baseClass="SkyrimMajorRecord" GUID="749a2492-52b8-4580-ac1c-b645cabfd20b" ID="107">
+    <Interface>IItem</Interface>
     <Fields>
     </Fields>
   </Object>

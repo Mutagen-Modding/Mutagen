@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Weapon" recordType="WEAP" baseClass="SkyrimMajorRecord" objType="Record" GUID="93888344-5257-4e1e-a99c-450b6e0d06bf" ID="169">
+    <Interface>IItem</Interface>
+  </Object>
+</Loqui>

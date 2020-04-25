@@ -21,6 +21,9 @@ namespace Mutagen.Bethesda
         /// <inheritdoc />
         public MasterReferenceReader? MasterReferences { get; set; }
 
+        /// <inheritdoc/>
+        public RecordInfoCache? RecordInfoCache { get; set; }
+
         public MutagenInterfaceReadStream(
             IBinaryReadStream stream,
             GameConstants metaData,
@@ -161,7 +164,12 @@ namespace Mutagen.Bethesda
         public IMutagenReadStream ReadAndReframe(int length)
         {
             var offset = this.OffsetReference + this.Position;
-            return new MutagenMemoryReadStream(this.ReadMemory(length, readSafe: true), this.MetaData, this.MasterReferences, offsetReference: offset);
+            return new MutagenMemoryReadStream(
+                this.ReadMemory(length, readSafe: true), 
+                this.MetaData,
+                this.MasterReferences, 
+                offsetReference: offset,
+                infoCache: this.RecordInfoCache);
         }
 
         /// <inheritdoc />

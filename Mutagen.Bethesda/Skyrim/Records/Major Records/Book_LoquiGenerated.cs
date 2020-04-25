@@ -1183,6 +1183,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBookGetter,
         ISkyrimMajorRecord,
         INamed,
+        IItem,
         ILoquiObjectSetter<IBookInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -1211,6 +1212,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IBookGetter :
         ISkyrimMajorRecordGetter,
         INamedGetter,
+        IItemGetter,
         ILoquiObject<IBookGetter>,
         IXmlItem,
         ILinkContainer,

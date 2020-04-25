@@ -11,21 +11,17 @@ namespace Mutagen.Bethesda.Binary
     /// </summary>
     public class MutagenMemoryReadStream : BinaryMemoryReadStream, IMutagenReadStream
     {
-        /// <summary>
-        /// Convenience offset tracker variable for helping print meaningful position information
-        /// relative to an original source file.  Only used if a stream gets reframed.
-        /// </summary>
+        /// <inheritdoc/>
         public long OffsetReference { get; }
-        
-        /// <summary>
-        /// Game constants meta object to reference for header length measurements
-        /// </summary>
+
+        /// <inheritdoc/>
         public GameConstants MetaData { get; }
-        
-        /// <summary>
-        /// Optional MasterReferenceReader to reference while reading
-        /// </summary>
+
+        /// <inheritdoc/>
         public MasterReferenceReader? MasterReferences { get; set; }
+
+        /// <inheritdoc/>
+        public RecordInfoCache? RecordInfoCache { get; set; }
 
         /// <summary>
         /// Constructor that wraps an array
@@ -33,7 +29,6 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="data">Array to wrap and read from</param>
         /// <param name="metaData">Game constants meta object to reference for header length measurements</param>
         /// <param name="masterReferences">Optional MasterReferenceReader to reference while reading</param>
-        /// <param name="bufferSize">Size of internal buffer</param>
         /// <param name="offsetReference">Optional offset reference position to use</param>
         public MutagenMemoryReadStream(
             byte[] data, 
@@ -53,17 +48,19 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="data">Span to wrap and read from</param>
         /// <param name="metaData">Game constants meta object to reference for header length measurements</param>
         /// <param name="masterReferences">Optional MasterReferenceReader to reference while reading</param>
-        /// <param name="bufferSize">Size of internal buffer</param>
+        /// <param name="infoCache">Optional RecordInfoCache to reference while readingg</param>
         /// <param name="offsetReference">Optional offset reference position to use</param>
         public MutagenMemoryReadStream(
             ReadOnlyMemorySlice<byte> data, 
             GameConstants metaData,
             MasterReferenceReader? masterReferences = null,
+            RecordInfoCache? infoCache = null,
             long offsetReference = 0)
             : base(data)
         {
             this.MetaData = metaData;
             this.MasterReferences = masterReferences;
+            this.RecordInfoCache = infoCache;
             this.OffsetReference = offsetReference;
         }
 
@@ -77,7 +74,12 @@ namespace Mutagen.Bethesda.Binary
         /// <returns>A new stream wrapping an internal array, set to position 0.</returns>
         public IMutagenReadStream ReadAndReframe(int length)
         {
-            return new MutagenMemoryReadStream(this.Data, this.MetaData, this.MasterReferences, this.OffsetReference + this.Position);
+            return new MutagenMemoryReadStream(
+                this.Data, 
+                this.MetaData, 
+                this.MasterReferences, 
+                offsetReference: this.OffsetReference + this.Position,
+                infoCache: this.RecordInfoCache);
         }
     }
 }
