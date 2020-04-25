@@ -49,6 +49,9 @@
     <Compile Include="Skyrim\Records\Major Records\Door.cs">
       <DependentUpon>Door.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\IngredientEffectData.cs">
+      <DependentUpon>Ingredient.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\ObjectEffect.cs">
       <DependentUpon>ObjectEffect.xml</DependentUpon>
     </Compile>
@@ -1553,6 +1556,12 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Door_LoquiGenerated.cs">
       <DependentUpon>Door.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\IngredientData_LoquiGenerated.cs">
+      <DependentUpon>Ingredient.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\IngredientEffectData_LoquiGenerated.cs">
+      <DependentUpon>Ingredient.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

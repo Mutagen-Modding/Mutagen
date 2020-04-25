@@ -18,7 +18,7 @@
       <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
       <RefDirect name="Data" refName="ScrollData" />
       <RefDirect name="SpellData" refName="SpellData" />
-      <RefList name="Effects" refName="Effect" />
+      <RefList name="Effects" refName="Effect" nullable="NotNull" />
     </Fields>
   </Object>
   <Object name="ScrollData" objType="Subrecord" recordType="DATA" GUID="9c306ccf-686c-49fc-998b-b56e3987538d" ID="143">

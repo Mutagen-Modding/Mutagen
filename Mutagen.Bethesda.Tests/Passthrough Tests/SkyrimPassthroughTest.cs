@@ -20,7 +20,25 @@ namespace Mutagen.Bethesda.Tests
 
         public override ModRecordAligner.AlignmentRules GetAlignmentRules()
         {
-            return new ModRecordAligner.AlignmentRules();
+            var ret = new ModRecordAligner.AlignmentRules();
+            ret.AddAlignments(
+                Ingredient_Registration.INGR_HEADER,
+                new RecordType("EDID"),
+                new RecordType("VMAD"),
+                new RecordType("OBND"),
+                new RecordType("FULL"),
+                new RecordType("KSIZ"),
+                new RecordType("KWDA"),
+                new RecordType("MODL"),
+                new RecordType("MODT"),
+                new RecordType("DATA"),
+                new RecordType("ENIT"),
+                new RecordType("YNAM"),
+                new RecordType("ZNAM"),
+                new ModRecordAligner.AlignmentRepeatedRule(
+                    new RecordType("EFID"),
+                    new RecordType("EFIT")));
+            return ret;
         }
 
         protected override async Task<IModDisposeGetter> ImportBinaryOverlay(FilePath path)

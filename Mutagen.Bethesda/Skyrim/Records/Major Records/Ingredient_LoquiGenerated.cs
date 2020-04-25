@@ -48,6 +48,154 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IIngredientGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #region ObjectBounds
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ObjectBounds _ObjectBounds = new ObjectBounds();
+        public ObjectBounds ObjectBounds
+        {
+            get => _ObjectBounds;
+            set => _ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IIngredientGetter.ObjectBounds => _ObjectBounds;
+        #endregion
+        #region Name
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String? _Name;
+        public String? Name
+        {
+            get => this._Name;
+            set => this._Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IIngredientGetter.Name => this.Name;
+        #endregion
+        #region Keywords
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLink<Keyword>>? _Keywords;
+        public ExtendedList<IFormLink<Keyword>>? Keywords
+        {
+            get => this._Keywords;
+            set => this._Keywords = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IIngredientGetter.Keywords => _Keywords;
+        #endregion
+
+        #endregion
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IIngredientGetter.Model => this.Model;
+        #endregion
+        #region Data
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private IngredientData? _Data;
+        public IngredientData? Data
+        {
+            get => _Data;
+            set => _Data = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IIngredientDataGetter? IIngredientGetter.Data => this.Data;
+        #endregion
+        #region IngredientEffectData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private IngredientEffectData? _IngredientEffectData;
+        public IngredientEffectData? IngredientEffectData
+        {
+            get => _IngredientEffectData;
+            set => _IngredientEffectData = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IIngredientEffectDataGetter? IIngredientGetter.IngredientEffectData => this.IngredientEffectData;
+        #endregion
+        #region LargeIconFilename
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String? _LargeIconFilename;
+        public String? LargeIconFilename
+        {
+            get => this._LargeIconFilename;
+            set => this._LargeIconFilename = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IIngredientGetter.LargeIconFilename => this.LargeIconFilename;
+        #endregion
+        #region SmallIconFilename
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String? _SmallIconFilename;
+        public String? SmallIconFilename
+        {
+            get => this._SmallIconFilename;
+            set => this._SmallIconFilename = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IIngredientGetter.SmallIconFilename => this.SmallIconFilename;
+        #endregion
+        #region Destructible
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Destructible? _Destructible;
+        public Destructible? Destructible
+        {
+            get => _Destructible;
+            set => _Destructible = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IIngredientGetter.Destructible => this.Destructible;
+        #endregion
+        #region EquipType
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormLinkNullable<EquipType> _EquipType = new FormLinkNullable<EquipType>();
+        public IFormLinkNullable<EquipType> EquipType => this._EquipType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IEquipTypeGetter> IIngredientGetter.EquipType => this.EquipType;
+        #endregion
+        #region PickUpSound
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormLinkNullable<SoundDescriptor> _PickUpSound = new FormLinkNullable<SoundDescriptor>();
+        public IFormLinkNullable<SoundDescriptor> PickUpSound => this._PickUpSound;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IIngredientGetter.PickUpSound => this.PickUpSound;
+        #endregion
+        #region PutDownSound
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormLinkNullable<SoundDescriptor> _PutDownSound = new FormLinkNullable<SoundDescriptor>();
+        public IFormLinkNullable<SoundDescriptor> PutDownSound => this._PutDownSound;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IIngredientGetter.PutDownSound => this.PutDownSound;
+        #endregion
+        #region Effects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Effect> _Effects = new ExtendedList<Effect>();
+        public ExtendedList<Effect> Effects
+        {
+            get => this._Effects;
+            protected set => this._Effects = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IEffectGetter> IIngredientGetter.Effects => _Effects;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -218,6 +366,20 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.Name = initialValue;
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.Data = new MaskItem<TItem, IngredientData.Mask<TItem>?>(initialValue, new IngredientData.Mask<TItem>(initialValue));
+                this.IngredientEffectData = new MaskItem<TItem, IngredientEffectData.Mask<TItem>?>(initialValue, new IngredientEffectData.Mask<TItem>(initialValue));
+                this.LargeIconFilename = initialValue;
+                this.SmallIconFilename = initialValue;
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
+                this.EquipType = initialValue;
+                this.PickUpSound = initialValue;
+                this.PutDownSound = initialValue;
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -226,7 +388,21 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem VirtualMachineAdapter,
+                TItem ObjectBounds,
+                TItem Name,
+                TItem Keywords,
+                TItem Model,
+                TItem Data,
+                TItem IngredientEffectData,
+                TItem LargeIconFilename,
+                TItem SmallIconFilename,
+                TItem Destructible,
+                TItem EquipType,
+                TItem PickUpSound,
+                TItem PutDownSound,
+                TItem Effects)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -235,6 +411,20 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.Name = Name;
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.Data = new MaskItem<TItem, IngredientData.Mask<TItem>?>(Data, new IngredientData.Mask<TItem>(Data));
+                this.IngredientEffectData = new MaskItem<TItem, IngredientEffectData.Mask<TItem>?>(IngredientEffectData, new IngredientEffectData.Mask<TItem>(IngredientEffectData));
+                this.LargeIconFilename = LargeIconFilename;
+                this.SmallIconFilename = SmallIconFilename;
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
+                this.EquipType = EquipType;
+                this.PickUpSound = PickUpSound;
+                this.PutDownSound = PutDownSound;
+                this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -243,6 +433,23 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem Name;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public MaskItem<TItem, IngredientData.Mask<TItem>?>? Data { get; set; }
+            public MaskItem<TItem, IngredientEffectData.Mask<TItem>?>? IngredientEffectData { get; set; }
+            public TItem LargeIconFilename;
+            public TItem SmallIconFilename;
+            public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
+            public TItem EquipType;
+            public TItem PickUpSound;
+            public TItem PutDownSound;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>? Effects;
             #endregion
 
             #region Equals
@@ -256,11 +463,39 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.IngredientEffectData, rhs.IngredientEffectData)) return false;
+                if (!object.Equals(this.LargeIconFilename, rhs.LargeIconFilename)) return false;
+                if (!object.Equals(this.SmallIconFilename, rhs.SmallIconFilename)) return false;
+                if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
+                if (!object.Equals(this.EquipType, rhs.EquipType)) return false;
+                if (!object.Equals(this.PickUpSound, rhs.PickUpSound)) return false;
+                if (!object.Equals(this.PutDownSound, rhs.PutDownSound)) return false;
+                if (!object.Equals(this.Effects, rhs.Effects)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.Name);
+                hash.Add(this.Keywords);
+                hash.Add(this.Model);
+                hash.Add(this.Data);
+                hash.Add(this.IngredientEffectData);
+                hash.Add(this.LargeIconFilename);
+                hash.Add(this.SmallIconFilename);
+                hash.Add(this.Destructible);
+                hash.Add(this.EquipType);
+                hash.Add(this.PickUpSound);
+                hash.Add(this.PutDownSound);
+                hash.Add(this.Effects);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -271,6 +506,65 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Name)) return false;
+                if (this.Keywords != null)
+                {
+                    if (!eval(this.Keywords.Overall)) return false;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
+                if (IngredientEffectData != null)
+                {
+                    if (!eval(this.IngredientEffectData.Overall)) return false;
+                    if (this.IngredientEffectData.Specific != null && !this.IngredientEffectData.Specific.All(eval)) return false;
+                }
+                if (!eval(this.LargeIconFilename)) return false;
+                if (!eval(this.SmallIconFilename)) return false;
+                if (Destructible != null)
+                {
+                    if (!eval(this.Destructible.Overall)) return false;
+                    if (this.Destructible.Specific != null && !this.Destructible.Specific.All(eval)) return false;
+                }
+                if (!eval(this.EquipType)) return false;
+                if (!eval(this.PickUpSound)) return false;
+                if (!eval(this.PutDownSound)) return false;
+                if (this.Effects != null)
+                {
+                    if (!eval(this.Effects.Overall)) return false;
+                    if (this.Effects.Specific != null)
+                    {
+                        foreach (var item in this.Effects.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -279,6 +573,65 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Name)) return true;
+                if (this.Keywords != null)
+                {
+                    if (eval(this.Keywords.Overall)) return true;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
+                if (IngredientEffectData != null)
+                {
+                    if (eval(this.IngredientEffectData.Overall)) return true;
+                    if (this.IngredientEffectData.Specific != null && this.IngredientEffectData.Specific.Any(eval)) return true;
+                }
+                if (eval(this.LargeIconFilename)) return true;
+                if (eval(this.SmallIconFilename)) return true;
+                if (Destructible != null)
+                {
+                    if (eval(this.Destructible.Overall)) return true;
+                    if (this.Destructible.Specific != null && this.Destructible.Specific.Any(eval)) return true;
+                }
+                if (eval(this.EquipType)) return true;
+                if (eval(this.PickUpSound)) return true;
+                if (eval(this.PutDownSound)) return true;
+                if (this.Effects != null)
+                {
+                    if (eval(this.Effects.Overall)) return true;
+                    if (this.Effects.Specific != null)
+                    {
+                        foreach (var item in this.Effects.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -294,6 +647,47 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.Name = eval(this.Name);
+                if (Keywords != null)
+                {
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Keywords.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Keywords.Specific = l;
+                        foreach (var item in Keywords.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Data = this.Data == null ? null : new MaskItem<R, IngredientData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
+                obj.IngredientEffectData = this.IngredientEffectData == null ? null : new MaskItem<R, IngredientEffectData.Mask<R>?>(eval(this.IngredientEffectData.Overall), this.IngredientEffectData.Specific?.Translate(eval));
+                obj.LargeIconFilename = eval(this.LargeIconFilename);
+                obj.SmallIconFilename = eval(this.SmallIconFilename);
+                obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
+                obj.EquipType = eval(this.EquipType);
+                obj.PickUpSound = eval(this.PickUpSound);
+                obj.PutDownSound = eval(this.PutDownSound);
+                if (Effects != null)
+                {
+                    obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect.Mask<R>?>>?>(eval(this.Effects.Overall), Enumerable.Empty<MaskItemIndexed<R, Effect.Mask<R>?>>());
+                    if (Effects.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Effect.Mask<R>?>>();
+                        obj.Effects.Specific = l;
+                        foreach (var item in Effects.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, Effect.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Effect.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -316,6 +710,100 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.ToString(fg);
+                    }
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.ToString(fg);
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendItem(Name, "Name");
+                    }
+                    if ((printMask?.Keywords?.Overall ?? true)
+                        && Keywords.TryGet(out var KeywordsItem))
+                    {
+                        fg.AppendLine("Keywords =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(KeywordsItem.Overall);
+                            if (KeywordsItem.Specific != null)
+                            {
+                                foreach (var subItem in KeywordsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.Data?.Overall ?? true)
+                    {
+                        Data?.ToString(fg);
+                    }
+                    if (printMask?.IngredientEffectData?.Overall ?? true)
+                    {
+                        IngredientEffectData?.ToString(fg);
+                    }
+                    if (printMask?.LargeIconFilename ?? true)
+                    {
+                        fg.AppendItem(LargeIconFilename, "LargeIconFilename");
+                    }
+                    if (printMask?.SmallIconFilename ?? true)
+                    {
+                        fg.AppendItem(SmallIconFilename, "SmallIconFilename");
+                    }
+                    if (printMask?.Destructible?.Overall ?? true)
+                    {
+                        Destructible?.ToString(fg);
+                    }
+                    if (printMask?.EquipType ?? true)
+                    {
+                        fg.AppendItem(EquipType, "EquipType");
+                    }
+                    if (printMask?.PickUpSound ?? true)
+                    {
+                        fg.AppendItem(PickUpSound, "PickUpSound");
+                    }
+                    if (printMask?.PutDownSound ?? true)
+                    {
+                        fg.AppendItem(PutDownSound, "PutDownSound");
+                    }
+                    if ((printMask?.Effects?.Overall ?? true)
+                        && Effects.TryGet(out var EffectsItem))
+                    {
+                        fg.AppendLine("Effects =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(EffectsItem.Overall);
+                            if (EffectsItem.Specific != null)
+                            {
+                                foreach (var subItem in EffectsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -327,12 +815,57 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? Name;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public MaskItem<Exception?, IngredientData.ErrorMask?>? Data;
+            public MaskItem<Exception?, IngredientEffectData.ErrorMask?>? IngredientEffectData;
+            public Exception? LargeIconFilename;
+            public Exception? SmallIconFilename;
+            public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
+            public Exception? EquipType;
+            public Exception? PickUpSound;
+            public Exception? PutDownSound;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>? Effects;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
                 switch (enu)
                 {
+                    case Ingredient_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
+                    case Ingredient_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case Ingredient_FieldIndex.Name:
+                        return Name;
+                    case Ingredient_FieldIndex.Keywords:
+                        return Keywords;
+                    case Ingredient_FieldIndex.Model:
+                        return Model;
+                    case Ingredient_FieldIndex.Data:
+                        return Data;
+                    case Ingredient_FieldIndex.IngredientEffectData:
+                        return IngredientEffectData;
+                    case Ingredient_FieldIndex.LargeIconFilename:
+                        return LargeIconFilename;
+                    case Ingredient_FieldIndex.SmallIconFilename:
+                        return SmallIconFilename;
+                    case Ingredient_FieldIndex.Destructible:
+                        return Destructible;
+                    case Ingredient_FieldIndex.EquipType:
+                        return EquipType;
+                    case Ingredient_FieldIndex.PickUpSound:
+                        return PickUpSound;
+                    case Ingredient_FieldIndex.PutDownSound:
+                        return PutDownSound;
+                    case Ingredient_FieldIndex.Effects:
+                        return Effects;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -343,6 +876,48 @@ namespace Mutagen.Bethesda.Skyrim
                 Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
                 switch (enu)
                 {
+                    case Ingredient_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
+                    case Ingredient_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case Ingredient_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Ingredient_FieldIndex.Keywords:
+                        this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Ingredient_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Ingredient_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, IngredientData.ErrorMask?>(ex, null);
+                        break;
+                    case Ingredient_FieldIndex.IngredientEffectData:
+                        this.IngredientEffectData = new MaskItem<Exception?, IngredientEffectData.ErrorMask?>(ex, null);
+                        break;
+                    case Ingredient_FieldIndex.LargeIconFilename:
+                        this.LargeIconFilename = ex;
+                        break;
+                    case Ingredient_FieldIndex.SmallIconFilename:
+                        this.SmallIconFilename = ex;
+                        break;
+                    case Ingredient_FieldIndex.Destructible:
+                        this.Destructible = new MaskItem<Exception?, Destructible.ErrorMask?>(ex, null);
+                        break;
+                    case Ingredient_FieldIndex.EquipType:
+                        this.EquipType = ex;
+                        break;
+                    case Ingredient_FieldIndex.PickUpSound:
+                        this.PickUpSound = ex;
+                        break;
+                    case Ingredient_FieldIndex.PutDownSound:
+                        this.PutDownSound = ex;
+                        break;
+                    case Ingredient_FieldIndex.Effects:
+                        this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -354,6 +929,48 @@ namespace Mutagen.Bethesda.Skyrim
                 Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
                 switch (enu)
                 {
+                    case Ingredient_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
+                    case Ingredient_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case Ingredient_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Ingredient_FieldIndex.Keywords:
+                        this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Ingredient_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Ingredient_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, IngredientData.ErrorMask?>?)obj;
+                        break;
+                    case Ingredient_FieldIndex.IngredientEffectData:
+                        this.IngredientEffectData = (MaskItem<Exception?, IngredientEffectData.ErrorMask?>?)obj;
+                        break;
+                    case Ingredient_FieldIndex.LargeIconFilename:
+                        this.LargeIconFilename = (Exception?)obj;
+                        break;
+                    case Ingredient_FieldIndex.SmallIconFilename:
+                        this.SmallIconFilename = (Exception?)obj;
+                        break;
+                    case Ingredient_FieldIndex.Destructible:
+                        this.Destructible = (MaskItem<Exception?, Destructible.ErrorMask?>?)obj;
+                        break;
+                    case Ingredient_FieldIndex.EquipType:
+                        this.EquipType = (Exception?)obj;
+                        break;
+                    case Ingredient_FieldIndex.PickUpSound:
+                        this.PickUpSound = (Exception?)obj;
+                        break;
+                    case Ingredient_FieldIndex.PutDownSound:
+                        this.PutDownSound = (Exception?)obj;
+                        break;
+                    case Ingredient_FieldIndex.Effects:
+                        this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -363,6 +980,20 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
+                if (ObjectBounds != null) return true;
+                if (Name != null) return true;
+                if (Keywords != null) return true;
+                if (Model != null) return true;
+                if (Data != null) return true;
+                if (IngredientEffectData != null) return true;
+                if (LargeIconFilename != null) return true;
+                if (SmallIconFilename != null) return true;
+                if (Destructible != null) return true;
+                if (EquipType != null) return true;
+                if (PickUpSound != null) return true;
+                if (PutDownSound != null) return true;
+                if (Effects != null) return true;
                 return false;
             }
             #endregion
@@ -398,6 +1029,62 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                VirtualMachineAdapter?.ToString(fg);
+                ObjectBounds?.ToString(fg);
+                fg.AppendItem(Name, "Name");
+                if (Keywords.TryGet(out var KeywordsItem))
+                {
+                    fg.AppendLine("Keywords =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(KeywordsItem.Overall);
+                        if (KeywordsItem.Specific != null)
+                        {
+                            foreach (var subItem in KeywordsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                Model?.ToString(fg);
+                Data?.ToString(fg);
+                IngredientEffectData?.ToString(fg);
+                fg.AppendItem(LargeIconFilename, "LargeIconFilename");
+                fg.AppendItem(SmallIconFilename, "SmallIconFilename");
+                Destructible?.ToString(fg);
+                fg.AppendItem(EquipType, "EquipType");
+                fg.AppendItem(PickUpSound, "PickUpSound");
+                fg.AppendItem(PutDownSound, "PutDownSound");
+                if (Effects.TryGet(out var EffectsItem))
+                {
+                    fg.AppendLine("Effects =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(EffectsItem.Overall);
+                        if (EffectsItem.Specific != null)
+                        {
+                            foreach (var subItem in EffectsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
             }
             #endregion
 
@@ -406,6 +1093,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
+                ret.IngredientEffectData = this.IngredientEffectData.Combine(rhs.IngredientEffectData, (l, r) => l.Combine(r));
+                ret.LargeIconFilename = this.LargeIconFilename.Combine(rhs.LargeIconFilename);
+                ret.SmallIconFilename = this.SmallIconFilename.Combine(rhs.SmallIconFilename);
+                ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
+                ret.EquipType = this.EquipType.Combine(rhs.EquipType);
+                ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
+                ret.PutDownSound = this.PutDownSound.Combine(rhs.PutDownSound);
+                ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -427,19 +1128,70 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public MaskItem<bool, VirtualMachineAdapter.TranslationMask?> VirtualMachineAdapter;
+            public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
+            public bool Name;
+            public bool Keywords;
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public MaskItem<bool, IngredientData.TranslationMask?> Data;
+            public MaskItem<bool, IngredientEffectData.TranslationMask?> IngredientEffectData;
+            public bool LargeIconFilename;
+            public bool SmallIconFilename;
+            public MaskItem<bool, Destructible.TranslationMask?> Destructible;
+            public bool EquipType;
+            public bool PickUpSound;
+            public bool PutDownSound;
+            public MaskItem<bool, Effect.TranslationMask?> Effects;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.TranslationMask?>(defaultOn, null);
+                this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
+                this.Name = defaultOn;
+                this.Keywords = defaultOn;
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.Data = new MaskItem<bool, IngredientData.TranslationMask?>(defaultOn, null);
+                this.IngredientEffectData = new MaskItem<bool, IngredientEffectData.TranslationMask?>(defaultOn, null);
+                this.LargeIconFilename = defaultOn;
+                this.SmallIconFilename = defaultOn;
+                this.Destructible = new MaskItem<bool, Destructible.TranslationMask?>(defaultOn, null);
+                this.EquipType = defaultOn;
+                this.PickUpSound = defaultOn;
+                this.PutDownSound = defaultOn;
+                this.Effects = new MaskItem<bool, Effect.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter?.Overall ?? true, VirtualMachineAdapter?.Specific?.GetCrystal()));
+                ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
+                ret.Add((Name, null));
+                ret.Add((Keywords, null));
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((IngredientEffectData?.Overall ?? true, IngredientEffectData?.Specific?.GetCrystal()));
+                ret.Add((LargeIconFilename, null));
+                ret.Add((SmallIconFilename, null));
+                ret.Add((Destructible?.Overall ?? true, Destructible?.Specific?.GetCrystal()));
+                ret.Add((EquipType, null));
+                ret.Add((PickUpSound, null));
+                ret.Add((PutDownSound, null));
+                ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
+            }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Ingredient_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public override IEnumerable<ILinkGetter> Links => IngredientCommon.Instance.GetLinks(this);
         public Ingredient(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -517,9 +1269,24 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IIngredient :
         IIngredientGetter,
         ISkyrimMajorRecord,
+        INamed,
         IItem,
         ILoquiObjectSetter<IIngredientInternal>
     {
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
+        new ObjectBounds ObjectBounds { get; set; }
+        new String? Name { get; set; }
+        new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new Model? Model { get; set; }
+        new IngredientData? Data { get; set; }
+        new IngredientEffectData? IngredientEffectData { get; set; }
+        new String? LargeIconFilename { get; set; }
+        new String? SmallIconFilename { get; set; }
+        new Destructible? Destructible { get; set; }
+        new IFormLinkNullable<EquipType> EquipType { get; }
+        new IFormLinkNullable<SoundDescriptor> PickUpSound { get; }
+        new IFormLinkNullable<SoundDescriptor> PutDownSound { get; }
+        new ExtendedList<Effect> Effects { get; }
     }
 
     public partial interface IIngredientInternal :
@@ -531,11 +1298,27 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IIngredientGetter :
         ISkyrimMajorRecordGetter,
+        INamedGetter,
         IItemGetter,
         ILoquiObject<IIngredientGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        IObjectBoundsGetter ObjectBounds { get; }
+        String? Name { get; }
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
+        IModelGetter? Model { get; }
+        IIngredientDataGetter? Data { get; }
+        IIngredientEffectDataGetter? IngredientEffectData { get; }
+        String? LargeIconFilename { get; }
+        String? SmallIconFilename { get; }
+        IDestructibleGetter? Destructible { get; }
+        IFormLinkNullableGetter<IEquipTypeGetter> EquipType { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound { get; }
+        IReadOnlyList<IEffectGetter> Effects { get; }
 
     }
 
@@ -836,6 +1619,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        VirtualMachineAdapter = 6,
+        ObjectBounds = 7,
+        Name = 8,
+        Keywords = 9,
+        Model = 10,
+        Data = 11,
+        IngredientEffectData = 12,
+        LargeIconFilename = 13,
+        SmallIconFilename = 14,
+        Destructible = 15,
+        EquipType = 16,
+        PickUpSound = 17,
+        PutDownSound = 18,
+        Effects = 19,
     }
     #endregion
 
@@ -853,9 +1650,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "03907af3-2557-45c7-9c9e-c22854b4ffe6";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 14;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 20;
 
         public static readonly Type MaskType = typeof(Ingredient.Mask<>);
 
@@ -885,6 +1682,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "VIRTUALMACHINEADAPTER":
+                    return (ushort)Ingredient_FieldIndex.VirtualMachineAdapter;
+                case "OBJECTBOUNDS":
+                    return (ushort)Ingredient_FieldIndex.ObjectBounds;
+                case "NAME":
+                    return (ushort)Ingredient_FieldIndex.Name;
+                case "KEYWORDS":
+                    return (ushort)Ingredient_FieldIndex.Keywords;
+                case "MODEL":
+                    return (ushort)Ingredient_FieldIndex.Model;
+                case "DATA":
+                    return (ushort)Ingredient_FieldIndex.Data;
+                case "INGREDIENTEFFECTDATA":
+                    return (ushort)Ingredient_FieldIndex.IngredientEffectData;
+                case "LARGEICONFILENAME":
+                    return (ushort)Ingredient_FieldIndex.LargeIconFilename;
+                case "SMALLICONFILENAME":
+                    return (ushort)Ingredient_FieldIndex.SmallIconFilename;
+                case "DESTRUCTIBLE":
+                    return (ushort)Ingredient_FieldIndex.Destructible;
+                case "EQUIPTYPE":
+                    return (ushort)Ingredient_FieldIndex.EquipType;
+                case "PICKUPSOUND":
+                    return (ushort)Ingredient_FieldIndex.PickUpSound;
+                case "PUTDOWNSOUND":
+                    return (ushort)Ingredient_FieldIndex.PutDownSound;
+                case "EFFECTS":
+                    return (ushort)Ingredient_FieldIndex.Effects;
                 default:
                     return null;
             }
@@ -895,6 +1720,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
             switch (enu)
             {
+                case Ingredient_FieldIndex.Keywords:
+                case Ingredient_FieldIndex.Effects:
+                    return true;
+                case Ingredient_FieldIndex.VirtualMachineAdapter:
+                case Ingredient_FieldIndex.ObjectBounds:
+                case Ingredient_FieldIndex.Name:
+                case Ingredient_FieldIndex.Model:
+                case Ingredient_FieldIndex.Data:
+                case Ingredient_FieldIndex.IngredientEffectData:
+                case Ingredient_FieldIndex.LargeIconFilename:
+                case Ingredient_FieldIndex.SmallIconFilename:
+                case Ingredient_FieldIndex.Destructible:
+                case Ingredient_FieldIndex.EquipType:
+                case Ingredient_FieldIndex.PickUpSound:
+                case Ingredient_FieldIndex.PutDownSound:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -905,6 +1746,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
             switch (enu)
             {
+                case Ingredient_FieldIndex.VirtualMachineAdapter:
+                case Ingredient_FieldIndex.ObjectBounds:
+                case Ingredient_FieldIndex.Model:
+                case Ingredient_FieldIndex.Data:
+                case Ingredient_FieldIndex.IngredientEffectData:
+                case Ingredient_FieldIndex.Destructible:
+                case Ingredient_FieldIndex.Effects:
+                    return true;
+                case Ingredient_FieldIndex.Name:
+                case Ingredient_FieldIndex.Keywords:
+                case Ingredient_FieldIndex.LargeIconFilename:
+                case Ingredient_FieldIndex.SmallIconFilename:
+                case Ingredient_FieldIndex.EquipType:
+                case Ingredient_FieldIndex.PickUpSound:
+                case Ingredient_FieldIndex.PutDownSound:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -915,6 +1772,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
             switch (enu)
             {
+                case Ingredient_FieldIndex.VirtualMachineAdapter:
+                case Ingredient_FieldIndex.ObjectBounds:
+                case Ingredient_FieldIndex.Name:
+                case Ingredient_FieldIndex.Keywords:
+                case Ingredient_FieldIndex.Model:
+                case Ingredient_FieldIndex.Data:
+                case Ingredient_FieldIndex.IngredientEffectData:
+                case Ingredient_FieldIndex.LargeIconFilename:
+                case Ingredient_FieldIndex.SmallIconFilename:
+                case Ingredient_FieldIndex.Destructible:
+                case Ingredient_FieldIndex.EquipType:
+                case Ingredient_FieldIndex.PickUpSound:
+                case Ingredient_FieldIndex.PutDownSound:
+                case Ingredient_FieldIndex.Effects:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -925,6 +1797,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
             switch (enu)
             {
+                case Ingredient_FieldIndex.VirtualMachineAdapter:
+                    return "VirtualMachineAdapter";
+                case Ingredient_FieldIndex.ObjectBounds:
+                    return "ObjectBounds";
+                case Ingredient_FieldIndex.Name:
+                    return "Name";
+                case Ingredient_FieldIndex.Keywords:
+                    return "Keywords";
+                case Ingredient_FieldIndex.Model:
+                    return "Model";
+                case Ingredient_FieldIndex.Data:
+                    return "Data";
+                case Ingredient_FieldIndex.IngredientEffectData:
+                    return "IngredientEffectData";
+                case Ingredient_FieldIndex.LargeIconFilename:
+                    return "LargeIconFilename";
+                case Ingredient_FieldIndex.SmallIconFilename:
+                    return "SmallIconFilename";
+                case Ingredient_FieldIndex.Destructible:
+                    return "Destructible";
+                case Ingredient_FieldIndex.EquipType:
+                    return "EquipType";
+                case Ingredient_FieldIndex.PickUpSound:
+                    return "PickUpSound";
+                case Ingredient_FieldIndex.PutDownSound:
+                    return "PutDownSound";
+                case Ingredient_FieldIndex.Effects:
+                    return "Effects";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -935,6 +1835,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
             switch (enu)
             {
+                case Ingredient_FieldIndex.VirtualMachineAdapter:
+                case Ingredient_FieldIndex.ObjectBounds:
+                case Ingredient_FieldIndex.Name:
+                case Ingredient_FieldIndex.Keywords:
+                case Ingredient_FieldIndex.Model:
+                case Ingredient_FieldIndex.Data:
+                case Ingredient_FieldIndex.IngredientEffectData:
+                case Ingredient_FieldIndex.LargeIconFilename:
+                case Ingredient_FieldIndex.SmallIconFilename:
+                case Ingredient_FieldIndex.Destructible:
+                case Ingredient_FieldIndex.EquipType:
+                case Ingredient_FieldIndex.PickUpSound:
+                case Ingredient_FieldIndex.PutDownSound:
+                case Ingredient_FieldIndex.Effects:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -945,6 +1860,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
             switch (enu)
             {
+                case Ingredient_FieldIndex.VirtualMachineAdapter:
+                case Ingredient_FieldIndex.ObjectBounds:
+                case Ingredient_FieldIndex.Name:
+                case Ingredient_FieldIndex.Keywords:
+                case Ingredient_FieldIndex.Model:
+                case Ingredient_FieldIndex.Data:
+                case Ingredient_FieldIndex.IngredientEffectData:
+                case Ingredient_FieldIndex.LargeIconFilename:
+                case Ingredient_FieldIndex.SmallIconFilename:
+                case Ingredient_FieldIndex.Destructible:
+                case Ingredient_FieldIndex.EquipType:
+                case Ingredient_FieldIndex.PickUpSound:
+                case Ingredient_FieldIndex.PutDownSound:
+                case Ingredient_FieldIndex.Effects:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -955,16 +1885,63 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
             switch (enu)
             {
+                case Ingredient_FieldIndex.VirtualMachineAdapter:
+                    return typeof(VirtualMachineAdapter);
+                case Ingredient_FieldIndex.ObjectBounds:
+                    return typeof(ObjectBounds);
+                case Ingredient_FieldIndex.Name:
+                    return typeof(String);
+                case Ingredient_FieldIndex.Keywords:
+                    return typeof(ExtendedList<IFormLink<Keyword>>);
+                case Ingredient_FieldIndex.Model:
+                    return typeof(Model);
+                case Ingredient_FieldIndex.Data:
+                    return typeof(IngredientData);
+                case Ingredient_FieldIndex.IngredientEffectData:
+                    return typeof(IngredientEffectData);
+                case Ingredient_FieldIndex.LargeIconFilename:
+                    return typeof(String);
+                case Ingredient_FieldIndex.SmallIconFilename:
+                    return typeof(String);
+                case Ingredient_FieldIndex.Destructible:
+                    return typeof(Destructible);
+                case Ingredient_FieldIndex.EquipType:
+                    return typeof(IFormLinkNullable<EquipType>);
+                case Ingredient_FieldIndex.PickUpSound:
+                    return typeof(IFormLinkNullable<SoundDescriptor>);
+                case Ingredient_FieldIndex.PutDownSound:
+                    return typeof(IFormLinkNullable<SoundDescriptor>);
+                case Ingredient_FieldIndex.Effects:
+                    return typeof(ExtendedList<Effect>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
         }
 
         public static readonly Type XmlWriteTranslation = typeof(IngredientXmlWriteTranslation);
-        public static readonly RecordType ALCH_HEADER = new RecordType("ALCH");
-        public static readonly RecordType TriggeringRecordType = ALCH_HEADER;
+        public static readonly RecordType INGR_HEADER = new RecordType("INGR");
+        public static readonly RecordType VMAD_HEADER = new RecordType("VMAD");
+        public static readonly RecordType OBND_HEADER = new RecordType("OBND");
+        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
+        public static readonly RecordType KWDA_HEADER = new RecordType("KWDA");
+        public static readonly RecordType KSIZ_HEADER = new RecordType("KSIZ");
+        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
+        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
+        public static readonly RecordType ENIT_HEADER = new RecordType("ENIT");
+        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
+        public static readonly RecordType MICO_HEADER = new RecordType("MICO");
+        public static readonly RecordType DEST_HEADER = new RecordType("DEST");
+        public static readonly RecordType DSTD_HEADER = new RecordType("DSTD");
+        public static readonly RecordType DMDL_HEADER = new RecordType("DMDL");
+        public static readonly RecordType ETYP_HEADER = new RecordType("ETYP");
+        public static readonly RecordType YNAM_HEADER = new RecordType("YNAM");
+        public static readonly RecordType ZNAM_HEADER = new RecordType("ZNAM");
+        public static readonly RecordType EFID_HEADER = new RecordType("EFID");
+        public static readonly RecordType EFIT_HEADER = new RecordType("EFIT");
+        public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
+        public static readonly RecordType TriggeringRecordType = INGR_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
+        public const int NumTypedFields = 14;
         public static readonly Type BinaryWriteTranslation = typeof(IngredientBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1007,6 +1984,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IIngredientInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
+            item.ObjectBounds = new ObjectBounds();
+            item.Name = default;
+            item.Keywords = null;
+            item.Model = null;
+            item.Data = null;
+            item.IngredientEffectData = null;
+            item.LargeIconFilename = default;
+            item.SmallIconFilename = default;
+            item.Destructible = null;
+            item.EquipType.FormKey = null;
+            item.PickUpSound.FormKey = null;
+            item.PutDownSound.FormKey = null;
+            item.Effects.Clear();
             base.Clear(item);
         }
         
@@ -1101,7 +2092,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => Ingredient_Registration.ALCH_HEADER;
+        public override RecordType RecordType => Ingredient_Registration.INGR_HEADER;
         protected static void FillBinaryStructs(
             IIngredientInternal item,
             MutagenFrame frame)
@@ -1109,6 +2100,141 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SkyrimMajorRecordSetterCommon.FillBinaryStructs(
                 item: item,
                 frame: frame);
+        }
+        
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            IIngredientInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x44414D56: // VMAD
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.VirtualMachineAdapter);
+                }
+                case 0x444E424F: // OBND
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.ObjectBounds);
+                }
+                case 0x4C4C5546: // FULL
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Name);
+                }
+                case 0x5A49534B: // KSIZ
+                {
+                    var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.ReadSubrecordFrame().Content);
+                    item.Keywords = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
+                            frame: frame,
+                            amount: amount,
+                            triggeringRecord: Ingredient_Registration.KWDA_HEADER,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<IFormLink<Keyword>>();
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Keywords);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Model);
+                }
+                case 0x41544144: // DATA
+                {
+                    item.Data = Mutagen.Bethesda.Skyrim.IngredientData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Data);
+                }
+                case 0x54494E45: // ENIT
+                {
+                    item.IngredientEffectData = Mutagen.Bethesda.Skyrim.IngredientEffectData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.IngredientEffectData);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.LargeIconFilename = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.LargeIconFilename);
+                }
+                case 0x4F43494D: // MICO
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.SmallIconFilename = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.SmallIconFilename);
+                }
+                case 0x54534544: // DEST
+                case 0x44545344: // DSTD
+                case 0x4C444D44: // DMDL
+                {
+                    item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Destructible);
+                }
+                case 0x50595445: // ETYP
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.EquipType.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.EquipType);
+                }
+                case 0x4D414E59: // YNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.PickUpSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.PickUpSound);
+                }
+                case 0x4D414E5A: // ZNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.PutDownSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.PutDownSound);
+                }
+                case 0x44494645: // EFID
+                case 0x54494645: // EFIT
+                case 0x41445443: // CTDA
+                {
+                    item.Effects.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Effect_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out Effect listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<Effect>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            }));
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Effects);
+                }
+                default:
+                    return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
         }
         
         public virtual void CopyInFromBinary(
@@ -1175,6 +2301,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Keywords = item.Keywords.CollectionEqualsHelper(
+                rhs.Keywords,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.IngredientEffectData = EqualsMaskHelper.EqualsHelper(
+                item.IngredientEffectData,
+                rhs.IngredientEffectData,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.LargeIconFilename = string.Equals(item.LargeIconFilename, rhs.LargeIconFilename);
+            ret.SmallIconFilename = string.Equals(item.SmallIconFilename, rhs.SmallIconFilename);
+            ret.Destructible = EqualsMaskHelper.EqualsHelper(
+                item.Destructible,
+                rhs.Destructible,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.EquipType = object.Equals(item.EquipType, rhs.EquipType);
+            ret.PickUpSound = object.Equals(item.PickUpSound, rhs.PickUpSound);
+            ret.PutDownSound = object.Equals(item.PutDownSound, rhs.PutDownSound);
+            ret.Effects = item.Effects.CollectionEqualsHelper(
+                rhs.Effects,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1226,12 +2392,125 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+            {
+                VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
+            }
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
+            {
+                fg.AppendItem(NameItem, "Name");
+            }
+            if ((printMask?.Keywords?.Overall ?? true)
+                && item.Keywords.TryGet(out var KeywordsItem))
+            {
+                fg.AppendLine("Keywords =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in KeywordsItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
+            {
+                ModelItem?.ToString(fg, "Model");
+            }
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data.TryGet(out var DataItem))
+            {
+                DataItem?.ToString(fg, "Data");
+            }
+            if ((printMask?.IngredientEffectData?.Overall ?? true)
+                && item.IngredientEffectData.TryGet(out var IngredientEffectDataItem))
+            {
+                IngredientEffectDataItem?.ToString(fg, "IngredientEffectData");
+            }
+            if ((printMask?.LargeIconFilename ?? true)
+                && item.LargeIconFilename.TryGet(out var LargeIconFilenameItem))
+            {
+                fg.AppendItem(LargeIconFilenameItem, "LargeIconFilename");
+            }
+            if ((printMask?.SmallIconFilename ?? true)
+                && item.SmallIconFilename.TryGet(out var SmallIconFilenameItem))
+            {
+                fg.AppendItem(SmallIconFilenameItem, "SmallIconFilename");
+            }
+            if ((printMask?.Destructible?.Overall ?? true)
+                && item.Destructible.TryGet(out var DestructibleItem))
+            {
+                DestructibleItem?.ToString(fg, "Destructible");
+            }
+            if ((printMask?.EquipType ?? true)
+                && item.EquipType.TryGet(out var EquipTypeItem))
+            {
+                fg.AppendItem(EquipTypeItem, "EquipType");
+            }
+            if ((printMask?.PickUpSound ?? true)
+                && item.PickUpSound.TryGet(out var PickUpSoundItem))
+            {
+                fg.AppendItem(PickUpSoundItem, "PickUpSound");
+            }
+            if ((printMask?.PutDownSound ?? true)
+                && item.PutDownSound.TryGet(out var PutDownSoundItem))
+            {
+                fg.AppendItem(PutDownSoundItem, "PutDownSound");
+            }
+            if (printMask?.Effects?.Overall ?? true)
+            {
+                fg.AppendLine("Effects =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Effects)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
         }
         
         public bool HasBeenSet(
             IIngredientGetter item,
             Ingredient.Mask<bool?> checkMask)
         {
+            if (checkMask.VirtualMachineAdapter?.Overall.HasValue ?? false && checkMask.VirtualMachineAdapter.Overall.Value != (item.VirtualMachineAdapter != null)) return false;
+            if (checkMask.VirtualMachineAdapter?.Specific != null && (item.VirtualMachineAdapter == null || !item.VirtualMachineAdapter.HasBeenSet(checkMask.VirtualMachineAdapter.Specific))) return false;
+            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
+            if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
+            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
+            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
+            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
+            if (checkMask.IngredientEffectData?.Overall.HasValue ?? false && checkMask.IngredientEffectData.Overall.Value != (item.IngredientEffectData != null)) return false;
+            if (checkMask.IngredientEffectData?.Specific != null && (item.IngredientEffectData == null || !item.IngredientEffectData.HasBeenSet(checkMask.IngredientEffectData.Specific))) return false;
+            if (checkMask.LargeIconFilename.HasValue && checkMask.LargeIconFilename.Value != (item.LargeIconFilename != null)) return false;
+            if (checkMask.SmallIconFilename.HasValue && checkMask.SmallIconFilename.Value != (item.SmallIconFilename != null)) return false;
+            if (checkMask.Destructible?.Overall.HasValue ?? false && checkMask.Destructible.Overall.Value != (item.Destructible != null)) return false;
+            if (checkMask.Destructible?.Specific != null && (item.Destructible == null || !item.Destructible.HasBeenSet(checkMask.Destructible.Specific))) return false;
+            if (checkMask.EquipType.HasValue && checkMask.EquipType.Value != (item.EquipType.FormKey != null)) return false;
+            if (checkMask.PickUpSound.HasValue && checkMask.PickUpSound.Value != (item.PickUpSound.FormKey != null)) return false;
+            if (checkMask.PutDownSound.HasValue && checkMask.PutDownSound.Value != (item.PutDownSound.FormKey != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1241,6 +2520,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IIngredientGetter item,
             Ingredient.Mask<bool> mask)
         {
+            var itemVirtualMachineAdapter = item.VirtualMachineAdapter;
+            mask.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
+            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
+            mask.Name = (item.Name != null);
+            mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
+            var itemModel = item.Model;
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            var itemData = item.Data;
+            mask.Data = new MaskItem<bool, IngredientData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
+            var itemIngredientEffectData = item.IngredientEffectData;
+            mask.IngredientEffectData = new MaskItem<bool, IngredientEffectData.Mask<bool>?>(itemIngredientEffectData != null, itemIngredientEffectData?.GetHasBeenSetMask());
+            mask.LargeIconFilename = (item.LargeIconFilename != null);
+            mask.SmallIconFilename = (item.SmallIconFilename != null);
+            var itemDestructible = item.Destructible;
+            mask.Destructible = new MaskItem<bool, Destructible.Mask<bool>?>(itemDestructible != null, itemDestructible?.GetHasBeenSetMask());
+            mask.EquipType = (item.EquipType.FormKey != null);
+            mask.PickUpSound = (item.PickUpSound.FormKey != null);
+            mask.PutDownSound = (item.PutDownSound.FormKey != null);
+            var EffectsItem = item.Effects;
+            mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect.Mask<bool>?>>?>(true, EffectsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1292,6 +2591,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
+            if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            if (!object.Equals(lhs.IngredientEffectData, rhs.IngredientEffectData)) return false;
+            if (!string.Equals(lhs.LargeIconFilename, rhs.LargeIconFilename)) return false;
+            if (!string.Equals(lhs.SmallIconFilename, rhs.SmallIconFilename)) return false;
+            if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
+            if (!lhs.EquipType.Equals(rhs.EquipType)) return false;
+            if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
+            if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
+            if (!lhs.Effects.SequenceEqual(rhs.Effects)) return false;
             return true;
         }
         
@@ -1316,6 +2629,53 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IIngredientGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapteritem))
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
+            hash.Add(item.ObjectBounds);
+            if (item.Name.TryGet(out var Nameitem))
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.Keywords);
+            if (item.Model.TryGet(out var Modelitem))
+            {
+                hash.Add(Modelitem);
+            }
+            if (item.Data.TryGet(out var Dataitem))
+            {
+                hash.Add(Dataitem);
+            }
+            if (item.IngredientEffectData.TryGet(out var IngredientEffectDataitem))
+            {
+                hash.Add(IngredientEffectDataitem);
+            }
+            if (item.LargeIconFilename.TryGet(out var LargeIconFilenameitem))
+            {
+                hash.Add(LargeIconFilenameitem);
+            }
+            if (item.SmallIconFilename.TryGet(out var SmallIconFilenameitem))
+            {
+                hash.Add(SmallIconFilenameitem);
+            }
+            if (item.Destructible.TryGet(out var Destructibleitem))
+            {
+                hash.Add(Destructibleitem);
+            }
+            if (item.EquipType.TryGet(out var EquipTypeitem))
+            {
+                hash.Add(EquipTypeitem);
+            }
+            if (item.PickUpSound.TryGet(out var PickUpSounditem))
+            {
+                hash.Add(PickUpSounditem);
+            }
+            if (item.PutDownSound.TryGet(out var PutDownSounditem))
+            {
+                hash.Add(PutDownSounditem);
+            }
+            hash.Add(item.Effects);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1342,6 +2702,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IEnumerable<ILinkGetter> GetLinks(IIngredientGetter obj)
         {
             foreach (var item in base.GetLinks(obj))
+            {
+                yield return item;
+            }
+            if (obj.VirtualMachineAdapter is ILinkContainer VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Keywords != null)
+            {
+                foreach (var item in obj.Keywords)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Model != null)
+            {
+                foreach (var item in obj.Model.Links)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible != null)
+            {
+                foreach (var item in obj.Destructible.Links)
+                {
+                    yield return item;
+                }
+            }
+            yield return obj.EquipType;
+            yield return obj.PickUpSound;
+            yield return obj.PutDownSound;
+            foreach (var item in obj.Effects.SelectMany(f => f.Links))
             {
                 yield return item;
             }
@@ -1391,6 +2786,233 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)Ingredient_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter.TryGet(out var rhsVirtualMachineAdapter))
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Ingredient_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)Ingredient_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Ingredient_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Keywords) ?? true))
+            {
+                errorMask?.PushIndex((int)Ingredient_FieldIndex.Keywords);
+                try
+                {
+                    if ((rhs.Keywords != null))
+                    {
+                        item.Keywords = 
+                            rhs.Keywords
+                            .Select(r => new FormLink<Keyword>(r.FormKey))
+                            .ToExtendedList<IFormLink<Keyword>>();
+                    }
+                    else
+                    {
+                        item.Keywords = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)Ingredient_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model.TryGet(out var rhsModel))
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Ingredient_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Data) ?? true))
+            {
+                errorMask?.PushIndex((int)Ingredient_FieldIndex.Data);
+                try
+                {
+                    if(rhs.Data.TryGet(out var rhsData))
+                    {
+                        item.Data = rhsData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Ingredient_FieldIndex.Data));
+                    }
+                    else
+                    {
+                        item.Data = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.IngredientEffectData) ?? true))
+            {
+                errorMask?.PushIndex((int)Ingredient_FieldIndex.IngredientEffectData);
+                try
+                {
+                    if(rhs.IngredientEffectData.TryGet(out var rhsIngredientEffectData))
+                    {
+                        item.IngredientEffectData = rhsIngredientEffectData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Ingredient_FieldIndex.IngredientEffectData));
+                    }
+                    else
+                    {
+                        item.IngredientEffectData = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.LargeIconFilename) ?? true))
+            {
+                item.LargeIconFilename = rhs.LargeIconFilename;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.SmallIconFilename) ?? true))
+            {
+                item.SmallIconFilename = rhs.SmallIconFilename;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Destructible) ?? true))
+            {
+                errorMask?.PushIndex((int)Ingredient_FieldIndex.Destructible);
+                try
+                {
+                    if(rhs.Destructible.TryGet(out var rhsDestructible))
+                    {
+                        item.Destructible = rhsDestructible.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Ingredient_FieldIndex.Destructible));
+                    }
+                    else
+                    {
+                        item.Destructible = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.EquipType) ?? true))
+            {
+                item.EquipType.FormKey = rhs.EquipType.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.PickUpSound) ?? true))
+            {
+                item.PickUpSound.FormKey = rhs.PickUpSound.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.PutDownSound) ?? true))
+            {
+                item.PutDownSound.FormKey = rhs.PutDownSound.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Effects) ?? true))
+            {
+                errorMask?.PushIndex((int)Ingredient_FieldIndex.Effects);
+                try
+                {
+                    item.Effects.SetTo(
+                        rhs.Effects
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1533,6 +3155,186 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((item.VirtualMachineAdapter != null)
+                && (translationMask?.GetShouldTranslate((int)Ingredient_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+                {
+                    ((VirtualMachineAdapterXmlWriteTranslation)((IXmlItem)VirtualMachineAdapterItem).XmlWriteTranslator).Write(
+                        item: VirtualMachineAdapterItem,
+                        node: node,
+                        name: nameof(item.VirtualMachineAdapter),
+                        fieldIndex: (int)Ingredient_FieldIndex.VirtualMachineAdapter,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Ingredient_FieldIndex.VirtualMachineAdapter));
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)Ingredient_FieldIndex.ObjectBounds) ?? true))
+            {
+                var ObjectBoundsItem = item.ObjectBounds;
+                ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
+                    item: ObjectBoundsItem,
+                    node: node,
+                    name: nameof(item.ObjectBounds),
+                    fieldIndex: (int)Ingredient_FieldIndex.ObjectBounds,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Ingredient_FieldIndex.ObjectBounds));
+            }
+            if ((item.Name != null)
+                && (translationMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Name) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)Ingredient_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if ((item.Keywords != null)
+                && (translationMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Keywords) ?? true))
+            {
+                ListXmlTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Keywords),
+                    item: item.Keywords,
+                    fieldIndex: (int)Ingredient_FieldIndex.Keywords,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Ingredient_FieldIndex.Keywords),
+                    transl: (XElement subNode, IFormLinkGetter<IKeywordGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem.FormKey,
+                            errorMask: listSubMask);
+                    });
+            }
+            if ((item.Model != null)
+                && (translationMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Model) ?? true))
+            {
+                if (item.Model.TryGet(out var ModelItem))
+                {
+                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                        item: ModelItem,
+                        node: node,
+                        name: nameof(item.Model),
+                        fieldIndex: (int)Ingredient_FieldIndex.Model,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Ingredient_FieldIndex.Model));
+                }
+            }
+            if ((item.Data != null)
+                && (translationMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Data) ?? true))
+            {
+                if (item.Data.TryGet(out var DataItem))
+                {
+                    ((IngredientDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                        item: DataItem,
+                        node: node,
+                        name: nameof(item.Data),
+                        fieldIndex: (int)Ingredient_FieldIndex.Data,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Ingredient_FieldIndex.Data));
+                }
+            }
+            if ((item.IngredientEffectData != null)
+                && (translationMask?.GetShouldTranslate((int)Ingredient_FieldIndex.IngredientEffectData) ?? true))
+            {
+                if (item.IngredientEffectData.TryGet(out var IngredientEffectDataItem))
+                {
+                    ((IngredientEffectDataXmlWriteTranslation)((IXmlItem)IngredientEffectDataItem).XmlWriteTranslator).Write(
+                        item: IngredientEffectDataItem,
+                        node: node,
+                        name: nameof(item.IngredientEffectData),
+                        fieldIndex: (int)Ingredient_FieldIndex.IngredientEffectData,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Ingredient_FieldIndex.IngredientEffectData));
+                }
+            }
+            if ((item.LargeIconFilename != null)
+                && (translationMask?.GetShouldTranslate((int)Ingredient_FieldIndex.LargeIconFilename) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.LargeIconFilename),
+                    item: item.LargeIconFilename,
+                    fieldIndex: (int)Ingredient_FieldIndex.LargeIconFilename,
+                    errorMask: errorMask);
+            }
+            if ((item.SmallIconFilename != null)
+                && (translationMask?.GetShouldTranslate((int)Ingredient_FieldIndex.SmallIconFilename) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.SmallIconFilename),
+                    item: item.SmallIconFilename,
+                    fieldIndex: (int)Ingredient_FieldIndex.SmallIconFilename,
+                    errorMask: errorMask);
+            }
+            if ((item.Destructible != null)
+                && (translationMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Destructible) ?? true))
+            {
+                if (item.Destructible.TryGet(out var DestructibleItem))
+                {
+                    ((DestructibleXmlWriteTranslation)((IXmlItem)DestructibleItem).XmlWriteTranslator).Write(
+                        item: DestructibleItem,
+                        node: node,
+                        name: nameof(item.Destructible),
+                        fieldIndex: (int)Ingredient_FieldIndex.Destructible,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Ingredient_FieldIndex.Destructible));
+                }
+            }
+            if ((item.EquipType.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Ingredient_FieldIndex.EquipType) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.EquipType),
+                    item: item.EquipType.FormKey.Value,
+                    fieldIndex: (int)Ingredient_FieldIndex.EquipType,
+                    errorMask: errorMask);
+            }
+            if ((item.PickUpSound.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Ingredient_FieldIndex.PickUpSound) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.PickUpSound),
+                    item: item.PickUpSound.FormKey.Value,
+                    fieldIndex: (int)Ingredient_FieldIndex.PickUpSound,
+                    errorMask: errorMask);
+            }
+            if ((item.PutDownSound.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Ingredient_FieldIndex.PutDownSound) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.PutDownSound),
+                    item: item.PutDownSound.FormKey.Value,
+                    fieldIndex: (int)Ingredient_FieldIndex.PutDownSound,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Ingredient_FieldIndex.Effects) ?? true))
+            {
+                ListXmlTranslation<IEffectGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Effects),
+                    item: item.Effects,
+                    fieldIndex: (int)Ingredient_FieldIndex.Effects,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Ingredient_FieldIndex.Effects),
+                    transl: (XElement subNode, IEffectGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((EffectXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
         }
 
         public void Write(
@@ -1640,6 +3442,284 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "VirtualMachineAdapter":
+                    errorMask?.PushIndex((int)Ingredient_FieldIndex.VirtualMachineAdapter);
+                    try
+                    {
+                        item.VirtualMachineAdapter = LoquiXmlTranslation<VirtualMachineAdapter>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Ingredient_FieldIndex.VirtualMachineAdapter));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ObjectBounds":
+                    errorMask?.PushIndex((int)Ingredient_FieldIndex.ObjectBounds);
+                    try
+                    {
+                        item.ObjectBounds = LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Ingredient_FieldIndex.ObjectBounds));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Name":
+                    errorMask?.PushIndex((int)Ingredient_FieldIndex.Name);
+                    try
+                    {
+                        item.Name = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Keywords":
+                    errorMask?.PushIndex((int)Ingredient_FieldIndex.Keywords);
+                    try
+                    {
+                        if (ListXmlTranslation<IFormLink<Keyword>>.Instance.Parse(
+                            node: node,
+                            enumer: out var KeywordsItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Keywords = KeywordsItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Keywords = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Model":
+                    errorMask?.PushIndex((int)Ingredient_FieldIndex.Model);
+                    try
+                    {
+                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Ingredient_FieldIndex.Model));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Data":
+                    errorMask?.PushIndex((int)Ingredient_FieldIndex.Data);
+                    try
+                    {
+                        item.Data = LoquiXmlTranslation<IngredientData>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Ingredient_FieldIndex.Data));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "IngredientEffectData":
+                    errorMask?.PushIndex((int)Ingredient_FieldIndex.IngredientEffectData);
+                    try
+                    {
+                        item.IngredientEffectData = LoquiXmlTranslation<IngredientEffectData>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Ingredient_FieldIndex.IngredientEffectData));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LargeIconFilename":
+                    errorMask?.PushIndex((int)Ingredient_FieldIndex.LargeIconFilename);
+                    try
+                    {
+                        item.LargeIconFilename = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SmallIconFilename":
+                    errorMask?.PushIndex((int)Ingredient_FieldIndex.SmallIconFilename);
+                    try
+                    {
+                        item.SmallIconFilename = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Destructible":
+                    errorMask?.PushIndex((int)Ingredient_FieldIndex.Destructible);
+                    try
+                    {
+                        item.Destructible = LoquiXmlTranslation<Destructible>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Ingredient_FieldIndex.Destructible));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "EquipType":
+                    errorMask?.PushIndex((int)Ingredient_FieldIndex.EquipType);
+                    try
+                    {
+                        item.EquipType.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "PickUpSound":
+                    errorMask?.PushIndex((int)Ingredient_FieldIndex.PickUpSound);
+                    try
+                    {
+                        item.PickUpSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "PutDownSound":
+                    errorMask?.PushIndex((int)Ingredient_FieldIndex.PutDownSound);
+                    try
+                    {
+                        item.PutDownSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Effects":
+                    errorMask?.PushIndex((int)Ingredient_FieldIndex.Effects);
+                    try
+                    {
+                        if (ListXmlTranslation<Effect>.Instance.Parse(
+                            node: node,
+                            enumer: out var EffectsItem,
+                            transl: LoquiXmlTranslation<Effect>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Effects.SetTo(EffectsItem);
+                        }
+                        else
+                        {
+                            item.Effects.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1726,6 +3806,106 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static IngredientBinaryWriteTranslation Instance = new IngredientBinaryWriteTranslation();
 
+        public static void WriteRecordTypes(
+            IIngredientGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: recordTypeConverter.ConvertToCustom(Ingredient_Registration.FULL_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Keywords,
+                counterType: Ingredient_Registration.KSIZ_HEADER,
+                recordType: recordTypeConverter.ConvertToCustom(Ingredient_Registration.KWDA_HEADER),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
+                {
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            if (item.Model.TryGet(out var ModelItem))
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            if (item.Data.TryGet(out var DataItem))
+            {
+                ((IngredientDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                    item: DataItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            if (item.IngredientEffectData.TryGet(out var IngredientEffectDataItem))
+            {
+                ((IngredientEffectDataBinaryWriteTranslation)((IBinaryItem)IngredientEffectDataItem).BinaryWriteTranslator).Write(
+                    item: IngredientEffectDataItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.LargeIconFilename,
+                header: recordTypeConverter.ConvertToCustom(Ingredient_Registration.ICON_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SmallIconFilename,
+                header: recordTypeConverter.ConvertToCustom(Ingredient_Registration.MICO_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            if (item.Destructible.TryGet(out var DestructibleItem))
+            {
+                ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
+                    item: DestructibleItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.EquipType,
+                header: recordTypeConverter.ConvertToCustom(Ingredient_Registration.ETYP_HEADER));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.PickUpSound,
+                header: recordTypeConverter.ConvertToCustom(Ingredient_Registration.YNAM_HEADER));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.PutDownSound,
+                header: recordTypeConverter.ConvertToCustom(Ingredient_Registration.ZNAM_HEADER));
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IEffectGetter>.Instance.Write(
+                writer: writer,
+                items: item.Effects,
+                transl: (MutagenWriter subWriter, IEffectGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((EffectBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             IIngredientGetter item,
@@ -1733,13 +3913,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Ingredient_Registration.ALCH_HEADER),
+                record: recordTypeConverter.ConvertToCustom(Ingredient_Registration.INGR_HEADER),
                 type: ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1819,6 +3999,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IIngredientGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => IngredientCommon.Instance.GetLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => IngredientXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
@@ -1846,6 +4027,67 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region VirtualMachineAdapter
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        private bool _VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapter_IsSet ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
+        #endregion
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private bool _ObjectBounds_IsSet => _ObjectBoundsLocation.HasValue;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBounds_IsSet ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation!.Value.Min)), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        #region Model
+        public IModelGetter? Model { get; private set; }
+        public bool Model_IsSet => Model != null;
+        #endregion
+        #region Data
+        private RangeInt32? _DataLocation;
+        private bool _Data_IsSet => _DataLocation.HasValue;
+        public IIngredientDataGetter? Data => _Data_IsSet ? IngredientDataBinaryOverlay.IngredientDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Data_IsSet => _DataLocation.HasValue;
+        #endregion
+        #region IngredientEffectData
+        private RangeInt32? _IngredientEffectDataLocation;
+        private bool _IngredientEffectData_IsSet => _IngredientEffectDataLocation.HasValue;
+        public IIngredientEffectDataGetter? IngredientEffectData => _IngredientEffectData_IsSet ? IngredientEffectDataBinaryOverlay.IngredientEffectDataFactory(new BinaryMemoryReadStream(_data.Slice(_IngredientEffectDataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool IngredientEffectData_IsSet => _IngredientEffectDataLocation.HasValue;
+        #endregion
+        #region LargeIconFilename
+        private int? _LargeIconFilenameLocation;
+        public String? LargeIconFilename => _LargeIconFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _LargeIconFilenameLocation.Value, _package.Meta)) : default(string?);
+        #endregion
+        #region SmallIconFilename
+        private int? _SmallIconFilenameLocation;
+        public String? SmallIconFilename => _SmallIconFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SmallIconFilenameLocation.Value, _package.Meta)) : default(string?);
+        #endregion
+        #region Destructible
+        public IDestructibleGetter? Destructible { get; private set; }
+        public bool Destructible_IsSet => Destructible != null;
+        #endregion
+        #region EquipType
+        private int? _EquipTypeLocation;
+        public bool EquipType_IsSet => _EquipTypeLocation.HasValue;
+        public IFormLinkNullableGetter<IEquipTypeGetter> EquipType => _EquipTypeLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EquipTypeLocation.Value, _package.Meta)))) : FormLinkNullable<IEquipTypeGetter>.Empty;
+        #endregion
+        #region PickUpSound
+        private int? _PickUpSoundLocation;
+        public bool PickUpSound_IsSet => _PickUpSoundLocation.HasValue;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PickUpSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Empty;
+        #endregion
+        #region PutDownSound
+        private int? _PutDownSoundLocation;
+        public bool PutDownSound_IsSet => _PutDownSoundLocation.HasValue;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PutDownSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Empty;
+        #endregion
+        public IReadOnlyList<IEffectGetter> Effects { get; private set; } = ListExt.Empty<EffectBinaryOverlay>();
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -1896,6 +4138,120 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case 0x44414D56: // VMAD
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.VirtualMachineAdapter);
+                }
+                case 0x444E424F: // OBND
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.ObjectBounds);
+                }
+                case 0x4C4C5546: // FULL
+                {
+                    _NameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Name);
+                }
+                case 0x5A49534B: // KSIZ
+                {
+                    var count = BinaryPrimitives.ReadUInt32LittleEndian(_package.Meta.ReadSubrecordFrame(stream).Content);
+                    var subMeta = _package.Meta.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.Keywords = BinaryOverlaySetList<IFormLinkGetter<IKeywordGetter>>.FactoryByCount(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        count: count,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Keywords);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Model);
+                }
+                case 0x41544144: // DATA
+                {
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Data);
+                }
+                case 0x54494E45: // ENIT
+                {
+                    _IngredientEffectDataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.IngredientEffectData);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    _LargeIconFilenameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.LargeIconFilename);
+                }
+                case 0x4F43494D: // MICO
+                {
+                    _SmallIconFilenameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.SmallIconFilename);
+                }
+                case 0x54534544: // DEST
+                case 0x44545344: // DSTD
+                case 0x4C444D44: // DMDL
+                {
+                    this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Destructible);
+                }
+                case 0x50595445: // ETYP
+                {
+                    _EquipTypeLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.EquipType);
+                }
+                case 0x4D414E59: // YNAM
+                {
+                    _PickUpSoundLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.PickUpSound);
+                }
+                case 0x4D414E5A: // ZNAM
+                {
+                    _PutDownSoundLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.PutDownSound);
+                }
+                case 0x44494645: // EFID
+                case 0x54494645: // EFIT
+                case 0x41445443: // CTDA
+                {
+                    this.Effects = this.ParseRepeatedTypelessSubrecord<EffectBinaryOverlay>(
+                        stream: stream,
+                        recordTypeConverter: recordTypeConverter,
+                        trigger: Effect_Registration.TriggeringRecordTypes,
+                        factory:  EffectBinaryOverlay.EffectFactory);
+                    return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.Effects);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
         #region To String
 
         public override void ToString(

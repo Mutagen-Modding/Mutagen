@@ -7,7 +7,7 @@
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
       <String name="Name" recordType="FULL" />
       <RefDirect name="Data" refName="ObjectEffectData" />
-      <RefList name="Effects" refName="Effect" />
+      <RefList name="Effects" refName="Effect" nullable="NotNull" />
     </Fields>
   </Object>
   <Object name="ObjectEffectData" objType="Subrecord" recordType="ENIT" GUID="edc0fcfa-9555-4856-a0c4-1a12c1a35802" ID="136">

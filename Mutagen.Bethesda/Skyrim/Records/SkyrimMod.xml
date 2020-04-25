@@ -28,6 +28,7 @@
       <Group name="Books" refName="Book" />
       <Group name="Containers" refName="Container" />
       <Group name="Doors" refName="Door" />
+      <Group name="Ingredients" refName="Ingredient" />
     </Fields>
   </Object>
 </Loqui>

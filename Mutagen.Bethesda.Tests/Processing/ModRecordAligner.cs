@@ -51,6 +51,11 @@ namespace Mutagen.Bethesda.Tests
             public abstract RecordType RecordType { get; }
 
             public abstract ReadOnlyMemorySlice<byte> GetBytes(IMutagenReadStream inputStream);
+
+            public static implicit operator AlignmentRule(RecordType recordType)
+            {
+                return new AlignmentStraightRecord(recordType.Type);
+            }
         }
 
         public class AlignmentStraightRecord : AlignmentRule
@@ -83,6 +88,9 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
+        /// <summary>
+        /// For use when a previously encountered record is seen again
+        /// </summary>
         public class AlignmentSubRule : AlignmentRule
         {
             public List<RecordType> SubTypes = new List<RecordType>();
@@ -132,6 +140,54 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
+        /// <summary>
+        /// For use when a set of records is repeated.
+        /// Does not currently enforce order within sub-group, but could be upgraded in the future
+        /// </summary>
+        public class AlignmentRepeatedRule : AlignmentRule
+        {
+            public List<RecordType> SubTypes = new List<RecordType>();
+
+            public AlignmentRepeatedRule(
+                params RecordType[] types)
+            {
+                this.SubTypes = types.ToList();
+            }
+
+            public override RecordType RecordType => SubTypes[0];
+
+            public override ReadOnlyMemorySlice<byte> GetBytes(IMutagenReadStream inputStream)
+            {
+                var dataList = new List<byte[]>();
+                MutagenWriter stream;
+                while (!inputStream.Complete)
+                {
+                    var subType = HeaderTranslation.ReadNextSubrecordType(
+                        inputStream,
+                        out var subLen);
+                    if (!SubTypes.Contains(subType))
+                    {
+                        inputStream.Position -= 6;
+                        break;
+                    }
+                    var data = new byte[subLen + 6];
+                    stream = new MutagenWriter(new MemoryStream(data), inputStream.MetaData);
+                    using (HeaderExport.ExportSubrecordHeader(stream, subType))
+                    {
+                        inputStream.WriteTo(stream.BaseStream, subLen);
+                    }
+                    dataList.Add(data);
+                }
+                byte[] ret = new byte[dataList.Sum((d) => d.Length)];
+                stream = new MutagenWriter(new MemoryStream(ret), inputStream.MetaData);
+                foreach (var data in dataList)
+                {
+                    stream.Write(data);
+                }
+                return ret;
+            }
+        }
+
         public static void Align(
             FilePath inputPath,
             FilePath outputPath,
@@ -144,33 +200,30 @@ namespace Mutagen.Bethesda.Tests
                 EmptyMeansInterested = false
             };
             var fileLocs = RecordLocator.GetFileLocations(inputPath.Path, gameMode, interest);
-            temp = temp ?? new TempFolder();
+            temp ??= new TempFolder();
             using (temp)
             {
-                var alignedMajorRecordsFile = Path.Combine(temp.Dir.Path, "alignedRules");
-                using (var inputStream = new MutagenBinaryReadStream(inputPath.Path, gameMode))
+                if (gameMode == GameMode.Oblivion)
                 {
-                    using (var writer = new MutagenWriter(new FileStream(alignedMajorRecordsFile, FileMode.Create), gameMode))
+                    var alignedMajorRecordsFile = Path.Combine(temp.Dir.Path, "alignedRules");
+                    using (var inputStream = new MutagenBinaryReadStream(inputPath.Path, gameMode))
                     {
+                        using var writer = new MutagenWriter(new FileStream(alignedMajorRecordsFile, FileMode.Create), gameMode);
                         AlignMajorRecordsByRules(inputStream, writer, alignmentRules, fileLocs);
                     }
-                }
 
-                var alignedGroupsFile = Path.Combine(temp.Dir.Path, "alignedGroups");
-                using (var inputStream = new MutagenBinaryReadStream(alignedMajorRecordsFile, gameMode))
-                {
-                    using (var writer = new MutagenWriter(new FileStream(alignedGroupsFile, FileMode.Create), gameMode))
+                    var alignedGroupsFile = Path.Combine(temp.Dir.Path, "alignedGroups");
+                    using (var inputStream = new MutagenBinaryReadStream(alignedMajorRecordsFile, gameMode))
                     {
+                        using var writer = new MutagenWriter(new FileStream(alignedGroupsFile, FileMode.Create), gameMode);
                         AlignGroupsByRules(inputStream, writer, alignmentRules, fileLocs);
                     }
-                }
 
-                fileLocs = RecordLocator.GetFileLocations(alignedGroupsFile, gameMode, interest);
-                var alignedCellsFile = Path.Combine(temp.Dir.Path, "alignedCells");
-                using (var mutaReader = new BinaryReadStream(alignedGroupsFile))
-                {
-                    using (var writer = new MutagenWriter(alignedCellsFile, gameMode))
+                    fileLocs = RecordLocator.GetFileLocations(alignedGroupsFile, gameMode, interest);
+                    var alignedCellsFile = Path.Combine(temp.Dir.Path, "alignedCells");
+                    using (var mutaReader = new BinaryReadStream(alignedGroupsFile))
                     {
+                        using var writer = new MutagenWriter(alignedCellsFile, gameMode);
                         foreach (var grup in fileLocs.GrupLocations)
                         {
                             if (grup <= mutaReader.Position) continue;
@@ -194,13 +247,11 @@ namespace Mutagen.Bethesda.Tests
                         }
                         mutaReader.WriteTo(writer.BaseStream, checked((int)mutaReader.Remaining));
                     }
-                }
 
-                fileLocs = RecordLocator.GetFileLocations(alignedCellsFile, gameMode, interest);
-                using (var mutaReader = new MutagenBinaryReadStream(alignedCellsFile, gameMode))
-                {
-                    using (var writer = new MutagenWriter(outputPath.Path, gameMode))
+                    fileLocs = RecordLocator.GetFileLocations(alignedCellsFile, gameMode, interest);
+                    using (var mutaReader = new MutagenBinaryReadStream(alignedCellsFile, gameMode))
                     {
+                        using var writer = new MutagenWriter(outputPath.Path, gameMode);
                         foreach (var grup in fileLocs.GrupLocations)
                         {
                             if (grup <= mutaReader.Position) continue;
@@ -224,6 +275,12 @@ namespace Mutagen.Bethesda.Tests
                         }
                         mutaReader.WriteTo(writer.BaseStream, checked((int)mutaReader.Remaining));
                     }
+                }
+                else
+                {
+                    using var inputStream = new MutagenBinaryReadStream(inputPath.Path, gameMode);
+                    using var writer = new MutagenWriter(outputPath.Path, gameMode);
+                    AlignMajorRecordsByRules(inputStream, writer, alignmentRules, fileLocs);
                 }
             }
         }
@@ -258,8 +315,7 @@ namespace Mutagen.Bethesda.Tests
                 var recType = HeaderTranslation.ReadNextRecordType(
                     inputStream,
                     out var len);
-                IEnumerable<RecordType> stopMarkers;
-                if (!alignmentRules.StopMarkers.TryGetValue(recType, out stopMarkers))
+                if (!alignmentRules.StopMarkers.TryGetValue(recType, out var stopMarkers))
                 {
                     stopMarkers = null;
                 }
@@ -269,7 +325,7 @@ namespace Mutagen.Bethesda.Tests
                 }
                 writer.Write(recType.TypeInt);
                 writer.Write(len);
-                inputStream.WriteTo(writer.BaseStream, 12);
+                inputStream.WriteTo(writer.BaseStream, inputStream.MetaData.MajorConstants.LengthAfterLength);
                 var endPos = inputStream.Position + len;
                 var dataDict = new Dictionary<RecordType, ReadOnlyMemorySlice<byte>>();
                 ReadOnlyMemorySlice<byte>? rest = null;
@@ -277,7 +333,7 @@ namespace Mutagen.Bethesda.Tests
                 {
                     var subType = HeaderTranslation.GetNextSubrecordType(
                         inputStream,
-                        out var subLen);
+                        out var _);
                     if (stopMarkers?.Contains(subType) ?? false)
                     {
                         rest = inputStream.ReadMemory((int)(endPos - inputStream.Position), readSafe: true);

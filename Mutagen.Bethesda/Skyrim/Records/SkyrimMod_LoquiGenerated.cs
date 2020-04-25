@@ -68,6 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
             _Books_Object = new Group<Book>(this);
             _Containers_Object = new Group<Container>(this);
             _Doors_Object = new Group<Door>(this);
+            _Ingredients_Object = new Group<Ingredient>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -254,6 +255,13 @@ namespace Mutagen.Bethesda.Skyrim
         public Group<Door> Doors => _Doors_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IDoorGetter> ISkyrimModGetter.Doors => _Doors_Object;
+        #endregion
+        #region Ingredients
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Ingredient> _Ingredients_Object;
+        public Group<Ingredient> Ingredients => _Ingredients_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IIngredientGetter> ISkyrimModGetter.Ingredients => _Ingredients_Object;
         #endregion
 
         #region To String
@@ -451,6 +459,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Books = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Containers = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Doors = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Ingredients = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -479,7 +488,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Armors,
                 TItem Books,
                 TItem Containers,
-                TItem Doors)
+                TItem Doors,
+                TItem Ingredients)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -507,6 +517,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Books = new MaskItem<TItem, Group.Mask<TItem>?>(Books, new Group.Mask<TItem>(Books));
                 this.Containers = new MaskItem<TItem, Group.Mask<TItem>?>(Containers, new Group.Mask<TItem>(Containers));
                 this.Doors = new MaskItem<TItem, Group.Mask<TItem>?>(Doors, new Group.Mask<TItem>(Doors));
+                this.Ingredients = new MaskItem<TItem, Group.Mask<TItem>?>(Ingredients, new Group.Mask<TItem>(Ingredients));
             }
 
             #pragma warning disable CS8618
@@ -544,6 +555,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? Books { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Containers { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Doors { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Ingredients { get; set; }
             #endregion
 
             #region Equals
@@ -582,6 +594,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Books, rhs.Books)) return false;
                 if (!object.Equals(this.Containers, rhs.Containers)) return false;
                 if (!object.Equals(this.Doors, rhs.Doors)) return false;
+                if (!object.Equals(this.Ingredients, rhs.Ingredients)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -613,6 +626,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Books);
                 hash.Add(this.Containers);
                 hash.Add(this.Doors);
+                hash.Add(this.Ingredients);
                 return hash.ToHashCode();
             }
 
@@ -751,6 +765,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Doors.Overall)) return false;
                     if (this.Doors.Specific != null && !this.Doors.Specific.All(eval)) return false;
                 }
+                if (Ingredients != null)
+                {
+                    if (!eval(this.Ingredients.Overall)) return false;
+                    if (this.Ingredients.Specific != null && !this.Ingredients.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -888,6 +907,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Doors.Overall)) return true;
                     if (this.Doors.Specific != null && this.Doors.Specific.Any(eval)) return true;
                 }
+                if (Ingredients != null)
+                {
+                    if (eval(this.Ingredients.Overall)) return true;
+                    if (this.Ingredients.Specific != null && this.Ingredients.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -928,6 +952,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Books = this.Books == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Books.Overall), this.Books.Specific?.Translate(eval));
                 obj.Containers = this.Containers == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Containers.Overall), this.Containers.Specific?.Translate(eval));
                 obj.Doors = this.Doors == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Doors.Overall), this.Doors.Specific?.Translate(eval));
+                obj.Ingredients = this.Ingredients == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Ingredients.Overall), this.Ingredients.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1054,6 +1079,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Doors?.ToString(fg);
                     }
+                    if (printMask?.Ingredients?.Overall ?? true)
+                    {
+                        Ingredients?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -1105,6 +1134,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<Book.ErrorMask>?>? Books;
             public MaskItem<Exception?, Group.ErrorMask<Container.ErrorMask>?>? Containers;
             public MaskItem<Exception?, Group.ErrorMask<Door.ErrorMask>?>? Doors;
+            public MaskItem<Exception?, Group.ErrorMask<Ingredient.ErrorMask>?>? Ingredients;
             #endregion
 
             #region IErrorMask
@@ -1165,6 +1195,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Containers;
                     case SkyrimMod_FieldIndex.Doors:
                         return Doors;
+                    case SkyrimMod_FieldIndex.Ingredients:
+                        return Ingredients;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1252,6 +1284,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.Doors:
                         this.Doors = new MaskItem<Exception?, Group.ErrorMask<Door.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Ingredients:
+                        this.Ingredients = new MaskItem<Exception?, Group.ErrorMask<Ingredient.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1341,6 +1376,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.Doors:
                         this.Doors = (MaskItem<Exception?, Group.ErrorMask<Door.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.Ingredients:
+                        this.Ingredients = (MaskItem<Exception?, Group.ErrorMask<Ingredient.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1375,6 +1413,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Books != null) return true;
                 if (Containers != null) return true;
                 if (Doors != null) return true;
+                if (Ingredients != null) return true;
                 return false;
             }
             #endregion
@@ -1435,6 +1474,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Books?.ToString(fg);
                 Containers?.ToString(fg);
                 Doors?.ToString(fg);
+                Ingredients?.ToString(fg);
             }
             #endregion
 
@@ -1469,6 +1509,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Books = this.Books.Combine(rhs.Books, (l, r) => l.Combine(r));
                 ret.Containers = this.Containers.Combine(rhs.Containers, (l, r) => l.Combine(r));
                 ret.Doors = this.Doors.Combine(rhs.Doors, (l, r) => l.Combine(r));
+                ret.Ingredients = this.Ingredients.Combine(rhs.Ingredients, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1516,6 +1557,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<Book.TranslationMask>?> Books;
             public MaskItem<bool, Group.TranslationMask<Container.TranslationMask>?> Containers;
             public MaskItem<bool, Group.TranslationMask<Door.TranslationMask>?> Doors;
+            public MaskItem<bool, Group.TranslationMask<Ingredient.TranslationMask>?> Ingredients;
             #endregion
 
             #region Ctors
@@ -1547,6 +1589,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Books = new MaskItem<bool, Group.TranslationMask<Book.TranslationMask>?>(defaultOn, null);
                 this.Containers = new MaskItem<bool, Group.TranslationMask<Container.TranslationMask>?>(defaultOn, null);
                 this.Doors = new MaskItem<bool, Group.TranslationMask<Door.TranslationMask>?>(defaultOn, null);
+                this.Ingredients = new MaskItem<bool, Group.TranslationMask<Ingredient.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -1588,6 +1631,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Books?.Overall ?? true, Books?.Specific?.GetCrystal()));
                 ret.Add((Containers?.Overall ?? true, Containers?.Specific?.GetCrystal()));
                 ret.Add((Doors?.Overall ?? true, Doors?.Specific?.GetCrystal()));
+                ret.Add((Ingredients?.Overall ?? true, Ingredients?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -1627,6 +1671,7 @@ namespace Mutagen.Bethesda.Skyrim
             _Books_Object = new Group<Book>(this);
             _Containers_Object = new Group<Container>(this);
             _Doors_Object = new Group<Door>(this);
+            _Ingredients_Object = new Group<Ingredient>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -1731,6 +1776,10 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.Doors ?? true)
             {
                 this.Doors.RecordCache.Set(rhsMod.Doors.RecordCache.Items);
+            }
+            if (mask?.Ingredients ?? true)
+            {
+                this.Ingredients.RecordCache.Set(rhsMod.Ingredients.RecordCache.Items);
             }
         }
 
@@ -1914,6 +1963,13 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Door>());
             }
+            if (mask?.Ingredients ?? true)
+            {
+                this.Ingredients.RecordCache.Set(
+                    rhs.Ingredients.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Ingredient>());
+            }
             Dictionary<FormKey, IMajorRecordCommon> router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var package = this.CreateLinkCache();
@@ -1964,6 +2020,7 @@ namespace Mutagen.Bethesda.Skyrim
             count += Books.RecordCache.Count > 0 ? 1 : 0;
             count += Containers.RecordCache.Count > 0 ? 1 : 0;
             count += Doors.RecordCache.Count > 0 ? 1 : 0;
+            count += Ingredients.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -2183,6 +2240,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<Book> Books { get; }
         new Group<Container> Containers { get; }
         new Group<Door> Doors { get; }
+        new Group<Ingredient> Ingredients { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -2225,6 +2283,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IBookGetter> Books { get; }
         IGroupGetter<IContainerGetter> Containers { get; }
         IGroupGetter<IDoorGetter> Doors { get; }
+        IGroupGetter<IIngredientGetter> Ingredients { get; }
 
     }
 
@@ -2679,6 +2738,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Books = 23,
         Containers = 24,
         Doors = 25,
+        Ingredients = 26,
     }
     #endregion
 
@@ -2696,9 +2756,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 26;
+        public const ushort AdditionalFieldCount = 27;
 
-        public const ushort FieldCount = 26;
+        public const ushort FieldCount = 27;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -2780,6 +2840,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.Containers;
                 case "DOORS":
                     return (ushort)SkyrimMod_FieldIndex.Doors;
+                case "INGREDIENTS":
+                    return (ushort)SkyrimMod_FieldIndex.Ingredients;
                 default:
                     return null;
             }
@@ -2816,6 +2878,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Books:
                 case SkyrimMod_FieldIndex.Containers:
                 case SkyrimMod_FieldIndex.Doors:
+                case SkyrimMod_FieldIndex.Ingredients:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2853,6 +2916,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Books:
                 case SkyrimMod_FieldIndex.Containers:
                 case SkyrimMod_FieldIndex.Doors:
+                case SkyrimMod_FieldIndex.Ingredients:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2890,6 +2954,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Books:
                 case SkyrimMod_FieldIndex.Containers:
                 case SkyrimMod_FieldIndex.Doors:
+                case SkyrimMod_FieldIndex.Ingredients:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2953,6 +3018,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Containers";
                 case SkyrimMod_FieldIndex.Doors:
                     return "Doors";
+                case SkyrimMod_FieldIndex.Ingredients:
+                    return "Ingredients";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2989,6 +3056,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Books:
                 case SkyrimMod_FieldIndex.Containers:
                 case SkyrimMod_FieldIndex.Doors:
+                case SkyrimMod_FieldIndex.Ingredients:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3027,6 +3095,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Books:
                 case SkyrimMod_FieldIndex.Containers:
                 case SkyrimMod_FieldIndex.Doors:
+                case SkyrimMod_FieldIndex.Ingredients:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3090,6 +3159,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<Container>);
                 case SkyrimMod_FieldIndex.Doors:
                     return typeof(Group<Door>);
+                case SkyrimMod_FieldIndex.Ingredients:
+                    return typeof(Group<Ingredient>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3122,9 +3193,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
         public static readonly RecordType CONT_HEADER = new RecordType("CONT");
         public static readonly RecordType DOOR_HEADER = new RecordType("DOOR");
+        public static readonly RecordType INGR_HEADER = new RecordType("INGR");
         public static readonly RecordType TriggeringRecordType = TES4_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 26;
+        public const int NumTypedFields = 27;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -3192,6 +3264,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Books.Clear();
             item.Containers.Clear();
             item.Doors.Clear();
+            item.Ingredients.Clear();
         }
         
         #region Xml Translation
@@ -3657,6 +3730,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Doors);
                 }
+                case 0x52474E49: // INGR
+                {
+                    if (importMask?.Ingredients ?? true)
+                    {
+                        item.Ingredients.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Ingredients);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -3734,6 +3821,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Books = MaskItemExt.Factory(item.Books.GetEqualsMask(rhs.Books, include), include);
             ret.Containers = MaskItemExt.Factory(item.Containers.GetEqualsMask(rhs.Containers, include), include);
             ret.Doors = MaskItemExt.Factory(item.Doors.GetEqualsMask(rhs.Doors, include), include);
+            ret.Ingredients = MaskItemExt.Factory(item.Ingredients.GetEqualsMask(rhs.Ingredients, include), include);
         }
         
         public string ToString(
@@ -3884,6 +3972,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Doors?.ToString(fg, "Doors");
             }
+            if (printMask?.Ingredients?.Overall ?? true)
+            {
+                item.Ingredients?.ToString(fg, "Ingredients");
+            }
         }
         
         public bool HasBeenSet(
@@ -3923,6 +4015,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Books = new MaskItem<bool, Group.Mask<bool>?>(true, item.Books?.GetHasBeenSetMask());
             mask.Containers = new MaskItem<bool, Group.Mask<bool>?>(true, item.Containers?.GetHasBeenSetMask());
             mask.Doors = new MaskItem<bool, Group.Mask<bool>?>(true, item.Doors?.GetHasBeenSetMask());
+            mask.Ingredients = new MaskItem<bool, Group.Mask<bool>?>(true, item.Ingredients?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -3958,6 +4051,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Books, rhs.Books)) return false;
             if (!object.Equals(lhs.Containers, rhs.Containers)) return false;
             if (!object.Equals(lhs.Doors, rhs.Doors)) return false;
+            if (!object.Equals(lhs.Ingredients, rhs.Ingredients)) return false;
             return true;
         }
         
@@ -3990,6 +4084,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Books);
             hash.Add(item.Containers);
             hash.Add(item.Doors);
+            hash.Add(item.Ingredients);
             return hash.ToHashCode();
         }
         
@@ -4132,6 +4227,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDoor":
                 case "IDoorInternal":
                     return obj.Doors.RecordCache;
+                case "Ingredient":
+                case "IIngredientGetter":
+                case "IIngredient":
+                case "IIngredientInternal":
+                    return obj.Ingredients.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown group type: {typeof(T)}");
             }
@@ -4148,7 +4248,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var modHeader = item.ModHeader.DeepCopy() as ModHeader;
             modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
             modHeader.WriteToBinary(new MutagenWriter(stream, GameConstants.Skyrim, masterRefs));
-            Stream[] outputStreams = new Stream[25];
+            Stream[] outputStreams = new Stream[26];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams));
@@ -4175,6 +4275,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.Books, masterRefs, 22, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Containers, masterRefs, 23, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Doors, masterRefs, 24, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Ingredients, masterRefs, 25, outputStreams));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -4397,6 +4498,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.Ingredients is ILinkContainer IngredientslinkCont)
+            {
+                foreach (var item in IngredientslinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -4499,6 +4607,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.Doors.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Ingredients.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -4741,6 +4853,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDoor":
                 case "IDoorInternal":
                     foreach (var item in obj.Doors.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Ingredient":
+                case "IIngredientGetter":
+                case "IIngredient":
+                case "IIngredientInternal":
+                    foreach (var item in obj.Ingredients.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -5284,6 +5405,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Ingredients) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Ingredients);
+                try
+                {
+                    item.Ingredients.DeepCopyIn(
+                        rhs: rhs.Ingredients,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Ingredients));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -5658,6 +5799,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.Doors,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Doors));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Ingredients) ?? true))
+            {
+                var IngredientsItem = item.Ingredients;
+                ((GroupXmlWriteTranslation)((IXmlItem)IngredientsItem).XmlWriteTranslator).Write<IIngredientGetter>(
+                    item: IngredientsItem,
+                    node: node,
+                    name: nameof(item.Ingredients),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Ingredients,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Ingredients));
             }
         }
 
@@ -6240,6 +6392,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "Ingredients":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Ingredients);
+                    try
+                    {
+                        item.Ingredients.CopyInFromXml<Ingredient>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -6434,6 +6605,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Books;
         public bool Containers;
         public bool Doors;
+        public bool Ingredients;
         public GroupMask()
         {
         }
@@ -6464,6 +6636,7 @@ namespace Mutagen.Bethesda.Skyrim
             Books = defaultValue;
             Containers = defaultValue;
             Doors = defaultValue;
+            Ingredients = defaultValue;
         }
     }
 
@@ -6764,6 +6937,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)DoorsItem).BinaryWriteTranslator).Write<IDoorGetter>(
                         item: DoorsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Ingredients ?? true)
+            {
+                var IngredientsItem = item.Ingredients;
+                if (IngredientsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)IngredientsItem).BinaryWriteTranslator).Write<IIngredientGetter>(
+                        item: IngredientsItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
                 }
@@ -7108,6 +7292,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IDoorGetter>? _Doors => _Doors_IsSet ? GroupBinaryOverlay<IDoorGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _DoorsLocation!.Value.Min, _DoorsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IDoorGetter> Doors => _Doors ?? new Group<Door>(this);
         #endregion
+        #region Ingredients
+        private RangeInt64? _IngredientsLocation;
+        private bool _Ingredients_IsSet => _IngredientsLocation.HasValue;
+        private IGroupGetter<IIngredientGetter>? _Ingredients => _Ingredients_IsSet ? GroupBinaryOverlay<IIngredientGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _IngredientsLocation!.Value.Min, _IngredientsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IIngredientGetter> Ingredients => _Ingredients ?? new Group<Ingredient>(this);
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             long finalPos,
@@ -7321,6 +7511,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _DoorsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Doors);
+                }
+                case 0x52474E49: // INGR
+                {
+                    _IngredientsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Ingredients);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

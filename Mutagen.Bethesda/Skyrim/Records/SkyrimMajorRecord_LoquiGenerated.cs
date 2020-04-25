@@ -1073,6 +1073,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType IMAD_HEADER = new RecordType("IMAD");
         public static readonly RecordType IPDS_HEADER = new RecordType("IPDS");
         public static readonly RecordType ALCH_HEADER = new RecordType("ALCH");
+        public static readonly RecordType INGR_HEADER = new RecordType("INGR");
         public static readonly RecordType KEYM_HEADER = new RecordType("KEYM");
         public static readonly RecordType KYWD_HEADER = new RecordType("KYWD");
         public static readonly RecordType LTEX_HEADER = new RecordType("LTEX");
@@ -1142,6 +1143,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         IMAD_HEADER,
                         IPDS_HEADER,
                         ALCH_HEADER,
+                        INGR_HEADER,
                         KEYM_HEADER,
                         KYWD_HEADER,
                         LTEX_HEADER,

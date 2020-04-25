@@ -13,7 +13,7 @@
       <FormLink name="EquipmentType" refName="EquipType" recordType="ETYP" />
       <String name="Description" recordType="DESC" />
       <RefDirect name="Data" refName="SpellData" />
-      <RefList name="Effects" refName="Effect" />
+      <RefList name="Effects" refName="Effect" nullable="NotNull" />
     </Fields>
   </Object>
   <Object name="SpellData" recordType="SPIT" objType="Subrecord" GUID="e315ed8f-6133-4758-bb7a-78fbf4542d94" ID="137">
