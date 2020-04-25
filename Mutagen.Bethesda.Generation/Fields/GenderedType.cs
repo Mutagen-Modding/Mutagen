@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Noggog;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Binary;
 
 namespace Mutagen.Bethesda.Generation
 {

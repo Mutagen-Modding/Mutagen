@@ -113,8 +113,8 @@
     <Compile Include="Preprocessing\ModRecordSorter.cs" />
     <Compile Include="Enums\ObjectType.cs" />
     <Compile Include="Patching\Pipeline.cs" />
-    <Compile Include="Locators\RecordInterest.cs" />
-    <Compile Include="Locators\RecordLocator.cs" />
+    <Compile Include="Utility\RecordInterest.cs" />
+    <Compile Include="Utility\RecordLocator.cs" />
     <Compile Include="Records\MajorRecord.cs">
       <DependentUpon>MajorRecord.xml</DependentUpon>
     </Compile>
@@ -122,7 +122,7 @@
       <DependentUpon>MasterReference.xml</DependentUpon>
     </Compile>
     <Compile Include="Structs\RecordType.cs" />
-    <Compile Include="Utility\RecordTypeConverter.cs" />
+    <Compile Include="Translations\Binary\RecordTypeConverter.cs" />
     <Compile Include="Streams\MutagenBinaryReadStream.cs" />
     <Compile Include="Streams\MutagenMemoryReadStream.cs" />
     <Compile Include="Translations\Binary\Fields\BooleanBinaryTranslation.cs" />

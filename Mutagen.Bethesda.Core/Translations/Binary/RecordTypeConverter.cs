@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Internals
+namespace Mutagen.Bethesda.Binary
 {
     /// <summary>
     /// Tracks custom mappings of one record type to another.
