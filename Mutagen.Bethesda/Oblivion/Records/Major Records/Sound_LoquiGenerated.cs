@@ -633,6 +633,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Sound_Registration.Instance;
         String? File { get; }
         ISoundDataInternalGetter? Data { get; }
 

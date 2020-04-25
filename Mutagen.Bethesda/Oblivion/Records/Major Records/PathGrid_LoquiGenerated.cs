@@ -945,6 +945,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => PathGrid_Registration.Instance;
         IReadOnlyList<IPathGridPointGetter>? PointToPointConnections { get; }
         ReadOnlyMemorySlice<Byte>? Unknown { get; }
         IReadOnlyList<IInterCellPointGetter>? InterCellConnections { get; }

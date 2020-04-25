@@ -888,6 +888,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => AttackData_Registration.Instance;
         Single DamageMult { get; }
         Single Chance { get; }
         IFormLinkGetter<IASpellGetter> Spell { get; }

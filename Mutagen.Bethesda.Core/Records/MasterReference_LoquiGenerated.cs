@@ -596,6 +596,7 @@ namespace Mutagen.Bethesda
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => MasterReference_Registration.Instance;
         ModKey Master { get; }
         UInt64? FileSize { get; }
 

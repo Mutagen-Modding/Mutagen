@@ -819,6 +819,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => LeveledCreature_Registration.Instance;
         Byte? ChanceNone { get; }
         LeveledFlag? Flags { get; }
         IReadOnlyList<ILeveledEntryGetter<INpcSpawnGetter>> Entries { get; }

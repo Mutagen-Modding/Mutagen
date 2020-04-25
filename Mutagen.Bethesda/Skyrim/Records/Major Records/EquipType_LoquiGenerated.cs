@@ -534,6 +534,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => EquipType_Registration.Instance;
 
     }
 

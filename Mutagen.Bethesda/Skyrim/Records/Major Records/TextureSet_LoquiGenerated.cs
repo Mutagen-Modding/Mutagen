@@ -731,6 +731,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => TextureSet_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
         ITexturesGetter? Textures { get; }
         IDecalGetter? Decal { get; }

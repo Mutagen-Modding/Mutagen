@@ -838,6 +838,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Weapon_Registration.Instance;
         String? Name { get; }
         IModelGetter? Model { get; }
         String? Icon { get; }

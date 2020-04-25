@@ -1526,6 +1526,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => PlacedObject_Registration.Instance;
         IFormLinkNullableGetter<IOblivionMajorRecordGetter> Base { get; }
         ReadOnlyMemorySlice<Byte>? XPCIFluff { get; }
         ReadOnlyMemorySlice<Byte>? FULLFluff { get; }

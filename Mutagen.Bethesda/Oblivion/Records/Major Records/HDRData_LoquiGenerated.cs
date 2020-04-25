@@ -973,6 +973,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => HDRData_Registration.Instance;
         Single EyeAdaptSpeed { get; }
         Single BlurRadius { get; }
         Single BlurPasses { get; }

@@ -653,6 +653,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => BookData_Registration.Instance;
         Book.BookFlag Flags { get; }
         Skill Teaches { get; }
         Single Value { get; }

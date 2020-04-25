@@ -771,6 +771,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => MagicEffectSubData_Registration.Instance;
         IFormLinkGetter<IEffectShaderGetter> EnchantEffect { get; }
         IFormLinkGetter<ISoundGetter> CastingSound { get; }
         IFormLinkGetter<ISoundGetter> BoltSound { get; }

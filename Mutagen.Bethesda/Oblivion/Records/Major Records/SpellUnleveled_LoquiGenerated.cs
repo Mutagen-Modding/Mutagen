@@ -717,6 +717,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => SpellUnleveled_Registration.Instance;
         ISpellDataGetter? Data { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
 

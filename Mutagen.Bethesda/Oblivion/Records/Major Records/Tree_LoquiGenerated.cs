@@ -845,6 +845,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Tree_Registration.Instance;
         IModelGetter? Model { get; }
         String? Icon { get; }
         IReadOnlyList<UInt32>? SpeedTreeSeeds { get; }

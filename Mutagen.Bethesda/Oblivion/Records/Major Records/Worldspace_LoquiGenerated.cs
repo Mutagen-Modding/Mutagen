@@ -1283,6 +1283,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Worldspace_Registration.Instance;
         String? Name { get; }
         IFormLinkNullableGetter<IWorldspaceGetter> Parent { get; }
         IFormLinkNullableGetter<IClimateGetter> Climate { get; }

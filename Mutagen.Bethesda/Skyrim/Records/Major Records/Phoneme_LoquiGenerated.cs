@@ -1897,6 +1897,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => Phoneme_Registration.Instance;
         Single IY { get; }
         Single IH { get; }
         Single EH { get; }

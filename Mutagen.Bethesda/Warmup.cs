@@ -16,9 +16,9 @@ namespace Mutagen.Bethesda
         /// </summary>
         public static void Init()
         {
-            LoquiRegistrationSettings.AutomaticRegistration = false;
-            ProtocolDefinition_Oblivion.Register();
-            ProtocolDefinition_Skyrim.Register();
+            LoquiRegistration.SpinUp(
+                new ProtocolDefinition_Oblivion(),
+                new ProtocolDefinition_Skyrim());
         }
     }
 }

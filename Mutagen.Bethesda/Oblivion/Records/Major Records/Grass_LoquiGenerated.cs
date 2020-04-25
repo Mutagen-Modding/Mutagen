@@ -641,6 +641,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Grass_Registration.Instance;
         IModelGetter? Model { get; }
         IGrassDataGetter? Data { get; }
 

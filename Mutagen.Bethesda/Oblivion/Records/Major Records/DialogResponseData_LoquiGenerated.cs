@@ -701,6 +701,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => DialogResponseData_Registration.Instance;
         EmotionType Emotion { get; }
         Int32 EmotionValue { get; }
         ReadOnlyMemorySlice<Byte> Fluff1 { get; }

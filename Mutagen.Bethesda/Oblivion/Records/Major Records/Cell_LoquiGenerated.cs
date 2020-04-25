@@ -1724,6 +1724,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Cell_Registration.Instance;
         String? Name { get; }
         Cell.Flag? Flags { get; }
         P2Int? Grid { get; }

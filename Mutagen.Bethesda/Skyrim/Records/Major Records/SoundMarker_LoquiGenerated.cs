@@ -714,6 +714,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => SoundMarker_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
         ReadOnlyMemorySlice<Byte>? SNDD { get; }

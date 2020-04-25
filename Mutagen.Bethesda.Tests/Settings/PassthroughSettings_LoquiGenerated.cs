@@ -738,6 +738,7 @@ namespace Mutagen.Bethesda.Tests
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => PassthroughSettings_Registration.Instance;
         Boolean ReuseCaches { get; }
         Boolean ReorderRecords { get; }
         Boolean DeleteCachesAfter { get; }

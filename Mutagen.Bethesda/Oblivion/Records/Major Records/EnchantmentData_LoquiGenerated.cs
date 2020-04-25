@@ -653,6 +653,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => EnchantmentData_Registration.Instance;
         Enchantment.EnchantmentType Type { get; }
         UInt32 ChargeAmount { get; }
         UInt32 EnchantCost { get; }

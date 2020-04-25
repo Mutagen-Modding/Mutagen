@@ -615,6 +615,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Clothing_Registration.Instance;
         IClothingDataGetter? Data { get; }
 
     }

@@ -593,6 +593,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Static_Registration.Instance;
         IModelGetter? Model { get; }
 
     }

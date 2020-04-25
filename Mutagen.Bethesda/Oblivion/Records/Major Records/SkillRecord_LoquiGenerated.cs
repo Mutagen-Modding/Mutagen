@@ -873,6 +873,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => SkillRecord_Registration.Instance;
         ActorValue? Skill { get; }
         String? Description { get; }
         String? Icon { get; }

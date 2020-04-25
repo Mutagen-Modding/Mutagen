@@ -915,6 +915,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => DialogTopic_Registration.Instance;
         IReadOnlyList<IFormLinkGetter<IQuestGetter>>? Quests { get; }
         String? Name { get; }
         DialogType? DialogType { get; }

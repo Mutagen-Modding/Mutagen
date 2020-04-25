@@ -641,6 +641,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => Rank_Registration.Instance;
         UInt32? RankID { get; }
         String? MaleRankTitle { get; }
         String? FemaleRankTitle { get; }

@@ -585,6 +585,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => SkillBoost_Registration.Instance;
         ActorValue Skill { get; }
         SByte Boost { get; }
 

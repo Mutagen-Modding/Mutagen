@@ -673,6 +673,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => EffectShader_Registration.Instance;
         String? FillTexture { get; }
         String? ParticleShaderTexture { get; }
         IEffectShaderDataGetter? Data { get; }

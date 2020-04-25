@@ -680,6 +680,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => PointToReferenceMapping_Registration.Instance;
         IFormLinkGetter<IPlacedGetter> Reference { get; }
         IReadOnlyList<Int16> Points { get; }
 

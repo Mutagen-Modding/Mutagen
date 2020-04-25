@@ -1234,6 +1234,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => MagicEffect_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         String? Name { get; }
         IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject { get; }

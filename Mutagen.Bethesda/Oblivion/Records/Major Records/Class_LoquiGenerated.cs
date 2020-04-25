@@ -715,6 +715,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Class_Registration.Instance;
         String? Name { get; }
         String? Description { get; }
         String? Icon { get; }

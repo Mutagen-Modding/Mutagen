@@ -628,6 +628,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => TeleportDestination_Registration.Instance;
         IFormLinkGetter<IPlacedGetter> Destination { get; }
         P3Float Position { get; }
         P3Float Rotation { get; }

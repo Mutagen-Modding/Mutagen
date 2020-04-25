@@ -874,6 +874,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => PlacedCreature_Registration.Instance;
         IFormLinkNullableGetter<ICreatureGetter> Base { get; }
         IFormLinkNullableGetter<IFactionGetter> Owner { get; }
         Int32? FactionRank { get; }

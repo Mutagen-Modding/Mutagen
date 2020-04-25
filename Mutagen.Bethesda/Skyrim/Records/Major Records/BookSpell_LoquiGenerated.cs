@@ -541,6 +541,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => BookSpell_Registration.Instance;
         IFormLinkGetter<ISpellGetter> Spell { get; }
 
     }

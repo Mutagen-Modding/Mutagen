@@ -1037,6 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Spell_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
         String? Name { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }

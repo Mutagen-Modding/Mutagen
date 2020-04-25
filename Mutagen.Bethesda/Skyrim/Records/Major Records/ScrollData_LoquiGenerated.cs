@@ -589,6 +589,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => ScrollData_Registration.Instance;
         UInt32 Value { get; }
         Single Weight { get; }
 

@@ -636,6 +636,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => RelatedWaters_Registration.Instance;
         IFormLinkGetter<IWaterGetter> RelatedWaterDaytime { get; }
         IFormLinkGetter<IWaterGetter> RelatedWaterNighttime { get; }
         IFormLinkGetter<IWaterGetter> RelatedWaterUnderwater { get; }

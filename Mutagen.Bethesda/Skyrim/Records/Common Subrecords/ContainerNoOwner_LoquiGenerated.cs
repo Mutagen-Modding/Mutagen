@@ -580,6 +580,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => ContainerNoOwner_Registration.Instance;
         UInt32 RawOwnerData { get; }
         IFormLinkGetter<IGlobalGetter> Global { get; }
 

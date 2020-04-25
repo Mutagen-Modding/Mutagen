@@ -667,6 +667,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Eye_Registration.Instance;
         String? Name { get; }
         String? Icon { get; }
         Eye.Flag? Flags { get; }

@@ -624,6 +624,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => SoundDataExtended_Registration.Instance;
         Single StaticAttenuation { get; }
         Single StopTime { get; }
         Single StartTime { get; }

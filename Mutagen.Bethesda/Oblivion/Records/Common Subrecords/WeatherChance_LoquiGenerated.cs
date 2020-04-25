@@ -595,6 +595,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => WeatherChance_Registration.Instance;
         IFormLinkGetter<IWeatherGetter> Weather { get; }
         Int32 Chance { get; }
 

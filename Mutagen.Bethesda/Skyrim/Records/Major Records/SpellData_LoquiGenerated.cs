@@ -820,6 +820,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => SpellData_Registration.Instance;
         UInt32 BaseCost { get; }
         SpellData.Flag Flags { get; }
         SpellData.SpellType Type { get; }

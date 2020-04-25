@@ -21,5 +21,12 @@ namespace Mutagen.Bethesda.UnitTests
                 (int)Group_FieldIndex.RecordCache,
                 new MaskItem<Exception?, IEnumerable<MaskItem<Exception, Npc.ErrorMask>>?>(null, null));
         }
+
+        [Fact]
+        public void RegistrationTest()
+        {
+            Assert.True(LoquiRegistration.TryLocateRegistration(typeof(Mutagen.Bethesda.Oblivion.INpcGetter), out var regis));
+            Assert.Same(Npc_Registration.Instance, regis);
+        }
     }
 }

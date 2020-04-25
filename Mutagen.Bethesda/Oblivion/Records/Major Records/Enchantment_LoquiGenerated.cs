@@ -757,6 +757,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Enchantment_Registration.Instance;
         String? Name { get; }
         IEnchantmentDataGetter? Data { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }

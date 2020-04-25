@@ -536,6 +536,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => AlchemicalApparatus_Registration.Instance;
 
     }
 

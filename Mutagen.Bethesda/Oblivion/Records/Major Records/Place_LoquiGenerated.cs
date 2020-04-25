@@ -524,6 +524,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Place_Registration.Instance;
 
     }
 

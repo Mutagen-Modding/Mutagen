@@ -523,6 +523,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Global_Registration.Instance;
 
         #region Mutagen
         Global.MajorFlag MajorFlags { get; }

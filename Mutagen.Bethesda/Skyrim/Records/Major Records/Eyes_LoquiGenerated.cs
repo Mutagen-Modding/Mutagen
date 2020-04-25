@@ -678,6 +678,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Eyes_Registration.Instance;
         String? Name { get; }
         String? Icon { get; }
         Eyes.Flag? Flags { get; }

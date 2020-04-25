@@ -551,6 +551,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => RegionDataMapName_Registration.Instance;
         String? MapName { get; }
 
     }

@@ -585,6 +585,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => GameSettingString_Registration.Instance;
         String? Data { get; }
 
     }

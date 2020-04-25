@@ -551,6 +551,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => AlphaLayer_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? AlphaLayerData { get; }
 
     }

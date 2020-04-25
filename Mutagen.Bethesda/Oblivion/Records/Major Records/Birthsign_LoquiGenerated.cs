@@ -786,6 +786,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Birthsign_Registration.Instance;
         String? Name { get; }
         String? Icon { get; }
         String? Description { get; }

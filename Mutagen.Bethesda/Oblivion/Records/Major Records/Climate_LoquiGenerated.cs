@@ -843,6 +843,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Climate_Registration.Instance;
         IReadOnlyList<IWeatherChanceGetter>? Weathers { get; }
         String? SunTexture { get; }
         String? SunGlareTexture { get; }

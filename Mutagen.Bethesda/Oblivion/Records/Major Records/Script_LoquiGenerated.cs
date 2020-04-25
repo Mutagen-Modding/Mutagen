@@ -593,6 +593,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Script_Registration.Instance;
         IScriptFieldsGetter Fields { get; }
 
     }

@@ -653,6 +653,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => SpellData_Registration.Instance;
         Spell.SpellType Type { get; }
         UInt32 Cost { get; }
         Spell.SpellLevel Level { get; }

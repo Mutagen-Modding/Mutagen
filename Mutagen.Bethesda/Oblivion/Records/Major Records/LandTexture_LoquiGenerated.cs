@@ -792,6 +792,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => LandTexture_Registration.Instance;
         String? Icon { get; }
         IHavokDataGetter? Havok { get; }
         Byte? TextureSpecularExponent { get; }

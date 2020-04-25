@@ -826,6 +826,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => LandTexture_Registration.Instance;
         IFormLinkNullableGetter<ITextureSetGetter> TextureSet { get; }
         IFormLinkNullableGetter<IMaterialTypeGetter> MaterialType { get; }
         IHavokDataGetter? HavokData { get; }

@@ -636,6 +636,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Model_Registration.Instance;
         IReadOnlyList<IAlternateTextureGetter>? AlternateTextures { get; }
 
     }

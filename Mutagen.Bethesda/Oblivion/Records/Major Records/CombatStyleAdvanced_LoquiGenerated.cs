@@ -1197,6 +1197,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => CombatStyleAdvanced_Registration.Instance;
         Single DodgeFatigueModMult { get; }
         Single DodgeFatigueModBase { get; }
         Single EncumbSpeedModBase { get; }

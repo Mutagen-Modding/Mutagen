@@ -762,6 +762,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => CellBlock_Registration.Instance;
         Int32 BlockNumber { get; }
         GroupTypeEnum GroupType { get; }
         ReadOnlyMemorySlice<Byte> LastModified { get; }

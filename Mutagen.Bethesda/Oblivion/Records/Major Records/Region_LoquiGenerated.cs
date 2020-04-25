@@ -1024,6 +1024,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Region_Registration.Instance;
         String? Icon { get; }
         Color? MapColor { get; }
         IFormLinkNullableGetter<IWorldspaceGetter> Worldspace { get; }

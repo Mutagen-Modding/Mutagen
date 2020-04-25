@@ -706,6 +706,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => AcousticSpace_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> AmbientSound { get; }
         IFormLinkNullableGetter<IRegionGetter> UseSoundFromRegion { get; }

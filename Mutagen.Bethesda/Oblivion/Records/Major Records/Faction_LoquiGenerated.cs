@@ -910,6 +910,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Faction_Registration.Instance;
         String? Name { get; }
         IReadOnlyList<IRelationGetter> Relations { get; }
         Faction.FactionFlag? Flags { get; }

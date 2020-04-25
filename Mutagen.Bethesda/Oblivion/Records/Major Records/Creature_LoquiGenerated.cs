@@ -2027,6 +2027,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Creature_Registration.Instance;
         String? Name { get; }
         IModelGetter? Model { get; }
         IReadOnlyList<IItemEntryGetter> Items { get; }

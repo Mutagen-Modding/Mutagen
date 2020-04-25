@@ -692,6 +692,7 @@ namespace Mutagen.Bethesda.Tests
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => Target_Registration.Instance;
         Boolean Do { get; }
         String Path { get; }
         Byte NumMasters { get; }

@@ -650,6 +650,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => FacePart_Registration.Instance;
         Race.FaceIndex? Index { get; }
         IModelGetter? Model { get; }
         String? Icon { get; }

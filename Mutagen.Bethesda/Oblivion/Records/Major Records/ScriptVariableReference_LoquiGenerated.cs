@@ -535,6 +535,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => ScriptVariableReference_Registration.Instance;
         Int32 VariableIndex { get; }
 
     }

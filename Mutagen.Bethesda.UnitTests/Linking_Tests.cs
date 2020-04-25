@@ -14,7 +14,19 @@ using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests
 {
-    public class Linking_Tests
+    public class LinkingInit : IDisposable
+    {
+        public LinkingInit()
+        {
+            Warmup.Init();
+        }
+
+        public void Dispose()
+        {
+        }
+    }
+
+    public class Linking_Tests : IClassFixture<LinkingInit>
     {
         public static FormKey UnusedFormKey = new FormKey(Utility.ModKey, 123456);
         public static string PathToTestFile = "../../../test.esp";
@@ -35,7 +47,16 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.False(package.TryLookup<IMajorRecordCommonGetter>(FormKey.Null, out var _));
             Assert.False(package.TryLookup<IOblivionMajorRecordGetter>(UnusedFormKey, out var _));
             Assert.False(package.TryLookup<IOblivionMajorRecordGetter>(FormKey.Null, out var _));
-            Assert.False(package.TryLookup<INpcGetter>(UnusedFormKey, out var _));
+            try
+            {
+                Assert.False(package.TryLookup<INpcGetter>(UnusedFormKey, out var _));
+            }
+            catch (Exception ex)
+            {
+                int wer = 23;
+                wer++;
+                Assert.False(package.TryLookup<INpcGetter>(UnusedFormKey, out var _));
+            }
             Assert.False(package.TryLookup<INpcGetter>(FormKey.Null, out var _));
             Assert.False(package.TryLookup<Npc>(UnusedFormKey, out var _));
             Assert.False(package.TryLookup<Npc>(FormKey.Null, out var _));

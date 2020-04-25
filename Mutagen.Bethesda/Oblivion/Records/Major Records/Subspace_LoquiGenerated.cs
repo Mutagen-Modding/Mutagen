@@ -585,6 +585,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Subspace_Registration.Instance;
         P3Float? Point { get; }
 
     }

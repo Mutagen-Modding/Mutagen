@@ -673,6 +673,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => RegionDataSounds_Registration.Instance;
         MusicType? MusicType { get; }
         IReadOnlyList<IRegionSoundGetter>? Sounds { get; }
 

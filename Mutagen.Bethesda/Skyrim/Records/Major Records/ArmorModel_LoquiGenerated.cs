@@ -656,6 +656,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => ArmorModel_Registration.Instance;
         IModelGetter? Model { get; }
         String? LargeIconFilename { get; }
         String? SmallIconFilename { get; }

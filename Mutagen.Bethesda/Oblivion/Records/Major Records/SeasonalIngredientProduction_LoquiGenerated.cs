@@ -653,6 +653,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => SeasonalIngredientProduction_Registration.Instance;
         Byte Spring { get; }
         Byte Summer { get; }
         Byte Fall { get; }

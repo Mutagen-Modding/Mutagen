@@ -871,6 +871,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => IdleAnimation_Registration.Instance;
         IModelGetter? Model { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         IdleAnimation.AnimationGroupSectionEnum? AnimationGroupSection { get; }

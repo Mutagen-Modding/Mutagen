@@ -653,6 +653,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => FogDistance_Registration.Instance;
         Single DayNear { get; }
         Single DayFar { get; }
         Single NightNear { get; }

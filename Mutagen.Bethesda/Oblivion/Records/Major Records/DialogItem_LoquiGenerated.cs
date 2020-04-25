@@ -1299,6 +1299,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => DialogItem_Registration.Instance;
         IDialogItemDataGetter? Data { get; }
         IFormLinkNullableGetter<IQuestGetter> Quest { get; }
         IFormLinkNullableGetter<IDialogItemGetter> PreviousTopic { get; }

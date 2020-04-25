@@ -626,6 +626,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => ScriptFloatListProperty_Registration.Instance;
         IReadOnlyList<Single> Data { get; }
 
     }

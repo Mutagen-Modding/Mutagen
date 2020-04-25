@@ -1058,6 +1058,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Weather_Registration.Instance;
         String? TextureLowerLayer { get; }
         String? TextureUpperLayer { get; }
         IModelGetter? Model { get; }

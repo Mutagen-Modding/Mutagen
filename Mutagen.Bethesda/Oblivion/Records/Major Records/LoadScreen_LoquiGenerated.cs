@@ -747,6 +747,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => LoadScreen_Registration.Instance;
         String? Icon { get; }
         String? Description { get; }
         IReadOnlyList<ILoadScreenLocationGetter> Locations { get; }

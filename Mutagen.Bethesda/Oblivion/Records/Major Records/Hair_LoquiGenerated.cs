@@ -715,6 +715,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Hair_Registration.Instance;
         String? Name { get; }
         IModelGetter? Model { get; }
         String? Icon { get; }

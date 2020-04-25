@@ -717,6 +717,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Class_Registration.Instance;
         String? Name { get; }
         String? Description { get; }
         String? Icon { get; }

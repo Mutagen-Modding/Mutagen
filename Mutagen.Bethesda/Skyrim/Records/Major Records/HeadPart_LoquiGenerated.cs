@@ -1036,6 +1036,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => HeadPart_Registration.Instance;
         String? Name { get; }
         IModelGetter? Model { get; }
         HeadPart.Flag? Flags { get; }

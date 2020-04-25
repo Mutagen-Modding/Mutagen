@@ -650,6 +650,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => WeatherType_Registration.Instance;
         Color Sunrise { get; }
         Color Day { get; }
         Color Sunset { get; }

@@ -628,6 +628,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => VendorLocation_Registration.Instance;
         VendorLocation.LocationType Type { get; }
         IFormLinkGetter<ISkyrimMajorRecordGetter> Reference { get; }
         UInt32 Radius { get; }

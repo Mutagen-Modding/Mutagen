@@ -592,6 +592,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => ConditionGlobal_Registration.Instance;
         IFormLinkGetter<IGlobalGetter> ComparisonValue { get; }
         IConditionDataGetter Data { get; }
 

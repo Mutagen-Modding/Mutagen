@@ -775,6 +775,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => LogEntry_Registration.Instance;
         LogEntry.Flag? Flags { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         String? Entry { get; }

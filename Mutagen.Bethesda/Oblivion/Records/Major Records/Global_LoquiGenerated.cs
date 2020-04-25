@@ -512,6 +512,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Global_Registration.Instance;
 
     }
 

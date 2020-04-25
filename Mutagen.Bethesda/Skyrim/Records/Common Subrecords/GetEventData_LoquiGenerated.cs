@@ -745,6 +745,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => GetEventData_Registration.Instance;
         UInt16 Unknown2 { get; }
         UInt16 EventFunction { get; }
         UInt16 EventMember { get; }

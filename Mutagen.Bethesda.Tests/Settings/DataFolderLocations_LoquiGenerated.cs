@@ -545,6 +545,7 @@ namespace Mutagen.Bethesda.Tests
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => DataFolderLocations_Registration.Instance;
         String Oblivion { get; }
         String Skyrim { get; }
 

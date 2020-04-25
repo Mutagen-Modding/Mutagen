@@ -630,6 +630,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => RegionDataGrasses_Registration.Instance;
         IReadOnlyList<IFormLinkGetter<IGrassGetter>>? Grasses { get; }
 
     }

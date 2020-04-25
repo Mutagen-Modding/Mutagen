@@ -1005,6 +1005,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => CreatureData_Registration.Instance;
         Creature.CreatureTypeEnum CreatureType { get; }
         Byte CombatSkill { get; }
         Byte MagicSkill { get; }

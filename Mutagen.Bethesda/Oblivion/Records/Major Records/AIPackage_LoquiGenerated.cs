@@ -859,6 +859,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => AIPackage_Registration.Instance;
         IAIPackageDataGetter? Data { get; }
         IAIPackageLocationGetter? Location { get; }
         IAIPackageScheduleGetter? Schedule { get; }

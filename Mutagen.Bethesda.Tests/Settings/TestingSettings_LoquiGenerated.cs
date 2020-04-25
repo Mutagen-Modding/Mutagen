@@ -845,6 +845,7 @@ namespace Mutagen.Bethesda.Tests
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => TestingSettings_Registration.Instance;
         Boolean TestGroupMasks { get; }
         Boolean TestFlattenedMod { get; }
         Boolean TestBenchmarks { get; }

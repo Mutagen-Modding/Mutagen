@@ -516,6 +516,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => ASpell_Registration.Instance;
 
     }
 

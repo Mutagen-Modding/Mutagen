@@ -1318,6 +1318,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => HeadData_Registration.Instance;
         IReadOnlyList<IHeadPartReferenceGetter> HeadParts { get; }
         IAvailableMorphsGetter? AvailableMorphs { get; }
         IReadOnlyList<IFormLinkGetter<INpcGetter>>? RacePresets { get; }

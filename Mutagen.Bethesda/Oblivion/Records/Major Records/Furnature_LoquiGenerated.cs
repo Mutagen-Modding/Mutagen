@@ -714,6 +714,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Furnature_Registration.Instance;
         String? Name { get; }
         IModelGetter? Model { get; }
         IFormLinkNullableGetter<IScriptGetter> Script { get; }

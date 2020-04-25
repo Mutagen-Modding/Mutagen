@@ -589,6 +589,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => QuestData_Registration.Instance;
         Quest.Flag Flags { get; }
         Byte Priority { get; }
 

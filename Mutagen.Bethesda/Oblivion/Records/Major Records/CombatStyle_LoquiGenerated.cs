@@ -641,6 +641,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => CombatStyle_Registration.Instance;
         ICombatStyleDataGetter? Data { get; }
         ICombatStyleAdvancedGetter? Advanced { get; }
 

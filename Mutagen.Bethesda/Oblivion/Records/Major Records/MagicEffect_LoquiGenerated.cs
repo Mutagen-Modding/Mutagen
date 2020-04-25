@@ -882,6 +882,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => MagicEffect_Registration.Instance;
         String? Name { get; }
         String? Description { get; }
         String? Icon { get; }

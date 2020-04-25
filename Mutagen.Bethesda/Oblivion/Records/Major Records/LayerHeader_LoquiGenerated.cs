@@ -640,6 +640,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => LayerHeader_Registration.Instance;
         IFormLinkGetter<ILandTextureGetter> Texture { get; }
         AlphaLayer.QuadrantEnum Quadrant { get; }
         UInt16 LayerNumber { get; }

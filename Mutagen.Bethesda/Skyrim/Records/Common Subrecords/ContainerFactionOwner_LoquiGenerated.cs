@@ -580,6 +580,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => ContainerFactionOwner_Registration.Instance;
         IFormLinkGetter<IFactionGetter> Faction { get; }
         Int32 RequiredRank { get; }
 

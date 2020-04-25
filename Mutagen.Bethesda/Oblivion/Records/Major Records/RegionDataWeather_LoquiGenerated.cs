@@ -633,6 +633,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => RegionDataWeather_Registration.Instance;
         IReadOnlyList<IWeatherChanceGetter>? Weathers { get; }
 
     }

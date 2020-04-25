@@ -945,6 +945,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Landscape_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? Unknown { get; }
         ReadOnlyMemorySlice<Byte>? VertexNormals { get; }
         ReadOnlyMemorySlice<Byte>? VertexHeightMap { get; }

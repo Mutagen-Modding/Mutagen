@@ -758,6 +758,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Flora_Registration.Instance;
         String? Name { get; }
         IModelGetter? Model { get; }
         IFormLinkNullableGetter<IScriptGetter> Script { get; }

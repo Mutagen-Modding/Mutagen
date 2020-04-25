@@ -1213,6 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => ModHeader_Registration.Instance;
         ModHeader.HeaderFlag Flags { get; }
         UInt32 FormID { get; }
         Int32 Version { get; }

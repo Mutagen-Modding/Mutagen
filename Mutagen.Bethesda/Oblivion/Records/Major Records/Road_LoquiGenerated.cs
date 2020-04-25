@@ -664,6 +664,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Road_Registration.Instance;
         IReadOnlyList<IRoadPointGetter>? Points { get; }
 
     }

@@ -588,6 +588,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => ActionRecord_Registration.Instance;
         Color? Color { get; }
 
     }

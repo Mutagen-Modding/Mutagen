@@ -1322,6 +1322,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => FaceFxPhonemes_Registration.Instance;
         Boolean LipMode { get; }
         IPhonemeGetter? Aah_LipBigAah { get; }
         IPhonemeGetter? BigAah_LipDST { get; }

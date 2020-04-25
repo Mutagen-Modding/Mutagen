@@ -1943,6 +1943,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Npc_Registration.Instance;
         String? Name { get; }
         IModelGetter? Model { get; }
         INpcConfigurationGetter? Configuration { get; }

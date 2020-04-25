@@ -881,6 +881,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => SigilStone_Registration.Instance;
         String? Name { get; }
         IModelGetter? Model { get; }
         String? Icon { get; }

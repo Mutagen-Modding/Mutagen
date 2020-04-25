@@ -536,6 +536,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Ingestible_Registration.Instance;
 
     }
 

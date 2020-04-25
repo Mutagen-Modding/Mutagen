@@ -531,6 +531,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => BookSkill_Registration.Instance;
         Skill Skill { get; }
 
     }

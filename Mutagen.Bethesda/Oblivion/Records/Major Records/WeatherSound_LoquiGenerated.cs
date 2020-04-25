@@ -596,6 +596,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => WeatherSound_Registration.Instance;
         IFormLinkGetter<ISoundGetter> Sound { get; }
         WeatherSound.SoundType Type { get; }
 

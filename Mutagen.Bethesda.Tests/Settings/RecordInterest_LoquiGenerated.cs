@@ -713,6 +713,7 @@ namespace Mutagen.Bethesda.Tests
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => RecordInterest_Registration.Instance;
         IReadOnlyList<String> InterestingTypes { get; }
         IReadOnlyList<String> UninterestingTypes { get; }
 

@@ -687,6 +687,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => CreatureSound_Registration.Instance;
         CreatureSound.CreatureSoundType? SoundType { get; }
         IReadOnlyList<ISoundItemGetter> Sounds { get; }
 

@@ -588,6 +588,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => SkyrimMajorRecord_Registration.Instance;
         UInt16 FormVersion { get; }
         UInt16 Version2 { get; }
 

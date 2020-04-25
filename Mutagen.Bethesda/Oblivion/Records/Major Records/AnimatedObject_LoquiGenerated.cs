@@ -632,6 +632,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => AnimatedObject_Registration.Instance;
         IModelGetter? Model { get; }
         IFormLinkNullableGetter<IIdleAnimationGetter> IdleAnimation { get; }
 

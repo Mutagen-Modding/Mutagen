@@ -840,6 +840,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Water_Registration.Instance;
         String? Texture { get; }
         Byte? Opacity { get; }
         Water.Flag? Flags { get; }

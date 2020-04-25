@@ -1485,6 +1485,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => NpcData_Registration.Instance;
         Byte Armorer { get; }
         Byte Athletics { get; }
         Byte Blade { get; }

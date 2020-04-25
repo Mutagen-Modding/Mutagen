@@ -2870,6 +2870,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => Race_Registration.Instance;
         String? Name { get; }
         String? Description { get; }
         IReadOnlyList<IFormLinkGetter<IASpellGetter>>? ActorEffect { get; }

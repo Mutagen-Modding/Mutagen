@@ -750,6 +750,7 @@ namespace Mutagen.Bethesda.Oblivion
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
+        static ILoquiRegistration Registration => ClimateData_Registration.Instance;
         DateTime SunriseBegin { get; }
         DateTime SunriseEnd { get; }
         DateTime SunsetBegin { get; }

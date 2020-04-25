@@ -809,6 +809,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => ObjectEffect_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
         String? Name { get; }
         IObjectEffectDataGetter? Data { get; }

@@ -633,6 +633,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkContainer,
         IBinaryItem
     {
+        static ILoquiRegistration Registration => RegionDataObjects_Registration.Instance;
         IReadOnlyList<IRegionDataObjectGetter>? Objects { get; }
 
     }
