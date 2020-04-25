@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IFloraInternal,
         ILoquiObjectSetter<Flora>,
-        INamed,
         IEquatable<Flora>,
         IEqualsMask
     {
@@ -734,6 +733,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IFlora :
         IFloraGetter,
         IOblivionMajorRecord,
+        INamed,
         ILoquiObjectSetter<IFloraInternal>
     {
         new String? Name { get; set; }
@@ -752,6 +752,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IFloraGetter :
         IOblivionMajorRecordGetter,
+        INamedGetter,
         ILoquiObject<IFloraGetter>,
         IXmlItem,
         ILinkContainer,

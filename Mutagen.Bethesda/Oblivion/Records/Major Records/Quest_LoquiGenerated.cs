@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IQuestInternal,
         ILoquiObjectSetter<Quest>,
-        INamed,
         IEquatable<Quest>,
         IEqualsMask
     {
@@ -1045,6 +1044,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IQuest :
         IQuestGetter,
         IOblivionMajorRecord,
+        INamed,
         ILoquiObjectSetter<IQuestInternal>
     {
         new IFormLinkNullable<Script> Script { get; }
@@ -1065,6 +1065,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IQuestGetter :
         IOblivionMajorRecordGetter,
+        INamedGetter,
         ILoquiObject<IQuestGetter>,
         IXmlItem,
         ILinkContainer,

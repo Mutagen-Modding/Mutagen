@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IMagicEffectInternal,
         ILoquiObjectSetter<MagicEffect>,
-        INamed,
         IEquatable<MagicEffect>,
         IEqualsMask
     {
@@ -857,6 +856,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IMagicEffect :
         IMagicEffectGetter,
         IOblivionMajorRecord,
+        INamed,
         ILoquiObjectSetter<IMagicEffectInternal>
     {
         new String? Name { get; set; }
@@ -876,6 +876,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IMagicEffectGetter :
         IOblivionMajorRecordGetter,
+        INamedGetter,
         ILoquiObject<IMagicEffectGetter>,
         IXmlItem,
         ILinkContainer,

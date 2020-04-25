@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IContainerInternal,
         ILoquiObjectSetter<Container>,
-        INamed,
         IEquatable<Container>,
         IEqualsMask
     {
@@ -887,6 +886,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IContainer :
         IContainerGetter,
         IOblivionMajorRecord,
+        INamed,
         ILoquiObjectSetter<IContainerInternal>
     {
         new String? Name { get; set; }
@@ -907,6 +907,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IContainerGetter :
         IOblivionMajorRecordGetter,
+        INamedGetter,
         ILoquiObject<IContainerGetter>,
         IXmlItem,
         ILinkContainer,

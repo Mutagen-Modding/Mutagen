@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IArmorInternal,
         ILoquiObjectSetter<Armor>,
-        INamed,
         IEquatable<Armor>,
         IEqualsMask
     {
@@ -87,7 +86,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected IFormLinkNullable<IEffectRecord> _ObjectEffect = new FormLinkNullable<IEffectRecord>();
         public IFormLinkNullable<IEffectRecord> ObjectEffect => this._ObjectEffect;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IEffectRecord> IArmorGetter.ObjectEffect => this.ObjectEffect;
+        IFormLinkNullableGetter<IEffectRecordGetter> IArmorGetter.ObjectEffect => this.ObjectEffect;
         #endregion
         #region EnchantmentAmount
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1521,6 +1520,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IArmor :
         IArmorGetter,
         ISkyrimMajorRecord,
+        INamed,
         ILoquiObjectSetter<IArmorInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -1560,6 +1560,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IArmorGetter :
         ISkyrimMajorRecordGetter,
+        INamedGetter,
         ILoquiObject<IArmorGetter>,
         IXmlItem,
         ILinkContainer,
@@ -1568,7 +1569,7 @@ namespace Mutagen.Bethesda.Skyrim
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         IObjectBoundsGetter ObjectBounds { get; }
         String? Name { get; }
-        IFormLinkNullableGetter<IEffectRecord> ObjectEffect { get; }
+        IFormLinkNullableGetter<IEffectRecordGetter> ObjectEffect { get; }
         UInt16? EnchantmentAmount { get; }
         IGenderedItemGetter<IArmorModelGetter?>? WorldModel { get; }
         IBodyTemplateGetter? BodyTemplate { get; }
@@ -4856,7 +4857,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ObjectEffect
         private int? _ObjectEffectLocation;
         public bool ObjectEffect_IsSet => _ObjectEffectLocation.HasValue;
-        public IFormLinkNullableGetter<IEffectRecord> ObjectEffect => _ObjectEffectLocation.HasValue ? new FormLinkNullable<IEffectRecord>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ObjectEffectLocation.Value, _package.Meta)))) : FormLinkNullable<IEffectRecord>.Empty;
+        public IFormLinkNullableGetter<IEffectRecordGetter> ObjectEffect => _ObjectEffectLocation.HasValue ? new FormLinkNullable<IEffectRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ObjectEffectLocation.Value, _package.Meta)))) : FormLinkNullable<IEffectRecordGetter>.Empty;
         #endregion
         #region EnchantmentAmount
         private int? _EnchantmentAmountLocation;

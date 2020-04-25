@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IDialogTopicInternal,
         ILoquiObjectSetter<DialogTopic>,
-        INamed,
         IEquatable<DialogTopic>,
         IEqualsMask
     {
@@ -889,6 +888,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IDialogTopic :
         IDialogTopicGetter,
         IOblivionMajorRecord,
+        INamed,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IDialogTopicInternal>
     {
@@ -908,6 +908,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IDialogTopicGetter :
         IOblivionMajorRecordGetter,
+        INamedGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IDialogTopicGetter>,
         IXmlItem,

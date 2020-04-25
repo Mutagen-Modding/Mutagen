@@ -18,7 +18,6 @@
   </Object>
   <Object name="Cell" recordType="CELL" baseClass="Place" objType="Record" customBinaryEnd="Normal" GUID="d54abb07-d896-4ddb-b857-9b9df945dd1e" ID="120">
     <Interface>INamed</Interface>
-    <Interface>IPlace</Interface>
     <Fields>
       <String name="Name" recordType="FULL" />
       <Enum name="Flags" enumName="Cell.Flag" byteLength="1" recordType="DATA" />
@@ -39,18 +38,15 @@
       <ByteArray name="Timestamp" binary="NoGeneration" byteLength="4" nullable="NotNull" />
       <ByteArray name="PersistentTimestamp" binary="NoGeneration" byteLength="4" nullable="NotNull" />
       <RefList name="Persistent" binary="NoGeneration" objType="Record" >
-        <Interface type="ISetter">IPlaced</Interface>
-        <Interface type="IGetter">IPlacedGetter</Interface>
+        <Interface>IPlaced</Interface>
       </RefList>
       <ByteArray name="TemporaryTimestamp" binary="NoGeneration" byteLength="4" nullable="NotNull" />
       <RefList name="Temporary" binary="NoGeneration" objType="Record" >
-        <Interface type="ISetter">IPlaced</Interface>
-        <Interface type="IGetter">IPlacedGetter</Interface>
+        <Interface>IPlaced</Interface>
       </RefList>
       <ByteArray name="VisibleWhenDistantTimestamp" binary="NoGeneration" byteLength="4" nullable="NotNull" />
       <RefList name="VisibleWhenDistant" binary="NoGeneration" objType="Record" >
-        <Interface type="ISetter">IPlaced</Interface>
-        <Interface type="IGetter">IPlacedGetter</Interface>
+        <Interface>IPlaced</Interface>
       </RefList>
     </Fields>
   </Object>

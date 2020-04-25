@@ -37,8 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         Place,
         IWorldspaceInternal,
         ILoquiObjectSetter<Worldspace>,
-        INamed,
-        IPlace,
         IEquatable<Worldspace>,
         IEqualsMask
     {
@@ -1247,6 +1245,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IWorldspace :
         IWorldspaceGetter,
         IPlace,
+        INamed,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IWorldspaceInternal>
     {
@@ -1277,6 +1276,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IWorldspaceGetter :
         IPlaceGetter,
+        INamedGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IWorldspaceGetter>,
         IXmlItem,

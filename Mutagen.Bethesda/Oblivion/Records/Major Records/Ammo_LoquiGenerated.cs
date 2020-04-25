@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         AItem,
         IAmmoInternal,
         ILoquiObjectSetter<Ammo>,
-        INamed,
         IEquatable<Ammo>,
         IEqualsMask
     {
@@ -777,6 +776,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IAmmo :
         IAmmoGetter,
         IAItem,
+        INamed,
         ILoquiObjectSetter<IAmmoInternal>
     {
         new String? Name { get; set; }
@@ -796,6 +796,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IAmmoGetter :
         IAItemGetter,
+        INamedGetter,
         ILoquiObject<IAmmoGetter>,
         IXmlItem,
         ILinkContainer,

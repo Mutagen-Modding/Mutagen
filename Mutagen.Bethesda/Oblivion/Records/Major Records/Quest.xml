@@ -35,8 +35,7 @@
   <Object name="QuestTargetData" objType="Subrecord" recordType="QSTA" GUID="e35b0594-8cec-4316-9e1b-ba136e9f8d05" ID="203">
     <Fields>
       <FormLink name="Target" objType="Record">
-        <Interface type="IGetter">IPlacedGetter</Interface>
-        <Interface type="ISetter">IPlaced</Interface>
+        <Interface>IPlaced</Interface>
       </FormLink>
       <Enum name="Flags" enumName="QuestTarget.Flag" byteLength="4" />
     </Fields>

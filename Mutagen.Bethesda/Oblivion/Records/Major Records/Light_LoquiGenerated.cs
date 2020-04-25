@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         AItem,
         ILightInternal,
         ILoquiObjectSetter<Light>,
-        INamed,
         IEquatable<Light>,
         IEqualsMask
     {
@@ -812,6 +811,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ILight :
         ILightGetter,
         IAItem,
+        INamed,
         ILoquiObjectSetter<ILightInternal>
     {
         new Model? Model { get; set; }
@@ -832,6 +832,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ILightGetter :
         IAItemGetter,
+        INamedGetter,
         ILoquiObject<ILightGetter>,
         IXmlItem,
         ILinkContainer,

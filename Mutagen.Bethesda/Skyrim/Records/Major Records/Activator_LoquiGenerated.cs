@@ -38,7 +38,6 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IActivatorInternal,
         ILoquiObjectSetter<Activator>,
-        INamed,
         IEquatable<Activator>,
         IEqualsMask
     {
@@ -1138,6 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IActivator :
         IActivatorGetter,
         ISkyrimMajorRecord,
+        INamed,
         ILoquiObjectSetter<IActivatorInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -1168,6 +1168,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IActivatorGetter :
         ISkyrimMajorRecordGetter,
+        INamedGetter,
         ILoquiObject<IActivatorGetter>,
         IXmlItem,
         ILinkContainer,

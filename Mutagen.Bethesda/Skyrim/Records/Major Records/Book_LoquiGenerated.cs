@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IBookInternal,
         ILoquiObjectSetter<Book>,
-        INamed,
         IEquatable<Book>,
         IEqualsMask
     {
@@ -1183,6 +1182,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IBook :
         IBookGetter,
         ISkyrimMajorRecord,
+        INamed,
         ILoquiObjectSetter<IBookInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -1210,6 +1210,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IBookGetter :
         ISkyrimMajorRecordGetter,
+        INamedGetter,
         ILoquiObject<IBookGetter>,
         IXmlItem,
         ILinkContainer,

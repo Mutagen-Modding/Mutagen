@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IFactionInternal,
         ILoquiObjectSetter<Faction>,
-        INamed,
         IEquatable<Faction>,
         IEqualsMask
     {
@@ -1386,6 +1385,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IFaction :
         IFactionGetter,
         ISkyrimMajorRecord,
+        INamed,
         ILoquiObjectSetter<IFactionInternal>
     {
         new String? Name { get; set; }
@@ -1415,6 +1415,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IFactionGetter :
         ISkyrimMajorRecordGetter,
+        INamedGetter,
         ILoquiObject<IFactionGetter>,
         IXmlItem,
         ILinkContainer,

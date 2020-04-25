@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         AItem,
         IBookInternal,
         ILoquiObjectSetter<Book>,
-        INamed,
         IEquatable<Book>,
         IEqualsMask
     {
@@ -851,6 +850,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IBook :
         IBookGetter,
         IAItem,
+        INamed,
         ILoquiObjectSetter<IBookInternal>
     {
         new String? Name { get; set; }
@@ -872,6 +872,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IBookGetter :
         IAItemGetter,
+        INamedGetter,
         ILoquiObject<IBookGetter>,
         IXmlItem,
         ILinkContainer,

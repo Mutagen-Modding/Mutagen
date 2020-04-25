@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         AItem,
         ISoulGemInternal,
         ILoquiObjectSetter<SoulGem>,
-        INamed,
         IEquatable<SoulGem>,
         IEqualsMask
     {
@@ -816,6 +815,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ISoulGem :
         ISoulGemGetter,
         IAItem,
+        INamed,
         ILoquiObjectSetter<ISoulGemInternal>
     {
         new String? Name { get; set; }
@@ -836,6 +836,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ISoulGemGetter :
         IAItemGetter,
+        INamedGetter,
         ILoquiObject<ISoulGemGetter>,
         IXmlItem,
         ILinkContainer,

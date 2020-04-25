@@ -17,8 +17,8 @@ namespace Mutagen.Bethesda.Generation
         public override async Task PostLoad(ObjectGeneration obj)
         {
             if (await HasMajorRecordsInTree(obj, false) == Case.No) return;
-            obj.Interfaces.Add(LoquiInterfaceType.IGetter, nameof(IMajorRecordGetterEnumerable));
-            obj.Interfaces.Add(LoquiInterfaceType.ISetter, nameof(IMajorRecordEnumerable));
+            obj.Interfaces.Add(LoquiInterfaceDefinitionType.IGetter, nameof(IMajorRecordGetterEnumerable));
+            obj.Interfaces.Add(LoquiInterfaceDefinitionType.ISetter, nameof(IMajorRecordEnumerable));
         }
 
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)

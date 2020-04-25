@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IClassInternal,
         ILoquiObjectSetter<Class>,
-        INamed,
         IEquatable<Class>,
         IEqualsMask
     {
@@ -695,6 +694,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IClass :
         IClassGetter,
         ISkyrimMajorRecord,
+        INamed,
         ILoquiObjectSetter<IClassInternal>
     {
         new String? Name { get; set; }
@@ -712,6 +712,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IClassGetter :
         ISkyrimMajorRecordGetter,
+        INamedGetter,
         ILoquiObject<IClassGetter>,
         IXmlItem,
         IBinaryItem

@@ -37,8 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         Place,
         ICellInternal,
         ILoquiObjectSetter<Cell>,
-        INamed,
-        IPlace,
         IEquatable<Cell>,
         IEqualsMask
     {
@@ -1683,6 +1681,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ICell :
         ICellGetter,
         IPlace,
+        INamed,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<ICellInternal>
     {
@@ -1718,6 +1717,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ICellGetter :
         IPlaceGetter,
+        INamedGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<ICellGetter>,
         IXmlItem,

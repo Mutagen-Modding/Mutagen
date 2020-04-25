@@ -4,7 +4,11 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public interface IEffectRecord : IMajorRecordCommonGetter
+    public interface IEffectRecord : IMajorRecordCommon, IEffectRecordGetter
+    {
+    }
+
+    public interface IEffectRecordGetter : IMajorRecordCommonGetter
     {
     }
 }

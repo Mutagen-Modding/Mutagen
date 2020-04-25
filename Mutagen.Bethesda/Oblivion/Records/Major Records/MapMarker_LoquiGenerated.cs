@@ -34,7 +34,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class MapMarker :
         IMapMarker,
         ILoquiObjectSetter<MapMarker>,
-        INamed,
         IEquatable<MapMarker>,
         IEqualsMask
     {
@@ -699,6 +698,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IMapMarker :
         IMapMarkerGetter,
+        INamed,
         ILoquiObjectSetter<IMapMarker>
     {
         new MapMarker.Flag? Flags { get; set; }
@@ -708,6 +708,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IMapMarkerGetter :
         ILoquiObject,
+        INamedGetter,
         ILoquiObject<IMapMarkerGetter>,
         IXmlItem,
         IBinaryItem

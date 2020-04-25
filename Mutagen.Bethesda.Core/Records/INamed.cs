@@ -9,11 +9,22 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// An interface implemented by Major Records that have names
     /// </summary>
-    public interface INamed
+    public interface INamed : INamedGetter
     {
         /// <summary>
         /// The display name of the record
         /// </summary>
-        String? Name { get; set; }
+        new String? Name { get; set; }
+    }
+
+    /// <summary>
+    /// An interface implemented by Major Records that have names
+    /// </summary>
+    public interface INamedGetter
+    {
+        /// <summary>
+        /// The display name of the record
+        /// </summary>
+        String? Name { get; }
     }
 }

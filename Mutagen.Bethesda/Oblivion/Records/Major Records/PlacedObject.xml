@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="PlacedObject" baseClass="OblivionMajorRecord" recordType="REFR" objType="Record" GUID="7a559a46-7ef9-49e9-98c1-ec16c3df81f2" ID="121">
-    <Interface type="IGetter">IPlacedGetter</Interface>
-    <Interface type="ISetter">IPlaced</Interface>
+    <Interface>IPlaced</Interface>
     <Fields>
       <FormLink name="Base" recordType="NAME" refName="OblivionMajorRecord" />
       <ByteArray name="XPCIFluff" recordType="XPCI" />
@@ -16,8 +15,7 @@
       <FormLink name="GlobalVariable" recordType="XGLB" refName="Global" />
       <RefDirect name="EnableParent" refName="EnableParent" />
       <FormLink name="Target" recordType="XTRG" objType="Record" >
-        <Interface type="IGetter">IPlacedGetter</Interface>
-        <Interface type="ISetter">IPlaced</Interface>
+        <Interface>IPlaced</Interface>
       </FormLink>
       <UInt8 name="SpeedTreeSeed" recordType="XSED" />
       <RefDirect name="DistantLODData" refName="DistantLODData" />
@@ -38,8 +36,7 @@
   <Object name="TeleportDestination" recordType="XTEL" objType="Subrecord" GUID="852c0c03-6606-4ae4-8733-4375d9cd1544" ID="122">
     <Fields>
       <FormLink name="Destination" objType="Record" >
-        <Interface type="ISetter">IPlaced</Interface>
-        <Interface type="IGetter">IPlacedGetter</Interface>
+        <Interface>IPlaced</Interface>
       </FormLink>
       <P3Float name="Position" />
       <P3Float name="Rotation" />

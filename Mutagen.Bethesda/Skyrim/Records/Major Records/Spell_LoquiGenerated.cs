@@ -37,8 +37,6 @@ namespace Mutagen.Bethesda.Skyrim
         ASpell,
         ISpellInternal,
         ILoquiObjectSetter<Spell>,
-        INamed,
-        IEffectRecord,
         IEquatable<Spell>,
         IEqualsMask
     {
@@ -1009,6 +1007,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ISpell :
         ISpellGetter,
         IASpell,
+        INamed,
+        IEffectRecord,
         ILoquiObjectSetter<ISpellInternal>
     {
         new ObjectBounds ObjectBounds { get; set; }
@@ -1030,6 +1030,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ISpellGetter :
         IASpellGetter,
+        INamedGetter,
+        IEffectRecordGetter,
         ILoquiObject<ISpellGetter>,
         IXmlItem,
         ILinkContainer,

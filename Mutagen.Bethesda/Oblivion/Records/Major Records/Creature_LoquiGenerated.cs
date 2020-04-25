@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         ANpc,
         ICreatureInternal,
         ILoquiObjectSetter<Creature>,
-        INamed,
         IEquatable<Creature>,
         IEqualsMask
     {
@@ -1985,6 +1984,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ICreature :
         ICreatureGetter,
         IANpc,
+        INamed,
         ILoquiObjectSetter<ICreatureInternal>
     {
         new String? Name { get; set; }
@@ -2021,6 +2021,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ICreatureGetter :
         IANpcGetter,
+        INamedGetter,
         ILoquiObject<ICreatureGetter>,
         IXmlItem,
         ILinkContainer,

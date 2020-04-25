@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IBirthsignInternal,
         ILoquiObjectSetter<Birthsign>,
-        INamed,
         IEquatable<Birthsign>,
         IEqualsMask
     {
@@ -763,6 +762,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IBirthsign :
         IBirthsignGetter,
         IOblivionMajorRecord,
+        INamed,
         ILoquiObjectSetter<IBirthsignInternal>
     {
         new String? Name { get; set; }
@@ -780,6 +780,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IBirthsignGetter :
         IOblivionMajorRecordGetter,
+        INamedGetter,
         ILoquiObject<IBirthsignGetter>,
         IXmlItem,
         ILinkContainer,

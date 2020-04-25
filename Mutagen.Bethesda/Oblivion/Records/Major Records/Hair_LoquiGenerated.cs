@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IHairInternal,
         ILoquiObjectSetter<Hair>,
-        INamed,
         IEquatable<Hair>,
         IEqualsMask
     {
@@ -693,6 +692,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IHair :
         IHairGetter,
         IOblivionMajorRecord,
+        INamed,
         ILoquiObjectSetter<IHairInternal>
     {
         new String? Name { get; set; }
@@ -710,6 +710,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IHairGetter :
         IOblivionMajorRecordGetter,
+        INamedGetter,
         ILoquiObject<IHairGetter>,
         IXmlItem,
         IBinaryItem

@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IEnchantmentInternal,
         ILoquiObjectSetter<Enchantment>,
-        INamed,
         IEquatable<Enchantment>,
         IEqualsMask
     {
@@ -735,6 +734,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IEnchantment :
         IEnchantmentGetter,
         IOblivionMajorRecord,
+        INamed,
         ILoquiObjectSetter<IEnchantmentInternal>
     {
         new String? Name { get; set; }
@@ -751,6 +751,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IEnchantmentGetter :
         IOblivionMajorRecordGetter,
+        INamedGetter,
         ILoquiObject<IEnchantmentGetter>,
         IXmlItem,
         ILinkContainer,

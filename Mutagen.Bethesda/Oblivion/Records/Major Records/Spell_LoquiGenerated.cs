@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         ASpell,
         ISpellInternal,
         ILoquiObjectSetter<Spell>,
-        INamed,
         IEquatable<Spell>,
         IEqualsMask
     {
@@ -549,6 +548,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface ISpell :
         ISpellGetter,
         IASpell,
+        INamed,
         ILoquiObjectSetter<ISpellInternal>
     {
         new String? Name { get; set; }
@@ -563,6 +563,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface ISpellGetter :
         IASpellGetter,
+        INamedGetter,
         ILoquiObject<ISpellGetter>,
         IXmlItem,
         ILinkContainer,

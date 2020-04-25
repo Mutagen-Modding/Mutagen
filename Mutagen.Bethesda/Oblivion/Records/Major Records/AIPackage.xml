@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="AIPackage" objType="Record" baseClass="OblivionMajorRecord" recordType="PACK" GUID="e9210f75-0cfe-4e96-8c3a-415255e0d359" ID="87">
     <Fields>
@@ -13,8 +13,7 @@
     <Fields>
       <Enum name="Type" enumName="AIPackageLocation.LocationType" byteLength="4" />
       <FormLink name="LocationReference" objType="Record">
-        <Interface type="IGetter">IPlacedGetter</Interface>
-        <Interface type="ISetter">IPlaced</Interface>
+        <Interface>IPlaced</Interface>
       </FormLink>
       <Float name="Radius" />
     </Fields>

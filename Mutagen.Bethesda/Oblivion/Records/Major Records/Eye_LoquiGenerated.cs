@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IEyeInternal,
         ILoquiObjectSetter<Eye>,
-        INamed,
         IEquatable<Eye>,
         IEqualsMask
     {
@@ -646,6 +645,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IEye :
         IEyeGetter,
         IOblivionMajorRecord,
+        INamed,
         ILoquiObjectSetter<IEyeInternal>
     {
         new String? Name { get; set; }
@@ -662,6 +662,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IEyeGetter :
         IOblivionMajorRecordGetter,
+        INamedGetter,
         ILoquiObject<IEyeGetter>,
         IXmlItem,
         IBinaryItem

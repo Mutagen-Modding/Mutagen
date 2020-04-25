@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IEyesInternal,
         ILoquiObjectSetter<Eyes>,
-        INamed,
         IEquatable<Eyes>,
         IEqualsMask
     {
@@ -653,6 +652,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IEyes :
         IEyesGetter,
         ISkyrimMajorRecord,
+        INamed,
         ILoquiObjectSetter<IEyesInternal>
     {
         new String? Name { get; set; }
@@ -673,6 +673,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IEyesGetter :
         ISkyrimMajorRecordGetter,
+        INamedGetter,
         ILoquiObject<IEyesGetter>,
         IXmlItem,
         IBinaryItem

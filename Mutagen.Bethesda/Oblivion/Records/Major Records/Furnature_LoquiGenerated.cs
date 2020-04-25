@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IFurnatureInternal,
         ILoquiObjectSetter<Furnature>,
-        INamed,
         IEquatable<Furnature>,
         IEqualsMask
     {
@@ -691,6 +690,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IFurnature :
         IFurnatureGetter,
         IOblivionMajorRecord,
+        INamed,
         ILoquiObjectSetter<IFurnatureInternal>
     {
         new String? Name { get; set; }
@@ -708,6 +708,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IFurnatureGetter :
         IOblivionMajorRecordGetter,
+        INamedGetter,
         ILoquiObject<IFurnatureGetter>,
         IXmlItem,
         ILinkContainer,

@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         OblivionMajorRecord,
         IRaceInternal,
         ILoquiObjectSetter<Race>,
-        INamed,
         IEquatable<Race>,
         IEqualsMask
     {
@@ -1610,6 +1609,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IRace :
         IRaceGetter,
         IOblivionMajorRecord,
+        INamed,
         ILoquiObjectSetter<IRaceInternal>
     {
         new String? Name { get; set; }
@@ -1644,6 +1644,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IRaceGetter :
         IOblivionMajorRecordGetter,
+        INamedGetter,
         ILoquiObject<IRaceGetter>,
         IXmlItem,
         ILinkContainer,

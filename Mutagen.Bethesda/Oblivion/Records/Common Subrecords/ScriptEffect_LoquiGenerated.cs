@@ -35,7 +35,6 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class ScriptEffect :
         IScriptEffect,
         ILoquiObjectSetter<ScriptEffect>,
-        INamed,
         IEquatable<ScriptEffect>,
         IEqualsMask
     {
@@ -598,6 +597,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IScriptEffect :
         IScriptEffectGetter,
+        INamed,
         ILoquiObjectSetter<IScriptEffect>
     {
         new ScriptEffectData? Data { get; set; }
@@ -606,6 +606,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IScriptEffectGetter :
         ILoquiObject,
+        INamedGetter,
         ILoquiObject<IScriptEffectGetter>,
         IXmlItem,
         ILinkContainer,

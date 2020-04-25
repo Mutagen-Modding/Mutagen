@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IRaceInternal,
         ILoquiObjectSetter<Race>,
-        INamed,
         IEquatable<Race>,
         IEqualsMask
     {
@@ -2799,6 +2798,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRace :
         IRaceGetter,
         ISkyrimMajorRecord,
+        INamed,
         ILoquiObjectSetter<IRaceInternal>
     {
         new String? Name { get; set; }
@@ -2864,6 +2864,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IRaceGetter :
         ISkyrimMajorRecordGetter,
+        INamedGetter,
         ILoquiObject<IRaceGetter>,
         IXmlItem,
         ILinkContainer,

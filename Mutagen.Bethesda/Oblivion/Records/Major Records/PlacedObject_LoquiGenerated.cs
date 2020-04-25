@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.Oblivion
         protected IFormLinkNullable<IOwner> _Owner = new FormLinkNullable<IOwner>();
         public IFormLinkNullable<IOwner> Owner => this._Owner;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IOwner> IPlacedObjectGetter.Owner => this.Owner;
+        IFormLinkNullableGetter<IOwnerGetter> IPlacedObjectGetter.Owner => this.Owner;
         #endregion
         #region FactionRank
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1531,7 +1531,7 @@ namespace Mutagen.Bethesda.Oblivion
         ReadOnlyMemorySlice<Byte>? FULLFluff { get; }
         ITeleportDestinationGetter? TeleportDestination { get; }
         ILockInformationGetter? Lock { get; }
-        IFormLinkNullableGetter<IOwner> Owner { get; }
+        IFormLinkNullableGetter<IOwnerGetter> Owner { get; }
         Int32? FactionRank { get; }
         IFormLinkNullableGetter<IGlobalGetter> GlobalVariable { get; }
         IEnableParentGetter? EnableParent { get; }
@@ -4878,7 +4878,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Owner
         private int? _OwnerLocation;
         public bool Owner_IsSet => _OwnerLocation.HasValue;
-        public IFormLinkNullableGetter<IOwner> Owner => _OwnerLocation.HasValue ? new FormLinkNullable<IOwner>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _OwnerLocation.Value, _package.Meta)))) : FormLinkNullable<IOwner>.Empty;
+        public IFormLinkNullableGetter<IOwnerGetter> Owner => _OwnerLocation.HasValue ? new FormLinkNullable<IOwnerGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _OwnerLocation.Value, _package.Meta)))) : FormLinkNullable<IOwnerGetter>.Empty;
         #endregion
         #region FactionRank
         private int? _FactionRankLocation;

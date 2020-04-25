@@ -37,8 +37,6 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IObjectEffectInternal,
         ILoquiObjectSetter<ObjectEffect>,
-        INamed,
-        IEffectRecord,
         IEquatable<ObjectEffect>,
         IEqualsMask
     {
@@ -785,6 +783,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IObjectEffect :
         IObjectEffectGetter,
         ISkyrimMajorRecord,
+        INamed,
+        IEffectRecord,
         ILoquiObjectSetter<IObjectEffectInternal>
     {
         new ObjectBounds ObjectBounds { get; set; }
@@ -802,6 +802,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IObjectEffectGetter :
         ISkyrimMajorRecordGetter,
+        INamedGetter,
+        IEffectRecordGetter,
         ILoquiObject<IObjectEffectGetter>,
         IXmlItem,
         ILinkContainer,

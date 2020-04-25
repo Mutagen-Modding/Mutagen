@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IHeadPartInternal,
         ILoquiObjectSetter<HeadPart>,
-        INamed,
         IEquatable<HeadPart>,
         IEqualsMask
     {
@@ -1005,6 +1004,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IHeadPart :
         IHeadPartGetter,
         ISkyrimMajorRecord,
+        INamed,
         ILoquiObjectSetter<IHeadPartInternal>
     {
         new String? Name { get; set; }
@@ -1030,6 +1030,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IHeadPartGetter :
         ISkyrimMajorRecordGetter,
+        INamedGetter,
         ILoquiObject<IHeadPartGetter>,
         IXmlItem,
         ILinkContainer,

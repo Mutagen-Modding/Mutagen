@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         AItem,
         IAClothingInternal,
         ILoquiObjectSetter<AClothing>,
-        INamed,
         IEquatable<AClothing>,
         IEqualsMask
     {
@@ -971,6 +970,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IAClothing :
         IAClothingGetter,
         IAItem,
+        INamed,
         ILoquiObjectSetter<IAClothingInternal>
     {
         new String? Name { get; set; }
@@ -995,6 +995,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IAClothingGetter :
         IAItemGetter,
+        INamedGetter,
         ILoquiObject<IAClothingGetter>,
         IXmlItem,
         ILinkContainer,

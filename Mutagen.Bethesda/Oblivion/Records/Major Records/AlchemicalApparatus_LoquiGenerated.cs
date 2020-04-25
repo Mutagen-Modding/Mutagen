@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Oblivion
         AItem,
         IAlchemicalApparatusInternal,
         ILoquiObjectSetter<AlchemicalApparatus>,
-        INamed,
         IEquatable<AlchemicalApparatus>,
         IEqualsMask
     {
@@ -738,6 +737,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IAlchemicalApparatus :
         IAlchemicalApparatusGetter,
         IAItem,
+        INamed,
         ILoquiObjectSetter<IAlchemicalApparatusInternal>
     {
         new String? Name { get; set; }
@@ -756,6 +756,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IAlchemicalApparatusGetter :
         IAItemGetter,
+        INamedGetter,
         ILoquiObject<IAlchemicalApparatusGetter>,
         IXmlItem,
         ILinkContainer,

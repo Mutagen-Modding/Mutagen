@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Landscape" recordType="LAND" objType="Record" baseClass="OblivionMajorRecord" GUID="f03a09c7-ce1f-4764-ac9a-bccccfa481d4" ID="143">
-    <Interface type="IGetter">IPlacedGetter</Interface>
-    <Interface type="ISetter">IPlaced</Interface>
+    <Interface>IPlaced</Interface>
     <Fields>
       <ByteArray name="Unknown" recordType="DATA" />
       <ByteArray name="VertexNormals" recordType="VNML" />

@@ -37,7 +37,6 @@ namespace Mutagen.Bethesda.Skyrim
         SkyrimMajorRecord,
         IMagicEffectInternal,
         ILoquiObjectSetter<MagicEffect>,
-        INamed,
         IEquatable<MagicEffect>,
         IEqualsMask
     {
@@ -1206,6 +1205,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IMagicEffect :
         IMagicEffectGetter,
         ISkyrimMajorRecord,
+        INamed,
         ILoquiObjectSetter<IMagicEffectInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -1228,6 +1228,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IMagicEffectGetter :
         ISkyrimMajorRecordGetter,
+        INamedGetter,
         ILoquiObject<IMagicEffectGetter>,
         IXmlItem,
         ILinkContainer,
