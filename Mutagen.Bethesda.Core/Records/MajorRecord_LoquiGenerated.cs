@@ -1290,6 +1290,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType IPDS_HEADER = new RecordType("IPDS");
         public static readonly RecordType KYWD_HEADER = new RecordType("KYWD");
         public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
+        public static readonly RecordType MATO_HEADER = new RecordType("MATO");
         public static readonly RecordType MATT_HEADER = new RecordType("MATT");
         public static readonly RecordType MOVT_HEADER = new RecordType("MOVT");
         public static readonly RecordType OTFT_HEADER = new RecordType("OTFT");
@@ -1401,6 +1402,7 @@ namespace Mutagen.Bethesda.Internals
                         IPDS_HEADER,
                         KYWD_HEADER,
                         LCRT_HEADER,
+                        MATO_HEADER,
                         MATT_HEADER,
                         MOVT_HEADER,
                         OTFT_HEADER,

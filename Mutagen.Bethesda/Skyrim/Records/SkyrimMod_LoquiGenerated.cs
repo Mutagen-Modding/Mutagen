@@ -71,6 +71,8 @@ namespace Mutagen.Bethesda.Skyrim
             _Ingredients_Object = new Group<Ingredient>(this);
             _Lights_Object = new Group<Light>(this);
             _MiscItems_Object = new Group<MiscItem>(this);
+            _AlchemicalApparatuses_Object = new Group<AlchemicalApparatus>(this);
+            _Statics_Object = new Group<Static>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -279,6 +281,20 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IMiscItemGetter> ISkyrimModGetter.MiscItems => _MiscItems_Object;
         #endregion
+        #region AlchemicalApparatuses
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<AlchemicalApparatus> _AlchemicalApparatuses_Object;
+        public Group<AlchemicalApparatus> AlchemicalApparatuses => _AlchemicalApparatuses_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IAlchemicalApparatusGetter> ISkyrimModGetter.AlchemicalApparatuses => _AlchemicalApparatuses_Object;
+        #endregion
+        #region Statics
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Static> _Statics_Object;
+        public Group<Static> Statics => _Statics_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IStaticGetter> ISkyrimModGetter.Statics => _Statics_Object;
+        #endregion
 
         #region To String
 
@@ -478,6 +494,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Ingredients = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Lights = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.MiscItems = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.AlchemicalApparatuses = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Statics = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -509,7 +527,9 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Doors,
                 TItem Ingredients,
                 TItem Lights,
-                TItem MiscItems)
+                TItem MiscItems,
+                TItem AlchemicalApparatuses,
+                TItem Statics)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -540,6 +560,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Ingredients = new MaskItem<TItem, Group.Mask<TItem>?>(Ingredients, new Group.Mask<TItem>(Ingredients));
                 this.Lights = new MaskItem<TItem, Group.Mask<TItem>?>(Lights, new Group.Mask<TItem>(Lights));
                 this.MiscItems = new MaskItem<TItem, Group.Mask<TItem>?>(MiscItems, new Group.Mask<TItem>(MiscItems));
+                this.AlchemicalApparatuses = new MaskItem<TItem, Group.Mask<TItem>?>(AlchemicalApparatuses, new Group.Mask<TItem>(AlchemicalApparatuses));
+                this.Statics = new MaskItem<TItem, Group.Mask<TItem>?>(Statics, new Group.Mask<TItem>(Statics));
             }
 
             #pragma warning disable CS8618
@@ -580,6 +602,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? Ingredients { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Lights { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? MiscItems { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? AlchemicalApparatuses { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Statics { get; set; }
             #endregion
 
             #region Equals
@@ -621,6 +645,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Ingredients, rhs.Ingredients)) return false;
                 if (!object.Equals(this.Lights, rhs.Lights)) return false;
                 if (!object.Equals(this.MiscItems, rhs.MiscItems)) return false;
+                if (!object.Equals(this.AlchemicalApparatuses, rhs.AlchemicalApparatuses)) return false;
+                if (!object.Equals(this.Statics, rhs.Statics)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -655,6 +681,8 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Ingredients);
                 hash.Add(this.Lights);
                 hash.Add(this.MiscItems);
+                hash.Add(this.AlchemicalApparatuses);
+                hash.Add(this.Statics);
                 return hash.ToHashCode();
             }
 
@@ -808,6 +836,16 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.MiscItems.Overall)) return false;
                     if (this.MiscItems.Specific != null && !this.MiscItems.Specific.All(eval)) return false;
                 }
+                if (AlchemicalApparatuses != null)
+                {
+                    if (!eval(this.AlchemicalApparatuses.Overall)) return false;
+                    if (this.AlchemicalApparatuses.Specific != null && !this.AlchemicalApparatuses.Specific.All(eval)) return false;
+                }
+                if (Statics != null)
+                {
+                    if (!eval(this.Statics.Overall)) return false;
+                    if (this.Statics.Specific != null && !this.Statics.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -960,6 +998,16 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.MiscItems.Overall)) return true;
                     if (this.MiscItems.Specific != null && this.MiscItems.Specific.Any(eval)) return true;
                 }
+                if (AlchemicalApparatuses != null)
+                {
+                    if (eval(this.AlchemicalApparatuses.Overall)) return true;
+                    if (this.AlchemicalApparatuses.Specific != null && this.AlchemicalApparatuses.Specific.Any(eval)) return true;
+                }
+                if (Statics != null)
+                {
+                    if (eval(this.Statics.Overall)) return true;
+                    if (this.Statics.Specific != null && this.Statics.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1003,6 +1051,8 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Ingredients = this.Ingredients == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Ingredients.Overall), this.Ingredients.Specific?.Translate(eval));
                 obj.Lights = this.Lights == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Lights.Overall), this.Lights.Specific?.Translate(eval));
                 obj.MiscItems = this.MiscItems == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.MiscItems.Overall), this.MiscItems.Specific?.Translate(eval));
+                obj.AlchemicalApparatuses = this.AlchemicalApparatuses == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.AlchemicalApparatuses.Overall), this.AlchemicalApparatuses.Specific?.Translate(eval));
+                obj.Statics = this.Statics == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Statics.Overall), this.Statics.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1141,6 +1191,14 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         MiscItems?.ToString(fg);
                     }
+                    if (printMask?.AlchemicalApparatuses?.Overall ?? true)
+                    {
+                        AlchemicalApparatuses?.ToString(fg);
+                    }
+                    if (printMask?.Statics?.Overall ?? true)
+                    {
+                        Statics?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -1195,6 +1253,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<Ingredient.ErrorMask>?>? Ingredients;
             public MaskItem<Exception?, Group.ErrorMask<Light.ErrorMask>?>? Lights;
             public MaskItem<Exception?, Group.ErrorMask<MiscItem.ErrorMask>?>? MiscItems;
+            public MaskItem<Exception?, Group.ErrorMask<AlchemicalApparatus.ErrorMask>?>? AlchemicalApparatuses;
+            public MaskItem<Exception?, Group.ErrorMask<Static.ErrorMask>?>? Statics;
             #endregion
 
             #region IErrorMask
@@ -1261,6 +1321,10 @@ namespace Mutagen.Bethesda.Skyrim
                         return Lights;
                     case SkyrimMod_FieldIndex.MiscItems:
                         return MiscItems;
+                    case SkyrimMod_FieldIndex.AlchemicalApparatuses:
+                        return AlchemicalApparatuses;
+                    case SkyrimMod_FieldIndex.Statics:
+                        return Statics;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1357,6 +1421,12 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.MiscItems:
                         this.MiscItems = new MaskItem<Exception?, Group.ErrorMask<MiscItem.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.AlchemicalApparatuses:
+                        this.AlchemicalApparatuses = new MaskItem<Exception?, Group.ErrorMask<AlchemicalApparatus.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Statics:
+                        this.Statics = new MaskItem<Exception?, Group.ErrorMask<Static.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1455,6 +1525,12 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.MiscItems:
                         this.MiscItems = (MaskItem<Exception?, Group.ErrorMask<MiscItem.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.AlchemicalApparatuses:
+                        this.AlchemicalApparatuses = (MaskItem<Exception?, Group.ErrorMask<AlchemicalApparatus.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.Statics:
+                        this.Statics = (MaskItem<Exception?, Group.ErrorMask<Static.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1492,6 +1568,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Ingredients != null) return true;
                 if (Lights != null) return true;
                 if (MiscItems != null) return true;
+                if (AlchemicalApparatuses != null) return true;
+                if (Statics != null) return true;
                 return false;
             }
             #endregion
@@ -1555,6 +1633,8 @@ namespace Mutagen.Bethesda.Skyrim
                 Ingredients?.ToString(fg);
                 Lights?.ToString(fg);
                 MiscItems?.ToString(fg);
+                AlchemicalApparatuses?.ToString(fg);
+                Statics?.ToString(fg);
             }
             #endregion
 
@@ -1592,6 +1672,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Ingredients = this.Ingredients.Combine(rhs.Ingredients, (l, r) => l.Combine(r));
                 ret.Lights = this.Lights.Combine(rhs.Lights, (l, r) => l.Combine(r));
                 ret.MiscItems = this.MiscItems.Combine(rhs.MiscItems, (l, r) => l.Combine(r));
+                ret.AlchemicalApparatuses = this.AlchemicalApparatuses.Combine(rhs.AlchemicalApparatuses, (l, r) => l.Combine(r));
+                ret.Statics = this.Statics.Combine(rhs.Statics, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1642,6 +1724,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<Ingredient.TranslationMask>?> Ingredients;
             public MaskItem<bool, Group.TranslationMask<Light.TranslationMask>?> Lights;
             public MaskItem<bool, Group.TranslationMask<MiscItem.TranslationMask>?> MiscItems;
+            public MaskItem<bool, Group.TranslationMask<AlchemicalApparatus.TranslationMask>?> AlchemicalApparatuses;
+            public MaskItem<bool, Group.TranslationMask<Static.TranslationMask>?> Statics;
             #endregion
 
             #region Ctors
@@ -1676,6 +1760,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Ingredients = new MaskItem<bool, Group.TranslationMask<Ingredient.TranslationMask>?>(defaultOn, null);
                 this.Lights = new MaskItem<bool, Group.TranslationMask<Light.TranslationMask>?>(defaultOn, null);
                 this.MiscItems = new MaskItem<bool, Group.TranslationMask<MiscItem.TranslationMask>?>(defaultOn, null);
+                this.AlchemicalApparatuses = new MaskItem<bool, Group.TranslationMask<AlchemicalApparatus.TranslationMask>?>(defaultOn, null);
+                this.Statics = new MaskItem<bool, Group.TranslationMask<Static.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -1720,6 +1806,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Ingredients?.Overall ?? true, Ingredients?.Specific?.GetCrystal()));
                 ret.Add((Lights?.Overall ?? true, Lights?.Specific?.GetCrystal()));
                 ret.Add((MiscItems?.Overall ?? true, MiscItems?.Specific?.GetCrystal()));
+                ret.Add((AlchemicalApparatuses?.Overall ?? true, AlchemicalApparatuses?.Specific?.GetCrystal()));
+                ret.Add((Statics?.Overall ?? true, Statics?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -1762,6 +1850,8 @@ namespace Mutagen.Bethesda.Skyrim
             _Ingredients_Object = new Group<Ingredient>(this);
             _Lights_Object = new Group<Light>(this);
             _MiscItems_Object = new Group<MiscItem>(this);
+            _AlchemicalApparatuses_Object = new Group<AlchemicalApparatus>(this);
+            _Statics_Object = new Group<Static>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -1878,6 +1968,14 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.MiscItems ?? true)
             {
                 this.MiscItems.RecordCache.Set(rhsMod.MiscItems.RecordCache.Items);
+            }
+            if (mask?.AlchemicalApparatuses ?? true)
+            {
+                this.AlchemicalApparatuses.RecordCache.Set(rhsMod.AlchemicalApparatuses.RecordCache.Items);
+            }
+            if (mask?.Statics ?? true)
+            {
+                this.Statics.RecordCache.Set(rhsMod.Statics.RecordCache.Items);
             }
         }
 
@@ -2082,6 +2180,20 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<MiscItem>());
             }
+            if (mask?.AlchemicalApparatuses ?? true)
+            {
+                this.AlchemicalApparatuses.RecordCache.Set(
+                    rhs.AlchemicalApparatuses.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<AlchemicalApparatus>());
+            }
+            if (mask?.Statics ?? true)
+            {
+                this.Statics.RecordCache.Set(
+                    rhs.Statics.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Static>());
+            }
             Dictionary<FormKey, IMajorRecordCommon> router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var package = this.CreateLinkCache();
@@ -2135,6 +2247,8 @@ namespace Mutagen.Bethesda.Skyrim
             count += Ingredients.RecordCache.Count > 0 ? 1 : 0;
             count += Lights.RecordCache.Count > 0 ? 1 : 0;
             count += MiscItems.RecordCache.Count > 0 ? 1 : 0;
+            count += AlchemicalApparatuses.RecordCache.Count > 0 ? 1 : 0;
+            count += Statics.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -2357,6 +2471,8 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<Ingredient> Ingredients { get; }
         new Group<Light> Lights { get; }
         new Group<MiscItem> MiscItems { get; }
+        new Group<AlchemicalApparatus> AlchemicalApparatuses { get; }
+        new Group<Static> Statics { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -2403,6 +2519,8 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IIngredientGetter> Ingredients { get; }
         IGroupGetter<ILightGetter> Lights { get; }
         IGroupGetter<IMiscItemGetter> MiscItems { get; }
+        IGroupGetter<IAlchemicalApparatusGetter> AlchemicalApparatuses { get; }
+        IGroupGetter<IStaticGetter> Statics { get; }
 
     }
 
@@ -2860,6 +2978,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Ingredients = 26,
         Lights = 27,
         MiscItems = 28,
+        AlchemicalApparatuses = 29,
+        Statics = 30,
     }
     #endregion
 
@@ -2877,9 +2997,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 29;
+        public const ushort AdditionalFieldCount = 31;
 
-        public const ushort FieldCount = 29;
+        public const ushort FieldCount = 31;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -2967,6 +3087,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.Lights;
                 case "MISCITEMS":
                     return (ushort)SkyrimMod_FieldIndex.MiscItems;
+                case "ALCHEMICALAPPARATUSES":
+                    return (ushort)SkyrimMod_FieldIndex.AlchemicalApparatuses;
+                case "STATICS":
+                    return (ushort)SkyrimMod_FieldIndex.Statics;
                 default:
                     return null;
             }
@@ -3006,6 +3130,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Ingredients:
                 case SkyrimMod_FieldIndex.Lights:
                 case SkyrimMod_FieldIndex.MiscItems:
+                case SkyrimMod_FieldIndex.AlchemicalApparatuses:
+                case SkyrimMod_FieldIndex.Statics:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3046,6 +3172,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Ingredients:
                 case SkyrimMod_FieldIndex.Lights:
                 case SkyrimMod_FieldIndex.MiscItems:
+                case SkyrimMod_FieldIndex.AlchemicalApparatuses:
+                case SkyrimMod_FieldIndex.Statics:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3086,6 +3214,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Ingredients:
                 case SkyrimMod_FieldIndex.Lights:
                 case SkyrimMod_FieldIndex.MiscItems:
+                case SkyrimMod_FieldIndex.AlchemicalApparatuses:
+                case SkyrimMod_FieldIndex.Statics:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3155,6 +3285,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Lights";
                 case SkyrimMod_FieldIndex.MiscItems:
                     return "MiscItems";
+                case SkyrimMod_FieldIndex.AlchemicalApparatuses:
+                    return "AlchemicalApparatuses";
+                case SkyrimMod_FieldIndex.Statics:
+                    return "Statics";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3194,6 +3328,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Ingredients:
                 case SkyrimMod_FieldIndex.Lights:
                 case SkyrimMod_FieldIndex.MiscItems:
+                case SkyrimMod_FieldIndex.AlchemicalApparatuses:
+                case SkyrimMod_FieldIndex.Statics:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3235,6 +3371,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Ingredients:
                 case SkyrimMod_FieldIndex.Lights:
                 case SkyrimMod_FieldIndex.MiscItems:
+                case SkyrimMod_FieldIndex.AlchemicalApparatuses:
+                case SkyrimMod_FieldIndex.Statics:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3304,6 +3442,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<Light>);
                 case SkyrimMod_FieldIndex.MiscItems:
                     return typeof(Group<MiscItem>);
+                case SkyrimMod_FieldIndex.AlchemicalApparatuses:
+                    return typeof(Group<AlchemicalApparatus>);
+                case SkyrimMod_FieldIndex.Statics:
+                    return typeof(Group<Static>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3339,9 +3481,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType INGR_HEADER = new RecordType("INGR");
         public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
         public static readonly RecordType MISC_HEADER = new RecordType("MISC");
+        public static readonly RecordType APPA_HEADER = new RecordType("APPA");
+        public static readonly RecordType STAT_HEADER = new RecordType("STAT");
         public static readonly RecordType TriggeringRecordType = TES4_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 29;
+        public const int NumTypedFields = 31;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -3412,6 +3556,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Ingredients.Clear();
             item.Lights.Clear();
             item.MiscItems.Clear();
+            item.AlchemicalApparatuses.Clear();
+            item.Statics.Clear();
         }
         
         #region Xml Translation
@@ -3919,6 +4065,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MiscItems);
                 }
+                case 0x41505041: // APPA
+                {
+                    if (importMask?.AlchemicalApparatuses ?? true)
+                    {
+                        item.AlchemicalApparatuses.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.AlchemicalApparatuses);
+                }
+                case 0x54415453: // STAT
+                {
+                    if (importMask?.Statics ?? true)
+                    {
+                        item.Statics.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Statics);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -3999,6 +4173,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Ingredients = MaskItemExt.Factory(item.Ingredients.GetEqualsMask(rhs.Ingredients, include), include);
             ret.Lights = MaskItemExt.Factory(item.Lights.GetEqualsMask(rhs.Lights, include), include);
             ret.MiscItems = MaskItemExt.Factory(item.MiscItems.GetEqualsMask(rhs.MiscItems, include), include);
+            ret.AlchemicalApparatuses = MaskItemExt.Factory(item.AlchemicalApparatuses.GetEqualsMask(rhs.AlchemicalApparatuses, include), include);
+            ret.Statics = MaskItemExt.Factory(item.Statics.GetEqualsMask(rhs.Statics, include), include);
         }
         
         public string ToString(
@@ -4161,6 +4337,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.MiscItems?.ToString(fg, "MiscItems");
             }
+            if (printMask?.AlchemicalApparatuses?.Overall ?? true)
+            {
+                item.AlchemicalApparatuses?.ToString(fg, "AlchemicalApparatuses");
+            }
+            if (printMask?.Statics?.Overall ?? true)
+            {
+                item.Statics?.ToString(fg, "Statics");
+            }
         }
         
         public bool HasBeenSet(
@@ -4203,6 +4387,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Ingredients = new MaskItem<bool, Group.Mask<bool>?>(true, item.Ingredients?.GetHasBeenSetMask());
             mask.Lights = new MaskItem<bool, Group.Mask<bool>?>(true, item.Lights?.GetHasBeenSetMask());
             mask.MiscItems = new MaskItem<bool, Group.Mask<bool>?>(true, item.MiscItems?.GetHasBeenSetMask());
+            mask.AlchemicalApparatuses = new MaskItem<bool, Group.Mask<bool>?>(true, item.AlchemicalApparatuses?.GetHasBeenSetMask());
+            mask.Statics = new MaskItem<bool, Group.Mask<bool>?>(true, item.Statics?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -4241,6 +4427,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Ingredients, rhs.Ingredients)) return false;
             if (!object.Equals(lhs.Lights, rhs.Lights)) return false;
             if (!object.Equals(lhs.MiscItems, rhs.MiscItems)) return false;
+            if (!object.Equals(lhs.AlchemicalApparatuses, rhs.AlchemicalApparatuses)) return false;
+            if (!object.Equals(lhs.Statics, rhs.Statics)) return false;
             return true;
         }
         
@@ -4276,6 +4464,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Ingredients);
             hash.Add(item.Lights);
             hash.Add(item.MiscItems);
+            hash.Add(item.AlchemicalApparatuses);
+            hash.Add(item.Statics);
             return hash.ToHashCode();
         }
         
@@ -4433,6 +4623,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMiscItem":
                 case "IMiscItemInternal":
                     return obj.MiscItems.RecordCache;
+                case "AlchemicalApparatus":
+                case "IAlchemicalApparatusGetter":
+                case "IAlchemicalApparatus":
+                case "IAlchemicalApparatusInternal":
+                    return obj.AlchemicalApparatuses.RecordCache;
+                case "Static":
+                case "IStaticGetter":
+                case "IStatic":
+                case "IStaticInternal":
+                    return obj.Statics.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown group type: {typeof(T)}");
             }
@@ -4449,7 +4649,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var modHeader = item.ModHeader.DeepCopy() as ModHeader;
             modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
             modHeader.WriteToBinary(new MutagenWriter(stream, GameConstants.Skyrim, masterRefs));
-            Stream[] outputStreams = new Stream[28];
+            Stream[] outputStreams = new Stream[30];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams));
@@ -4479,6 +4679,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.Ingredients, masterRefs, 25, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Lights, masterRefs, 26, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.MiscItems, masterRefs, 27, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.AlchemicalApparatuses, masterRefs, 28, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Statics, masterRefs, 29, outputStreams));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -4722,6 +4924,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.AlchemicalApparatuses is ILinkContainer AlchemicalApparatuseslinkCont)
+            {
+                foreach (var item in AlchemicalApparatuseslinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Statics is ILinkContainer StaticslinkCont)
+            {
+                foreach (var item in StaticslinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -4836,6 +5052,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.MiscItems.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.AlchemicalApparatuses.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Statics.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -5105,6 +5329,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMiscItem":
                 case "IMiscItemInternal":
                     foreach (var item in obj.MiscItems.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "AlchemicalApparatus":
+                case "IAlchemicalApparatusGetter":
+                case "IAlchemicalApparatus":
+                case "IAlchemicalApparatusInternal":
+                    foreach (var item in obj.AlchemicalApparatuses.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Static":
+                case "IStaticGetter":
+                case "IStatic":
+                case "IStaticInternal":
+                    foreach (var item in obj.Statics.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -5708,6 +5950,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.AlchemicalApparatuses) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.AlchemicalApparatuses);
+                try
+                {
+                    item.AlchemicalApparatuses.DeepCopyIn(
+                        rhs: rhs.AlchemicalApparatuses,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.AlchemicalApparatuses));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Statics) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Statics);
+                try
+                {
+                    item.Statics.DeepCopyIn(
+                        rhs: rhs.Statics,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Statics));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -6115,6 +6397,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.MiscItems,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.MiscItems));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.AlchemicalApparatuses) ?? true))
+            {
+                var AlchemicalApparatusesItem = item.AlchemicalApparatuses;
+                ((GroupXmlWriteTranslation)((IXmlItem)AlchemicalApparatusesItem).XmlWriteTranslator).Write<IAlchemicalApparatusGetter>(
+                    item: AlchemicalApparatusesItem,
+                    node: node,
+                    name: nameof(item.AlchemicalApparatuses),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.AlchemicalApparatuses,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.AlchemicalApparatuses));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Statics) ?? true))
+            {
+                var StaticsItem = item.Statics;
+                ((GroupXmlWriteTranslation)((IXmlItem)StaticsItem).XmlWriteTranslator).Write<IStaticGetter>(
+                    item: StaticsItem,
+                    node: node,
+                    name: nameof(item.Statics),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Statics,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Statics));
             }
         }
 
@@ -6754,6 +7058,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "AlchemicalApparatuses":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.AlchemicalApparatuses);
+                    try
+                    {
+                        item.AlchemicalApparatuses.CopyInFromXml<AlchemicalApparatus>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Statics":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Statics);
+                    try
+                    {
+                        item.Statics.CopyInFromXml<Static>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -6951,6 +7293,8 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Ingredients;
         public bool Lights;
         public bool MiscItems;
+        public bool AlchemicalApparatuses;
+        public bool Statics;
         public GroupMask()
         {
         }
@@ -6984,6 +7328,8 @@ namespace Mutagen.Bethesda.Skyrim
             Ingredients = defaultValue;
             Lights = defaultValue;
             MiscItems = defaultValue;
+            AlchemicalApparatuses = defaultValue;
+            Statics = defaultValue;
         }
     }
 
@@ -7317,6 +7663,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)MiscItemsItem).BinaryWriteTranslator).Write<IMiscItemGetter>(
                         item: MiscItemsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.AlchemicalApparatuses ?? true)
+            {
+                var AlchemicalApparatusesItem = item.AlchemicalApparatuses;
+                if (AlchemicalApparatusesItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)AlchemicalApparatusesItem).BinaryWriteTranslator).Write<IAlchemicalApparatusGetter>(
+                        item: AlchemicalApparatusesItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Statics ?? true)
+            {
+                var StaticsItem = item.Statics;
+                if (StaticsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)StaticsItem).BinaryWriteTranslator).Write<IStaticGetter>(
+                        item: StaticsItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
                 }
@@ -7679,6 +8047,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IMiscItemGetter>? _MiscItems => _MiscItems_IsSet ? GroupBinaryOverlay<IMiscItemGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _MiscItemsLocation!.Value.Min, _MiscItemsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IMiscItemGetter> MiscItems => _MiscItems ?? new Group<MiscItem>(this);
         #endregion
+        #region AlchemicalApparatuses
+        private RangeInt64? _AlchemicalApparatusesLocation;
+        private bool _AlchemicalApparatuses_IsSet => _AlchemicalApparatusesLocation.HasValue;
+        private IGroupGetter<IAlchemicalApparatusGetter>? _AlchemicalApparatuses => _AlchemicalApparatuses_IsSet ? GroupBinaryOverlay<IAlchemicalApparatusGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _AlchemicalApparatusesLocation!.Value.Min, _AlchemicalApparatusesLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IAlchemicalApparatusGetter> AlchemicalApparatuses => _AlchemicalApparatuses ?? new Group<AlchemicalApparatus>(this);
+        #endregion
+        #region Statics
+        private RangeInt64? _StaticsLocation;
+        private bool _Statics_IsSet => _StaticsLocation.HasValue;
+        private IGroupGetter<IStaticGetter>? _Statics => _Statics_IsSet ? GroupBinaryOverlay<IStaticGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _StaticsLocation!.Value.Min, _StaticsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IStaticGetter> Statics => _Statics ?? new Group<Static>(this);
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             long finalPos,
@@ -7907,6 +8287,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _MiscItemsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MiscItems);
+                }
+                case 0x41505041: // APPA
+                {
+                    _AlchemicalApparatusesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.AlchemicalApparatuses);
+                }
+                case 0x54415453: // STAT
+                {
+                    _StaticsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Statics);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

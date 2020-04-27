@@ -436,6 +436,7 @@ namespace Mutagen.Bethesda.Generation
                         if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
                         if (fieldData.Binary == BinaryGenerationType.DoNothing) continue;
                         if (field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
+                        if (!field.Enabled) continue;
                         if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
                         {
                             if (!field.IntegrateField) continue;
@@ -1262,6 +1263,7 @@ namespace Mutagen.Bethesda.Generation
                             fg.AppendLine("{");
                             fg.Depth++;
                         }
+                        if (!field.Enabled) continue;
                         List<string> conditions = new List<string>();
                         if (conditions.Count > 0)
                         {

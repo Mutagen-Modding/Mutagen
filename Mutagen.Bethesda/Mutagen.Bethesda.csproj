@@ -34,6 +34,9 @@
     <Compile Include="Skyrim\Records\Major Records\Activator.cs">
       <DependentUpon>Activator.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\AlchemicalApparatus.cs">
+      <DependentUpon>AlchemicalApparatus.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\Armor.cs">
       <DependentUpon>Armor.xml</DependentUpon>
     </Compile>
@@ -45,6 +48,9 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\ContainerData.cs">
       <DependentUpon>Container.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\DirectionMaterial.cs">
+      <DependentUpon>Static.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Door.cs">
       <DependentUpon>Door.xml</DependentUpon>
@@ -58,6 +64,9 @@
     <Compile Include="Skyrim\Records\Major Records\LightData.cs">
       <DependentUpon>Light.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Lod.cs">
+      <DependentUpon>Static.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\MiscItem.cs">
       <DependentUpon>MiscItem.xml</DependentUpon>
     </Compile>
@@ -66,6 +75,9 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\SpellData.cs">
       <DependentUpon>Spell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Static.cs">
+      <DependentUpon>Static.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\TalkingActivator.cs">
       <DependentUpon>TalkingActivator.xml</DependentUpon>
@@ -1577,6 +1589,15 @@
     </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\WeightValue_LoquiGenerated.cs">
       <DependentUpon>WeightValue.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MaterialObject_LoquiGenerated.cs">
+      <DependentUpon>MaterialObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\DirectionMaterial_LoquiGenerated.cs">
+      <DependentUpon>Static.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Lod_LoquiGenerated.cs">
+      <DependentUpon>Static.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

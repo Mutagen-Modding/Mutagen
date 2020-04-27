@@ -118,6 +118,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="isSE" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether the record is only present in Special Edition
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
           <xs:attribute name="markerType" type="xs:string" >
             <xs:annotation>
               <xs:documentation>
@@ -198,6 +205,13 @@
             <xs:annotation>
               <xs:documentation>
                 Type of mutagen object this is referencing.  Only needed for interface typed references.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="isSE" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether the record is only present in Special Edition
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>

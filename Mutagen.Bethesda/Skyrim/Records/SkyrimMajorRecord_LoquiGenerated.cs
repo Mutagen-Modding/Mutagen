@@ -1082,6 +1082,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
         public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
         public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
+        public static readonly RecordType MATO_HEADER = new RecordType("MATO");
         public static readonly RecordType MATT_HEADER = new RecordType("MATT");
         public static readonly RecordType MISC_HEADER = new RecordType("MISC");
         public static readonly RecordType MOVT_HEADER = new RecordType("MOVT");
@@ -1152,6 +1153,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         LIGH_HEADER,
                         LCRT_HEADER,
                         MGEF_HEADER,
+                        MATO_HEADER,
                         MATT_HEADER,
                         MISC_HEADER,
                         MOVT_HEADER,

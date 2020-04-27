@@ -180,6 +180,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}BinaryPrimitives.ReadInt32LittleEndian(ret._data{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}) + 4;");
                     break;
                 default:
+                    if (typeGen.GetFieldData().Binary == BinaryGenerationType.Custom) return;
                     throw new NotImplementedException();
             }
         }

@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "etFinal: true";
+            string testString = "item.Unused = new byte[3];";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

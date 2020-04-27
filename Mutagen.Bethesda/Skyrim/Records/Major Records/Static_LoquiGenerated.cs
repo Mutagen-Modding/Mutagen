@@ -48,6 +48,50 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region ObjectBounds
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ObjectBounds _ObjectBounds = new ObjectBounds();
+        public ObjectBounds ObjectBounds
+        {
+            get => _ObjectBounds;
+            set => _ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IStaticGetter.ObjectBounds => _ObjectBounds;
+        #endregion
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IStaticGetter.Model => this.Model;
+        #endregion
+        #region DirectionMaterial
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private DirectionMaterial? _DirectionMaterial;
+        public DirectionMaterial? DirectionMaterial
+        {
+            get => _DirectionMaterial;
+            set => _DirectionMaterial = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDirectionMaterialGetter? IStaticGetter.DirectionMaterial => this.DirectionMaterial;
+        #endregion
+        #region Lod
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Lod? _Lod;
+        public Lod? Lod
+        {
+            get => _Lod;
+            set => _Lod = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ILodGetter? IStaticGetter.Lod => this.Lod;
+        #endregion
 
         #region To String
 
@@ -218,6 +262,10 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.DirectionMaterial = new MaskItem<TItem, DirectionMaterial.Mask<TItem>?>(initialValue, new DirectionMaterial.Mask<TItem>(initialValue));
+                this.Lod = new MaskItem<TItem, Lod.Mask<TItem>?>(initialValue, new Lod.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -226,7 +274,11 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem ObjectBounds,
+                TItem Model,
+                TItem DirectionMaterial,
+                TItem Lod)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -235,6 +287,10 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.DirectionMaterial = new MaskItem<TItem, DirectionMaterial.Mask<TItem>?>(DirectionMaterial, new DirectionMaterial.Mask<TItem>(DirectionMaterial));
+                this.Lod = new MaskItem<TItem, Lod.Mask<TItem>?>(Lod, new Lod.Mask<TItem>(Lod));
             }
 
             #pragma warning disable CS8618
@@ -243,6 +299,13 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public MaskItem<TItem, DirectionMaterial.Mask<TItem>?>? DirectionMaterial { get; set; }
+            public MaskItem<TItem, Lod.Mask<TItem>?>? Lod { get; set; }
             #endregion
 
             #region Equals
@@ -256,11 +319,19 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.DirectionMaterial, rhs.DirectionMaterial)) return false;
+                if (!object.Equals(this.Lod, rhs.Lod)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.Model);
+                hash.Add(this.DirectionMaterial);
+                hash.Add(this.Lod);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -271,6 +342,26 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (DirectionMaterial != null)
+                {
+                    if (!eval(this.DirectionMaterial.Overall)) return false;
+                    if (this.DirectionMaterial.Specific != null && !this.DirectionMaterial.Specific.All(eval)) return false;
+                }
+                if (Lod != null)
+                {
+                    if (!eval(this.Lod.Overall)) return false;
+                    if (this.Lod.Specific != null && !this.Lod.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -279,6 +370,26 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (DirectionMaterial != null)
+                {
+                    if (eval(this.DirectionMaterial.Overall)) return true;
+                    if (this.DirectionMaterial.Specific != null && this.DirectionMaterial.Specific.Any(eval)) return true;
+                }
+                if (Lod != null)
+                {
+                    if (eval(this.Lod.Overall)) return true;
+                    if (this.Lod.Specific != null && this.Lod.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -294,6 +405,10 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.DirectionMaterial = this.DirectionMaterial == null ? null : new MaskItem<R, DirectionMaterial.Mask<R>?>(eval(this.DirectionMaterial.Overall), this.DirectionMaterial.Specific?.Translate(eval));
+                obj.Lod = this.Lod == null ? null : new MaskItem<R, Lod.Mask<R>?>(eval(this.Lod.Overall), this.Lod.Specific?.Translate(eval));
             }
             #endregion
 
@@ -316,6 +431,22 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.ToString(fg);
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.DirectionMaterial?.Overall ?? true)
+                    {
+                        DirectionMaterial?.ToString(fg);
+                    }
+                    if (printMask?.Lod?.Overall ?? true)
+                    {
+                        Lod?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -327,12 +458,27 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public MaskItem<Exception?, DirectionMaterial.ErrorMask?>? DirectionMaterial;
+            public MaskItem<Exception?, Lod.ErrorMask?>? Lod;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Static_FieldIndex enu = (Static_FieldIndex)index;
                 switch (enu)
                 {
+                    case Static_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case Static_FieldIndex.Model:
+                        return Model;
+                    case Static_FieldIndex.DirectionMaterial:
+                        return DirectionMaterial;
+                    case Static_FieldIndex.Lod:
+                        return Lod;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -343,6 +489,18 @@ namespace Mutagen.Bethesda.Skyrim
                 Static_FieldIndex enu = (Static_FieldIndex)index;
                 switch (enu)
                 {
+                    case Static_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case Static_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Static_FieldIndex.DirectionMaterial:
+                        this.DirectionMaterial = new MaskItem<Exception?, DirectionMaterial.ErrorMask?>(ex, null);
+                        break;
+                    case Static_FieldIndex.Lod:
+                        this.Lod = new MaskItem<Exception?, Lod.ErrorMask?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -354,6 +512,18 @@ namespace Mutagen.Bethesda.Skyrim
                 Static_FieldIndex enu = (Static_FieldIndex)index;
                 switch (enu)
                 {
+                    case Static_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case Static_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Static_FieldIndex.DirectionMaterial:
+                        this.DirectionMaterial = (MaskItem<Exception?, DirectionMaterial.ErrorMask?>?)obj;
+                        break;
+                    case Static_FieldIndex.Lod:
+                        this.Lod = (MaskItem<Exception?, Lod.ErrorMask?>?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -363,6 +533,10 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ObjectBounds != null) return true;
+                if (Model != null) return true;
+                if (DirectionMaterial != null) return true;
+                if (Lod != null) return true;
                 return false;
             }
             #endregion
@@ -398,6 +572,10 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                ObjectBounds?.ToString(fg);
+                Model?.ToString(fg);
+                DirectionMaterial?.ToString(fg);
+                Lod?.ToString(fg);
             }
             #endregion
 
@@ -406,6 +584,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.DirectionMaterial = this.DirectionMaterial.Combine(rhs.DirectionMaterial, (l, r) => l.Combine(r));
+                ret.Lod = this.Lod.Combine(rhs.Lod, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -427,19 +609,40 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public MaskItem<bool, DirectionMaterial.TranslationMask?> DirectionMaterial;
+            public MaskItem<bool, Lod.TranslationMask?> Lod;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.DirectionMaterial = new MaskItem<bool, DirectionMaterial.TranslationMask?>(defaultOn, null);
+                this.Lod = new MaskItem<bool, Lod.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((DirectionMaterial?.Overall ?? true, DirectionMaterial?.Specific?.GetCrystal()));
+                ret.Add((Lod?.Overall ?? true, Lod?.Specific?.GetCrystal()));
+            }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Static_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public override IEnumerable<ILinkGetter> Links => StaticCommon.Instance.GetLinks(this);
         public Static(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -457,6 +660,11 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         #endregion
 
         #region Binary Translation
@@ -519,6 +727,14 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IStaticInternal>
     {
+        new ObjectBounds ObjectBounds { get; set; }
+        new Model? Model { get; set; }
+        new DirectionMaterial? DirectionMaterial { get; set; }
+        new Lod? Lod { get; set; }
+        #region Mutagen
+        new Static.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IStaticInternal :
@@ -532,9 +748,18 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         ILoquiObject<IStaticGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => Static_Registration.Instance;
+        IObjectBoundsGetter ObjectBounds { get; }
+        IModelGetter? Model { get; }
+        IDirectionMaterialGetter? DirectionMaterial { get; }
+        ILodGetter? Lod { get; }
+
+        #region Mutagen
+        Static.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -835,6 +1060,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        ObjectBounds = 6,
+        Model = 7,
+        DirectionMaterial = 8,
+        Lod = 9,
     }
     #endregion
 
@@ -852,9 +1081,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "89036057-4570-493d-a5f7-4c5718f67a06";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(Static.Mask<>);
 
@@ -884,6 +1113,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "OBJECTBOUNDS":
+                    return (ushort)Static_FieldIndex.ObjectBounds;
+                case "MODEL":
+                    return (ushort)Static_FieldIndex.Model;
+                case "DIRECTIONMATERIAL":
+                    return (ushort)Static_FieldIndex.DirectionMaterial;
+                case "LOD":
+                    return (ushort)Static_FieldIndex.Lod;
                 default:
                     return null;
             }
@@ -894,6 +1131,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Static_FieldIndex enu = (Static_FieldIndex)index;
             switch (enu)
             {
+                case Static_FieldIndex.ObjectBounds:
+                case Static_FieldIndex.Model:
+                case Static_FieldIndex.DirectionMaterial:
+                case Static_FieldIndex.Lod:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -904,6 +1146,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Static_FieldIndex enu = (Static_FieldIndex)index;
             switch (enu)
             {
+                case Static_FieldIndex.ObjectBounds:
+                case Static_FieldIndex.Model:
+                case Static_FieldIndex.DirectionMaterial:
+                case Static_FieldIndex.Lod:
+                    return true;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -914,6 +1161,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Static_FieldIndex enu = (Static_FieldIndex)index;
             switch (enu)
             {
+                case Static_FieldIndex.ObjectBounds:
+                case Static_FieldIndex.Model:
+                case Static_FieldIndex.DirectionMaterial:
+                case Static_FieldIndex.Lod:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -924,6 +1176,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Static_FieldIndex enu = (Static_FieldIndex)index;
             switch (enu)
             {
+                case Static_FieldIndex.ObjectBounds:
+                    return "ObjectBounds";
+                case Static_FieldIndex.Model:
+                    return "Model";
+                case Static_FieldIndex.DirectionMaterial:
+                    return "DirectionMaterial";
+                case Static_FieldIndex.Lod:
+                    return "Lod";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -934,6 +1194,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Static_FieldIndex enu = (Static_FieldIndex)index;
             switch (enu)
             {
+                case Static_FieldIndex.ObjectBounds:
+                case Static_FieldIndex.Model:
+                case Static_FieldIndex.DirectionMaterial:
+                case Static_FieldIndex.Lod:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -944,6 +1209,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Static_FieldIndex enu = (Static_FieldIndex)index;
             switch (enu)
             {
+                case Static_FieldIndex.ObjectBounds:
+                case Static_FieldIndex.Model:
+                case Static_FieldIndex.DirectionMaterial:
+                case Static_FieldIndex.Lod:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -954,6 +1224,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Static_FieldIndex enu = (Static_FieldIndex)index;
             switch (enu)
             {
+                case Static_FieldIndex.ObjectBounds:
+                    return typeof(ObjectBounds);
+                case Static_FieldIndex.Model:
+                    return typeof(Model);
+                case Static_FieldIndex.DirectionMaterial:
+                    return typeof(DirectionMaterial);
+                case Static_FieldIndex.Lod:
+                    return typeof(Lod);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -961,9 +1239,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(StaticXmlWriteTranslation);
         public static readonly RecordType STAT_HEADER = new RecordType("STAT");
+        public static readonly RecordType OBND_HEADER = new RecordType("OBND");
+        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
+        public static readonly RecordType DNAM_HEADER = new RecordType("DNAM");
+        public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
         public static readonly RecordType TriggeringRecordType = STAT_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
+        public const int NumTypedFields = 4;
         public static readonly Type BinaryWriteTranslation = typeof(StaticBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1006,6 +1288,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IStaticInternal item)
         {
             ClearPartial();
+            item.ObjectBounds = new ObjectBounds();
+            item.Model = null;
+            item.DirectionMaterial = null;
+            item.Lod = null;
             base.Clear(item);
         }
         
@@ -1110,6 +1396,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
         
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            IStaticInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x444E424F: // OBND
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Static_FieldIndex.ObjectBounds);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)Static_FieldIndex.Model);
+                }
+                case 0x4D414E44: // DNAM
+                {
+                    item.DirectionMaterial = Mutagen.Bethesda.Skyrim.DirectionMaterial.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Static_FieldIndex.DirectionMaterial);
+                }
+                case 0x4D414E4D: // MNAM
+                {
+                    item.Lod = Mutagen.Bethesda.Skyrim.Lod.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Static_FieldIndex.Lod);
+                }
+                default:
+                    return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
+        
         public virtual void CopyInFromBinary(
             IStaticInternal item,
             MutagenFrame frame,
@@ -1174,6 +1502,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.DirectionMaterial = EqualsMaskHelper.EqualsHelper(
+                item.DirectionMaterial,
+                rhs.DirectionMaterial,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Lod = EqualsMaskHelper.EqualsHelper(
+                item.Lod,
+                rhs.Lod,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1225,12 +1569,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+            }
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
+            {
+                ModelItem?.ToString(fg, "Model");
+            }
+            if ((printMask?.DirectionMaterial?.Overall ?? true)
+                && item.DirectionMaterial.TryGet(out var DirectionMaterialItem))
+            {
+                DirectionMaterialItem?.ToString(fg, "DirectionMaterial");
+            }
+            if ((printMask?.Lod?.Overall ?? true)
+                && item.Lod.TryGet(out var LodItem))
+            {
+                LodItem?.ToString(fg, "Lod");
+            }
         }
         
         public bool HasBeenSet(
             IStaticGetter item,
             Static.Mask<bool?> checkMask)
         {
+            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
+            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.DirectionMaterial?.Overall.HasValue ?? false && checkMask.DirectionMaterial.Overall.Value != (item.DirectionMaterial != null)) return false;
+            if (checkMask.DirectionMaterial?.Specific != null && (item.DirectionMaterial == null || !item.DirectionMaterial.HasBeenSet(checkMask.DirectionMaterial.Specific))) return false;
+            if (checkMask.Lod?.Overall.HasValue ?? false && checkMask.Lod.Overall.Value != (item.Lod != null)) return false;
+            if (checkMask.Lod?.Specific != null && (item.Lod == null || !item.Lod.HasBeenSet(checkMask.Lod.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1240,6 +1609,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IStaticGetter item,
             Static.Mask<bool> mask)
         {
+            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
+            var itemModel = item.Model;
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            var itemDirectionMaterial = item.DirectionMaterial;
+            mask.DirectionMaterial = new MaskItem<bool, DirectionMaterial.Mask<bool>?>(itemDirectionMaterial != null, itemDirectionMaterial?.GetHasBeenSetMask());
+            var itemLod = item.Lod;
+            mask.Lod = new MaskItem<bool, Lod.Mask<bool>?>(itemLod != null, itemLod?.GetHasBeenSetMask());
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1291,6 +1667,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            if (!object.Equals(lhs.DirectionMaterial, rhs.DirectionMaterial)) return false;
+            if (!object.Equals(lhs.Lod, rhs.Lod)) return false;
             return true;
         }
         
@@ -1315,6 +1695,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IStaticGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.ObjectBounds);
+            if (item.Model.TryGet(out var Modelitem))
+            {
+                hash.Add(Modelitem);
+            }
+            if (item.DirectionMaterial.TryGet(out var DirectionMaterialitem))
+            {
+                hash.Add(DirectionMaterialitem);
+            }
+            if (item.Lod.TryGet(out var Loditem))
+            {
+                hash.Add(Loditem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1343,6 +1736,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             foreach (var item in base.GetLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.Model != null)
+            {
+                foreach (var item in obj.Model.Links)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.DirectionMaterial != null)
+            {
+                foreach (var item in obj.DirectionMaterial.Links)
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1390,6 +1797,106 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)Static_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Static_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)Static_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model.TryGet(out var rhsModel))
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Static_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.DirectionMaterial) ?? true))
+            {
+                errorMask?.PushIndex((int)Static_FieldIndex.DirectionMaterial);
+                try
+                {
+                    if(rhs.DirectionMaterial.TryGet(out var rhsDirectionMaterial))
+                    {
+                        item.DirectionMaterial = rhsDirectionMaterial.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Static_FieldIndex.DirectionMaterial));
+                    }
+                    else
+                    {
+                        item.DirectionMaterial = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.Lod) ?? true))
+            {
+                errorMask?.PushIndex((int)Static_FieldIndex.Lod);
+                try
+                {
+                    if(rhs.Lod.TryGet(out var rhsLod))
+                    {
+                        item.Lod = rhsLod.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Static_FieldIndex.Lod));
+                    }
+                    else
+                    {
+                        item.Lod = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1532,6 +2039,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((translationMask?.GetShouldTranslate((int)Static_FieldIndex.ObjectBounds) ?? true))
+            {
+                var ObjectBoundsItem = item.ObjectBounds;
+                ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
+                    item: ObjectBoundsItem,
+                    node: node,
+                    name: nameof(item.ObjectBounds),
+                    fieldIndex: (int)Static_FieldIndex.ObjectBounds,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Static_FieldIndex.ObjectBounds));
+            }
+            if ((item.Model != null)
+                && (translationMask?.GetShouldTranslate((int)Static_FieldIndex.Model) ?? true))
+            {
+                if (item.Model.TryGet(out var ModelItem))
+                {
+                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                        item: ModelItem,
+                        node: node,
+                        name: nameof(item.Model),
+                        fieldIndex: (int)Static_FieldIndex.Model,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Static_FieldIndex.Model));
+                }
+            }
+            if ((item.DirectionMaterial != null)
+                && (translationMask?.GetShouldTranslate((int)Static_FieldIndex.DirectionMaterial) ?? true))
+            {
+                if (item.DirectionMaterial.TryGet(out var DirectionMaterialItem))
+                {
+                    ((DirectionMaterialXmlWriteTranslation)((IXmlItem)DirectionMaterialItem).XmlWriteTranslator).Write(
+                        item: DirectionMaterialItem,
+                        node: node,
+                        name: nameof(item.DirectionMaterial),
+                        fieldIndex: (int)Static_FieldIndex.DirectionMaterial,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Static_FieldIndex.DirectionMaterial));
+                }
+            }
+            if ((item.Lod != null)
+                && (translationMask?.GetShouldTranslate((int)Static_FieldIndex.Lod) ?? true))
+            {
+                if (item.Lod.TryGet(out var LodItem))
+                {
+                    ((LodXmlWriteTranslation)((IXmlItem)LodItem).XmlWriteTranslator).Write(
+                        item: LodItem,
+                        node: node,
+                        name: nameof(item.Lod),
+                        fieldIndex: (int)Static_FieldIndex.Lod,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Static_FieldIndex.Lod));
+                }
+            }
         }
 
         public void Write(
@@ -1639,6 +2199,82 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "ObjectBounds":
+                    errorMask?.PushIndex((int)Static_FieldIndex.ObjectBounds);
+                    try
+                    {
+                        item.ObjectBounds = LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Static_FieldIndex.ObjectBounds));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Model":
+                    errorMask?.PushIndex((int)Static_FieldIndex.Model);
+                    try
+                    {
+                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Static_FieldIndex.Model));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DirectionMaterial":
+                    errorMask?.PushIndex((int)Static_FieldIndex.DirectionMaterial);
+                    try
+                    {
+                        item.DirectionMaterial = LoquiXmlTranslation<DirectionMaterial>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Static_FieldIndex.DirectionMaterial));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Lod":
+                    errorMask?.PushIndex((int)Static_FieldIndex.Lod);
+                    try
+                    {
+                        item.Lod = LoquiXmlTranslation<Lod>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Static_FieldIndex.Lod));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1725,6 +2361,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static StaticBinaryWriteTranslation Instance = new StaticBinaryWriteTranslation();
 
+        public static void WriteRecordTypes(
+            IStaticGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            if (item.Model.TryGet(out var ModelItem))
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            if (item.DirectionMaterial.TryGet(out var DirectionMaterialItem))
+            {
+                ((DirectionMaterialBinaryWriteTranslation)((IBinaryItem)DirectionMaterialItem).BinaryWriteTranslator).Write(
+                    item: DirectionMaterialItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            if (item.Lod.TryGet(out var LodItem))
+            {
+                ((LodBinaryWriteTranslation)((IBinaryItem)LodItem).BinaryWriteTranslator).Write(
+                    item: LodItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             IStaticGetter item,
@@ -1738,7 +2411,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1818,6 +2491,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IStaticGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => StaticCommon.Instance.GetLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => StaticXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
@@ -1844,7 +2518,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
+        public Static.MajorFlag MajorFlags => (Static.MajorFlag)this.MajorRecordFlagsRaw;
 
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private bool _ObjectBounds_IsSet => _ObjectBoundsLocation.HasValue;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBounds_IsSet ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation!.Value.Min)), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        #region Model
+        public IModelGetter? Model { get; private set; }
+        public bool Model_IsSet => Model != null;
+        #endregion
+        #region DirectionMaterial
+        private RangeInt32? _DirectionMaterialLocation;
+        private bool _DirectionMaterial_IsSet => _DirectionMaterialLocation.HasValue;
+        public IDirectionMaterialGetter? DirectionMaterial => _DirectionMaterial_IsSet ? DirectionMaterialBinaryOverlay.DirectionMaterialFactory(new BinaryMemoryReadStream(_data.Slice(_DirectionMaterialLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool DirectionMaterial_IsSet => _DirectionMaterialLocation.HasValue;
+        #endregion
+        #region Lod
+        private RangeInt32? _LodLocation;
+        private bool _Lod_IsSet => _LodLocation.HasValue;
+        public ILodGetter? Lod => _Lod_IsSet ? LodBinaryOverlay.LodFactory(new BinaryMemoryReadStream(_data.Slice(_LodLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Lod_IsSet => _LodLocation.HasValue;
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -1895,6 +2592,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case 0x444E424F: // OBND
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Static_FieldIndex.ObjectBounds);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)Static_FieldIndex.Model);
+                }
+                case 0x4D414E44: // DNAM
+                {
+                    _DirectionMaterialLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Static_FieldIndex.DirectionMaterial);
+                }
+                case 0x4D414E4D: // MNAM
+                {
+                    _LodLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Static_FieldIndex.Lod);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
         #region To String
 
         public override void ToString(

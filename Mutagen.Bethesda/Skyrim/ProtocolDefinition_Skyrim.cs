@@ -173,6 +173,9 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.IngredientData_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.LightData_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.WeightValue_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.MaterialObject_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.DirectionMaterial_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Skyrim.Internals.Lod_Registration.Instance);
         }
     }
 }

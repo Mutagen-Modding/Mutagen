@@ -48,6 +48,116 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region VirtualMachineAdapter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private VirtualMachineAdapter? _VirtualMachineAdapter;
+        public VirtualMachineAdapter? VirtualMachineAdapter
+        {
+            get => _VirtualMachineAdapter;
+            set => _VirtualMachineAdapter = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IAlchemicalApparatusGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
+        #region ObjectBounds
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ObjectBounds _ObjectBounds = new ObjectBounds();
+        public ObjectBounds ObjectBounds
+        {
+            get => _ObjectBounds;
+            set => _ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IAlchemicalApparatusGetter.ObjectBounds => _ObjectBounds;
+        #endregion
+        #region Name
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String? _Name;
+        public String? Name
+        {
+            get => this._Name;
+            set => this._Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IAlchemicalApparatusGetter.Name => this.Name;
+        #endregion
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IAlchemicalApparatusGetter.Model => this.Model;
+        #endregion
+        #region LargeIconFilename
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String? _LargeIconFilename;
+        public String? LargeIconFilename
+        {
+            get => this._LargeIconFilename;
+            set => this._LargeIconFilename = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IAlchemicalApparatusGetter.LargeIconFilename => this.LargeIconFilename;
+        #endregion
+        #region SmallIconFilename
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String? _SmallIconFilename;
+        public String? SmallIconFilename
+        {
+            get => this._SmallIconFilename;
+            set => this._SmallIconFilename = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IAlchemicalApparatusGetter.SmallIconFilename => this.SmallIconFilename;
+        #endregion
+        #region Destructible
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Destructible? _Destructible;
+        public Destructible? Destructible
+        {
+            get => _Destructible;
+            set => _Destructible = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IAlchemicalApparatusGetter.Destructible => this.Destructible;
+        #endregion
+        #region Quality
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private AlchemicalApparatus.QualityLevel? _Quality;
+        public AlchemicalApparatus.QualityLevel? Quality
+        {
+            get => this._Quality;
+            set => this._Quality = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        AlchemicalApparatus.QualityLevel? IAlchemicalApparatusGetter.Quality => this.Quality;
+        #endregion
+        #region Description
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String? _Description;
+        public String? Description
+        {
+            get => this._Description;
+            set => this._Description = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IAlchemicalApparatusGetter.Description => this.Description;
+        #endregion
+        #region WeightValue
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private WeightValue? _WeightValue;
+        public WeightValue? WeightValue
+        {
+            get => _WeightValue;
+            set => _WeightValue = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IWeightValueGetter? IAlchemicalApparatusGetter.WeightValue => this.WeightValue;
+        #endregion
 
         #region To String
 
@@ -218,6 +328,16 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.Name = initialValue;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.LargeIconFilename = initialValue;
+                this.SmallIconFilename = initialValue;
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
+                this.Quality = initialValue;
+                this.Description = initialValue;
+                this.WeightValue = new MaskItem<TItem, WeightValue.Mask<TItem>?>(initialValue, new WeightValue.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -226,7 +346,17 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem VirtualMachineAdapter,
+                TItem ObjectBounds,
+                TItem Name,
+                TItem Model,
+                TItem LargeIconFilename,
+                TItem SmallIconFilename,
+                TItem Destructible,
+                TItem Quality,
+                TItem Description,
+                TItem WeightValue)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -235,6 +365,16 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.Name = Name;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.LargeIconFilename = LargeIconFilename;
+                this.SmallIconFilename = SmallIconFilename;
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
+                this.Quality = Quality;
+                this.Description = Description;
+                this.WeightValue = new MaskItem<TItem, WeightValue.Mask<TItem>?>(WeightValue, new WeightValue.Mask<TItem>(WeightValue));
             }
 
             #pragma warning disable CS8618
@@ -243,6 +383,19 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem Name;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public TItem LargeIconFilename;
+            public TItem SmallIconFilename;
+            public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
+            public TItem Quality;
+            public TItem Description;
+            public MaskItem<TItem, WeightValue.Mask<TItem>?>? WeightValue { get; set; }
             #endregion
 
             #region Equals
@@ -256,11 +409,31 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.LargeIconFilename, rhs.LargeIconFilename)) return false;
+                if (!object.Equals(this.SmallIconFilename, rhs.SmallIconFilename)) return false;
+                if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
+                if (!object.Equals(this.Quality, rhs.Quality)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!object.Equals(this.WeightValue, rhs.WeightValue)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.VirtualMachineAdapter);
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.Name);
+                hash.Add(this.Model);
+                hash.Add(this.LargeIconFilename);
+                hash.Add(this.SmallIconFilename);
+                hash.Add(this.Destructible);
+                hash.Add(this.Quality);
+                hash.Add(this.Description);
+                hash.Add(this.WeightValue);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -271,6 +444,36 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (!eval(this.VirtualMachineAdapter.Overall)) return false;
+                    if (this.VirtualMachineAdapter.Specific != null && !this.VirtualMachineAdapter.Specific.All(eval)) return false;
+                }
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Name)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (!eval(this.LargeIconFilename)) return false;
+                if (!eval(this.SmallIconFilename)) return false;
+                if (Destructible != null)
+                {
+                    if (!eval(this.Destructible.Overall)) return false;
+                    if (this.Destructible.Specific != null && !this.Destructible.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Quality)) return false;
+                if (!eval(this.Description)) return false;
+                if (WeightValue != null)
+                {
+                    if (!eval(this.WeightValue.Overall)) return false;
+                    if (this.WeightValue.Specific != null && !this.WeightValue.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -279,6 +482,36 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (VirtualMachineAdapter != null)
+                {
+                    if (eval(this.VirtualMachineAdapter.Overall)) return true;
+                    if (this.VirtualMachineAdapter.Specific != null && this.VirtualMachineAdapter.Specific.Any(eval)) return true;
+                }
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Name)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (eval(this.LargeIconFilename)) return true;
+                if (eval(this.SmallIconFilename)) return true;
+                if (Destructible != null)
+                {
+                    if (eval(this.Destructible.Overall)) return true;
+                    if (this.Destructible.Specific != null && this.Destructible.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Quality)) return true;
+                if (eval(this.Description)) return true;
+                if (WeightValue != null)
+                {
+                    if (eval(this.WeightValue.Overall)) return true;
+                    if (this.WeightValue.Specific != null && this.WeightValue.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -294,6 +527,16 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.Name = eval(this.Name);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.LargeIconFilename = eval(this.LargeIconFilename);
+                obj.SmallIconFilename = eval(this.SmallIconFilename);
+                obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
+                obj.Quality = eval(this.Quality);
+                obj.Description = eval(this.Description);
+                obj.WeightValue = this.WeightValue == null ? null : new MaskItem<R, WeightValue.Mask<R>?>(eval(this.WeightValue.Overall), this.WeightValue.Specific?.Translate(eval));
             }
             #endregion
 
@@ -316,6 +559,46 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.VirtualMachineAdapter?.Overall ?? true)
+                    {
+                        VirtualMachineAdapter?.ToString(fg);
+                    }
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.ToString(fg);
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.LargeIconFilename ?? true)
+                    {
+                        fg.AppendItem(LargeIconFilename, "LargeIconFilename");
+                    }
+                    if (printMask?.SmallIconFilename ?? true)
+                    {
+                        fg.AppendItem(SmallIconFilename, "SmallIconFilename");
+                    }
+                    if (printMask?.Destructible?.Overall ?? true)
+                    {
+                        Destructible?.ToString(fg);
+                    }
+                    if (printMask?.Quality ?? true)
+                    {
+                        fg.AppendItem(Quality, "Quality");
+                    }
+                    if (printMask?.Description ?? true)
+                    {
+                        fg.AppendItem(Description, "Description");
+                    }
+                    if (printMask?.WeightValue?.Overall ?? true)
+                    {
+                        WeightValue?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -327,12 +610,45 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? Name;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? LargeIconFilename;
+            public Exception? SmallIconFilename;
+            public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
+            public Exception? Quality;
+            public Exception? Description;
+            public MaskItem<Exception?, WeightValue.ErrorMask?>? WeightValue;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
                 switch (enu)
                 {
+                    case AlchemicalApparatus_FieldIndex.VirtualMachineAdapter:
+                        return VirtualMachineAdapter;
+                    case AlchemicalApparatus_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case AlchemicalApparatus_FieldIndex.Name:
+                        return Name;
+                    case AlchemicalApparatus_FieldIndex.Model:
+                        return Model;
+                    case AlchemicalApparatus_FieldIndex.LargeIconFilename:
+                        return LargeIconFilename;
+                    case AlchemicalApparatus_FieldIndex.SmallIconFilename:
+                        return SmallIconFilename;
+                    case AlchemicalApparatus_FieldIndex.Destructible:
+                        return Destructible;
+                    case AlchemicalApparatus_FieldIndex.Quality:
+                        return Quality;
+                    case AlchemicalApparatus_FieldIndex.Description:
+                        return Description;
+                    case AlchemicalApparatus_FieldIndex.WeightValue:
+                        return WeightValue;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -343,6 +659,36 @@ namespace Mutagen.Bethesda.Skyrim
                 AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
                 switch (enu)
                 {
+                    case AlchemicalApparatus_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = new MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>(ex, null);
+                        break;
+                    case AlchemicalApparatus_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case AlchemicalApparatus_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case AlchemicalApparatus_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case AlchemicalApparatus_FieldIndex.LargeIconFilename:
+                        this.LargeIconFilename = ex;
+                        break;
+                    case AlchemicalApparatus_FieldIndex.SmallIconFilename:
+                        this.SmallIconFilename = ex;
+                        break;
+                    case AlchemicalApparatus_FieldIndex.Destructible:
+                        this.Destructible = new MaskItem<Exception?, Destructible.ErrorMask?>(ex, null);
+                        break;
+                    case AlchemicalApparatus_FieldIndex.Quality:
+                        this.Quality = ex;
+                        break;
+                    case AlchemicalApparatus_FieldIndex.Description:
+                        this.Description = ex;
+                        break;
+                    case AlchemicalApparatus_FieldIndex.WeightValue:
+                        this.WeightValue = new MaskItem<Exception?, WeightValue.ErrorMask?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -354,6 +700,36 @@ namespace Mutagen.Bethesda.Skyrim
                 AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
                 switch (enu)
                 {
+                    case AlchemicalApparatus_FieldIndex.VirtualMachineAdapter:
+                        this.VirtualMachineAdapter = (MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>?)obj;
+                        break;
+                    case AlchemicalApparatus_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case AlchemicalApparatus_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case AlchemicalApparatus_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case AlchemicalApparatus_FieldIndex.LargeIconFilename:
+                        this.LargeIconFilename = (Exception?)obj;
+                        break;
+                    case AlchemicalApparatus_FieldIndex.SmallIconFilename:
+                        this.SmallIconFilename = (Exception?)obj;
+                        break;
+                    case AlchemicalApparatus_FieldIndex.Destructible:
+                        this.Destructible = (MaskItem<Exception?, Destructible.ErrorMask?>?)obj;
+                        break;
+                    case AlchemicalApparatus_FieldIndex.Quality:
+                        this.Quality = (Exception?)obj;
+                        break;
+                    case AlchemicalApparatus_FieldIndex.Description:
+                        this.Description = (Exception?)obj;
+                        break;
+                    case AlchemicalApparatus_FieldIndex.WeightValue:
+                        this.WeightValue = (MaskItem<Exception?, WeightValue.ErrorMask?>?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -363,6 +739,16 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (VirtualMachineAdapter != null) return true;
+                if (ObjectBounds != null) return true;
+                if (Name != null) return true;
+                if (Model != null) return true;
+                if (LargeIconFilename != null) return true;
+                if (SmallIconFilename != null) return true;
+                if (Destructible != null) return true;
+                if (Quality != null) return true;
+                if (Description != null) return true;
+                if (WeightValue != null) return true;
                 return false;
             }
             #endregion
@@ -398,6 +784,16 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                VirtualMachineAdapter?.ToString(fg);
+                ObjectBounds?.ToString(fg);
+                fg.AppendItem(Name, "Name");
+                Model?.ToString(fg);
+                fg.AppendItem(LargeIconFilename, "LargeIconFilename");
+                fg.AppendItem(SmallIconFilename, "SmallIconFilename");
+                Destructible?.ToString(fg);
+                fg.AppendItem(Quality, "Quality");
+                fg.AppendItem(Description, "Description");
+                WeightValue?.ToString(fg);
             }
             #endregion
 
@@ -406,6 +802,16 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.LargeIconFilename = this.LargeIconFilename.Combine(rhs.LargeIconFilename);
+                ret.SmallIconFilename = this.SmallIconFilename.Combine(rhs.SmallIconFilename);
+                ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
+                ret.Quality = this.Quality.Combine(rhs.Quality);
+                ret.Description = this.Description.Combine(rhs.Description);
+                ret.WeightValue = this.WeightValue.Combine(rhs.WeightValue, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -427,19 +833,58 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public MaskItem<bool, VirtualMachineAdapter.TranslationMask?> VirtualMachineAdapter;
+            public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
+            public bool Name;
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public bool LargeIconFilename;
+            public bool SmallIconFilename;
+            public MaskItem<bool, Destructible.TranslationMask?> Destructible;
+            public bool Quality;
+            public bool Description;
+            public MaskItem<bool, WeightValue.TranslationMask?> WeightValue;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.TranslationMask?>(defaultOn, null);
+                this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
+                this.Name = defaultOn;
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.LargeIconFilename = defaultOn;
+                this.SmallIconFilename = defaultOn;
+                this.Destructible = new MaskItem<bool, Destructible.TranslationMask?>(defaultOn, null);
+                this.Quality = defaultOn;
+                this.Description = defaultOn;
+                this.WeightValue = new MaskItem<bool, WeightValue.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((VirtualMachineAdapter?.Overall ?? true, VirtualMachineAdapter?.Specific?.GetCrystal()));
+                ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
+                ret.Add((Name, null));
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((LargeIconFilename, null));
+                ret.Add((SmallIconFilename, null));
+                ret.Add((Destructible?.Overall ?? true, Destructible?.Specific?.GetCrystal()));
+                ret.Add((Quality, null));
+                ret.Add((Description, null));
+                ret.Add((WeightValue?.Overall ?? true, WeightValue?.Specific?.GetCrystal()));
+            }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = AlchemicalApparatus_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public override IEnumerable<ILinkGetter> Links => AlchemicalApparatusCommon.Instance.GetLinks(this);
         public AlchemicalApparatus(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -517,9 +962,20 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IAlchemicalApparatus :
         IAlchemicalApparatusGetter,
         ISkyrimMajorRecord,
+        INamed,
         IItem,
         ILoquiObjectSetter<IAlchemicalApparatusInternal>
     {
+        new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
+        new ObjectBounds ObjectBounds { get; set; }
+        new String? Name { get; set; }
+        new Model? Model { get; set; }
+        new String? LargeIconFilename { get; set; }
+        new String? SmallIconFilename { get; set; }
+        new Destructible? Destructible { get; set; }
+        new AlchemicalApparatus.QualityLevel? Quality { get; set; }
+        new String? Description { get; set; }
+        new WeightValue? WeightValue { get; set; }
     }
 
     public partial interface IAlchemicalApparatusInternal :
@@ -531,12 +987,24 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IAlchemicalApparatusGetter :
         ISkyrimMajorRecordGetter,
+        INamedGetter,
         IItemGetter,
         ILoquiObject<IAlchemicalApparatusGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => AlchemicalApparatus_Registration.Instance;
+        IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        IObjectBoundsGetter ObjectBounds { get; }
+        String? Name { get; }
+        IModelGetter? Model { get; }
+        String? LargeIconFilename { get; }
+        String? SmallIconFilename { get; }
+        IDestructibleGetter? Destructible { get; }
+        AlchemicalApparatus.QualityLevel? Quality { get; }
+        String? Description { get; }
+        IWeightValueGetter? WeightValue { get; }
 
     }
 
@@ -837,6 +1305,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        VirtualMachineAdapter = 6,
+        ObjectBounds = 7,
+        Name = 8,
+        Model = 9,
+        LargeIconFilename = 10,
+        SmallIconFilename = 11,
+        Destructible = 12,
+        Quality = 13,
+        Description = 14,
+        WeightValue = 15,
     }
     #endregion
 
@@ -854,9 +1332,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "5ca84371-e6e9-4890-a8c8-930cc1633a36";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 10;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(AlchemicalApparatus.Mask<>);
 
@@ -886,6 +1364,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "VIRTUALMACHINEADAPTER":
+                    return (ushort)AlchemicalApparatus_FieldIndex.VirtualMachineAdapter;
+                case "OBJECTBOUNDS":
+                    return (ushort)AlchemicalApparatus_FieldIndex.ObjectBounds;
+                case "NAME":
+                    return (ushort)AlchemicalApparatus_FieldIndex.Name;
+                case "MODEL":
+                    return (ushort)AlchemicalApparatus_FieldIndex.Model;
+                case "LARGEICONFILENAME":
+                    return (ushort)AlchemicalApparatus_FieldIndex.LargeIconFilename;
+                case "SMALLICONFILENAME":
+                    return (ushort)AlchemicalApparatus_FieldIndex.SmallIconFilename;
+                case "DESTRUCTIBLE":
+                    return (ushort)AlchemicalApparatus_FieldIndex.Destructible;
+                case "QUALITY":
+                    return (ushort)AlchemicalApparatus_FieldIndex.Quality;
+                case "DESCRIPTION":
+                    return (ushort)AlchemicalApparatus_FieldIndex.Description;
+                case "WEIGHTVALUE":
+                    return (ushort)AlchemicalApparatus_FieldIndex.WeightValue;
                 default:
                     return null;
             }
@@ -896,6 +1394,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
             switch (enu)
             {
+                case AlchemicalApparatus_FieldIndex.VirtualMachineAdapter:
+                case AlchemicalApparatus_FieldIndex.ObjectBounds:
+                case AlchemicalApparatus_FieldIndex.Name:
+                case AlchemicalApparatus_FieldIndex.Model:
+                case AlchemicalApparatus_FieldIndex.LargeIconFilename:
+                case AlchemicalApparatus_FieldIndex.SmallIconFilename:
+                case AlchemicalApparatus_FieldIndex.Destructible:
+                case AlchemicalApparatus_FieldIndex.Quality:
+                case AlchemicalApparatus_FieldIndex.Description:
+                case AlchemicalApparatus_FieldIndex.WeightValue:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -906,6 +1415,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
             switch (enu)
             {
+                case AlchemicalApparatus_FieldIndex.VirtualMachineAdapter:
+                case AlchemicalApparatus_FieldIndex.ObjectBounds:
+                case AlchemicalApparatus_FieldIndex.Model:
+                case AlchemicalApparatus_FieldIndex.Destructible:
+                case AlchemicalApparatus_FieldIndex.WeightValue:
+                    return true;
+                case AlchemicalApparatus_FieldIndex.Name:
+                case AlchemicalApparatus_FieldIndex.LargeIconFilename:
+                case AlchemicalApparatus_FieldIndex.SmallIconFilename:
+                case AlchemicalApparatus_FieldIndex.Quality:
+                case AlchemicalApparatus_FieldIndex.Description:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -916,6 +1437,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
             switch (enu)
             {
+                case AlchemicalApparatus_FieldIndex.VirtualMachineAdapter:
+                case AlchemicalApparatus_FieldIndex.ObjectBounds:
+                case AlchemicalApparatus_FieldIndex.Name:
+                case AlchemicalApparatus_FieldIndex.Model:
+                case AlchemicalApparatus_FieldIndex.LargeIconFilename:
+                case AlchemicalApparatus_FieldIndex.SmallIconFilename:
+                case AlchemicalApparatus_FieldIndex.Destructible:
+                case AlchemicalApparatus_FieldIndex.Quality:
+                case AlchemicalApparatus_FieldIndex.Description:
+                case AlchemicalApparatus_FieldIndex.WeightValue:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -926,6 +1458,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
             switch (enu)
             {
+                case AlchemicalApparatus_FieldIndex.VirtualMachineAdapter:
+                    return "VirtualMachineAdapter";
+                case AlchemicalApparatus_FieldIndex.ObjectBounds:
+                    return "ObjectBounds";
+                case AlchemicalApparatus_FieldIndex.Name:
+                    return "Name";
+                case AlchemicalApparatus_FieldIndex.Model:
+                    return "Model";
+                case AlchemicalApparatus_FieldIndex.LargeIconFilename:
+                    return "LargeIconFilename";
+                case AlchemicalApparatus_FieldIndex.SmallIconFilename:
+                    return "SmallIconFilename";
+                case AlchemicalApparatus_FieldIndex.Destructible:
+                    return "Destructible";
+                case AlchemicalApparatus_FieldIndex.Quality:
+                    return "Quality";
+                case AlchemicalApparatus_FieldIndex.Description:
+                    return "Description";
+                case AlchemicalApparatus_FieldIndex.WeightValue:
+                    return "WeightValue";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -936,6 +1488,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
             switch (enu)
             {
+                case AlchemicalApparatus_FieldIndex.VirtualMachineAdapter:
+                case AlchemicalApparatus_FieldIndex.ObjectBounds:
+                case AlchemicalApparatus_FieldIndex.Name:
+                case AlchemicalApparatus_FieldIndex.Model:
+                case AlchemicalApparatus_FieldIndex.LargeIconFilename:
+                case AlchemicalApparatus_FieldIndex.SmallIconFilename:
+                case AlchemicalApparatus_FieldIndex.Destructible:
+                case AlchemicalApparatus_FieldIndex.Quality:
+                case AlchemicalApparatus_FieldIndex.Description:
+                case AlchemicalApparatus_FieldIndex.WeightValue:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -946,6 +1509,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
             switch (enu)
             {
+                case AlchemicalApparatus_FieldIndex.VirtualMachineAdapter:
+                case AlchemicalApparatus_FieldIndex.ObjectBounds:
+                case AlchemicalApparatus_FieldIndex.Name:
+                case AlchemicalApparatus_FieldIndex.Model:
+                case AlchemicalApparatus_FieldIndex.LargeIconFilename:
+                case AlchemicalApparatus_FieldIndex.SmallIconFilename:
+                case AlchemicalApparatus_FieldIndex.Destructible:
+                case AlchemicalApparatus_FieldIndex.Quality:
+                case AlchemicalApparatus_FieldIndex.Description:
+                case AlchemicalApparatus_FieldIndex.WeightValue:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -956,6 +1530,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
             switch (enu)
             {
+                case AlchemicalApparatus_FieldIndex.VirtualMachineAdapter:
+                    return typeof(VirtualMachineAdapter);
+                case AlchemicalApparatus_FieldIndex.ObjectBounds:
+                    return typeof(ObjectBounds);
+                case AlchemicalApparatus_FieldIndex.Name:
+                    return typeof(String);
+                case AlchemicalApparatus_FieldIndex.Model:
+                    return typeof(Model);
+                case AlchemicalApparatus_FieldIndex.LargeIconFilename:
+                    return typeof(String);
+                case AlchemicalApparatus_FieldIndex.SmallIconFilename:
+                    return typeof(String);
+                case AlchemicalApparatus_FieldIndex.Destructible:
+                    return typeof(Destructible);
+                case AlchemicalApparatus_FieldIndex.Quality:
+                    return typeof(AlchemicalApparatus.QualityLevel);
+                case AlchemicalApparatus_FieldIndex.Description:
+                    return typeof(String);
+                case AlchemicalApparatus_FieldIndex.WeightValue:
+                    return typeof(WeightValue);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -963,9 +1557,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(AlchemicalApparatusXmlWriteTranslation);
         public static readonly RecordType APPA_HEADER = new RecordType("APPA");
+        public static readonly RecordType VMAD_HEADER = new RecordType("VMAD");
+        public static readonly RecordType OBND_HEADER = new RecordType("OBND");
+        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
+        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
+        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
+        public static readonly RecordType MICO_HEADER = new RecordType("MICO");
+        public static readonly RecordType DEST_HEADER = new RecordType("DEST");
+        public static readonly RecordType DSTD_HEADER = new RecordType("DSTD");
+        public static readonly RecordType DMDL_HEADER = new RecordType("DMDL");
+        public static readonly RecordType QUAL_HEADER = new RecordType("QUAL");
+        public static readonly RecordType DESC_HEADER = new RecordType("DESC");
+        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = APPA_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
+        public const int NumTypedFields = 10;
         public static readonly Type BinaryWriteTranslation = typeof(AlchemicalApparatusBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1008,6 +1614,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IAlchemicalApparatusInternal item)
         {
             ClearPartial();
+            item.VirtualMachineAdapter = null;
+            item.ObjectBounds = new ObjectBounds();
+            item.Name = default;
+            item.Model = null;
+            item.LargeIconFilename = default;
+            item.SmallIconFilename = default;
+            item.Destructible = null;
+            item.Quality = default;
+            item.Description = default;
+            item.WeightValue = null;
             base.Clear(item);
         }
         
@@ -1112,6 +1728,96 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
         
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            IAlchemicalApparatusInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x44414D56: // VMAD
+                {
+                    item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.VirtualMachineAdapter);
+                }
+                case 0x444E424F: // OBND
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.ObjectBounds);
+                }
+                case 0x4C4C5546: // FULL
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Name);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Model);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.LargeIconFilename = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.LargeIconFilename);
+                }
+                case 0x4F43494D: // MICO
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.SmallIconFilename = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.SmallIconFilename);
+                }
+                case 0x54534544: // DEST
+                case 0x44545344: // DSTD
+                case 0x4C444D44: // DMDL
+                {
+                    item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Destructible);
+                }
+                case 0x4C415551: // QUAL
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.Quality = EnumBinaryTranslation<AlchemicalApparatus.QualityLevel>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Quality);
+                }
+                case 0x43534544: // DESC
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Description);
+                }
+                case 0x41544144: // DATA
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength; // Skip header
+                    item.WeightValue = Mutagen.Bethesda.Skyrim.WeightValue.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.WeightValue);
+                }
+                default:
+                    return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
+        
         public virtual void CopyInFromBinary(
             IAlchemicalApparatusInternal item,
             MutagenFrame frame,
@@ -1176,6 +1882,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.VirtualMachineAdapter = EqualsMaskHelper.EqualsHelper(
+                item.VirtualMachineAdapter,
+                rhs.VirtualMachineAdapter,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.LargeIconFilename = string.Equals(item.LargeIconFilename, rhs.LargeIconFilename);
+            ret.SmallIconFilename = string.Equals(item.SmallIconFilename, rhs.SmallIconFilename);
+            ret.Destructible = EqualsMaskHelper.EqualsHelper(
+                item.Destructible,
+                rhs.Destructible,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Quality = item.Quality == rhs.Quality;
+            ret.Description = string.Equals(item.Description, rhs.Description);
+            ret.WeightValue = EqualsMaskHelper.EqualsHelper(
+                item.WeightValue,
+                rhs.WeightValue,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1227,12 +1959,74 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if ((printMask?.VirtualMachineAdapter?.Overall ?? true)
+                && item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+            {
+                VirtualMachineAdapterItem?.ToString(fg, "VirtualMachineAdapter");
+            }
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
+            {
+                fg.AppendItem(NameItem, "Name");
+            }
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
+            {
+                ModelItem?.ToString(fg, "Model");
+            }
+            if ((printMask?.LargeIconFilename ?? true)
+                && item.LargeIconFilename.TryGet(out var LargeIconFilenameItem))
+            {
+                fg.AppendItem(LargeIconFilenameItem, "LargeIconFilename");
+            }
+            if ((printMask?.SmallIconFilename ?? true)
+                && item.SmallIconFilename.TryGet(out var SmallIconFilenameItem))
+            {
+                fg.AppendItem(SmallIconFilenameItem, "SmallIconFilename");
+            }
+            if ((printMask?.Destructible?.Overall ?? true)
+                && item.Destructible.TryGet(out var DestructibleItem))
+            {
+                DestructibleItem?.ToString(fg, "Destructible");
+            }
+            if ((printMask?.Quality ?? true)
+                && item.Quality.TryGet(out var QualityItem))
+            {
+                fg.AppendItem(QualityItem, "Quality");
+            }
+            if ((printMask?.Description ?? true)
+                && item.Description.TryGet(out var DescriptionItem))
+            {
+                fg.AppendItem(DescriptionItem, "Description");
+            }
+            if ((printMask?.WeightValue?.Overall ?? true)
+                && item.WeightValue.TryGet(out var WeightValueItem))
+            {
+                WeightValueItem?.ToString(fg, "WeightValue");
+            }
         }
         
         public bool HasBeenSet(
             IAlchemicalApparatusGetter item,
             AlchemicalApparatus.Mask<bool?> checkMask)
         {
+            if (checkMask.VirtualMachineAdapter?.Overall.HasValue ?? false && checkMask.VirtualMachineAdapter.Overall.Value != (item.VirtualMachineAdapter != null)) return false;
+            if (checkMask.VirtualMachineAdapter?.Specific != null && (item.VirtualMachineAdapter == null || !item.VirtualMachineAdapter.HasBeenSet(checkMask.VirtualMachineAdapter.Specific))) return false;
+            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
+            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
+            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.LargeIconFilename.HasValue && checkMask.LargeIconFilename.Value != (item.LargeIconFilename != null)) return false;
+            if (checkMask.SmallIconFilename.HasValue && checkMask.SmallIconFilename.Value != (item.SmallIconFilename != null)) return false;
+            if (checkMask.Destructible?.Overall.HasValue ?? false && checkMask.Destructible.Overall.Value != (item.Destructible != null)) return false;
+            if (checkMask.Destructible?.Specific != null && (item.Destructible == null || !item.Destructible.HasBeenSet(checkMask.Destructible.Specific))) return false;
+            if (checkMask.Quality.HasValue && checkMask.Quality.Value != (item.Quality != null)) return false;
+            if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
+            if (checkMask.WeightValue?.Overall.HasValue ?? false && checkMask.WeightValue.Overall.Value != (item.WeightValue != null)) return false;
+            if (checkMask.WeightValue?.Specific != null && (item.WeightValue == null || !item.WeightValue.HasBeenSet(checkMask.WeightValue.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1242,6 +2036,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAlchemicalApparatusGetter item,
             AlchemicalApparatus.Mask<bool> mask)
         {
+            var itemVirtualMachineAdapter = item.VirtualMachineAdapter;
+            mask.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
+            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
+            mask.Name = (item.Name != null);
+            var itemModel = item.Model;
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            mask.LargeIconFilename = (item.LargeIconFilename != null);
+            mask.SmallIconFilename = (item.SmallIconFilename != null);
+            var itemDestructible = item.Destructible;
+            mask.Destructible = new MaskItem<bool, Destructible.Mask<bool>?>(itemDestructible != null, itemDestructible?.GetHasBeenSetMask());
+            mask.Quality = (item.Quality != null);
+            mask.Description = (item.Description != null);
+            var itemWeightValue = item.WeightValue;
+            mask.WeightValue = new MaskItem<bool, WeightValue.Mask<bool>?>(itemWeightValue != null, itemWeightValue?.GetHasBeenSetMask());
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1293,6 +2101,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            if (!string.Equals(lhs.LargeIconFilename, rhs.LargeIconFilename)) return false;
+            if (!string.Equals(lhs.SmallIconFilename, rhs.SmallIconFilename)) return false;
+            if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
+            if (lhs.Quality != rhs.Quality) return false;
+            if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            if (!object.Equals(lhs.WeightValue, rhs.WeightValue)) return false;
             return true;
         }
         
@@ -1317,6 +2135,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IAlchemicalApparatusGetter item)
         {
             var hash = new HashCode();
+            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapteritem))
+            {
+                hash.Add(VirtualMachineAdapteritem);
+            }
+            hash.Add(item.ObjectBounds);
+            if (item.Name.TryGet(out var Nameitem))
+            {
+                hash.Add(Nameitem);
+            }
+            if (item.Model.TryGet(out var Modelitem))
+            {
+                hash.Add(Modelitem);
+            }
+            if (item.LargeIconFilename.TryGet(out var LargeIconFilenameitem))
+            {
+                hash.Add(LargeIconFilenameitem);
+            }
+            if (item.SmallIconFilename.TryGet(out var SmallIconFilenameitem))
+            {
+                hash.Add(SmallIconFilenameitem);
+            }
+            if (item.Destructible.TryGet(out var Destructibleitem))
+            {
+                hash.Add(Destructibleitem);
+            }
+            if (item.Quality.TryGet(out var Qualityitem))
+            {
+                hash.Add(Qualityitem);
+            }
+            if (item.Description.TryGet(out var Descriptionitem))
+            {
+                hash.Add(Descriptionitem);
+            }
+            if (item.WeightValue.TryGet(out var WeightValueitem))
+            {
+                hash.Add(WeightValueitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1345,6 +2200,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             foreach (var item in base.GetLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.VirtualMachineAdapter is ILinkContainer VirtualMachineAdapterlinkCont)
+            {
+                foreach (var item in VirtualMachineAdapterlinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Model != null)
+            {
+                foreach (var item in obj.Model.Links)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible != null)
+            {
+                foreach (var item in obj.Destructible.Links)
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1392,6 +2268,152 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.VirtualMachineAdapter);
+                try
+                {
+                    if(rhs.VirtualMachineAdapter.TryGet(out var rhsVirtualMachineAdapter))
+                    {
+                        item.VirtualMachineAdapter = rhsVirtualMachineAdapter.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)AlchemicalApparatus_FieldIndex.VirtualMachineAdapter));
+                    }
+                    else
+                    {
+                        item.VirtualMachineAdapter = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)AlchemicalApparatus_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model.TryGet(out var rhsModel))
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)AlchemicalApparatus_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.LargeIconFilename) ?? true))
+            {
+                item.LargeIconFilename = rhs.LargeIconFilename;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.SmallIconFilename) ?? true))
+            {
+                item.SmallIconFilename = rhs.SmallIconFilename;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Destructible) ?? true))
+            {
+                errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Destructible);
+                try
+                {
+                    if(rhs.Destructible.TryGet(out var rhsDestructible))
+                    {
+                        item.Destructible = rhsDestructible.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)AlchemicalApparatus_FieldIndex.Destructible));
+                    }
+                    else
+                    {
+                        item.Destructible = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Quality) ?? true))
+            {
+                item.Quality = rhs.Quality;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Description) ?? true))
+            {
+                item.Description = rhs.Description;
+            }
+            if ((copyMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.WeightValue) ?? true))
+            {
+                errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.WeightValue);
+                try
+                {
+                    if(rhs.WeightValue.TryGet(out var rhsWeightValue))
+                    {
+                        item.WeightValue = rhsWeightValue.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)AlchemicalApparatus_FieldIndex.WeightValue));
+                    }
+                    else
+                    {
+                        item.WeightValue = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1534,6 +2556,123 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((item.VirtualMachineAdapter != null)
+                && (translationMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+                {
+                    ((VirtualMachineAdapterXmlWriteTranslation)((IXmlItem)VirtualMachineAdapterItem).XmlWriteTranslator).Write(
+                        item: VirtualMachineAdapterItem,
+                        node: node,
+                        name: nameof(item.VirtualMachineAdapter),
+                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.VirtualMachineAdapter,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)AlchemicalApparatus_FieldIndex.VirtualMachineAdapter));
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.ObjectBounds) ?? true))
+            {
+                var ObjectBoundsItem = item.ObjectBounds;
+                ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
+                    item: ObjectBoundsItem,
+                    node: node,
+                    name: nameof(item.ObjectBounds),
+                    fieldIndex: (int)AlchemicalApparatus_FieldIndex.ObjectBounds,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)AlchemicalApparatus_FieldIndex.ObjectBounds));
+            }
+            if ((item.Name != null)
+                && (translationMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Name) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)AlchemicalApparatus_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if ((item.Model != null)
+                && (translationMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Model) ?? true))
+            {
+                if (item.Model.TryGet(out var ModelItem))
+                {
+                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                        item: ModelItem,
+                        node: node,
+                        name: nameof(item.Model),
+                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Model,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)AlchemicalApparatus_FieldIndex.Model));
+                }
+            }
+            if ((item.LargeIconFilename != null)
+                && (translationMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.LargeIconFilename) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.LargeIconFilename),
+                    item: item.LargeIconFilename,
+                    fieldIndex: (int)AlchemicalApparatus_FieldIndex.LargeIconFilename,
+                    errorMask: errorMask);
+            }
+            if ((item.SmallIconFilename != null)
+                && (translationMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.SmallIconFilename) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.SmallIconFilename),
+                    item: item.SmallIconFilename,
+                    fieldIndex: (int)AlchemicalApparatus_FieldIndex.SmallIconFilename,
+                    errorMask: errorMask);
+            }
+            if ((item.Destructible != null)
+                && (translationMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Destructible) ?? true))
+            {
+                if (item.Destructible.TryGet(out var DestructibleItem))
+                {
+                    ((DestructibleXmlWriteTranslation)((IXmlItem)DestructibleItem).XmlWriteTranslator).Write(
+                        item: DestructibleItem,
+                        node: node,
+                        name: nameof(item.Destructible),
+                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Destructible,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)AlchemicalApparatus_FieldIndex.Destructible));
+                }
+            }
+            if ((item.Quality != null)
+                && (translationMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Quality) ?? true))
+            {
+                EnumXmlTranslation<AlchemicalApparatus.QualityLevel>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Quality),
+                    item: item.Quality,
+                    fieldIndex: (int)AlchemicalApparatus_FieldIndex.Quality,
+                    errorMask: errorMask);
+            }
+            if ((item.Description != null)
+                && (translationMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.Description) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Description),
+                    item: item.Description,
+                    fieldIndex: (int)AlchemicalApparatus_FieldIndex.Description,
+                    errorMask: errorMask);
+            }
+            if ((item.WeightValue != null)
+                && (translationMask?.GetShouldTranslate((int)AlchemicalApparatus_FieldIndex.WeightValue) ?? true))
+            {
+                if (item.WeightValue.TryGet(out var WeightValueItem))
+                {
+                    ((WeightValueXmlWriteTranslation)((IXmlItem)WeightValueItem).XmlWriteTranslator).Write(
+                        item: WeightValueItem,
+                        node: node,
+                        name: nameof(item.WeightValue),
+                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.WeightValue,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)AlchemicalApparatus_FieldIndex.WeightValue));
+                }
+            }
         }
 
         public void Write(
@@ -1641,6 +2780,191 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "VirtualMachineAdapter":
+                    errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.VirtualMachineAdapter);
+                    try
+                    {
+                        item.VirtualMachineAdapter = LoquiXmlTranslation<VirtualMachineAdapter>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)AlchemicalApparatus_FieldIndex.VirtualMachineAdapter));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ObjectBounds":
+                    errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.ObjectBounds);
+                    try
+                    {
+                        item.ObjectBounds = LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)AlchemicalApparatus_FieldIndex.ObjectBounds));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Name":
+                    errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Name);
+                    try
+                    {
+                        item.Name = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Model":
+                    errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Model);
+                    try
+                    {
+                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)AlchemicalApparatus_FieldIndex.Model));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LargeIconFilename":
+                    errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.LargeIconFilename);
+                    try
+                    {
+                        item.LargeIconFilename = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SmallIconFilename":
+                    errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.SmallIconFilename);
+                    try
+                    {
+                        item.SmallIconFilename = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Destructible":
+                    errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Destructible);
+                    try
+                    {
+                        item.Destructible = LoquiXmlTranslation<Destructible>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)AlchemicalApparatus_FieldIndex.Destructible));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Quality":
+                    errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Quality);
+                    try
+                    {
+                        item.Quality = EnumXmlTranslation<AlchemicalApparatus.QualityLevel>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Description":
+                    errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.Description);
+                    try
+                    {
+                        item.Description = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "WeightValue":
+                    errorMask?.PushIndex((int)AlchemicalApparatus_FieldIndex.WeightValue);
+                    try
+                    {
+                        item.WeightValue = LoquiXmlTranslation<WeightValue>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)AlchemicalApparatus_FieldIndex.WeightValue));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1727,6 +3051,78 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static AlchemicalApparatusBinaryWriteTranslation Instance = new AlchemicalApparatusBinaryWriteTranslation();
 
+        public static void WriteRecordTypes(
+            IAlchemicalApparatusGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            if (item.VirtualMachineAdapter.TryGet(out var VirtualMachineAdapterItem))
+            {
+                ((VirtualMachineAdapterBinaryWriteTranslation)((IBinaryItem)VirtualMachineAdapterItem).BinaryWriteTranslator).Write(
+                    item: VirtualMachineAdapterItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.FULL_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            if (item.Model.TryGet(out var ModelItem))
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.LargeIconFilename,
+                header: recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.ICON_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SmallIconFilename,
+                header: recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.MICO_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            if (item.Destructible.TryGet(out var DestructibleItem))
+            {
+                ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
+                    item: DestructibleItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlchemicalApparatus.QualityLevel>.Instance.WriteNullable(
+                writer,
+                item.Quality,
+                length: 4,
+                header: recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.QUAL_HEADER));
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Description,
+                header: recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.DESC_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            if (item.WeightValue.TryGet(out var WeightValueItem))
+            {
+                using (HeaderExport.ExportHeader(writer, AlchemicalApparatus_Registration.DATA_HEADER, ObjectType.Subrecord))
+                {
+                    ((WeightValueBinaryWriteTranslation)((IBinaryItem)WeightValueItem).BinaryWriteTranslator).Write(
+                        item: WeightValueItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             IAlchemicalApparatusGetter item,
@@ -1740,7 +3136,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1820,6 +3216,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAlchemicalApparatusGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => AlchemicalApparatusCommon.Instance.GetLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => AlchemicalApparatusXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
@@ -1847,6 +3244,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region VirtualMachineAdapter
+        private RangeInt32? _VirtualMachineAdapterLocation;
+        private bool _VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapter_IsSet ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
+        #endregion
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private bool _ObjectBounds_IsSet => _ObjectBoundsLocation.HasValue;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBounds_IsSet ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation!.Value.Min)), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
+        #endregion
+        #region Model
+        public IModelGetter? Model { get; private set; }
+        public bool Model_IsSet => Model != null;
+        #endregion
+        #region LargeIconFilename
+        private int? _LargeIconFilenameLocation;
+        public String? LargeIconFilename => _LargeIconFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _LargeIconFilenameLocation.Value, _package.Meta)) : default(string?);
+        #endregion
+        #region SmallIconFilename
+        private int? _SmallIconFilenameLocation;
+        public String? SmallIconFilename => _SmallIconFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SmallIconFilenameLocation.Value, _package.Meta)) : default(string?);
+        #endregion
+        #region Destructible
+        public IDestructibleGetter? Destructible { get; private set; }
+        public bool Destructible_IsSet => Destructible != null;
+        #endregion
+        #region Quality
+        private int? _QualityLocation;
+        private bool Quality_IsSet => _QualityLocation.HasValue;
+        public AlchemicalApparatus.QualityLevel? Quality => Quality_IsSet ? (AlchemicalApparatus.QualityLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _QualityLocation!.Value, _package.Meta)) : default(AlchemicalApparatus.QualityLevel?);
+        #endregion
+        #region Description
+        private int? _DescriptionLocation;
+        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta)) : default(string?);
+        #endregion
+        #region WeightValue
+        public IWeightValueGetter? WeightValue { get; private set; }
+        public bool WeightValue_IsSet => WeightValue != null;
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -1897,6 +3339,89 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case 0x44414D56: // VMAD
+                {
+                    _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.VirtualMachineAdapter);
+                }
+                case 0x444E424F: // OBND
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.ObjectBounds);
+                }
+                case 0x4C4C5546: // FULL
+                {
+                    _NameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Name);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Model);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    _LargeIconFilenameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.LargeIconFilename);
+                }
+                case 0x4F43494D: // MICO
+                {
+                    _SmallIconFilenameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.SmallIconFilename);
+                }
+                case 0x54534544: // DEST
+                case 0x44545344: // DSTD
+                case 0x4C444D44: // DMDL
+                {
+                    this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Destructible);
+                }
+                case 0x4C415551: // QUAL
+                {
+                    _QualityLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Quality);
+                }
+                case 0x43534544: // DESC
+                {
+                    _DescriptionLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.Description);
+                }
+                case 0x41544144: // DATA
+                {
+                    stream.Position += _package.Meta.SubConstants.HeaderLength;
+                    this.WeightValue = WeightValueBinaryOverlay.WeightValueFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)AlchemicalApparatus_FieldIndex.WeightValue);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
         #region To String
 
         public override void ToString(
