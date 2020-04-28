@@ -47,16 +47,7 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.False(package.TryLookup<IMajorRecordCommonGetter>(FormKey.Null, out var _));
             Assert.False(package.TryLookup<IOblivionMajorRecordGetter>(UnusedFormKey, out var _));
             Assert.False(package.TryLookup<IOblivionMajorRecordGetter>(FormKey.Null, out var _));
-            try
-            {
-                Assert.False(package.TryLookup<INpcGetter>(UnusedFormKey, out var _));
-            }
-            catch (Exception ex)
-            {
-                int wer = 23;
-                wer++;
-                Assert.False(package.TryLookup<INpcGetter>(UnusedFormKey, out var _));
-            }
+            Assert.False(package.TryLookup<INpcGetter>(UnusedFormKey, out var _));
             Assert.False(package.TryLookup<INpcGetter>(FormKey.Null, out var _));
             Assert.False(package.TryLookup<Npc>(UnusedFormKey, out var _));
             Assert.False(package.TryLookup<Npc>(FormKey.Null, out var _));

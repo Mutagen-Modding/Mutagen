@@ -6,11 +6,21 @@ using System.Threading.Tasks;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Loqui;
+using System.Diagnostics;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     public partial class Race
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+
         [Flags]
         public enum Flag
         {
@@ -37,6 +47,15 @@ namespace Mutagen.Bethesda.Oblivion
             Hand = 2,
             Foot = 3,
             Tail = 4,
+        }
+    }
+
+    namespace Internals
+    {
+        public partial class RaceBinaryOverlay
+        {
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            String INamedRequiredGetter.Name => this.Name ?? string.Empty;
         }
     }
 }

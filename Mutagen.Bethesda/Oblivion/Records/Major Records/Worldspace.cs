@@ -1,6 +1,7 @@
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,15 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class Worldspace
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+
         [Flags]
         public enum Flag
         {
@@ -222,6 +232,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class WorldspaceBinaryOverlay
         {
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            String INamedRequiredGetter.Name => this.Name ?? string.Empty;
+
             private ReadOnlyMemorySlice<byte>? _grupData;
 
             private int? _RoadLocation;

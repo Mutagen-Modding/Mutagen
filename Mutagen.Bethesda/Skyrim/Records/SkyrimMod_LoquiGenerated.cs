@@ -73,6 +73,10 @@ namespace Mutagen.Bethesda.Skyrim
             _MiscItems_Object = new Group<MiscItem>(this);
             _AlchemicalApparatuses_Object = new Group<AlchemicalApparatus>(this);
             _Statics_Object = new Group<Static>(this);
+            _MoveableStatics_Object = new Group<MoveableStatic>(this);
+            _Grasses_Object = new Group<Grass>(this);
+            _Trees_Object = new Group<Tree>(this);
+            _Florae_Object = new Group<Flora>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -295,6 +299,34 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IStaticGetter> ISkyrimModGetter.Statics => _Statics_Object;
         #endregion
+        #region MoveableStatics
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<MoveableStatic> _MoveableStatics_Object;
+        public Group<MoveableStatic> MoveableStatics => _MoveableStatics_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IMoveableStaticGetter> ISkyrimModGetter.MoveableStatics => _MoveableStatics_Object;
+        #endregion
+        #region Grasses
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Grass> _Grasses_Object;
+        public Group<Grass> Grasses => _Grasses_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IGrassGetter> ISkyrimModGetter.Grasses => _Grasses_Object;
+        #endregion
+        #region Trees
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Tree> _Trees_Object;
+        public Group<Tree> Trees => _Trees_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<ITreeGetter> ISkyrimModGetter.Trees => _Trees_Object;
+        #endregion
+        #region Florae
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Flora> _Florae_Object;
+        public Group<Flora> Florae => _Florae_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IFloraGetter> ISkyrimModGetter.Florae => _Florae_Object;
+        #endregion
 
         #region To String
 
@@ -496,6 +528,10 @@ namespace Mutagen.Bethesda.Skyrim
                 this.MiscItems = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.AlchemicalApparatuses = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Statics = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.MoveableStatics = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Grasses = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Trees = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Florae = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -529,7 +565,11 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Lights,
                 TItem MiscItems,
                 TItem AlchemicalApparatuses,
-                TItem Statics)
+                TItem Statics,
+                TItem MoveableStatics,
+                TItem Grasses,
+                TItem Trees,
+                TItem Florae)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -562,6 +602,10 @@ namespace Mutagen.Bethesda.Skyrim
                 this.MiscItems = new MaskItem<TItem, Group.Mask<TItem>?>(MiscItems, new Group.Mask<TItem>(MiscItems));
                 this.AlchemicalApparatuses = new MaskItem<TItem, Group.Mask<TItem>?>(AlchemicalApparatuses, new Group.Mask<TItem>(AlchemicalApparatuses));
                 this.Statics = new MaskItem<TItem, Group.Mask<TItem>?>(Statics, new Group.Mask<TItem>(Statics));
+                this.MoveableStatics = new MaskItem<TItem, Group.Mask<TItem>?>(MoveableStatics, new Group.Mask<TItem>(MoveableStatics));
+                this.Grasses = new MaskItem<TItem, Group.Mask<TItem>?>(Grasses, new Group.Mask<TItem>(Grasses));
+                this.Trees = new MaskItem<TItem, Group.Mask<TItem>?>(Trees, new Group.Mask<TItem>(Trees));
+                this.Florae = new MaskItem<TItem, Group.Mask<TItem>?>(Florae, new Group.Mask<TItem>(Florae));
             }
 
             #pragma warning disable CS8618
@@ -604,6 +648,10 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? MiscItems { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? AlchemicalApparatuses { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Statics { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? MoveableStatics { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Grasses { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Trees { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Florae { get; set; }
             #endregion
 
             #region Equals
@@ -647,6 +695,10 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.MiscItems, rhs.MiscItems)) return false;
                 if (!object.Equals(this.AlchemicalApparatuses, rhs.AlchemicalApparatuses)) return false;
                 if (!object.Equals(this.Statics, rhs.Statics)) return false;
+                if (!object.Equals(this.MoveableStatics, rhs.MoveableStatics)) return false;
+                if (!object.Equals(this.Grasses, rhs.Grasses)) return false;
+                if (!object.Equals(this.Trees, rhs.Trees)) return false;
+                if (!object.Equals(this.Florae, rhs.Florae)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -683,6 +735,10 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.MiscItems);
                 hash.Add(this.AlchemicalApparatuses);
                 hash.Add(this.Statics);
+                hash.Add(this.MoveableStatics);
+                hash.Add(this.Grasses);
+                hash.Add(this.Trees);
+                hash.Add(this.Florae);
                 return hash.ToHashCode();
             }
 
@@ -846,6 +902,26 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Statics.Overall)) return false;
                     if (this.Statics.Specific != null && !this.Statics.Specific.All(eval)) return false;
                 }
+                if (MoveableStatics != null)
+                {
+                    if (!eval(this.MoveableStatics.Overall)) return false;
+                    if (this.MoveableStatics.Specific != null && !this.MoveableStatics.Specific.All(eval)) return false;
+                }
+                if (Grasses != null)
+                {
+                    if (!eval(this.Grasses.Overall)) return false;
+                    if (this.Grasses.Specific != null && !this.Grasses.Specific.All(eval)) return false;
+                }
+                if (Trees != null)
+                {
+                    if (!eval(this.Trees.Overall)) return false;
+                    if (this.Trees.Specific != null && !this.Trees.Specific.All(eval)) return false;
+                }
+                if (Florae != null)
+                {
+                    if (!eval(this.Florae.Overall)) return false;
+                    if (this.Florae.Specific != null && !this.Florae.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1008,6 +1084,26 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Statics.Overall)) return true;
                     if (this.Statics.Specific != null && this.Statics.Specific.Any(eval)) return true;
                 }
+                if (MoveableStatics != null)
+                {
+                    if (eval(this.MoveableStatics.Overall)) return true;
+                    if (this.MoveableStatics.Specific != null && this.MoveableStatics.Specific.Any(eval)) return true;
+                }
+                if (Grasses != null)
+                {
+                    if (eval(this.Grasses.Overall)) return true;
+                    if (this.Grasses.Specific != null && this.Grasses.Specific.Any(eval)) return true;
+                }
+                if (Trees != null)
+                {
+                    if (eval(this.Trees.Overall)) return true;
+                    if (this.Trees.Specific != null && this.Trees.Specific.Any(eval)) return true;
+                }
+                if (Florae != null)
+                {
+                    if (eval(this.Florae.Overall)) return true;
+                    if (this.Florae.Specific != null && this.Florae.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1053,6 +1149,10 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.MiscItems = this.MiscItems == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.MiscItems.Overall), this.MiscItems.Specific?.Translate(eval));
                 obj.AlchemicalApparatuses = this.AlchemicalApparatuses == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.AlchemicalApparatuses.Overall), this.AlchemicalApparatuses.Specific?.Translate(eval));
                 obj.Statics = this.Statics == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Statics.Overall), this.Statics.Specific?.Translate(eval));
+                obj.MoveableStatics = this.MoveableStatics == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.MoveableStatics.Overall), this.MoveableStatics.Specific?.Translate(eval));
+                obj.Grasses = this.Grasses == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Grasses.Overall), this.Grasses.Specific?.Translate(eval));
+                obj.Trees = this.Trees == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Trees.Overall), this.Trees.Specific?.Translate(eval));
+                obj.Florae = this.Florae == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Florae.Overall), this.Florae.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1199,6 +1299,22 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Statics?.ToString(fg);
                     }
+                    if (printMask?.MoveableStatics?.Overall ?? true)
+                    {
+                        MoveableStatics?.ToString(fg);
+                    }
+                    if (printMask?.Grasses?.Overall ?? true)
+                    {
+                        Grasses?.ToString(fg);
+                    }
+                    if (printMask?.Trees?.Overall ?? true)
+                    {
+                        Trees?.ToString(fg);
+                    }
+                    if (printMask?.Florae?.Overall ?? true)
+                    {
+                        Florae?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -1255,6 +1371,10 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<MiscItem.ErrorMask>?>? MiscItems;
             public MaskItem<Exception?, Group.ErrorMask<AlchemicalApparatus.ErrorMask>?>? AlchemicalApparatuses;
             public MaskItem<Exception?, Group.ErrorMask<Static.ErrorMask>?>? Statics;
+            public MaskItem<Exception?, Group.ErrorMask<MoveableStatic.ErrorMask>?>? MoveableStatics;
+            public MaskItem<Exception?, Group.ErrorMask<Grass.ErrorMask>?>? Grasses;
+            public MaskItem<Exception?, Group.ErrorMask<Tree.ErrorMask>?>? Trees;
+            public MaskItem<Exception?, Group.ErrorMask<Flora.ErrorMask>?>? Florae;
             #endregion
 
             #region IErrorMask
@@ -1325,6 +1445,14 @@ namespace Mutagen.Bethesda.Skyrim
                         return AlchemicalApparatuses;
                     case SkyrimMod_FieldIndex.Statics:
                         return Statics;
+                    case SkyrimMod_FieldIndex.MoveableStatics:
+                        return MoveableStatics;
+                    case SkyrimMod_FieldIndex.Grasses:
+                        return Grasses;
+                    case SkyrimMod_FieldIndex.Trees:
+                        return Trees;
+                    case SkyrimMod_FieldIndex.Florae:
+                        return Florae;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1427,6 +1555,18 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.Statics:
                         this.Statics = new MaskItem<Exception?, Group.ErrorMask<Static.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.MoveableStatics:
+                        this.MoveableStatics = new MaskItem<Exception?, Group.ErrorMask<MoveableStatic.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Grasses:
+                        this.Grasses = new MaskItem<Exception?, Group.ErrorMask<Grass.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Trees:
+                        this.Trees = new MaskItem<Exception?, Group.ErrorMask<Tree.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Florae:
+                        this.Florae = new MaskItem<Exception?, Group.ErrorMask<Flora.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1531,6 +1671,18 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.Statics:
                         this.Statics = (MaskItem<Exception?, Group.ErrorMask<Static.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.MoveableStatics:
+                        this.MoveableStatics = (MaskItem<Exception?, Group.ErrorMask<MoveableStatic.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.Grasses:
+                        this.Grasses = (MaskItem<Exception?, Group.ErrorMask<Grass.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.Trees:
+                        this.Trees = (MaskItem<Exception?, Group.ErrorMask<Tree.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.Florae:
+                        this.Florae = (MaskItem<Exception?, Group.ErrorMask<Flora.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1570,6 +1722,10 @@ namespace Mutagen.Bethesda.Skyrim
                 if (MiscItems != null) return true;
                 if (AlchemicalApparatuses != null) return true;
                 if (Statics != null) return true;
+                if (MoveableStatics != null) return true;
+                if (Grasses != null) return true;
+                if (Trees != null) return true;
+                if (Florae != null) return true;
                 return false;
             }
             #endregion
@@ -1635,6 +1791,10 @@ namespace Mutagen.Bethesda.Skyrim
                 MiscItems?.ToString(fg);
                 AlchemicalApparatuses?.ToString(fg);
                 Statics?.ToString(fg);
+                MoveableStatics?.ToString(fg);
+                Grasses?.ToString(fg);
+                Trees?.ToString(fg);
+                Florae?.ToString(fg);
             }
             #endregion
 
@@ -1674,6 +1834,10 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.MiscItems = this.MiscItems.Combine(rhs.MiscItems, (l, r) => l.Combine(r));
                 ret.AlchemicalApparatuses = this.AlchemicalApparatuses.Combine(rhs.AlchemicalApparatuses, (l, r) => l.Combine(r));
                 ret.Statics = this.Statics.Combine(rhs.Statics, (l, r) => l.Combine(r));
+                ret.MoveableStatics = this.MoveableStatics.Combine(rhs.MoveableStatics, (l, r) => l.Combine(r));
+                ret.Grasses = this.Grasses.Combine(rhs.Grasses, (l, r) => l.Combine(r));
+                ret.Trees = this.Trees.Combine(rhs.Trees, (l, r) => l.Combine(r));
+                ret.Florae = this.Florae.Combine(rhs.Florae, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1726,6 +1890,10 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<MiscItem.TranslationMask>?> MiscItems;
             public MaskItem<bool, Group.TranslationMask<AlchemicalApparatus.TranslationMask>?> AlchemicalApparatuses;
             public MaskItem<bool, Group.TranslationMask<Static.TranslationMask>?> Statics;
+            public MaskItem<bool, Group.TranslationMask<MoveableStatic.TranslationMask>?> MoveableStatics;
+            public MaskItem<bool, Group.TranslationMask<Grass.TranslationMask>?> Grasses;
+            public MaskItem<bool, Group.TranslationMask<Tree.TranslationMask>?> Trees;
+            public MaskItem<bool, Group.TranslationMask<Flora.TranslationMask>?> Florae;
             #endregion
 
             #region Ctors
@@ -1762,6 +1930,10 @@ namespace Mutagen.Bethesda.Skyrim
                 this.MiscItems = new MaskItem<bool, Group.TranslationMask<MiscItem.TranslationMask>?>(defaultOn, null);
                 this.AlchemicalApparatuses = new MaskItem<bool, Group.TranslationMask<AlchemicalApparatus.TranslationMask>?>(defaultOn, null);
                 this.Statics = new MaskItem<bool, Group.TranslationMask<Static.TranslationMask>?>(defaultOn, null);
+                this.MoveableStatics = new MaskItem<bool, Group.TranslationMask<MoveableStatic.TranslationMask>?>(defaultOn, null);
+                this.Grasses = new MaskItem<bool, Group.TranslationMask<Grass.TranslationMask>?>(defaultOn, null);
+                this.Trees = new MaskItem<bool, Group.TranslationMask<Tree.TranslationMask>?>(defaultOn, null);
+                this.Florae = new MaskItem<bool, Group.TranslationMask<Flora.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -1808,6 +1980,10 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((MiscItems?.Overall ?? true, MiscItems?.Specific?.GetCrystal()));
                 ret.Add((AlchemicalApparatuses?.Overall ?? true, AlchemicalApparatuses?.Specific?.GetCrystal()));
                 ret.Add((Statics?.Overall ?? true, Statics?.Specific?.GetCrystal()));
+                ret.Add((MoveableStatics?.Overall ?? true, MoveableStatics?.Specific?.GetCrystal()));
+                ret.Add((Grasses?.Overall ?? true, Grasses?.Specific?.GetCrystal()));
+                ret.Add((Trees?.Overall ?? true, Trees?.Specific?.GetCrystal()));
+                ret.Add((Florae?.Overall ?? true, Florae?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -1852,6 +2028,10 @@ namespace Mutagen.Bethesda.Skyrim
             _MiscItems_Object = new Group<MiscItem>(this);
             _AlchemicalApparatuses_Object = new Group<AlchemicalApparatus>(this);
             _Statics_Object = new Group<Static>(this);
+            _MoveableStatics_Object = new Group<MoveableStatic>(this);
+            _Grasses_Object = new Group<Grass>(this);
+            _Trees_Object = new Group<Tree>(this);
+            _Florae_Object = new Group<Flora>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -1976,6 +2156,22 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.Statics ?? true)
             {
                 this.Statics.RecordCache.Set(rhsMod.Statics.RecordCache.Items);
+            }
+            if (mask?.MoveableStatics ?? true)
+            {
+                this.MoveableStatics.RecordCache.Set(rhsMod.MoveableStatics.RecordCache.Items);
+            }
+            if (mask?.Grasses ?? true)
+            {
+                this.Grasses.RecordCache.Set(rhsMod.Grasses.RecordCache.Items);
+            }
+            if (mask?.Trees ?? true)
+            {
+                this.Trees.RecordCache.Set(rhsMod.Trees.RecordCache.Items);
+            }
+            if (mask?.Florae ?? true)
+            {
+                this.Florae.RecordCache.Set(rhsMod.Florae.RecordCache.Items);
             }
         }
 
@@ -2194,6 +2390,34 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Static>());
             }
+            if (mask?.MoveableStatics ?? true)
+            {
+                this.MoveableStatics.RecordCache.Set(
+                    rhs.MoveableStatics.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<MoveableStatic>());
+            }
+            if (mask?.Grasses ?? true)
+            {
+                this.Grasses.RecordCache.Set(
+                    rhs.Grasses.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Grass>());
+            }
+            if (mask?.Trees ?? true)
+            {
+                this.Trees.RecordCache.Set(
+                    rhs.Trees.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Tree>());
+            }
+            if (mask?.Florae ?? true)
+            {
+                this.Florae.RecordCache.Set(
+                    rhs.Florae.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Flora>());
+            }
             Dictionary<FormKey, IMajorRecordCommon> router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var package = this.CreateLinkCache();
@@ -2249,6 +2473,10 @@ namespace Mutagen.Bethesda.Skyrim
             count += MiscItems.RecordCache.Count > 0 ? 1 : 0;
             count += AlchemicalApparatuses.RecordCache.Count > 0 ? 1 : 0;
             count += Statics.RecordCache.Count > 0 ? 1 : 0;
+            count += MoveableStatics.RecordCache.Count > 0 ? 1 : 0;
+            count += Grasses.RecordCache.Count > 0 ? 1 : 0;
+            count += Trees.RecordCache.Count > 0 ? 1 : 0;
+            count += Florae.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -2473,6 +2701,10 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<MiscItem> MiscItems { get; }
         new Group<AlchemicalApparatus> AlchemicalApparatuses { get; }
         new Group<Static> Statics { get; }
+        new Group<MoveableStatic> MoveableStatics { get; }
+        new Group<Grass> Grasses { get; }
+        new Group<Tree> Trees { get; }
+        new Group<Flora> Florae { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -2521,6 +2753,10 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IMiscItemGetter> MiscItems { get; }
         IGroupGetter<IAlchemicalApparatusGetter> AlchemicalApparatuses { get; }
         IGroupGetter<IStaticGetter> Statics { get; }
+        IGroupGetter<IMoveableStaticGetter> MoveableStatics { get; }
+        IGroupGetter<IGrassGetter> Grasses { get; }
+        IGroupGetter<ITreeGetter> Trees { get; }
+        IGroupGetter<IFloraGetter> Florae { get; }
 
     }
 
@@ -2980,6 +3216,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         MiscItems = 28,
         AlchemicalApparatuses = 29,
         Statics = 30,
+        MoveableStatics = 31,
+        Grasses = 32,
+        Trees = 33,
+        Florae = 34,
     }
     #endregion
 
@@ -2997,9 +3237,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 31;
+        public const ushort AdditionalFieldCount = 35;
 
-        public const ushort FieldCount = 31;
+        public const ushort FieldCount = 35;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -3091,6 +3331,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.AlchemicalApparatuses;
                 case "STATICS":
                     return (ushort)SkyrimMod_FieldIndex.Statics;
+                case "MOVEABLESTATICS":
+                    return (ushort)SkyrimMod_FieldIndex.MoveableStatics;
+                case "GRASSES":
+                    return (ushort)SkyrimMod_FieldIndex.Grasses;
+                case "TREES":
+                    return (ushort)SkyrimMod_FieldIndex.Trees;
+                case "FLORAE":
+                    return (ushort)SkyrimMod_FieldIndex.Florae;
                 default:
                     return null;
             }
@@ -3132,6 +3380,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.MiscItems:
                 case SkyrimMod_FieldIndex.AlchemicalApparatuses:
                 case SkyrimMod_FieldIndex.Statics:
+                case SkyrimMod_FieldIndex.MoveableStatics:
+                case SkyrimMod_FieldIndex.Grasses:
+                case SkyrimMod_FieldIndex.Trees:
+                case SkyrimMod_FieldIndex.Florae:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3174,6 +3426,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.MiscItems:
                 case SkyrimMod_FieldIndex.AlchemicalApparatuses:
                 case SkyrimMod_FieldIndex.Statics:
+                case SkyrimMod_FieldIndex.MoveableStatics:
+                case SkyrimMod_FieldIndex.Grasses:
+                case SkyrimMod_FieldIndex.Trees:
+                case SkyrimMod_FieldIndex.Florae:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3216,6 +3472,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.MiscItems:
                 case SkyrimMod_FieldIndex.AlchemicalApparatuses:
                 case SkyrimMod_FieldIndex.Statics:
+                case SkyrimMod_FieldIndex.MoveableStatics:
+                case SkyrimMod_FieldIndex.Grasses:
+                case SkyrimMod_FieldIndex.Trees:
+                case SkyrimMod_FieldIndex.Florae:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3289,6 +3549,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "AlchemicalApparatuses";
                 case SkyrimMod_FieldIndex.Statics:
                     return "Statics";
+                case SkyrimMod_FieldIndex.MoveableStatics:
+                    return "MoveableStatics";
+                case SkyrimMod_FieldIndex.Grasses:
+                    return "Grasses";
+                case SkyrimMod_FieldIndex.Trees:
+                    return "Trees";
+                case SkyrimMod_FieldIndex.Florae:
+                    return "Florae";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3330,6 +3598,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.MiscItems:
                 case SkyrimMod_FieldIndex.AlchemicalApparatuses:
                 case SkyrimMod_FieldIndex.Statics:
+                case SkyrimMod_FieldIndex.MoveableStatics:
+                case SkyrimMod_FieldIndex.Grasses:
+                case SkyrimMod_FieldIndex.Trees:
+                case SkyrimMod_FieldIndex.Florae:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3373,6 +3645,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.MiscItems:
                 case SkyrimMod_FieldIndex.AlchemicalApparatuses:
                 case SkyrimMod_FieldIndex.Statics:
+                case SkyrimMod_FieldIndex.MoveableStatics:
+                case SkyrimMod_FieldIndex.Grasses:
+                case SkyrimMod_FieldIndex.Trees:
+                case SkyrimMod_FieldIndex.Florae:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3446,6 +3722,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<AlchemicalApparatus>);
                 case SkyrimMod_FieldIndex.Statics:
                     return typeof(Group<Static>);
+                case SkyrimMod_FieldIndex.MoveableStatics:
+                    return typeof(Group<MoveableStatic>);
+                case SkyrimMod_FieldIndex.Grasses:
+                    return typeof(Group<Grass>);
+                case SkyrimMod_FieldIndex.Trees:
+                    return typeof(Group<Tree>);
+                case SkyrimMod_FieldIndex.Florae:
+                    return typeof(Group<Flora>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3483,9 +3767,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType MISC_HEADER = new RecordType("MISC");
         public static readonly RecordType APPA_HEADER = new RecordType("APPA");
         public static readonly RecordType STAT_HEADER = new RecordType("STAT");
+        public static readonly RecordType MSTT_HEADER = new RecordType("MSTT");
+        public static readonly RecordType GRAS_HEADER = new RecordType("GRAS");
+        public static readonly RecordType TREE_HEADER = new RecordType("TREE");
+        public static readonly RecordType FLOR_HEADER = new RecordType("FLOR");
         public static readonly RecordType TriggeringRecordType = TES4_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 31;
+        public const int NumTypedFields = 35;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -3558,6 +3846,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.MiscItems.Clear();
             item.AlchemicalApparatuses.Clear();
             item.Statics.Clear();
+            item.MoveableStatics.Clear();
+            item.Grasses.Clear();
+            item.Trees.Clear();
+            item.Florae.Clear();
         }
         
         #region Xml Translation
@@ -4093,6 +4385,62 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Statics);
                 }
+                case 0x5454534D: // MSTT
+                {
+                    if (importMask?.MoveableStatics ?? true)
+                    {
+                        item.MoveableStatics.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MoveableStatics);
+                }
+                case 0x53415247: // GRAS
+                {
+                    if (importMask?.Grasses ?? true)
+                    {
+                        item.Grasses.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Grasses);
+                }
+                case 0x45455254: // TREE
+                {
+                    if (importMask?.Trees ?? true)
+                    {
+                        item.Trees.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Trees);
+                }
+                case 0x524F4C46: // FLOR
+                {
+                    if (importMask?.Florae ?? true)
+                    {
+                        item.Florae.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Florae);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -4175,6 +4523,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.MiscItems = MaskItemExt.Factory(item.MiscItems.GetEqualsMask(rhs.MiscItems, include), include);
             ret.AlchemicalApparatuses = MaskItemExt.Factory(item.AlchemicalApparatuses.GetEqualsMask(rhs.AlchemicalApparatuses, include), include);
             ret.Statics = MaskItemExt.Factory(item.Statics.GetEqualsMask(rhs.Statics, include), include);
+            ret.MoveableStatics = MaskItemExt.Factory(item.MoveableStatics.GetEqualsMask(rhs.MoveableStatics, include), include);
+            ret.Grasses = MaskItemExt.Factory(item.Grasses.GetEqualsMask(rhs.Grasses, include), include);
+            ret.Trees = MaskItemExt.Factory(item.Trees.GetEqualsMask(rhs.Trees, include), include);
+            ret.Florae = MaskItemExt.Factory(item.Florae.GetEqualsMask(rhs.Florae, include), include);
         }
         
         public string ToString(
@@ -4345,6 +4697,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Statics?.ToString(fg, "Statics");
             }
+            if (printMask?.MoveableStatics?.Overall ?? true)
+            {
+                item.MoveableStatics?.ToString(fg, "MoveableStatics");
+            }
+            if (printMask?.Grasses?.Overall ?? true)
+            {
+                item.Grasses?.ToString(fg, "Grasses");
+            }
+            if (printMask?.Trees?.Overall ?? true)
+            {
+                item.Trees?.ToString(fg, "Trees");
+            }
+            if (printMask?.Florae?.Overall ?? true)
+            {
+                item.Florae?.ToString(fg, "Florae");
+            }
         }
         
         public bool HasBeenSet(
@@ -4389,6 +4757,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.MiscItems = new MaskItem<bool, Group.Mask<bool>?>(true, item.MiscItems?.GetHasBeenSetMask());
             mask.AlchemicalApparatuses = new MaskItem<bool, Group.Mask<bool>?>(true, item.AlchemicalApparatuses?.GetHasBeenSetMask());
             mask.Statics = new MaskItem<bool, Group.Mask<bool>?>(true, item.Statics?.GetHasBeenSetMask());
+            mask.MoveableStatics = new MaskItem<bool, Group.Mask<bool>?>(true, item.MoveableStatics?.GetHasBeenSetMask());
+            mask.Grasses = new MaskItem<bool, Group.Mask<bool>?>(true, item.Grasses?.GetHasBeenSetMask());
+            mask.Trees = new MaskItem<bool, Group.Mask<bool>?>(true, item.Trees?.GetHasBeenSetMask());
+            mask.Florae = new MaskItem<bool, Group.Mask<bool>?>(true, item.Florae?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -4429,6 +4801,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.MiscItems, rhs.MiscItems)) return false;
             if (!object.Equals(lhs.AlchemicalApparatuses, rhs.AlchemicalApparatuses)) return false;
             if (!object.Equals(lhs.Statics, rhs.Statics)) return false;
+            if (!object.Equals(lhs.MoveableStatics, rhs.MoveableStatics)) return false;
+            if (!object.Equals(lhs.Grasses, rhs.Grasses)) return false;
+            if (!object.Equals(lhs.Trees, rhs.Trees)) return false;
+            if (!object.Equals(lhs.Florae, rhs.Florae)) return false;
             return true;
         }
         
@@ -4466,6 +4842,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.MiscItems);
             hash.Add(item.AlchemicalApparatuses);
             hash.Add(item.Statics);
+            hash.Add(item.MoveableStatics);
+            hash.Add(item.Grasses);
+            hash.Add(item.Trees);
+            hash.Add(item.Florae);
             return hash.ToHashCode();
         }
         
@@ -4633,6 +5013,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IStatic":
                 case "IStaticInternal":
                     return obj.Statics.RecordCache;
+                case "MoveableStatic":
+                case "IMoveableStaticGetter":
+                case "IMoveableStatic":
+                case "IMoveableStaticInternal":
+                    return obj.MoveableStatics.RecordCache;
+                case "Grass":
+                case "IGrassGetter":
+                case "IGrass":
+                case "IGrassInternal":
+                    return obj.Grasses.RecordCache;
+                case "Tree":
+                case "ITreeGetter":
+                case "ITree":
+                case "ITreeInternal":
+                    return obj.Trees.RecordCache;
+                case "Flora":
+                case "IFloraGetter":
+                case "IFlora":
+                case "IFloraInternal":
+                    return obj.Florae.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown group type: {typeof(T)}");
             }
@@ -4649,7 +5049,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var modHeader = item.ModHeader.DeepCopy() as ModHeader;
             modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
             modHeader.WriteToBinary(new MutagenWriter(stream, GameConstants.Skyrim, masterRefs));
-            Stream[] outputStreams = new Stream[30];
+            Stream[] outputStreams = new Stream[34];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams));
@@ -4681,6 +5081,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.MiscItems, masterRefs, 27, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.AlchemicalApparatuses, masterRefs, 28, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Statics, masterRefs, 29, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.MoveableStatics, masterRefs, 30, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Grasses, masterRefs, 31, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Trees, masterRefs, 32, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Florae, masterRefs, 33, outputStreams));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -4938,6 +5342,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.MoveableStatics is ILinkContainer MoveableStaticslinkCont)
+            {
+                foreach (var item in MoveableStaticslinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Grasses is ILinkContainer GrasseslinkCont)
+            {
+                foreach (var item in GrasseslinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Trees is ILinkContainer TreeslinkCont)
+            {
+                foreach (var item in TreeslinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Florae is ILinkContainer FloraelinkCont)
+            {
+                foreach (var item in FloraelinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -5060,6 +5492,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.Statics.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MoveableStatics.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Grasses.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Trees.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Florae.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -5347,6 +5795,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IStatic":
                 case "IStaticInternal":
                     foreach (var item in obj.Statics.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MoveableStatic":
+                case "IMoveableStaticGetter":
+                case "IMoveableStatic":
+                case "IMoveableStaticInternal":
+                    foreach (var item in obj.MoveableStatics.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Grass":
+                case "IGrassGetter":
+                case "IGrass":
+                case "IGrassInternal":
+                    foreach (var item in obj.Grasses.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Tree":
+                case "ITreeGetter":
+                case "ITree":
+                case "ITreeInternal":
+                    foreach (var item in obj.Trees.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Flora":
+                case "IFloraGetter":
+                case "IFlora":
+                case "IFloraInternal":
+                    foreach (var item in obj.Florae.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -5990,6 +6474,86 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.MoveableStatics) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.MoveableStatics);
+                try
+                {
+                    item.MoveableStatics.DeepCopyIn(
+                        rhs: rhs.MoveableStatics,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.MoveableStatics));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Grasses) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Grasses);
+                try
+                {
+                    item.Grasses.DeepCopyIn(
+                        rhs: rhs.Grasses,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Grasses));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Trees) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Trees);
+                try
+                {
+                    item.Trees.DeepCopyIn(
+                        rhs: rhs.Trees,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Trees));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Florae) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Florae);
+                try
+                {
+                    item.Florae.DeepCopyIn(
+                        rhs: rhs.Florae,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Florae));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -6419,6 +6983,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.Statics,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Statics));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.MoveableStatics) ?? true))
+            {
+                var MoveableStaticsItem = item.MoveableStatics;
+                ((GroupXmlWriteTranslation)((IXmlItem)MoveableStaticsItem).XmlWriteTranslator).Write<IMoveableStaticGetter>(
+                    item: MoveableStaticsItem,
+                    node: node,
+                    name: nameof(item.MoveableStatics),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.MoveableStatics,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.MoveableStatics));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Grasses) ?? true))
+            {
+                var GrassesItem = item.Grasses;
+                ((GroupXmlWriteTranslation)((IXmlItem)GrassesItem).XmlWriteTranslator).Write<IGrassGetter>(
+                    item: GrassesItem,
+                    node: node,
+                    name: nameof(item.Grasses),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Grasses,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Grasses));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Trees) ?? true))
+            {
+                var TreesItem = item.Trees;
+                ((GroupXmlWriteTranslation)((IXmlItem)TreesItem).XmlWriteTranslator).Write<ITreeGetter>(
+                    item: TreesItem,
+                    node: node,
+                    name: nameof(item.Trees),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Trees,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Trees));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Florae) ?? true))
+            {
+                var FloraeItem = item.Florae;
+                ((GroupXmlWriteTranslation)((IXmlItem)FloraeItem).XmlWriteTranslator).Write<IFloraGetter>(
+                    item: FloraeItem,
+                    node: node,
+                    name: nameof(item.Florae),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Florae,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Florae));
             }
         }
 
@@ -7096,6 +7704,82 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "MoveableStatics":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.MoveableStatics);
+                    try
+                    {
+                        item.MoveableStatics.CopyInFromXml<MoveableStatic>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Grasses":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Grasses);
+                    try
+                    {
+                        item.Grasses.CopyInFromXml<Grass>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Trees":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Trees);
+                    try
+                    {
+                        item.Trees.CopyInFromXml<Tree>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Florae":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Florae);
+                    try
+                    {
+                        item.Florae.CopyInFromXml<Flora>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -7295,6 +7979,10 @@ namespace Mutagen.Bethesda.Skyrim
         public bool MiscItems;
         public bool AlchemicalApparatuses;
         public bool Statics;
+        public bool MoveableStatics;
+        public bool Grasses;
+        public bool Trees;
+        public bool Florae;
         public GroupMask()
         {
         }
@@ -7330,6 +8018,10 @@ namespace Mutagen.Bethesda.Skyrim
             MiscItems = defaultValue;
             AlchemicalApparatuses = defaultValue;
             Statics = defaultValue;
+            MoveableStatics = defaultValue;
+            Grasses = defaultValue;
+            Trees = defaultValue;
+            Florae = defaultValue;
         }
     }
 
@@ -7685,6 +8377,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)StaticsItem).BinaryWriteTranslator).Write<IStaticGetter>(
                         item: StaticsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.MoveableStatics ?? true)
+            {
+                var MoveableStaticsItem = item.MoveableStatics;
+                if (MoveableStaticsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)MoveableStaticsItem).BinaryWriteTranslator).Write<IMoveableStaticGetter>(
+                        item: MoveableStaticsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Grasses ?? true)
+            {
+                var GrassesItem = item.Grasses;
+                if (GrassesItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)GrassesItem).BinaryWriteTranslator).Write<IGrassGetter>(
+                        item: GrassesItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Trees ?? true)
+            {
+                var TreesItem = item.Trees;
+                if (TreesItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)TreesItem).BinaryWriteTranslator).Write<ITreeGetter>(
+                        item: TreesItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Florae ?? true)
+            {
+                var FloraeItem = item.Florae;
+                if (FloraeItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)FloraeItem).BinaryWriteTranslator).Write<IFloraGetter>(
+                        item: FloraeItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
                 }
@@ -8059,6 +8795,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IStaticGetter>? _Statics => _Statics_IsSet ? GroupBinaryOverlay<IStaticGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _StaticsLocation!.Value.Min, _StaticsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IStaticGetter> Statics => _Statics ?? new Group<Static>(this);
         #endregion
+        #region MoveableStatics
+        private RangeInt64? _MoveableStaticsLocation;
+        private bool _MoveableStatics_IsSet => _MoveableStaticsLocation.HasValue;
+        private IGroupGetter<IMoveableStaticGetter>? _MoveableStatics => _MoveableStatics_IsSet ? GroupBinaryOverlay<IMoveableStaticGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _MoveableStaticsLocation!.Value.Min, _MoveableStaticsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IMoveableStaticGetter> MoveableStatics => _MoveableStatics ?? new Group<MoveableStatic>(this);
+        #endregion
+        #region Grasses
+        private RangeInt64? _GrassesLocation;
+        private bool _Grasses_IsSet => _GrassesLocation.HasValue;
+        private IGroupGetter<IGrassGetter>? _Grasses => _Grasses_IsSet ? GroupBinaryOverlay<IGrassGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _GrassesLocation!.Value.Min, _GrassesLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IGrassGetter> Grasses => _Grasses ?? new Group<Grass>(this);
+        #endregion
+        #region Trees
+        private RangeInt64? _TreesLocation;
+        private bool _Trees_IsSet => _TreesLocation.HasValue;
+        private IGroupGetter<ITreeGetter>? _Trees => _Trees_IsSet ? GroupBinaryOverlay<ITreeGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _TreesLocation!.Value.Min, _TreesLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<ITreeGetter> Trees => _Trees ?? new Group<Tree>(this);
+        #endregion
+        #region Florae
+        private RangeInt64? _FloraeLocation;
+        private bool _Florae_IsSet => _FloraeLocation.HasValue;
+        private IGroupGetter<IFloraGetter>? _Florae => _Florae_IsSet ? GroupBinaryOverlay<IFloraGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _FloraeLocation!.Value.Min, _FloraeLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IFloraGetter> Florae => _Florae ?? new Group<Flora>(this);
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             long finalPos,
@@ -8297,6 +9057,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _StaticsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Statics);
+                }
+                case 0x5454534D: // MSTT
+                {
+                    _MoveableStaticsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MoveableStatics);
+                }
+                case 0x53415247: // GRAS
+                {
+                    _GrassesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Grasses);
+                }
+                case 0x45455254: // TREE
+                {
+                    _TreesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Trees);
+                }
+                case 0x524F4C46: // FLOR
+                {
+                    _FloraeLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Florae);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

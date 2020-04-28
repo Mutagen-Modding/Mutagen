@@ -2,5 +2,6 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="LeveledItem" recordType="LVLI" baseClass="SkyrimMajorRecord" objType="Record" GUID="dbc7006d-3752-43d0-9e4f-95268f3353ab" ID="166">
     <Interface>IItem</Interface>
+    <Interface>IHarvestTarget</Interface>
   </Object>
 </Loqui>

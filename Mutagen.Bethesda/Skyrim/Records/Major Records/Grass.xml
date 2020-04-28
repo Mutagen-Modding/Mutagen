@@ -2,6 +2,26 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Grass" recordType="GRAS" objType="Record" baseClass="SkyrimMajorRecord" GUID="40ec1abd-2509-4d30-b323-24e660c36412" ID="129">
     <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Data" refName="GrassData" />
+    </Fields>
+  </Object>
+  <Object name="GrassData" objType="Subrecord" recordType="DATA" GUID="825acb51-3e9d-4012-abc9-1a516dd04d49" ID="187">
+    <Fields>
+      <UInt8 name="Density" />
+      <UInt8 name="MinSlope" />
+      <UInt8 name="MaxSlope" />
+      <UInt8 name="Unknown" />
+      <UInt16 name="UnitsFromWater" />
+      <UInt16 name="Unknown2" />
+      <Enum name="UnitsFromWaterType" enumName="GrassData.UnitsFromWaterTypeEnum" byteLength="4" />
+      <Float name="PositionRange" />
+      <Float name="HeightRange" />
+      <Float name="ColorRange" />
+      <Float name="WavePeriod" />
+      <Enum name="Flags" enumName="GrassData.Flag" byteLength="1" />
+      <ByteArray name="Unknown3" nullable="NotNull" byteLength="3" />
     </Fields>
   </Object>
 </Loqui>

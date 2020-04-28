@@ -48,6 +48,39 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region ObjectBounds
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ObjectBounds _ObjectBounds = new ObjectBounds();
+        public ObjectBounds ObjectBounds
+        {
+            get => _ObjectBounds;
+            set => _ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IGrassGetter.ObjectBounds => _ObjectBounds;
+        #endregion
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IGrassGetter.Model => this.Model;
+        #endregion
+        #region Data
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private GrassData? _Data;
+        public GrassData? Data
+        {
+            get => _Data;
+            set => _Data = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGrassDataGetter? IGrassGetter.Data => this.Data;
+        #endregion
 
         #region To String
 
@@ -218,6 +251,9 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.Data = new MaskItem<TItem, GrassData.Mask<TItem>?>(initialValue, new GrassData.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -226,7 +262,10 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem ObjectBounds,
+                TItem Model,
+                TItem Data)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -235,6 +274,9 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.Data = new MaskItem<TItem, GrassData.Mask<TItem>?>(Data, new GrassData.Mask<TItem>(Data));
             }
 
             #pragma warning disable CS8618
@@ -243,6 +285,12 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public MaskItem<TItem, GrassData.Mask<TItem>?>? Data { get; set; }
             #endregion
 
             #region Equals
@@ -256,11 +304,17 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.Model);
+                hash.Add(this.Data);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -271,6 +325,21 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -279,6 +348,21 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -294,6 +378,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Data = this.Data == null ? null : new MaskItem<R, GrassData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
             }
             #endregion
 
@@ -316,6 +403,18 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.ToString(fg);
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.Data?.Overall ?? true)
+                    {
+                        Data?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -327,12 +426,24 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public MaskItem<Exception?, GrassData.ErrorMask?>? Data;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Grass_FieldIndex enu = (Grass_FieldIndex)index;
                 switch (enu)
                 {
+                    case Grass_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case Grass_FieldIndex.Model:
+                        return Model;
+                    case Grass_FieldIndex.Data:
+                        return Data;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -343,6 +454,15 @@ namespace Mutagen.Bethesda.Skyrim
                 Grass_FieldIndex enu = (Grass_FieldIndex)index;
                 switch (enu)
                 {
+                    case Grass_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case Grass_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Grass_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, GrassData.ErrorMask?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -354,6 +474,15 @@ namespace Mutagen.Bethesda.Skyrim
                 Grass_FieldIndex enu = (Grass_FieldIndex)index;
                 switch (enu)
                 {
+                    case Grass_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case Grass_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Grass_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, GrassData.ErrorMask?>?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -363,6 +492,9 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ObjectBounds != null) return true;
+                if (Model != null) return true;
+                if (Data != null) return true;
                 return false;
             }
             #endregion
@@ -398,6 +530,9 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                ObjectBounds?.ToString(fg);
+                Model?.ToString(fg);
+                Data?.ToString(fg);
             }
             #endregion
 
@@ -406,6 +541,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -427,19 +565,37 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public MaskItem<bool, GrassData.TranslationMask?> Data;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.Data = new MaskItem<bool, GrassData.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+            }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Grass_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public override IEnumerable<ILinkGetter> Links => GrassCommon.Instance.GetLinks(this);
         public Grass(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -519,6 +675,9 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IGrassInternal>
     {
+        new ObjectBounds ObjectBounds { get; set; }
+        new Model? Model { get; set; }
+        new GrassData? Data { get; set; }
     }
 
     public partial interface IGrassInternal :
@@ -532,9 +691,13 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         ILoquiObject<IGrassGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => Grass_Registration.Instance;
+        IObjectBoundsGetter ObjectBounds { get; }
+        IModelGetter? Model { get; }
+        IGrassDataGetter? Data { get; }
 
     }
 
@@ -835,6 +998,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        ObjectBounds = 6,
+        Model = 7,
+        Data = 8,
     }
     #endregion
 
@@ -852,9 +1018,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "40ec1abd-2509-4d30-b323-24e660c36412";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(Grass.Mask<>);
 
@@ -884,6 +1050,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "OBJECTBOUNDS":
+                    return (ushort)Grass_FieldIndex.ObjectBounds;
+                case "MODEL":
+                    return (ushort)Grass_FieldIndex.Model;
+                case "DATA":
+                    return (ushort)Grass_FieldIndex.Data;
                 default:
                     return null;
             }
@@ -894,6 +1066,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Grass_FieldIndex enu = (Grass_FieldIndex)index;
             switch (enu)
             {
+                case Grass_FieldIndex.ObjectBounds:
+                case Grass_FieldIndex.Model:
+                case Grass_FieldIndex.Data:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -904,6 +1080,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Grass_FieldIndex enu = (Grass_FieldIndex)index;
             switch (enu)
             {
+                case Grass_FieldIndex.ObjectBounds:
+                case Grass_FieldIndex.Model:
+                case Grass_FieldIndex.Data:
+                    return true;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -914,6 +1094,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Grass_FieldIndex enu = (Grass_FieldIndex)index;
             switch (enu)
             {
+                case Grass_FieldIndex.ObjectBounds:
+                case Grass_FieldIndex.Model:
+                case Grass_FieldIndex.Data:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -924,6 +1108,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Grass_FieldIndex enu = (Grass_FieldIndex)index;
             switch (enu)
             {
+                case Grass_FieldIndex.ObjectBounds:
+                    return "ObjectBounds";
+                case Grass_FieldIndex.Model:
+                    return "Model";
+                case Grass_FieldIndex.Data:
+                    return "Data";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -934,6 +1124,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Grass_FieldIndex enu = (Grass_FieldIndex)index;
             switch (enu)
             {
+                case Grass_FieldIndex.ObjectBounds:
+                case Grass_FieldIndex.Model:
+                case Grass_FieldIndex.Data:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -944,6 +1138,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Grass_FieldIndex enu = (Grass_FieldIndex)index;
             switch (enu)
             {
+                case Grass_FieldIndex.ObjectBounds:
+                case Grass_FieldIndex.Model:
+                case Grass_FieldIndex.Data:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -954,6 +1152,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Grass_FieldIndex enu = (Grass_FieldIndex)index;
             switch (enu)
             {
+                case Grass_FieldIndex.ObjectBounds:
+                    return typeof(ObjectBounds);
+                case Grass_FieldIndex.Model:
+                    return typeof(Model);
+                case Grass_FieldIndex.Data:
+                    return typeof(GrassData);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -961,9 +1165,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(GrassXmlWriteTranslation);
         public static readonly RecordType GRAS_HEADER = new RecordType("GRAS");
+        public static readonly RecordType OBND_HEADER = new RecordType("OBND");
+        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
+        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = GRAS_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
+        public const int NumTypedFields = 3;
         public static readonly Type BinaryWriteTranslation = typeof(GrassBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1006,6 +1213,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IGrassInternal item)
         {
             ClearPartial();
+            item.ObjectBounds = new ObjectBounds();
+            item.Model = null;
+            item.Data = null;
             base.Clear(item);
         }
         
@@ -1110,6 +1320,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
         
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            IGrassInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x444E424F: // OBND
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.ObjectBounds);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.Model);
+                }
+                case 0x41544144: // DATA
+                {
+                    item.Data = Mutagen.Bethesda.Skyrim.GrassData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.Data);
+                }
+                default:
+                    return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
+        
         public virtual void CopyInFromBinary(
             IGrassInternal item,
             MutagenFrame frame,
@@ -1174,6 +1421,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1225,12 +1483,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+            }
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
+            {
+                ModelItem?.ToString(fg, "Model");
+            }
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data.TryGet(out var DataItem))
+            {
+                DataItem?.ToString(fg, "Data");
+            }
         }
         
         public bool HasBeenSet(
             IGrassGetter item,
             Grass.Mask<bool?> checkMask)
         {
+            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
+            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
+            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1240,6 +1516,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGrassGetter item,
             Grass.Mask<bool> mask)
         {
+            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
+            var itemModel = item.Model;
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            var itemData = item.Data;
+            mask.Data = new MaskItem<bool, GrassData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1291,6 +1572,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            if (!object.Equals(lhs.Data, rhs.Data)) return false;
             return true;
         }
         
@@ -1315,6 +1599,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IGrassGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.ObjectBounds);
+            if (item.Model.TryGet(out var Modelitem))
+            {
+                hash.Add(Modelitem);
+            }
+            if (item.Data.TryGet(out var Dataitem))
+            {
+                hash.Add(Dataitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1343,6 +1636,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             foreach (var item in base.GetLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.Model != null)
+            {
+                foreach (var item in obj.Model.Links)
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1390,6 +1690,80 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)Grass_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Grass_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)Grass_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model.TryGet(out var rhsModel))
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Grass_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.Data) ?? true))
+            {
+                errorMask?.PushIndex((int)Grass_FieldIndex.Data);
+                try
+                {
+                    if(rhs.Data.TryGet(out var rhsData))
+                    {
+                        item.Data = rhsData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Grass_FieldIndex.Data));
+                    }
+                    else
+                    {
+                        item.Data = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1532,6 +1906,45 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((translationMask?.GetShouldTranslate((int)Grass_FieldIndex.ObjectBounds) ?? true))
+            {
+                var ObjectBoundsItem = item.ObjectBounds;
+                ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
+                    item: ObjectBoundsItem,
+                    node: node,
+                    name: nameof(item.ObjectBounds),
+                    fieldIndex: (int)Grass_FieldIndex.ObjectBounds,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Grass_FieldIndex.ObjectBounds));
+            }
+            if ((item.Model != null)
+                && (translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Model) ?? true))
+            {
+                if (item.Model.TryGet(out var ModelItem))
+                {
+                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                        item: ModelItem,
+                        node: node,
+                        name: nameof(item.Model),
+                        fieldIndex: (int)Grass_FieldIndex.Model,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Grass_FieldIndex.Model));
+                }
+            }
+            if ((item.Data != null)
+                && (translationMask?.GetShouldTranslate((int)Grass_FieldIndex.Data) ?? true))
+            {
+                if (item.Data.TryGet(out var DataItem))
+                {
+                    ((GrassDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                        item: DataItem,
+                        node: node,
+                        name: nameof(item.Data),
+                        fieldIndex: (int)Grass_FieldIndex.Data,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Grass_FieldIndex.Data));
+                }
+            }
         }
 
         public void Write(
@@ -1639,6 +2052,63 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "ObjectBounds":
+                    errorMask?.PushIndex((int)Grass_FieldIndex.ObjectBounds);
+                    try
+                    {
+                        item.ObjectBounds = LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Grass_FieldIndex.ObjectBounds));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Model":
+                    errorMask?.PushIndex((int)Grass_FieldIndex.Model);
+                    try
+                    {
+                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Grass_FieldIndex.Model));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Data":
+                    errorMask?.PushIndex((int)Grass_FieldIndex.Data);
+                    try
+                    {
+                        item.Data = LoquiXmlTranslation<GrassData>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Grass_FieldIndex.Data));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1725,6 +2195,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static GrassBinaryWriteTranslation Instance = new GrassBinaryWriteTranslation();
 
+        public static void WriteRecordTypes(
+            IGrassGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            if (item.Model.TryGet(out var ModelItem))
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            if (item.Data.TryGet(out var DataItem))
+            {
+                ((GrassDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                    item: DataItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             IGrassGetter item,
@@ -1738,7 +2238,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1818,6 +2318,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IGrassGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => GrassCommon.Instance.GetLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => GrassXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
@@ -1845,6 +2346,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private bool _ObjectBounds_IsSet => _ObjectBoundsLocation.HasValue;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBounds_IsSet ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation!.Value.Min)), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        #region Model
+        public IModelGetter? Model { get; private set; }
+        public bool Model_IsSet => Model != null;
+        #endregion
+        #region Data
+        private RangeInt32? _DataLocation;
+        private bool _Data_IsSet => _DataLocation.HasValue;
+        public IGrassDataGetter? Data => _Data_IsSet ? GrassDataBinaryOverlay.GrassDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public bool Data_IsSet => _DataLocation.HasValue;
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -1895,6 +2412,45 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case 0x444E424F: // OBND
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.ObjectBounds);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.Model);
+                }
+                case 0x41544144: // DATA
+                {
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.Data);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
         #region To String
 
         public override void ToString(

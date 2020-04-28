@@ -1,11 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
     public partial class Door
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+
         [Flags]
         public enum MajorFlag
         {
@@ -22,6 +32,15 @@ namespace Mutagen.Bethesda.Skyrim
             MinimalUse = 0x08,
             Sliding = 0x10,
             DoNotOpenInCombatSearch = 0x20,
+        }
+    }
+
+    namespace Internals
+    {
+        public partial class DoorBinaryOverlay
+        {
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            String INamedRequiredGetter.Name => this.Name ?? string.Empty;
         }
     }
 }

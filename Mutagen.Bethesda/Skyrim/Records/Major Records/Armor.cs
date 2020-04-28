@@ -1,12 +1,22 @@
 ﻿using Mutagen.Bethesda.Binary;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
     public partial class Armor
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+
         [Flags]
         public enum MajorFlag
         {
@@ -27,5 +37,14 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IArmorGetter
     {
         public decimal? ArmorRating => this.ArmorRatingRaw.HasValue ? this.ArmorRatingRaw.Value / 100m : default(decimal?);
+    }
+
+    namespace Internals
+    {
+        public partial class ArmorBinaryOverlay
+        {
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            String INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        }
     }
 }

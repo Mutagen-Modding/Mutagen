@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,15 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class Npc
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+
         [Flags]
         public enum NpcFlag
         {
@@ -40,6 +50,15 @@ namespace Mutagen.Bethesda.Oblivion
             Training = 0x04000,
             Recharge = 0x10000,
             Repair = 0x20000,
+        }
+    }
+
+    namespace Internals
+    {
+        public partial class NpcBinaryOverlay
+        {
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            String INamedRequiredGetter.Name => this.Name ?? string.Empty;
         }
     }
 }

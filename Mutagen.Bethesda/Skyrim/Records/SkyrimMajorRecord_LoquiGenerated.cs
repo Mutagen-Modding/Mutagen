@@ -1064,6 +1064,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType EXPL_HEADER = new RecordType("EXPL");
         public static readonly RecordType EYES_HEADER = new RecordType("EYES");
         public static readonly RecordType FACT_HEADER = new RecordType("FACT");
+        public static readonly RecordType FLOR_HEADER = new RecordType("FLOR");
         public static readonly RecordType FLST_HEADER = new RecordType("FLST");
         public static readonly RecordType GMST_HEADER = new RecordType("GMST");
         public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
@@ -1085,6 +1086,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType MATO_HEADER = new RecordType("MATO");
         public static readonly RecordType MATT_HEADER = new RecordType("MATT");
         public static readonly RecordType MISC_HEADER = new RecordType("MISC");
+        public static readonly RecordType MSTT_HEADER = new RecordType("MSTT");
         public static readonly RecordType MOVT_HEADER = new RecordType("MOVT");
         public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
         public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
@@ -1102,6 +1104,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType STAT_HEADER = new RecordType("STAT");
         public static readonly RecordType TACT_HEADER = new RecordType("TACT");
         public static readonly RecordType TXST_HEADER = new RecordType("TXST");
+        public static readonly RecordType TREE_HEADER = new RecordType("TREE");
         public static readonly RecordType VTYP_HEADER = new RecordType("VTYP");
         public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
         public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
@@ -1135,6 +1138,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         EXPL_HEADER,
                         EYES_HEADER,
                         FACT_HEADER,
+                        FLOR_HEADER,
                         FLST_HEADER,
                         GMST_HEADER,
                         GLOB_HEADER,
@@ -1156,6 +1160,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         MATO_HEADER,
                         MATT_HEADER,
                         MISC_HEADER,
+                        MSTT_HEADER,
                         MOVT_HEADER,
                         NPC__HEADER,
                         ENCH_HEADER,
@@ -1173,6 +1178,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         STAT_HEADER,
                         TACT_HEADER,
                         TXST_HEADER,
+                        TREE_HEADER,
                         VTYP_HEADER,
                         WEAP_HEADER,
                         LVSP_HEADER,

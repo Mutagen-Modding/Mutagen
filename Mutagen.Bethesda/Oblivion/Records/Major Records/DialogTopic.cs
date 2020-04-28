@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,18 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Oblivion
 {
+    public partial class DialogTopic
+    {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+    }
+
     namespace Internals
     {
         public partial class DialogTopicCommon
@@ -79,6 +92,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class DialogTopicBinaryOverlay
         {
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            String INamedRequiredGetter.Name => this.Name ?? string.Empty;
+
             private ReadOnlyMemorySlice<byte>? _grupData;
 
             public ReadOnlyMemorySlice<byte> Timestamp => _grupData != null ? _package.Meta.Group(_grupData.Value).LastModifiedSpan.ToArray() : default(ReadOnlyMemorySlice<byte>);

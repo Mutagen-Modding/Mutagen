@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Class" recordType="CLAS" objType="Record" baseClass="SkyrimMajorRecord" GUID="faa1b071-96bf-43c3-be87-10d98e0b6cd8" ID="25">
-    <Interface>INamed</Interface>
+    <Interface>INamedRequired</Interface>
     <Fields>
-      <String name="Name" recordType="FULL" />
+      <String name="Name" recordType="FULL" hasBeenSet="False" />
       <String name="Description" recordType="DESC" />
       <String name="Icon" recordType="ICON" />
       <RefDirect name="Data" refName="ClassData" />

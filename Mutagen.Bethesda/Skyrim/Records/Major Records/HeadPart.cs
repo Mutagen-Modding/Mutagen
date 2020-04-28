@@ -1,11 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
     public partial class HeadPart
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+
         [Flags]
         public enum Flag
         {
@@ -31,6 +41,15 @@ namespace Mutagen.Bethesda.Skyrim
             FacialHair,
             Scars,
             Eyebrows,
+        }
+    }
+
+    namespace Internals
+    {
+        public partial class HeadPartBinaryOverlay
+        {
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            String INamedRequiredGetter.Name => this.Name ?? string.Empty;
         }
     }
 }

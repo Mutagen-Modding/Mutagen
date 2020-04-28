@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MoveableStatic" recordType="MSTT" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true" GUID="2b67f0bf-985c-4fb6-844a-8b8d93ad85a6" ID="186">
+    <Interface>INamed</Interface>
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <Enum name="Flags" enumName="MoveableStatic.Flag" byteLength="1" recordType="DATA" />
+      <FormLink name="LoopingSound" refName="SoundDescriptor" recordType="SNAM" />
+    </Fields>
+  </Object>
+</Loqui>

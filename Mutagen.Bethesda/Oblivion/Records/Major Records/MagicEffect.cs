@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,15 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class MagicEffect
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+
         [Flags]
         public enum MagicFlag
         {
@@ -44,6 +54,15 @@ namespace Mutagen.Bethesda.Oblivion
             UNKNOWN_29 = 0x20000000,
             UNKNOWN_30 = 0x40000000,
             //UNKNOWN_31 = 0x80000000,
+        }
+    }
+
+    namespace Internals
+    {
+        public partial class MagicEffectBinaryOverlay
+        {
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            String INamedRequiredGetter.Name => this.Name ?? string.Empty;
         }
     }
 }

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Tree" recordType="TREE" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true" GUID="5353e43a-3c33-49d9-b5a7-fc971ba96d88" ID="188">
+    <Interface>INamed</Interface>
+    <Interface>IHarvestable</Interface>
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
+      <RefDirect name="Model" refName="Model" />
+      <FormLink name="Ingredient" objType="Record" recordType="PFIG">
+        <Interface>IHarvestTarget</Interface>
+      </FormLink>
+      <FormLink name="HarvestSound" recordType="SNAM" refName="SoundDescriptor" />
+      <RefDirect name="Production" refName="SeasonalIngredientProduction" />
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Data" refName="TreeData" />
+    </Fields>
+  </Object>
+  <Object name="TreeData" objType="Subrecord" recordType="CNAM" GUID="f0e0de65-6492-449f-b9b5-56a5dfda9d46" ID="190">
+    <Fields>
+      <Float name="TrunkFlexibility" />
+      <Float name="BranchFlexibility" />
+      <ByteArray name="Unknown" nullable="NotNull" byteLength="32" />
+      <Float name="LeafAmplitude" />
+      <Float name="LeafFrequency" />
+    </Fields>
+  </Object>
+</Loqui>

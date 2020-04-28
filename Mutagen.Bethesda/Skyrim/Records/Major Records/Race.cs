@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -10,6 +11,15 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class Race
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+
         internal static readonly RecordType NAM2 = new RecordType("NAM2");
         public bool ExportingExtraNam2 { get; set; }
         
@@ -75,6 +85,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class RaceBinaryOverlay
         {
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            String INamedRequiredGetter.Name => this.Name ?? string.Empty;
+
             public bool ExportingExtraNam2 { get; private set; }
             public bool ExportingExtraNam3 => throw new NotImplementedException();
 

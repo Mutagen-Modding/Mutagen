@@ -3,6 +3,7 @@
   <Object name="Ingredient" recordType="INGR" baseClass="SkyrimMajorRecord" objType="Record" GUID="03907af3-2557-45c7-9c9e-c22854b4ffe6" ID="164">
     <Interface>INamed</Interface>
     <Interface>IItem</Interface>
+    <Interface>IHarvestTarget</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />

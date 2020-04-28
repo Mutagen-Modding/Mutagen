@@ -1271,6 +1271,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         INamed,
         IItem,
+        IHarvestTarget,
         ILoquiObjectSetter<IIngredientInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -1300,6 +1301,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         INamedGetter,
         IItemGetter,
+        IHarvestTargetGetter,
         ILoquiObject<IIngredientGetter>,
         IXmlItem,
         ILinkContainer,

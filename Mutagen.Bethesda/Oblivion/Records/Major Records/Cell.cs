@@ -1,6 +1,7 @@
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,15 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class Cell
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+
         [Flags]
         public enum Flag
         {
@@ -335,6 +345,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class CellBinaryOverlay
         {
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            String INamedRequiredGetter.Name => this.Name ?? string.Empty;
+
             static readonly HashSet<RecordType> TypicalPlacedTypes = new HashSet<RecordType>()
             {
                 Cell_Registration.ACHR_HEADER,

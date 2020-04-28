@@ -49,15 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IClassGetter.Name => this.Name;
+        public String Name { get; set; } = string.Empty;
         #endregion
         #region Description
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -694,10 +686,10 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IClass :
         IClassGetter,
         ISkyrimMajorRecord,
-        INamed,
+        INamedRequired,
         ILoquiObjectSetter<IClassInternal>
     {
-        new String? Name { get; set; }
+        new String Name { get; set; }
         new String? Description { get; set; }
         new String? Icon { get; set; }
         new ClassData? Data { get; set; }
@@ -712,13 +704,13 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IClassGetter :
         ISkyrimMajorRecordGetter,
-        INamedGetter,
+        INamedRequiredGetter,
         ILoquiObject<IClassGetter>,
         IXmlItem,
         IBinaryItem
     {
         static ILoquiRegistration Registration => Class_Registration.Instance;
-        String? Name { get; }
+        String Name { get; }
         String? Description { get; }
         String? Icon { get; }
         IClassDataGetter? Data { get; }
@@ -1251,7 +1243,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IClassInternal item)
         {
             ClearPartial();
-            item.Name = default;
+            item.Name = string.Empty;
             item.Description = default;
             item.Icon = default;
             item.Data = null;
@@ -1531,10 +1523,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+            if (printMask?.Name ?? true)
             {
-                fg.AppendItem(NameItem, "Name");
+                fg.AppendItem(item.Name, "Name");
             }
             if ((printMask?.Description ?? true)
                 && item.Description.TryGet(out var DescriptionItem))
@@ -1557,7 +1548,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IClassGetter item,
             Class.Mask<bool?> checkMask)
         {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
             if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
@@ -1571,7 +1561,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IClassGetter item,
             Class.Mask<bool> mask)
         {
-            mask.Name = (item.Name != null);
+            mask.Name = true;
             mask.Description = (item.Description != null);
             mask.Icon = (item.Icon != null);
             var itemData = item.Data;
@@ -1655,10 +1645,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IClassGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
-            {
-                hash.Add(Nameitem);
-            }
+            hash.Add(item.Name);
             if (item.Description.TryGet(out var Descriptionitem))
             {
                 hash.Add(Descriptionitem);
@@ -1926,8 +1913,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if ((item.Name != null)
-                && (translationMask?.GetShouldTranslate((int)Class_FieldIndex.Name) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: node,
@@ -2245,7 +2231,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(Class_Registration.FULL_HEADER),
@@ -2391,7 +2377,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
+        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : string.Empty;
         #endregion
         #region Description
         private int? _DescriptionLocation;

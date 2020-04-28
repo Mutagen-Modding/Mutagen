@@ -1292,6 +1292,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
         public static readonly RecordType MATO_HEADER = new RecordType("MATO");
         public static readonly RecordType MATT_HEADER = new RecordType("MATT");
+        public static readonly RecordType MSTT_HEADER = new RecordType("MSTT");
         public static readonly RecordType MOVT_HEADER = new RecordType("MOVT");
         public static readonly RecordType OTFT_HEADER = new RecordType("OTFT");
         public static readonly RecordType PERK_HEADER = new RecordType("PERK");
@@ -1404,6 +1405,7 @@ namespace Mutagen.Bethesda.Internals
                         LCRT_HEADER,
                         MATO_HEADER,
                         MATT_HEADER,
+                        MSTT_HEADER,
                         MOVT_HEADER,
                         OTFT_HEADER,
                         PERK_HEADER,

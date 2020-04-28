@@ -49,15 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Name;
-        public String? Name
-        {
-            get => this._Name;
-            set => this._Name = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IEyesGetter.Name => this.Name;
+        public String Name { get; set; } = string.Empty;
         #endregion
         #region Icon
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -652,10 +644,10 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IEyes :
         IEyesGetter,
         ISkyrimMajorRecord,
-        INamed,
+        INamedRequired,
         ILoquiObjectSetter<IEyesInternal>
     {
-        new String? Name { get; set; }
+        new String Name { get; set; }
         new String? Icon { get; set; }
         new Eyes.Flag? Flags { get; set; }
         #region Mutagen
@@ -673,13 +665,13 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IEyesGetter :
         ISkyrimMajorRecordGetter,
-        INamedGetter,
+        INamedRequiredGetter,
         ILoquiObject<IEyesGetter>,
         IXmlItem,
         IBinaryItem
     {
         static ILoquiRegistration Registration => Eyes_Registration.Instance;
-        String? Name { get; }
+        String Name { get; }
         String? Icon { get; }
         Eyes.Flag? Flags { get; }
 
@@ -1201,7 +1193,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IEyesInternal item)
         {
             ClearPartial();
-            item.Name = default;
+            item.Name = string.Empty;
             item.Icon = default;
             item.Flags = default;
             base.Clear(item);
@@ -1468,10 +1460,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if ((printMask?.Name ?? true)
-                && item.Name.TryGet(out var NameItem))
+            if (printMask?.Name ?? true)
             {
-                fg.AppendItem(NameItem, "Name");
+                fg.AppendItem(item.Name, "Name");
             }
             if ((printMask?.Icon ?? true)
                 && item.Icon.TryGet(out var IconItem))
@@ -1489,7 +1480,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IEyesGetter item,
             Eyes.Mask<bool?> checkMask)
         {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
             if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
             return base.HasBeenSet(
@@ -1501,7 +1491,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IEyesGetter item,
             Eyes.Mask<bool> mask)
         {
-            mask.Name = (item.Name != null);
+            mask.Name = true;
             mask.Icon = (item.Icon != null);
             mask.Flags = (item.Flags != null);
             base.FillHasBeenSetMask(
@@ -1582,10 +1572,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IEyesGetter item)
         {
             var hash = new HashCode();
-            if (item.Name.TryGet(out var Nameitem))
-            {
-                hash.Add(Nameitem);
-            }
+            hash.Add(item.Name);
             if (item.Icon.TryGet(out var Iconitem))
             {
                 hash.Add(Iconitem);
@@ -1823,8 +1810,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if ((item.Name != null)
-                && (translationMask?.GetShouldTranslate((int)Eyes_FieldIndex.Name) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Eyes_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: node,
@@ -2109,7 +2095,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(Eyes_Registration.FULL_HEADER),
@@ -2249,7 +2235,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
+        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : string.Empty;
         #endregion
         #region Icon
         private int? _IconLocation;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
@@ -11,6 +12,15 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class Faction
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+
         [Flags]
         public enum FactionFlag
         {
@@ -63,6 +73,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class FactionBinaryOverlay
         {
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            String INamedRequiredGetter.Name => this.Name ?? string.Empty;
+
             public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
 
             partial void ConditionsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)

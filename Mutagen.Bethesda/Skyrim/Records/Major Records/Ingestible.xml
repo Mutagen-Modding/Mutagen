@@ -2,5 +2,6 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Ingestible" recordType="ALCH" baseClass="SkyrimMajorRecord" objType="Record" GUID="f04a4e71-fb0c-4416-8623-5a6ac42fefb4" ID="163">
     <Interface>IItem</Interface>
+    <Interface>IHarvestTarget</Interface>
   </Object>
 </Loqui>

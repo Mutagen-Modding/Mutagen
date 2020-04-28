@@ -50,6 +50,7 @@
     <Compile Include="Links\ILinkCache.cs" />
     <Compile Include="Links\LoadOrderLinkCache.cs" />
     <Compile Include="Load Order\LoadOrder.cs" />
+    <Compile Include="Records\Interfaces\INamedRequired.cs" />
     <Compile Include="Utility\RecordInfoCache.cs" />
     <Compile Include="Persistance\TextFileFormKeyAllocator.cs" />
     <Compile Include="Records\AMod.cs" />
@@ -61,7 +62,7 @@
     <Compile Include="Enums\StringBinaryType.cs" />
     <Compile Include="Extensions\NullableExt.cs" />
     <Compile Include="Persistance\IFormKeyAllocator.cs" />
-    <Compile Include="Records\IMajorRecordEnumerable.cs" />
+    <Compile Include="Records\Interfaces\IMajorRecordEnumerable.cs" />
     <Compile Include="Records\GenderedItem.cs" />
     <Compile Include="Records\AListGroup.cs" />
     <Compile Include="Records\ProtocolDefinition_Bethesda.cs" />
@@ -84,7 +85,7 @@
     <Compile Include="Translations\Binary\Headers\VariableHeader.cs" /> 
     <Compile Include="Translations\Binary\Fields\LoquiBinaryOverlayTranslation.cs" />
     <Compile Include="Translations\Binary\Headers\GameConstants.cs" />
-    <Compile Include="Records\IGroup.cs" />
+    <Compile Include="Records\Interfaces\IGroup.cs" />
     <Compile Include="Preprocessing\BinaryFileProcessor.cs" />
     <Compile Include="Preprocessing\ModRecordAligner.cs" />
     <Compile Include="Translations\Binary\BinaryStringUtility.cs" />
@@ -94,12 +95,12 @@
     <Compile Include="Extensions\IBinaryStreamExt.cs" />
     <Compile Include="Structs\FormID.cs" />
     <Compile Include="Structs\FormKey.cs" />
-    <Compile Include="Records\IDuplicatable.cs" />
-    <Compile Include="Records\IGameSettingCommon.cs" />
-    <Compile Include="Records\IMajorRecordCommon.cs" />
-    <Compile Include="Records\IMod.cs" />
+    <Compile Include="Records\Interfaces\IDuplicatable.cs" />
+    <Compile Include="Records\Interfaces\IGameSettingCommon.cs" />
+    <Compile Include="Records\Interfaces\IMajorRecordCommon.cs" />
+    <Compile Include="Records\Interfaces\IMod.cs" />
     <Compile Include="Streams\IMutagenReadStream.cs" />
-    <Compile Include="Records\INamed.cs" />
+    <Compile Include="Records\Interfaces\INamed.cs" />
     <Compile Include="Links\EDIDLink.cs" />
     <Compile Include="Links\FormLink.cs" />
     <Compile Include="Links\IEDIDLink.cs" />

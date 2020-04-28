@@ -518,6 +518,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILeveledItemGetter,
         ISkyrimMajorRecord,
         IItem,
+        IHarvestTarget,
         ILoquiObjectSetter<ILeveledItemInternal>
     {
     }
@@ -532,6 +533,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILeveledItemGetter :
         ISkyrimMajorRecordGetter,
         IItemGetter,
+        IHarvestTargetGetter,
         ILoquiObject<ILeveledItemGetter>,
         IXmlItem,
         IBinaryItem
