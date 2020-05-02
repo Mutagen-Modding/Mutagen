@@ -2318,15 +2318,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return;
             }
             item.FogDistanceFarPlane = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.ShallowColor = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
-                extraByte: true);
-            item.DeepColor = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
-                extraByte: true);
-            item.ReflectionColor = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
-                extraByte: true);
+            item.ShallowColor = frame.ReadColor(ColorBinaryType.Alpha);
+            item.DeepColor = frame.ReadColor(ColorBinaryType.Alpha);
+            item.ReflectionColor = frame.ReadColor(ColorBinaryType.Alpha);
             item.TextureBlend = frame.ReadUInt8();
             frame.SetPosition(frame.Position + 3);
             WaterDataBinaryCreateTranslation.FillBinaryOilCustomLogicCustomPublic(
@@ -4014,16 +4008,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item.FogDistanceFarPlane);
                     Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.ShallowColor,
-                        extraByte: true);
+                        item: item.ShallowColor);
                     Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.DeepColor,
-                        extraByte: true);
+                        item: item.DeepColor);
                     Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.ReflectionColor,
-                        extraByte: true);
+                        item: item.ReflectionColor);
                     writer.Write(item.TextureBlend);
                     writer.WriteZeros(3);
                     WaterDataBinaryWriteTranslation.WriteBinaryOilCustomLogic(

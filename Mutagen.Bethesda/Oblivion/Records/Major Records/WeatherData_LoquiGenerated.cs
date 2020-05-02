@@ -1654,7 +1654,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ThunderLightningEndFadeOut = frame.ReadUInt8();
             item.ThunderLightningFrequency = frame.ReadUInt8();
             item.Classification = EnumBinaryTranslation<Weather.WeatherClassification>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.LightningColor = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(frame: frame);
+            item.LightningColor = frame.ReadColor(ColorBinaryType.NoAlpha);
         }
         
         public virtual void CopyInFromBinary(
@@ -2699,7 +2699,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 length: 1);
             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.LightningColor);
+                item: item.LightningColor,
+                binaryType: ColorBinaryType.NoAlpha);
         }
 
         public void Write(
@@ -2828,7 +2829,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Byte ThunderLightningEndFadeOut => _data.Span[0x9];
         public Byte ThunderLightningFrequency => _data.Span[0xA];
         public Weather.WeatherClassification Classification => (Weather.WeatherClassification)_data.Span.Slice(0xB, 0x1)[0];
-        public Color LightningColor => _data.Slice(0xC, 0x3).ReadColor();
+        public Color LightningColor => _data.Slice(0xC, 0x3).ReadColor(ColorBinaryType.NoAlpha);
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

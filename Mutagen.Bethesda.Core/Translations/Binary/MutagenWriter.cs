@@ -294,14 +294,28 @@ namespace Mutagen.Bethesda.Binary
         }
 
         /// <inheritdoc/>
-        public void Write(Color color, bool extraByte)
+        public void Write(Color color, ColorBinaryType binaryType)
         {
-            this.Writer.Write(color.R);
-            this.Writer.Write(color.G);
-            this.Writer.Write(color.B);
-            if (extraByte)
+            switch (binaryType)
             {
-                this.Writer.Write(color.A);
+                case ColorBinaryType.NoAlpha:
+                    this.Writer.Write(color.R);
+                    this.Writer.Write(color.G);
+                    this.Writer.Write(color.B);
+                    break;
+                case ColorBinaryType.Alpha:
+                    this.Writer.Write(color.R);
+                    this.Writer.Write(color.G);
+                    this.Writer.Write(color.B);
+                    this.Writer.Write(color.A);
+                    break;
+                case ColorBinaryType.NoAlphaFloat:
+                    this.Writer.Write((float)color.R);
+                    this.Writer.Write((float)color.G);
+                    this.Writer.Write((float)color.B);
+                    break;
+                default:
+                    break;
             }
         }
 

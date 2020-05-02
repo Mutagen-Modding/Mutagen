@@ -3076,9 +3076,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x524C4348: // HCLR
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.HairColor = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        extraByte: true);
+                    item.HairColor = frame.ReadColor(ColorBinaryType.Alpha);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.HairColor);
                 }
                 case 0x4D414E5A: // ZNAM
@@ -5599,8 +5597,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.HairColor,
-                header: recordTypeConverter.ConvertToCustom(Npc_Registration.HCLR_HEADER),
-                extraByte: true);
+                header: recordTypeConverter.ConvertToCustom(Npc_Registration.HCLR_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.CombatStyle,
@@ -5829,7 +5826,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlyList<IFormLinkGetter<IEyeGetter>>? Eyes { get; private set; }
         #region HairColor
         private int? _HairColorLocation;
-        public Color? HairColor => _HairColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _HairColorLocation.Value, _package.Meta).ReadColor() : default(Color?);
+        public Color? HairColor => _HairColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _HairColorLocation.Value, _package.Meta).ReadColor(ColorBinaryType.Alpha) : default(Color?);
         #endregion
         #region CombatStyle
         private int? _CombatStyleLocation;

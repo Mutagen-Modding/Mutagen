@@ -13,7 +13,7 @@
       <Enum name="MembraneShaderSourceBlendMode" enumName="EffectShader.SourceBlendMode" byteLength="4" />
       <Enum name="MembraneShaderBlendOperation" enumName="EffectShader.BlendOperation" byteLength="4" />
       <Enum name="MembraneShaderZTestFunction" enumName="EffectShader.ZTestFunction" byteLength="4" />
-      <Color name="FillTextureEffectColor" />
+      <Color name="FillTextureEffectColor" binaryType="Alpha" />
       <Float name="FillTextureEffectAlphaFadeInTime" />
       <Float name="FillTextureEffectFullAlphaTime" />
       <Float name="FillTextureEffectAlphaFadeOutTime" />
@@ -23,7 +23,7 @@
       <Float name="FillTextureEffectTextureAnimationSpeedU" />
       <Float name="FillTextureEffectTextureAnimationSpeedV" />
       <Float name="EdgeEffectFallOff" />
-      <Color name="EdgeEffectColor" />
+      <Color name="EdgeEffectColor" binaryType="Alpha" />
       <Float name="EdgeEffectAlphaFadeInTime" />
       <Float name="EdgeEffectFullAlphaTime" />
       <Float name="EdgeEffectAlphaFadeOutTime" />
@@ -57,9 +57,9 @@
       <Float name="ParticleShaderScaleKey2" />
       <Float name="ParticleShaderScaleKey1Time" />
       <Float name="ParticleShaderScaleKey2Time" />
-      <Color name="ColorKey1Color" />
-      <Color name="ColorKey2Color" />
-      <Color name="ColorKey3Color" />
+      <Color name="ColorKey1Color" binaryType="Alpha" />
+      <Color name="ColorKey2Color" binaryType="Alpha" />
+      <Color name="ColorKey3Color" binaryType="Alpha" />
       <Float name="ColorKey1ColorAlpha" />
       <Float name="ColorKey2ColorAlpha" />
       <Float name="ColorKey3ColorAlpha" />

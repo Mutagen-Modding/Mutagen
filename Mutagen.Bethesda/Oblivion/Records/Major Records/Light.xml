@@ -16,7 +16,7 @@
     <Fields>
       <Int32 name="Time" default="-1" />
       <UInt32 name="Radius" />
-      <Color name="Color" extraByte="true" />
+      <Color name="Color" binaryType="Alpha" />
       <Enum name="Flags" enumName="Light.LightFlag" byteLength="4" />
       <Float name="FalloffExponent" default="1" />
       <Float name="FOV" default="90" />

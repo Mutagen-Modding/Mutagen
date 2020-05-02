@@ -3675,9 +3675,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.MembraneShaderSourceBlendMode = EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.MembraneShaderBlendOperation = EnumBinaryTranslation<EffectShader.BlendOperation>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.MembraneShaderZTestFunction = EnumBinaryTranslation<EffectShader.ZTestFunction>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.FillTextureEffectColor = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
-                extraByte: true);
+            item.FillTextureEffectColor = frame.ReadColor(ColorBinaryType.Alpha);
             item.FillTextureEffectAlphaFadeInTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.FillTextureEffectFullAlphaTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.FillTextureEffectAlphaFadeOutTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
@@ -3687,9 +3685,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.FillTextureEffectTextureAnimationSpeedU = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.FillTextureEffectTextureAnimationSpeedV = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.EdgeEffectFallOff = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.EdgeEffectColor = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
-                extraByte: true);
+            item.EdgeEffectColor = frame.ReadColor(ColorBinaryType.Alpha);
             item.EdgeEffectAlphaFadeInTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.EdgeEffectFullAlphaTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.EdgeEffectAlphaFadeOutTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
@@ -3727,15 +3723,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ParticleShaderScaleKey2 = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.ParticleShaderScaleKey1Time = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.ParticleShaderScaleKey2Time = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.ColorKey1Color = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
-                extraByte: true);
-            item.ColorKey2Color = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
-                extraByte: true);
-            item.ColorKey3Color = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
-                extraByte: true);
+            item.ColorKey1Color = frame.ReadColor(ColorBinaryType.Alpha);
+            item.ColorKey2Color = frame.ReadColor(ColorBinaryType.Alpha);
+            item.ColorKey3Color = frame.ReadColor(ColorBinaryType.Alpha);
             item.ColorKey1ColorAlpha = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.ColorKey2ColorAlpha = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.ColorKey3ColorAlpha = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
@@ -6504,8 +6494,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 length: 4);
             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.FillTextureEffectColor,
-                extraByte: true);
+                item: item.FillTextureEffectColor);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FillTextureEffectAlphaFadeInTime);
@@ -6535,8 +6524,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.EdgeEffectFallOff);
             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.EdgeEffectColor,
-                extraByte: true);
+                item: item.EdgeEffectColor);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EdgeEffectAlphaFadeInTime);
@@ -6642,16 +6630,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.ParticleShaderScaleKey2Time);
                 Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.ColorKey1Color,
-                    extraByte: true);
+                    item: item.ColorKey1Color);
                 Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.ColorKey2Color,
-                    extraByte: true);
+                    item: item.ColorKey2Color);
                 Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.ColorKey3Color,
-                    extraByte: true);
+                    item: item.ColorKey3Color);
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ColorKey1ColorAlpha);
@@ -6792,7 +6777,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public EffectShader.SourceBlendMode MembraneShaderSourceBlendMode => (EffectShader.SourceBlendMode)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         public EffectShader.BlendOperation MembraneShaderBlendOperation => (EffectShader.BlendOperation)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
         public EffectShader.ZTestFunction MembraneShaderZTestFunction => (EffectShader.ZTestFunction)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
-        public Color FillTextureEffectColor => _data.Slice(0x10, 0x4).ReadColor();
+        public Color FillTextureEffectColor => _data.Slice(0x10, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Single FillTextureEffectAlphaFadeInTime => SpanExt.GetFloat(_data.Slice(0x14, 0x4));
         public Single FillTextureEffectFullAlphaTime => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
         public Single FillTextureEffectAlphaFadeOutTime => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
@@ -6802,7 +6787,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single FillTextureEffectTextureAnimationSpeedU => SpanExt.GetFloat(_data.Slice(0x2C, 0x4));
         public Single FillTextureEffectTextureAnimationSpeedV => SpanExt.GetFloat(_data.Slice(0x30, 0x4));
         public Single EdgeEffectFallOff => SpanExt.GetFloat(_data.Slice(0x34, 0x4));
-        public Color EdgeEffectColor => _data.Slice(0x38, 0x4).ReadColor();
+        public Color EdgeEffectColor => _data.Slice(0x38, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Single EdgeEffectAlphaFadeInTime => SpanExt.GetFloat(_data.Slice(0x3C, 0x4));
         public Single EdgeEffectFullAlphaTime => SpanExt.GetFloat(_data.Slice(0x40, 0x4));
         public Single EdgeEffectAlphaFadeOutTime => SpanExt.GetFloat(_data.Slice(0x44, 0x4));
@@ -6835,9 +6820,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single ParticleShaderScaleKey2 => SpanExt.GetFloat(_data.Slice(0xB0, 0x4));
         public Single ParticleShaderScaleKey1Time => SpanExt.GetFloat(_data.Slice(0xB4, 0x4));
         public Single ParticleShaderScaleKey2Time => SpanExt.GetFloat(_data.Slice(0xB8, 0x4));
-        public Color ColorKey1Color => _data.Slice(0xBC, 0x4).ReadColor();
-        public Color ColorKey2Color => _data.Slice(0xC0, 0x4).ReadColor();
-        public Color ColorKey3Color => _data.Slice(0xC4, 0x4).ReadColor();
+        public Color ColorKey1Color => _data.Slice(0xBC, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color ColorKey2Color => _data.Slice(0xC0, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color ColorKey3Color => _data.Slice(0xC4, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Single ColorKey1ColorAlpha => SpanExt.GetFloat(_data.Slice(0xC8, 0x4));
         public Single ColorKey2ColorAlpha => SpanExt.GetFloat(_data.Slice(0xCC, 0x4));
         public Single ColorKey3ColorAlpha => SpanExt.GetFloat(_data.Slice(0xD0, 0x4));

@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "item.Unused = new byte[3];";
+            string testString = "em.Color = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(frame: frame);";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

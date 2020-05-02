@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="LocationReferenceType" recordType="LCRT" objType="Record" baseClass="SkyrimMajorRecord" GUID="a17b8351-47c0-4da3-9676-338a040891ca" ID="19">
     <Fields>
-      <Color name="Color" recordType="CNAM" />
+      <Color name="Color" recordType="CNAM" binaryType="Alpha" />
     </Fields>
   </Object>
 </Loqui>

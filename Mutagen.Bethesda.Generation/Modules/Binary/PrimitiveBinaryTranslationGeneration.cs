@@ -17,8 +17,8 @@ namespace Mutagen.Bethesda.Generation
         protected bool? nullable;
         public bool Nullable => nullable ?? false || typeof(T).GetName().EndsWith("?");
         public bool PreferDirectTranslation = true;
-        public Action<FileGeneration, Accessor, Accessor> CustomRead;
-        public Action<FileGeneration, Accessor, Accessor> CustomWrite;
+        public Action<FileGeneration, ObjectGeneration, TypeGeneration, Accessor, Accessor> CustomRead;
+        public Action<FileGeneration, ObjectGeneration, TypeGeneration, Accessor, Accessor> CustomWrite;
 
         public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
         {
@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Generation
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             if (CustomWrite != null)
             {
-                CustomWrite(fg, writerAccessor, itemAccessor);
+                CustomWrite(fg, objGen, typeGen, writerAccessor, itemAccessor);
             }
             else if (data.HasTrigger || !PreferDirectTranslation)
             {
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Generation
 
             if (CustomRead != null)
             {
-                CustomRead(fg, frameAccessor, itemAccessor);
+                CustomRead(fg, objGen, typeGen, frameAccessor, itemAccessor);
             }
             else if (PreferDirectTranslation)
             {

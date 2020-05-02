@@ -27,9 +27,9 @@
       <CustomLogic name="BloodCustomLogic" />
       <Break />
       <Float name="FogDistanceFarPlane" />
-      <Color name="ShallowColor" />
-      <Color name="DeepColor" />
-      <Color name="ReflectionColor" />
+      <Color name="ShallowColor" binaryType="Alpha" />
+      <Color name="DeepColor" binaryType="Alpha" />
+      <Color name="ReflectionColor" binaryType="Alpha" />
       <UInt8 name="TextureBlend" />
       <Zero byteLength="3" />
       <CustomLogic name="OilCustomLogic" />

@@ -33,7 +33,7 @@
       <List name="Eyes" recordType="ENAM">
         <FormLink refName="Eye" />
       </List>
-      <Color name="HairColor" recordType="HCLR" />
+      <Color name="HairColor" recordType="HCLR" binaryType="Alpha" />
       <FormLink name="CombatStyle" refName="CombatStyle" recordType="ZNAM" />
       <ByteArray name="FaceGenGeometrySymmetric" recordType="FGGS" />
       <ByteArray name="FaceGenGeometryAsymmetric" recordType="FGGA" />

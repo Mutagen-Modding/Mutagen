@@ -1222,18 +1222,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeatherType item,
             MutagenFrame frame)
         {
-            item.Sunrise = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
-                extraByte: true);
-            item.Day = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
-                extraByte: true);
-            item.Sunset = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
-                extraByte: true);
-            item.Night = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
-                extraByte: true);
+            item.Sunrise = frame.ReadColor(ColorBinaryType.Alpha);
+            item.Day = frame.ReadColor(ColorBinaryType.Alpha);
+            item.Sunset = frame.ReadColor(ColorBinaryType.Alpha);
+            item.Night = frame.ReadColor(ColorBinaryType.Alpha);
         }
         
         public virtual void CopyInFromBinary(
@@ -1909,20 +1901,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Sunrise,
-                extraByte: true);
+                item: item.Sunrise);
             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Day,
-                extraByte: true);
+                item: item.Day);
             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Sunset,
-                extraByte: true);
+                item: item.Sunset);
             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Night,
-                extraByte: true);
+                item: item.Night);
         }
 
         public void Write(
@@ -2033,10 +2021,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Color Sunrise => _data.Slice(0x0, 0x4).ReadColor();
-        public Color Day => _data.Slice(0x4, 0x4).ReadColor();
-        public Color Sunset => _data.Slice(0x8, 0x4).ReadColor();
-        public Color Night => _data.Slice(0xC, 0x4).ReadColor();
+        public Color Sunrise => _data.Slice(0x0, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color Day => _data.Slice(0x4, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color Sunset => _data.Slice(0x8, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color Night => _data.Slice(0xC, 0x4).ReadColor(ColorBinaryType.Alpha);
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

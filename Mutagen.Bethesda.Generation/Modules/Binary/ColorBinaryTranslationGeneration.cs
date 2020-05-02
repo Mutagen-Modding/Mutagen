@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Loqui;
 using Loqui.Generation;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 
 namespace Mutagen.Bethesda.Generation
@@ -14,7 +10,17 @@ namespace Mutagen.Bethesda.Generation
     {
         public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
         {
-            return ExtraByte(typeGen) ? 4 : 3;
+            switch (BinaryType(typeGen))
+            {
+                case ColorBinaryType.NoAlpha:
+                    return 3;
+                case ColorBinaryType.Alpha:
+                    return 4;
+                case ColorBinaryType.NoAlphaFloat:
+                    return 12;
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         public ColorBinaryTranslationGeneration()
@@ -23,24 +29,32 @@ namespace Mutagen.Bethesda.Generation
             this.AdditionalWriteParams.Add(AdditionalParam);
             this.AdditionalCopyInParams.Add(AdditionalParam);
             this.AdditionalCopyInRetParams.Add(AdditionalParam);
+            CustomRead = (fg, objGen, typeGen, reader, item) =>
+            {
+                var binaryType = BinaryType(typeGen);
+                fg.AppendLine($"{item} = {reader}.ReadColor({nameof(ColorBinaryType)}.{binaryType});");
+            };
         }
 
         private static TryGet<string> AdditionalParam(
            ObjectGeneration objGen,
            TypeGeneration typeGen)
         {
-            return TryGet<string>.Create(successful: ExtraByte(typeGen), val: "extraByte: true");
+            var binaryType = BinaryType(typeGen);
+            string param = $"binaryType: {nameof(ColorBinaryType)}.{binaryType}";
+            return TryGet<string>.Create(successful: binaryType != ColorBinaryType.Alpha, val: param);
         }
 
-        protected static bool ExtraByte(TypeGeneration typeGen)
+        protected static ColorBinaryType BinaryType(TypeGeneration typeGen)
         {
-            if (!typeGen.CustomData.TryGetValue("ColorExtraByte", out var obj)) return false;
-            return (bool)obj;
+            if (!typeGen.CustomData.TryGetValue(ColorTypeModule.BinaryTypeStr, out var obj)) return ColorBinaryType.Alpha;
+            return (ColorBinaryType)obj;
         }
 
         public override string GenerateForTypicalWrapper(ObjectGeneration objGen, TypeGeneration typeGen, Accessor dataAccessor, Accessor packageAccessor)
         {
-            return $"{dataAccessor}.ReadColor()";
+            var binaryType = BinaryType(typeGen);
+            return $"{dataAccessor}.ReadColor({nameof(ColorBinaryType)}.{binaryType})";
         }
     }
 }

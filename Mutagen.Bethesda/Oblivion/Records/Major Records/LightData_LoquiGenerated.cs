@@ -1468,9 +1468,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Time = frame.ReadInt32();
             item.Radius = frame.ReadUInt32();
-            item.Color = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
-                extraByte: true);
+            item.Color = frame.ReadColor(ColorBinaryType.Alpha);
             item.Flags = EnumBinaryTranslation<Light.LightFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.FalloffExponent = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.FOV = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
@@ -2357,8 +2355,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             writer.Write(item.Radius);
             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Color,
-                extraByte: true);
+                item: item.Color);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Light.LightFlag>.Instance.Write(
                 writer,
                 item.Flags,
@@ -2495,7 +2492,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public LightData.VersioningBreaks Versioning { get; private set; }
         public Int32 Time => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
         public UInt32 Radius => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
-        public Color Color => _data.Slice(0x8, 0x4).ReadColor();
+        public Color Color => _data.Slice(0x8, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Light.LightFlag Flags => (Light.LightFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
         public Single FalloffExponent => SpanExt.GetFloat(_data.Slice(0x10, 0x4));
         public Single FOV => SpanExt.GetFloat(_data.Slice(0x14, 0x4));

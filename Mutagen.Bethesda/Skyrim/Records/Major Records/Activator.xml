@@ -13,7 +13,7 @@
       <List name="Keywords" counterRecType="KSIZ">
         <FormLink refName="Keyword" recordType="KWDA" />
       </List>
-      <Color name="MarkerColor" recordType="PNAM" />
+      <Color name="MarkerColor" recordType="PNAM" binaryType="Alpha" />
       <FormLink name="LoopingSound" refName="SoundDescriptor" recordType="SNAM" />
       <FormLink name="ActivationSound" refName="SoundDescriptor" recordType="VNAM" />
       <FormLink name="WaterType" refName="Water" recordType="WNAM" />

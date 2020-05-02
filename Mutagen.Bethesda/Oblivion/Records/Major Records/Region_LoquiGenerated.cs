@@ -1759,9 +1759,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x524C4352: // RCLR
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.MapColor = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        extraByte: true);
+                    item.MapColor = frame.ReadColor(ColorBinaryType.Alpha);
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.MapColor);
                 }
                 case 0x4D414E57: // WNAM
@@ -3103,8 +3101,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MapColor,
-                header: recordTypeConverter.ConvertToCustom(Region_Registration.RCLR_HEADER),
-                extraByte: true);
+                header: recordTypeConverter.ConvertToCustom(Region_Registration.RCLR_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Worldspace,
@@ -3270,7 +3267,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region MapColor
         private int? _MapColorLocation;
-        public Color? MapColor => _MapColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _MapColorLocation.Value, _package.Meta).ReadColor() : default(Color?);
+        public Color? MapColor => _MapColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _MapColorLocation.Value, _package.Meta).ReadColor(ColorBinaryType.Alpha) : default(Color?);
         #endregion
         #region Worldspace
         private int? _WorldspaceLocation;

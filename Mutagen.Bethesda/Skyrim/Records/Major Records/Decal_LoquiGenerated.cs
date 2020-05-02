@@ -1560,9 +1560,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ParallaxPasses = frame.ReadUInt8();
             item.Flags = EnumBinaryTranslation<Decal.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
             item.Unknown = frame.ReadUInt16();
-            item.Color = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
-                extraByte: true);
+            item.Color = frame.ReadColor(ColorBinaryType.Alpha);
         }
         
         public virtual void CopyInFromBinary(
@@ -2541,8 +2539,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             writer.Write(item.Unknown);
             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Color,
-                extraByte: true);
+                item: item.Color);
         }
 
         public void Write(
@@ -2669,7 +2666,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Byte ParallaxPasses => _data.Span[0x1C];
         public Decal.Flag Flags => (Decal.Flag)_data.Span.Slice(0x1D, 0x1)[0];
         public UInt16 Unknown => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x1E, 0x2));
-        public Color Color => _data.Slice(0x20, 0x4).ReadColor();
+        public Color Color => _data.Slice(0x20, 0x4).ReadColor(ColorBinaryType.Alpha);
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

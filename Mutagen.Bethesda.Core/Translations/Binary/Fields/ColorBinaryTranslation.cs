@@ -17,9 +17,9 @@ namespace Mutagen.Bethesda.Binary
         public bool Parse(
             MutagenFrame frame,
             [MaybeNullWhen(false)]out Color item,
-            bool extraByte)
+            ColorBinaryType binaryType)
         {
-            if (!extraByte)
+            if (binaryType != ColorBinaryType.NoAlpha)
             {
                 throw new NotImplementedException();
             }
@@ -30,40 +30,42 @@ namespace Mutagen.Bethesda.Binary
 
         public Color Parse(
             MutagenFrame frame,
-            bool extraByte)
+            ColorBinaryType binaryType)
         {
-            if (!extraByte)
-            {
-                throw new NotImplementedException();
-            }
-            return this.ParseValue(frame);
+            return frame.ReadColor(binaryType);
         }
 
         public override Color ParseValue(MutagenFrame reader)
         {
-            return reader.ReadColor();
+            throw new NotImplementedException();
         }
 
         public override void Write(MutagenWriter writer, Color item)
         {
-            writer.Write(item, false);
+            writer.Write(item, ColorBinaryType.Alpha);
         }
 
-        protected Action<MutagenWriter, Color> GetWriter(bool extraByte)
+        protected Action<MutagenWriter, Color> GetWriter(ColorBinaryType binaryType)
         {
-            if (extraByte)
+            switch (binaryType)
             {
-                return (w, c) =>
-                {
-                    w.Write(c, true);
-                };
-            }
-            else
-            {
-                return (w, c) =>
-                {
-                    w.Write(c, false);
-                };
+                case ColorBinaryType.NoAlpha:
+                    return (w, c) =>
+                    {
+                        w.Write(c, ColorBinaryType.NoAlpha);
+                    };
+                case ColorBinaryType.Alpha:
+                    return (w, c) =>
+                    {
+                        w.Write(c, ColorBinaryType.Alpha);
+                    };
+                case ColorBinaryType.NoAlphaFloat:
+                    return (w, c) =>
+                    {
+                        w.Write(c, ColorBinaryType.NoAlphaFloat);
+                    };
+                default:
+                    throw new NotImplementedException();
             }
         }
 
@@ -71,48 +73,48 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             Color item,
             RecordType header,
-            bool extraByte)
+            ColorBinaryType binaryType)
         {
             this.Write(
                 writer,
                 item,
                 header,
-                write: GetWriter(extraByte));
+                write: GetWriter(binaryType));
         }
 
         public void Write(
             MutagenWriter writer,
             Color item,
-            bool extraByte)
+            ColorBinaryType binaryType)
         {
             this.Write(
                 writer,
                 item,
-                write: GetWriter(extraByte));
+                write: GetWriter(binaryType));
         }
 
         public void WriteNullable(
             MutagenWriter writer,
             Color? item,
             RecordType header,
-            bool extraByte)
+            ColorBinaryType binaryType)
         {
             this.WriteNullable(
                 writer,
                 item,
                 header,
-                write: GetWriter(extraByte));
+                write: GetWriter(binaryType));
         }
 
         public void WriteNullable(
             MutagenWriter writer,
             Color? item,
-            bool extraByte)
+            ColorBinaryType binaryType)
         {
             this.WriteNullable(
                 writer,
                 item,
-                write: GetWriter(extraByte));
+                write: GetWriter(binaryType));
         }
     }
 }

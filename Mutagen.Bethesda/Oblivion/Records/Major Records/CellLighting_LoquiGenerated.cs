@@ -1458,15 +1458,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICellLighting item,
             MutagenFrame frame)
         {
-            item.AmbientColor = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
-                extraByte: true);
-            item.DirectionalColor = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
-                extraByte: true);
-            item.FogColor = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                frame: frame,
-                extraByte: true);
+            item.AmbientColor = frame.ReadColor(ColorBinaryType.Alpha);
+            item.DirectionalColor = frame.ReadColor(ColorBinaryType.Alpha);
+            item.FogColor = frame.ReadColor(ColorBinaryType.Alpha);
             item.FogNear = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.FogFar = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.DirectionalRotationXY = frame.ReadInt32();
@@ -2346,16 +2340,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.AmbientColor,
-                extraByte: true);
+                item: item.AmbientColor);
             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.DirectionalColor,
-                extraByte: true);
+                item: item.DirectionalColor);
             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.FogColor,
-                extraByte: true);
+                item: item.FogColor);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FogNear);
@@ -2486,9 +2477,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Color AmbientColor => _data.Slice(0x0, 0x4).ReadColor();
-        public Color DirectionalColor => _data.Slice(0x4, 0x4).ReadColor();
-        public Color FogColor => _data.Slice(0x8, 0x4).ReadColor();
+        public Color AmbientColor => _data.Slice(0x0, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color DirectionalColor => _data.Slice(0x4, 0x4).ReadColor(ColorBinaryType.Alpha);
+        public Color FogColor => _data.Slice(0x8, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Single FogNear => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
         public Single FogFar => SpanExt.GetFloat(_data.Slice(0x10, 0x4));
         public Int32 DirectionalRotationXY => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x14, 0x4));

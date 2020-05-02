@@ -24,7 +24,7 @@
   <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.13.7" />
     <PackageReference Include="Loqui" Version="1.1.8" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.0.12" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.0.13" />
   </ItemGroup>
   <PropertyGroup>
     <PackageId>Mutagen.Bethesda.Core</PackageId>
@@ -45,6 +45,7 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\ColorBinaryType.cs" />
     <Compile Include="Links\DirectModLinkCache.cs" />
     <Compile Include="Links\FormLinkNullable.cs" />
     <Compile Include="Links\ILinkCache.cs" />

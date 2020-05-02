@@ -1197,9 +1197,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E43: // CNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.Color = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        extraByte: true);
+                    item.Color = frame.ReadColor(ColorBinaryType.Alpha);
                     return TryGet<int?>.Succeed((int)ActionRecord_FieldIndex.Color);
                 }
                 default:
@@ -1884,8 +1882,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Color,
-                header: recordTypeConverter.ConvertToCustom(ActionRecord_Registration.CNAM_HEADER),
-                extraByte: true);
+                header: recordTypeConverter.ConvertToCustom(ActionRecord_Registration.CNAM_HEADER));
         }
 
         public void Write(
@@ -2010,7 +2007,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Color
         private int? _ColorLocation;
-        public Color? Color => _ColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ColorLocation.Value, _package.Meta).ReadColor() : default(Color?);
+        public Color? Color => _ColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ColorLocation.Value, _package.Meta).ReadColor(ColorBinaryType.Alpha) : default(Color?);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

@@ -33,7 +33,7 @@
       <UInt8 name="ParallaxPasses" />
       <Enum name="Flags" enumName="Decal.Flag" byteLength="1" />
       <UInt16 name="Unknown" />
-      <Color name="Color" />
+      <Color name="Color" binaryType="Alpha" />
     </Fields>
   </Object>
 </Loqui>

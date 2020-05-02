@@ -222,7 +222,7 @@
     <xs:complexType name="Color">
       <xs:complexContent>
         <xs:extension base="Color">
-          <xs:attribute name="extraByte" type="xs:boolean" />
+          <xs:attribute name="binaryType" type="ColorBinaryType" use="required" />
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
@@ -369,6 +369,14 @@
       <xs:enumeration value="Off" />
       <xs:enumeration value="Normal" />
       <xs:enumeration value="Async" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ColorBinaryType" final="restriction" >
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="NoAlpha" />
+      <xs:enumeration value="Alpha" />
+      <xs:enumeration value="NoAlphaFloat" />
     </xs:restriction>
   </xs:simpleType>
 

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Noggog;
 using Loqui;
+using Mutagen.Bethesda.Binary;
 
 namespace Mutagen.Bethesda.Generation
 {

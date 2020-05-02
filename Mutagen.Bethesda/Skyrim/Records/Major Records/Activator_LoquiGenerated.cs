@@ -2023,9 +2023,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E50: // PNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.MarkerColor = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        extraByte: true);
+                    item.MarkerColor = frame.ReadColor(ColorBinaryType.Alpha);
                     return TryGet<int?>.Succeed((int)Activator_FieldIndex.MarkerColor);
                 }
                 case 0x4D414E53: // SNAM
@@ -3540,8 +3538,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MarkerColor,
-                header: recordTypeConverter.ConvertToCustom(Activator_Registration.PNAM_HEADER),
-                extraByte: true);
+                header: recordTypeConverter.ConvertToCustom(Activator_Registration.PNAM_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.LoopingSound,
@@ -3719,7 +3716,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         #region MarkerColor
         private int? _MarkerColorLocation;
-        public Color? MarkerColor => _MarkerColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _MarkerColorLocation.Value, _package.Meta).ReadColor() : default(Color?);
+        public Color? MarkerColor => _MarkerColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _MarkerColorLocation.Value, _package.Meta).ReadColor(ColorBinaryType.Alpha) : default(Color?);
         #endregion
         #region LoopingSound
         private int? _LoopingSoundLocation;
