@@ -145,11 +145,11 @@ namespace Mutagen.Bethesda
         {
             var majorMeta = meta.MajorRecordFrame(span);
             var edidLoc = UtilityTranslation.FindFirstSubrecord(majorMeta.Content, meta, Constants.EditorID);
-            if (edidLoc == -1)
+            if (edidLoc == null)
             {
                 return GetResponse<GameSettingType>.Fail($"EDID was not located");
             }
-            var edidMeta = meta.SubrecordFrame(majorMeta.Content.Slice(edidLoc));
+            var edidMeta = meta.SubrecordFrame(majorMeta.Content.Slice(edidLoc.Value));
             var edid = BinaryStringUtility.ProcessWholeToZString(edidMeta.Content);
             if (edid.Length == 0)
             {

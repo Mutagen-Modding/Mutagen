@@ -110,10 +110,10 @@ namespace Mutagen.Bethesda.Tests
             stream.Position = loc.Min;
             var majorFrame = stream.ReadMajorRecordFrame();
             var edidLoc = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, this.Meta, Mutagen.Bethesda.Internals.Constants.EditorID);
-            if (edidLoc == -1) return;
+            if (edidLoc == null) return;
             ProcessStringTermination(
                 stream,
-                loc.Min + majorFrame.Header.HeaderLength + edidLoc,
+                loc.Min + majorFrame.Header.HeaderLength + edidLoc.Value,
                 majorFrame.Header.FormID);
         }
 

@@ -121,7 +121,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void FindFirstSubrecord_Empty()
         {
             var b = new byte[0];
-            Assert.Equal(-1, UtilityTranslation.FindFirstSubrecord(b.AsSpan(), GameConstants.Oblivion, SecondTypicalType));
+            Assert.Null(UtilityTranslation.FindFirstSubrecord(b.AsSpan(), GameConstants.Oblivion, SecondTypicalType));
         }
 
         [Fact]

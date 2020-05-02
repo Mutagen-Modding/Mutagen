@@ -548,7 +548,7 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        public static int FindFirstSubrecord(ReadOnlySpan<byte> data, GameConstants meta, RecordType recordType, bool navigateToContent = false)
+        public static int? FindFirstSubrecord(ReadOnlySpan<byte> data, GameConstants meta, RecordType recordType, bool navigateToContent = false)
         {
             int loc = 0;
             while (data.Length > loc)
@@ -557,7 +557,7 @@ namespace Mutagen.Bethesda
                 if (subMeta.RecordType == recordType) return navigateToContent ? (loc + meta.SubConstants.HeaderLength) : loc;
                 loc += subMeta.TotalLength;
             }
-            return -1;
+            return null;
         }
 
         public static async Task CompileStreamsInto(IEnumerable<Task<IEnumerable<Stream>>> inStreams, Stream outStream)

@@ -34,11 +34,11 @@ namespace Mutagen.Bethesda.Binary
         {
             var subrecordSpan = frame.Content;
             var fnamLocation = UtilityTranslation.FindFirstSubrecord(subrecordSpan, frame.Header.Meta, FNAM);
-            if (fnamLocation == -1)
+            if (fnamLocation == null)
             {
                 throw new ArgumentException($"Could not find FNAM.");
             }
-            var fnamMeta = frame.Header.Meta.SubrecordFrame(subrecordSpan.Slice(fnamLocation));
+            var fnamMeta = frame.Header.Meta.SubrecordFrame(subrecordSpan.Slice(fnamLocation.Value));
             if (fnamMeta.Content.Length != 1)
             {
                 throw new ArgumentException($"FNAM had non 1 length: {fnamMeta.Content.Length}");
@@ -71,11 +71,11 @@ namespace Mutagen.Bethesda.Binary
 
             // Read data
             var fltvLoc = UtilityTranslation.FindFirstSubrecord(majorMeta.Content, frame.MetaData, FLTV, navigateToContent: true);
-            if (fltvLoc == -1)
+            if (fltvLoc == null)
             {
                 throw new ArgumentException($"Could not find FLTV.");
             }
-            g.RawFloat = majorMeta.Content.Slice(fltvLoc).GetFloat();
+            g.RawFloat = majorMeta.Content.Slice(fltvLoc.Value).GetFloat();
 
             // Skip to end
             frame.Reader.Position = initialPos + majorMeta.Header.TotalLength;

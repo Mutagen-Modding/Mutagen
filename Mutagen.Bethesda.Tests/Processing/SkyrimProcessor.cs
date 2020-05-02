@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,12 +33,12 @@ namespace Mutagen.Bethesda.Tests
             stream.Position = loc.Min;
             var majorFrame = stream.ReadMajorRecordFrame();
             var edidLoc = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, this.Meta, new RecordType("EDID"), navigateToContent: true);
-            if (edidLoc == -1) return;
-            if ((char)majorFrame.Content[edidLoc] != 'f') return;
+            if (edidLoc == null) return;
+            if ((char)majorFrame.Content[edidLoc.Value] != 'f') return;
 
             var dataIndex = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, this.Meta, new RecordType("DATA"), navigateToContent: true);
-            if (dataIndex == -1) return;
-            stream.Position = loc.Min + majorFrame.Header.HeaderLength + dataIndex;
+            if (dataIndex == null) return;
+            stream.Position = loc.Min + majorFrame.Header.HeaderLength + dataIndex.Value;
             ProcessZeroFloat(stream);
         }
 
@@ -61,10 +61,10 @@ namespace Mutagen.Bethesda.Tests
             RangeInt64 loc)
         {
             var phonemeListLoc = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, this.Meta, new RecordType("PHTN"));
-            if (phonemeListLoc == -1) return;
-            stream.Position = loc.Min + phonemeListLoc + majorFrame.Header.HeaderLength;
+            if (phonemeListLoc == null) return;
+            stream.Position = loc.Min + phonemeListLoc.Value + majorFrame.Header.HeaderLength;
 
-            var phonemeSpan = majorFrame.Content.Slice(phonemeListLoc);
+            var phonemeSpan = majorFrame.Content.Slice(phonemeListLoc.Value);
             var finds = UtilityTranslation.FindRepeatingSubrecord(
                 phonemeSpan, 
                 this.Meta, 
@@ -102,8 +102,8 @@ namespace Mutagen.Bethesda.Tests
             var data = new Dictionary<int, ReadOnlyMemorySlice<byte>>();
             var indices = new List<int>();
             var initialPos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData, Furniture_Registration.ENAM_HEADER);
-            if (initialPos == -1) return;
-            var pos = initialPos;
+            if (initialPos == null) return;
+            var pos = initialPos.Value;
             while (pos < majorFrame.Content.Length)
             {
                 var positions = UtilityTranslation.FindNextSubrecords(
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Tests
                 bytes.Span.CopyTo(reordered.AsSpan().Slice(transferPos));
                 transferPos += bytes.Length;
             }
-            this._Instructions.SetSubstitution(loc.Min + majorFrame.Header.HeaderLength + initialPos, reordered);
+            this._Instructions.SetSubstitution(loc.Min + majorFrame.Header.HeaderLength + initialPos.Value, reordered);
         }
     }
 }
