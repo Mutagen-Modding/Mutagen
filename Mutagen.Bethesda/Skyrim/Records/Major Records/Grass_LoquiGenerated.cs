@@ -673,6 +673,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IGrass :
         IGrassGetter,
         ISkyrimMajorRecord,
+        IModeled,
+        IObjectBounded,
         ILoquiObjectSetter<IGrassInternal>
     {
         new ObjectBounds ObjectBounds { get; set; }
@@ -689,6 +691,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IGrassGetter :
         ISkyrimMajorRecordGetter,
+        IModeledGetter,
+        IObjectBoundedGetter,
         ILoquiObject<IGrassGetter>,
         IXmlItem,
         ILinkContainer,

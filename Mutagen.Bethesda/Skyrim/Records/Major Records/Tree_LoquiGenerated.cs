@@ -883,6 +883,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         INamed,
         IHarvestable,
+        IModeled,
+        IObjectBounded,
         ILoquiObjectSetter<ITreeInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -910,6 +912,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         INamedGetter,
         IHarvestableGetter,
+        IModeledGetter,
+        IObjectBoundedGetter,
         ILoquiObject<ITreeGetter>,
         IXmlItem,
         ILinkContainer,

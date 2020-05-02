@@ -785,6 +785,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         INamed,
         IEffectRecord,
+        IObjectBounded,
         ILoquiObjectSetter<IObjectEffectInternal>
     {
         new ObjectBounds ObjectBounds { get; set; }
@@ -804,6 +805,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         INamedGetter,
         IEffectRecordGetter,
+        IObjectBoundedGetter,
         ILoquiObject<IObjectEffectGetter>,
         IXmlItem,
         ILinkContainer,

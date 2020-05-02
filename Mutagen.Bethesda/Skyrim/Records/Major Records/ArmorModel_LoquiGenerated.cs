@@ -636,6 +636,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IArmorModel :
         IArmorModelGetter,
+        IIcons,
+        IModeled,
         ILoquiObjectSetter<IArmorModel>
     {
         new Model? Model { get; set; }
@@ -645,6 +647,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IArmorModelGetter :
         ILoquiObject,
+        IIconsGetter,
+        IModeledGetter,
         ILoquiObject<IArmorModelGetter>,
         IXmlItem,
         ILinkContainer,

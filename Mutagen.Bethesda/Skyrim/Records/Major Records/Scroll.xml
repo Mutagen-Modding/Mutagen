@@ -3,6 +3,8 @@
   <Object name="Scroll" recordType="SCRL" objType="Record" baseClass="SkyrimMajorRecord" GUID="966367fb-9898-41f3-a250-d453749a138b" ID="139">
     <Interface>INamed</Interface>
     <Interface>IItem</Interface>
+    <Interface>IModeled</Interface>
+    <Interface>IObjectBounded</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
       <String name="Name" recordType="FULL" />

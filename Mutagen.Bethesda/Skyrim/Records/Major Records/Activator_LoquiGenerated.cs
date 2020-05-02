@@ -1138,6 +1138,8 @@ namespace Mutagen.Bethesda.Skyrim
         IActivatorGetter,
         ISkyrimMajorRecord,
         INamed,
+        IModeled,
+        IObjectBounded,
         ILoquiObjectSetter<IActivatorInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -1169,6 +1171,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IActivatorGetter :
         ISkyrimMajorRecordGetter,
         INamedGetter,
+        IModeledGetter,
+        IObjectBoundedGetter,
         ILoquiObject<IActivatorGetter>,
         IXmlItem,
         ILinkContainer,

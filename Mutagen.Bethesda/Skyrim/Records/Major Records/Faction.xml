@@ -2,7 +2,6 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Faction" recordType="FACT" objType="Record" baseClass="SkyrimMajorRecord" GUID="db110917-5be4-4ea2-b679-55c8ac5b6179" ID="27">
     <Interface>INamed</Interface>
-    <Interface>IOwner</Interface>
     <Fields>
       <String name="Name" recordType="FULL" />
       <RefList name="Relations" refName="Relation" />

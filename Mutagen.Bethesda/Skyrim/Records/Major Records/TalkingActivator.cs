@@ -7,6 +7,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class TalkingActivator
     {
+        #region Interfaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String INamedRequiredGetter.Name => this.Name ?? string.Empty;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -15,6 +16,11 @@ namespace Mutagen.Bethesda.Skyrim
             get => this.Name ?? string.Empty;
             set => this.Name = value;
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
 
         [Flags]
         public enum MajorFlag
@@ -29,8 +35,10 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class TalkingActivatorBinaryOverlay
         {
+            #region Interfaces
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             String INamedRequiredGetter.Name => this.Name ?? string.Empty;
+            #endregion
         }
     }
 }

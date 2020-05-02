@@ -909,6 +909,8 @@ namespace Mutagen.Bethesda.Skyrim
         IDoorGetter,
         ISkyrimMajorRecord,
         INamed,
+        IModeled,
+        IObjectBounded,
         ILoquiObjectSetter<IDoorInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -936,6 +938,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDoorGetter :
         ISkyrimMajorRecordGetter,
         INamedGetter,
+        IModeledGetter,
+        IObjectBoundedGetter,
         ILoquiObject<IDoorGetter>,
         IXmlItem,
         ILinkContainer,

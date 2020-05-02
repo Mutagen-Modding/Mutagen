@@ -684,6 +684,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IAcousticSpace :
         IAcousticSpaceGetter,
         ISkyrimMajorRecord,
+        IObjectBounded,
         ILoquiObjectSetter<IAcousticSpaceInternal>
     {
         new ObjectBounds ObjectBounds { get; set; }
@@ -701,6 +702,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IAcousticSpaceGetter :
         ISkyrimMajorRecordGetter,
+        IObjectBoundedGetter,
         ILoquiObject<IAcousticSpaceGetter>,
         IXmlItem,
         ILinkContainer,

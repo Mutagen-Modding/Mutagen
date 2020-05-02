@@ -7,6 +7,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class Tree
     {
+        #region Interfaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String INamedRequiredGetter.Name => this.Name ?? string.Empty;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -15,11 +16,15 @@ namespace Mutagen.Bethesda.Skyrim
             get => this.Name ?? string.Empty;
             set => this.Name = value;
         }
-
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IHarvestTargetGetter> IHarvestableGetter.Ingredient => this.Ingredient;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IHarvestableGetter.HarvestSound => this.HarvestSound;
+        #endregion
 
         [Flags]
         public enum MajorFlag

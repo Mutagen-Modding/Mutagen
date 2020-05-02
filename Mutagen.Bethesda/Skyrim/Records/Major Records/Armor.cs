@@ -8,6 +8,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class Armor
     {
+        #region Interfaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String INamedRequiredGetter.Name => this.Name ?? string.Empty;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -16,6 +17,9 @@ namespace Mutagen.Bethesda.Skyrim
             get => this.Name ?? string.Empty;
             set => this.Name = value;
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
 
         [Flags]
         public enum MajorFlag
@@ -43,8 +47,10 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class ArmorBinaryOverlay
         {
+            #region Interfaces
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             String INamedRequiredGetter.Name => this.Name ?? string.Empty;
+            #endregion
         }
     }
 }

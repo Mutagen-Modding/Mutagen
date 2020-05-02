@@ -5,16 +5,11 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class BodyData
+    public partial class HeadData
     {
         #region Interfaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IModeledGetter.Model => this.Model;
         #endregion
-
-        public enum PartIndex
-        {
-            BodyTexture
-        }
     }
 }

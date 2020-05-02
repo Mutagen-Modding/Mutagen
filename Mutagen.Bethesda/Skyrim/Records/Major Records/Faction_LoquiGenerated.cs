@@ -1386,7 +1386,6 @@ namespace Mutagen.Bethesda.Skyrim
         IFactionGetter,
         ISkyrimMajorRecord,
         INamed,
-        IOwner,
         ILoquiObjectSetter<IFactionInternal>
     {
         new String? Name { get; set; }
@@ -1417,7 +1416,6 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IFactionGetter :
         ISkyrimMajorRecordGetter,
         INamedGetter,
-        IOwnerGetter,
         ILoquiObject<IFactionGetter>,
         IXmlItem,
         ILinkContainer,

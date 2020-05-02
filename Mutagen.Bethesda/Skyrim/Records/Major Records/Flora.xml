@@ -2,6 +2,8 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Flora" recordType="FLOR" baseClass="SkyrimMajorRecord" objType="Record" GUID="004a650f-053a-425f-8eb9-2efda89c4869" ID="191">
     <Interface>INamedRequired</Interface>
+    <Interface>IModeled</Interface>
+    <Interface>IObjectBounded</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />

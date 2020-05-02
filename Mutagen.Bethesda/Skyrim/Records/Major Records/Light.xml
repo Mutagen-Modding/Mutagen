@@ -3,6 +3,9 @@
   <Object name="Light" recordType="LIGH" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true" GUID="749a2492-52b8-4580-ac1c-b645cabfd20b" ID="107">
     <Interface>INamed</Interface>
     <Interface>IItem</Interface>
+    <Interface>IIcons</Interface>
+    <Interface>IModeled</Interface>
+    <Interface>IObjectBounded</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />

@@ -964,6 +964,9 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         INamed,
         IItem,
+        IIcons,
+        IModeled,
+        IObjectBounded,
         ILoquiObjectSetter<IAlchemicalApparatusInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -989,6 +992,9 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         INamedGetter,
         IItemGetter,
+        IIconsGetter,
+        IModeledGetter,
+        IObjectBoundedGetter,
         ILoquiObject<IAlchemicalApparatusGetter>,
         IXmlItem,
         ILinkContainer,

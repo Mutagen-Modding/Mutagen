@@ -5,19 +5,11 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class TextureSet
+    public partial class AcousticSpace
     {
         #region Interfaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
         #endregion
-
-        [Flags]
-        public enum Flag
-        {
-            NoSpecularMap = 0x01,
-            FaceGenTextures = 0x02,
-            HasModelSpaceNormalMap = 0x04,
-        }
     }
 }

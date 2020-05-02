@@ -2,6 +2,8 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="TalkingActivator" recordType="TACT" objType="Record" majorFlag="true" baseClass="SkyrimMajorRecord" GUID="94183ba9-f9eb-4dd2-9969-62218607a50f" ID="150">
     <Interface>INamed</Interface>
+    <Interface>IModeled</Interface>
+    <Interface>IObjectBounded</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />

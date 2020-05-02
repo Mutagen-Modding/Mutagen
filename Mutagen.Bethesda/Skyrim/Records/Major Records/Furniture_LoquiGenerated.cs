@@ -1232,6 +1232,8 @@ namespace Mutagen.Bethesda.Skyrim
         IFurnitureGetter,
         ISkyrimMajorRecord,
         INamed,
+        IModeled,
+        IObjectBounded,
         ILoquiObjectSetter<IFurnitureInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -1263,6 +1265,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IFurnitureGetter :
         ISkyrimMajorRecordGetter,
         INamedGetter,
+        IModeledGetter,
+        IObjectBoundedGetter,
         ILoquiObject<IFurnitureGetter>,
         IXmlItem,
         ILinkContainer,

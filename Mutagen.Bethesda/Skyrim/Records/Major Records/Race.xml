@@ -160,9 +160,10 @@
     </Fields>
   </Object>
   <Object name="BodyData" objType="Subrecord" GUID="baeb0edf-c312-4f2b-9a87-b0bc6542773b" ID="60">
+    <Interface>IModeled</Interface>
     <Fields>
       <Enum name="Index" enumName="BodyData.PartIndex" byteLength="4" recordType="INDX" />
-      <RefDirect name="Part" refName="Model" />
+      <RefDirect name="Model" refName="Model" />
     </Fields>
   </Object>
   <Object name="RaceMovementType" objType="Subrecord" GUID="fb099dce-2d5d-4b0e-86dd-ae8fa82d4951" ID="67">
@@ -255,6 +256,7 @@
     </Fields>
   </Object>
   <Object name="HeadData" objType="Subrecord" GUID="c0a94c29-c6cd-4b72-b019-b2af3b6b2b34" ID="72">
+    <Interface>IModeled</Interface>
     <Fields>
       <RefList name="HeadParts" refName="HeadPartReference" />
       <RefDirect name="AvailableMorphs" refName="AvailableMorphs" />

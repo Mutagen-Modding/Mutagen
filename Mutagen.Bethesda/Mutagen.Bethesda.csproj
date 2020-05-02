@@ -53,9 +53,11 @@
       <DependentUpon>SoulGem.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Interfaces\IHarvestable.cs" />
+    <Compile Include="Skyrim\Interfaces\IModeled.cs" />
+    <Compile Include="Skyrim\Interfaces\IIcons.cs" />
     <Compile Include="Skyrim\Interfaces\IItem.cs" />
     <Compile Include="Skyrim\Interfaces\IEffectRecord.cs" />
-    <Compile Include="Skyrim\Interfaces\IOwner.cs" />
+    <Compile Include="Skyrim\Interfaces\IObjectBounded.cs" />
     <Compile Include="Skyrim\Interfaces\IHarvestTarget.cs" />
     <Compile Include="Skyrim\Records\Common Subrecords\ContainerEntryData.cs">
       <DependentUpon>ContainerEntry.xml</DependentUpon>
@@ -63,8 +65,14 @@
     <Compile Include="Skyrim\Records\Common Subrecords\DestructionStageData.cs">
       <DependentUpon>Destructible.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\DestructionStage.cs">
+      <DependentUpon>Destructible.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\Effect.cs">
       <DependentUpon>Effect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\AcousticSpace.cs">
+      <DependentUpon>AcousticSpace.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Activator.cs">
       <DependentUpon>Activator.xml</DependentUpon>
@@ -75,11 +83,17 @@
     <Compile Include="Skyrim\Records\Major Records\Armor.cs">
       <DependentUpon>Armor.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ArmorModel.cs">
+      <DependentUpon>Armor.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\Book.cs">
       <DependentUpon>Book.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\BookData.cs">
       <DependentUpon>Book.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Flora.cs">
+      <DependentUpon>Flora.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Furniture.cs">
       <DependentUpon>Furniture.xml</DependentUpon>
@@ -96,8 +110,14 @@
     <Compile Include="Skyrim\Records\Major Records\Door.cs">
       <DependentUpon>Door.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Grass.cs">
+      <DependentUpon>Grass.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\GrassData.cs">
       <DependentUpon>Grass.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\HeadData.cs">
+      <DependentUpon>Race.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Ingredient.cs">
       <DependentUpon>Ingredient.xml</DependentUpon>
@@ -125,6 +145,9 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Scroll.cs">
       <DependentUpon>Scroll.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\SoundMarker.cs">
+      <DependentUpon>SoundMarker.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Spell.cs">
       <DependentUpon>Spell.xml</DependentUpon>

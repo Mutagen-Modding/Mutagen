@@ -1009,6 +1009,7 @@ namespace Mutagen.Bethesda.Skyrim
         IASpell,
         INamed,
         IEffectRecord,
+        IObjectBounded,
         ILoquiObjectSetter<ISpellInternal>
     {
         new ObjectBounds ObjectBounds { get; set; }
@@ -1032,6 +1033,7 @@ namespace Mutagen.Bethesda.Skyrim
         IASpellGetter,
         INamedGetter,
         IEffectRecordGetter,
+        IObjectBoundedGetter,
         ILoquiObject<ISpellGetter>,
         IXmlItem,
         ILinkContainer,

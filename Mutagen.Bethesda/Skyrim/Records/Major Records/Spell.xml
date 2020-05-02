@@ -3,6 +3,7 @@
   <Object name="Spell" recordType="SPEL" objType="Record" baseClass="ASpell" GUID="9bc07114-08cb-4a62-8819-b3edc36ab87e" ID="115">
     <Interface>INamed</Interface>
     <Interface>IEffectRecord</Interface>
+    <Interface>IObjectBounded</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
       <String name="Name" recordType="FULL" />

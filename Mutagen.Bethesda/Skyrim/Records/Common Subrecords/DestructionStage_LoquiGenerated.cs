@@ -605,6 +605,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IDestructionStage :
         IDestructionStageGetter,
+        IModeled,
         ILoquiObjectSetter<IDestructionStage>
     {
         new DestructionStageData? Data { get; set; }
@@ -613,6 +614,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IDestructionStageGetter :
         ILoquiObject,
+        IModeledGetter,
         ILoquiObject<IDestructionStageGetter>,
         IXmlItem,
         ILinkContainer,

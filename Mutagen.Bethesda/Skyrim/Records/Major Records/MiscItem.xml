@@ -4,6 +4,9 @@
     <Interface>INamed</Interface>
     <Interface>IItem</Interface>
     <Interface>IHarvestTarget</Interface>
+    <Interface>IIcons</Interface>
+    <Interface>IModeled</Interface>
+    <Interface>IObjectBounded</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />

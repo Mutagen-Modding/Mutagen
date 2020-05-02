@@ -1220,6 +1220,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         INamed,
         IItem,
+        IModeled,
+        IObjectBounded,
         ILoquiObjectSetter<IScrollInternal>
     {
         new ObjectBounds ObjectBounds { get; set; }
@@ -1248,6 +1250,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         INamedGetter,
         IItemGetter,
+        IModeledGetter,
+        IObjectBoundedGetter,
         ILoquiObject<IScrollGetter>,
         IXmlItem,
         ILinkContainer,

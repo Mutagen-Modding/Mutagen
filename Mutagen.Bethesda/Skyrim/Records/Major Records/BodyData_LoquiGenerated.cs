@@ -57,16 +57,16 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         BodyData.PartIndex? IBodyDataGetter.Index => this.Index;
         #endregion
-        #region Part
+        #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Model? _Part;
-        public Model? Part
+        private Model? _Model;
+        public Model? Model
         {
-            get => _Part;
-            set => _Part = value;
+            get => _Model;
+            set => _Model = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModelGetter? IBodyDataGetter.Part => this.Part;
+        IModelGetter? IBodyDataGetter.Model => this.Model;
         #endregion
 
         #region To String
@@ -239,15 +239,15 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             {
                 this.Index = initialValue;
-                this.Part = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
             }
 
             public Mask(
                 TItem Index,
-                TItem Part)
+                TItem Model)
             {
                 this.Index = Index;
-                this.Part = new MaskItem<TItem, Model.Mask<TItem>?>(Part, new Model.Mask<TItem>(Part));
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
             }
 
             #pragma warning disable CS8618
@@ -260,7 +260,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             #region Members
             public TItem Index;
-            public MaskItem<TItem, Model.Mask<TItem>?>? Part { get; set; }
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             #endregion
 
             #region Equals
@@ -274,14 +274,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Index, rhs.Index)) return false;
-                if (!object.Equals(this.Part, rhs.Part)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Index);
-                hash.Add(this.Part);
+                hash.Add(this.Model);
                 return hash.ToHashCode();
             }
 
@@ -291,10 +291,10 @@ namespace Mutagen.Bethesda.Skyrim
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Index)) return false;
-                if (Part != null)
+                if (Model != null)
                 {
-                    if (!eval(this.Part.Overall)) return false;
-                    if (this.Part.Specific != null && !this.Part.Specific.All(eval)) return false;
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
                 return true;
             }
@@ -304,10 +304,10 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Index)) return true;
-                if (Part != null)
+                if (Model != null)
                 {
-                    if (eval(this.Part.Overall)) return true;
-                    if (this.Part.Specific != null && this.Part.Specific.Any(eval)) return true;
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
                 }
                 return false;
             }
@@ -324,7 +324,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Index = eval(this.Index);
-                obj.Part = this.Part == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Part.Overall), this.Part.Specific?.Translate(eval));
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
             }
             #endregion
 
@@ -351,9 +351,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(Index, "Index");
                     }
-                    if (printMask?.Part?.Overall ?? true)
+                    if (printMask?.Model?.Overall ?? true)
                     {
-                        Part?.ToString(fg);
+                        Model?.ToString(fg);
                     }
                 }
                 fg.AppendLine("]");
@@ -381,7 +381,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
             public Exception? Index;
-            public MaskItem<Exception?, Model.ErrorMask?>? Part;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
             #endregion
 
             #region IErrorMask
@@ -392,8 +392,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     case BodyData_FieldIndex.Index:
                         return Index;
-                    case BodyData_FieldIndex.Part:
-                        return Part;
+                    case BodyData_FieldIndex.Model:
+                        return Model;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -407,8 +407,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case BodyData_FieldIndex.Index:
                         this.Index = ex;
                         break;
-                    case BodyData_FieldIndex.Part:
-                        this.Part = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                    case BodyData_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -423,8 +423,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case BodyData_FieldIndex.Index:
                         this.Index = (Exception?)obj;
                         break;
-                    case BodyData_FieldIndex.Part:
-                        this.Part = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                    case BodyData_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -435,7 +435,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (Overall != null) return true;
                 if (Index != null) return true;
-                if (Part != null) return true;
+                if (Model != null) return true;
                 return false;
             }
             #endregion
@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(Index, "Index");
-                Part?.ToString(fg);
+                Model?.ToString(fg);
             }
             #endregion
 
@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Index = this.Index.Combine(rhs.Index);
-                ret.Part = this.Part.Combine(rhs.Part, (l, r) => l.Combine(r));
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -504,14 +504,14 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             private TranslationCrystal? _crystal;
             public bool Index;
-            public MaskItem<bool, Model.TranslationMask?> Part;
+            public MaskItem<bool, Model.TranslationMask?> Model;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
                 this.Index = defaultOn;
-                this.Part = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -528,7 +528,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Index, null));
-                ret.Add((Part?.Overall ?? true, Part?.Specific?.GetCrystal()));
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -597,14 +597,16 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IBodyData :
         IBodyDataGetter,
+        IModeled,
         ILoquiObjectSetter<IBodyData>
     {
         new BodyData.PartIndex? Index { get; set; }
-        new Model? Part { get; set; }
+        new Model? Model { get; set; }
     }
 
     public partial interface IBodyDataGetter :
         ILoquiObject,
+        IModeledGetter,
         ILoquiObject<IBodyDataGetter>,
         IXmlItem,
         ILinkContainer,
@@ -618,7 +620,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => BodyData_Registration.Instance;
         BodyData.PartIndex? Index { get; }
-        IModelGetter? Part { get; }
+        IModelGetter? Model { get; }
 
     }
 
@@ -926,7 +928,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public enum BodyData_FieldIndex
     {
         Index = 0,
-        Part = 1,
+        Model = 1,
     }
     #endregion
 
@@ -978,8 +980,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case "INDEX":
                     return (ushort)BodyData_FieldIndex.Index;
-                case "PART":
-                    return (ushort)BodyData_FieldIndex.Part;
+                case "MODEL":
+                    return (ushort)BodyData_FieldIndex.Model;
                 default:
                     return null;
             }
@@ -991,7 +993,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case BodyData_FieldIndex.Index:
-                case BodyData_FieldIndex.Part:
+                case BodyData_FieldIndex.Model:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1003,7 +1005,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BodyData_FieldIndex enu = (BodyData_FieldIndex)index;
             switch (enu)
             {
-                case BodyData_FieldIndex.Part:
+                case BodyData_FieldIndex.Model:
                     return true;
                 case BodyData_FieldIndex.Index:
                     return false;
@@ -1018,7 +1020,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case BodyData_FieldIndex.Index:
-                case BodyData_FieldIndex.Part:
+                case BodyData_FieldIndex.Model:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1032,8 +1034,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case BodyData_FieldIndex.Index:
                     return "Index";
-                case BodyData_FieldIndex.Part:
-                    return "Part";
+                case BodyData_FieldIndex.Model:
+                    return "Model";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1045,7 +1047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case BodyData_FieldIndex.Index:
-                case BodyData_FieldIndex.Part:
+                case BodyData_FieldIndex.Model:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1058,7 +1060,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case BodyData_FieldIndex.Index:
-                case BodyData_FieldIndex.Part:
+                case BodyData_FieldIndex.Model:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1072,7 +1074,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case BodyData_FieldIndex.Index:
                     return typeof(BodyData.PartIndex);
-                case BodyData_FieldIndex.Part:
+                case BodyData_FieldIndex.Model:
                     return typeof(Model);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1139,7 +1141,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Index = default;
-            item.Part = null;
+            item.Model = null;
         }
         
         #region Xml Translation
@@ -1197,11 +1199,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4C444F4D: // MODL
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Part) return TryGet<int?>.Failure;
-                    item.Part = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Model) return TryGet<int?>.Failure;
+                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)BodyData_FieldIndex.Part);
+                    return TryGet<int?>.Succeed((int)BodyData_FieldIndex.Model);
                 }
                 default:
                     return TryGet<int?>.Failure;
@@ -1250,9 +1252,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.Index = item.Index == rhs.Index;
-            ret.Part = EqualsMaskHelper.EqualsHelper(
-                item.Part,
-                rhs.Part,
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
         }
@@ -1306,10 +1308,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(IndexItem, "Index");
             }
-            if ((printMask?.Part?.Overall ?? true)
-                && item.Part.TryGet(out var PartItem))
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
             {
-                PartItem?.ToString(fg, "Part");
+                ModelItem?.ToString(fg, "Model");
             }
         }
         
@@ -1318,8 +1320,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BodyData.Mask<bool?> checkMask)
         {
             if (checkMask.Index.HasValue && checkMask.Index.Value != (item.Index != null)) return false;
-            if (checkMask.Part?.Overall.HasValue ?? false && checkMask.Part.Overall.Value != (item.Part != null)) return false;
-            if (checkMask.Part?.Specific != null && (item.Part == null || !item.Part.HasBeenSet(checkMask.Part.Specific))) return false;
+            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
+            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             return true;
         }
         
@@ -1328,8 +1330,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BodyData.Mask<bool> mask)
         {
             mask.Index = (item.Index != null);
-            var itemPart = item.Part;
-            mask.Part = new MaskItem<bool, Model.Mask<bool>?>(itemPart != null, itemPart?.GetHasBeenSetMask());
+            var itemModel = item.Model;
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -1340,7 +1342,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (lhs.Index != rhs.Index) return false;
-            if (!object.Equals(lhs.Part, rhs.Part)) return false;
+            if (!object.Equals(lhs.Model, rhs.Model)) return false;
             return true;
         }
         
@@ -1351,9 +1353,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Indexitem);
             }
-            if (item.Part.TryGet(out var Partitem))
+            if (item.Model.TryGet(out var Modelitem))
             {
-                hash.Add(Partitem);
+                hash.Add(Modelitem);
             }
             return hash.ToHashCode();
         }
@@ -1369,9 +1371,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<ILinkGetter> GetLinks(IBodyDataGetter obj)
         {
-            if (obj.Part != null)
+            if (obj.Model != null)
             {
-                foreach (var item in obj.Part.Links)
+                foreach (var item in obj.Model.Links)
                 {
                     yield return item;
                 }
@@ -1397,20 +1399,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Index = rhs.Index;
             }
-            if ((copyMask?.GetShouldTranslate((int)BodyData_FieldIndex.Part) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)BodyData_FieldIndex.Model) ?? true))
             {
-                errorMask?.PushIndex((int)BodyData_FieldIndex.Part);
+                errorMask?.PushIndex((int)BodyData_FieldIndex.Model);
                 try
                 {
-                    if(rhs.Part.TryGet(out var rhsPart))
+                    if(rhs.Model.TryGet(out var rhsModel))
                     {
-                        item.Part = rhsPart.DeepCopy(
+                        item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)BodyData_FieldIndex.Part));
+                            copyMask?.GetSubCrystal((int)BodyData_FieldIndex.Model));
                     }
                     else
                     {
-                        item.Part = default;
+                        item.Model = default;
                     }
                 }
                 catch (Exception ex)
@@ -1522,18 +1524,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)BodyData_FieldIndex.Index,
                     errorMask: errorMask);
             }
-            if ((item.Part != null)
-                && (translationMask?.GetShouldTranslate((int)BodyData_FieldIndex.Part) ?? true))
+            if ((item.Model != null)
+                && (translationMask?.GetShouldTranslate((int)BodyData_FieldIndex.Model) ?? true))
             {
-                if (item.Part.TryGet(out var PartItem))
+                if (item.Model.TryGet(out var ModelItem))
                 {
-                    ((ModelXmlWriteTranslation)((IXmlItem)PartItem).XmlWriteTranslator).Write(
-                        item: PartItem,
+                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                        item: ModelItem,
                         node: node,
-                        name: nameof(item.Part),
-                        fieldIndex: (int)BodyData_FieldIndex.Part,
+                        name: nameof(item.Model),
+                        fieldIndex: (int)BodyData_FieldIndex.Model,
                         errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)BodyData_FieldIndex.Part));
+                        translationMask: translationMask?.GetSubCrystal((int)BodyData_FieldIndex.Model));
                 }
             }
         }
@@ -1660,14 +1662,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Part":
-                    errorMask?.PushIndex((int)BodyData_FieldIndex.Part);
+                case "Model":
+                    errorMask?.PushIndex((int)BodyData_FieldIndex.Model);
                     try
                     {
-                        item.Part = LoquiXmlTranslation<Model>.Instance.Parse(
+                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)BodyData_FieldIndex.Part));
+                            translationMask: translationMask?.GetSubCrystal((int)BodyData_FieldIndex.Model));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1860,10 +1862,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.Index,
                 length: 4,
                 header: recordTypeConverter.ConvertToCustom(BodyData_Registration.INDX_HEADER));
-            if (item.Part.TryGet(out var PartItem))
+            if (item.Model.TryGet(out var ModelItem))
             {
-                ((ModelBinaryWriteTranslation)((IBinaryItem)PartItem).BinaryWriteTranslator).Write(
-                    item: PartItem,
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
@@ -1984,9 +1986,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private bool Index_IsSet => _IndexLocation.HasValue;
         public BodyData.PartIndex? Index => Index_IsSet ? (BodyData.PartIndex)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IndexLocation!.Value, _package.Meta)) : default(BodyData.PartIndex?);
         #endregion
-        #region Part
-        public IModelGetter? Part { get; private set; }
-        public bool Part_IsSet => Part != null;
+        #region Model
+        public IModelGetter? Model { get; private set; }
+        public bool Model_IsSet => Model != null;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
@@ -2054,12 +2056,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4C444F4D: // MODL
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Part) return TryGet<int?>.Failure;
-                    this.Part = ModelBinaryOverlay.ModelFactory(
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Model) return TryGet<int?>.Failure;
+                    this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)BodyData_FieldIndex.Part);
+                    return TryGet<int?>.Succeed((int)BodyData_FieldIndex.Model);
                 }
                 default:
                     return TryGet<int?>.Failure;

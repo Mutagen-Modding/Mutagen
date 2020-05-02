@@ -1000,6 +1000,8 @@ namespace Mutagen.Bethesda.Skyrim
         IContainerGetter,
         ISkyrimMajorRecord,
         INamed,
+        IModeled,
+        IObjectBounded,
         ILoquiObjectSetter<IContainerInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -1027,6 +1029,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IContainerGetter :
         ISkyrimMajorRecordGetter,
         INamedGetter,
+        IModeledGetter,
+        IObjectBoundedGetter,
         ILoquiObject<IContainerGetter>,
         IXmlItem,
         ILinkContainer,

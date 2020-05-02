@@ -1522,6 +1522,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         INamed,
         IItem,
+        IObjectBounded,
         ILoquiObjectSetter<IArmorInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -1563,6 +1564,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         INamedGetter,
         IItemGetter,
+        IObjectBoundedGetter,
         ILoquiObject<IArmorGetter>,
         IXmlItem,
         ILinkContainer,

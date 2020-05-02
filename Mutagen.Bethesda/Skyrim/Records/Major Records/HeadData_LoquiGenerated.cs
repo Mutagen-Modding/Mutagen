@@ -1291,6 +1291,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IHeadData :
         IHeadDataGetter,
+        IModeled,
         ILoquiObjectSetter<IHeadData>
     {
         new ExtendedList<HeadPartReference> HeadParts { get; }
@@ -1307,6 +1308,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IHeadDataGetter :
         ILoquiObject,
+        IModeledGetter,
         ILoquiObject<IHeadDataGetter>,
         IXmlItem,
         ILinkContainer,

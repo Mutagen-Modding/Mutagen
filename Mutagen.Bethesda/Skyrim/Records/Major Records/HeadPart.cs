@@ -7,6 +7,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class HeadPart
     {
+        #region Interfaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String INamedRequiredGetter.Name => this.Name ?? string.Empty;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -15,6 +16,9 @@ namespace Mutagen.Bethesda.Skyrim
             get => this.Name ?? string.Empty;
             set => this.Name = value;
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IModeledGetter.Model => this.Model;
+        #endregion
 
         [Flags]
         public enum Flag
@@ -48,8 +52,10 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class HeadPartBinaryOverlay
         {
+            #region Interfaces
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             String INamedRequiredGetter.Name => this.Name ?? string.Empty;
+            #endregion
         }
     }
 }

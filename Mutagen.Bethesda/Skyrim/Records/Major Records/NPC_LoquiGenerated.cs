@@ -517,7 +517,6 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INpc :
         INpcGetter,
         ISkyrimMajorRecord,
-        IOwner,
         ILoquiObjectSetter<INpcInternal>
     {
     }
@@ -531,7 +530,6 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface INpcGetter :
         ISkyrimMajorRecordGetter,
-        IOwnerGetter,
         ILoquiObject<INpcGetter>,
         IXmlItem,
         IBinaryItem

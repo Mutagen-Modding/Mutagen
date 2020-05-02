@@ -1005,6 +1005,7 @@ namespace Mutagen.Bethesda.Skyrim
         IHeadPartGetter,
         ISkyrimMajorRecord,
         INamed,
+        IModeled,
         ILoquiObjectSetter<IHeadPartInternal>
     {
         new String? Name { get; set; }
@@ -1031,6 +1032,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IHeadPartGetter :
         ISkyrimMajorRecordGetter,
         INamedGetter,
+        IModeledGetter,
         ILoquiObject<IHeadPartGetter>,
         IXmlItem,
         ILinkContainer,

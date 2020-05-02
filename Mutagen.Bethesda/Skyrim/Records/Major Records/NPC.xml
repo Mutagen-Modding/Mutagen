@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Npc" recordType="NPC_" objType="Record" baseClass="SkyrimMajorRecord" GUID="63c41e9b-1707-48b0-906a-573f3c678370" ID="75">
-    <Interface>IOwner</Interface>
     <Fields>
     </Fields>
   </Object>
