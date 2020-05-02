@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LeveledNpc" recordType="LVLN" baseClass="SkyrimMajorRecord" objType="Record" GUID="4197e9ea-0f51-44d8-867e-f33c9b48f4c4" ID="200">
+    <Interface>INpcTemplate</Interface>
+  </Object>
+</Loqui>

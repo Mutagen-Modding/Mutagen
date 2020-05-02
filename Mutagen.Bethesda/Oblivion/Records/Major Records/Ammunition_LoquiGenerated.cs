@@ -33,15 +33,15 @@ using System.Buffers.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Ammo :
+    public partial class Ammunition :
         AItem,
-        IAmmoInternal,
-        ILoquiObjectSetter<Ammo>,
-        IEquatable<Ammo>,
+        IAmmunitionInternal,
+        ILoquiObjectSetter<Ammunition>,
+        IEquatable<Ammunition>,
         IEqualsMask
     {
         #region Ctor
-        protected Ammo()
+        protected Ammunition()
         {
             CustomCtor();
         }
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._Name = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IAmmoGetter.Name => this.Name;
+        String? IAmmunitionGetter.Name => this.Name;
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
             set => _Model = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModelGetter? IAmmoGetter.Model => this.Model;
+        IModelGetter? IAmmunitionGetter.Model => this.Model;
         #endregion
         #region Icon
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -79,14 +79,14 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._Icon = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IAmmoGetter.Icon => this.Icon;
+        String? IAmmunitionGetter.Icon => this.Icon;
         #endregion
         #region Enchantment
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected IFormLinkNullable<Enchantment> _Enchantment = new FormLinkNullable<Enchantment>();
         public IFormLinkNullable<Enchantment> Enchantment => this._Enchantment;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IEnchantmentGetter> IAmmoGetter.Enchantment => this.Enchantment;
+        IFormLinkNullableGetter<IEnchantmentGetter> IAmmunitionGetter.Enchantment => this.Enchantment;
         #endregion
         #region EnchantmentPoints
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -97,18 +97,18 @@ namespace Mutagen.Bethesda.Oblivion
             set => this._EnchantmentPoints = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt16? IAmmoGetter.EnchantmentPoints => this.EnchantmentPoints;
+        UInt16? IAmmunitionGetter.EnchantmentPoints => this.EnchantmentPoints;
         #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private AmmoData? _Data;
-        public AmmoData? Data
+        private AmmunitionData? _Data;
+        public AmmunitionData? Data
         {
             get => _Data;
             set => _Data = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAmmoDataGetter? IAmmoGetter.Data => this.Data;
+        IAmmunitionDataGetter? IAmmunitionGetter.Data => this.Data;
         #endregion
 
         #region To String
@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Oblivion
             FileGeneration fg,
             string? name = null)
         {
-            AmmoMixIn.ToString(
+            AmmunitionMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -127,29 +127,29 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAmmoGetter rhs)) return false;
-            return ((AmmoCommon)((IAmmoGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IAmmunitionGetter rhs)) return false;
+            return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Ammo obj)
+        public bool Equals(Ammunition obj)
         {
-            return ((AmmoCommon)((IAmmoGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((AmmoCommon)((IAmmoGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => AmmoXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => AmmunitionXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((AmmoXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((AmmunitionXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -158,9 +158,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static new Ammo CreateFromXml(
+        public static new Ammunition CreateFromXml(
             XElement node,
-            Ammo.TranslationMask? translationMask = null)
+            Ammunition.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -169,27 +169,27 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static Ammo CreateFromXml(
+        public static Ammunition CreateFromXml(
             XElement node,
-            out Ammo.ErrorMask errorMask,
-            Ammo.TranslationMask? translationMask = null)
+            out Ammunition.ErrorMask errorMask,
+            Ammunition.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Ammo.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Ammunition.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public new static Ammo CreateFromXml(
+        public new static Ammunition CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new Ammo();
-            ((AmmoSetterCommon)((IAmmoGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new Ammunition();
+            ((AmmunitionSetterCommon)((IAmmunitionGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -197,9 +197,9 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Ammo CreateFromXml(
+        public static Ammunition CreateFromXml(
             string path,
-            Ammo.TranslationMask? translationMask = null)
+            Ammunition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -207,10 +207,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static Ammo CreateFromXml(
+        public static Ammunition CreateFromXml(
             string path,
-            out Ammo.ErrorMask errorMask,
-            Ammo.TranslationMask? translationMask = null)
+            out Ammunition.ErrorMask errorMask,
+            Ammunition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -219,10 +219,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static Ammo CreateFromXml(
+        public static Ammunition CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Ammo.TranslationMask? translationMask = null)
+            Ammunition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -231,9 +231,9 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static Ammo CreateFromXml(
+        public static Ammunition CreateFromXml(
             Stream stream,
-            Ammo.TranslationMask? translationMask = null)
+            Ammunition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -241,10 +241,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static Ammo CreateFromXml(
+        public static Ammunition CreateFromXml(
             Stream stream,
-            out Ammo.ErrorMask errorMask,
-            Ammo.TranslationMask? translationMask = null)
+            out Ammunition.ErrorMask errorMask,
+            Ammunition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -253,10 +253,10 @@ namespace Mutagen.Bethesda.Oblivion
                 translationMask: translationMask);
         }
 
-        public static Ammo CreateFromXml(
+        public static Ammunition CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Ammo.TranslationMask? translationMask = null)
+            Ammunition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -285,7 +285,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Icon = initialValue;
                 this.Enchantment = initialValue;
                 this.EnchantmentPoints = initialValue;
-                this.Data = new MaskItem<TItem, AmmoData.Mask<TItem>?>(initialValue, new AmmoData.Mask<TItem>(initialValue));
+                this.Data = new MaskItem<TItem, AmmunitionData.Mask<TItem>?>(initialValue, new AmmunitionData.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -312,7 +312,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Icon = Icon;
                 this.Enchantment = Enchantment;
                 this.EnchantmentPoints = EnchantmentPoints;
-                this.Data = new MaskItem<TItem, AmmoData.Mask<TItem>?>(Data, new AmmoData.Mask<TItem>(Data));
+                this.Data = new MaskItem<TItem, AmmunitionData.Mask<TItem>?>(Data, new AmmunitionData.Mask<TItem>(Data));
             }
 
             #pragma warning disable CS8618
@@ -329,7 +329,7 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem Icon;
             public TItem Enchantment;
             public TItem EnchantmentPoints;
-            public MaskItem<TItem, AmmoData.Mask<TItem>?>? Data { get; set; }
+            public MaskItem<TItem, AmmunitionData.Mask<TItem>?>? Data { get; set; }
             #endregion
 
             #region Equals
@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new Ammo.Mask<R>();
+                var ret = new Ammunition.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -426,7 +426,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Icon = eval(this.Icon);
                 obj.Enchantment = eval(this.Enchantment);
                 obj.EnchantmentPoints = eval(this.EnchantmentPoints);
-                obj.Data = this.Data == null ? null : new MaskItem<R, AmmoData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
+                obj.Data = this.Data == null ? null : new MaskItem<R, AmmunitionData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
             }
             #endregion
 
@@ -436,16 +436,16 @@ namespace Mutagen.Bethesda.Oblivion
                 return ToString(printMask: null);
             }
 
-            public string ToString(Ammo.Mask<bool>? printMask = null)
+            public string ToString(Ammunition.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, Ammo.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, Ammunition.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Ammo.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(Ammunition.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -490,26 +490,26 @@ namespace Mutagen.Bethesda.Oblivion
             public Exception? Icon;
             public Exception? Enchantment;
             public Exception? EnchantmentPoints;
-            public MaskItem<Exception?, AmmoData.ErrorMask?>? Data;
+            public MaskItem<Exception?, AmmunitionData.ErrorMask?>? Data;
             #endregion
 
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                Ammo_FieldIndex enu = (Ammo_FieldIndex)index;
+                Ammunition_FieldIndex enu = (Ammunition_FieldIndex)index;
                 switch (enu)
                 {
-                    case Ammo_FieldIndex.Name:
+                    case Ammunition_FieldIndex.Name:
                         return Name;
-                    case Ammo_FieldIndex.Model:
+                    case Ammunition_FieldIndex.Model:
                         return Model;
-                    case Ammo_FieldIndex.Icon:
+                    case Ammunition_FieldIndex.Icon:
                         return Icon;
-                    case Ammo_FieldIndex.Enchantment:
+                    case Ammunition_FieldIndex.Enchantment:
                         return Enchantment;
-                    case Ammo_FieldIndex.EnchantmentPoints:
+                    case Ammunition_FieldIndex.EnchantmentPoints:
                         return EnchantmentPoints;
-                    case Ammo_FieldIndex.Data:
+                    case Ammunition_FieldIndex.Data:
                         return Data;
                     default:
                         return base.GetNthMask(index);
@@ -518,26 +518,26 @@ namespace Mutagen.Bethesda.Oblivion
 
             public override void SetNthException(int index, Exception ex)
             {
-                Ammo_FieldIndex enu = (Ammo_FieldIndex)index;
+                Ammunition_FieldIndex enu = (Ammunition_FieldIndex)index;
                 switch (enu)
                 {
-                    case Ammo_FieldIndex.Name:
+                    case Ammunition_FieldIndex.Name:
                         this.Name = ex;
                         break;
-                    case Ammo_FieldIndex.Model:
+                    case Ammunition_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
-                    case Ammo_FieldIndex.Icon:
+                    case Ammunition_FieldIndex.Icon:
                         this.Icon = ex;
                         break;
-                    case Ammo_FieldIndex.Enchantment:
+                    case Ammunition_FieldIndex.Enchantment:
                         this.Enchantment = ex;
                         break;
-                    case Ammo_FieldIndex.EnchantmentPoints:
+                    case Ammunition_FieldIndex.EnchantmentPoints:
                         this.EnchantmentPoints = ex;
                         break;
-                    case Ammo_FieldIndex.Data:
-                        this.Data = new MaskItem<Exception?, AmmoData.ErrorMask?>(ex, null);
+                    case Ammunition_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, AmmunitionData.ErrorMask?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -547,26 +547,26 @@ namespace Mutagen.Bethesda.Oblivion
 
             public override void SetNthMask(int index, object obj)
             {
-                Ammo_FieldIndex enu = (Ammo_FieldIndex)index;
+                Ammunition_FieldIndex enu = (Ammunition_FieldIndex)index;
                 switch (enu)
                 {
-                    case Ammo_FieldIndex.Name:
+                    case Ammunition_FieldIndex.Name:
                         this.Name = (Exception?)obj;
                         break;
-                    case Ammo_FieldIndex.Model:
+                    case Ammunition_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
-                    case Ammo_FieldIndex.Icon:
+                    case Ammunition_FieldIndex.Icon:
                         this.Icon = (Exception?)obj;
                         break;
-                    case Ammo_FieldIndex.Enchantment:
+                    case Ammunition_FieldIndex.Enchantment:
                         this.Enchantment = (Exception?)obj;
                         break;
-                    case Ammo_FieldIndex.EnchantmentPoints:
+                    case Ammunition_FieldIndex.EnchantmentPoints:
                         this.EnchantmentPoints = (Exception?)obj;
                         break;
-                    case Ammo_FieldIndex.Data:
-                        this.Data = (MaskItem<Exception?, AmmoData.ErrorMask?>?)obj;
+                    case Ammunition_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, AmmunitionData.ErrorMask?>?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -665,7 +665,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Icon;
             public bool Enchantment;
             public bool EnchantmentPoints;
-            public MaskItem<bool, AmmoData.TranslationMask?> Data;
+            public MaskItem<bool, AmmunitionData.TranslationMask?> Data;
             #endregion
 
             #region Ctors
@@ -677,7 +677,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Icon = defaultOn;
                 this.Enchantment = defaultOn;
                 this.EnchantmentPoints = defaultOn;
-                this.Data = new MaskItem<bool, AmmoData.TranslationMask?>(defaultOn, null);
+                this.Data = new MaskItem<bool, AmmunitionData.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -696,21 +696,21 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Ammo_Registration.TriggeringRecordType;
+        public new static readonly RecordType GrupRecordType = Ammunition_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public override IEnumerable<ILinkGetter> Links => AmmoCommon.Instance.GetLinks(this);
-        public Ammo(FormKey formKey)
+        public override IEnumerable<ILinkGetter> Links => AmmunitionCommon.Instance.GetLinks(this);
+        public Ammunition(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        public Ammo(IMod mod)
+        public Ammunition(IMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Ammo(IMod mod, string editorID)
+        public Ammunition(IMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -720,31 +720,31 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => AmmoBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => AmmunitionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((AmmoBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((AmmunitionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static new Ammo CreateFromBinary(MutagenFrame frame)
+        public static new Ammunition CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public new static Ammo CreateFromBinary(
+        public new static Ammunition CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new Ammo();
-            ((AmmoSetterCommon)((IAmmoGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new Ammunition();
+            ((AmmunitionSetterCommon)((IAmmunitionGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -757,100 +757,100 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAmmoGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAmmunitionGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((AmmoSetterCommon)((IAmmoGetter)this).CommonSetterInstance()!).Clear(this);
+            ((AmmunitionSetterCommon)((IAmmunitionGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new Ammo GetNew()
+        internal static new Ammunition GetNew()
         {
-            return new Ammo();
+            return new Ammunition();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IAmmo :
-        IAmmoGetter,
+    public partial interface IAmmunition :
+        IAmmunitionGetter,
         IAItem,
         INamed,
-        ILoquiObjectSetter<IAmmoInternal>
+        ILoquiObjectSetter<IAmmunitionInternal>
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
         new String? Icon { get; set; }
         new IFormLinkNullable<Enchantment> Enchantment { get; }
         new UInt16? EnchantmentPoints { get; set; }
-        new AmmoData? Data { get; set; }
+        new AmmunitionData? Data { get; set; }
     }
 
-    public partial interface IAmmoInternal :
+    public partial interface IAmmunitionInternal :
         IAItemInternal,
-        IAmmo,
-        IAmmoGetter
+        IAmmunition,
+        IAmmunitionGetter
     {
     }
 
-    public partial interface IAmmoGetter :
+    public partial interface IAmmunitionGetter :
         IAItemGetter,
         INamedGetter,
-        ILoquiObject<IAmmoGetter>,
+        ILoquiObject<IAmmunitionGetter>,
         IXmlItem,
         ILinkContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Ammo_Registration.Instance;
+        static ILoquiRegistration Registration => Ammunition_Registration.Instance;
         String? Name { get; }
         IModelGetter? Model { get; }
         String? Icon { get; }
         IFormLinkNullableGetter<IEnchantmentGetter> Enchantment { get; }
         UInt16? EnchantmentPoints { get; }
-        IAmmoDataGetter? Data { get; }
+        IAmmunitionDataGetter? Data { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class AmmoMixIn
+    public static partial class AmmunitionMixIn
     {
-        public static void Clear(this IAmmoInternal item)
+        public static void Clear(this IAmmunitionInternal item)
         {
-            ((AmmoSetterCommon)((IAmmoGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((AmmunitionSetterCommon)((IAmmunitionGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Ammo.Mask<bool> GetEqualsMask(
-            this IAmmoGetter item,
-            IAmmoGetter rhs,
+        public static Ammunition.Mask<bool> GetEqualsMask(
+            this IAmmunitionGetter item,
+            IAmmunitionGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((AmmoCommon)((IAmmoGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((AmmunitionCommon)((IAmmunitionGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IAmmoGetter item,
+            this IAmmunitionGetter item,
             string? name = null,
-            Ammo.Mask<bool>? printMask = null)
+            Ammunition.Mask<bool>? printMask = null)
         {
-            return ((AmmoCommon)((IAmmoGetter)item).CommonInstance()!).ToString(
+            return ((AmmunitionCommon)((IAmmunitionGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IAmmoGetter item,
+            this IAmmunitionGetter item,
             FileGeneration fg,
             string? name = null,
-            Ammo.Mask<bool>? printMask = null)
+            Ammunition.Mask<bool>? printMask = null)
         {
-            ((AmmoCommon)((IAmmoGetter)item).CommonInstance()!).ToString(
+            ((AmmunitionCommon)((IAmmunitionGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -858,86 +858,86 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static bool HasBeenSet(
-            this IAmmoGetter item,
-            Ammo.Mask<bool?> checkMask)
+            this IAmmunitionGetter item,
+            Ammunition.Mask<bool?> checkMask)
         {
-            return ((AmmoCommon)((IAmmoGetter)item).CommonInstance()!).HasBeenSet(
+            return ((AmmunitionCommon)((IAmmunitionGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Ammo.Mask<bool> GetHasBeenSetMask(this IAmmoGetter item)
+        public static Ammunition.Mask<bool> GetHasBeenSetMask(this IAmmunitionGetter item)
         {
-            var ret = new Ammo.Mask<bool>(false);
-            ((AmmoCommon)((IAmmoGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new Ammunition.Mask<bool>(false);
+            ((AmmunitionCommon)((IAmmunitionGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IAmmoGetter item,
-            IAmmoGetter rhs)
+            this IAmmunitionGetter item,
+            IAmmunitionGetter rhs)
         {
-            return ((AmmoCommon)((IAmmoGetter)item).CommonInstance()!).Equals(
+            return ((AmmunitionCommon)((IAmmunitionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this IAmmoInternal lhs,
-            IAmmoGetter rhs,
-            out Ammo.ErrorMask errorMask,
-            Ammo.TranslationMask? copyMask = null)
+            this IAmmunitionInternal lhs,
+            IAmmunitionGetter rhs,
+            out Ammunition.ErrorMask errorMask,
+            Ammunition.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((AmmoSetterTranslationCommon)((IAmmoGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((AmmunitionSetterTranslationCommon)((IAmmunitionGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Ammo.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Ammunition.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IAmmoInternal lhs,
-            IAmmoGetter rhs,
+            this IAmmunitionInternal lhs,
+            IAmmunitionGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((AmmoSetterTranslationCommon)((IAmmoGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((AmmunitionSetterTranslationCommon)((IAmmunitionGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static Ammo DeepCopy(
-            this IAmmoGetter item,
-            Ammo.TranslationMask? copyMask = null)
+        public static Ammunition DeepCopy(
+            this IAmmunitionGetter item,
+            Ammunition.TranslationMask? copyMask = null)
         {
-            return ((AmmoSetterTranslationCommon)((IAmmoGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((AmmunitionSetterTranslationCommon)((IAmmunitionGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static Ammo DeepCopy(
-            this IAmmoGetter item,
-            out Ammo.ErrorMask errorMask,
-            Ammo.TranslationMask? copyMask = null)
+        public static Ammunition DeepCopy(
+            this IAmmunitionGetter item,
+            out Ammunition.ErrorMask errorMask,
+            Ammunition.TranslationMask? copyMask = null)
         {
-            return ((AmmoSetterTranslationCommon)((IAmmoGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((AmmunitionSetterTranslationCommon)((IAmmunitionGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static Ammo DeepCopy(
-            this IAmmoGetter item,
+        public static Ammunition DeepCopy(
+            this IAmmunitionGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((AmmoSetterTranslationCommon)((IAmmoGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((AmmunitionSetterTranslationCommon)((IAmmunitionGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -946,9 +946,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IAmmoInternal item,
+            this IAmmunitionInternal item,
             XElement node,
-            Ammo.TranslationMask? translationMask = null)
+            Ammunition.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -959,10 +959,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IAmmoInternal item,
+            this IAmmunitionInternal item,
             XElement node,
-            out Ammo.ErrorMask errorMask,
-            Ammo.TranslationMask? translationMask = null)
+            out Ammunition.ErrorMask errorMask,
+            Ammunition.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -970,16 +970,16 @@ namespace Mutagen.Bethesda.Oblivion
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Ammo.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Ammunition.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this IAmmoInternal item,
+            this IAmmunitionInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((AmmoSetterCommon)((IAmmoGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((AmmunitionSetterCommon)((IAmmunitionGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -987,9 +987,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IAmmoInternal item,
+            this IAmmunitionInternal item,
             string path,
-            Ammo.TranslationMask? translationMask = null)
+            Ammunition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -999,10 +999,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IAmmoInternal item,
+            this IAmmunitionInternal item,
             string path,
-            out Ammo.ErrorMask errorMask,
-            Ammo.TranslationMask? translationMask = null)
+            out Ammunition.ErrorMask errorMask,
+            Ammunition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -1013,10 +1013,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IAmmoInternal item,
+            this IAmmunitionInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Ammo.TranslationMask? translationMask = null)
+            Ammunition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -1027,9 +1027,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IAmmoInternal item,
+            this IAmmunitionInternal item,
             Stream stream,
-            Ammo.TranslationMask? translationMask = null)
+            Ammunition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1039,10 +1039,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IAmmoInternal item,
+            this IAmmunitionInternal item,
             Stream stream,
-            out Ammo.ErrorMask errorMask,
-            Ammo.TranslationMask? translationMask = null)
+            out Ammunition.ErrorMask errorMask,
+            Ammunition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1053,10 +1053,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromXml(
-            this IAmmoInternal item,
+            this IAmmunitionInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Ammo.TranslationMask? translationMask = null)
+            Ammunition.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1071,7 +1071,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IAmmoInternal item,
+            this IAmmunitionInternal item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -1081,11 +1081,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void CopyInFromBinary(
-            this IAmmoInternal item,
+            this IAmmunitionInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((AmmoSetterCommon)((IAmmoGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((AmmunitionSetterCommon)((IAmmunitionGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -1101,7 +1101,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     #region Field Index
-    public enum Ammo_FieldIndex
+    public enum Ammunition_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1118,9 +1118,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public partial class Ammo_Registration : ILoquiRegistration
+    public partial class Ammunition_Registration : ILoquiRegistration
     {
-        public static readonly Ammo_Registration Instance = new Ammo_Registration();
+        public static readonly Ammunition_Registration Instance = new Ammunition_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
@@ -1135,23 +1135,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 11;
 
-        public static readonly Type MaskType = typeof(Ammo.Mask<>);
+        public static readonly Type MaskType = typeof(Ammunition.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Ammo.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Ammunition.ErrorMask);
 
-        public static readonly Type ClassType = typeof(Ammo);
+        public static readonly Type ClassType = typeof(Ammunition);
 
-        public static readonly Type GetterType = typeof(IAmmoGetter);
+        public static readonly Type GetterType = typeof(IAmmunitionGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IAmmo);
+        public static readonly Type SetterType = typeof(IAmmunition);
 
-        public static readonly Type? InternalSetterType = typeof(IAmmoInternal);
+        public static readonly Type? InternalSetterType = typeof(IAmmunitionInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Oblivion.Ammo";
+        public const string FullName = "Mutagen.Bethesda.Oblivion.Ammunition";
 
-        public const string Name = "Ammo";
+        public const string Name = "Ammunition";
 
         public const string Namespace = "Mutagen.Bethesda.Oblivion";
 
@@ -1164,17 +1164,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (str.Upper)
             {
                 case "NAME":
-                    return (ushort)Ammo_FieldIndex.Name;
+                    return (ushort)Ammunition_FieldIndex.Name;
                 case "MODEL":
-                    return (ushort)Ammo_FieldIndex.Model;
+                    return (ushort)Ammunition_FieldIndex.Model;
                 case "ICON":
-                    return (ushort)Ammo_FieldIndex.Icon;
+                    return (ushort)Ammunition_FieldIndex.Icon;
                 case "ENCHANTMENT":
-                    return (ushort)Ammo_FieldIndex.Enchantment;
+                    return (ushort)Ammunition_FieldIndex.Enchantment;
                 case "ENCHANTMENTPOINTS":
-                    return (ushort)Ammo_FieldIndex.EnchantmentPoints;
+                    return (ushort)Ammunition_FieldIndex.EnchantmentPoints;
                 case "DATA":
-                    return (ushort)Ammo_FieldIndex.Data;
+                    return (ushort)Ammunition_FieldIndex.Data;
                 default:
                     return null;
             }
@@ -1182,15 +1182,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            Ammo_FieldIndex enu = (Ammo_FieldIndex)index;
+            Ammunition_FieldIndex enu = (Ammunition_FieldIndex)index;
             switch (enu)
             {
-                case Ammo_FieldIndex.Name:
-                case Ammo_FieldIndex.Model:
-                case Ammo_FieldIndex.Icon:
-                case Ammo_FieldIndex.Enchantment:
-                case Ammo_FieldIndex.EnchantmentPoints:
-                case Ammo_FieldIndex.Data:
+                case Ammunition_FieldIndex.Name:
+                case Ammunition_FieldIndex.Model:
+                case Ammunition_FieldIndex.Icon:
+                case Ammunition_FieldIndex.Enchantment:
+                case Ammunition_FieldIndex.EnchantmentPoints:
+                case Ammunition_FieldIndex.Data:
                     return false;
                 default:
                     return AItem_Registration.GetNthIsEnumerable(index);
@@ -1199,16 +1199,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            Ammo_FieldIndex enu = (Ammo_FieldIndex)index;
+            Ammunition_FieldIndex enu = (Ammunition_FieldIndex)index;
             switch (enu)
             {
-                case Ammo_FieldIndex.Model:
-                case Ammo_FieldIndex.Data:
+                case Ammunition_FieldIndex.Model:
+                case Ammunition_FieldIndex.Data:
                     return true;
-                case Ammo_FieldIndex.Name:
-                case Ammo_FieldIndex.Icon:
-                case Ammo_FieldIndex.Enchantment:
-                case Ammo_FieldIndex.EnchantmentPoints:
+                case Ammunition_FieldIndex.Name:
+                case Ammunition_FieldIndex.Icon:
+                case Ammunition_FieldIndex.Enchantment:
+                case Ammunition_FieldIndex.EnchantmentPoints:
                     return false;
                 default:
                     return AItem_Registration.GetNthIsLoqui(index);
@@ -1217,15 +1217,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            Ammo_FieldIndex enu = (Ammo_FieldIndex)index;
+            Ammunition_FieldIndex enu = (Ammunition_FieldIndex)index;
             switch (enu)
             {
-                case Ammo_FieldIndex.Name:
-                case Ammo_FieldIndex.Model:
-                case Ammo_FieldIndex.Icon:
-                case Ammo_FieldIndex.Enchantment:
-                case Ammo_FieldIndex.EnchantmentPoints:
-                case Ammo_FieldIndex.Data:
+                case Ammunition_FieldIndex.Name:
+                case Ammunition_FieldIndex.Model:
+                case Ammunition_FieldIndex.Icon:
+                case Ammunition_FieldIndex.Enchantment:
+                case Ammunition_FieldIndex.EnchantmentPoints:
+                case Ammunition_FieldIndex.Data:
                     return false;
                 default:
                     return AItem_Registration.GetNthIsSingleton(index);
@@ -1234,20 +1234,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static string GetNthName(ushort index)
         {
-            Ammo_FieldIndex enu = (Ammo_FieldIndex)index;
+            Ammunition_FieldIndex enu = (Ammunition_FieldIndex)index;
             switch (enu)
             {
-                case Ammo_FieldIndex.Name:
+                case Ammunition_FieldIndex.Name:
                     return "Name";
-                case Ammo_FieldIndex.Model:
+                case Ammunition_FieldIndex.Model:
                     return "Model";
-                case Ammo_FieldIndex.Icon:
+                case Ammunition_FieldIndex.Icon:
                     return "Icon";
-                case Ammo_FieldIndex.Enchantment:
+                case Ammunition_FieldIndex.Enchantment:
                     return "Enchantment";
-                case Ammo_FieldIndex.EnchantmentPoints:
+                case Ammunition_FieldIndex.EnchantmentPoints:
                     return "EnchantmentPoints";
-                case Ammo_FieldIndex.Data:
+                case Ammunition_FieldIndex.Data:
                     return "Data";
                 default:
                     return AItem_Registration.GetNthName(index);
@@ -1256,15 +1256,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            Ammo_FieldIndex enu = (Ammo_FieldIndex)index;
+            Ammunition_FieldIndex enu = (Ammunition_FieldIndex)index;
             switch (enu)
             {
-                case Ammo_FieldIndex.Name:
-                case Ammo_FieldIndex.Model:
-                case Ammo_FieldIndex.Icon:
-                case Ammo_FieldIndex.Enchantment:
-                case Ammo_FieldIndex.EnchantmentPoints:
-                case Ammo_FieldIndex.Data:
+                case Ammunition_FieldIndex.Name:
+                case Ammunition_FieldIndex.Model:
+                case Ammunition_FieldIndex.Icon:
+                case Ammunition_FieldIndex.Enchantment:
+                case Ammunition_FieldIndex.EnchantmentPoints:
+                case Ammunition_FieldIndex.Data:
                     return false;
                 default:
                     return AItem_Registration.IsNthDerivative(index);
@@ -1273,15 +1273,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsProtected(ushort index)
         {
-            Ammo_FieldIndex enu = (Ammo_FieldIndex)index;
+            Ammunition_FieldIndex enu = (Ammunition_FieldIndex)index;
             switch (enu)
             {
-                case Ammo_FieldIndex.Name:
-                case Ammo_FieldIndex.Model:
-                case Ammo_FieldIndex.Icon:
-                case Ammo_FieldIndex.Enchantment:
-                case Ammo_FieldIndex.EnchantmentPoints:
-                case Ammo_FieldIndex.Data:
+                case Ammunition_FieldIndex.Name:
+                case Ammunition_FieldIndex.Model:
+                case Ammunition_FieldIndex.Icon:
+                case Ammunition_FieldIndex.Enchantment:
+                case Ammunition_FieldIndex.EnchantmentPoints:
+                case Ammunition_FieldIndex.Data:
                     return false;
                 default:
                     return AItem_Registration.IsProtected(index);
@@ -1290,27 +1290,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Type GetNthType(ushort index)
         {
-            Ammo_FieldIndex enu = (Ammo_FieldIndex)index;
+            Ammunition_FieldIndex enu = (Ammunition_FieldIndex)index;
             switch (enu)
             {
-                case Ammo_FieldIndex.Name:
+                case Ammunition_FieldIndex.Name:
                     return typeof(String);
-                case Ammo_FieldIndex.Model:
+                case Ammunition_FieldIndex.Model:
                     return typeof(Model);
-                case Ammo_FieldIndex.Icon:
+                case Ammunition_FieldIndex.Icon:
                     return typeof(String);
-                case Ammo_FieldIndex.Enchantment:
+                case Ammunition_FieldIndex.Enchantment:
                     return typeof(IFormLinkNullable<Enchantment>);
-                case Ammo_FieldIndex.EnchantmentPoints:
+                case Ammunition_FieldIndex.EnchantmentPoints:
                     return typeof(UInt16);
-                case Ammo_FieldIndex.Data:
-                    return typeof(AmmoData);
+                case Ammunition_FieldIndex.Data:
+                    return typeof(AmmunitionData);
                 default:
                     return AItem_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(AmmoXmlWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(AmmunitionXmlWriteTranslation);
         public static readonly RecordType AMMO_HEADER = new RecordType("AMMO");
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
@@ -1321,7 +1321,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType TriggeringRecordType = AMMO_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 6;
-        public static readonly Type BinaryWriteTranslation = typeof(AmmoBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(AmmunitionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1354,13 +1354,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class AmmoSetterCommon : AItemSetterCommon
+    public partial class AmmunitionSetterCommon : AItemSetterCommon
     {
-        public new static readonly AmmoSetterCommon Instance = new AmmoSetterCommon();
+        public new static readonly AmmunitionSetterCommon Instance = new AmmunitionSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IAmmoInternal item)
+        public void Clear(IAmmunitionInternal item)
         {
             ClearPartial();
             item.Name = default;
@@ -1374,22 +1374,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public override void Clear(IAItemInternal item)
         {
-            Clear(item: (IAmmoInternal)item);
+            Clear(item: (IAmmunitionInternal)item);
         }
         
         public override void Clear(IOblivionMajorRecordInternal item)
         {
-            Clear(item: (IAmmoInternal)item);
+            Clear(item: (IAmmunitionInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IAmmoInternal)item);
+            Clear(item: (IAmmunitionInternal)item);
         }
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
-            IAmmoInternal item,
+            IAmmunitionInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1409,7 +1409,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public virtual void CopyInFromXml(
-            IAmmoInternal item,
+            IAmmunitionInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1424,7 +1424,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    AmmoXmlCreateTranslation.FillPublicElementXml(
+                    AmmunitionXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1446,7 +1446,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask)
         {
             CopyInFromXml(
-                item: (Ammo)item,
+                item: (Ammunition)item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1459,7 +1459,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask)
         {
             CopyInFromXml(
-                item: (Ammo)item,
+                item: (Ammunition)item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1472,7 +1472,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? translationMask)
         {
             CopyInFromXml(
-                item: (Ammo)item,
+                item: (Ammunition)item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1481,9 +1481,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => Ammo_Registration.AMMO_HEADER;
+        public override RecordType RecordType => Ammunition_Registration.AMMO_HEADER;
         protected static void FillBinaryStructs(
-            IAmmoInternal item,
+            IAmmunitionInternal item,
             MutagenFrame frame)
         {
             AItemSetterCommon.FillBinaryStructs(
@@ -1492,7 +1492,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         protected static TryGet<int?> FillBinaryRecordTypes(
-            IAmmoInternal item,
+            IAmmunitionInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
@@ -1507,14 +1507,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Name);
+                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Name);
                 }
                 case 0x4C444F4D: // MODL
                 {
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Model);
+                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Model);
                 }
                 case 0x4E4F4349: // ICON
                 {
@@ -1522,7 +1522,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Icon);
+                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Icon);
                 }
                 case 0x4D414E45: // ENAM
                 {
@@ -1530,18 +1530,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Enchantment.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Enchantment);
+                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Enchantment);
                 }
                 case 0x4D414E41: // ANAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
                     item.EnchantmentPoints = frame.ReadUInt16();
-                    return TryGet<int?>.Succeed((int)Ammo_FieldIndex.EnchantmentPoints);
+                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.EnchantmentPoints);
                 }
                 case 0x41544144: // DATA
                 {
-                    item.Data = Mutagen.Bethesda.Oblivion.AmmoData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Data);
+                    item.Data = Mutagen.Bethesda.Oblivion.AmmunitionData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Data);
                 }
                 default:
                     return AItemSetterCommon.FillBinaryRecordTypes(
@@ -1554,11 +1554,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public virtual void CopyInFromBinary(
-            IAmmoInternal item,
+            IAmmunitionInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<IAmmoInternal>(
+            UtilityTranslation.MajorRecordParse<IAmmunitionInternal>(
                 record: item,
                 frame: frame,
                 recType: RecordType,
@@ -1573,7 +1573,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (Ammo)item,
+                item: (Ammunition)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1584,7 +1584,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (Ammo)item,
+                item: (Ammunition)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1595,7 +1595,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (Ammo)item,
+                item: (Ammunition)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1603,17 +1603,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class AmmoCommon : AItemCommon
+    public partial class AmmunitionCommon : AItemCommon
     {
-        public new static readonly AmmoCommon Instance = new AmmoCommon();
+        public new static readonly AmmunitionCommon Instance = new AmmunitionCommon();
 
-        public Ammo.Mask<bool> GetEqualsMask(
-            IAmmoGetter item,
-            IAmmoGetter rhs,
+        public Ammunition.Mask<bool> GetEqualsMask(
+            IAmmunitionGetter item,
+            IAmmunitionGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Ammo.Mask<bool>(false);
-            ((AmmoCommon)((IAmmoGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new Ammunition.Mask<bool>(false);
+            ((AmmunitionCommon)((IAmmunitionGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1622,9 +1622,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public void FillEqualsMask(
-            IAmmoGetter item,
-            IAmmoGetter rhs,
-            Ammo.Mask<bool> ret,
+            IAmmunitionGetter item,
+            IAmmunitionGetter rhs,
+            Ammunition.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1646,9 +1646,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public string ToString(
-            IAmmoGetter item,
+            IAmmunitionGetter item,
             string? name = null,
-            Ammo.Mask<bool>? printMask = null)
+            Ammunition.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1660,18 +1660,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public void ToString(
-            IAmmoGetter item,
+            IAmmunitionGetter item,
             FileGeneration fg,
             string? name = null,
-            Ammo.Mask<bool>? printMask = null)
+            Ammunition.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Ammo =>");
+                fg.AppendLine($"Ammunition =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Ammo) =>");
+                fg.AppendLine($"{name} (Ammunition) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1685,9 +1685,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         protected static void ToStringFields(
-            IAmmoGetter item,
+            IAmmunitionGetter item,
             FileGeneration fg,
-            Ammo.Mask<bool>? printMask = null)
+            Ammunition.Mask<bool>? printMask = null)
         {
             AItemCommon.ToStringFields(
                 item: item,
@@ -1726,8 +1726,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public bool HasBeenSet(
-            IAmmoGetter item,
-            Ammo.Mask<bool?> checkMask)
+            IAmmunitionGetter item,
+            Ammunition.Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
@@ -1743,8 +1743,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public void FillHasBeenSetMask(
-            IAmmoGetter item,
-            Ammo.Mask<bool> mask)
+            IAmmunitionGetter item,
+            Ammunition.Mask<bool> mask)
         {
             mask.Name = (item.Name != null);
             var itemModel = item.Model;
@@ -1753,62 +1753,62 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Enchantment = (item.Enchantment.FormKey != null);
             mask.EnchantmentPoints = (item.EnchantmentPoints != null);
             var itemData = item.Data;
-            mask.Data = new MaskItem<bool, AmmoData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
+            mask.Data = new MaskItem<bool, AmmunitionData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
         }
         
-        public static Ammo_FieldIndex ConvertFieldIndex(AItem_FieldIndex index)
+        public static Ammunition_FieldIndex ConvertFieldIndex(AItem_FieldIndex index)
         {
             switch (index)
             {
                 case AItem_FieldIndex.MajorRecordFlagsRaw:
-                    return (Ammo_FieldIndex)((int)index);
+                    return (Ammunition_FieldIndex)((int)index);
                 case AItem_FieldIndex.FormKey:
-                    return (Ammo_FieldIndex)((int)index);
+                    return (Ammunition_FieldIndex)((int)index);
                 case AItem_FieldIndex.Version:
-                    return (Ammo_FieldIndex)((int)index);
+                    return (Ammunition_FieldIndex)((int)index);
                 case AItem_FieldIndex.EditorID:
-                    return (Ammo_FieldIndex)((int)index);
+                    return (Ammunition_FieldIndex)((int)index);
                 case AItem_FieldIndex.OblivionMajorRecordFlags:
-                    return (Ammo_FieldIndex)((int)index);
+                    return (Ammunition_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new Ammo_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static new Ammunition_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case OblivionMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Ammo_FieldIndex)((int)index);
+                    return (Ammunition_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.FormKey:
-                    return (Ammo_FieldIndex)((int)index);
+                    return (Ammunition_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.Version:
-                    return (Ammo_FieldIndex)((int)index);
+                    return (Ammunition_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.EditorID:
-                    return (Ammo_FieldIndex)((int)index);
+                    return (Ammunition_FieldIndex)((int)index);
                 case OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags:
-                    return (Ammo_FieldIndex)((int)index);
+                    return (Ammunition_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new Ammo_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Ammunition_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Ammo_FieldIndex)((int)index);
+                    return (Ammunition_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (Ammo_FieldIndex)((int)index);
+                    return (Ammunition_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
-                    return (Ammo_FieldIndex)((int)index);
+                    return (Ammunition_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Ammo_FieldIndex)((int)index);
+                    return (Ammunition_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1816,8 +1816,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IAmmoGetter? lhs,
-            IAmmoGetter? rhs)
+            IAmmunitionGetter? lhs,
+            IAmmunitionGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1836,8 +1836,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAItemGetter? rhs)
         {
             return Equals(
-                lhs: (IAmmoGetter?)lhs,
-                rhs: rhs as IAmmoGetter);
+                lhs: (IAmmunitionGetter?)lhs,
+                rhs: rhs as IAmmunitionGetter);
         }
         
         public override bool Equals(
@@ -1845,8 +1845,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IOblivionMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IAmmoGetter?)lhs,
-                rhs: rhs as IAmmoGetter);
+                lhs: (IAmmunitionGetter?)lhs,
+                rhs: rhs as IAmmunitionGetter);
         }
         
         public override bool Equals(
@@ -1854,11 +1854,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IAmmoGetter?)lhs,
-                rhs: rhs as IAmmoGetter);
+                lhs: (IAmmunitionGetter?)lhs,
+                rhs: rhs as IAmmunitionGetter);
         }
         
-        public virtual int GetHashCode(IAmmoGetter item)
+        public virtual int GetHashCode(IAmmunitionGetter item)
         {
             var hash = new HashCode();
             if (item.Name.TryGet(out var Nameitem))
@@ -1891,17 +1891,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public override int GetHashCode(IAItemGetter item)
         {
-            return GetHashCode(item: (IAmmoGetter)item);
+            return GetHashCode(item: (IAmmunitionGetter)item);
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)
         {
-            return GetHashCode(item: (IAmmoGetter)item);
+            return GetHashCode(item: (IAmmunitionGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IAmmoGetter)item);
+            return GetHashCode(item: (IAmmunitionGetter)item);
         }
         
         #endregion
@@ -1909,11 +1909,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public override object GetNew()
         {
-            return Ammo.GetNew();
+            return Ammunition.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IAmmoGetter obj)
+        public IEnumerable<ILinkGetter> GetLinks(IAmmunitionGetter obj)
         {
             foreach (var item in base.GetLinks(obj))
             {
@@ -1923,28 +1923,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
-        partial void PostDuplicate(Ammo obj, Ammo rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
+        partial void PostDuplicate(Ammunition obj, Ammunition rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            var ret = new Ammo(getNextFormKey());
-            ret.DeepCopyIn((Ammo)item);
+            var ret = new Ammunition(getNextFormKey());
+            ret.DeepCopyIn((Ammunition)item);
             duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Ammo)item, getNextFormKey, duplicatedRecords);
+            PostDuplicate(ret, (Ammunition)item, getNextFormKey, duplicatedRecords);
             return ret;
         }
         
         #endregion
         
     }
-    public partial class AmmoSetterTranslationCommon : AItemSetterTranslationCommon
+    public partial class AmmunitionSetterTranslationCommon : AItemSetterTranslationCommon
     {
-        public new static readonly AmmoSetterTranslationCommon Instance = new AmmoSetterTranslationCommon();
+        public new static readonly AmmunitionSetterTranslationCommon Instance = new AmmunitionSetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            IAmmoInternal item,
-            IAmmoGetter rhs,
+            IAmmunitionInternal item,
+            IAmmunitionGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1956,8 +1956,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public void DeepCopyIn(
-            IAmmo item,
-            IAmmoGetter rhs,
+            IAmmunition item,
+            IAmmunitionGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1966,20 +1966,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs,
                 errorMask,
                 copyMask);
-            if ((copyMask?.GetShouldTranslate((int)Ammo_FieldIndex.Name) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Name) ?? true))
             {
                 item.Name = rhs.Name;
             }
-            if ((copyMask?.GetShouldTranslate((int)Ammo_FieldIndex.Model) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Model) ?? true))
             {
-                errorMask?.PushIndex((int)Ammo_FieldIndex.Model);
+                errorMask?.PushIndex((int)Ammunition_FieldIndex.Model);
                 try
                 {
                     if(rhs.Model.TryGet(out var rhsModel))
                     {
                         item.Model = rhsModel.DeepCopy(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Ammo_FieldIndex.Model));
+                            copyMask?.GetSubCrystal((int)Ammunition_FieldIndex.Model));
                     }
                     else
                     {
@@ -1996,28 +1996,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Ammo_FieldIndex.Icon) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Icon) ?? true))
             {
                 item.Icon = rhs.Icon;
             }
-            if ((copyMask?.GetShouldTranslate((int)Ammo_FieldIndex.Enchantment) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Enchantment) ?? true))
             {
                 item.Enchantment.FormKey = rhs.Enchantment.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)Ammo_FieldIndex.EnchantmentPoints) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.EnchantmentPoints) ?? true))
             {
                 item.EnchantmentPoints = rhs.EnchantmentPoints;
             }
-            if ((copyMask?.GetShouldTranslate((int)Ammo_FieldIndex.Data) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Data) ?? true))
             {
-                errorMask?.PushIndex((int)Ammo_FieldIndex.Data);
+                errorMask?.PushIndex((int)Ammunition_FieldIndex.Data);
                 try
                 {
                     if(rhs.Data.TryGet(out var rhsData))
                     {
                         item.Data = rhsData.DeepCopy(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Ammo_FieldIndex.Data));
+                            copyMask?.GetSubCrystal((int)Ammunition_FieldIndex.Data));
                     }
                     else
                     {
@@ -2043,8 +2043,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IAmmoInternal)item,
-                rhs: (IAmmoGetter)rhs,
+                item: (IAmmunitionInternal)item,
+                rhs: (IAmmunitionGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -2056,8 +2056,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IAmmo)item,
-                rhs: (IAmmoGetter)rhs,
+                item: (IAmmunition)item,
+                rhs: (IAmmunitionGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -2069,8 +2069,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IAmmoInternal)item,
-                rhs: (IAmmoGetter)rhs,
+                item: (IAmmunitionInternal)item,
+                rhs: (IAmmunitionGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -2082,8 +2082,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IAmmo)item,
-                rhs: (IAmmoGetter)rhs,
+                item: (IAmmunition)item,
+                rhs: (IAmmunitionGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -2095,8 +2095,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IAmmoInternal)item,
-                rhs: (IAmmoGetter)rhs,
+                item: (IAmmunitionInternal)item,
+                rhs: (IAmmunitionGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -2108,31 +2108,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IAmmo)item,
-                rhs: (IAmmoGetter)rhs,
+                item: (IAmmunition)item,
+                rhs: (IAmmunitionGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
         #endregion
         
-        public Ammo DeepCopy(
-            IAmmoGetter item,
-            Ammo.TranslationMask? copyMask = null)
+        public Ammunition DeepCopy(
+            IAmmunitionGetter item,
+            Ammunition.TranslationMask? copyMask = null)
         {
-            Ammo ret = (Ammo)((AmmoCommon)((IAmmoGetter)item).CommonInstance()!).GetNew();
+            Ammunition ret = (Ammunition)((AmmunitionCommon)((IAmmunitionGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public Ammo DeepCopy(
-            IAmmoGetter item,
-            out Ammo.ErrorMask errorMask,
-            Ammo.TranslationMask? copyMask = null)
+        public Ammunition DeepCopy(
+            IAmmunitionGetter item,
+            out Ammunition.ErrorMask errorMask,
+            Ammunition.TranslationMask? copyMask = null)
         {
-            Ammo ret = (Ammo)((AmmoCommon)((IAmmoGetter)item).CommonInstance()!).GetNew();
+            Ammunition ret = (Ammunition)((AmmunitionCommon)((IAmmunitionGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -2140,12 +2140,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
         
-        public Ammo DeepCopy(
-            IAmmoGetter item,
+        public Ammunition DeepCopy(
+            IAmmunitionGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            Ammo ret = (Ammo)((AmmoCommon)((IAmmoGetter)item).CommonInstance()!).GetNew();
+            Ammunition ret = (Ammunition)((AmmunitionCommon)((IAmmunitionGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -2160,21 +2160,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class Ammo
+    public partial class Ammunition
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Ammo_Registration.Instance;
-        public new static Ammo_Registration Registration => Ammo_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Ammunition_Registration.Instance;
+        public new static Ammunition_Registration Registration => Ammunition_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => AmmoCommon.Instance;
+        protected override object CommonInstance() => AmmunitionCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return AmmoSetterCommon.Instance;
+            return AmmunitionSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => AmmoSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => AmmunitionSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -2185,14 +2185,14 @@ namespace Mutagen.Bethesda.Oblivion
 #region Xml Translation
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class AmmoXmlWriteTranslation :
+    public partial class AmmunitionXmlWriteTranslation :
         AItemXmlWriteTranslation,
         IXmlWriteTranslator
     {
-        public new readonly static AmmoXmlWriteTranslation Instance = new AmmoXmlWriteTranslation();
+        public new readonly static AmmunitionXmlWriteTranslation Instance = new AmmunitionXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IAmmoGetter item,
+            IAmmunitionGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -2203,17 +2203,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
             if ((item.Name != null)
-                && (translationMask?.GetShouldTranslate((int)Ammo_FieldIndex.Name) ?? true))
+                && (translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Name) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Name),
                     item: item.Name,
-                    fieldIndex: (int)Ammo_FieldIndex.Name,
+                    fieldIndex: (int)Ammunition_FieldIndex.Name,
                     errorMask: errorMask);
             }
             if ((item.Model != null)
-                && (translationMask?.GetShouldTranslate((int)Ammo_FieldIndex.Model) ?? true))
+                && (translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Model) ?? true))
             {
                 if (item.Model.TryGet(out var ModelItem))
                 {
@@ -2221,69 +2221,69 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: ModelItem,
                         node: node,
                         name: nameof(item.Model),
-                        fieldIndex: (int)Ammo_FieldIndex.Model,
+                        fieldIndex: (int)Ammunition_FieldIndex.Model,
                         errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Ammo_FieldIndex.Model));
+                        translationMask: translationMask?.GetSubCrystal((int)Ammunition_FieldIndex.Model));
                 }
             }
             if ((item.Icon != null)
-                && (translationMask?.GetShouldTranslate((int)Ammo_FieldIndex.Icon) ?? true))
+                && (translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Icon) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Icon),
                     item: item.Icon,
-                    fieldIndex: (int)Ammo_FieldIndex.Icon,
+                    fieldIndex: (int)Ammunition_FieldIndex.Icon,
                     errorMask: errorMask);
             }
             if ((item.Enchantment.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Ammo_FieldIndex.Enchantment) ?? true))
+                && (translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Enchantment) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Enchantment),
                     item: item.Enchantment.FormKey.Value,
-                    fieldIndex: (int)Ammo_FieldIndex.Enchantment,
+                    fieldIndex: (int)Ammunition_FieldIndex.Enchantment,
                     errorMask: errorMask);
             }
             if ((item.EnchantmentPoints != null)
-                && (translationMask?.GetShouldTranslate((int)Ammo_FieldIndex.EnchantmentPoints) ?? true))
+                && (translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.EnchantmentPoints) ?? true))
             {
                 UInt16XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.EnchantmentPoints),
                     item: item.EnchantmentPoints.Value,
-                    fieldIndex: (int)Ammo_FieldIndex.EnchantmentPoints,
+                    fieldIndex: (int)Ammunition_FieldIndex.EnchantmentPoints,
                     errorMask: errorMask);
             }
             if ((item.Data != null)
-                && (translationMask?.GetShouldTranslate((int)Ammo_FieldIndex.Data) ?? true))
+                && (translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Data) ?? true))
             {
                 if (item.Data.TryGet(out var DataItem))
                 {
-                    ((AmmoDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                    ((AmmunitionDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
                         item: DataItem,
                         node: node,
                         name: nameof(item.Data),
-                        fieldIndex: (int)Ammo_FieldIndex.Data,
+                        fieldIndex: (int)Ammunition_FieldIndex.Data,
                         errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Ammo_FieldIndex.Data));
+                        translationMask: translationMask?.GetSubCrystal((int)Ammunition_FieldIndex.Data));
                 }
             }
         }
 
         public void Write(
             XElement node,
-            IAmmoGetter item,
+            IAmmunitionGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Ammo");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.Ammunition");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Ammo");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.Ammunition");
             }
             WriteToNodeXml(
                 item: item,
@@ -2300,7 +2300,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string? name = null)
         {
             Write(
-                item: (IAmmoGetter)item,
+                item: (IAmmunitionGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -2315,7 +2315,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string? name = null)
         {
             Write(
-                item: (IAmmoGetter)item,
+                item: (IAmmunitionGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -2330,7 +2330,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string? name = null)
         {
             Write(
-                item: (IAmmoGetter)item,
+                item: (IAmmunitionGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -2345,7 +2345,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             string? name = null)
         {
             Write(
-                item: (IAmmoGetter)item,
+                item: (IAmmunitionGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -2354,12 +2354,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class AmmoXmlCreateTranslation : AItemXmlCreateTranslation
+    public partial class AmmunitionXmlCreateTranslation : AItemXmlCreateTranslation
     {
-        public new readonly static AmmoXmlCreateTranslation Instance = new AmmoXmlCreateTranslation();
+        public new readonly static AmmunitionXmlCreateTranslation Instance = new AmmunitionXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IAmmoInternal item,
+            IAmmunitionInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -2368,7 +2368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    AmmoXmlCreateTranslation.FillPublicElementXml(
+                    AmmunitionXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -2384,7 +2384,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void FillPublicElementXml(
-            IAmmoInternal item,
+            IAmmunitionInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -2393,7 +2393,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 case "Name":
-                    errorMask?.PushIndex((int)Ammo_FieldIndex.Name);
+                    errorMask?.PushIndex((int)Ammunition_FieldIndex.Name);
                     try
                     {
                         item.Name = StringXmlTranslation.Instance.Parse(
@@ -2411,13 +2411,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Model":
-                    errorMask?.PushIndex((int)Ammo_FieldIndex.Model);
+                    errorMask?.PushIndex((int)Ammunition_FieldIndex.Model);
                     try
                     {
                         item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Ammo_FieldIndex.Model));
+                            translationMask: translationMask?.GetSubCrystal((int)Ammunition_FieldIndex.Model));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2430,7 +2430,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Icon":
-                    errorMask?.PushIndex((int)Ammo_FieldIndex.Icon);
+                    errorMask?.PushIndex((int)Ammunition_FieldIndex.Icon);
                     try
                     {
                         item.Icon = StringXmlTranslation.Instance.Parse(
@@ -2448,7 +2448,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Enchantment":
-                    errorMask?.PushIndex((int)Ammo_FieldIndex.Enchantment);
+                    errorMask?.PushIndex((int)Ammunition_FieldIndex.Enchantment);
                     try
                     {
                         item.Enchantment.FormKey = FormKeyXmlTranslation.Instance.Parse(
@@ -2466,7 +2466,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "EnchantmentPoints":
-                    errorMask?.PushIndex((int)Ammo_FieldIndex.EnchantmentPoints);
+                    errorMask?.PushIndex((int)Ammunition_FieldIndex.EnchantmentPoints);
                     try
                     {
                         item.EnchantmentPoints = UInt16XmlTranslation.Instance.Parse(
@@ -2484,13 +2484,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 case "Data":
-                    errorMask?.PushIndex((int)Ammo_FieldIndex.Data);
+                    errorMask?.PushIndex((int)Ammunition_FieldIndex.Data);
                     try
                     {
-                        item.Data = LoquiXmlTranslation<AmmoData>.Instance.Parse(
+                        item.Data = LoquiXmlTranslation<AmmunitionData>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Ammo_FieldIndex.Data));
+                            translationMask: translationMask?.GetSubCrystal((int)Ammunition_FieldIndex.Data));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2519,30 +2519,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Xml Write Mixins
-    public static class AmmoXmlTranslationMixIn
+    public static class AmmunitionXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IAmmoGetter item,
+            this IAmmunitionGetter item,
             XElement node,
-            out Ammo.ErrorMask errorMask,
-            Ammo.TranslationMask? translationMask = null,
+            out Ammunition.ErrorMask errorMask,
+            Ammunition.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((AmmoXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((AmmunitionXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Ammo.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Ammunition.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this IAmmoGetter item,
+            this IAmmunitionGetter item,
             string path,
-            out Ammo.ErrorMask errorMask,
-            Ammo.TranslationMask? translationMask = null,
+            out Ammunition.ErrorMask errorMask,
+            Ammunition.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2556,10 +2556,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public static void WriteToXml(
-            this IAmmoGetter item,
+            this IAmmunitionGetter item,
             Stream stream,
-            out Ammo.ErrorMask errorMask,
-            Ammo.TranslationMask? translationMask = null,
+            out Ammunition.ErrorMask errorMask,
+            Ammunition.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2582,14 +2582,14 @@ namespace Mutagen.Bethesda.Oblivion
 #region Binary Translation
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class AmmoBinaryWriteTranslation :
+    public partial class AmmunitionBinaryWriteTranslation :
         AItemBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static AmmoBinaryWriteTranslation Instance = new AmmoBinaryWriteTranslation();
+        public new readonly static AmmunitionBinaryWriteTranslation Instance = new AmmunitionBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
-            IAmmoGetter item,
+            IAmmunitionGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
@@ -2600,7 +2600,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
-                header: recordTypeConverter.ConvertToCustom(Ammo_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Ammunition_Registration.FULL_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.Model.TryGet(out var ModelItem))
             {
@@ -2612,19 +2612,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Icon,
-                header: recordTypeConverter.ConvertToCustom(Ammo_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Ammunition_Registration.ICON_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Enchantment,
-                header: recordTypeConverter.ConvertToCustom(Ammo_Registration.ENAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(Ammunition_Registration.ENAM_HEADER));
             Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.EnchantmentPoints,
-                header: recordTypeConverter.ConvertToCustom(Ammo_Registration.ANAM_HEADER));
+                header: recordTypeConverter.ConvertToCustom(Ammunition_Registration.ANAM_HEADER));
             if (item.Data.TryGet(out var DataItem))
             {
-                ((AmmoDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                ((AmmunitionDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
                     item: DataItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -2633,12 +2633,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void Write(
             MutagenWriter writer,
-            IAmmoGetter item,
+            IAmmunitionGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.ExportHeader(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Ammo_Registration.AMMO_HEADER),
+                record: recordTypeConverter.ConvertToCustom(Ammunition_Registration.AMMO_HEADER),
                 type: ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2657,7 +2657,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IAmmoGetter)item,
+                item: (IAmmunitionGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2668,7 +2668,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IAmmoGetter)item,
+                item: (IAmmunitionGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2679,7 +2679,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IAmmoGetter)item,
+                item: (IAmmunitionGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2690,16 +2690,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IAmmoGetter)item,
+                item: (IAmmunitionGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class AmmoBinaryCreateTranslation : AItemBinaryCreateTranslation
+    public partial class AmmunitionBinaryCreateTranslation : AItemBinaryCreateTranslation
     {
-        public new readonly static AmmoBinaryCreateTranslation Instance = new AmmoBinaryCreateTranslation();
+        public new readonly static AmmunitionBinaryCreateTranslation Instance = new AmmunitionBinaryCreateTranslation();
 
     }
 
@@ -2707,7 +2707,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Binary Write Mixins
-    public static class AmmoBinaryTranslationMixIn
+    public static class AmmunitionBinaryTranslationMixIn
     {
     }
     #endregion
@@ -2716,35 +2716,35 @@ namespace Mutagen.Bethesda.Oblivion
 }
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
-    public partial class AmmoBinaryOverlay :
+    public partial class AmmunitionBinaryOverlay :
         AItemBinaryOverlay,
-        IAmmoGetter
+        IAmmunitionGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Ammo_Registration.Instance;
-        public new static Ammo_Registration Registration => Ammo_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Ammunition_Registration.Instance;
+        public new static Ammunition_Registration Registration => Ammunition_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => AmmoCommon.Instance;
+        protected override object CommonInstance() => AmmunitionCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => AmmoSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => AmmunitionSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAmmoGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAmmunitionGetter)rhs, include);
 
-        public override IEnumerable<ILinkGetter> Links => AmmoCommon.Instance.GetLinks(this);
+        public override IEnumerable<ILinkGetter> Links => AmmunitionCommon.Instance.GetLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => AmmoXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => AmmunitionXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((AmmoXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((AmmunitionXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -2752,12 +2752,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => AmmoBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => AmmunitionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((AmmoBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((AmmunitionBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
@@ -2787,7 +2787,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Data
         private RangeInt32? _DataLocation;
         private bool _Data_IsSet => _DataLocation.HasValue;
-        public IAmmoDataGetter? Data => _Data_IsSet ? AmmoDataBinaryOverlay.AmmoDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IAmmunitionDataGetter? Data => _Data_IsSet ? AmmunitionDataBinaryOverlay.AmmunitionDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         partial void CustomCtor(
@@ -2795,7 +2795,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int finalPos,
             int offset);
 
-        protected AmmoBinaryOverlay(
+        protected AmmunitionBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -2804,13 +2804,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
 
-        public static AmmoBinaryOverlay AmmoFactory(
+        public static AmmunitionBinaryOverlay AmmunitionFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new AmmoBinaryOverlay(
+            var ret = new AmmunitionBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.Meta),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -2829,12 +2829,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
-        public static AmmoBinaryOverlay AmmoFactory(
+        public static AmmunitionBinaryOverlay AmmunitionFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            return AmmoFactory(
+            return AmmunitionFactory(
                 stream: new BinaryMemoryReadStream(slice),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
@@ -2854,7 +2854,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4C4C5546: // FULL
                 {
                     _NameLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Name);
+                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Name);
                 }
                 case 0x4C444F4D: // MODL
                 {
@@ -2862,27 +2862,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Model);
+                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Model);
                 }
                 case 0x4E4F4349: // ICON
                 {
                     _IconLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Icon);
+                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Icon);
                 }
                 case 0x4D414E45: // ENAM
                 {
                     _EnchantmentLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Enchantment);
+                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Enchantment);
                 }
                 case 0x4D414E41: // ANAM
                 {
                     _EnchantmentPointsLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Ammo_FieldIndex.EnchantmentPoints);
+                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.EnchantmentPoints);
                 }
                 case 0x41544144: // DATA
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Ammo_FieldIndex.Data);
+                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Data);
                 }
                 default:
                     return base.FillRecordType(
@@ -2900,7 +2900,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             string? name = null)
         {
-            AmmoMixIn.ToString(
+            AmmunitionMixIn.ToString(
                 item: this,
                 name: name);
         }

@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var mod = new OblivionMod(Utility.ModKey);
             mod.Npcs.AddNew();
-            mod.Ammo.AddNew();
+            mod.Ammunitions.AddNew();
             Assert.Equal(2, ((IOblivionModGetter)mod).EnumerateMajorRecords().Count());
             Assert.Equal(2, ((IOblivionMod)mod).EnumerateMajorRecords().Count());
         }
@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var mod = new OblivionMod(Utility.ModKey);
             mod.Npcs.AddNew();
-            mod.Ammo.AddNew();
+            mod.Ammunitions.AddNew();
             Assert.Equal(2, ((IOblivionModGetter)mod).EnumerateMajorRecords<IMajorRecordCommon>().Count());
             Assert.Equal(2, ((IOblivionModGetter)mod).EnumerateMajorRecords<IMajorRecordCommonGetter>().Count());
         }
@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var mod = new OblivionMod(Utility.ModKey);
             mod.Npcs.AddNew();
-            mod.Ammo.AddNew();
+            mod.Ammunitions.AddNew();
             Assert.Single(((IOblivionModGetter)mod).EnumerateMajorRecords<INpc>());
             Assert.Single(((IOblivionModGetter)mod).EnumerateMajorRecords<INpcGetter>());
             Assert.Single(((IOblivionModGetter)mod).EnumerateMajorRecords<Npc>());
@@ -59,9 +59,9 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var mod = new OblivionMod(Utility.ModKey);
             mod.Npcs.AddNew();
-            Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<IAmmo>());
-            Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<IAmmoGetter>());
-            Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<Ammo>());
+            Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<IAmmunition>());
+            Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<IAmmunitionGetter>());
+            Assert.Empty(((IOblivionModGetter)mod).EnumerateMajorRecords<Ammunition>());
         }
     }
 }

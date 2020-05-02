@@ -241,6 +241,7 @@ namespace Mutagen.Bethesda.Binary
             this.Writer.Write(c);
         }
 
+        /// <inheritdoc/>
         public void Write(char? c)
         {
             if (!c.HasValue) return;
@@ -255,8 +256,8 @@ namespace Mutagen.Bethesda.Binary
                 this.Write(Zero);
             }
         }
-        /// <inheritdoc/>
 
+        /// <inheritdoc/>
         public void Write(ReadOnlySpan<char> str)
         {
             Span<byte> bytes = stackalloc byte[str.Length];
@@ -310,9 +311,10 @@ namespace Mutagen.Bethesda.Binary
                     this.Writer.Write(color.A);
                     break;
                 case ColorBinaryType.NoAlphaFloat:
-                    this.Writer.Write((float)color.R);
-                    this.Writer.Write((float)color.G);
-                    this.Writer.Write((float)color.B);
+                    var t = color.R / 255f;
+                    this.Writer.Write(t);
+                    this.Writer.Write(color.G / 255f);
+                    this.Writer.Write(color.B / 255f);
                     break;
                 default:
                     break;

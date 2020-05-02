@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
 {
     public class LoquiTranslationReflection
     {
-        LoquiBinaryTranslation<Ammo>.CREATE_FUNC _create = LoquiBinaryTranslation<Ammo>.CREATE;
+        LoquiBinaryTranslation<Ammunition>.CREATE_FUNC _create = LoquiBinaryTranslation<Ammunition>.CREATE;
         byte[] _data = new byte[0x14];
         MutagenFrame _frame;
         MasterReferenceReader _masterRefs = new MasterReferenceReader(Mutagen.Bethesda.Oblivion.Constants.Oblivion);
@@ -26,16 +26,16 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         }
 
         [Benchmark]
-        public Ammo Direct()
+        public Ammunition Direct()
         {
             _frame.Position = 0;
-            return Ammo.CreateFromBinary(
+            return Ammunition.CreateFromBinary(
                 frame: _frame,
                 recordTypeConverter: null);
         }
 
         [Benchmark]
-        public Ammo Wrapped()
+        public Ammunition Wrapped()
         {
             _frame.Position = 0;
             return _create(

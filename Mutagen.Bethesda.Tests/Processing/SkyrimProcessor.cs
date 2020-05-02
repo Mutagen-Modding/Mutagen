@@ -1,6 +1,7 @@
-using System;
+﻿using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Mutagen.Bethesda.Binary;
@@ -21,6 +22,7 @@ namespace Mutagen.Bethesda.Tests
             ProcessGameSettings(stream, formID, recType, loc);
             ProcessRaces(stream, formID, recType, loc);
             ProcessFurniture(stream, formID, recType, loc);
+            ProcessNpcs(stream, formID, recType, loc);
         }
 
         private void ProcessGameSettings(
@@ -66,8 +68,8 @@ namespace Mutagen.Bethesda.Tests
 
             var phonemeSpan = majorFrame.Content.Slice(phonemeListLoc.Value);
             var finds = UtilityTranslation.FindRepeatingSubrecord(
-                phonemeSpan, 
-                this.Meta, 
+                phonemeSpan,
+                this.Meta,
                 new RecordType("PHTN"),
                 out var lenParsed);
             if (finds?.Length != 16) return;
@@ -136,6 +138,44 @@ namespace Mutagen.Bethesda.Tests
                 transferPos += bytes.Length;
             }
             this._Instructions.SetSubstitution(loc.Min + majorFrame.Header.HeaderLength + initialPos.Value, reordered);
+        }
+
+        private void ProcessNpcs(
+            IMutagenReadStream stream,
+            FormID formID,
+            RecordType recType,
+            RangeInt64 loc)
+        {
+            if (!Npc_Registration.TriggeringRecordType.Equals(recType)) return;
+            stream.Position = loc.Min;
+            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+
+            var qnam = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData, Npc_Registration.QNAM_HEADER, navigateToContent: true);
+            if (qnam != null)
+            {
+                // Standardize float rounding errors
+                var r = IBinaryStreamExt.GetColorByte(SpanExt.GetFloat(majorFrame.Content.Slice(qnam.Value, 4)));
+                var g = IBinaryStreamExt.GetColorByte(SpanExt.GetFloat(majorFrame.Content.Slice(qnam.Value + 4, 4)));
+                var b = IBinaryStreamExt.GetColorByte(SpanExt.GetFloat(majorFrame.Content.Slice(qnam.Value + 8, 4)));
+                byte[] bytes = new byte[12];
+                using var writer = new MutagenWriter(new MemoryStream(bytes), stream.MetaData);
+                writer.Write(r / 255f);
+                writer.Write(g / 255f);
+                writer.Write(b / 255f);
+                this._Instructions.SetSubstitution(loc.Min + qnam.Value + majorFrame.Header.HeaderLength, bytes);
+            }
+            var nam9 = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData, Npc_Registration.NAM9_HEADER);
+            if (nam9 != null)
+            {
+                // Standardize floats
+                var subRecord = stream.MetaData.Subrecord(majorFrame.Content.Slice(nam9.Value), Npc_Registration.NAM9_HEADER);
+                stream.Position = loc.Min + nam9.Value + majorFrame.Header.HeaderLength + subRecord.HeaderLength;
+                var final = stream.Position + subRecord.ContentLength;
+                while (stream.Position < final)
+                {
+                    ProcessZeroFloat(stream);
+                }
+            }
         }
     }
 }

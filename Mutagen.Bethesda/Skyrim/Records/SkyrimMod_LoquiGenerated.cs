@@ -79,6 +79,8 @@ namespace Mutagen.Bethesda.Skyrim
             _Florae_Object = new Group<Flora>(this);
             _Furniture_Object = new Group<Furniture>(this);
             _Weapons_Object = new Group<Weapon>(this);
+            _Ammunitions_Object = new Group<Ammunition>(this);
+            _Npcs_Object = new Group<Npc>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -343,6 +345,20 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IWeaponGetter> ISkyrimModGetter.Weapons => _Weapons_Object;
         #endregion
+        #region Ammunitions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Ammunition> _Ammunitions_Object;
+        public Group<Ammunition> Ammunitions => _Ammunitions_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IAmmunitionGetter> ISkyrimModGetter.Ammunitions => _Ammunitions_Object;
+        #endregion
+        #region Npcs
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Npc> _Npcs_Object;
+        public Group<Npc> Npcs => _Npcs_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<INpcGetter> ISkyrimModGetter.Npcs => _Npcs_Object;
+        #endregion
 
         #region To String
 
@@ -550,6 +566,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Florae = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Furniture = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Weapons = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Ammunitions = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Npcs = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -589,7 +607,9 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Trees,
                 TItem Florae,
                 TItem Furniture,
-                TItem Weapons)
+                TItem Weapons,
+                TItem Ammunitions,
+                TItem Npcs)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -628,6 +648,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Florae = new MaskItem<TItem, Group.Mask<TItem>?>(Florae, new Group.Mask<TItem>(Florae));
                 this.Furniture = new MaskItem<TItem, Group.Mask<TItem>?>(Furniture, new Group.Mask<TItem>(Furniture));
                 this.Weapons = new MaskItem<TItem, Group.Mask<TItem>?>(Weapons, new Group.Mask<TItem>(Weapons));
+                this.Ammunitions = new MaskItem<TItem, Group.Mask<TItem>?>(Ammunitions, new Group.Mask<TItem>(Ammunitions));
+                this.Npcs = new MaskItem<TItem, Group.Mask<TItem>?>(Npcs, new Group.Mask<TItem>(Npcs));
             }
 
             #pragma warning disable CS8618
@@ -676,6 +698,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? Florae { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Furniture { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Weapons { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Ammunitions { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Npcs { get; set; }
             #endregion
 
             #region Equals
@@ -725,6 +749,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Florae, rhs.Florae)) return false;
                 if (!object.Equals(this.Furniture, rhs.Furniture)) return false;
                 if (!object.Equals(this.Weapons, rhs.Weapons)) return false;
+                if (!object.Equals(this.Ammunitions, rhs.Ammunitions)) return false;
+                if (!object.Equals(this.Npcs, rhs.Npcs)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -767,6 +793,8 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Florae);
                 hash.Add(this.Furniture);
                 hash.Add(this.Weapons);
+                hash.Add(this.Ammunitions);
+                hash.Add(this.Npcs);
                 return hash.ToHashCode();
             }
 
@@ -960,6 +988,16 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Weapons.Overall)) return false;
                     if (this.Weapons.Specific != null && !this.Weapons.Specific.All(eval)) return false;
                 }
+                if (Ammunitions != null)
+                {
+                    if (!eval(this.Ammunitions.Overall)) return false;
+                    if (this.Ammunitions.Specific != null && !this.Ammunitions.Specific.All(eval)) return false;
+                }
+                if (Npcs != null)
+                {
+                    if (!eval(this.Npcs.Overall)) return false;
+                    if (this.Npcs.Specific != null && !this.Npcs.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1152,6 +1190,16 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Weapons.Overall)) return true;
                     if (this.Weapons.Specific != null && this.Weapons.Specific.Any(eval)) return true;
                 }
+                if (Ammunitions != null)
+                {
+                    if (eval(this.Ammunitions.Overall)) return true;
+                    if (this.Ammunitions.Specific != null && this.Ammunitions.Specific.Any(eval)) return true;
+                }
+                if (Npcs != null)
+                {
+                    if (eval(this.Npcs.Overall)) return true;
+                    if (this.Npcs.Specific != null && this.Npcs.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1203,6 +1251,8 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Florae = this.Florae == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Florae.Overall), this.Florae.Specific?.Translate(eval));
                 obj.Furniture = this.Furniture == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Furniture.Overall), this.Furniture.Specific?.Translate(eval));
                 obj.Weapons = this.Weapons == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Weapons.Overall), this.Weapons.Specific?.Translate(eval));
+                obj.Ammunitions = this.Ammunitions == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Ammunitions.Overall), this.Ammunitions.Specific?.Translate(eval));
+                obj.Npcs = this.Npcs == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Npcs.Overall), this.Npcs.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1373,6 +1423,14 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Weapons?.ToString(fg);
                     }
+                    if (printMask?.Ammunitions?.Overall ?? true)
+                    {
+                        Ammunitions?.ToString(fg);
+                    }
+                    if (printMask?.Npcs?.Overall ?? true)
+                    {
+                        Npcs?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -1435,6 +1493,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<Flora.ErrorMask>?>? Florae;
             public MaskItem<Exception?, Group.ErrorMask<Furniture.ErrorMask>?>? Furniture;
             public MaskItem<Exception?, Group.ErrorMask<Weapon.ErrorMask>?>? Weapons;
+            public MaskItem<Exception?, Group.ErrorMask<Ammunition.ErrorMask>?>? Ammunitions;
+            public MaskItem<Exception?, Group.ErrorMask<Npc.ErrorMask>?>? Npcs;
             #endregion
 
             #region IErrorMask
@@ -1517,6 +1577,10 @@ namespace Mutagen.Bethesda.Skyrim
                         return Furniture;
                     case SkyrimMod_FieldIndex.Weapons:
                         return Weapons;
+                    case SkyrimMod_FieldIndex.Ammunitions:
+                        return Ammunitions;
+                    case SkyrimMod_FieldIndex.Npcs:
+                        return Npcs;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1637,6 +1701,12 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.Weapons:
                         this.Weapons = new MaskItem<Exception?, Group.ErrorMask<Weapon.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Ammunitions:
+                        this.Ammunitions = new MaskItem<Exception?, Group.ErrorMask<Ammunition.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Npcs:
+                        this.Npcs = new MaskItem<Exception?, Group.ErrorMask<Npc.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1759,6 +1829,12 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.Weapons:
                         this.Weapons = (MaskItem<Exception?, Group.ErrorMask<Weapon.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.Ammunitions:
+                        this.Ammunitions = (MaskItem<Exception?, Group.ErrorMask<Ammunition.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.Npcs:
+                        this.Npcs = (MaskItem<Exception?, Group.ErrorMask<Npc.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1804,6 +1880,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Florae != null) return true;
                 if (Furniture != null) return true;
                 if (Weapons != null) return true;
+                if (Ammunitions != null) return true;
+                if (Npcs != null) return true;
                 return false;
             }
             #endregion
@@ -1875,6 +1953,8 @@ namespace Mutagen.Bethesda.Skyrim
                 Florae?.ToString(fg);
                 Furniture?.ToString(fg);
                 Weapons?.ToString(fg);
+                Ammunitions?.ToString(fg);
+                Npcs?.ToString(fg);
             }
             #endregion
 
@@ -1920,6 +2000,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Florae = this.Florae.Combine(rhs.Florae, (l, r) => l.Combine(r));
                 ret.Furniture = this.Furniture.Combine(rhs.Furniture, (l, r) => l.Combine(r));
                 ret.Weapons = this.Weapons.Combine(rhs.Weapons, (l, r) => l.Combine(r));
+                ret.Ammunitions = this.Ammunitions.Combine(rhs.Ammunitions, (l, r) => l.Combine(r));
+                ret.Npcs = this.Npcs.Combine(rhs.Npcs, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1978,6 +2060,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<Flora.TranslationMask>?> Florae;
             public MaskItem<bool, Group.TranslationMask<Furniture.TranslationMask>?> Furniture;
             public MaskItem<bool, Group.TranslationMask<Weapon.TranslationMask>?> Weapons;
+            public MaskItem<bool, Group.TranslationMask<Ammunition.TranslationMask>?> Ammunitions;
+            public MaskItem<bool, Group.TranslationMask<Npc.TranslationMask>?> Npcs;
             #endregion
 
             #region Ctors
@@ -2020,6 +2104,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Florae = new MaskItem<bool, Group.TranslationMask<Flora.TranslationMask>?>(defaultOn, null);
                 this.Furniture = new MaskItem<bool, Group.TranslationMask<Furniture.TranslationMask>?>(defaultOn, null);
                 this.Weapons = new MaskItem<bool, Group.TranslationMask<Weapon.TranslationMask>?>(defaultOn, null);
+                this.Ammunitions = new MaskItem<bool, Group.TranslationMask<Ammunition.TranslationMask>?>(defaultOn, null);
+                this.Npcs = new MaskItem<bool, Group.TranslationMask<Npc.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -2072,6 +2158,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Florae?.Overall ?? true, Florae?.Specific?.GetCrystal()));
                 ret.Add((Furniture?.Overall ?? true, Furniture?.Specific?.GetCrystal()));
                 ret.Add((Weapons?.Overall ?? true, Weapons?.Specific?.GetCrystal()));
+                ret.Add((Ammunitions?.Overall ?? true, Ammunitions?.Specific?.GetCrystal()));
+                ret.Add((Npcs?.Overall ?? true, Npcs?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -2122,6 +2210,8 @@ namespace Mutagen.Bethesda.Skyrim
             _Florae_Object = new Group<Flora>(this);
             _Furniture_Object = new Group<Furniture>(this);
             _Weapons_Object = new Group<Weapon>(this);
+            _Ammunitions_Object = new Group<Ammunition>(this);
+            _Npcs_Object = new Group<Npc>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -2270,6 +2360,14 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.Weapons ?? true)
             {
                 this.Weapons.RecordCache.Set(rhsMod.Weapons.RecordCache.Items);
+            }
+            if (mask?.Ammunitions ?? true)
+            {
+                this.Ammunitions.RecordCache.Set(rhsMod.Ammunitions.RecordCache.Items);
+            }
+            if (mask?.Npcs ?? true)
+            {
+                this.Npcs.RecordCache.Set(rhsMod.Npcs.RecordCache.Items);
             }
         }
 
@@ -2530,6 +2628,20 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Weapon>());
             }
+            if (mask?.Ammunitions ?? true)
+            {
+                this.Ammunitions.RecordCache.Set(
+                    rhs.Ammunitions.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Ammunition>());
+            }
+            if (mask?.Npcs ?? true)
+            {
+                this.Npcs.RecordCache.Set(
+                    rhs.Npcs.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Npc>());
+            }
             Dictionary<FormKey, IMajorRecordCommon> router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var package = this.CreateLinkCache();
@@ -2591,6 +2703,8 @@ namespace Mutagen.Bethesda.Skyrim
             count += Florae.RecordCache.Count > 0 ? 1 : 0;
             count += Furniture.RecordCache.Count > 0 ? 1 : 0;
             count += Weapons.RecordCache.Count > 0 ? 1 : 0;
+            count += Ammunitions.RecordCache.Count > 0 ? 1 : 0;
+            count += Npcs.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -2821,6 +2935,8 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<Flora> Florae { get; }
         new Group<Furniture> Furniture { get; }
         new Group<Weapon> Weapons { get; }
+        new Group<Ammunition> Ammunitions { get; }
+        new Group<Npc> Npcs { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -2875,6 +2991,8 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IFloraGetter> Florae { get; }
         IGroupGetter<IFurnitureGetter> Furniture { get; }
         IGroupGetter<IWeaponGetter> Weapons { get; }
+        IGroupGetter<IAmmunitionGetter> Ammunitions { get; }
+        IGroupGetter<INpcGetter> Npcs { get; }
 
     }
 
@@ -3340,6 +3458,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Florae = 34,
         Furniture = 35,
         Weapons = 36,
+        Ammunitions = 37,
+        Npcs = 38,
     }
     #endregion
 
@@ -3357,9 +3477,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 37;
+        public const ushort AdditionalFieldCount = 39;
 
-        public const ushort FieldCount = 37;
+        public const ushort FieldCount = 39;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -3463,6 +3583,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.Furniture;
                 case "WEAPONS":
                     return (ushort)SkyrimMod_FieldIndex.Weapons;
+                case "AMMUNITIONS":
+                    return (ushort)SkyrimMod_FieldIndex.Ammunitions;
+                case "NPCS":
+                    return (ushort)SkyrimMod_FieldIndex.Npcs;
                 default:
                     return null;
             }
@@ -3510,6 +3634,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Florae:
                 case SkyrimMod_FieldIndex.Furniture:
                 case SkyrimMod_FieldIndex.Weapons:
+                case SkyrimMod_FieldIndex.Ammunitions:
+                case SkyrimMod_FieldIndex.Npcs:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3558,6 +3684,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Florae:
                 case SkyrimMod_FieldIndex.Furniture:
                 case SkyrimMod_FieldIndex.Weapons:
+                case SkyrimMod_FieldIndex.Ammunitions:
+                case SkyrimMod_FieldIndex.Npcs:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3606,6 +3734,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Florae:
                 case SkyrimMod_FieldIndex.Furniture:
                 case SkyrimMod_FieldIndex.Weapons:
+                case SkyrimMod_FieldIndex.Ammunitions:
+                case SkyrimMod_FieldIndex.Npcs:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3691,6 +3821,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Furniture";
                 case SkyrimMod_FieldIndex.Weapons:
                     return "Weapons";
+                case SkyrimMod_FieldIndex.Ammunitions:
+                    return "Ammunitions";
+                case SkyrimMod_FieldIndex.Npcs:
+                    return "Npcs";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3738,6 +3872,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Florae:
                 case SkyrimMod_FieldIndex.Furniture:
                 case SkyrimMod_FieldIndex.Weapons:
+                case SkyrimMod_FieldIndex.Ammunitions:
+                case SkyrimMod_FieldIndex.Npcs:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3787,6 +3923,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Florae:
                 case SkyrimMod_FieldIndex.Furniture:
                 case SkyrimMod_FieldIndex.Weapons:
+                case SkyrimMod_FieldIndex.Ammunitions:
+                case SkyrimMod_FieldIndex.Npcs:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3872,6 +4010,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<Furniture>);
                 case SkyrimMod_FieldIndex.Weapons:
                     return typeof(Group<Weapon>);
+                case SkyrimMod_FieldIndex.Ammunitions:
+                    return typeof(Group<Ammunition>);
+                case SkyrimMod_FieldIndex.Npcs:
+                    return typeof(Group<Npc>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3915,9 +4057,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType FLOR_HEADER = new RecordType("FLOR");
         public static readonly RecordType FURN_HEADER = new RecordType("FURN");
         public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
+        public static readonly RecordType AMMO_HEADER = new RecordType("AMMO");
+        public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
         public static readonly RecordType TriggeringRecordType = TES4_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 37;
+        public const int NumTypedFields = 39;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -3996,6 +4140,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Florae.Clear();
             item.Furniture.Clear();
             item.Weapons.Clear();
+            item.Ammunitions.Clear();
+            item.Npcs.Clear();
         }
         
         #region Xml Translation
@@ -4615,6 +4761,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Weapons);
                 }
+                case 0x4F4D4D41: // AMMO
+                {
+                    if (importMask?.Ammunitions ?? true)
+                    {
+                        item.Ammunitions.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Ammunitions);
+                }
+                case 0x5F43504E: // NPC_
+                {
+                    if (importMask?.Npcs ?? true)
+                    {
+                        item.Npcs.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Npcs);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -4703,6 +4877,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Florae = MaskItemExt.Factory(item.Florae.GetEqualsMask(rhs.Florae, include), include);
             ret.Furniture = MaskItemExt.Factory(item.Furniture.GetEqualsMask(rhs.Furniture, include), include);
             ret.Weapons = MaskItemExt.Factory(item.Weapons.GetEqualsMask(rhs.Weapons, include), include);
+            ret.Ammunitions = MaskItemExt.Factory(item.Ammunitions.GetEqualsMask(rhs.Ammunitions, include), include);
+            ret.Npcs = MaskItemExt.Factory(item.Npcs.GetEqualsMask(rhs.Npcs, include), include);
         }
         
         public string ToString(
@@ -4897,6 +5073,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Weapons?.ToString(fg, "Weapons");
             }
+            if (printMask?.Ammunitions?.Overall ?? true)
+            {
+                item.Ammunitions?.ToString(fg, "Ammunitions");
+            }
+            if (printMask?.Npcs?.Overall ?? true)
+            {
+                item.Npcs?.ToString(fg, "Npcs");
+            }
         }
         
         public bool HasBeenSet(
@@ -4947,6 +5131,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Florae = new MaskItem<bool, Group.Mask<bool>?>(true, item.Florae?.GetHasBeenSetMask());
             mask.Furniture = new MaskItem<bool, Group.Mask<bool>?>(true, item.Furniture?.GetHasBeenSetMask());
             mask.Weapons = new MaskItem<bool, Group.Mask<bool>?>(true, item.Weapons?.GetHasBeenSetMask());
+            mask.Ammunitions = new MaskItem<bool, Group.Mask<bool>?>(true, item.Ammunitions?.GetHasBeenSetMask());
+            mask.Npcs = new MaskItem<bool, Group.Mask<bool>?>(true, item.Npcs?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -4993,6 +5179,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Florae, rhs.Florae)) return false;
             if (!object.Equals(lhs.Furniture, rhs.Furniture)) return false;
             if (!object.Equals(lhs.Weapons, rhs.Weapons)) return false;
+            if (!object.Equals(lhs.Ammunitions, rhs.Ammunitions)) return false;
+            if (!object.Equals(lhs.Npcs, rhs.Npcs)) return false;
             return true;
         }
         
@@ -5036,6 +5224,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Florae);
             hash.Add(item.Furniture);
             hash.Add(item.Weapons);
+            hash.Add(item.Ammunitions);
+            hash.Add(item.Npcs);
             return hash.ToHashCode();
         }
         
@@ -5233,6 +5423,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IWeapon":
                 case "IWeaponInternal":
                     return obj.Weapons.RecordCache;
+                case "Ammunition":
+                case "IAmmunitionGetter":
+                case "IAmmunition":
+                case "IAmmunitionInternal":
+                    return obj.Ammunitions.RecordCache;
+                case "Npc":
+                case "INpcGetter":
+                case "INpc":
+                case "INpcInternal":
+                    return obj.Npcs.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown group type: {typeof(T)}");
             }
@@ -5249,7 +5449,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var modHeader = item.ModHeader.DeepCopy() as ModHeader;
             modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
             modHeader.WriteToBinary(new MutagenWriter(stream, GameConstants.Skyrim, masterRefs));
-            Stream[] outputStreams = new Stream[36];
+            Stream[] outputStreams = new Stream[38];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams));
@@ -5287,6 +5487,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.Florae, masterRefs, 33, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Furniture, masterRefs, 34, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Weapons, masterRefs, 35, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Ammunitions, masterRefs, 36, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Npcs, masterRefs, 37, outputStreams));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -5586,6 +5788,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.Ammunitions is ILinkContainer AmmunitionslinkCont)
+            {
+                foreach (var item in AmmunitionslinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Npcs is ILinkContainer NpcslinkCont)
+            {
+                foreach (var item in NpcslinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -5732,6 +5948,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.Weapons.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Ammunitions.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Npcs.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -6073,6 +6297,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IWeapon":
                 case "IWeaponInternal":
                     foreach (var item in obj.Weapons.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Ammunition":
+                case "IAmmunitionGetter":
+                case "IAmmunition":
+                case "IAmmunitionInternal":
+                    foreach (var item in obj.Ammunitions.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Npc":
+                case "INpcGetter":
+                case "INpc":
+                case "INpcInternal":
+                    foreach (var item in obj.Npcs.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -6836,6 +7078,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Ammunitions) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Ammunitions);
+                try
+                {
+                    item.Ammunitions.DeepCopyIn(
+                        rhs: rhs.Ammunitions,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Ammunitions));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Npcs) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Npcs);
+                try
+                {
+                    item.Npcs.DeepCopyIn(
+                        rhs: rhs.Npcs,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Npcs));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -7331,6 +7613,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.Weapons,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Weapons));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Ammunitions) ?? true))
+            {
+                var AmmunitionsItem = item.Ammunitions;
+                ((GroupXmlWriteTranslation)((IXmlItem)AmmunitionsItem).XmlWriteTranslator).Write<IAmmunitionGetter>(
+                    item: AmmunitionsItem,
+                    node: node,
+                    name: nameof(item.Ammunitions),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Ammunitions,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Ammunitions));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Npcs) ?? true))
+            {
+                var NpcsItem = item.Npcs;
+                ((GroupXmlWriteTranslation)((IXmlItem)NpcsItem).XmlWriteTranslator).Write<INpcGetter>(
+                    item: NpcsItem,
+                    node: node,
+                    name: nameof(item.Npcs),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Npcs,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Npcs));
             }
         }
 
@@ -8122,6 +8426,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "Ammunitions":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Ammunitions);
+                    try
+                    {
+                        item.Ammunitions.CopyInFromXml<Ammunition>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Npcs":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Npcs);
+                    try
+                    {
+                        item.Npcs.CopyInFromXml<Npc>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -8327,6 +8669,8 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Florae;
         public bool Furniture;
         public bool Weapons;
+        public bool Ammunitions;
+        public bool Npcs;
         public GroupMask()
         {
         }
@@ -8368,6 +8712,8 @@ namespace Mutagen.Bethesda.Skyrim
             Florae = defaultValue;
             Furniture = defaultValue;
             Weapons = defaultValue;
+            Ammunitions = defaultValue;
+            Npcs = defaultValue;
         }
     }
 
@@ -8793,6 +9139,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                 }
             }
+            if (importMask?.Ammunitions ?? true)
+            {
+                var AmmunitionsItem = item.Ammunitions;
+                if (AmmunitionsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)AmmunitionsItem).BinaryWriteTranslator).Write<IAmmunitionGetter>(
+                        item: AmmunitionsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Npcs ?? true)
+            {
+                var NpcsItem = item.Npcs;
+                if (NpcsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)NpcsItem).BinaryWriteTranslator).Write<INpcGetter>(
+                        item: NpcsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
         }
 
         public void Write(
@@ -9199,6 +9567,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IWeaponGetter>? _Weapons => _Weapons_IsSet ? GroupBinaryOverlay<IWeaponGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _WeaponsLocation!.Value.Min, _WeaponsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IWeaponGetter> Weapons => _Weapons ?? new Group<Weapon>(this);
         #endregion
+        #region Ammunitions
+        private RangeInt64? _AmmunitionsLocation;
+        private bool _Ammunitions_IsSet => _AmmunitionsLocation.HasValue;
+        private IGroupGetter<IAmmunitionGetter>? _Ammunitions => _Ammunitions_IsSet ? GroupBinaryOverlay<IAmmunitionGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _AmmunitionsLocation!.Value.Min, _AmmunitionsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IAmmunitionGetter> Ammunitions => _Ammunitions ?? new Group<Ammunition>(this);
+        #endregion
+        #region Npcs
+        private RangeInt64? _NpcsLocation;
+        private bool _Npcs_IsSet => _NpcsLocation.HasValue;
+        private IGroupGetter<INpcGetter>? _Npcs => _Npcs_IsSet ? GroupBinaryOverlay<INpcGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _NpcsLocation!.Value.Min, _NpcsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<INpcGetter> Npcs => _Npcs ?? new Group<Npc>(this);
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             long finalPos,
@@ -9467,6 +9847,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _WeaponsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Weapons);
+                }
+                case 0x4F4D4D41: // AMMO
+                {
+                    _AmmunitionsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Ammunitions);
+                }
+                case 0x5F43504E: // NPC_
+                {
+                    _NpcsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Npcs);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

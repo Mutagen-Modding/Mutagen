@@ -165,7 +165,8 @@ namespace Mutagen.Bethesda.Generation
         {
             var loqui = typeGen as LoquiType;
             if (loqui.TryGetFieldData(out var data)
-                && data.MarkerType.HasValue)
+                && data.MarkerType.HasValue
+                && !data.RecordType.HasValue)
             {
                 fg.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)} + contentLength; // Skip marker");
             }

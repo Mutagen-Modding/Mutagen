@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="us-ascii"?>
-<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Ammo" recordType="AMMO" baseClass="SkyrimMajorRecord" objType="Record" GUID="14e93a4b-95d0-42a5-8ccf-bad4555e8184" ID="162">
-    <Interface>IItem</Interface>
-  </Object>
-</Loqui>

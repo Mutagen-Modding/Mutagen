@@ -22,6 +22,9 @@
     <Compile Include="Oblivion\Records\Major Records\Activator.cs">
       <DependentUpon>Activator.xml</DependentUpon>
     </Compile>
+    <Compile Include="Oblivion\Records\Major Records\AmmunitionData.cs">
+      <DependentUpon>Ammunition.xml</DependentUpon>
+    </Compile>
     <Compile Include="Oblivion\Records\Major Records\Birthsign.cs">
       <DependentUpon>Birthsign.xml</DependentUpon>
     </Compile>
@@ -52,12 +55,18 @@
     <Compile Include="Oblivion\Records\Major Records\SoulGem.cs">
       <DependentUpon>SoulGem.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Enums\Agression.cs" />
+    <Compile Include="Skyrim\Enums\Assistance.cs" />
+    <Compile Include="Skyrim\Enums\Confidence.cs" />
+    <Compile Include="Skyrim\Enums\Mood.cs" />
+    <Compile Include="Skyrim\Enums\Responsibility.cs" />
     <Compile Include="Skyrim\Enums\WeaponAnimationType.cs" />
     <Compile Include="Skyrim\Interfaces\IHarvestable.cs" />
     <Compile Include="Skyrim\Interfaces\IModeled.cs" />
     <Compile Include="Skyrim\Interfaces\IIcons.cs" />
     <Compile Include="Skyrim\Interfaces\IItem.cs" />
     <Compile Include="Skyrim\Interfaces\IEffectRecord.cs" />
+    <Compile Include="Skyrim\Interfaces\INpcTemplate.cs" />
     <Compile Include="Skyrim\Interfaces\IObjectBounded.cs" />
     <Compile Include="Skyrim\Interfaces\IHarvestTarget.cs" />
     <Compile Include="Skyrim\Records\Common Subrecords\ContainerEntryData.cs">
@@ -80,6 +89,12 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\AlchemicalApparatus.cs">
       <DependentUpon>AlchemicalApparatus.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Ammunition.cs">
+      <DependentUpon>Ammunition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\AmmunitionData.cs">
+      <DependentUpon>Ammunition.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Armor.cs">
       <DependentUpon>Armor.xml</DependentUpon>
@@ -144,8 +159,23 @@
     <Compile Include="Skyrim\Records\Major Records\MoveableStatic.cs">
       <DependentUpon>MoveableStatic.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Npc.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\NpcConfiguration.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\NpcSoundType.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\ObjectEffect.cs">
       <DependentUpon>ObjectEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PcLevelMult.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PlayerSkills.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Scroll.cs">
       <DependentUpon>Scroll.xml</DependentUpon>
@@ -289,11 +319,8 @@
     <Compile Include="Oblivion\Records\Major Records\AlphaLayer_LoquiGenerated.cs">
       <DependentUpon>Landscape.xml</DependentUpon>
     </Compile>
-    <Compile Include="Oblivion\Records\Major Records\Ammo.cs">
-      <DependentUpon>Ammo.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Oblivion\Records\Major Records\Ammo_LoquiGenerated.cs">
-      <DependentUpon>Ammo.xml</DependentUpon>
+    <Compile Include="Oblivion\Records\Major Records\Ammunition.cs">
+      <DependentUpon>Ammunition.xml</DependentUpon>
     </Compile>
     <Compile Include="Oblivion\Records\Major Records\AnimatedObject_LoquiGenerated.cs">
       <DependentUpon>AnimatedObject.xml</DependentUpon>
@@ -1385,9 +1412,6 @@
     <Compile Include="Oblivion\Records\Major Records\AlchemicalApparatusData_LoquiGenerated.cs">
       <DependentUpon>AlchemicalApparatus.xml</DependentUpon>
     </Compile>
-    <Compile Include="Oblivion\Records\Major Records\AmmoData_LoquiGenerated.cs">
-      <DependentUpon>Ammo.xml</DependentUpon>
-    </Compile>
     <Compile Include="Oblivion\Records\Major Records\ArmorData_LoquiGenerated.cs">
       <DependentUpon>Armor.xml</DependentUpon>
     </Compile>
@@ -1455,13 +1479,13 @@
       <DependentUpon>Miscellaneous.xml</DependentUpon>
     </Compile>
     <Compile Include="Oblivion\Records\Major Records\NpcConfiguration_LoquiGenerated.cs">
-      <DependentUpon>NPC.xml</DependentUpon>
+      <DependentUpon>Npc.xml</DependentUpon>
     </Compile>
     <Compile Include="Oblivion\Records\Major Records\AIData_LoquiGenerated.cs">
-      <DependentUpon>NPC.xml</DependentUpon>
+      <DependentUpon>Npc.xml</DependentUpon>
     </Compile>
     <Compile Include="Oblivion\Records\Major Records\NpcData_LoquiGenerated.cs">
-      <DependentUpon>NPC.xml</DependentUpon>
+      <DependentUpon>Npc.xml</DependentUpon>
     </Compile>
     <Compile Include="Oblivion\Records\Common Subrecords\Location_LoquiGenerated.cs">
       <DependentUpon>Location.xml</DependentUpon>
@@ -1619,9 +1643,6 @@
     <Compile Include="Skyrim\Records\Major Records\AlchemicalApparatus_LoquiGenerated.cs">
       <DependentUpon>AlchemicalApparatus.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\Ammo_LoquiGenerated.cs">
-      <DependentUpon>Ammo.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Major Records\Ingestible_LoquiGenerated.cs">
       <DependentUpon>Ingestible.xml</DependentUpon>
     </Compile>
@@ -1732,6 +1753,75 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\CriticalData_LoquiGenerated.cs">
       <DependentUpon>Weapon.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\Ammunition_LoquiGenerated.cs">
+      <DependentUpon>Ammunition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\AmmunitionData_LoquiGenerated.cs">
+      <DependentUpon>Ammunition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Ammunition_LoquiGenerated.cs">
+      <DependentUpon>Ammunition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\AmmunitionData_LoquiGenerated.cs">
+      <DependentUpon>Ammunition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\LeveledNpc_LoquiGenerated.cs">
+      <DependentUpon>LeveledNpc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\NpcConfiguration_LoquiGenerated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ANpcLevel_LoquiGenerated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\NpcLevel_LoquiGenerated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PcLevelMult_LoquiGenerated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\RankPlacement_LoquiGenerated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PerkPlacement_LoquiGenerated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\AIData_LoquiGenerated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\CombatStyle_LoquiGenerated.cs">
+      <DependentUpon>CombatStyle.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PlayerSkills_LoquiGenerated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ANpcSoundDefinition_LoquiGenerated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\NpcInheritSound_LoquiGenerated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\NpcSoundTypes_LoquiGenerated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\NpcSoundType_LoquiGenerated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\NpcSound_LoquiGenerated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Package_LoquiGenerated.cs">
+      <DependentUpon>Package.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\NpcFaceMorph_LoquiGenerated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\NpcFaceParts_LoquiGenerated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\TintLayer_LoquiGenerated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

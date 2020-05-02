@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Oblivion
             _Flora_Object = new Group<Flora>(this);
             _Furniture_Object = new Group<Furniture>(this);
             _Weapons_Object = new Group<Weapon>(this);
-            _Ammo_Object = new Group<Ammo>(this);
+            _Ammunitions_Object = new Group<Ammunition>(this);
             _Npcs_Object = new Group<Npc>(this);
             _Creatures_Object = new Group<Creature>(this);
             _LeveledCreatures_Object = new Group<LeveledCreature>(this);
@@ -327,12 +327,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IWeaponGetter> IOblivionModGetter.Weapons => _Weapons_Object;
         #endregion
-        #region Ammo
+        #region Ammunitions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Ammo> _Ammo_Object;
-        public Group<Ammo> Ammo => _Ammo_Object;
+        private Group<Ammunition> _Ammunitions_Object;
+        public Group<Ammunition> Ammunitions => _Ammunitions_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IAmmoGetter> IOblivionModGetter.Ammo => _Ammo_Object;
+        IGroupGetter<IAmmunitionGetter> IOblivionModGetter.Ammunitions => _Ammunitions_Object;
         #endregion
         #region Npcs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -704,7 +704,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Flora = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Furniture = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Weapons = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Ammo = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Ammunitions = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Npcs = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Creatures = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.LeveledCreatures = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
@@ -764,7 +764,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Flora,
                 TItem Furniture,
                 TItem Weapons,
-                TItem Ammo,
+                TItem Ammunitions,
                 TItem Npcs,
                 TItem Creatures,
                 TItem LeveledCreatures,
@@ -822,7 +822,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Flora = new MaskItem<TItem, Group.Mask<TItem>?>(Flora, new Group.Mask<TItem>(Flora));
                 this.Furniture = new MaskItem<TItem, Group.Mask<TItem>?>(Furniture, new Group.Mask<TItem>(Furniture));
                 this.Weapons = new MaskItem<TItem, Group.Mask<TItem>?>(Weapons, new Group.Mask<TItem>(Weapons));
-                this.Ammo = new MaskItem<TItem, Group.Mask<TItem>?>(Ammo, new Group.Mask<TItem>(Ammo));
+                this.Ammunitions = new MaskItem<TItem, Group.Mask<TItem>?>(Ammunitions, new Group.Mask<TItem>(Ammunitions));
                 this.Npcs = new MaskItem<TItem, Group.Mask<TItem>?>(Npcs, new Group.Mask<TItem>(Npcs));
                 this.Creatures = new MaskItem<TItem, Group.Mask<TItem>?>(Creatures, new Group.Mask<TItem>(Creatures));
                 this.LeveledCreatures = new MaskItem<TItem, Group.Mask<TItem>?>(LeveledCreatures, new Group.Mask<TItem>(LeveledCreatures));
@@ -890,7 +890,7 @@ namespace Mutagen.Bethesda.Oblivion
             public MaskItem<TItem, Group.Mask<TItem>?>? Flora { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Furniture { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Weapons { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Ammo { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Ammunitions { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Npcs { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Creatures { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? LeveledCreatures { get; set; }
@@ -959,7 +959,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.Flora, rhs.Flora)) return false;
                 if (!object.Equals(this.Furniture, rhs.Furniture)) return false;
                 if (!object.Equals(this.Weapons, rhs.Weapons)) return false;
-                if (!object.Equals(this.Ammo, rhs.Ammo)) return false;
+                if (!object.Equals(this.Ammunitions, rhs.Ammunitions)) return false;
                 if (!object.Equals(this.Npcs, rhs.Npcs)) return false;
                 if (!object.Equals(this.Creatures, rhs.Creatures)) return false;
                 if (!object.Equals(this.LeveledCreatures, rhs.LeveledCreatures)) return false;
@@ -1021,7 +1021,7 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.Flora);
                 hash.Add(this.Furniture);
                 hash.Add(this.Weapons);
-                hash.Add(this.Ammo);
+                hash.Add(this.Ammunitions);
                 hash.Add(this.Npcs);
                 hash.Add(this.Creatures);
                 hash.Add(this.LeveledCreatures);
@@ -1214,10 +1214,10 @@ namespace Mutagen.Bethesda.Oblivion
                     if (!eval(this.Weapons.Overall)) return false;
                     if (this.Weapons.Specific != null && !this.Weapons.Specific.All(eval)) return false;
                 }
-                if (Ammo != null)
+                if (Ammunitions != null)
                 {
-                    if (!eval(this.Ammo.Overall)) return false;
-                    if (this.Ammo.Specific != null && !this.Ammo.Specific.All(eval)) return false;
+                    if (!eval(this.Ammunitions.Overall)) return false;
+                    if (this.Ammunitions.Specific != null && !this.Ammunitions.Specific.All(eval)) return false;
                 }
                 if (Npcs != null)
                 {
@@ -1506,10 +1506,10 @@ namespace Mutagen.Bethesda.Oblivion
                     if (eval(this.Weapons.Overall)) return true;
                     if (this.Weapons.Specific != null && this.Weapons.Specific.Any(eval)) return true;
                 }
-                if (Ammo != null)
+                if (Ammunitions != null)
                 {
-                    if (eval(this.Ammo.Overall)) return true;
-                    if (this.Ammo.Specific != null && this.Ammo.Specific.Any(eval)) return true;
+                    if (eval(this.Ammunitions.Overall)) return true;
+                    if (this.Ammunitions.Specific != null && this.Ammunitions.Specific.Any(eval)) return true;
                 }
                 if (Npcs != null)
                 {
@@ -1677,7 +1677,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Flora = this.Flora == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Flora.Overall), this.Flora.Specific?.Translate(eval));
                 obj.Furniture = this.Furniture == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Furniture.Overall), this.Furniture.Specific?.Translate(eval));
                 obj.Weapons = this.Weapons == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Weapons.Overall), this.Weapons.Specific?.Translate(eval));
-                obj.Ammo = this.Ammo == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Ammo.Overall), this.Ammo.Specific?.Translate(eval));
+                obj.Ammunitions = this.Ammunitions == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Ammunitions.Overall), this.Ammunitions.Specific?.Translate(eval));
                 obj.Npcs = this.Npcs == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Npcs.Overall), this.Npcs.Specific?.Translate(eval));
                 obj.Creatures = this.Creatures == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Creatures.Overall), this.Creatures.Specific?.Translate(eval));
                 obj.LeveledCreatures = this.LeveledCreatures == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LeveledCreatures.Overall), this.LeveledCreatures.Specific?.Translate(eval));
@@ -1852,9 +1852,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         Weapons?.ToString(fg);
                     }
-                    if (printMask?.Ammo?.Overall ?? true)
+                    if (printMask?.Ammunitions?.Overall ?? true)
                     {
-                        Ammo?.ToString(fg);
+                        Ammunitions?.ToString(fg);
                     }
                     if (printMask?.Npcs?.Overall ?? true)
                     {
@@ -2009,7 +2009,7 @@ namespace Mutagen.Bethesda.Oblivion
             public MaskItem<Exception?, Group.ErrorMask<Flora.ErrorMask>?>? Flora;
             public MaskItem<Exception?, Group.ErrorMask<Furniture.ErrorMask>?>? Furniture;
             public MaskItem<Exception?, Group.ErrorMask<Weapon.ErrorMask>?>? Weapons;
-            public MaskItem<Exception?, Group.ErrorMask<Ammo.ErrorMask>?>? Ammo;
+            public MaskItem<Exception?, Group.ErrorMask<Ammunition.ErrorMask>?>? Ammunitions;
             public MaskItem<Exception?, Group.ErrorMask<Npc.ErrorMask>?>? Npcs;
             public MaskItem<Exception?, Group.ErrorMask<Creature.ErrorMask>?>? Creatures;
             public MaskItem<Exception?, Group.ErrorMask<LeveledCreature.ErrorMask>?>? LeveledCreatures;
@@ -2106,8 +2106,8 @@ namespace Mutagen.Bethesda.Oblivion
                         return Furniture;
                     case OblivionMod_FieldIndex.Weapons:
                         return Weapons;
-                    case OblivionMod_FieldIndex.Ammo:
-                        return Ammo;
+                    case OblivionMod_FieldIndex.Ammunitions:
+                        return Ammunitions;
                     case OblivionMod_FieldIndex.Npcs:
                         return Npcs;
                     case OblivionMod_FieldIndex.Creatures:
@@ -2262,8 +2262,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case OblivionMod_FieldIndex.Weapons:
                         this.Weapons = new MaskItem<Exception?, Group.ErrorMask<Weapon.ErrorMask>?>(ex, null);
                         break;
-                    case OblivionMod_FieldIndex.Ammo:
-                        this.Ammo = new MaskItem<Exception?, Group.ErrorMask<Ammo.ErrorMask>?>(ex, null);
+                    case OblivionMod_FieldIndex.Ammunitions:
+                        this.Ammunitions = new MaskItem<Exception?, Group.ErrorMask<Ammunition.ErrorMask>?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.Npcs:
                         this.Npcs = new MaskItem<Exception?, Group.ErrorMask<Npc.ErrorMask>?>(ex, null);
@@ -2443,8 +2443,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case OblivionMod_FieldIndex.Weapons:
                         this.Weapons = (MaskItem<Exception?, Group.ErrorMask<Weapon.ErrorMask>?>?)obj;
                         break;
-                    case OblivionMod_FieldIndex.Ammo:
-                        this.Ammo = (MaskItem<Exception?, Group.ErrorMask<Ammo.ErrorMask>?>?)obj;
+                    case OblivionMod_FieldIndex.Ammunitions:
+                        this.Ammunitions = (MaskItem<Exception?, Group.ErrorMask<Ammunition.ErrorMask>?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.Npcs:
                         this.Npcs = (MaskItem<Exception?, Group.ErrorMask<Npc.ErrorMask>?>?)obj;
@@ -2558,7 +2558,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Flora != null) return true;
                 if (Furniture != null) return true;
                 if (Weapons != null) return true;
-                if (Ammo != null) return true;
+                if (Ammunitions != null) return true;
                 if (Npcs != null) return true;
                 if (Creatures != null) return true;
                 if (LeveledCreatures != null) return true;
@@ -2649,7 +2649,7 @@ namespace Mutagen.Bethesda.Oblivion
                 Flora?.ToString(fg);
                 Furniture?.ToString(fg);
                 Weapons?.ToString(fg);
-                Ammo?.ToString(fg);
+                Ammunitions?.ToString(fg);
                 Npcs?.ToString(fg);
                 Creatures?.ToString(fg);
                 LeveledCreatures?.ToString(fg);
@@ -2714,7 +2714,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Flora = this.Flora.Combine(rhs.Flora, (l, r) => l.Combine(r));
                 ret.Furniture = this.Furniture.Combine(rhs.Furniture, (l, r) => l.Combine(r));
                 ret.Weapons = this.Weapons.Combine(rhs.Weapons, (l, r) => l.Combine(r));
-                ret.Ammo = this.Ammo.Combine(rhs.Ammo, (l, r) => l.Combine(r));
+                ret.Ammunitions = this.Ammunitions.Combine(rhs.Ammunitions, (l, r) => l.Combine(r));
                 ret.Npcs = this.Npcs.Combine(rhs.Npcs, (l, r) => l.Combine(r));
                 ret.Creatures = this.Creatures.Combine(rhs.Creatures, (l, r) => l.Combine(r));
                 ret.LeveledCreatures = this.LeveledCreatures.Combine(rhs.LeveledCreatures, (l, r) => l.Combine(r));
@@ -2792,7 +2792,7 @@ namespace Mutagen.Bethesda.Oblivion
             public MaskItem<bool, Group.TranslationMask<Flora.TranslationMask>?> Flora;
             public MaskItem<bool, Group.TranslationMask<Furniture.TranslationMask>?> Furniture;
             public MaskItem<bool, Group.TranslationMask<Weapon.TranslationMask>?> Weapons;
-            public MaskItem<bool, Group.TranslationMask<Ammo.TranslationMask>?> Ammo;
+            public MaskItem<bool, Group.TranslationMask<Ammunition.TranslationMask>?> Ammunitions;
             public MaskItem<bool, Group.TranslationMask<Npc.TranslationMask>?> Npcs;
             public MaskItem<bool, Group.TranslationMask<Creature.TranslationMask>?> Creatures;
             public MaskItem<bool, Group.TranslationMask<LeveledCreature.TranslationMask>?> LeveledCreatures;
@@ -2854,7 +2854,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Flora = new MaskItem<bool, Group.TranslationMask<Flora.TranslationMask>?>(defaultOn, null);
                 this.Furniture = new MaskItem<bool, Group.TranslationMask<Furniture.TranslationMask>?>(defaultOn, null);
                 this.Weapons = new MaskItem<bool, Group.TranslationMask<Weapon.TranslationMask>?>(defaultOn, null);
-                this.Ammo = new MaskItem<bool, Group.TranslationMask<Ammo.TranslationMask>?>(defaultOn, null);
+                this.Ammunitions = new MaskItem<bool, Group.TranslationMask<Ammunition.TranslationMask>?>(defaultOn, null);
                 this.Npcs = new MaskItem<bool, Group.TranslationMask<Npc.TranslationMask>?>(defaultOn, null);
                 this.Creatures = new MaskItem<bool, Group.TranslationMask<Creature.TranslationMask>?>(defaultOn, null);
                 this.LeveledCreatures = new MaskItem<bool, Group.TranslationMask<LeveledCreature.TranslationMask>?>(defaultOn, null);
@@ -2926,7 +2926,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Flora?.Overall ?? true, Flora?.Specific?.GetCrystal()));
                 ret.Add((Furniture?.Overall ?? true, Furniture?.Specific?.GetCrystal()));
                 ret.Add((Weapons?.Overall ?? true, Weapons?.Specific?.GetCrystal()));
-                ret.Add((Ammo?.Overall ?? true, Ammo?.Specific?.GetCrystal()));
+                ret.Add((Ammunitions?.Overall ?? true, Ammunitions?.Specific?.GetCrystal()));
                 ret.Add((Npcs?.Overall ?? true, Npcs?.Specific?.GetCrystal()));
                 ret.Add((Creatures?.Overall ?? true, Creatures?.Specific?.GetCrystal()));
                 ret.Add((LeveledCreatures?.Overall ?? true, LeveledCreatures?.Specific?.GetCrystal()));
@@ -2996,7 +2996,7 @@ namespace Mutagen.Bethesda.Oblivion
             _Flora_Object = new Group<Flora>(this);
             _Furniture_Object = new Group<Furniture>(this);
             _Weapons_Object = new Group<Weapon>(this);
-            _Ammo_Object = new Group<Ammo>(this);
+            _Ammunitions_Object = new Group<Ammunition>(this);
             _Npcs_Object = new Group<Npc>(this);
             _Creatures_Object = new Group<Creature>(this);
             _LeveledCreatures_Object = new Group<LeveledCreature>(this);
@@ -3149,9 +3149,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Weapons.RecordCache.Set(rhsMod.Weapons.RecordCache.Items);
             }
-            if (mask?.Ammo ?? true)
+            if (mask?.Ammunitions ?? true)
             {
-                this.Ammo.RecordCache.Set(rhsMod.Ammo.RecordCache.Items);
+                this.Ammunitions.RecordCache.Set(rhsMod.Ammunitions.RecordCache.Items);
             }
             if (mask?.Npcs ?? true)
             {
@@ -3476,12 +3476,12 @@ namespace Mutagen.Bethesda.Oblivion
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Weapon>());
             }
-            if (mask?.Ammo ?? true)
+            if (mask?.Ammunitions ?? true)
             {
-                this.Ammo.RecordCache.Set(
-                    rhs.Ammo.Records
+                this.Ammunitions.RecordCache.Set(
+                    rhs.Ammunitions.Records
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
-                        .Cast<Ammo>());
+                        .Cast<Ammunition>());
             }
             if (mask?.Npcs ?? true)
             {
@@ -3707,7 +3707,7 @@ namespace Mutagen.Bethesda.Oblivion
             count += Flora.RecordCache.Count > 0 ? 1 : 0;
             count += Furniture.RecordCache.Count > 0 ? 1 : 0;
             count += Weapons.RecordCache.Count > 0 ? 1 : 0;
-            count += Ammo.RecordCache.Count > 0 ? 1 : 0;
+            count += Ammunitions.RecordCache.Count > 0 ? 1 : 0;
             count += Npcs.RecordCache.Count > 0 ? 1 : 0;
             count += Creatures.RecordCache.Count > 0 ? 1 : 0;
             count += LeveledCreatures.RecordCache.Count > 0 ? 1 : 0;
@@ -3957,7 +3957,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Group<Flora> Flora { get; }
         new Group<Furniture> Furniture { get; }
         new Group<Weapon> Weapons { get; }
-        new Group<Ammo> Ammo { get; }
+        new Group<Ammunition> Ammunitions { get; }
         new Group<Npc> Npcs { get; }
         new Group<Creature> Creatures { get; }
         new Group<LeveledCreature> LeveledCreatures { get; }
@@ -4031,7 +4031,7 @@ namespace Mutagen.Bethesda.Oblivion
         IGroupGetter<IFloraGetter> Flora { get; }
         IGroupGetter<IFurnitureGetter> Furniture { get; }
         IGroupGetter<IWeaponGetter> Weapons { get; }
-        IGroupGetter<IAmmoGetter> Ammo { get; }
+        IGroupGetter<IAmmunitionGetter> Ammunitions { get; }
         IGroupGetter<INpcGetter> Npcs { get; }
         IGroupGetter<ICreatureGetter> Creatures { get; }
         IGroupGetter<ILeveledCreatureGetter> LeveledCreatures { get; }
@@ -4516,7 +4516,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Flora = 29,
         Furniture = 30,
         Weapons = 31,
-        Ammo = 32,
+        Ammunitions = 32,
         Npcs = 33,
         Creatures = 34,
         LeveledCreatures = 35,
@@ -4654,8 +4654,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)OblivionMod_FieldIndex.Furniture;
                 case "WEAPONS":
                     return (ushort)OblivionMod_FieldIndex.Weapons;
-                case "AMMO":
-                    return (ushort)OblivionMod_FieldIndex.Ammo;
+                case "AMMUNITIONS":
+                    return (ushort)OblivionMod_FieldIndex.Ammunitions;
                 case "NPCS":
                     return (ushort)OblivionMod_FieldIndex.Npcs;
                 case "CREATURES":
@@ -4746,7 +4746,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Flora:
                 case OblivionMod_FieldIndex.Furniture:
                 case OblivionMod_FieldIndex.Weapons:
-                case OblivionMod_FieldIndex.Ammo:
+                case OblivionMod_FieldIndex.Ammunitions:
                 case OblivionMod_FieldIndex.Npcs:
                 case OblivionMod_FieldIndex.Creatures:
                 case OblivionMod_FieldIndex.LeveledCreatures:
@@ -4814,7 +4814,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Flora:
                 case OblivionMod_FieldIndex.Furniture:
                 case OblivionMod_FieldIndex.Weapons:
-                case OblivionMod_FieldIndex.Ammo:
+                case OblivionMod_FieldIndex.Ammunitions:
                 case OblivionMod_FieldIndex.Npcs:
                 case OblivionMod_FieldIndex.Creatures:
                 case OblivionMod_FieldIndex.LeveledCreatures:
@@ -4882,7 +4882,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Flora:
                 case OblivionMod_FieldIndex.Furniture:
                 case OblivionMod_FieldIndex.Weapons:
-                case OblivionMod_FieldIndex.Ammo:
+                case OblivionMod_FieldIndex.Ammunitions:
                 case OblivionMod_FieldIndex.Npcs:
                 case OblivionMod_FieldIndex.Creatures:
                 case OblivionMod_FieldIndex.LeveledCreatures:
@@ -4982,8 +4982,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Furniture";
                 case OblivionMod_FieldIndex.Weapons:
                     return "Weapons";
-                case OblivionMod_FieldIndex.Ammo:
-                    return "Ammo";
+                case OblivionMod_FieldIndex.Ammunitions:
+                    return "Ammunitions";
                 case OblivionMod_FieldIndex.Npcs:
                     return "Npcs";
                 case OblivionMod_FieldIndex.Creatures:
@@ -5074,7 +5074,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Flora:
                 case OblivionMod_FieldIndex.Furniture:
                 case OblivionMod_FieldIndex.Weapons:
-                case OblivionMod_FieldIndex.Ammo:
+                case OblivionMod_FieldIndex.Ammunitions:
                 case OblivionMod_FieldIndex.Npcs:
                 case OblivionMod_FieldIndex.Creatures:
                 case OblivionMod_FieldIndex.LeveledCreatures:
@@ -5144,7 +5144,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Flora:
                 case OblivionMod_FieldIndex.Furniture:
                 case OblivionMod_FieldIndex.Weapons:
-                case OblivionMod_FieldIndex.Ammo:
+                case OblivionMod_FieldIndex.Ammunitions:
                 case OblivionMod_FieldIndex.Npcs:
                 case OblivionMod_FieldIndex.Creatures:
                 case OblivionMod_FieldIndex.LeveledCreatures:
@@ -5243,8 +5243,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Group<Furniture>);
                 case OblivionMod_FieldIndex.Weapons:
                     return typeof(Group<Weapon>);
-                case OblivionMod_FieldIndex.Ammo:
-                    return typeof(Group<Ammo>);
+                case OblivionMod_FieldIndex.Ammunitions:
+                    return typeof(Group<Ammunition>);
                 case OblivionMod_FieldIndex.Npcs:
                     return typeof(Group<Npc>);
                 case OblivionMod_FieldIndex.Creatures:
@@ -5432,7 +5432,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flora.Clear();
             item.Furniture.Clear();
             item.Weapons.Clear();
-            item.Ammo.Clear();
+            item.Ammunitions.Clear();
             item.Npcs.Clear();
             item.Creatures.Clear();
             item.LeveledCreatures.Clear();
@@ -6026,9 +6026,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4F4D4D41: // AMMO
                 {
-                    if (importMask?.Ammo ?? true)
+                    if (importMask?.Ammunitions ?? true)
                     {
-                        item.Ammo.CopyInFromBinary(
+                        item.Ammunitions.CopyInFromBinary(
                             frame: frame,
                             recordTypeConverter: null);
                     }
@@ -6036,7 +6036,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Ammo);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Ammunitions);
                 }
                 case 0x5F43504E: // NPC_
                 {
@@ -6457,7 +6457,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Flora = MaskItemExt.Factory(item.Flora.GetEqualsMask(rhs.Flora, include), include);
             ret.Furniture = MaskItemExt.Factory(item.Furniture.GetEqualsMask(rhs.Furniture, include), include);
             ret.Weapons = MaskItemExt.Factory(item.Weapons.GetEqualsMask(rhs.Weapons, include), include);
-            ret.Ammo = MaskItemExt.Factory(item.Ammo.GetEqualsMask(rhs.Ammo, include), include);
+            ret.Ammunitions = MaskItemExt.Factory(item.Ammunitions.GetEqualsMask(rhs.Ammunitions, include), include);
             ret.Npcs = MaskItemExt.Factory(item.Npcs.GetEqualsMask(rhs.Npcs, include), include);
             ret.Creatures = MaskItemExt.Factory(item.Creatures.GetEqualsMask(rhs.Creatures, include), include);
             ret.LeveledCreatures = MaskItemExt.Factory(item.LeveledCreatures.GetEqualsMask(rhs.LeveledCreatures, include), include);
@@ -6656,9 +6656,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.Weapons?.ToString(fg, "Weapons");
             }
-            if (printMask?.Ammo?.Overall ?? true)
+            if (printMask?.Ammunitions?.Overall ?? true)
             {
-                item.Ammo?.ToString(fg, "Ammo");
+                item.Ammunitions?.ToString(fg, "Ammunitions");
             }
             if (printMask?.Npcs?.Overall ?? true)
             {
@@ -6801,7 +6801,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Flora = new MaskItem<bool, Group.Mask<bool>?>(true, item.Flora?.GetHasBeenSetMask());
             mask.Furniture = new MaskItem<bool, Group.Mask<bool>?>(true, item.Furniture?.GetHasBeenSetMask());
             mask.Weapons = new MaskItem<bool, Group.Mask<bool>?>(true, item.Weapons?.GetHasBeenSetMask());
-            mask.Ammo = new MaskItem<bool, Group.Mask<bool>?>(true, item.Ammo?.GetHasBeenSetMask());
+            mask.Ammunitions = new MaskItem<bool, Group.Mask<bool>?>(true, item.Ammunitions?.GetHasBeenSetMask());
             mask.Npcs = new MaskItem<bool, Group.Mask<bool>?>(true, item.Npcs?.GetHasBeenSetMask());
             mask.Creatures = new MaskItem<bool, Group.Mask<bool>?>(true, item.Creatures?.GetHasBeenSetMask());
             mask.LeveledCreatures = new MaskItem<bool, Group.Mask<bool>?>(true, item.LeveledCreatures?.GetHasBeenSetMask());
@@ -6867,7 +6867,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(lhs.Flora, rhs.Flora)) return false;
             if (!object.Equals(lhs.Furniture, rhs.Furniture)) return false;
             if (!object.Equals(lhs.Weapons, rhs.Weapons)) return false;
-            if (!object.Equals(lhs.Ammo, rhs.Ammo)) return false;
+            if (!object.Equals(lhs.Ammunitions, rhs.Ammunitions)) return false;
             if (!object.Equals(lhs.Npcs, rhs.Npcs)) return false;
             if (!object.Equals(lhs.Creatures, rhs.Creatures)) return false;
             if (!object.Equals(lhs.LeveledCreatures, rhs.LeveledCreatures)) return false;
@@ -6930,7 +6930,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             hash.Add(item.Flora);
             hash.Add(item.Furniture);
             hash.Add(item.Weapons);
-            hash.Add(item.Ammo);
+            hash.Add(item.Ammunitions);
             hash.Add(item.Npcs);
             hash.Add(item.Creatures);
             hash.Add(item.LeveledCreatures);
@@ -7127,11 +7127,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IWeapon":
                 case "IWeaponInternal":
                     return obj.Weapons.RecordCache;
-                case "Ammo":
-                case "IAmmoGetter":
-                case "IAmmo":
-                case "IAmmoInternal":
-                    return obj.Ammo.RecordCache;
+                case "Ammunition":
+                case "IAmmunitionGetter":
+                case "IAmmunition":
+                case "IAmmunitionInternal":
+                    return obj.Ammunitions.RecordCache;
                 case "Npc":
                 case "INpcGetter":
                 case "INpc":
@@ -7300,7 +7300,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             toDo.Add(() => WriteGroupParallel(item.Flora, masterRefs, 28, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Furniture, masterRefs, 29, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Weapons, masterRefs, 30, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Ammo, masterRefs, 31, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Ammunitions, masterRefs, 31, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Npcs, masterRefs, 32, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Creatures, masterRefs, 33, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.LeveledCreatures, masterRefs, 34, outputStreams));
@@ -7585,9 +7585,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield return item;
                 }
             }
-            if (obj.Ammo is ILinkContainer AmmolinkCont)
+            if (obj.Ammunitions is ILinkContainer AmmunitionslinkCont)
             {
-                foreach (var item in AmmolinkCont.Links)
+                foreach (var item in AmmunitionslinkCont.Links)
                 {
                     yield return item;
                 }
@@ -7886,7 +7886,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.Ammo.EnumerateMajorRecords())
+            foreach (var item in obj.Ammunitions.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -8283,11 +8283,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return item;
                     }
                     yield break;
-                case "Ammo":
-                case "IAmmoGetter":
-                case "IAmmo":
-                case "IAmmoInternal":
-                    foreach (var item in obj.Ammo.EnumerateMajorRecords<TMajor>())
+                case "Ammunition":
+                case "IAmmunitionGetter":
+                case "IAmmunition":
+                case "IAmmunitionInternal":
+                    foreach (var item in obj.Ammunitions.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -9166,15 +9166,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Ammo) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Ammunitions) ?? true))
             {
-                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Ammo);
+                errorMask?.PushIndex((int)OblivionMod_FieldIndex.Ammunitions);
                 try
                 {
-                    item.Ammo.DeepCopyIn(
-                        rhs: rhs.Ammo,
+                    item.Ammunitions.DeepCopyIn(
+                        rhs: rhs.Ammunitions,
                         errorMask: errorMask,
-                        copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Ammo));
+                        copyMask: copyMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Ammunitions));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -10107,16 +10107,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Weapons));
             }
-            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Ammo) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Ammunitions) ?? true))
             {
-                var AmmoItem = item.Ammo;
-                ((GroupXmlWriteTranslation)((IXmlItem)AmmoItem).XmlWriteTranslator).Write<IAmmoGetter>(
-                    item: AmmoItem,
+                var AmmunitionsItem = item.Ammunitions;
+                ((GroupXmlWriteTranslation)((IXmlItem)AmmunitionsItem).XmlWriteTranslator).Write<IAmmunitionGetter>(
+                    item: AmmunitionsItem,
                     node: node,
-                    name: nameof(item.Ammo),
-                    fieldIndex: (int)OblivionMod_FieldIndex.Ammo,
+                    name: nameof(item.Ammunitions),
+                    fieldIndex: (int)OblivionMod_FieldIndex.Ammunitions,
                     errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Ammo));
+                    translationMask: translationMask?.GetSubCrystal((int)OblivionMod_FieldIndex.Ammunitions));
             }
             if ((translationMask?.GetShouldTranslate((int)OblivionMod_FieldIndex.Npcs) ?? true))
             {
@@ -11077,11 +11077,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Ammo":
-                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Ammo);
+                case "Ammunitions":
+                    errorMask?.PushIndex((int)OblivionMod_FieldIndex.Ammunitions);
                     try
                     {
-                        item.Ammo.CopyInFromXml<Ammo>(
+                        item.Ammunitions.CopyInFromXml<Ammunition>(
                             node: node,
                             translationMask: translationMask,
                             errorMask: errorMask);
@@ -11733,7 +11733,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Flora;
         public bool Furniture;
         public bool Weapons;
-        public bool Ammo;
+        public bool Ammunitions;
         public bool Npcs;
         public bool Creatures;
         public bool LeveledCreatures;
@@ -11794,7 +11794,7 @@ namespace Mutagen.Bethesda.Oblivion
             Flora = defaultValue;
             Furniture = defaultValue;
             Weapons = defaultValue;
-            Ammo = defaultValue;
+            Ammunitions = defaultValue;
             Npcs = defaultValue;
             Creatures = defaultValue;
             LeveledCreatures = defaultValue;
@@ -12189,13 +12189,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter);
                 }
             }
-            if (importMask?.Ammo ?? true)
+            if (importMask?.Ammunitions ?? true)
             {
-                var AmmoItem = item.Ammo;
-                if (AmmoItem.RecordCache.Count > 0)
+                var AmmunitionsItem = item.Ammunitions;
+                if (AmmunitionsItem.RecordCache.Count > 0)
                 {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)AmmoItem).BinaryWriteTranslator).Write<IAmmoGetter>(
-                        item: AmmoItem,
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)AmmunitionsItem).BinaryWriteTranslator).Write<IAmmunitionGetter>(
+                        item: AmmunitionsItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
                 }
@@ -12840,11 +12840,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private IGroupGetter<IWeaponGetter>? _Weapons => _Weapons_IsSet ? GroupBinaryOverlay<IWeaponGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _WeaponsLocation!.Value.Min, _WeaponsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IWeaponGetter> Weapons => _Weapons ?? new Group<Weapon>(this);
         #endregion
-        #region Ammo
-        private RangeInt64? _AmmoLocation;
-        private bool _Ammo_IsSet => _AmmoLocation.HasValue;
-        private IGroupGetter<IAmmoGetter>? _Ammo => _Ammo_IsSet ? GroupBinaryOverlay<IAmmoGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _AmmoLocation!.Value.Min, _AmmoLocation!.Value.Max)), _package) : default;
-        public IGroupGetter<IAmmoGetter> Ammo => _Ammo ?? new Group<Ammo>(this);
+        #region Ammunitions
+        private RangeInt64? _AmmunitionsLocation;
+        private bool _Ammunitions_IsSet => _AmmunitionsLocation.HasValue;
+        private IGroupGetter<IAmmunitionGetter>? _Ammunitions => _Ammunitions_IsSet ? GroupBinaryOverlay<IAmmunitionGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _AmmunitionsLocation!.Value.Min, _AmmunitionsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IAmmunitionGetter> Ammunitions => _Ammunitions ?? new Group<Ammunition>(this);
         #endregion
         #region Npcs
         private RangeInt64? _NpcsLocation;
@@ -13240,8 +13240,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4F4D4D41: // AMMO
                 {
-                    _AmmoLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Ammo);
+                    _AmmunitionsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Ammunitions);
                 }
                 case 0x5F43504E: // NPC_
                 {

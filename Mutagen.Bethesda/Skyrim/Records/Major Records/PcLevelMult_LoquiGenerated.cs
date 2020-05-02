@@ -16,8 +16,6 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
-using Mutagen.Bethesda;
-using Mutagen.Bethesda.Internals;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -27,27 +25,31 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Binary;
 using System.Buffers.Binary;
+using Mutagen.Bethesda.Internals;
 #endregion
 
 #nullable enable
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class Ammo :
-        SkyrimMajorRecord,
-        IAmmoInternal,
-        ILoquiObjectSetter<Ammo>,
-        IEquatable<Ammo>,
+    public partial class PcLevelMult :
+        ANpcLevel,
+        IPcLevelMult,
+        ILoquiObjectSetter<PcLevelMult>,
+        IEquatable<PcLevelMult>,
         IEqualsMask
     {
         #region Ctor
-        protected Ammo()
+        public PcLevelMult()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
+        #region LevelMult
+        public Single LevelMult { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -55,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            AmmoMixIn.ToString(
+            PcLevelMultMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -65,29 +67,29 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAmmoGetter rhs)) return false;
-            return ((AmmoCommon)((IAmmoGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IPcLevelMultGetter rhs)) return false;
+            return ((PcLevelMultCommon)((IPcLevelMultGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Ammo obj)
+        public bool Equals(PcLevelMult obj)
         {
-            return ((AmmoCommon)((IAmmoGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PcLevelMultCommon)((IPcLevelMultGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((AmmoCommon)((IAmmoGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((PcLevelMultCommon)((IPcLevelMultGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => AmmoXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => PcLevelMultXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((AmmoXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((PcLevelMultXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -96,9 +98,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static new Ammo CreateFromXml(
+        public static new PcLevelMult CreateFromXml(
             XElement node,
-            Ammo.TranslationMask? translationMask = null)
+            PcLevelMult.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -107,27 +109,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static Ammo CreateFromXml(
+        public static PcLevelMult CreateFromXml(
             XElement node,
-            out Ammo.ErrorMask errorMask,
-            Ammo.TranslationMask? translationMask = null)
+            out PcLevelMult.ErrorMask errorMask,
+            PcLevelMult.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Ammo.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PcLevelMult.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public new static Ammo CreateFromXml(
+        public new static PcLevelMult CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new Ammo();
-            ((AmmoSetterCommon)((IAmmoGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new PcLevelMult();
+            ((PcLevelMultSetterCommon)((IPcLevelMultGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -135,9 +137,9 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static Ammo CreateFromXml(
+        public static PcLevelMult CreateFromXml(
             string path,
-            Ammo.TranslationMask? translationMask = null)
+            PcLevelMult.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -145,10 +147,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static Ammo CreateFromXml(
+        public static PcLevelMult CreateFromXml(
             string path,
-            out Ammo.ErrorMask errorMask,
-            Ammo.TranslationMask? translationMask = null)
+            out PcLevelMult.ErrorMask errorMask,
+            PcLevelMult.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -157,10 +159,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static Ammo CreateFromXml(
+        public static PcLevelMult CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Ammo.TranslationMask? translationMask = null)
+            PcLevelMult.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -169,9 +171,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static Ammo CreateFromXml(
+        public static PcLevelMult CreateFromXml(
             Stream stream,
-            Ammo.TranslationMask? translationMask = null)
+            PcLevelMult.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -179,10 +181,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static Ammo CreateFromXml(
+        public static PcLevelMult CreateFromXml(
             Stream stream,
-            out Ammo.ErrorMask errorMask,
-            Ammo.TranslationMask? translationMask = null)
+            out PcLevelMult.ErrorMask errorMask,
+            PcLevelMult.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -191,10 +193,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static Ammo CreateFromXml(
+        public static PcLevelMult CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Ammo.TranslationMask? translationMask = null)
+            PcLevelMult.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -209,32 +211,16 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public new class Mask<TItem> :
-            SkyrimMajorRecord.Mask<TItem>,
+            ANpcLevel.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
             where TItem : notnull
         {
             #region Ctors
-            public Mask(TItem initialValue)
-            : base(initialValue)
+            public Mask(TItem LevelMult)
+            : base()
             {
-            }
-
-            public Mask(
-                TItem MajorRecordFlagsRaw,
-                TItem FormKey,
-                TItem Version,
-                TItem EditorID,
-                TItem FormVersion,
-                TItem Version2)
-            : base(
-                MajorRecordFlagsRaw: MajorRecordFlagsRaw,
-                FormKey: FormKey,
-                Version: Version,
-                EditorID: EditorID,
-                FormVersion: FormVersion,
-                Version2: Version2)
-            {
+                this.LevelMult = LevelMult;
             }
 
             #pragma warning disable CS8618
@@ -243,6 +229,10 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem LevelMult;
             #endregion
 
             #region Equals
@@ -256,11 +246,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.LevelMult, rhs.LevelMult)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.LevelMult);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -271,6 +263,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.LevelMult)) return false;
                 return true;
             }
             #endregion
@@ -279,6 +272,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.LevelMult)) return true;
                 return false;
             }
             #endregion
@@ -286,7 +280,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new Ammo.Mask<R>();
+                var ret = new PcLevelMult.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -294,6 +288,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.LevelMult = eval(this.LevelMult);
             }
             #endregion
 
@@ -303,19 +298,23 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(Ammo.Mask<bool>? printMask = null)
+            public string ToString(PcLevelMult.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, Ammo.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, PcLevelMult.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Ammo.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(PcLevelMult.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.LevelMult ?? true)
+                    {
+                        fg.AppendItem(LevelMult, "LevelMult");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -324,15 +323,21 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public new class ErrorMask :
-            SkyrimMajorRecord.ErrorMask,
+            ANpcLevel.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? LevelMult;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                Ammo_FieldIndex enu = (Ammo_FieldIndex)index;
+                PcLevelMult_FieldIndex enu = (PcLevelMult_FieldIndex)index;
                 switch (enu)
                 {
+                    case PcLevelMult_FieldIndex.LevelMult:
+                        return LevelMult;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -340,9 +345,12 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthException(int index, Exception ex)
             {
-                Ammo_FieldIndex enu = (Ammo_FieldIndex)index;
+                PcLevelMult_FieldIndex enu = (PcLevelMult_FieldIndex)index;
                 switch (enu)
                 {
+                    case PcLevelMult_FieldIndex.LevelMult:
+                        this.LevelMult = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -351,9 +359,12 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthMask(int index, object obj)
             {
-                Ammo_FieldIndex enu = (Ammo_FieldIndex)index;
+                PcLevelMult_FieldIndex enu = (PcLevelMult_FieldIndex)index;
                 switch (enu)
                 {
+                    case PcLevelMult_FieldIndex.LevelMult:
+                        this.LevelMult = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -363,6 +374,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (LevelMult != null) return true;
                 return false;
             }
             #endregion
@@ -398,6 +410,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                fg.AppendItem(LevelMult, "LevelMult");
             }
             #endregion
 
@@ -406,6 +419,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.LevelMult = this.LevelMult.Combine(rhs.LevelMult);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -424,68 +438,57 @@ namespace Mutagen.Bethesda.Skyrim
 
         }
         public new class TranslationMask :
-            SkyrimMajorRecord.TranslationMask,
+            ANpcLevel.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool LevelMult;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.LevelMult = defaultOn;
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((LevelMult, null));
+            }
         }
-        #endregion
-
-        #region Mutagen
-        public new static readonly RecordType GrupRecordType = Ammo_Registration.TriggeringRecordType;
-        public Ammo(FormKey formKey)
-        {
-            this.FormKey = formKey;
-            CustomCtor();
-        }
-
-        public Ammo(IMod mod)
-            : this(mod.GetNextFormKey())
-        {
-        }
-
-        public Ammo(IMod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
-        {
-            this.EditorID = editorID;
-        }
-
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => AmmoBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => PcLevelMultBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((AmmoBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((PcLevelMultBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static new Ammo CreateFromBinary(MutagenFrame frame)
+        public static new PcLevelMult CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public new static Ammo CreateFromBinary(
+        public new static PcLevelMult CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new Ammo();
-            ((AmmoSetterCommon)((IAmmoGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new PcLevelMult();
+            ((PcLevelMultSetterCommon)((IPcLevelMultGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -498,87 +501,80 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAmmoGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPcLevelMultGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((AmmoSetterCommon)((IAmmoGetter)this).CommonSetterInstance()!).Clear(this);
+            ((PcLevelMultSetterCommon)((IPcLevelMultGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new Ammo GetNew()
+        internal static new PcLevelMult GetNew()
         {
-            return new Ammo();
+            return new PcLevelMult();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IAmmo :
-        IAmmoGetter,
-        ISkyrimMajorRecord,
-        IItem,
-        ILoquiObjectSetter<IAmmoInternal>
+    public partial interface IPcLevelMult :
+        IPcLevelMultGetter,
+        IANpcLevel,
+        ILoquiObjectSetter<IPcLevelMult>
     {
+        new Single LevelMult { get; set; }
     }
 
-    public partial interface IAmmoInternal :
-        ISkyrimMajorRecordInternal,
-        IAmmo,
-        IAmmoGetter
-    {
-    }
-
-    public partial interface IAmmoGetter :
-        ISkyrimMajorRecordGetter,
-        IItemGetter,
-        ILoquiObject<IAmmoGetter>,
+    public partial interface IPcLevelMultGetter :
+        IANpcLevelGetter,
+        ILoquiObject<IPcLevelMultGetter>,
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Ammo_Registration.Instance;
+        static ILoquiRegistration Registration => PcLevelMult_Registration.Instance;
+        Single LevelMult { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class AmmoMixIn
+    public static partial class PcLevelMultMixIn
     {
-        public static void Clear(this IAmmoInternal item)
+        public static void Clear(this IPcLevelMult item)
         {
-            ((AmmoSetterCommon)((IAmmoGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((PcLevelMultSetterCommon)((IPcLevelMultGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Ammo.Mask<bool> GetEqualsMask(
-            this IAmmoGetter item,
-            IAmmoGetter rhs,
+        public static PcLevelMult.Mask<bool> GetEqualsMask(
+            this IPcLevelMultGetter item,
+            IPcLevelMultGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((AmmoCommon)((IAmmoGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((PcLevelMultCommon)((IPcLevelMultGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IAmmoGetter item,
+            this IPcLevelMultGetter item,
             string? name = null,
-            Ammo.Mask<bool>? printMask = null)
+            PcLevelMult.Mask<bool>? printMask = null)
         {
-            return ((AmmoCommon)((IAmmoGetter)item).CommonInstance()!).ToString(
+            return ((PcLevelMultCommon)((IPcLevelMultGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IAmmoGetter item,
+            this IPcLevelMultGetter item,
             FileGeneration fg,
             string? name = null,
-            Ammo.Mask<bool>? printMask = null)
+            PcLevelMult.Mask<bool>? printMask = null)
         {
-            ((AmmoCommon)((IAmmoGetter)item).CommonInstance()!).ToString(
+            ((PcLevelMultCommon)((IPcLevelMultGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -586,86 +582,86 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this IAmmoGetter item,
-            Ammo.Mask<bool?> checkMask)
+            this IPcLevelMultGetter item,
+            PcLevelMult.Mask<bool?> checkMask)
         {
-            return ((AmmoCommon)((IAmmoGetter)item).CommonInstance()!).HasBeenSet(
+            return ((PcLevelMultCommon)((IPcLevelMultGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Ammo.Mask<bool> GetHasBeenSetMask(this IAmmoGetter item)
+        public static PcLevelMult.Mask<bool> GetHasBeenSetMask(this IPcLevelMultGetter item)
         {
-            var ret = new Ammo.Mask<bool>(false);
-            ((AmmoCommon)((IAmmoGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new PcLevelMult.Mask<bool>(false);
+            ((PcLevelMultCommon)((IPcLevelMultGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IAmmoGetter item,
-            IAmmoGetter rhs)
+            this IPcLevelMultGetter item,
+            IPcLevelMultGetter rhs)
         {
-            return ((AmmoCommon)((IAmmoGetter)item).CommonInstance()!).Equals(
+            return ((PcLevelMultCommon)((IPcLevelMultGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this IAmmoInternal lhs,
-            IAmmoGetter rhs,
-            out Ammo.ErrorMask errorMask,
-            Ammo.TranslationMask? copyMask = null)
+            this IPcLevelMult lhs,
+            IPcLevelMultGetter rhs,
+            out PcLevelMult.ErrorMask errorMask,
+            PcLevelMult.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((AmmoSetterTranslationCommon)((IAmmoGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PcLevelMultSetterTranslationCommon)((IPcLevelMultGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Ammo.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PcLevelMult.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IAmmoInternal lhs,
-            IAmmoGetter rhs,
+            this IPcLevelMult lhs,
+            IPcLevelMultGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((AmmoSetterTranslationCommon)((IAmmoGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PcLevelMultSetterTranslationCommon)((IPcLevelMultGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static Ammo DeepCopy(
-            this IAmmoGetter item,
-            Ammo.TranslationMask? copyMask = null)
+        public static PcLevelMult DeepCopy(
+            this IPcLevelMultGetter item,
+            PcLevelMult.TranslationMask? copyMask = null)
         {
-            return ((AmmoSetterTranslationCommon)((IAmmoGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PcLevelMultSetterTranslationCommon)((IPcLevelMultGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static Ammo DeepCopy(
-            this IAmmoGetter item,
-            out Ammo.ErrorMask errorMask,
-            Ammo.TranslationMask? copyMask = null)
+        public static PcLevelMult DeepCopy(
+            this IPcLevelMultGetter item,
+            out PcLevelMult.ErrorMask errorMask,
+            PcLevelMult.TranslationMask? copyMask = null)
         {
-            return ((AmmoSetterTranslationCommon)((IAmmoGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PcLevelMultSetterTranslationCommon)((IPcLevelMultGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static Ammo DeepCopy(
-            this IAmmoGetter item,
+        public static PcLevelMult DeepCopy(
+            this IPcLevelMultGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((AmmoSetterTranslationCommon)((IAmmoGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PcLevelMultSetterTranslationCommon)((IPcLevelMultGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -674,9 +670,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IAmmoInternal item,
+            this IPcLevelMult item,
             XElement node,
-            Ammo.TranslationMask? translationMask = null)
+            PcLevelMult.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -687,10 +683,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IAmmoInternal item,
+            this IPcLevelMult item,
             XElement node,
-            out Ammo.ErrorMask errorMask,
-            Ammo.TranslationMask? translationMask = null)
+            out PcLevelMult.ErrorMask errorMask,
+            PcLevelMult.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -698,16 +694,16 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Ammo.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PcLevelMult.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this IAmmoInternal item,
+            this IPcLevelMult item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((AmmoSetterCommon)((IAmmoGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((PcLevelMultSetterCommon)((IPcLevelMultGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -715,9 +711,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IAmmoInternal item,
+            this IPcLevelMult item,
             string path,
-            Ammo.TranslationMask? translationMask = null)
+            PcLevelMult.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -727,10 +723,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IAmmoInternal item,
+            this IPcLevelMult item,
             string path,
-            out Ammo.ErrorMask errorMask,
-            Ammo.TranslationMask? translationMask = null)
+            out PcLevelMult.ErrorMask errorMask,
+            PcLevelMult.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -741,10 +737,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IAmmoInternal item,
+            this IPcLevelMult item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Ammo.TranslationMask? translationMask = null)
+            PcLevelMult.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -755,9 +751,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IAmmoInternal item,
+            this IPcLevelMult item,
             Stream stream,
-            Ammo.TranslationMask? translationMask = null)
+            PcLevelMult.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -767,10 +763,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IAmmoInternal item,
+            this IPcLevelMult item,
             Stream stream,
-            out Ammo.ErrorMask errorMask,
-            Ammo.TranslationMask? translationMask = null)
+            out PcLevelMult.ErrorMask errorMask,
+            PcLevelMult.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -781,10 +777,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IAmmoInternal item,
+            this IPcLevelMult item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Ammo.TranslationMask? translationMask = null)
+            PcLevelMult.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -799,7 +795,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IAmmoInternal item,
+            this IPcLevelMult item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -809,11 +805,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromBinary(
-            this IAmmoInternal item,
+            this IPcLevelMult item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((AmmoSetterCommon)((IAmmoGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((PcLevelMultSetterCommon)((IPcLevelMultGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -829,52 +825,47 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum Ammo_FieldIndex
+    public enum PcLevelMult_FieldIndex
     {
-        MajorRecordFlagsRaw = 0,
-        FormKey = 1,
-        Version = 2,
-        EditorID = 3,
-        FormVersion = 4,
-        Version2 = 5,
+        LevelMult = 0,
     }
     #endregion
 
     #region Registration
-    public partial class Ammo_Registration : ILoquiRegistration
+    public partial class PcLevelMult_Registration : ILoquiRegistration
     {
-        public static readonly Ammo_Registration Instance = new Ammo_Registration();
+        public static readonly PcLevelMult_Registration Instance = new PcLevelMult_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 162,
+            msgID: 204,
             version: 0);
 
-        public const string GUID = "14e93a4b-95d0-42a5-8ccf-bad4555e8184";
+        public const string GUID = "dc10b70e-654d-4b0d-ae7f-6f548dfad269";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 1;
 
-        public static readonly Type MaskType = typeof(Ammo.Mask<>);
+        public static readonly Type MaskType = typeof(PcLevelMult.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Ammo.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(PcLevelMult.ErrorMask);
 
-        public static readonly Type ClassType = typeof(Ammo);
+        public static readonly Type ClassType = typeof(PcLevelMult);
 
-        public static readonly Type GetterType = typeof(IAmmoGetter);
+        public static readonly Type GetterType = typeof(IPcLevelMultGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IAmmo);
+        public static readonly Type SetterType = typeof(IPcLevelMult);
 
-        public static readonly Type? InternalSetterType = typeof(IAmmoInternal);
+        public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.Ammo";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.PcLevelMult";
 
-        public const string Name = "Ammo";
+        public const string Name = "PcLevelMult";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -886,6 +877,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "LEVELMULT":
+                    return (ushort)PcLevelMult_FieldIndex.LevelMult;
                 default:
                     return null;
             }
@@ -893,80 +886,92 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            Ammo_FieldIndex enu = (Ammo_FieldIndex)index;
+            PcLevelMult_FieldIndex enu = (PcLevelMult_FieldIndex)index;
             switch (enu)
             {
+                case PcLevelMult_FieldIndex.LevelMult:
+                    return false;
                 default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
+                    return ANpcLevel_Registration.GetNthIsEnumerable(index);
             }
         }
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            Ammo_FieldIndex enu = (Ammo_FieldIndex)index;
+            PcLevelMult_FieldIndex enu = (PcLevelMult_FieldIndex)index;
             switch (enu)
             {
+                case PcLevelMult_FieldIndex.LevelMult:
+                    return false;
                 default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
+                    return ANpcLevel_Registration.GetNthIsLoqui(index);
             }
         }
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            Ammo_FieldIndex enu = (Ammo_FieldIndex)index;
+            PcLevelMult_FieldIndex enu = (PcLevelMult_FieldIndex)index;
             switch (enu)
             {
+                case PcLevelMult_FieldIndex.LevelMult:
+                    return false;
                 default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
+                    return ANpcLevel_Registration.GetNthIsSingleton(index);
             }
         }
 
         public static string GetNthName(ushort index)
         {
-            Ammo_FieldIndex enu = (Ammo_FieldIndex)index;
+            PcLevelMult_FieldIndex enu = (PcLevelMult_FieldIndex)index;
             switch (enu)
             {
+                case PcLevelMult_FieldIndex.LevelMult:
+                    return "LevelMult";
                 default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
+                    return ANpcLevel_Registration.GetNthName(index);
             }
         }
 
         public static bool IsNthDerivative(ushort index)
         {
-            Ammo_FieldIndex enu = (Ammo_FieldIndex)index;
+            PcLevelMult_FieldIndex enu = (PcLevelMult_FieldIndex)index;
             switch (enu)
             {
+                case PcLevelMult_FieldIndex.LevelMult:
+                    return false;
                 default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
+                    return ANpcLevel_Registration.IsNthDerivative(index);
             }
         }
 
         public static bool IsProtected(ushort index)
         {
-            Ammo_FieldIndex enu = (Ammo_FieldIndex)index;
+            PcLevelMult_FieldIndex enu = (PcLevelMult_FieldIndex)index;
             switch (enu)
             {
+                case PcLevelMult_FieldIndex.LevelMult:
+                    return false;
                 default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
+                    return ANpcLevel_Registration.IsProtected(index);
             }
         }
 
         public static Type GetNthType(ushort index)
         {
-            Ammo_FieldIndex enu = (Ammo_FieldIndex)index;
+            PcLevelMult_FieldIndex enu = (PcLevelMult_FieldIndex)index;
             switch (enu)
             {
+                case PcLevelMult_FieldIndex.LevelMult:
+                    return typeof(Single);
                 default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
+                    return ANpcLevel_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(AmmoXmlWriteTranslation);
-        public static readonly RecordType AMMO_HEADER = new RecordType("AMMO");
-        public static readonly RecordType TriggeringRecordType = AMMO_HEADER;
-        public const int NumStructFields = 0;
+        public static readonly Type XmlWriteTranslation = typeof(PcLevelMultXmlWriteTranslation);
+        public const int NumStructFields = 1;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryWriteTranslation = typeof(AmmoBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(PcLevelMultBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -999,51 +1004,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class AmmoSetterCommon : SkyrimMajorRecordSetterCommon
+    public partial class PcLevelMultSetterCommon : ANpcLevelSetterCommon
     {
-        public new static readonly AmmoSetterCommon Instance = new AmmoSetterCommon();
+        public new static readonly PcLevelMultSetterCommon Instance = new PcLevelMultSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IAmmoInternal item)
+        public void Clear(IPcLevelMult item)
         {
             ClearPartial();
+            item.LevelMult = default;
             base.Clear(item);
         }
         
-        public override void Clear(ISkyrimMajorRecordInternal item)
+        public override void Clear(IANpcLevel item)
         {
-            Clear(item: (IAmmoInternal)item);
-        }
-        
-        public override void Clear(IMajorRecordInternal item)
-        {
-            Clear(item: (IAmmoInternal)item);
+            Clear(item: (IPcLevelMult)item);
         }
         
         #region Xml Translation
-        protected static void FillPrivateElementXml(
-            IAmmoInternal item,
-            XElement node,
-            string name,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            switch (name)
-            {
-                default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
-                        item: item,
-                        node: node,
-                        name: name,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    break;
-            }
-        }
-        
         public virtual void CopyInFromXml(
-            IAmmoInternal item,
+            IPcLevelMult item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1052,13 +1033,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    FillPrivateElementXml(
-                        item: item,
-                        node: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask,
-                        translationMask: translationMask);
-                    AmmoXmlCreateTranslation.FillPublicElementXml(
+                    PcLevelMultXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1074,26 +1049,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override void CopyInFromXml(
-            ISkyrimMajorRecordInternal item,
+            IANpcLevel item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
             CopyInFromXml(
-                item: (Ammo)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
-            IMajorRecordInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (Ammo)item,
+                item: (PcLevelMult)item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1102,48 +1064,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         #region Binary Translation
-        public override RecordType RecordType => Ammo_Registration.AMMO_HEADER;
         protected static void FillBinaryStructs(
-            IAmmoInternal item,
+            IPcLevelMult item,
             MutagenFrame frame)
         {
-            SkyrimMajorRecordSetterCommon.FillBinaryStructs(
-                item: item,
-                frame: frame);
+            PcLevelMultBinaryCreateTranslation.FillBinaryLevelMultCustomPublic(
+                frame: frame,
+                item: item);
         }
         
         public virtual void CopyInFromBinary(
-            IAmmoInternal item,
+            IPcLevelMult item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<IAmmoInternal>(
+            UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
-                recType: RecordType,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: FillBinaryStructs);
         }
         
         public override void CopyInFromBinary(
-            ISkyrimMajorRecordInternal item,
+            IANpcLevel item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (Ammo)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
-        }
-        
-        public override void CopyInFromBinary(
-            IMajorRecordInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (Ammo)item,
+                item: (PcLevelMult)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1151,17 +1099,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class AmmoCommon : SkyrimMajorRecordCommon
+    public partial class PcLevelMultCommon : ANpcLevelCommon
     {
-        public new static readonly AmmoCommon Instance = new AmmoCommon();
+        public new static readonly PcLevelMultCommon Instance = new PcLevelMultCommon();
 
-        public Ammo.Mask<bool> GetEqualsMask(
-            IAmmoGetter item,
-            IAmmoGetter rhs,
+        public PcLevelMult.Mask<bool> GetEqualsMask(
+            IPcLevelMultGetter item,
+            IPcLevelMultGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Ammo.Mask<bool>(false);
-            ((AmmoCommon)((IAmmoGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new PcLevelMult.Mask<bool>(false);
+            ((PcLevelMultCommon)((IPcLevelMultGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1170,19 +1118,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IAmmoGetter item,
-            IAmmoGetter rhs,
-            Ammo.Mask<bool> ret,
+            IPcLevelMultGetter item,
+            IPcLevelMultGetter rhs,
+            PcLevelMult.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.LevelMult = item.LevelMult.EqualsWithin(rhs.LevelMult);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string ToString(
-            IAmmoGetter item,
+            IPcLevelMultGetter item,
             string? name = null,
-            Ammo.Mask<bool>? printMask = null)
+            PcLevelMult.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1194,18 +1143,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IAmmoGetter item,
+            IPcLevelMultGetter item,
             FileGeneration fg,
             string? name = null,
-            Ammo.Mask<bool>? printMask = null)
+            PcLevelMult.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Ammo =>");
+                fg.AppendLine($"PcLevelMult =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Ammo) =>");
+                fg.AppendLine($"{name} (PcLevelMult) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1219,19 +1168,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IAmmoGetter item,
+            IPcLevelMultGetter item,
             FileGeneration fg,
-            Ammo.Mask<bool>? printMask = null)
+            PcLevelMult.Mask<bool>? printMask = null)
         {
-            SkyrimMajorRecordCommon.ToStringFields(
+            ANpcLevelCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if (printMask?.LevelMult ?? true)
+            {
+                fg.AppendItem(item.LevelMult, "LevelMult");
+            }
         }
         
         public bool HasBeenSet(
-            IAmmoGetter item,
-            Ammo.Mask<bool?> checkMask)
+            IPcLevelMultGetter item,
+            PcLevelMult.Mask<bool?> checkMask)
         {
             return base.HasBeenSet(
                 item: item,
@@ -1239,47 +1192,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillHasBeenSetMask(
-            IAmmoGetter item,
-            Ammo.Mask<bool> mask)
+            IPcLevelMultGetter item,
+            PcLevelMult.Mask<bool> mask)
         {
+            mask.LevelMult = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
         }
         
-        public static Ammo_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
+        public static PcLevelMult_FieldIndex ConvertFieldIndex(ANpcLevel_FieldIndex index)
         {
             switch (index)
             {
-                case SkyrimMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Ammo_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.FormKey:
-                    return (Ammo_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
-                    return (Ammo_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.EditorID:
-                    return (Ammo_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.FormVersion:
-                    return (Ammo_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version2:
-                    return (Ammo_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
-        public static new Ammo_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
-        {
-            switch (index)
-            {
-                case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Ammo_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormKey:
-                    return (Ammo_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (Ammo_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (Ammo_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1287,48 +1212,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IAmmoGetter? lhs,
-            IAmmoGetter? rhs)
+            IPcLevelMultGetter? lhs,
+            IPcLevelMultGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!lhs.LevelMult.EqualsWithin(rhs.LevelMult)) return false;
             return true;
         }
         
         public override bool Equals(
-            ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            IANpcLevelGetter? lhs,
+            IANpcLevelGetter? rhs)
         {
             return Equals(
-                lhs: (IAmmoGetter?)lhs,
-                rhs: rhs as IAmmoGetter);
+                lhs: (IPcLevelMultGetter?)lhs,
+                rhs: rhs as IPcLevelMultGetter);
         }
         
-        public override bool Equals(
-            IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
-        {
-            return Equals(
-                lhs: (IAmmoGetter?)lhs,
-                rhs: rhs as IAmmoGetter);
-        }
-        
-        public virtual int GetHashCode(IAmmoGetter item)
+        public virtual int GetHashCode(IPcLevelMultGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.LevelMult);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
-        public override int GetHashCode(ISkyrimMajorRecordGetter item)
+        public override int GetHashCode(IANpcLevelGetter item)
         {
-            return GetHashCode(item: (IAmmoGetter)item);
-        }
-        
-        public override int GetHashCode(IMajorRecordGetter item)
-        {
-            return GetHashCode(item: (IAmmoGetter)item);
+            return GetHashCode(item: (IPcLevelMultGetter)item);
         }
         
         #endregion
@@ -1336,41 +1249,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override object GetNew()
         {
-            return Ammo.GetNew();
+            return PcLevelMult.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IAmmoGetter obj)
+        public IEnumerable<ILinkGetter> GetLinks(IPcLevelMultGetter obj)
         {
-            foreach (var item in base.GetLinks(obj))
-            {
-                yield return item;
-            }
             yield break;
-        }
-        
-        partial void PostDuplicate(Ammo obj, Ammo rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
-        
-        public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
-        {
-            var ret = new Ammo(getNextFormKey());
-            ret.DeepCopyIn((Ammo)item);
-            duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Ammo)item, getNextFormKey, duplicatedRecords);
-            return ret;
         }
         
         #endregion
         
     }
-    public partial class AmmoSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    public partial class PcLevelMultSetterTranslationCommon : ANpcLevelSetterTranslationCommon
     {
-        public new static readonly AmmoSetterTranslationCommon Instance = new AmmoSetterTranslationCommon();
+        public new static readonly PcLevelMultSetterTranslationCommon Instance = new PcLevelMultSetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            IAmmoInternal item,
-            IAmmoGetter rhs,
+            IPcLevelMult item,
+            IPcLevelMultGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1379,92 +1277,45 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)PcLevelMult_FieldIndex.LevelMult) ?? true))
+            {
+                item.LevelMult = rhs.LevelMult;
+            }
         }
         
-        public void DeepCopyIn(
-            IAmmo item,
-            IAmmoGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
-        {
-            base.DeepCopyIn(
-                item,
-                rhs,
-                errorMask,
-                copyMask);
-        }
         
         public override void DeepCopyIn(
-            ISkyrimMajorRecordInternal item,
-            ISkyrimMajorRecordGetter rhs,
+            IANpcLevel item,
+            IANpcLevelGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IAmmoInternal)item,
-                rhs: (IAmmoGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-        
-        public override void DeepCopyIn(
-            ISkyrimMajorRecord item,
-            ISkyrimMajorRecordGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
-        {
-            this.DeepCopyIn(
-                item: (IAmmo)item,
-                rhs: (IAmmoGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-        
-        public override void DeepCopyIn(
-            IMajorRecordInternal item,
-            IMajorRecordGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
-        {
-            this.DeepCopyIn(
-                item: (IAmmoInternal)item,
-                rhs: (IAmmoGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-        
-        public override void DeepCopyIn(
-            IMajorRecord item,
-            IMajorRecordGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
-        {
-            this.DeepCopyIn(
-                item: (IAmmo)item,
-                rhs: (IAmmoGetter)rhs,
+                item: (IPcLevelMult)item,
+                rhs: (IPcLevelMultGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
         #endregion
         
-        public Ammo DeepCopy(
-            IAmmoGetter item,
-            Ammo.TranslationMask? copyMask = null)
+        public PcLevelMult DeepCopy(
+            IPcLevelMultGetter item,
+            PcLevelMult.TranslationMask? copyMask = null)
         {
-            Ammo ret = (Ammo)((AmmoCommon)((IAmmoGetter)item).CommonInstance()!).GetNew();
+            PcLevelMult ret = (PcLevelMult)((PcLevelMultCommon)((IPcLevelMultGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public Ammo DeepCopy(
-            IAmmoGetter item,
-            out Ammo.ErrorMask errorMask,
-            Ammo.TranslationMask? copyMask = null)
+        public PcLevelMult DeepCopy(
+            IPcLevelMultGetter item,
+            out PcLevelMult.ErrorMask errorMask,
+            PcLevelMult.TranslationMask? copyMask = null)
         {
-            Ammo ret = (Ammo)((AmmoCommon)((IAmmoGetter)item).CommonInstance()!).GetNew();
+            PcLevelMult ret = (PcLevelMult)((PcLevelMultCommon)((IPcLevelMultGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1472,12 +1323,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public Ammo DeepCopy(
-            IAmmoGetter item,
+        public PcLevelMult DeepCopy(
+            IPcLevelMultGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            Ammo ret = (Ammo)((AmmoCommon)((IAmmoGetter)item).CommonInstance()!).GetNew();
+            PcLevelMult ret = (PcLevelMult)((PcLevelMultCommon)((IPcLevelMultGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1492,21 +1343,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class Ammo
+    public partial class PcLevelMult
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Ammo_Registration.Instance;
-        public new static Ammo_Registration Registration => Ammo_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PcLevelMult_Registration.Instance;
+        public new static PcLevelMult_Registration Registration => PcLevelMult_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => AmmoCommon.Instance;
+        protected override object CommonInstance() => PcLevelMultCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return AmmoSetterCommon.Instance;
+            return PcLevelMultSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => AmmoSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => PcLevelMultSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1517,37 +1368,46 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class AmmoXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
+    public partial class PcLevelMultXmlWriteTranslation :
+        ANpcLevelXmlWriteTranslation,
         IXmlWriteTranslator
     {
-        public new readonly static AmmoXmlWriteTranslation Instance = new AmmoXmlWriteTranslation();
+        public new readonly static PcLevelMultXmlWriteTranslation Instance = new PcLevelMultXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IAmmoGetter item,
+            IPcLevelMultGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
+            ANpcLevelXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((translationMask?.GetShouldTranslate((int)PcLevelMult_FieldIndex.LevelMult) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.LevelMult),
+                    item: item.LevelMult,
+                    fieldIndex: (int)PcLevelMult_FieldIndex.LevelMult,
+                    errorMask: errorMask);
+            }
         }
 
         public void Write(
             XElement node,
-            IAmmoGetter item,
+            IPcLevelMultGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Ammo");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.PcLevelMult");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Ammo");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.PcLevelMult");
             }
             WriteToNodeXml(
                 item: item,
@@ -1564,7 +1424,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IAmmoGetter)item,
+                item: (IPcLevelMultGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1573,28 +1433,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public override void Write(
             XElement node,
-            ISkyrimMajorRecordGetter item,
+            IANpcLevelGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
             Write(
-                item: (IAmmoGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IMajorRecordGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IAmmoGetter)item,
+                item: (IPcLevelMultGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1603,12 +1448,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class AmmoXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
+    public partial class PcLevelMultXmlCreateTranslation : ANpcLevelXmlCreateTranslation
     {
-        public new readonly static AmmoXmlCreateTranslation Instance = new AmmoXmlCreateTranslation();
+        public new readonly static PcLevelMultXmlCreateTranslation Instance = new PcLevelMultXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IAmmoInternal item,
+            IPcLevelMult item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1617,7 +1462,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    AmmoXmlCreateTranslation.FillPublicElementXml(
+                    PcLevelMultXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1633,7 +1478,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            IAmmoInternal item,
+            IPcLevelMult item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1641,8 +1486,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "LevelMult":
+                    errorMask?.PushIndex((int)PcLevelMult_FieldIndex.LevelMult);
+                    try
+                    {
+                        item.LevelMult = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
+                    ANpcLevelXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -1658,30 +1521,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Xml Write Mixins
-    public static class AmmoXmlTranslationMixIn
+    public static class PcLevelMultXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IAmmoGetter item,
+            this IPcLevelMultGetter item,
             XElement node,
-            out Ammo.ErrorMask errorMask,
-            Ammo.TranslationMask? translationMask = null,
+            out PcLevelMult.ErrorMask errorMask,
+            PcLevelMult.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((AmmoXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((PcLevelMultXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Ammo.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PcLevelMult.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this IAmmoGetter item,
+            this IPcLevelMultGetter item,
             string path,
-            out Ammo.ErrorMask errorMask,
-            Ammo.TranslationMask? translationMask = null,
+            out PcLevelMult.ErrorMask errorMask,
+            PcLevelMult.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1695,10 +1558,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IAmmoGetter item,
+            this IPcLevelMultGetter item,
             Stream stream,
-            out Ammo.ErrorMask errorMask,
-            Ammo.TranslationMask? translationMask = null,
+            out PcLevelMult.ErrorMask errorMask,
+            PcLevelMult.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1721,30 +1584,42 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class AmmoBinaryWriteTranslation :
-        SkyrimMajorRecordBinaryWriteTranslation,
+    public partial class PcLevelMultBinaryWriteTranslation :
+        ANpcLevelBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static AmmoBinaryWriteTranslation Instance = new AmmoBinaryWriteTranslation();
+        public new readonly static PcLevelMultBinaryWriteTranslation Instance = new PcLevelMultBinaryWriteTranslation();
+
+        static partial void WriteBinaryLevelMultCustom(
+            MutagenWriter writer,
+            IPcLevelMultGetter item);
+
+        public static void WriteBinaryLevelMult(
+            MutagenWriter writer,
+            IPcLevelMultGetter item)
+        {
+            WriteBinaryLevelMultCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static void WriteEmbedded(
+            IPcLevelMultGetter item,
+            MutagenWriter writer)
+        {
+            PcLevelMultBinaryWriteTranslation.WriteBinaryLevelMult(
+                writer: writer,
+                item: item);
+        }
 
         public void Write(
             MutagenWriter writer,
-            IAmmoGetter item,
+            IPcLevelMultGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
-                writer: writer,
-                record: recordTypeConverter.ConvertToCustom(Ammo_Registration.AMMO_HEADER),
-                type: ObjectType.Record))
-            {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                    item: item,
-                    writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
-            }
+            WriteEmbedded(
+                item: item,
+                writer: writer);
         }
 
         public override void Write(
@@ -1753,38 +1628,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IAmmoGetter)item,
+                item: (IPcLevelMultGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public override void Write(
             MutagenWriter writer,
-            ISkyrimMajorRecordGetter item,
+            IANpcLevelGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IAmmoGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
-            IMajorRecordGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (IAmmoGetter)item,
+                item: (IPcLevelMultGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class AmmoBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    public partial class PcLevelMultBinaryCreateTranslation : ANpcLevelBinaryCreateTranslation
     {
-        public new readonly static AmmoBinaryCreateTranslation Instance = new AmmoBinaryCreateTranslation();
+        public new readonly static PcLevelMultBinaryCreateTranslation Instance = new PcLevelMultBinaryCreateTranslation();
+
+        static partial void FillBinaryLevelMultCustom(
+            MutagenFrame frame,
+            IPcLevelMult item);
+
+        public static void FillBinaryLevelMultCustomPublic(
+            MutagenFrame frame,
+            IPcLevelMult item)
+        {
+            FillBinaryLevelMultCustom(
+                frame: frame,
+                item: item);
+        }
 
     }
 
@@ -1792,7 +1669,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class AmmoBinaryTranslationMixIn
+    public static class PcLevelMultBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1801,34 +1678,34 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class AmmoBinaryOverlay :
-        SkyrimMajorRecordBinaryOverlay,
-        IAmmoGetter
+    public partial class PcLevelMultBinaryOverlay :
+        ANpcLevelBinaryOverlay,
+        IPcLevelMultGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Ammo_Registration.Instance;
-        public new static Ammo_Registration Registration => Ammo_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PcLevelMult_Registration.Instance;
+        public new static PcLevelMult_Registration Registration => PcLevelMult_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => AmmoCommon.Instance;
+        protected override object CommonInstance() => PcLevelMultCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => AmmoSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => PcLevelMultSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAmmoGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPcLevelMultGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => AmmoXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => PcLevelMultXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((AmmoXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((PcLevelMultXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -1836,23 +1713,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => AmmoBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => PcLevelMultBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((AmmoBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((PcLevelMultBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public Single LevelMult => GetLevelMultCustom(location: 0x0);
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected AmmoBinaryOverlay(
+        protected PcLevelMultBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1861,37 +1739,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static AmmoBinaryOverlay AmmoFactory(
+        public static PcLevelMultBinaryOverlay PcLevelMultFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream, package.Meta);
-            var ret = new AmmoBinaryOverlay(
-                bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.Meta),
+            var ret = new PcLevelMultBinaryOverlay(
+                bytes: stream.RemainingMemory.Slice(0, 0x4),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.Meta.MajorRecord(stream.RemainingSpan).TotalLength));
-            int offset = stream.Position + package.Meta.MajorConstants.TypeAndLengthLength;
-            stream.Position += 0x10 + package.Meta.MajorConstants.TypeAndLengthLength;
+            int offset = stream.Position;
+            stream.Position += 0x4;
             ret.CustomCtor(
                 stream: stream,
-                finalPos: finalPos,
+                finalPos: stream.Length,
                 offset: offset);
-            ret.FillSubrecordTypes(
-                stream: stream,
-                finalPos: finalPos,
-                offset: offset,
-                recordTypeConverter: recordTypeConverter,
-                fill: ret.FillRecordType);
             return ret;
         }
 
-        public static AmmoBinaryOverlay AmmoFactory(
+        public static PcLevelMultBinaryOverlay PcLevelMultFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            return AmmoFactory(
+            return PcLevelMultFactory(
                 stream: new BinaryMemoryReadStream(slice),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
@@ -1903,7 +1773,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             string? name = null)
         {
-            AmmoMixIn.ToString(
+            PcLevelMultMixIn.ToString(
                 item: this,
                 name: name);
         }

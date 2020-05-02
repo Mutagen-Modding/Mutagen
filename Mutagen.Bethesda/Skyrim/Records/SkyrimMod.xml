@@ -39,6 +39,8 @@
       <Group name="Florae" refName="Flora" />
       <Group name="Furniture" refName="Furniture" />
       <Group name="Weapons" refName="Weapon" />
+      <Group name="Ammunitions" refName="Ammunition" />
+      <Group name="Npcs" refName="Npc" />
     </Fields>
   </Object>
 </Loqui>

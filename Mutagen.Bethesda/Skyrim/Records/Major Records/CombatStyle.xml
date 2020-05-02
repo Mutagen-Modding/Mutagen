@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="CombatStyle" recordType="CSTY" objType="Record" baseClass="SkyrimMajorRecord" GUID="13dc9a9a-040d-459c-82f4-53985876bc3c" ID="208">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

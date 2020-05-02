@@ -70,7 +70,6 @@ namespace Mutagen.Bethesda.Generation
             {
                 var markerTypeRec = new RecordType(markerType.Value);
                 data.MarkerType = markerTypeRec;
-                data.RecordType = markerTypeRec;
             }
             if (obj.Node.TryGetAttribute("endMarkerType", out var endMarker))
             {

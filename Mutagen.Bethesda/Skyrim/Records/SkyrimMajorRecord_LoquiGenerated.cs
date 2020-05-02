@@ -1055,6 +1055,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
         public static readonly RecordType CLFM_HEADER = new RecordType("CLFM");
+        public static readonly RecordType CSTY_HEADER = new RecordType("CSTY");
         public static readonly RecordType CONT_HEADER = new RecordType("CONT");
         public static readonly RecordType DEBR_HEADER = new RecordType("DEBR");
         public static readonly RecordType DOOR_HEADER = new RecordType("DOOR");
@@ -1081,6 +1082,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType KYWD_HEADER = new RecordType("KYWD");
         public static readonly RecordType LTEX_HEADER = new RecordType("LTEX");
         public static readonly RecordType LVLI_HEADER = new RecordType("LVLI");
+        public static readonly RecordType LVLN_HEADER = new RecordType("LVLN");
         public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
         public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
         public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
@@ -1092,6 +1094,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
         public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
         public static readonly RecordType OTFT_HEADER = new RecordType("OTFT");
+        public static readonly RecordType PACK_HEADER = new RecordType("PACK");
         public static readonly RecordType PERK_HEADER = new RecordType("PERK");
         public static readonly RecordType REFR_HEADER = new RecordType("REFR");
         public static readonly RecordType PROJ_HEADER = new RecordType("PROJ");
@@ -1130,6 +1133,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         BOOK_HEADER,
                         CLAS_HEADER,
                         CLFM_HEADER,
+                        CSTY_HEADER,
                         CONT_HEADER,
                         DEBR_HEADER,
                         DOOR_HEADER,
@@ -1156,6 +1160,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         KYWD_HEADER,
                         LTEX_HEADER,
                         LVLI_HEADER,
+                        LVLN_HEADER,
                         LIGH_HEADER,
                         LCRT_HEADER,
                         MGEF_HEADER,
@@ -1167,6 +1172,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         NPC__HEADER,
                         ENCH_HEADER,
                         OTFT_HEADER,
+                        PACK_HEADER,
                         PERK_HEADER,
                         REFR_HEADER,
                         PROJ_HEADER,

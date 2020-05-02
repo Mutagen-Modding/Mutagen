@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Ammo" baseClass="AItem" objType="Record" recordType="AMMO" GUID="b9883ff5-be2f-44d5-acf7-69751cd6e87f" ID="83">
+  <Object name="Ammunition" baseClass="AItem" objType="Record" recordType="AMMO" GUID="b9883ff5-be2f-44d5-acf7-69751cd6e87f" ID="83">
     <Interface>INamed</Interface>
     <Fields>
       <String name="Name" recordType="FULL" />
@@ -8,13 +8,13 @@
       <String name="Icon" recordType="ICON" />
       <FormLink name="Enchantment" refName="Enchantment" recordType="ENAM" />
       <UInt16 name="EnchantmentPoints" recordType="ANAM" />
-      <RefDirect name="Data" refName="AmmoData" />
+      <RefDirect name="Data" refName="AmmunitionData" />
     </Fields>
   </Object>
-  <Object name="AmmoData" recordType="DATA" objType="Subrecord" GUID="23c0f6c1-3952-4c89-a2ca-3137d4bb8aa5" ID="175">
+  <Object name="AmmunitionData" recordType="DATA" objType="Subrecord" GUID="23c0f6c1-3952-4c89-a2ca-3137d4bb8aa5" ID="175">
     <Fields>
       <Float name="Speed" />
-      <Enum name="Flags" enumName="Ammo.AmmoFlag" byteLength="4" />
+      <Enum name="Flags" enumName="AmmunitionData.Flag" byteLength="4" />
       <UInt32 name="Value" />
       <Float name="Weight" />
       <UInt16 name="Damage" />

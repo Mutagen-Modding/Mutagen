@@ -494,8 +494,7 @@ namespace Mutagen.Bethesda.Generation
                             nonIntegrated: true))
                         {
                             if (!field.Field.TryGetFieldData(out var fieldData)
-                                || !fieldData.HasTrigger
-                                || fieldData.TriggeringRecordTypes.Count == 0) continue;
+                                || fieldData.GenerationTypes.Count() == 0) continue;
                             if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
                             if (field.Field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
                             if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
@@ -563,7 +562,8 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 if (!field.Field.TryGetFieldData(out var fieldData)
                                     || !fieldData.HasTrigger
-                                    || fieldData.TriggeringRecordTypes.Count > 0) continue;
+                                    || fieldData.TriggeringRecordTypes.Count > 0
+                                    || fieldData.GenerationTypes.Count() > 0) continue;
                                 if (field.Field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
                                 if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
                                 {
@@ -2227,7 +2227,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 if (!field.Field.TryGetFieldData(out var fieldData)
                                     || !fieldData.HasTrigger
-                                    || fieldData.TriggeringRecordTypes.Count == 0) continue;
+                                    || fieldData.GenerationTypes.Count() == 0) continue;
                                 if (fieldData.BinaryOverlayFallback == BinaryGenerationType.NoGeneration) continue;
                                 if (field.Field.Derivative && fieldData.BinaryOverlayFallback != BinaryGenerationType.Custom) continue;
                                 if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))

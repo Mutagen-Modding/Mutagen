@@ -759,11 +759,15 @@ namespace Mutagen.Bethesda.Generation
                 case ListBinaryType.CounterRecord:
                     fg.AppendLine($"var count = BinaryPrimitives.{nameof(BinaryPrimitives.ReadUInt32LittleEndian)}(_package.Meta.ReadSubrecordFrame(stream).Content);");
                     var subRecordPerItem = (bool)list.CustomData[CounterSubrecordPerItemType];
-                    if (subRecordPerItem)
+                    if (subRecordPerItem || loqui != null)
                     {
                         if (expectedLen.HasValue)
                         {
                             fg.AppendLine($"var subLen = checked((int)(({expectedLen} + _package.Meta.SubConstants.HeaderLength) * count));");
+                        }
+                        if (loqui != null)
+                        {
+                            expectedLen += GameConstants.Get(objGen.GetObjectData().GameMode.Value).SubConstants.HeaderLength;
                         }
                     }
                     else
