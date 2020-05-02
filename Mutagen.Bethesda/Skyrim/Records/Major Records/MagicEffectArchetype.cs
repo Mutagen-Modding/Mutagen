@@ -6,6 +6,8 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class MagicEffectArchetype
     {
+        public readonly static ActorValueExtended _ActorValue_Default = ActorValueExtended.None;
+
         public enum TypeEnum
         {
             ValueModifier = 0,

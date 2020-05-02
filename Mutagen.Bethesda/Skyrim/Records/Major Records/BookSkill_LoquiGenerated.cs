@@ -48,6 +48,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Skill
+        public readonly static Skill _Skill_Default = Skill.None;
         public Skill Skill { get; set; } = default;
         #endregion
 
@@ -1013,7 +1014,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IBookSkill item)
         {
             ClearPartial();
-            item.Skill = default;
+            item.Skill = BookSkill._Skill_Default;
             base.Clear(item);
         }
         

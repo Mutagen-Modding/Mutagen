@@ -53,9 +53,11 @@ namespace Mutagen.Bethesda.Skyrim
         public Single BaseCost { get; set; } = default;
         #endregion
         #region MagicSkill
+        public readonly static ActorValueExtended _MagicSkill_Default = ActorValueExtended.None;
         public ActorValueExtended MagicSkill { get; set; } = default;
         #endregion
         #region ResistValue
+        public readonly static ActorValueExtended _ResistValue_Default = ActorValueExtended.None;
         public ActorValueExtended ResistValue { get; set; } = default;
         #endregion
         #region CounterEffectCount
@@ -132,6 +134,7 @@ namespace Mutagen.Bethesda.Skyrim
         public TargetType TargetType { get; set; } = default;
         #endregion
         #region SecondActorValue
+        public readonly static ActorValueExtended _SecondActorValue_Default = ActorValueExtended.None;
         public ActorValueExtended SecondActorValue { get; set; } = default;
         #endregion
         #region CastingArt
@@ -2750,8 +2753,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.Flags = default;
             item.BaseCost = default;
-            item.MagicSkill = default;
-            item.ResistValue = default;
+            item.MagicSkill = MagicEffectData._MagicSkill_Default;
+            item.ResistValue = MagicEffectData._ResistValue_Default;
             item.CounterEffectCount = default;
             item.Unknown1 = default;
             item.CastingLight.FormKey = FormKey.Null;
@@ -2769,7 +2772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Explosion.FormKey = FormKey.Null;
             item.CastType = default;
             item.TargetType = default;
-            item.SecondActorValue = default;
+            item.SecondActorValue = MagicEffectData._SecondActorValue_Default;
             item.CastingArt.FormKey = FormKey.Null;
             item.HitEffectArt.FormKey = FormKey.Null;
             item.ImpactData.FormKey = FormKey.Null;

@@ -38,6 +38,7 @@
       <Group name="Trees" refName="Tree" />
       <Group name="Florae" refName="Flora" />
       <Group name="Furniture" refName="Furniture" />
+      <Group name="Weapons" refName="Weapon" />
     </Fields>
   </Object>
 </Loqui>

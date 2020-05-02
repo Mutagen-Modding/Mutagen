@@ -52,6 +52,7 @@
     <Compile Include="Oblivion\Records\Major Records\SoulGem.cs">
       <DependentUpon>SoulGem.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Enums\WeaponAnimationType.cs" />
     <Compile Include="Skyrim\Interfaces\IHarvestable.cs" />
     <Compile Include="Skyrim\Interfaces\IModeled.cs" />
     <Compile Include="Skyrim\Interfaces\IIcons.cs" />
@@ -91,6 +92,9 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\BookData.cs">
       <DependentUpon>Book.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\CriticalData.cs">
+      <DependentUpon>Weapon.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Flora.cs">
       <DependentUpon>Flora.xml</DependentUpon>
@@ -163,6 +167,12 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Tree.cs">
       <DependentUpon>Tree.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Weapon.cs">
+      <DependentUpon>Weapon.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WeaponData.cs">
+      <DependentUpon>Weapon.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\WorkbenchData.cs">
       <DependentUpon>Furniture.xml</DependentUpon>
@@ -1713,6 +1723,15 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\EntryPoints_LoquiGenerated.cs">
       <DependentUpon>Furniture.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WeaponBasicStats_LoquiGenerated.cs">
+      <DependentUpon>Weapon.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WeaponData_LoquiGenerated.cs">
+      <DependentUpon>Weapon.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\CriticalData_LoquiGenerated.cs">
+      <DependentUpon>Weapon.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

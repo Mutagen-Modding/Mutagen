@@ -49,6 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 Unknown { get; set; } = default;
         #endregion
         #region Teaches
+        public readonly static Skill _Teaches_Default = Skill.None;
         public Skill Teaches { get; set; } = default;
         #endregion
         #region MaxTrainingLevel
@@ -2224,7 +2225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Unknown = default;
-            item.Teaches = default;
+            item.Teaches = ClassData._Teaches_Default;
             item.MaxTrainingLevel = default;
             item.OneHandedWeight = default;
             item.TwoHandedWeight = default;

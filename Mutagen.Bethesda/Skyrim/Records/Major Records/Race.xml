@@ -155,7 +155,7 @@
   </Object>
   <Object name="SkillBoost" objType="Subrecord" GUID="8397e320-5ee6-4314-b35a-b69c871fa3ec" ID="53">
     <Fields>
-      <Enum name="Skill" enumName="ActorValueExtended" byteLength="1" />
+      <Enum name="Skill" enumName="ActorValueExtended" byteLength="1" default="ActorValueExtended.None" />
       <Int8 name="Boost" />
     </Fields>
   </Object>

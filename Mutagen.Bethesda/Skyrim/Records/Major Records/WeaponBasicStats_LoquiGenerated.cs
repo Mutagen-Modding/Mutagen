@@ -31,29 +31,37 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class MagicEffectArchetype :
-        IMagicEffectArchetypeInternal,
-        ILoquiObjectSetter<MagicEffectArchetype>,
-        IEquatable<MagicEffectArchetype>,
+    public partial class WeaponBasicStats :
+        IWeaponBasicStats,
+        ILoquiObjectSetter<WeaponBasicStats>,
+        IEquatable<WeaponBasicStats>,
         IEqualsMask
     {
-        #region Type
-        public MagicEffectArchetype.TypeEnum Type { get; set; } = default;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        MagicEffectArchetype.TypeEnum IMagicEffectArchetypeInternal.Type
+        #region Ctor
+        public WeaponBasicStats()
         {
-            get => this.Type;
-            set => this.Type = value;
+            CustomCtor();
         }
+        partial void CustomCtor();
+        #endregion
+
+        #region Value
+        public Int32 Value { get; set; } = default;
+        #endregion
+        #region Weight
+        public Single Weight { get; set; } = default;
+        #endregion
+        #region Damage
+        public UInt16 Damage { get; set; } = default;
         #endregion
 
         #region To String
 
-        public virtual void ToString(
+        public void ToString(
             FileGeneration fg,
             string? name = null)
         {
-            MagicEffectArchetypeMixIn.ToString(
+            WeaponBasicStatsMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -63,22 +71,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMagicEffectArchetypeGetter rhs)) return false;
-            return ((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IWeaponBasicStatsGetter rhs)) return false;
+            return ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MagicEffectArchetype obj)
+        public bool Equals(WeaponBasicStats obj)
         {
-            return ((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object XmlWriteTranslator => MagicEffectArchetypeXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => WeaponBasicStatsXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -87,7 +95,7 @@ namespace Mutagen.Bethesda.Skyrim
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((MagicEffectArchetypeXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((WeaponBasicStatsXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -96,9 +104,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static MagicEffectArchetype CreateFromXml(
+        public static WeaponBasicStats CreateFromXml(
             XElement node,
-            MagicEffectArchetype.TranslationMask? translationMask = null)
+            WeaponBasicStats.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -107,27 +115,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static MagicEffectArchetype CreateFromXml(
+        public static WeaponBasicStats CreateFromXml(
             XElement node,
-            out MagicEffectArchetype.ErrorMask errorMask,
-            MagicEffectArchetype.TranslationMask? translationMask = null)
+            out WeaponBasicStats.ErrorMask errorMask,
+            WeaponBasicStats.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = MagicEffectArchetype.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WeaponBasicStats.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public static MagicEffectArchetype CreateFromXml(
+        public static WeaponBasicStats CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new MagicEffectArchetype();
-            ((MagicEffectArchetypeSetterCommon)((IMagicEffectArchetypeGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new WeaponBasicStats();
+            ((WeaponBasicStatsSetterCommon)((IWeaponBasicStatsGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -135,9 +143,9 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static MagicEffectArchetype CreateFromXml(
+        public static WeaponBasicStats CreateFromXml(
             string path,
-            MagicEffectArchetype.TranslationMask? translationMask = null)
+            WeaponBasicStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -145,10 +153,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static MagicEffectArchetype CreateFromXml(
+        public static WeaponBasicStats CreateFromXml(
             string path,
-            out MagicEffectArchetype.ErrorMask errorMask,
-            MagicEffectArchetype.TranslationMask? translationMask = null)
+            out WeaponBasicStats.ErrorMask errorMask,
+            WeaponBasicStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -157,10 +165,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static MagicEffectArchetype CreateFromXml(
+        public static WeaponBasicStats CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            MagicEffectArchetype.TranslationMask? translationMask = null)
+            WeaponBasicStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -169,9 +177,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static MagicEffectArchetype CreateFromXml(
+        public static WeaponBasicStats CreateFromXml(
             Stream stream,
-            MagicEffectArchetype.TranslationMask? translationMask = null)
+            WeaponBasicStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -179,10 +187,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static MagicEffectArchetype CreateFromXml(
+        public static WeaponBasicStats CreateFromXml(
             Stream stream,
-            out MagicEffectArchetype.ErrorMask errorMask,
-            MagicEffectArchetype.TranslationMask? translationMask = null)
+            out WeaponBasicStats.ErrorMask errorMask,
+            WeaponBasicStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -191,10 +199,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static MagicEffectArchetype CreateFromXml(
+        public static WeaponBasicStats CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            MagicEffectArchetype.TranslationMask? translationMask = null)
+            WeaponBasicStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -216,19 +224,19 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Type = initialValue;
-                this.AssociationKey = initialValue;
-                this.ActorValue = initialValue;
+                this.Value = initialValue;
+                this.Weight = initialValue;
+                this.Damage = initialValue;
             }
 
             public Mask(
-                TItem Type,
-                TItem AssociationKey,
-                TItem ActorValue)
+                TItem Value,
+                TItem Weight,
+                TItem Damage)
             {
-                this.Type = Type;
-                this.AssociationKey = AssociationKey;
-                this.ActorValue = ActorValue;
+                this.Value = Value;
+                this.Weight = Weight;
+                this.Damage = Damage;
             }
 
             #pragma warning disable CS8618
@@ -240,9 +248,9 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem Type;
-            public TItem AssociationKey;
-            public TItem ActorValue;
+            public TItem Value;
+            public TItem Weight;
+            public TItem Damage;
             #endregion
 
             #region Equals
@@ -255,38 +263,38 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Type, rhs.Type)) return false;
-                if (!object.Equals(this.AssociationKey, rhs.AssociationKey)) return false;
-                if (!object.Equals(this.ActorValue, rhs.ActorValue)) return false;
+                if (!object.Equals(this.Value, rhs.Value)) return false;
+                if (!object.Equals(this.Weight, rhs.Weight)) return false;
+                if (!object.Equals(this.Damage, rhs.Damage)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Type);
-                hash.Add(this.AssociationKey);
-                hash.Add(this.ActorValue);
+                hash.Add(this.Value);
+                hash.Add(this.Weight);
+                hash.Add(this.Damage);
                 return hash.ToHashCode();
             }
 
             #endregion
 
             #region All
-            public virtual bool All(Func<TItem, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Type)) return false;
-                if (!eval(this.AssociationKey)) return false;
-                if (!eval(this.ActorValue)) return false;
+                if (!eval(this.Value)) return false;
+                if (!eval(this.Weight)) return false;
+                if (!eval(this.Damage)) return false;
                 return true;
             }
             #endregion
 
             #region Any
-            public virtual bool Any(Func<TItem, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Type)) return true;
-                if (eval(this.AssociationKey)) return true;
-                if (eval(this.ActorValue)) return true;
+                if (eval(this.Value)) return true;
+                if (eval(this.Weight)) return true;
+                if (eval(this.Damage)) return true;
                 return false;
             }
             #endregion
@@ -294,16 +302,16 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new MagicEffectArchetype.Mask<R>();
+                var ret = new WeaponBasicStats.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Type = eval(this.Type);
-                obj.AssociationKey = eval(this.AssociationKey);
-                obj.ActorValue = eval(this.ActorValue);
+                obj.Value = eval(this.Value);
+                obj.Weight = eval(this.Weight);
+                obj.Damage = eval(this.Damage);
             }
             #endregion
 
@@ -313,30 +321,30 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(MagicEffectArchetype.Mask<bool>? printMask = null)
+            public string ToString(WeaponBasicStats.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, MagicEffectArchetype.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, WeaponBasicStats.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(MagicEffectArchetype.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(WeaponBasicStats.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Type ?? true)
+                    if (printMask?.Value ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        fg.AppendItem(Value, "Value");
                     }
-                    if (printMask?.AssociationKey ?? true)
+                    if (printMask?.Weight ?? true)
                     {
-                        fg.AppendItem(AssociationKey, "AssociationKey");
+                        fg.AppendItem(Weight, "Weight");
                     }
-                    if (printMask?.ActorValue ?? true)
+                    if (printMask?.Damage ?? true)
                     {
-                        fg.AppendItem(ActorValue, "ActorValue");
+                        fg.AppendItem(Damage, "Damage");
                     }
                 }
                 fg.AppendLine("]");
@@ -363,72 +371,72 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
-            public Exception? Type;
-            public Exception? AssociationKey;
-            public Exception? ActorValue;
+            public Exception? Value;
+            public Exception? Weight;
+            public Exception? Damage;
             #endregion
 
             #region IErrorMask
-            public virtual object? GetNthMask(int index)
+            public object? GetNthMask(int index)
             {
-                MagicEffectArchetype_FieldIndex enu = (MagicEffectArchetype_FieldIndex)index;
+                WeaponBasicStats_FieldIndex enu = (WeaponBasicStats_FieldIndex)index;
                 switch (enu)
                 {
-                    case MagicEffectArchetype_FieldIndex.Type:
-                        return Type;
-                    case MagicEffectArchetype_FieldIndex.AssociationKey:
-                        return AssociationKey;
-                    case MagicEffectArchetype_FieldIndex.ActorValue:
-                        return ActorValue;
+                    case WeaponBasicStats_FieldIndex.Value:
+                        return Value;
+                    case WeaponBasicStats_FieldIndex.Weight:
+                        return Weight;
+                    case WeaponBasicStats_FieldIndex.Damage:
+                        return Damage;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public virtual void SetNthException(int index, Exception ex)
+            public void SetNthException(int index, Exception ex)
             {
-                MagicEffectArchetype_FieldIndex enu = (MagicEffectArchetype_FieldIndex)index;
+                WeaponBasicStats_FieldIndex enu = (WeaponBasicStats_FieldIndex)index;
                 switch (enu)
                 {
-                    case MagicEffectArchetype_FieldIndex.Type:
-                        this.Type = ex;
+                    case WeaponBasicStats_FieldIndex.Value:
+                        this.Value = ex;
                         break;
-                    case MagicEffectArchetype_FieldIndex.AssociationKey:
-                        this.AssociationKey = ex;
+                    case WeaponBasicStats_FieldIndex.Weight:
+                        this.Weight = ex;
                         break;
-                    case MagicEffectArchetype_FieldIndex.ActorValue:
-                        this.ActorValue = ex;
-                        break;
-                    default:
-                        throw new ArgumentException($"Index is out of range: {index}");
-                }
-            }
-
-            public virtual void SetNthMask(int index, object obj)
-            {
-                MagicEffectArchetype_FieldIndex enu = (MagicEffectArchetype_FieldIndex)index;
-                switch (enu)
-                {
-                    case MagicEffectArchetype_FieldIndex.Type:
-                        this.Type = (Exception?)obj;
-                        break;
-                    case MagicEffectArchetype_FieldIndex.AssociationKey:
-                        this.AssociationKey = (Exception?)obj;
-                        break;
-                    case MagicEffectArchetype_FieldIndex.ActorValue:
-                        this.ActorValue = (Exception?)obj;
+                    case WeaponBasicStats_FieldIndex.Damage:
+                        this.Damage = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public virtual bool IsInError()
+            public void SetNthMask(int index, object obj)
+            {
+                WeaponBasicStats_FieldIndex enu = (WeaponBasicStats_FieldIndex)index;
+                switch (enu)
+                {
+                    case WeaponBasicStats_FieldIndex.Value:
+                        this.Value = (Exception?)obj;
+                        break;
+                    case WeaponBasicStats_FieldIndex.Weight:
+                        this.Weight = (Exception?)obj;
+                        break;
+                    case WeaponBasicStats_FieldIndex.Damage:
+                        this.Damage = (Exception?)obj;
+                        break;
+                    default:
+                        throw new ArgumentException($"Index is out of range: {index}");
+                }
+            }
+
+            public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Type != null) return true;
-                if (AssociationKey != null) return true;
-                if (ActorValue != null) return true;
+                if (Value != null) return true;
+                if (Weight != null) return true;
+                if (Damage != null) return true;
                 return false;
             }
             #endregion
@@ -441,7 +449,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return fg.ToString();
             }
 
-            public virtual void ToString(FileGeneration fg, string? name = null)
+            public void ToString(FileGeneration fg, string? name = null)
             {
                 fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
@@ -461,11 +469,11 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 fg.AppendLine("]");
             }
-            protected virtual void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendItem(Type, "Type");
-                fg.AppendItem(AssociationKey, "AssociationKey");
-                fg.AppendItem(ActorValue, "ActorValue");
+                fg.AppendItem(Value, "Value");
+                fg.AppendItem(Weight, "Weight");
+                fg.AppendItem(Damage, "Damage");
             }
             #endregion
 
@@ -474,9 +482,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Type = this.Type.Combine(rhs.Type);
-                ret.AssociationKey = this.AssociationKey.Combine(rhs.AssociationKey);
-                ret.ActorValue = this.ActorValue.Combine(rhs.ActorValue);
+                ret.Value = this.Value.Combine(rhs.Value);
+                ret.Weight = this.Weight.Combine(rhs.Weight);
+                ret.Damage = this.Damage.Combine(rhs.Damage);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -498,17 +506,17 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public bool Type;
-            public bool AssociationKey;
-            public bool ActorValue;
+            public bool Value;
+            public bool Weight;
+            public bool Damage;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.Type = defaultOn;
-                this.AssociationKey = defaultOn;
-                this.ActorValue = defaultOn;
+                this.Value = defaultOn;
+                this.Weight = defaultOn;
+                this.Damage = defaultOn;
             }
 
             #endregion
@@ -522,44 +530,48 @@ namespace Mutagen.Bethesda.Skyrim
                 return _crystal;
             }
 
-            protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Type, null));
-                ret.Add((AssociationKey, null));
-                ret.Add((ActorValue, null));
+                ret.Add((Value, null));
+                ret.Add((Weight, null));
+                ret.Add((Damage, null));
             }
         }
         #endregion
 
+        #region Mutagen
+        public new static readonly RecordType GrupRecordType = WeaponBasicStats_Registration.TriggeringRecordType;
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object BinaryWriteTranslator => MagicEffectArchetypeBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => WeaponBasicStatsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((MagicEffectArchetypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((WeaponBasicStatsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static MagicEffectArchetype CreateFromBinary(MutagenFrame frame)
+        public static WeaponBasicStats CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public static MagicEffectArchetype CreateFromBinary(
+        public static WeaponBasicStats CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new MagicEffectArchetype();
-            ((MagicEffectArchetypeSetterCommon)((IMagicEffectArchetypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new WeaponBasicStats();
+            ((WeaponBasicStatsSetterCommon)((IWeaponBasicStatsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -572,40 +584,36 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMagicEffectArchetypeGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeaponBasicStatsGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((MagicEffectArchetypeSetterCommon)((IMagicEffectArchetypeGetter)this).CommonSetterInstance()!).Clear(this);
+            ((WeaponBasicStatsSetterCommon)((IWeaponBasicStatsGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static MagicEffectArchetype GetNew()
+        internal static WeaponBasicStats GetNew()
         {
-            return new MagicEffectArchetype();
+            return new WeaponBasicStats();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IMagicEffectArchetype :
-        IMagicEffectArchetypeGetter,
-        ILoquiObjectSetter<IMagicEffectArchetypeInternal>
+    public partial interface IWeaponBasicStats :
+        IWeaponBasicStatsGetter,
+        IWeightValue,
+        ILoquiObjectSetter<IWeaponBasicStats>
     {
-        new FormKey AssociationKey { get; set; }
-        new ActorValueExtended ActorValue { get; set; }
+        new Int32 Value { get; set; }
+        new Single Weight { get; set; }
+        new UInt16 Damage { get; set; }
     }
 
-    public partial interface IMagicEffectArchetypeInternal :
-        IMagicEffectArchetype,
-        IMagicEffectArchetypeGetter
-    {
-        new MagicEffectArchetype.TypeEnum Type { get; set; }
-    }
-
-    public partial interface IMagicEffectArchetypeGetter :
+    public partial interface IWeaponBasicStatsGetter :
         ILoquiObject,
-        ILoquiObject<IMagicEffectArchetypeGetter>,
+        IWeightValueGetter,
+        ILoquiObject<IWeaponBasicStatsGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -615,52 +623,52 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => MagicEffectArchetype_Registration.Instance;
-        MagicEffectArchetype.TypeEnum Type { get; }
-        FormKey AssociationKey { get; }
-        ActorValueExtended ActorValue { get; }
+        static ILoquiRegistration Registration => WeaponBasicStats_Registration.Instance;
+        Int32 Value { get; }
+        Single Weight { get; }
+        UInt16 Damage { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class MagicEffectArchetypeMixIn
+    public static partial class WeaponBasicStatsMixIn
     {
-        public static void Clear(this IMagicEffectArchetypeInternal item)
+        public static void Clear(this IWeaponBasicStats item)
         {
-            ((MagicEffectArchetypeSetterCommon)((IMagicEffectArchetypeGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((WeaponBasicStatsSetterCommon)((IWeaponBasicStatsGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static MagicEffectArchetype.Mask<bool> GetEqualsMask(
-            this IMagicEffectArchetypeGetter item,
-            IMagicEffectArchetypeGetter rhs,
+        public static WeaponBasicStats.Mask<bool> GetEqualsMask(
+            this IWeaponBasicStatsGetter item,
+            IWeaponBasicStatsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IMagicEffectArchetypeGetter item,
+            this IWeaponBasicStatsGetter item,
             string? name = null,
-            MagicEffectArchetype.Mask<bool>? printMask = null)
+            WeaponBasicStats.Mask<bool>? printMask = null)
         {
-            return ((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)item).CommonInstance()!).ToString(
+            return ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IMagicEffectArchetypeGetter item,
+            this IWeaponBasicStatsGetter item,
             FileGeneration fg,
             string? name = null,
-            MagicEffectArchetype.Mask<bool>? printMask = null)
+            WeaponBasicStats.Mask<bool>? printMask = null)
         {
-            ((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)item).CommonInstance()!).ToString(
+            ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -668,38 +676,38 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this IMagicEffectArchetypeGetter item,
-            MagicEffectArchetype.Mask<bool?> checkMask)
+            this IWeaponBasicStatsGetter item,
+            WeaponBasicStats.Mask<bool?> checkMask)
         {
-            return ((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)item).CommonInstance()!).HasBeenSet(
+            return ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static MagicEffectArchetype.Mask<bool> GetHasBeenSetMask(this IMagicEffectArchetypeGetter item)
+        public static WeaponBasicStats.Mask<bool> GetHasBeenSetMask(this IWeaponBasicStatsGetter item)
         {
-            var ret = new MagicEffectArchetype.Mask<bool>(false);
-            ((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new WeaponBasicStats.Mask<bool>(false);
+            ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IMagicEffectArchetypeGetter item,
-            IMagicEffectArchetypeGetter rhs)
+            this IWeaponBasicStatsGetter item,
+            IWeaponBasicStatsGetter rhs)
         {
-            return ((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)item).CommonInstance()!).Equals(
+            return ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this IMagicEffectArchetypeInternal lhs,
-            IMagicEffectArchetypeGetter rhs,
-            MagicEffectArchetype.TranslationMask? copyMask = null)
+            this IWeaponBasicStats lhs,
+            IWeaponBasicStatsGetter rhs,
+            WeaponBasicStats.TranslationMask? copyMask = null)
         {
-            ((MagicEffectArchetypeSetterTranslationCommon)((IMagicEffectArchetypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WeaponBasicStatsSetterTranslationCommon)((IWeaponBasicStatsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -707,59 +715,59 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this IMagicEffectArchetypeInternal lhs,
-            IMagicEffectArchetypeGetter rhs,
-            out MagicEffectArchetype.ErrorMask errorMask,
-            MagicEffectArchetype.TranslationMask? copyMask = null)
+            this IWeaponBasicStats lhs,
+            IWeaponBasicStatsGetter rhs,
+            out WeaponBasicStats.ErrorMask errorMask,
+            WeaponBasicStats.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((MagicEffectArchetypeSetterTranslationCommon)((IMagicEffectArchetypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WeaponBasicStatsSetterTranslationCommon)((IWeaponBasicStatsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = MagicEffectArchetype.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WeaponBasicStats.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IMagicEffectArchetypeInternal lhs,
-            IMagicEffectArchetypeGetter rhs,
+            this IWeaponBasicStats lhs,
+            IWeaponBasicStatsGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((MagicEffectArchetypeSetterTranslationCommon)((IMagicEffectArchetypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WeaponBasicStatsSetterTranslationCommon)((IWeaponBasicStatsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static MagicEffectArchetype DeepCopy(
-            this IMagicEffectArchetypeGetter item,
-            MagicEffectArchetype.TranslationMask? copyMask = null)
+        public static WeaponBasicStats DeepCopy(
+            this IWeaponBasicStatsGetter item,
+            WeaponBasicStats.TranslationMask? copyMask = null)
         {
-            return ((MagicEffectArchetypeSetterTranslationCommon)((IMagicEffectArchetypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WeaponBasicStatsSetterTranslationCommon)((IWeaponBasicStatsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static MagicEffectArchetype DeepCopy(
-            this IMagicEffectArchetypeGetter item,
-            out MagicEffectArchetype.ErrorMask errorMask,
-            MagicEffectArchetype.TranslationMask? copyMask = null)
+        public static WeaponBasicStats DeepCopy(
+            this IWeaponBasicStatsGetter item,
+            out WeaponBasicStats.ErrorMask errorMask,
+            WeaponBasicStats.TranslationMask? copyMask = null)
         {
-            return ((MagicEffectArchetypeSetterTranslationCommon)((IMagicEffectArchetypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WeaponBasicStatsSetterTranslationCommon)((IWeaponBasicStatsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static MagicEffectArchetype DeepCopy(
-            this IMagicEffectArchetypeGetter item,
+        public static WeaponBasicStats DeepCopy(
+            this IWeaponBasicStatsGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((MagicEffectArchetypeSetterTranslationCommon)((IMagicEffectArchetypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WeaponBasicStatsSetterTranslationCommon)((IWeaponBasicStatsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -768,9 +776,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IMagicEffectArchetypeInternal item,
+            this IWeaponBasicStats item,
             XElement node,
-            MagicEffectArchetype.TranslationMask? translationMask = null)
+            WeaponBasicStats.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -781,10 +789,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IMagicEffectArchetypeInternal item,
+            this IWeaponBasicStats item,
             XElement node,
-            out MagicEffectArchetype.ErrorMask errorMask,
-            MagicEffectArchetype.TranslationMask? translationMask = null)
+            out WeaponBasicStats.ErrorMask errorMask,
+            WeaponBasicStats.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -792,16 +800,16 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = MagicEffectArchetype.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WeaponBasicStats.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this IMagicEffectArchetypeInternal item,
+            this IWeaponBasicStats item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((MagicEffectArchetypeSetterCommon)((IMagicEffectArchetypeGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((WeaponBasicStatsSetterCommon)((IWeaponBasicStatsGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -809,9 +817,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IMagicEffectArchetypeInternal item,
+            this IWeaponBasicStats item,
             string path,
-            MagicEffectArchetype.TranslationMask? translationMask = null)
+            WeaponBasicStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -821,10 +829,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IMagicEffectArchetypeInternal item,
+            this IWeaponBasicStats item,
             string path,
-            out MagicEffectArchetype.ErrorMask errorMask,
-            MagicEffectArchetype.TranslationMask? translationMask = null)
+            out WeaponBasicStats.ErrorMask errorMask,
+            WeaponBasicStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -835,10 +843,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IMagicEffectArchetypeInternal item,
+            this IWeaponBasicStats item,
             string path,
             ErrorMaskBuilder? errorMask,
-            MagicEffectArchetype.TranslationMask? translationMask = null)
+            WeaponBasicStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -849,9 +857,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IMagicEffectArchetypeInternal item,
+            this IWeaponBasicStats item,
             Stream stream,
-            MagicEffectArchetype.TranslationMask? translationMask = null)
+            WeaponBasicStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -861,10 +869,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IMagicEffectArchetypeInternal item,
+            this IWeaponBasicStats item,
             Stream stream,
-            out MagicEffectArchetype.ErrorMask errorMask,
-            MagicEffectArchetype.TranslationMask? translationMask = null)
+            out WeaponBasicStats.ErrorMask errorMask,
+            WeaponBasicStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -875,10 +883,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IMagicEffectArchetypeInternal item,
+            this IWeaponBasicStats item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            MagicEffectArchetype.TranslationMask? translationMask = null)
+            WeaponBasicStats.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -893,7 +901,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IMagicEffectArchetypeInternal item,
+            this IWeaponBasicStats item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -903,11 +911,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromBinary(
-            this IMagicEffectArchetypeInternal item,
+            this IWeaponBasicStats item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((MagicEffectArchetypeSetterCommon)((IMagicEffectArchetypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((WeaponBasicStatsSetterCommon)((IWeaponBasicStatsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -923,49 +931,49 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum MagicEffectArchetype_FieldIndex
+    public enum WeaponBasicStats_FieldIndex
     {
-        Type = 0,
-        AssociationKey = 1,
-        ActorValue = 2,
+        Value = 0,
+        Weight = 1,
+        Damage = 2,
     }
     #endregion
 
     #region Registration
-    public partial class MagicEffectArchetype_Registration : ILoquiRegistration
+    public partial class WeaponBasicStats_Registration : ILoquiRegistration
     {
-        public static readonly MagicEffectArchetype_Registration Instance = new MagicEffectArchetype_Registration();
+        public static readonly WeaponBasicStats_Registration Instance = new WeaponBasicStats_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 108,
+            msgID: 196,
             version: 0);
 
-        public const string GUID = "4a9ea74b-5a0a-4630-96f8-cb34dc5b1207";
+        public const string GUID = "be7d3fc4-80d6-464c-931d-8329744fe7d3";
 
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(MagicEffectArchetype.Mask<>);
+        public static readonly Type MaskType = typeof(WeaponBasicStats.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(MagicEffectArchetype.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(WeaponBasicStats.ErrorMask);
 
-        public static readonly Type ClassType = typeof(MagicEffectArchetype);
+        public static readonly Type ClassType = typeof(WeaponBasicStats);
 
-        public static readonly Type GetterType = typeof(IMagicEffectArchetypeGetter);
+        public static readonly Type GetterType = typeof(IWeaponBasicStatsGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IMagicEffectArchetype);
+        public static readonly Type SetterType = typeof(IWeaponBasicStats);
 
-        public static readonly Type? InternalSetterType = typeof(IMagicEffectArchetypeInternal);
+        public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.MagicEffectArchetype";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.WeaponBasicStats";
 
-        public const string Name = "MagicEffectArchetype";
+        public const string Name = "WeaponBasicStats";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -977,12 +985,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "TYPE":
-                    return (ushort)MagicEffectArchetype_FieldIndex.Type;
-                case "ASSOCIATIONKEY":
-                    return (ushort)MagicEffectArchetype_FieldIndex.AssociationKey;
-                case "ACTORVALUE":
-                    return (ushort)MagicEffectArchetype_FieldIndex.ActorValue;
+                case "VALUE":
+                    return (ushort)WeaponBasicStats_FieldIndex.Value;
+                case "WEIGHT":
+                    return (ushort)WeaponBasicStats_FieldIndex.Weight;
+                case "DAMAGE":
+                    return (ushort)WeaponBasicStats_FieldIndex.Damage;
                 default:
                     return null;
             }
@@ -990,12 +998,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            MagicEffectArchetype_FieldIndex enu = (MagicEffectArchetype_FieldIndex)index;
+            WeaponBasicStats_FieldIndex enu = (WeaponBasicStats_FieldIndex)index;
             switch (enu)
             {
-                case MagicEffectArchetype_FieldIndex.Type:
-                case MagicEffectArchetype_FieldIndex.AssociationKey:
-                case MagicEffectArchetype_FieldIndex.ActorValue:
+                case WeaponBasicStats_FieldIndex.Value:
+                case WeaponBasicStats_FieldIndex.Weight:
+                case WeaponBasicStats_FieldIndex.Damage:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1004,12 +1012,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            MagicEffectArchetype_FieldIndex enu = (MagicEffectArchetype_FieldIndex)index;
+            WeaponBasicStats_FieldIndex enu = (WeaponBasicStats_FieldIndex)index;
             switch (enu)
             {
-                case MagicEffectArchetype_FieldIndex.Type:
-                case MagicEffectArchetype_FieldIndex.AssociationKey:
-                case MagicEffectArchetype_FieldIndex.ActorValue:
+                case WeaponBasicStats_FieldIndex.Value:
+                case WeaponBasicStats_FieldIndex.Weight:
+                case WeaponBasicStats_FieldIndex.Damage:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1018,12 +1026,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            MagicEffectArchetype_FieldIndex enu = (MagicEffectArchetype_FieldIndex)index;
+            WeaponBasicStats_FieldIndex enu = (WeaponBasicStats_FieldIndex)index;
             switch (enu)
             {
-                case MagicEffectArchetype_FieldIndex.Type:
-                case MagicEffectArchetype_FieldIndex.AssociationKey:
-                case MagicEffectArchetype_FieldIndex.ActorValue:
+                case WeaponBasicStats_FieldIndex.Value:
+                case WeaponBasicStats_FieldIndex.Weight:
+                case WeaponBasicStats_FieldIndex.Damage:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1032,15 +1040,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static string GetNthName(ushort index)
         {
-            MagicEffectArchetype_FieldIndex enu = (MagicEffectArchetype_FieldIndex)index;
+            WeaponBasicStats_FieldIndex enu = (WeaponBasicStats_FieldIndex)index;
             switch (enu)
             {
-                case MagicEffectArchetype_FieldIndex.Type:
-                    return "Type";
-                case MagicEffectArchetype_FieldIndex.AssociationKey:
-                    return "AssociationKey";
-                case MagicEffectArchetype_FieldIndex.ActorValue:
-                    return "ActorValue";
+                case WeaponBasicStats_FieldIndex.Value:
+                    return "Value";
+                case WeaponBasicStats_FieldIndex.Weight:
+                    return "Weight";
+                case WeaponBasicStats_FieldIndex.Damage:
+                    return "Damage";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1048,12 +1056,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            MagicEffectArchetype_FieldIndex enu = (MagicEffectArchetype_FieldIndex)index;
+            WeaponBasicStats_FieldIndex enu = (WeaponBasicStats_FieldIndex)index;
             switch (enu)
             {
-                case MagicEffectArchetype_FieldIndex.Type:
-                case MagicEffectArchetype_FieldIndex.AssociationKey:
-                case MagicEffectArchetype_FieldIndex.ActorValue:
+                case WeaponBasicStats_FieldIndex.Value:
+                case WeaponBasicStats_FieldIndex.Weight:
+                case WeaponBasicStats_FieldIndex.Damage:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1062,12 +1070,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsProtected(ushort index)
         {
-            MagicEffectArchetype_FieldIndex enu = (MagicEffectArchetype_FieldIndex)index;
+            WeaponBasicStats_FieldIndex enu = (WeaponBasicStats_FieldIndex)index;
             switch (enu)
             {
-                case MagicEffectArchetype_FieldIndex.Type:
-                case MagicEffectArchetype_FieldIndex.AssociationKey:
-                case MagicEffectArchetype_FieldIndex.ActorValue:
+                case WeaponBasicStats_FieldIndex.Value:
+                case WeaponBasicStats_FieldIndex.Weight:
+                case WeaponBasicStats_FieldIndex.Damage:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1076,24 +1084,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static Type GetNthType(ushort index)
         {
-            MagicEffectArchetype_FieldIndex enu = (MagicEffectArchetype_FieldIndex)index;
+            WeaponBasicStats_FieldIndex enu = (WeaponBasicStats_FieldIndex)index;
             switch (enu)
             {
-                case MagicEffectArchetype_FieldIndex.Type:
-                    return typeof(MagicEffectArchetype.TypeEnum);
-                case MagicEffectArchetype_FieldIndex.AssociationKey:
-                    return typeof(FormKey);
-                case MagicEffectArchetype_FieldIndex.ActorValue:
-                    return typeof(ActorValueExtended);
+                case WeaponBasicStats_FieldIndex.Value:
+                    return typeof(Int32);
+                case WeaponBasicStats_FieldIndex.Weight:
+                    return typeof(Single);
+                case WeaponBasicStats_FieldIndex.Damage:
+                    return typeof(UInt16);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(MagicEffectArchetypeXmlWriteTranslation);
-        public const int NumStructFields = 0;
+        public static readonly Type XmlWriteTranslation = typeof(WeaponBasicStatsXmlWriteTranslation);
+        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
+        public static readonly RecordType TriggeringRecordType = DATA_HEADER;
+        public const int NumStructFields = 3;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryWriteTranslation = typeof(MagicEffectArchetypeBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(WeaponBasicStatsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1126,22 +1136,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class MagicEffectArchetypeSetterCommon
+    public partial class WeaponBasicStatsSetterCommon
     {
-        public static readonly MagicEffectArchetypeSetterCommon Instance = new MagicEffectArchetypeSetterCommon();
+        public static readonly WeaponBasicStatsSetterCommon Instance = new WeaponBasicStatsSetterCommon();
 
         partial void ClearPartial();
         
-        public virtual void Clear(IMagicEffectArchetypeInternal item)
+        public void Clear(IWeaponBasicStats item)
         {
             ClearPartial();
-            item.AssociationKey = FormKey.Null;
-            item.ActorValue = MagicEffectArchetype._ActorValue_Default;
+            item.Value = default;
+            item.Weight = default;
+            item.Damage = default;
         }
         
         #region Xml Translation
         public virtual void CopyInFromXml(
-            IMagicEffectArchetypeInternal item,
+            IWeaponBasicStats item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1150,7 +1161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    MagicEffectArchetypeXmlCreateTranslation.FillPublicElementXml(
+                    WeaponBasicStatsXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1169,16 +1180,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Binary Translation
         protected static void FillBinaryStructs(
-            IMagicEffectArchetypeInternal item,
+            IWeaponBasicStats item,
             MutagenFrame frame)
         {
+            item.Value = frame.ReadInt32();
+            item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Damage = frame.ReadUInt16();
         }
         
         public virtual void CopyInFromBinary(
-            IMagicEffectArchetypeInternal item,
+            IWeaponBasicStats item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                recordTypeConverter.ConvertToCustom(WeaponBasicStats_Registration.DATA_HEADER)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1189,17 +1206,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MagicEffectArchetypeCommon
+    public partial class WeaponBasicStatsCommon
     {
-        public static readonly MagicEffectArchetypeCommon Instance = new MagicEffectArchetypeCommon();
+        public static readonly WeaponBasicStatsCommon Instance = new WeaponBasicStatsCommon();
 
-        public MagicEffectArchetype.Mask<bool> GetEqualsMask(
-            IMagicEffectArchetypeGetter item,
-            IMagicEffectArchetypeGetter rhs,
+        public WeaponBasicStats.Mask<bool> GetEqualsMask(
+            IWeaponBasicStatsGetter item,
+            IWeaponBasicStatsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new MagicEffectArchetype.Mask<bool>(false);
-            ((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new WeaponBasicStats.Mask<bool>(false);
+            ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1208,21 +1225,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IMagicEffectArchetypeGetter item,
-            IMagicEffectArchetypeGetter rhs,
-            MagicEffectArchetype.Mask<bool> ret,
+            IWeaponBasicStatsGetter item,
+            IWeaponBasicStatsGetter rhs,
+            WeaponBasicStats.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Type = item.Type == rhs.Type;
-            ret.AssociationKey = item.AssociationKey == rhs.AssociationKey;
-            ret.ActorValue = item.ActorValue == rhs.ActorValue;
+            ret.Value = item.Value == rhs.Value;
+            ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
+            ret.Damage = item.Damage == rhs.Damage;
         }
         
         public string ToString(
-            IMagicEffectArchetypeGetter item,
+            IWeaponBasicStatsGetter item,
             string? name = null,
-            MagicEffectArchetype.Mask<bool>? printMask = null)
+            WeaponBasicStats.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1234,18 +1251,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IMagicEffectArchetypeGetter item,
+            IWeaponBasicStatsGetter item,
             FileGeneration fg,
             string? name = null,
-            MagicEffectArchetype.Mask<bool>? printMask = null)
+            WeaponBasicStats.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"MagicEffectArchetype =>");
+                fg.AppendLine($"WeaponBasicStats =>");
             }
             else
             {
-                fg.AppendLine($"{name} (MagicEffectArchetype) =>");
+                fg.AppendLine($"{name} (WeaponBasicStats) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1259,72 +1276,72 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IMagicEffectArchetypeGetter item,
+            IWeaponBasicStatsGetter item,
             FileGeneration fg,
-            MagicEffectArchetype.Mask<bool>? printMask = null)
+            WeaponBasicStats.Mask<bool>? printMask = null)
         {
-            if (printMask?.Type ?? true)
+            if (printMask?.Value ?? true)
             {
-                fg.AppendItem(item.Type, "Type");
+                fg.AppendItem(item.Value, "Value");
             }
-            if (printMask?.AssociationKey ?? true)
+            if (printMask?.Weight ?? true)
             {
-                fg.AppendItem(item.AssociationKey, "AssociationKey");
+                fg.AppendItem(item.Weight, "Weight");
             }
-            if (printMask?.ActorValue ?? true)
+            if (printMask?.Damage ?? true)
             {
-                fg.AppendItem(item.ActorValue, "ActorValue");
+                fg.AppendItem(item.Damage, "Damage");
             }
         }
         
         public bool HasBeenSet(
-            IMagicEffectArchetypeGetter item,
-            MagicEffectArchetype.Mask<bool?> checkMask)
+            IWeaponBasicStatsGetter item,
+            WeaponBasicStats.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
-            IMagicEffectArchetypeGetter item,
-            MagicEffectArchetype.Mask<bool> mask)
+            IWeaponBasicStatsGetter item,
+            WeaponBasicStats.Mask<bool> mask)
         {
-            mask.Type = true;
-            mask.AssociationKey = true;
-            mask.ActorValue = true;
+            mask.Value = true;
+            mask.Weight = true;
+            mask.Damage = true;
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IMagicEffectArchetypeGetter? lhs,
-            IMagicEffectArchetypeGetter? rhs)
+            IWeaponBasicStatsGetter? lhs,
+            IWeaponBasicStatsGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Type != rhs.Type) return false;
-            if (lhs.AssociationKey != rhs.AssociationKey) return false;
-            if (lhs.ActorValue != rhs.ActorValue) return false;
+            if (lhs.Value != rhs.Value) return false;
+            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            if (lhs.Damage != rhs.Damage) return false;
             return true;
         }
         
-        public virtual int GetHashCode(IMagicEffectArchetypeGetter item)
+        public virtual int GetHashCode(IWeaponBasicStatsGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Type);
-            hash.Add(item.AssociationKey);
-            hash.Add(item.ActorValue);
+            hash.Add(item.Value);
+            hash.Add(item.Weight);
+            hash.Add(item.Damage);
             return hash.ToHashCode();
         }
         
         #endregion
         
         
-        public virtual object GetNew()
+        public object GetNew()
         {
-            return MagicEffectArchetype.GetNew();
+            return WeaponBasicStats.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IMagicEffectArchetypeGetter obj)
+        public IEnumerable<ILinkGetter> GetLinks(IWeaponBasicStatsGetter obj)
         {
             yield break;
         }
@@ -1332,63 +1349,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MagicEffectArchetypeSetterTranslationCommon
+    public partial class WeaponBasicStatsSetterTranslationCommon
     {
-        public static readonly MagicEffectArchetypeSetterTranslationCommon Instance = new MagicEffectArchetypeSetterTranslationCommon();
+        public static readonly WeaponBasicStatsSetterTranslationCommon Instance = new WeaponBasicStatsSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public virtual void DeepCopyIn(
-            IMagicEffectArchetypeInternal item,
-            IMagicEffectArchetypeGetter rhs,
+        public void DeepCopyIn(
+            IWeaponBasicStats item,
+            IWeaponBasicStatsGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)MagicEffectArchetype_FieldIndex.Type) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WeaponBasicStats_FieldIndex.Value) ?? true))
             {
-                item.Type = rhs.Type;
+                item.Value = rhs.Value;
             }
-            DeepCopyIn(
-                (IMagicEffectArchetype)item,
-                (IMagicEffectArchetypeGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-        
-        public virtual void DeepCopyIn(
-            IMagicEffectArchetype item,
-            IMagicEffectArchetypeGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
-        {
-            if ((copyMask?.GetShouldTranslate((int)MagicEffectArchetype_FieldIndex.AssociationKey) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WeaponBasicStats_FieldIndex.Weight) ?? true))
             {
-                item.AssociationKey = rhs.AssociationKey;
+                item.Weight = rhs.Weight;
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffectArchetype_FieldIndex.ActorValue) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WeaponBasicStats_FieldIndex.Damage) ?? true))
             {
-                item.ActorValue = rhs.ActorValue;
+                item.Damage = rhs.Damage;
             }
         }
         
         #endregion
         
-        public MagicEffectArchetype DeepCopy(
-            IMagicEffectArchetypeGetter item,
-            MagicEffectArchetype.TranslationMask? copyMask = null)
+        public WeaponBasicStats DeepCopy(
+            IWeaponBasicStatsGetter item,
+            WeaponBasicStats.TranslationMask? copyMask = null)
         {
-            MagicEffectArchetype ret = (MagicEffectArchetype)((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)item).CommonInstance()!).GetNew();
+            WeaponBasicStats ret = (WeaponBasicStats)((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public MagicEffectArchetype DeepCopy(
-            IMagicEffectArchetypeGetter item,
-            out MagicEffectArchetype.ErrorMask errorMask,
-            MagicEffectArchetype.TranslationMask? copyMask = null)
+        public WeaponBasicStats DeepCopy(
+            IWeaponBasicStatsGetter item,
+            out WeaponBasicStats.ErrorMask errorMask,
+            WeaponBasicStats.TranslationMask? copyMask = null)
         {
-            MagicEffectArchetype ret = (MagicEffectArchetype)((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)item).CommonInstance()!).GetNew();
+            WeaponBasicStats ret = (WeaponBasicStats)((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1396,12 +1400,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public MagicEffectArchetype DeepCopy(
-            IMagicEffectArchetypeGetter item,
+        public WeaponBasicStats DeepCopy(
+            IWeaponBasicStatsGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            MagicEffectArchetype ret = (MagicEffectArchetype)((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)item).CommonInstance()!).GetNew();
+            WeaponBasicStats ret = (WeaponBasicStats)((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1416,27 +1420,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class MagicEffectArchetype
+    public partial class WeaponBasicStats
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => MagicEffectArchetype_Registration.Instance;
-        public static MagicEffectArchetype_Registration Registration => MagicEffectArchetype_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => WeaponBasicStats_Registration.Instance;
+        public static WeaponBasicStats_Registration Registration => WeaponBasicStats_Registration.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonInstance() => MagicEffectArchetypeCommon.Instance;
+        protected object CommonInstance() => WeaponBasicStatsCommon.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonSetterInstance()
+        protected object CommonSetterInstance()
         {
-            return MagicEffectArchetypeSetterCommon.Instance;
+            return WeaponBasicStatsSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected virtual object CommonSetterTranslationInstance() => MagicEffectArchetypeSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => WeaponBasicStatsSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IMagicEffectArchetypeGetter.CommonInstance() => this.CommonInstance();
+        object IWeaponBasicStatsGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IMagicEffectArchetypeGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IWeaponBasicStatsGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IMagicEffectArchetypeGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IWeaponBasicStatsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+
+        [DebuggerStepThrough]
+        object IWeightValueGetter.CommonInstance() => WeightValueCommon.Instance;
+        [DebuggerStepThrough]
+        object IWeightValueGetter.CommonSetterInstance() => WeightValueSetterCommon.Instance;
+        [DebuggerStepThrough]
+        object IWeightValueGetter.CommonSetterTranslationInstance() => WeightValueSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1447,57 +1458,57 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class MagicEffectArchetypeXmlWriteTranslation : IXmlWriteTranslator
+    public partial class WeaponBasicStatsXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static MagicEffectArchetypeXmlWriteTranslation Instance = new MagicEffectArchetypeXmlWriteTranslation();
+        public readonly static WeaponBasicStatsXmlWriteTranslation Instance = new WeaponBasicStatsXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IMagicEffectArchetypeGetter item,
+            IWeaponBasicStatsGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)MagicEffectArchetype_FieldIndex.Type) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)WeaponBasicStats_FieldIndex.Value) ?? true))
             {
-                EnumXmlTranslation<MagicEffectArchetype.TypeEnum>.Instance.Write(
+                Int32XmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Type),
-                    item: item.Type,
-                    fieldIndex: (int)MagicEffectArchetype_FieldIndex.Type,
+                    name: nameof(item.Value),
+                    item: item.Value,
+                    fieldIndex: (int)WeaponBasicStats_FieldIndex.Value,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffectArchetype_FieldIndex.AssociationKey) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)WeaponBasicStats_FieldIndex.Weight) ?? true))
             {
-                FormKeyXmlTranslation.Instance.Write(
+                FloatXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.AssociationKey),
-                    item: item.AssociationKey,
-                    fieldIndex: (int)MagicEffectArchetype_FieldIndex.AssociationKey,
+                    name: nameof(item.Weight),
+                    item: item.Weight,
+                    fieldIndex: (int)WeaponBasicStats_FieldIndex.Weight,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffectArchetype_FieldIndex.ActorValue) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)WeaponBasicStats_FieldIndex.Damage) ?? true))
             {
-                EnumXmlTranslation<ActorValueExtended>.Instance.Write(
+                UInt16XmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.ActorValue),
-                    item: item.ActorValue,
-                    fieldIndex: (int)MagicEffectArchetype_FieldIndex.ActorValue,
+                    name: nameof(item.Damage),
+                    item: item.Damage,
+                    fieldIndex: (int)WeaponBasicStats_FieldIndex.Damage,
                     errorMask: errorMask);
             }
         }
 
-        public virtual void Write(
+        public void Write(
             XElement node,
-            IMagicEffectArchetypeGetter item,
+            IWeaponBasicStatsGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.MagicEffectArchetype");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.WeaponBasicStats");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.MagicEffectArchetype");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.WeaponBasicStats");
             }
             WriteToNodeXml(
                 item: item,
@@ -1506,7 +1517,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
 
-        public virtual void Write(
+        public void Write(
             XElement node,
             object item,
             ErrorMaskBuilder? errorMask,
@@ -1514,7 +1525,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IMagicEffectArchetypeGetter)item,
+                item: (IWeaponBasicStatsGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1523,7 +1534,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public void Write(
             XElement node,
-            IMagicEffectArchetypeGetter item,
+            IWeaponBasicStatsGetter item,
             ErrorMaskBuilder? errorMask,
             int fieldIndex,
             TranslationCrystal? translationMask,
@@ -1533,7 +1544,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             try
             {
                 Write(
-                    item: (IMagicEffectArchetypeGetter)item,
+                    item: (IWeaponBasicStatsGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1552,12 +1563,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class MagicEffectArchetypeXmlCreateTranslation
+    public partial class WeaponBasicStatsXmlCreateTranslation
     {
-        public readonly static MagicEffectArchetypeXmlCreateTranslation Instance = new MagicEffectArchetypeXmlCreateTranslation();
+        public readonly static WeaponBasicStatsXmlCreateTranslation Instance = new WeaponBasicStatsXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IMagicEffectArchetypeInternal item,
+            IWeaponBasicStats item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1566,7 +1577,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    MagicEffectArchetypeXmlCreateTranslation.FillPublicElementXml(
+                    WeaponBasicStatsXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1582,7 +1593,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            IMagicEffectArchetypeInternal item,
+            IWeaponBasicStats item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1590,11 +1601,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
-                case "Type":
-                    errorMask?.PushIndex((int)MagicEffectArchetype_FieldIndex.Type);
+                case "Value":
+                    errorMask?.PushIndex((int)WeaponBasicStats_FieldIndex.Value);
                     try
                     {
-                        item.Type = EnumXmlTranslation<MagicEffectArchetype.TypeEnum>.Instance.Parse(
+                        item.Value = Int32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1608,11 +1619,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "AssociationKey":
-                    errorMask?.PushIndex((int)MagicEffectArchetype_FieldIndex.AssociationKey);
+                case "Weight":
+                    errorMask?.PushIndex((int)WeaponBasicStats_FieldIndex.Weight);
                     try
                     {
-                        item.AssociationKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Weight = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1626,11 +1637,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "ActorValue":
-                    errorMask?.PushIndex((int)MagicEffectArchetype_FieldIndex.ActorValue);
+                case "Damage":
+                    errorMask?.PushIndex((int)WeaponBasicStats_FieldIndex.Damage);
                     try
                     {
-                        item.ActorValue = EnumXmlTranslation<ActorValueExtended>.Instance.Parse(
+                        item.Damage = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1655,30 +1666,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Xml Write Mixins
-    public static class MagicEffectArchetypeXmlTranslationMixIn
+    public static class WeaponBasicStatsXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IMagicEffectArchetypeGetter item,
+            this IWeaponBasicStatsGetter item,
             XElement node,
-            out MagicEffectArchetype.ErrorMask errorMask,
-            MagicEffectArchetype.TranslationMask? translationMask = null,
+            out WeaponBasicStats.ErrorMask errorMask,
+            WeaponBasicStats.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((MagicEffectArchetypeXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((WeaponBasicStatsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = MagicEffectArchetype.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WeaponBasicStats.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this IMagicEffectArchetypeGetter item,
+            this IWeaponBasicStatsGetter item,
             string path,
-            out MagicEffectArchetype.ErrorMask errorMask,
-            MagicEffectArchetype.TranslationMask? translationMask = null,
+            out WeaponBasicStats.ErrorMask errorMask,
+            WeaponBasicStats.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1692,7 +1703,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IMagicEffectArchetypeGetter item,
+            this IWeaponBasicStatsGetter item,
             string path,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1709,10 +1720,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IMagicEffectArchetypeGetter item,
+            this IWeaponBasicStatsGetter item,
             Stream stream,
-            out MagicEffectArchetype.ErrorMask errorMask,
-            MagicEffectArchetype.TranslationMask? translationMask = null,
+            out WeaponBasicStats.ErrorMask errorMask,
+            WeaponBasicStats.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1726,7 +1737,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IMagicEffectArchetypeGetter item,
+            this IWeaponBasicStatsGetter item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1743,13 +1754,13 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IMagicEffectArchetypeGetter item,
+            this IWeaponBasicStatsGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
             string? name = null)
         {
-            ((MagicEffectArchetypeXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((WeaponBasicStatsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1758,12 +1769,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IMagicEffectArchetypeGetter item,
+            this IWeaponBasicStatsGetter item,
             XElement node,
             string? name = null,
-            MagicEffectArchetype.TranslationMask? translationMask = null)
+            WeaponBasicStats.TranslationMask? translationMask = null)
         {
-            ((MagicEffectArchetypeXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((WeaponBasicStatsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1772,12 +1783,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IMagicEffectArchetypeGetter item,
+            this IWeaponBasicStatsGetter item,
             string path,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((MagicEffectArchetypeXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((WeaponBasicStatsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1787,12 +1798,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IMagicEffectArchetypeGetter item,
+            this IWeaponBasicStatsGetter item,
             Stream stream,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((MagicEffectArchetypeXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((WeaponBasicStatsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1811,42 +1822,53 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class MagicEffectArchetypeBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class WeaponBasicStatsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static MagicEffectArchetypeBinaryWriteTranslation Instance = new MagicEffectArchetypeBinaryWriteTranslation();
+        public readonly static WeaponBasicStatsBinaryWriteTranslation Instance = new WeaponBasicStatsBinaryWriteTranslation();
 
         public static void WriteEmbedded(
-            IMagicEffectArchetypeGetter item,
+            IWeaponBasicStatsGetter item,
             MutagenWriter writer)
         {
+            writer.Write(item.Value);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Weight);
+            writer.Write(item.Damage);
         }
 
-        public virtual void Write(
+        public void Write(
             MutagenWriter writer,
-            IMagicEffectArchetypeGetter item,
+            IWeaponBasicStatsGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
+            using (HeaderExport.ExportHeader(
+                writer: writer,
+                record: recordTypeConverter.ConvertToCustom(WeaponBasicStats_Registration.DATA_HEADER),
+                type: ObjectType.Subrecord))
+            {
+                WriteEmbedded(
+                    item: item,
+                    writer: writer);
+            }
         }
 
-        public virtual void Write(
+        public void Write(
             MutagenWriter writer,
             object item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IMagicEffectArchetypeGetter)item,
+                item: (IWeaponBasicStatsGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class MagicEffectArchetypeBinaryCreateTranslation
+    public partial class WeaponBasicStatsBinaryCreateTranslation
     {
-        public readonly static MagicEffectArchetypeBinaryCreateTranslation Instance = new MagicEffectArchetypeBinaryCreateTranslation();
+        public readonly static WeaponBasicStatsBinaryCreateTranslation Instance = new WeaponBasicStatsBinaryCreateTranslation();
 
     }
 
@@ -1854,13 +1876,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class MagicEffectArchetypeBinaryTranslationMixIn
+    public static class WeaponBasicStatsBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IMagicEffectArchetypeGetter item,
+            this IWeaponBasicStatsGetter item,
             MutagenWriter writer)
         {
-            ((MagicEffectArchetypeBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((WeaponBasicStatsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 recordTypeConverter: null);
@@ -1873,33 +1895,40 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class MagicEffectArchetypeBinaryOverlay :
+    public partial class WeaponBasicStatsBinaryOverlay :
         BinaryOverlay,
-        IMagicEffectArchetypeGetter
+        IWeaponBasicStatsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => MagicEffectArchetype_Registration.Instance;
-        public static MagicEffectArchetype_Registration Registration => MagicEffectArchetype_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => WeaponBasicStats_Registration.Instance;
+        public static WeaponBasicStats_Registration Registration => WeaponBasicStats_Registration.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonInstance() => MagicEffectArchetypeCommon.Instance;
+        protected object CommonInstance() => WeaponBasicStatsCommon.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonSetterTranslationInstance() => MagicEffectArchetypeSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => WeaponBasicStatsSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IMagicEffectArchetypeGetter.CommonInstance() => this.CommonInstance();
+        object IWeaponBasicStatsGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IMagicEffectArchetypeGetter.CommonSetterInstance() => null;
+        object? IWeaponBasicStatsGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IMagicEffectArchetypeGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IWeaponBasicStatsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+
+        [DebuggerStepThrough]
+        object IWeightValueGetter.CommonInstance() => WeightValueCommon.Instance;
+        [DebuggerStepThrough]
+        object? IWeightValueGetter.CommonSetterInstance() => null;
+        [DebuggerStepThrough]
+        object IWeightValueGetter.CommonSetterTranslationInstance() => WeightValueSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMagicEffectArchetypeGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeaponBasicStatsGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object XmlWriteTranslator => MagicEffectArchetypeXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => WeaponBasicStatsXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -1908,7 +1937,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((MagicEffectArchetypeXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((WeaponBasicStatsXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -1916,25 +1945,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object BinaryWriteTranslator => MagicEffectArchetypeBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => WeaponBasicStatsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((MagicEffectArchetypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((WeaponBasicStatsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public Int32 Value => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
+        public Single Weight => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
+        public UInt16 Damage => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x8, 0x2));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected MagicEffectArchetypeBinaryOverlay(
+        protected WeaponBasicStatsBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1943,16 +1975,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static MagicEffectArchetypeBinaryOverlay MagicEffectArchetypeFactory(
+        public static WeaponBasicStatsBinaryOverlay WeaponBasicStatsFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new MagicEffectArchetypeBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x0),
+            var ret = new WeaponBasicStatsBinaryOverlay(
+                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.Meta),
                 package: package);
-            int offset = stream.Position;
-            stream.Position += 0x0;
+            var finalPos = checked((int)(stream.Position + package.Meta.Subrecord(stream.RemainingSpan).TotalLength));
+            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
+            stream.Position += 0xA + package.Meta.SubConstants.HeaderLength;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1960,12 +1993,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static MagicEffectArchetypeBinaryOverlay MagicEffectArchetypeFactory(
+        public static WeaponBasicStatsBinaryOverlay WeaponBasicStatsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            return MagicEffectArchetypeFactory(
+            return WeaponBasicStatsFactory(
                 stream: new BinaryMemoryReadStream(slice),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
@@ -1973,11 +2006,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region To String
 
-        public virtual void ToString(
+        public void ToString(
             FileGeneration fg,
             string? name = null)
         {
-            MagicEffectArchetypeMixIn.ToString(
+            WeaponBasicStatsMixIn.ToString(
                 item: this,
                 name: name);
         }

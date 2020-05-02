@@ -46,6 +46,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Skill
+        public readonly static ActorValueExtended _Skill_Default = ActorValueExtended.None;
         public ActorValueExtended Skill { get; set; } = default;
         #endregion
         #region Boost
@@ -1092,7 +1093,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ISkillBoost item)
         {
             ClearPartial();
-            item.Skill = default;
+            item.Skill = SkillBoost._Skill_Default;
             item.Boost = default;
         }
         
