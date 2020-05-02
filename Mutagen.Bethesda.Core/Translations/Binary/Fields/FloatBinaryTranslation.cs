@@ -1,5 +1,6 @@
 ﻿using Noggog;
 using System;
+using System.Buffers.Binary;
 using System.IO;
 
 namespace Mutagen.Bethesda.Binary
@@ -19,6 +20,52 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
+        public static float Parse(MutagenFrame frame, FloatIntegerType integerType, ushort divisor)
+        {
+            switch (integerType)
+            {
+                case FloatIntegerType.UInt:
+                    {
+                        var raw = frame.ReadUInt32();
+                        float f = raw;
+                        f /= divisor * 1f;
+                        return f;
+                    }
+                case FloatIntegerType.UShort:
+                    {
+                        var raw = frame.ReadUInt16();
+                        float f = raw;
+                        f /= divisor * 1f;
+                        return f;
+                    }
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        public static float GetFloat(ReadOnlySpan<byte> bytes, FloatIntegerType integerType, ushort divisor)
+        {
+            switch (integerType)
+            {
+                case FloatIntegerType.UInt:
+                    {
+                        var raw = BinaryPrimitives.ReadUInt32LittleEndian(bytes);
+                        float f = raw;
+                        f /= divisor * 1f;
+                        return f;
+                    }
+                case FloatIntegerType.UShort:
+                    {
+                        var raw = BinaryPrimitives.ReadUInt16LittleEndian(bytes);
+                        float f = raw;
+                        f /= divisor * 1f;
+                        return f;
+                    }
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
         public override void Write(MutagenWriter writer, float item)
         {
             if (item == float.Epsilon)
@@ -32,6 +79,31 @@ namespace Mutagen.Bethesda.Binary
             else
             {
                 writer.Write(item);
+            }
+        }
+
+        public static void Write(MutagenWriter writer, float? item, FloatIntegerType integerType, ushort divisor)
+        {
+            if (item == null) return;
+            switch (integerType)
+            {
+                case FloatIntegerType.UInt:
+                    writer.Write((uint)Math.Round(item.Value * divisor));
+                    break;
+                case FloatIntegerType.UShort:
+                    writer.Write((ushort)Math.Round(item.Value * divisor));
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        public static void Write(MutagenWriter writer, float? item, RecordType header, FloatIntegerType integerType, ushort divisor)
+        {
+            if (item == null) return;
+            using (HeaderExport.ExportSubrecordHeader(writer, header))
+            {
+                Write(writer, item, integerType, divisor);
             }
         }
     }

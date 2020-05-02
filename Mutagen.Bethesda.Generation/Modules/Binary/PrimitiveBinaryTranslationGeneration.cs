@@ -17,8 +17,12 @@ namespace Mutagen.Bethesda.Generation
         protected bool? nullable;
         public bool Nullable => nullable ?? false || typeof(T).GetName().EndsWith("?");
         public bool PreferDirectTranslation = true;
-        public Action<FileGeneration, ObjectGeneration, TypeGeneration, Accessor, Accessor> CustomRead;
-        public Action<FileGeneration, ObjectGeneration, TypeGeneration, Accessor, Accessor> CustomWrite;
+        public delegate bool CustomReadAction(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor reader, Accessor item);
+        public CustomReadAction CustomRead;
+        public delegate bool CustomWriteAction(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor writer, Accessor item);
+        public CustomWriteAction CustomWrite;
+        public delegate bool CustomWrapperAction(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor data, Accessor passedLen);
+        public CustomWrapperAction CustomWrapper;
 
         public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
         {
@@ -52,9 +56,9 @@ namespace Mutagen.Bethesda.Generation
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             if (CustomWrite != null)
             {
-                CustomWrite(fg, objGen, typeGen, writerAccessor, itemAccessor);
+                if (CustomWrite(fg, objGen, typeGen, writerAccessor, itemAccessor)) return;
             }
-            else if (data.HasTrigger || !PreferDirectTranslation)
+            if (data.HasTrigger || !PreferDirectTranslation)
             {
                 using (var args = new ArgsWrapper(fg,
                     $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Write{(typeGen.HasBeenSet ? "Nullable" : null)}"))
@@ -119,9 +123,9 @@ namespace Mutagen.Bethesda.Generation
 
             if (CustomRead != null)
             {
-                CustomRead(fg, objGen, typeGen, frameAccessor, itemAccessor);
+                if (CustomRead(fg, objGen, typeGen, frameAccessor, itemAccessor)) return;
             }
-            else if (PreferDirectTranslation)
+            if (PreferDirectTranslation)
             {
                 fg.AppendLine($"{itemAccessor.DirectAccess} = {frameAccessor.DirectAccess}.Read{typeName}();");
             }
@@ -231,6 +235,10 @@ namespace Mutagen.Bethesda.Generation
             else
             {
                 var expectedLen = this.ExpectedLength(objGen, typeGen);
+                if (this.CustomWrapper != null)
+                {
+                    if (CustomWrapper(fg, objGen, typeGen, dataAccessor, passedLengthAccessor)) return;
+                }
                 if (typeGen.HasBeenSet)
                 {
                     if (!typeGen.CanBeNullable(getter: true))

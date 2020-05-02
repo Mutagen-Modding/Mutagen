@@ -14,7 +14,11 @@ namespace Mutagen.Bethesda.Generation
         public SByteBinaryTranslationGeneration()
             : base(expectedLen: 1)
         {
-            CustomRead = (fg, o, t, reader, item) => fg.AppendLine($"{item.DirectAccess} = {reader.DirectAccess}.ReadInt8();");
+            CustomRead = (fg, o, t, reader, item) =>
+            {
+                fg.AppendLine($"{item.DirectAccess} = {reader.DirectAccess}.ReadInt8();");
+                return true;
+            };
         }
 
         public override string GenerateForTypicalWrapper(

@@ -147,9 +147,9 @@ namespace Mutagen.Bethesda.Generation
                 case FormLinkType.FormIDTypeEnum.Normal:
                     if (CustomWrite != null)
                     {
-                        CustomWrite(fg, objGen, typeGen, writerAccessor, itemAccessor);
+                        if (CustomWrite(fg, objGen, typeGen, writerAccessor, itemAccessor)) return;
                     }
-                    else if (data.HasTrigger || !PreferDirectTranslation)
+                    if (data.HasTrigger || !PreferDirectTranslation)
                     {
                         using (var args = new ArgsWrapper(fg,
                             $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Write{(typeGen.HasBeenSet ? "Nullable" : null)}"))

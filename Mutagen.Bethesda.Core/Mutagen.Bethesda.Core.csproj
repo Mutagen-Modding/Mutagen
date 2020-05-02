@@ -46,6 +46,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\ColorBinaryType.cs" />
+    <Compile Include="Enums\FloatBinaryType.cs" />
+    <Compile Include="Enums\FloatIntegerType.cs" />
     <Compile Include="Links\DirectModLinkCache.cs" />
     <Compile Include="Links\FormLinkNullable.cs" />
     <Compile Include="Links\ILinkCache.cs" />

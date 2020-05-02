@@ -33,6 +33,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 var binaryType = BinaryType(typeGen);
                 fg.AppendLine($"{item} = {reader}.ReadColor({nameof(ColorBinaryType)}.{binaryType});");
+                return true;
             };
         }
 
