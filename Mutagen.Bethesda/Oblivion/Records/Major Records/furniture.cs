@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class Furnature
+    public partial class Furniture
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String INamedRequiredGetter.Name => this.Name ?? string.Empty;
@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     namespace Internals
     {
-        public partial class FurnatureBinaryOverlay
+        public partial class FurnitureBinaryOverlay
         {
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             String INamedRequiredGetter.Name => this.Name ?? string.Empty;

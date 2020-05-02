@@ -32,7 +32,7 @@
       <Group name="Grasses" refName="Grass" />
       <Group name="Trees" refName="Tree" />
       <Group name="Flora" refName="Flora" />
-      <Group name="Furnature" refName="Furnature" />
+      <Group name="Furniture" refName="Furniture" />
       <Group name="Weapons" refName="Weapon" />
       <Group name="Ammo" refName="Ammo" />
       <Group name="Npcs" refName="Npc" />

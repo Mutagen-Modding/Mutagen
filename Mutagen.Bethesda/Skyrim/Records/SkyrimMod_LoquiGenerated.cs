@@ -77,6 +77,7 @@ namespace Mutagen.Bethesda.Skyrim
             _Grasses_Object = new Group<Grass>(this);
             _Trees_Object = new Group<Tree>(this);
             _Florae_Object = new Group<Flora>(this);
+            _Furniture_Object = new Group<Furniture>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -327,6 +328,13 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IFloraGetter> ISkyrimModGetter.Florae => _Florae_Object;
         #endregion
+        #region Furniture
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Furniture> _Furniture_Object;
+        public Group<Furniture> Furniture => _Furniture_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IFurnitureGetter> ISkyrimModGetter.Furniture => _Furniture_Object;
+        #endregion
 
         #region To String
 
@@ -532,6 +540,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Grasses = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Trees = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Florae = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Furniture = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -569,7 +578,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem MoveableStatics,
                 TItem Grasses,
                 TItem Trees,
-                TItem Florae)
+                TItem Florae,
+                TItem Furniture)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -606,6 +616,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Grasses = new MaskItem<TItem, Group.Mask<TItem>?>(Grasses, new Group.Mask<TItem>(Grasses));
                 this.Trees = new MaskItem<TItem, Group.Mask<TItem>?>(Trees, new Group.Mask<TItem>(Trees));
                 this.Florae = new MaskItem<TItem, Group.Mask<TItem>?>(Florae, new Group.Mask<TItem>(Florae));
+                this.Furniture = new MaskItem<TItem, Group.Mask<TItem>?>(Furniture, new Group.Mask<TItem>(Furniture));
             }
 
             #pragma warning disable CS8618
@@ -652,6 +663,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? Grasses { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Trees { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Florae { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Furniture { get; set; }
             #endregion
 
             #region Equals
@@ -699,6 +711,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Grasses, rhs.Grasses)) return false;
                 if (!object.Equals(this.Trees, rhs.Trees)) return false;
                 if (!object.Equals(this.Florae, rhs.Florae)) return false;
+                if (!object.Equals(this.Furniture, rhs.Furniture)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -739,6 +752,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Grasses);
                 hash.Add(this.Trees);
                 hash.Add(this.Florae);
+                hash.Add(this.Furniture);
                 return hash.ToHashCode();
             }
 
@@ -922,6 +936,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Florae.Overall)) return false;
                     if (this.Florae.Specific != null && !this.Florae.Specific.All(eval)) return false;
                 }
+                if (Furniture != null)
+                {
+                    if (!eval(this.Furniture.Overall)) return false;
+                    if (this.Furniture.Specific != null && !this.Furniture.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1104,6 +1123,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Florae.Overall)) return true;
                     if (this.Florae.Specific != null && this.Florae.Specific.Any(eval)) return true;
                 }
+                if (Furniture != null)
+                {
+                    if (eval(this.Furniture.Overall)) return true;
+                    if (this.Furniture.Specific != null && this.Furniture.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1153,6 +1177,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Grasses = this.Grasses == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Grasses.Overall), this.Grasses.Specific?.Translate(eval));
                 obj.Trees = this.Trees == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Trees.Overall), this.Trees.Specific?.Translate(eval));
                 obj.Florae = this.Florae == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Florae.Overall), this.Florae.Specific?.Translate(eval));
+                obj.Furniture = this.Furniture == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Furniture.Overall), this.Furniture.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1315,6 +1340,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Florae?.ToString(fg);
                     }
+                    if (printMask?.Furniture?.Overall ?? true)
+                    {
+                        Furniture?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -1375,6 +1404,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<Grass.ErrorMask>?>? Grasses;
             public MaskItem<Exception?, Group.ErrorMask<Tree.ErrorMask>?>? Trees;
             public MaskItem<Exception?, Group.ErrorMask<Flora.ErrorMask>?>? Florae;
+            public MaskItem<Exception?, Group.ErrorMask<Furniture.ErrorMask>?>? Furniture;
             #endregion
 
             #region IErrorMask
@@ -1453,6 +1483,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Trees;
                     case SkyrimMod_FieldIndex.Florae:
                         return Florae;
+                    case SkyrimMod_FieldIndex.Furniture:
+                        return Furniture;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1567,6 +1599,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.Florae:
                         this.Florae = new MaskItem<Exception?, Group.ErrorMask<Flora.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Furniture:
+                        this.Furniture = new MaskItem<Exception?, Group.ErrorMask<Furniture.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1683,6 +1718,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.Florae:
                         this.Florae = (MaskItem<Exception?, Group.ErrorMask<Flora.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.Furniture:
+                        this.Furniture = (MaskItem<Exception?, Group.ErrorMask<Furniture.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1726,6 +1764,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Grasses != null) return true;
                 if (Trees != null) return true;
                 if (Florae != null) return true;
+                if (Furniture != null) return true;
                 return false;
             }
             #endregion
@@ -1795,6 +1834,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Grasses?.ToString(fg);
                 Trees?.ToString(fg);
                 Florae?.ToString(fg);
+                Furniture?.ToString(fg);
             }
             #endregion
 
@@ -1838,6 +1878,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Grasses = this.Grasses.Combine(rhs.Grasses, (l, r) => l.Combine(r));
                 ret.Trees = this.Trees.Combine(rhs.Trees, (l, r) => l.Combine(r));
                 ret.Florae = this.Florae.Combine(rhs.Florae, (l, r) => l.Combine(r));
+                ret.Furniture = this.Furniture.Combine(rhs.Furniture, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1894,6 +1935,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<Grass.TranslationMask>?> Grasses;
             public MaskItem<bool, Group.TranslationMask<Tree.TranslationMask>?> Trees;
             public MaskItem<bool, Group.TranslationMask<Flora.TranslationMask>?> Florae;
+            public MaskItem<bool, Group.TranslationMask<Furniture.TranslationMask>?> Furniture;
             #endregion
 
             #region Ctors
@@ -1934,6 +1976,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Grasses = new MaskItem<bool, Group.TranslationMask<Grass.TranslationMask>?>(defaultOn, null);
                 this.Trees = new MaskItem<bool, Group.TranslationMask<Tree.TranslationMask>?>(defaultOn, null);
                 this.Florae = new MaskItem<bool, Group.TranslationMask<Flora.TranslationMask>?>(defaultOn, null);
+                this.Furniture = new MaskItem<bool, Group.TranslationMask<Furniture.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -1984,6 +2027,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Grasses?.Overall ?? true, Grasses?.Specific?.GetCrystal()));
                 ret.Add((Trees?.Overall ?? true, Trees?.Specific?.GetCrystal()));
                 ret.Add((Florae?.Overall ?? true, Florae?.Specific?.GetCrystal()));
+                ret.Add((Furniture?.Overall ?? true, Furniture?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -2032,6 +2076,7 @@ namespace Mutagen.Bethesda.Skyrim
             _Grasses_Object = new Group<Grass>(this);
             _Trees_Object = new Group<Tree>(this);
             _Florae_Object = new Group<Flora>(this);
+            _Furniture_Object = new Group<Furniture>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -2172,6 +2217,10 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.Florae ?? true)
             {
                 this.Florae.RecordCache.Set(rhsMod.Florae.RecordCache.Items);
+            }
+            if (mask?.Furniture ?? true)
+            {
+                this.Furniture.RecordCache.Set(rhsMod.Furniture.RecordCache.Items);
             }
         }
 
@@ -2418,6 +2467,13 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Flora>());
             }
+            if (mask?.Furniture ?? true)
+            {
+                this.Furniture.RecordCache.Set(
+                    rhs.Furniture.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Furniture>());
+            }
             Dictionary<FormKey, IMajorRecordCommon> router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var package = this.CreateLinkCache();
@@ -2477,6 +2533,7 @@ namespace Mutagen.Bethesda.Skyrim
             count += Grasses.RecordCache.Count > 0 ? 1 : 0;
             count += Trees.RecordCache.Count > 0 ? 1 : 0;
             count += Florae.RecordCache.Count > 0 ? 1 : 0;
+            count += Furniture.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -2705,6 +2762,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<Grass> Grasses { get; }
         new Group<Tree> Trees { get; }
         new Group<Flora> Florae { get; }
+        new Group<Furniture> Furniture { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -2757,6 +2815,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IGrassGetter> Grasses { get; }
         IGroupGetter<ITreeGetter> Trees { get; }
         IGroupGetter<IFloraGetter> Florae { get; }
+        IGroupGetter<IFurnitureGetter> Furniture { get; }
 
     }
 
@@ -3220,6 +3279,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Grasses = 32,
         Trees = 33,
         Florae = 34,
+        Furniture = 35,
     }
     #endregion
 
@@ -3237,9 +3297,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 35;
+        public const ushort AdditionalFieldCount = 36;
 
-        public const ushort FieldCount = 35;
+        public const ushort FieldCount = 36;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -3339,6 +3399,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.Trees;
                 case "FLORAE":
                     return (ushort)SkyrimMod_FieldIndex.Florae;
+                case "FURNITURE":
+                    return (ushort)SkyrimMod_FieldIndex.Furniture;
                 default:
                     return null;
             }
@@ -3384,6 +3446,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Grasses:
                 case SkyrimMod_FieldIndex.Trees:
                 case SkyrimMod_FieldIndex.Florae:
+                case SkyrimMod_FieldIndex.Furniture:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3430,6 +3493,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Grasses:
                 case SkyrimMod_FieldIndex.Trees:
                 case SkyrimMod_FieldIndex.Florae:
+                case SkyrimMod_FieldIndex.Furniture:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3476,6 +3540,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Grasses:
                 case SkyrimMod_FieldIndex.Trees:
                 case SkyrimMod_FieldIndex.Florae:
+                case SkyrimMod_FieldIndex.Furniture:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3557,6 +3622,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Trees";
                 case SkyrimMod_FieldIndex.Florae:
                     return "Florae";
+                case SkyrimMod_FieldIndex.Furniture:
+                    return "Furniture";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3602,6 +3669,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Grasses:
                 case SkyrimMod_FieldIndex.Trees:
                 case SkyrimMod_FieldIndex.Florae:
+                case SkyrimMod_FieldIndex.Furniture:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3649,6 +3717,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Grasses:
                 case SkyrimMod_FieldIndex.Trees:
                 case SkyrimMod_FieldIndex.Florae:
+                case SkyrimMod_FieldIndex.Furniture:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3730,6 +3799,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<Tree>);
                 case SkyrimMod_FieldIndex.Florae:
                     return typeof(Group<Flora>);
+                case SkyrimMod_FieldIndex.Furniture:
+                    return typeof(Group<Furniture>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3771,9 +3842,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType GRAS_HEADER = new RecordType("GRAS");
         public static readonly RecordType TREE_HEADER = new RecordType("TREE");
         public static readonly RecordType FLOR_HEADER = new RecordType("FLOR");
+        public static readonly RecordType FURN_HEADER = new RecordType("FURN");
         public static readonly RecordType TriggeringRecordType = TES4_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 35;
+        public const int NumTypedFields = 36;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -3850,6 +3922,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Grasses.Clear();
             item.Trees.Clear();
             item.Florae.Clear();
+            item.Furniture.Clear();
         }
         
         #region Xml Translation
@@ -4441,6 +4514,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Florae);
                 }
+                case 0x4E525546: // FURN
+                {
+                    if (importMask?.Furniture ?? true)
+                    {
+                        item.Furniture.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Furniture);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -4527,6 +4614,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Grasses = MaskItemExt.Factory(item.Grasses.GetEqualsMask(rhs.Grasses, include), include);
             ret.Trees = MaskItemExt.Factory(item.Trees.GetEqualsMask(rhs.Trees, include), include);
             ret.Florae = MaskItemExt.Factory(item.Florae.GetEqualsMask(rhs.Florae, include), include);
+            ret.Furniture = MaskItemExt.Factory(item.Furniture.GetEqualsMask(rhs.Furniture, include), include);
         }
         
         public string ToString(
@@ -4713,6 +4801,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Florae?.ToString(fg, "Florae");
             }
+            if (printMask?.Furniture?.Overall ?? true)
+            {
+                item.Furniture?.ToString(fg, "Furniture");
+            }
         }
         
         public bool HasBeenSet(
@@ -4761,6 +4853,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Grasses = new MaskItem<bool, Group.Mask<bool>?>(true, item.Grasses?.GetHasBeenSetMask());
             mask.Trees = new MaskItem<bool, Group.Mask<bool>?>(true, item.Trees?.GetHasBeenSetMask());
             mask.Florae = new MaskItem<bool, Group.Mask<bool>?>(true, item.Florae?.GetHasBeenSetMask());
+            mask.Furniture = new MaskItem<bool, Group.Mask<bool>?>(true, item.Furniture?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -4805,6 +4898,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Grasses, rhs.Grasses)) return false;
             if (!object.Equals(lhs.Trees, rhs.Trees)) return false;
             if (!object.Equals(lhs.Florae, rhs.Florae)) return false;
+            if (!object.Equals(lhs.Furniture, rhs.Furniture)) return false;
             return true;
         }
         
@@ -4846,6 +4940,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Grasses);
             hash.Add(item.Trees);
             hash.Add(item.Florae);
+            hash.Add(item.Furniture);
             return hash.ToHashCode();
         }
         
@@ -5033,6 +5128,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFlora":
                 case "IFloraInternal":
                     return obj.Florae.RecordCache;
+                case "Furniture":
+                case "IFurnitureGetter":
+                case "IFurniture":
+                case "IFurnitureInternal":
+                    return obj.Furniture.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown group type: {typeof(T)}");
             }
@@ -5049,7 +5149,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var modHeader = item.ModHeader.DeepCopy() as ModHeader;
             modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
             modHeader.WriteToBinary(new MutagenWriter(stream, GameConstants.Skyrim, masterRefs));
-            Stream[] outputStreams = new Stream[34];
+            Stream[] outputStreams = new Stream[35];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams));
@@ -5085,6 +5185,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.Grasses, masterRefs, 31, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Trees, masterRefs, 32, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Florae, masterRefs, 33, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Furniture, masterRefs, 34, outputStreams));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -5370,6 +5471,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.Furniture is ILinkContainer FurniturelinkCont)
+            {
+                foreach (var item in FurniturelinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -5508,6 +5616,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.Florae.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Furniture.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -5831,6 +5943,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFlora":
                 case "IFloraInternal":
                     foreach (var item in obj.Florae.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Furniture":
+                case "IFurnitureGetter":
+                case "IFurniture":
+                case "IFurnitureInternal":
+                    foreach (var item in obj.Furniture.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -6554,6 +6675,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Furniture) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Furniture);
+                try
+                {
+                    item.Furniture.DeepCopyIn(
+                        rhs: rhs.Furniture,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Furniture));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -7027,6 +7168,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.Florae,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Florae));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Furniture) ?? true))
+            {
+                var FurnitureItem = item.Furniture;
+                ((GroupXmlWriteTranslation)((IXmlItem)FurnitureItem).XmlWriteTranslator).Write<IFurnitureGetter>(
+                    item: FurnitureItem,
+                    node: node,
+                    name: nameof(item.Furniture),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Furniture,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Furniture));
             }
         }
 
@@ -7780,6 +7932,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "Furniture":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Furniture);
+                    try
+                    {
+                        item.Furniture.CopyInFromXml<Furniture>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -7983,6 +8154,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Grasses;
         public bool Trees;
         public bool Florae;
+        public bool Furniture;
         public GroupMask()
         {
         }
@@ -8022,6 +8194,7 @@ namespace Mutagen.Bethesda.Skyrim
             Grasses = defaultValue;
             Trees = defaultValue;
             Florae = defaultValue;
+            Furniture = defaultValue;
         }
     }
 
@@ -8425,6 +8598,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                 }
             }
+            if (importMask?.Furniture ?? true)
+            {
+                var FurnitureItem = item.Furniture;
+                if (FurnitureItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)FurnitureItem).BinaryWriteTranslator).Write<IFurnitureGetter>(
+                        item: FurnitureItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
         }
 
         public void Write(
@@ -8819,6 +9003,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IFloraGetter>? _Florae => _Florae_IsSet ? GroupBinaryOverlay<IFloraGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _FloraeLocation!.Value.Min, _FloraeLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IFloraGetter> Florae => _Florae ?? new Group<Flora>(this);
         #endregion
+        #region Furniture
+        private RangeInt64? _FurnitureLocation;
+        private bool _Furniture_IsSet => _FurnitureLocation.HasValue;
+        private IGroupGetter<IFurnitureGetter>? _Furniture => _Furniture_IsSet ? GroupBinaryOverlay<IFurnitureGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _FurnitureLocation!.Value.Min, _FurnitureLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IFurnitureGetter> Furniture => _Furniture ?? new Group<Furniture>(this);
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             long finalPos,
@@ -9077,6 +9267,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _FloraeLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Florae);
+                }
+                case 0x4E525546: // FURN
+                {
+                    _FurnitureLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Furniture);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

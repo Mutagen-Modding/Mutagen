@@ -37,6 +37,7 @@
       <Group name="Grasses" refName="Grass" />
       <Group name="Trees" refName="Tree" />
       <Group name="Florae" refName="Flora" />
+      <Group name="Furniture" refName="Furniture" />
     </Fields>
   </Object>
 </Loqui>

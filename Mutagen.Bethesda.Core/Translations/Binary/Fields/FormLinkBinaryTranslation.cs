@@ -111,5 +111,16 @@ namespace Mutagen.Bethesda.Binary
                 item.FormKey.Value,
                 header);
         }
+
+        public void WriteNullable<T>(
+            MutagenWriter writer,
+            IFormLinkNullableGetter<T> item)
+            where T : class, IMajorRecordCommonGetter
+        {
+            if (item.FormKey == null) return;
+            FormKeyBinaryTranslation.Instance.Write(
+                writer,
+                item.FormKey.Value);
+        }
     }
 }

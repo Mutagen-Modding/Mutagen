@@ -187,10 +187,10 @@ namespace Mutagen.Bethesda.Binary
             var meta = GetMajorRecord(stream);
             return new MajorRecordFrame(meta, stream.ReadSpan(checked((int)meta.TotalLength)));
         }
-        public MajorRecordMemoryFrame ReadMajorRecordMemoryFrame(BinaryMemoryReadStream stream)
+        public MajorRecordMemoryFrame ReadMajorRecordMemoryFrame(IBinaryReadStream stream, bool readSafe = false)
         {
             var meta = GetMajorRecord(stream);
-            return new MajorRecordMemoryFrame(meta, stream.ReadMemory(checked((int)meta.TotalLength)));
+            return new MajorRecordMemoryFrame(meta, stream.ReadMemory(checked((int)meta.TotalLength), readSafe: readSafe));
         }
 
         public SubrecordHeader Subrecord(ReadOnlySpan<byte> span) => new SubrecordHeader(this, span);
@@ -468,6 +468,7 @@ namespace Mutagen.Bethesda.Binary
         public static MajorRecordFrame GetMajorRecordFrame(this IMutagenReadStream stream, int offset = 0) => stream.MetaData.GetMajorRecordFrame(stream, offset);
         public static MajorRecordHeader ReadMajorRecord(this IMutagenReadStream stream) => stream.MetaData.ReadMajorRecord(stream);
         public static MajorRecordFrame ReadMajorRecordFrame(this IMutagenReadStream stream) => stream.MetaData.ReadMajorRecordFrame(stream);
+        public static MajorRecordMemoryFrame ReadMajorRecordMemoryFrame(this IMutagenReadStream stream, bool readSafe = false) => stream.MetaData.ReadMajorRecordMemoryFrame(stream, readSafe: readSafe);
 
         public static SubrecordHeader GetSubrecord(this IMutagenReadStream stream, int offset = 0) => stream.MetaData.GetSubrecord(stream, offset);
         public static bool TryGetSubrecord(this IMutagenReadStream stream, out SubrecordHeader meta) => stream.MetaData.TryGetSubrecord(stream, out meta);

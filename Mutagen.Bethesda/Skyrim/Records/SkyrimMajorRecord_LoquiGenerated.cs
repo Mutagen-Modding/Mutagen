@@ -1066,6 +1066,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType FACT_HEADER = new RecordType("FACT");
         public static readonly RecordType FLOR_HEADER = new RecordType("FLOR");
         public static readonly RecordType FLST_HEADER = new RecordType("FLST");
+        public static readonly RecordType FURN_HEADER = new RecordType("FURN");
         public static readonly RecordType GMST_HEADER = new RecordType("GMST");
         public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
         public static readonly RecordType GRAS_HEADER = new RecordType("GRAS");
@@ -1140,6 +1141,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         FACT_HEADER,
                         FLOR_HEADER,
                         FLST_HEADER,
+                        FURN_HEADER,
                         GMST_HEADER,
                         GLOB_HEADER,
                         GRAS_HEADER,

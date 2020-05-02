@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Furniture" recordType="FURN" baseClass="SkyrimMajorRecord" objType="Record" majorFlag="true" GUID="d259f939-c92a-48d0-aad5-2d58e712b4f6" ID="192">
+    <Interface>INamed</Interface>
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <List name="Keywords" counterRecType="KSIZ">
+        <FormLink refName="Keyword" recordType="KWDA" />
+      </List>
+      <ByteArray name="Unknown" recordType="PNAM" />
+      <Enum name="Flags" enumName="Furniture.Flag" recordType="FNAM" binary="Custom" />
+      <FormLink name="InteractionKeyword" refName="Keyword" recordType="KNAM" />
+      <CustomLogic name="Flags2" recordType="MNAM" />
+      <RefDirect name="WorkbenchData" refName="WorkbenchData" />
+      <FormLink name="AssociatedSpell" refName="Spell" recordType="NAM1" />
+      <CustomLogic name="DisabledMarkers" recordType="ENAM" />
+      <RefList name="Markers" refName="FurnitureMarker" recordType="FNPR" binary="Custom" />
+      <String name="ModelFilename" recordType="XMRK" />
+    </Fields>
+  </Object>
+  <Object name="WorkbenchData" objType="Subrecord" recordType="WBDT" GUID="751a4c09-9920-42eb-b754-b9a7a15a73d0" ID="193">
+    <Fields>
+      <Enum name="BenchType" enumName="WorkbenchData.Type" byteLength="1" />
+      <Enum name="UsesSkill" enumName="Skill" byteLength="1" />
+    </Fields>
+  </Object>
+  <Object name="FurnitureMarker" objType="Subrecord" GUID="947fcdab-6949-4138-a678-cae2ce9086a6" ID="194">
+    <Fields>
+      <Bool name="Enabled" />
+      <RefDirect name="DisabledEntryPoints" refName="EntryPoints" hasBeenSet="True" />
+      <FormLink name="MarkerKeyword" refName="Keyword" hasBeenSet="True" />
+      <RefDirect name="EntryPoints" refName="EntryPoints" hasBeenSet="True" />
+    </Fields>
+  </Object>
+  <Object name="EntryPoints" objType="Subrecord" GUID="c9ce2bba-98b9-40d0-8af9-3fdfc7003494" ID="195">
+    <Fields>
+      <Enum name="Type" enumName="Furniture.AnimationType" byteLength="2" />
+      <Enum name="Points" enumName="Furniture.Entry" byteLength="2" />
+    </Fields>
+  </Object>
+</Loqui>

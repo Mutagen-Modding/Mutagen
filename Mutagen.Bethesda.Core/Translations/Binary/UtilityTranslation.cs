@@ -468,8 +468,38 @@ namespace Mutagen.Bethesda
         /// <param name="data">Subrecord data to be parsed</param>
         /// <param name="recordTypes">Record types to locate</param>
         /// <param name="meta">Metadata to use in subrecord parsing</param>
+        /// <param name="lenParsed">Amount of data contained in located records</param>
         /// <returns>Array of found record locations</returns>
         public static int?[] FindNextSubrecords(ReadOnlySpan<byte> data, GameConstants meta, out int lenParsed, params RecordType[] recordTypes)
+        {
+            return FindNextSubrecords(
+                data: data,
+                meta: meta,
+                lenParsed: out lenParsed,
+                stopOnAlreadyEncounteredRecord: false,
+                recordTypes: recordTypes);
+        }
+
+        /// <summary>
+        /// Locates the first encountered instances of all given subrecord types, and returns an array of their locations
+        /// -1 represents a recordtype that was not found.
+        /// 
+        /// If a subrecord is encountered that is not of the target types, it will stop looking for more matches.
+        /// If a subrecord is encountered that was already seen, it will stop looking for more matches.
+        /// 
+        /// </summary>
+        /// <param name="data">Subrecord data to be parsed</param>
+        /// <param name="recordTypes">Record types to locate</param>
+        /// <param name="meta">Metadata to use in subrecord parsing</param>
+        /// <param name="lenParsed">Amount of data contained in located records</param>
+        /// <param name="stopOnAlreadyEncounteredRecord">Whether to stop looking if encountering a record type that has already been seen</param>
+        /// <returns>Array of found record locations</returns>
+        public static int?[] FindNextSubrecords(
+            ReadOnlySpan<byte> data,
+            GameConstants meta, 
+            out int lenParsed,
+            bool stopOnAlreadyEncounteredRecord,
+            params RecordType[] recordTypes)
         {
             lenParsed = 0;
             int?[] ret = new int?[recordTypes.Length];
@@ -477,12 +507,12 @@ namespace Mutagen.Bethesda
             {
                 var subMeta = meta.Subrecord(data.Slice(lenParsed));
                 var recType = subMeta.RecordType;
-                bool matchedSomething = false;
+                bool breakOut = true;
                 for (int i = 0; i < recordTypes.Length; i++)
                 {
                     if (recordTypes[i] == recType)
                     {
-                        matchedSomething = true;
+                        breakOut = false;
                         if (ret[i] == null)
                         {
                             ret[i] = lenParsed;
@@ -502,10 +532,14 @@ namespace Mutagen.Bethesda
                                 return ret;
                             }
                         }
+                        else if (stopOnAlreadyEncounteredRecord)
+                        {
+                            breakOut = true;
+                        }
                         break;
                     }
                 }
-                if (!matchedSomething)
+                if (breakOut)
                 {
                     return ret;
                 }

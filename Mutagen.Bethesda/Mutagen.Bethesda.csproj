@@ -31,8 +31,8 @@
     <Compile Include="Oblivion\Records\Major Records\Flora.cs">
       <DependentUpon>Flora.xml</DependentUpon>
     </Compile>
-    <Compile Include="Oblivion\Records\Major Records\Furnature.cs">
-      <DependentUpon>Furnature.xml</DependentUpon>
+    <Compile Include="Oblivion\Records\Major Records\Furniture.cs">
+      <DependentUpon>Furniture.xml</DependentUpon>
     </Compile>
     <Compile Include="Oblivion\Records\Major Records\Ingredient.cs">
       <DependentUpon>Ingredient.xml</DependentUpon>
@@ -80,6 +80,9 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\BookData.cs">
       <DependentUpon>Book.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Furniture.cs">
+      <DependentUpon>Furniture.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Container.cs">
       <DependentUpon>Container.xml</DependentUpon>
@@ -137,6 +140,9 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Tree.cs">
       <DependentUpon>Tree.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WorkbenchData.cs">
+      <DependentUpon>Furniture.xml</DependentUpon>
     </Compile>
     <Compile Include="Warmup.cs" />
     <Compile Include="Oblivion\Constants.cs" />
@@ -411,9 +417,6 @@
     </Compile>
     <Compile Include="Oblivion\Records\Major Records\Flora_LoquiGenerated.cs">
       <DependentUpon>Flora.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Oblivion\Records\Major Records\Furnature_LoquiGenerated.cs">
-      <DependentUpon>Furnature.xml</DependentUpon>
     </Compile>
     <Compile Include="Oblivion\Records\Major Records\GameSetting.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
@@ -1673,11 +1676,26 @@
     <Compile Include="Skyrim\Records\Major Records\Flora_LoquiGenerated.cs">
       <DependentUpon>Flora.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Furniture_LoquiGenerated.cs">
+      <DependentUpon>Furniture.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WorkbenchData_LoquiGenerated.cs">
+      <DependentUpon>Furniture.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\Furniture_LoquiGenerated.cs">
+      <DependentUpon>Furniture.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\FurnitureMarker_LoquiGenerated.cs">
+      <DependentUpon>Furniture.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\EntryPoints_LoquiGenerated.cs">
+      <DependentUpon>Furniture.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.13.7" />
     <PackageReference Include="Loqui" Version="1.1.8" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.0.11" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.0.12" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />

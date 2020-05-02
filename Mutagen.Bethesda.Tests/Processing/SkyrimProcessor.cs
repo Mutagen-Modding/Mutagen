@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Skyrim;
@@ -18,6 +20,7 @@ namespace Mutagen.Bethesda.Tests
             var loc = this._AlignedFileLocs[formID];
             ProcessGameSettings(stream, formID, recType, loc);
             ProcessRaces(stream, formID, recType, loc);
+            ProcessFurniture(stream, formID, recType, loc);
         }
 
         private void ProcessGameSettings(
@@ -83,6 +86,56 @@ namespace Mutagen.Bethesda.Tests
             // Remove fully populated phonemes list
             this._Instructions.SetRemove(RangeInt64.FactoryFromLength(stream.Position, lenParsed));
             ModifyLengths(stream, -lenParsed, formID, loc.Min, null);
+        }
+
+        private void ProcessFurniture(
+            IMutagenReadStream stream,
+            FormID formID,
+            RecordType recType,
+            RangeInt64 loc)
+        {
+            if (!Furniture_Registration.TriggeringRecordType.Equals(recType)) return;
+            stream.Position = loc.Min;
+            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+
+            // Find and store marker data
+            var data = new Dictionary<int, ReadOnlyMemorySlice<byte>>();
+            var indices = new List<int>();
+            var initialPos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData, Furniture_Registration.ENAM_HEADER);
+            if (initialPos == -1) return;
+            var pos = initialPos;
+            while (pos < majorFrame.Content.Length)
+            {
+                var positions = UtilityTranslation.FindNextSubrecords(
+                    majorFrame.Content.Slice(pos),
+                    stream.MetaData,
+                    out var lenParsed,
+                    stopOnAlreadyEncounteredRecord: true,
+                    new RecordType[]
+                    {
+                        Furniture_Registration.ENAM_HEADER,
+                        new RecordType("NAM0"),
+                        new RecordType("FNMK"),
+                    });
+                var enamPos = positions[0];
+                if (enamPos == null) break;
+                var enamFrame = stream.MetaData.SubrecordFrame(majorFrame.Content.Slice(pos + enamPos.Value));
+                var index = BinaryPrimitives.ReadInt32LittleEndian(enamFrame.Content);
+                data.Add(index, majorFrame.Content.Slice(pos + enamPos.Value, lenParsed));
+                indices.Add(index);
+                pos += lenParsed;
+            }
+
+            if (indices.SequenceEqual(indices.OrderBy(i => i))) return;
+            byte[] reordered = new byte[data.Values.Select(l => l.Length).Sum()];
+            int transferPos = 0;
+            foreach (var index in indices.OrderBy(i => i))
+            {
+                var bytes = data[index];
+                bytes.Span.CopyTo(reordered.AsSpan().Slice(transferPos));
+                transferPos += bytes.Length;
+            }
+            this._Instructions.SetSubstitution(loc.Min + majorFrame.Header.HeaderLength + initialPos, reordered);
         }
     }
 }
