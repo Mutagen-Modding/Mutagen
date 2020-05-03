@@ -7,8 +7,8 @@
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
       <String name="Name" recordType="FULL" />
-      <List name="Keywords" counterRecType="KSIZ">
-        <FormLink refName="Keyword" recordType="KWDA" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
+        <FormLink refName="Keyword" />
       </List>
       <FormLink name="MenuDisplayObject" refName="Static" recordType="MDOB" />
       <FormLink name="EquipmentType" refName="EquipType" recordType="ETYP" />

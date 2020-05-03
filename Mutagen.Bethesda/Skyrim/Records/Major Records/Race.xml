@@ -5,13 +5,13 @@
     <Fields>
       <String name="Name" recordType="FULL" />
       <String name="Description" recordType="DESC" />
-      <List name="ActorEffect" counterRecType="SPCT" counterSubrecordPerItem="true">
+      <List name="ActorEffect" counterRecType="SPCT" >
         <FormLink refName="ASpell" recordType="SPLO" />
       </List>
       <FormLink name="Skin" refName="Armor" recordType="WNAM" />
       <RefDirect name="BodyTemplate" refName="BodyTemplate" />
-      <List name="Keywords" counterRecType="KSIZ">
-        <FormLink refName="Keyword" recordType="KWDA" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
+        <FormLink refName="Keyword" />
       </List>
       <RefDirect name="Data" refName="RaceData" />
       <Gendered name="SkeletalModel" maleMarker="MNAM" femaleMarker="FNAM">

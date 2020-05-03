@@ -15,7 +15,7 @@
         <Interface>INpcTemplate</Interface>
       </FormLink>
       <FormLink name="Race" refName="Race" recordType="RNAM" />
-      <List name="ActorEffect" counterRecType="SPCT" counterSubrecordPerItem="true">
+      <List name="ActorEffect" counterRecType="SPCT" >
         <FormLink refName="ASpell" recordType="SPLO" />
       </List>
       <RefDirect name="Destructible" refName="Destructible" />
@@ -28,13 +28,13 @@
       <FormLink name="GuardWarnOverridePackageList" refName="FormList" recordType="GWOR" />
       <FormLink name="CombatOverridePackageList" refName="FormList" recordType="ECOR" />
       <RefList name="Perks" counterRecType="PRKZ" refName="PerkPlacement" />
-      <RefList name="Items" counterRecType="COCT" refName="ContainerEntry" counterSubrecordPerItem="true" />
+      <RefList name="Items" counterRecType="COCT" refName="ContainerEntry" />
       <RefDirect name="AIData" refName="AIData" />
       <List name="Packages">
         <FormLink refName="Package" recordType="PKID" />
       </List>
-      <List name="Keywords" counterRecType="KSIZ">
-        <FormLink refName="Keyword" recordType="KWDA" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
+        <FormLink refName="Keyword" />
       </List>
       <FormLink name="Class" refName="Class" recordType="CNAM" />
       <String name="Name" recordType="FULL" />

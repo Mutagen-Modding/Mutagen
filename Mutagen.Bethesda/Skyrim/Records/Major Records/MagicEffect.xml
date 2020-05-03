@@ -6,8 +6,8 @@
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
       <String name="Name" recordType="FULL" />
       <FormLink name="MenuDisplayObject" refName="Static" recordType="MDOB" />
-      <List name="Keywords" counterRecType="KSIZ">
-        <FormLink refName="Keyword" recordType="KWDA" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
+        <FormLink refName="Keyword" />
       </List>
       <RefDirect name="Data" refName="MagicEffectData" />
       <List name="CounterEffects">

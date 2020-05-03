@@ -4505,7 +4505,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.ReadSubrecordFrame().Content);
                     item.Perks = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<PerkPlacement>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<PerkPlacement>.Instance.ParsePerItem(
                             frame: frame,
                             amount: amount,
                             triggeringRecord: Npc_Registration.PRKR_HEADER,

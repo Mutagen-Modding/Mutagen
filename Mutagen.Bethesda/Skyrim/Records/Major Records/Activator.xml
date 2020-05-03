@@ -10,8 +10,8 @@
       <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
       <RefDirect name="Destructible" refName="Destructible" />
-      <List name="Keywords" counterRecType="KSIZ">
-        <FormLink refName="Keyword" recordType="KWDA" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
+        <FormLink refName="Keyword" />
       </List>
       <Color name="MarkerColor" recordType="PNAM" binaryType="Alpha" />
       <FormLink name="LoopingSound" refName="SoundDescriptor" recordType="SNAM" />

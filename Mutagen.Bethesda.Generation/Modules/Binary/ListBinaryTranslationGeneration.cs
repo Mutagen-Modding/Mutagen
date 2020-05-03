@@ -29,7 +29,6 @@ namespace Mutagen.Bethesda.Generation
         const string AsyncItemKey = "ListAsyncItem";
         const string ThreadKey = "ListThread";
         public const string CounterRecordType = "ListCounterRecordType";
-        public const string CounterSubrecordPerItemType = "ListCounterSubrecordPerItemType";
         public const string PrependCountType = "ListPrependCountType";
 
         public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
@@ -57,7 +56,6 @@ namespace Mutagen.Bethesda.Generation
             var listType = field as ListType;
             listType.CustomData[ThreadKey] = node.GetAttribute<bool>("thread", false);
             listType.CustomData[CounterRecordType] = node.GetAttribute("counterRecType", null);
-            listType.CustomData[CounterSubrecordPerItemType] = node.GetAttribute("counterSubrecordPerItem", false);
             listType.CustomData[PrependCountType] = node.GetAttribute("prependCount", default(byte));
             var asyncItem = node.GetAttribute<bool>("asyncItems", false);
             if (asyncItem && listType.SubTypeGeneration is LoquiType loqui)
@@ -179,8 +177,11 @@ namespace Mutagen.Bethesda.Generation
                         {
                             args.Add($"recordType: recordTypeConverter.ConvertToCustom({subData.TriggeringRecordSetAccessor})");
                         }
-                        if ((bool)list.CustomData[CounterSubrecordPerItemType]
-                            && !subData.HandleTrigger)
+                        else if (data.RecordType != null)
+                        {
+                            args.Add($"recordType: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
+                        }
+                        if (subData.HasTrigger && !subData.HandleTrigger)
                         {
                             args.Add($"subRecordPerItem: true");
                         }
@@ -283,8 +284,8 @@ namespace Mutagen.Bethesda.Generation
             bool needsMasters = list.SubTypeGeneration.NeedMasters();
 
             bool recordPerItem = false;
-            if (((bool)list.CustomData[CounterSubrecordPerItemType])
-                && listBinaryType == ListBinaryType.CounterRecord)
+            if (listBinaryType == ListBinaryType.CounterRecord
+                && subData.HasTrigger)
             {
                 recordPerItem = true;
             }
@@ -318,7 +319,11 @@ namespace Mutagen.Bethesda.Generation
                             case ListBinaryType.CounterRecord:
                                 args.AddPassArg($"frame");
                                 args.AddPassArg($"amount");
-                                if (subData.HasTrigger)
+                                if (data.RecordType != null)
+                                {
+                                    args.Add($"triggeringRecord: {objGen.RecordTypeHeaderName(data.RecordType.Value)}");
+                                }
+                                else if (subData.HasTrigger)
                                 {
                                     args.Add($"triggeringRecord: {subData.TriggeringRecordSetAccessor}");
                                 }
@@ -758,8 +763,7 @@ namespace Mutagen.Bethesda.Generation
                     break;
                 case ListBinaryType.CounterRecord:
                     fg.AppendLine($"var count = BinaryPrimitives.{nameof(BinaryPrimitives.ReadUInt32LittleEndian)}(_package.Meta.ReadSubrecordFrame(stream).Content);");
-                    var subRecordPerItem = (bool)list.CustomData[CounterSubrecordPerItemType];
-                    if (subRecordPerItem || loqui != null)
+                    if (subData.HasTrigger)
                     {
                         if (expectedLen.HasValue)
                         {
@@ -775,11 +779,7 @@ namespace Mutagen.Bethesda.Generation
                         fg.AppendLine("var subMeta = _package.Meta.ReadSubrecord(stream);");
                         fg.AppendLine("var subLen = subMeta.ContentLength;");
                     }
-                    if (!subData.HasTrigger)
-                    {
-                        throw new NotImplementedException();
-                    }
-                    if (!subRecordPerItem || expectedLen.HasValue)
+                    if (expectedLen.HasValue)
                     {
                         using (var args = new ArgsWrapper(fg,
                             $"this.{typeGen.Name} = BinaryOverlaySetList<{typeName}>.FactoryByCount"))
@@ -787,7 +787,7 @@ namespace Mutagen.Bethesda.Generation
                             args.Add($"mem: stream.RemainingMemory.Slice(0, subLen)");
                             args.Add($"package: _package");
                             args.Add($"itemLength: {expectedLen}");
-                            if (subRecordPerItem)
+                            if (subData.HasTrigger && !subData.HandleTrigger)
                             {
                                 args.Add($"subrecordType: {subData.TriggeringRecordSetAccessor}");
                             }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Container" recordType="CONT" objType="Record" majorFlag="true" baseClass="SkyrimMajorRecord" GUID="9adb9b58-0aef-4cee-a346-0639dd924acd" ID="160">
     <Interface>INamed</Interface>
@@ -9,7 +9,7 @@
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
       <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
-      <RefList name="Items" counterRecType="COCT" refName="ContainerEntry" counterSubrecordPerItem="true" />
+      <RefList name="Items" counterRecType="COCT" refName="ContainerEntry" />
       <RefDirect name="Data" refName="ContainerData" />
       <RefDirect name="Destructible" refName="Destructible" />
       <FormLink name="OpenSound" refName="SoundDescriptor" recordType="SNAM" />

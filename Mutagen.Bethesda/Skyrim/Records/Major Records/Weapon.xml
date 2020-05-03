@@ -23,8 +23,8 @@
       <FormLink name="AlternateBlockMaterial" recordType="BAMT" refName="MaterialType" />
       <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
       <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
-      <List name="Keywords" counterRecType="KSIZ">
-        <FormLink refName="Keyword" recordType="KWDA" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
+        <FormLink refName="Keyword" />
       </List>
       <String name="Description" recordType="DESC" />
       <RefDirect name="ScopeModel" refName="Model">

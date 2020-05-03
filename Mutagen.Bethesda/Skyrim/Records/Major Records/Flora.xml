@@ -10,8 +10,8 @@
       <String name="Name" recordType="FULL" hasBeenSet="False" />
       <RefDirect name="Model" refName="Model" />
       <RefDirect name="Destructible" refName="Destructible" />
-      <List name="Keywords" counterRecType="KSIZ">
-        <FormLink refName="Keyword" recordType="KWDA" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
+        <FormLink refName="Keyword" />
       </List>
       <ByteArray name="Unknown" recordType="PNAM" />
       <String name="ActivateText" recordType="RNAM" />

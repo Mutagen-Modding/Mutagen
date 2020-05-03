@@ -38,8 +38,8 @@
       <FormLink name="BashImpactDataSet" recordType="BIDS" refName="ImpactDataSet" />
       <FormLink name="AlternateBlockMaterial" recordType="BAMT" refName="MaterialType" />
       <FormLink name="Race" recordType="RNAM" refName="Race" />
-      <List name="Keywords" counterRecType="KSIZ">
-        <FormLink refName="Keyword" recordType="KWDA" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
+        <FormLink refName="Keyword" />
       </List>
       <String name="Description" recordType="DESC" />
       <List name="Armature">
