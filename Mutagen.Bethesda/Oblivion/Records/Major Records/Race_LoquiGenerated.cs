@@ -213,14 +213,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown;
-        public Byte[]? Unknown
+        private Int16? _Unknown;
+        public Int16? Unknown
         {
             get => this._Unknown;
             set => this._Unknown = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IRaceGetter.Unknown => this.Unknown;
+        Int16? IRaceGetter.Unknown => this.Unknown;
         #endregion
 
         #region To String
@@ -1628,7 +1628,7 @@ namespace Mutagen.Bethesda.Oblivion
         new ExtendedList<IFormLink<Hair>>? Hairs { get; set; }
         new ExtendedList<IFormLink<Eye>>? Eyes { get; set; }
         new FaceGenData? FaceGenData { get; set; }
-        new Byte[]? Unknown { get; set; }
+        new Int16? Unknown { get; set; }
     }
 
     public partial interface IRaceInternal :
@@ -1667,7 +1667,7 @@ namespace Mutagen.Bethesda.Oblivion
         IReadOnlyList<IFormLinkGetter<IHairGetter>>? Hairs { get; }
         IReadOnlyList<IFormLinkGetter<IEyeGetter>>? Eyes { get; }
         IFaceGenDataGetter? FaceGenData { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown { get; }
+        Int16? Unknown { get; }
 
     }
 
@@ -2296,7 +2296,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.FaceGenData:
                     return typeof(FaceGenData);
                 case Race_FieldIndex.Unknown:
-                    return typeof(Byte[]);
+                    return typeof(Int16);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -2655,7 +2655,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E53: // SNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Unknown = frame.ReadInt16();
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Unknown);
                 }
                 default:
@@ -2787,7 +2787,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.FaceGenData,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Unknown = MemorySliceExt.Equal(item.Unknown, rhs.Unknown);
+            ret.Unknown = item.Unknown == rhs.Unknown;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2990,7 +2990,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((printMask?.Unknown ?? true)
                 && item.Unknown.TryGet(out var UnknownItem))
             {
-                fg.AppendLine($"Unknown => {SpanExt.ToHexString(UnknownItem)}");
+                fg.AppendItem(UnknownItem, "Unknown");
             }
         }
         
@@ -3114,7 +3114,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!lhs.Hairs.SequenceEqual(rhs.Hairs)) return false;
             if (!lhs.Eyes.SequenceEqual(rhs.Eyes)) return false;
             if (!object.Equals(lhs.FaceGenData, rhs.FaceGenData)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown, rhs.Unknown)) return false;
+            if (lhs.Unknown != rhs.Unknown) return false;
             return true;
         }
         
@@ -3188,9 +3188,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(FaceGenDataitem);
             }
-            if (item.Unknown.TryGet(out var UnknownItem))
+            if (item.Unknown.TryGet(out var Unknownitem))
             {
-                hash.Add(UnknownItem);
+                hash.Add(Unknownitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -3543,14 +3543,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Unknown) ?? true))
             {
-                if(rhs.Unknown.TryGet(out var Unknownrhs))
-                {
-                    item.Unknown = Unknownrhs.ToArray();
-                }
-                else
-                {
-                    item.Unknown = default;
-                }
+                item.Unknown = rhs.Unknown;
             }
         }
         
@@ -3960,7 +3953,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.Unknown != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.Unknown) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
+                Int16XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Unknown),
                     item: item.Unknown.Value,
@@ -4438,9 +4431,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)Race_FieldIndex.Unknown);
                     try
                     {
-                        item.Unknown = ByteArrayXmlTranslation.Instance.Parse(
+                        item.Unknown = Int16XmlTranslation.Instance.Parse(
                             node: node,
-                            fallbackLength: 2,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)
@@ -4690,7 +4682,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Unknown,
                 header: recordTypeConverter.ConvertToCustom(Race_Registration.SNAM_HEADER));
@@ -4900,7 +4892,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Unknown
         private int? _UnknownLocation;
-        public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _UnknownLocation.Value, _package.Meta).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public Int16? Unknown => _UnknownLocation.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownLocation.Value, _package.Meta)) : default(Int16?);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

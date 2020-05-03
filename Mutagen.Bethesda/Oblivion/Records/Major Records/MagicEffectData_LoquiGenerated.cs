@@ -56,15 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Single BaseCost { get; set; } = default;
         #endregion
         #region Unused
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Unused = new byte[4];
-        public Byte[] Unused
-        {
-            get => _Unused;
-            set => this._Unused = value ?? new byte[4];
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IMagicEffectDataGetter.Unused => this.Unused;
+        public Int32 Unused { get; set; } = default;
         #endregion
         #region MagicSchool
         public MagicSchool MagicSchool { get; set; } = default;
@@ -895,7 +887,7 @@ namespace Mutagen.Bethesda.Oblivion
         new MagicEffectData.VersioningBreaks Versioning { get; set; }
         new MagicEffect.MagicFlag Flags { get; set; }
         new Single BaseCost { get; set; }
-        new Byte[] Unused { get; set; }
+        new Int32 Unused { get; set; }
         new MagicSchool MagicSchool { get; set; }
         new Resistance Resistance { get; set; }
         new UInt32 CounterEffectCount { get; set; }
@@ -922,7 +914,7 @@ namespace Mutagen.Bethesda.Oblivion
         MagicEffectData.VersioningBreaks Versioning { get; }
         MagicEffect.MagicFlag Flags { get; }
         Single BaseCost { get; }
-        ReadOnlyMemorySlice<Byte> Unused { get; }
+        Int32 Unused { get; }
         MagicSchool MagicSchool { get; }
         Resistance Resistance { get; }
         UInt32 CounterEffectCount { get; }
@@ -1478,7 +1470,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffectData_FieldIndex.BaseCost:
                     return typeof(Single);
                 case MagicEffectData_FieldIndex.Unused:
-                    return typeof(Byte[]);
+                    return typeof(Int32);
                 case MagicEffectData_FieldIndex.MagicSchool:
                     return typeof(MagicSchool);
                 case MagicEffectData_FieldIndex.Resistance:
@@ -1548,7 +1540,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Versioning = default;
             item.Flags = default;
             item.BaseCost = default;
-            item.Unused = new byte[4];
+            item.Unused = default;
             item.MagicSchool = default;
             item.Resistance = default;
             item.CounterEffectCount = default;
@@ -1593,7 +1585,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Flags = EnumBinaryTranslation<MagicEffect.MagicFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.BaseCost = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Unused = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Unused = frame.ReadInt32();
             item.MagicSchool = EnumBinaryTranslation<MagicSchool>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.Resistance = EnumBinaryTranslation<Resistance>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.CounterEffectCount = frame.ReadUInt32();
@@ -1659,7 +1651,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Versioning = item.Versioning == rhs.Versioning;
             ret.Flags = item.Flags == rhs.Flags;
             ret.BaseCost = item.BaseCost.EqualsWithin(rhs.BaseCost);
-            ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
+            ret.Unused = item.Unused == rhs.Unused;
             ret.MagicSchool = item.MagicSchool == rhs.MagicSchool;
             ret.Resistance = item.Resistance == rhs.Resistance;
             ret.CounterEffectCount = item.CounterEffectCount == rhs.CounterEffectCount;
@@ -1731,7 +1723,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Unused ?? true)
             {
-                fg.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
+                fg.AppendItem(item.Unused, "Unused");
             }
             if (printMask?.MagicSchool ?? true)
             {
@@ -1801,7 +1793,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs.Versioning != rhs.Versioning) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (!lhs.BaseCost.EqualsWithin(rhs.BaseCost)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
+            if (lhs.Unused != rhs.Unused) return false;
             if (lhs.MagicSchool != rhs.MagicSchool) return false;
             if (lhs.Resistance != rhs.Resistance) return false;
             if (lhs.CounterEffectCount != rhs.CounterEffectCount) return false;
@@ -1883,7 +1875,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Unused) ?? true))
             {
-                item.Unused = rhs.Unused.ToArray();
+                item.Unused = rhs.Unused;
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.MagicSchool) ?? true))
             {
@@ -2054,7 +2046,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Unused) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
+                Int32XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Unused),
                     item: item.Unused,
@@ -2293,9 +2285,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)MagicEffectData_FieldIndex.Unused);
                     try
                     {
-                        item.Unused = ByteArrayXmlTranslation.Instance.Parse(
+                        item.Unused = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            fallbackLength: 4,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)
@@ -2617,9 +2608,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BaseCost);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Unused);
+            writer.Write(item.Unused);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Write(
                 writer,
                 item.MagicSchool,
@@ -2767,7 +2756,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MagicEffectData.VersioningBreaks Versioning { get; private set; }
         public MagicEffect.MagicFlag Flags => (MagicEffect.MagicFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
         public Single BaseCost => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
-        public ReadOnlyMemorySlice<Byte> Unused => _data.Span.Slice(0x8, 0x4).ToArray();
+        public Int32 Unused => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x8, 0x4));
         public MagicSchool MagicSchool => (MagicSchool)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
         public Resistance Resistance => (Resistance)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x10, 0x4));
         public UInt32 CounterEffectCount => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x14, 0x4));

@@ -79,14 +79,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region MarkerFlags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _MarkerFlags;
-        public Byte[]? MarkerFlags
+        private Int32? _MarkerFlags;
+        public Int32? MarkerFlags
         {
             get => this._MarkerFlags;
             set => this._MarkerFlags = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IFurnitureGetter.MarkerFlags => this.MarkerFlags;
+        Int32? IFurnitureGetter.MarkerFlags => this.MarkerFlags;
         #endregion
 
         #region To String
@@ -696,7 +696,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Name { get; set; }
         new Model? Model { get; set; }
         new IFormLinkNullable<Script> Script { get; }
-        new Byte[]? MarkerFlags { get; set; }
+        new Int32? MarkerFlags { get; set; }
     }
 
     public partial interface IFurnitureInternal :
@@ -718,7 +718,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Name { get; }
         IModelGetter? Model { get; }
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
-        ReadOnlyMemorySlice<Byte>? MarkerFlags { get; }
+        Int32? MarkerFlags { get; }
 
     }
 
@@ -1190,7 +1190,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Furniture_FieldIndex.Script:
                     return typeof(IFormLinkNullable<Script>);
                 case Furniture_FieldIndex.MarkerFlags:
-                    return typeof(Byte[]);
+                    return typeof(Int32);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -1391,7 +1391,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E4D: // MNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.MarkerFlags = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.MarkerFlags = frame.ReadInt32();
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.MarkerFlags);
                 }
                 default:
@@ -1475,7 +1475,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Script = object.Equals(item.Script, rhs.Script);
-            ret.MarkerFlags = MemorySliceExt.Equal(item.MarkerFlags, rhs.MarkerFlags);
+            ret.MarkerFlags = item.MarkerFlags == rhs.MarkerFlags;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1545,7 +1545,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((printMask?.MarkerFlags ?? true)
                 && item.MarkerFlags.TryGet(out var MarkerFlagsItem))
             {
-                fg.AppendLine($"MarkerFlags => {SpanExt.ToHexString(MarkerFlagsItem)}");
+                fg.AppendItem(MarkerFlagsItem, "MarkerFlags");
             }
         }
         
@@ -1624,7 +1624,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!lhs.Script.Equals(rhs.Script)) return false;
-            if (!MemorySliceExt.Equal(lhs.MarkerFlags, rhs.MarkerFlags)) return false;
+            if (lhs.MarkerFlags != rhs.MarkerFlags) return false;
             return true;
         }
         
@@ -1661,9 +1661,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 hash.Add(Scriptitem);
             }
-            if (item.MarkerFlags.TryGet(out var MarkerFlagsItem))
+            if (item.MarkerFlags.TryGet(out var MarkerFlagsitem))
             {
-                hash.Add(MarkerFlagsItem);
+                hash.Add(MarkerFlagsitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1777,14 +1777,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.MarkerFlags) ?? true))
             {
-                if(rhs.MarkerFlags.TryGet(out var MarkerFlagsrhs))
-                {
-                    item.MarkerFlags = MarkerFlagsrhs.ToArray();
-                }
-                else
-                {
-                    item.MarkerFlags = default;
-                }
+                item.MarkerFlags = rhs.MarkerFlags;
             }
         }
         
@@ -1965,7 +1958,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if ((item.MarkerFlags != null)
                 && (translationMask?.GetShouldTranslate((int)Furniture_FieldIndex.MarkerFlags) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
+                Int32XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.MarkerFlags),
                     item: item.MarkerFlags.Value,
@@ -2138,9 +2131,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)Furniture_FieldIndex.MarkerFlags);
                     try
                     {
-                        item.MarkerFlags = ByteArrayXmlTranslation.Instance.Parse(
+                        item.MarkerFlags = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            fallbackLength: 4,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)
@@ -2264,7 +2256,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.Script,
                 header: recordTypeConverter.ConvertToCustom(Furniture_Registration.SCRI_HEADER));
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MarkerFlags,
                 header: recordTypeConverter.ConvertToCustom(Furniture_Registration.MNAM_HEADER));
@@ -2406,7 +2398,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region MarkerFlags
         private int? _MarkerFlagsLocation;
-        public ReadOnlyMemorySlice<Byte>? MarkerFlags => _MarkerFlagsLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _MarkerFlagsLocation.Value, _package.Meta).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public Int32? MarkerFlags => _MarkerFlagsLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MarkerFlagsLocation.Value, _package.Meta)) : default(Int32?);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

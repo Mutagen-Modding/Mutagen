@@ -45,16 +45,8 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
-        #region Fluff
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Fluff = new byte[4];
-        public Byte[] Fluff
-        {
-            get => _Fluff;
-            set => this._Fluff = value ?? new byte[4];
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IScriptMetaSummaryGetter.Fluff => this.Fluff;
+        #region Unknown
+        public Int32 Unknown { get; set; } = default;
         #endregion
         #region RefCount
         public UInt32 RefCount { get; set; } = default;
@@ -238,7 +230,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Fluff = initialValue;
+                this.Unknown = initialValue;
                 this.RefCount = initialValue;
                 this.CompiledSize = initialValue;
                 this.VariableCount = initialValue;
@@ -246,13 +238,13 @@ namespace Mutagen.Bethesda.Oblivion
             }
 
             public Mask(
-                TItem Fluff,
+                TItem Unknown,
                 TItem RefCount,
                 TItem CompiledSize,
                 TItem VariableCount,
                 TItem Type)
             {
-                this.Fluff = Fluff;
+                this.Unknown = Unknown;
                 this.RefCount = RefCount;
                 this.CompiledSize = CompiledSize;
                 this.VariableCount = VariableCount;
@@ -268,7 +260,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public TItem Fluff;
+            public TItem Unknown;
             public TItem RefCount;
             public TItem CompiledSize;
             public TItem VariableCount;
@@ -285,7 +277,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Fluff, rhs.Fluff)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.RefCount, rhs.RefCount)) return false;
                 if (!object.Equals(this.CompiledSize, rhs.CompiledSize)) return false;
                 if (!object.Equals(this.VariableCount, rhs.VariableCount)) return false;
@@ -295,7 +287,7 @@ namespace Mutagen.Bethesda.Oblivion
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Fluff);
+                hash.Add(this.Unknown);
                 hash.Add(this.RefCount);
                 hash.Add(this.CompiledSize);
                 hash.Add(this.VariableCount);
@@ -308,7 +300,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Fluff)) return false;
+                if (!eval(this.Unknown)) return false;
                 if (!eval(this.RefCount)) return false;
                 if (!eval(this.CompiledSize)) return false;
                 if (!eval(this.VariableCount)) return false;
@@ -320,7 +312,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Fluff)) return true;
+                if (eval(this.Unknown)) return true;
                 if (eval(this.RefCount)) return true;
                 if (eval(this.CompiledSize)) return true;
                 if (eval(this.VariableCount)) return true;
@@ -339,7 +331,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Fluff = eval(this.Fluff);
+                obj.Unknown = eval(this.Unknown);
                 obj.RefCount = eval(this.RefCount);
                 obj.CompiledSize = eval(this.CompiledSize);
                 obj.VariableCount = eval(this.VariableCount);
@@ -366,9 +358,9 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Fluff ?? true)
+                    if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Fluff, "Fluff");
+                        fg.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.RefCount ?? true)
                     {
@@ -411,7 +403,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return _warnings;
                 }
             }
-            public Exception? Fluff;
+            public Exception? Unknown;
             public Exception? RefCount;
             public Exception? CompiledSize;
             public Exception? VariableCount;
@@ -424,8 +416,8 @@ namespace Mutagen.Bethesda.Oblivion
                 ScriptMetaSummary_FieldIndex enu = (ScriptMetaSummary_FieldIndex)index;
                 switch (enu)
                 {
-                    case ScriptMetaSummary_FieldIndex.Fluff:
-                        return Fluff;
+                    case ScriptMetaSummary_FieldIndex.Unknown:
+                        return Unknown;
                     case ScriptMetaSummary_FieldIndex.RefCount:
                         return RefCount;
                     case ScriptMetaSummary_FieldIndex.CompiledSize:
@@ -444,8 +436,8 @@ namespace Mutagen.Bethesda.Oblivion
                 ScriptMetaSummary_FieldIndex enu = (ScriptMetaSummary_FieldIndex)index;
                 switch (enu)
                 {
-                    case ScriptMetaSummary_FieldIndex.Fluff:
-                        this.Fluff = ex;
+                    case ScriptMetaSummary_FieldIndex.Unknown:
+                        this.Unknown = ex;
                         break;
                     case ScriptMetaSummary_FieldIndex.RefCount:
                         this.RefCount = ex;
@@ -469,8 +461,8 @@ namespace Mutagen.Bethesda.Oblivion
                 ScriptMetaSummary_FieldIndex enu = (ScriptMetaSummary_FieldIndex)index;
                 switch (enu)
                 {
-                    case ScriptMetaSummary_FieldIndex.Fluff:
-                        this.Fluff = (Exception?)obj;
+                    case ScriptMetaSummary_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
                         break;
                     case ScriptMetaSummary_FieldIndex.RefCount:
                         this.RefCount = (Exception?)obj;
@@ -492,7 +484,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Fluff != null) return true;
+                if (Unknown != null) return true;
                 if (RefCount != null) return true;
                 if (CompiledSize != null) return true;
                 if (VariableCount != null) return true;
@@ -531,7 +523,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendItem(Fluff, "Fluff");
+                fg.AppendItem(Unknown, "Unknown");
                 fg.AppendItem(RefCount, "RefCount");
                 fg.AppendItem(CompiledSize, "CompiledSize");
                 fg.AppendItem(VariableCount, "VariableCount");
@@ -544,7 +536,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Fluff = this.Fluff.Combine(rhs.Fluff);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.RefCount = this.RefCount.Combine(rhs.RefCount);
                 ret.CompiledSize = this.CompiledSize.Combine(rhs.CompiledSize);
                 ret.VariableCount = this.VariableCount.Combine(rhs.VariableCount);
@@ -570,7 +562,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public bool Fluff;
+            public bool Unknown;
             public bool RefCount;
             public bool CompiledSize;
             public bool VariableCount;
@@ -580,7 +572,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.Fluff = defaultOn;
+                this.Unknown = defaultOn;
                 this.RefCount = defaultOn;
                 this.CompiledSize = defaultOn;
                 this.VariableCount = defaultOn;
@@ -600,7 +592,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Fluff, null));
+                ret.Add((Unknown, null));
                 ret.Add((RefCount, null));
                 ret.Add((CompiledSize, null));
                 ret.Add((VariableCount, null));
@@ -674,7 +666,7 @@ namespace Mutagen.Bethesda.Oblivion
         IScriptMetaSummaryGetter,
         ILoquiObjectSetter<IScriptMetaSummary>
     {
-        new Byte[] Fluff { get; set; }
+        new Int32 Unknown { get; set; }
         new UInt32 RefCount { get; set; }
         new UInt32 VariableCount { get; set; }
         new ScriptFields.ScriptType Type { get; set; }
@@ -693,7 +685,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ScriptMetaSummary_Registration.Instance;
-        ReadOnlyMemorySlice<Byte> Fluff { get; }
+        Int32 Unknown { get; }
         UInt32 RefCount { get; }
         Int32 CompiledSize { get; }
         UInt32 VariableCount { get; }
@@ -1004,7 +996,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum ScriptMetaSummary_FieldIndex
     {
-        Fluff = 0,
+        Unknown = 0,
         RefCount = 1,
         CompiledSize = 2,
         VariableCount = 3,
@@ -1058,8 +1050,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
-                case "FLUFF":
-                    return (ushort)ScriptMetaSummary_FieldIndex.Fluff;
+                case "UNKNOWN":
+                    return (ushort)ScriptMetaSummary_FieldIndex.Unknown;
                 case "REFCOUNT":
                     return (ushort)ScriptMetaSummary_FieldIndex.RefCount;
                 case "COMPILEDSIZE":
@@ -1078,7 +1070,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptMetaSummary_FieldIndex enu = (ScriptMetaSummary_FieldIndex)index;
             switch (enu)
             {
-                case ScriptMetaSummary_FieldIndex.Fluff:
+                case ScriptMetaSummary_FieldIndex.Unknown:
                 case ScriptMetaSummary_FieldIndex.RefCount:
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
                 case ScriptMetaSummary_FieldIndex.VariableCount:
@@ -1094,7 +1086,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptMetaSummary_FieldIndex enu = (ScriptMetaSummary_FieldIndex)index;
             switch (enu)
             {
-                case ScriptMetaSummary_FieldIndex.Fluff:
+                case ScriptMetaSummary_FieldIndex.Unknown:
                 case ScriptMetaSummary_FieldIndex.RefCount:
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
                 case ScriptMetaSummary_FieldIndex.VariableCount:
@@ -1110,7 +1102,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptMetaSummary_FieldIndex enu = (ScriptMetaSummary_FieldIndex)index;
             switch (enu)
             {
-                case ScriptMetaSummary_FieldIndex.Fluff:
+                case ScriptMetaSummary_FieldIndex.Unknown:
                 case ScriptMetaSummary_FieldIndex.RefCount:
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
                 case ScriptMetaSummary_FieldIndex.VariableCount:
@@ -1126,8 +1118,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptMetaSummary_FieldIndex enu = (ScriptMetaSummary_FieldIndex)index;
             switch (enu)
             {
-                case ScriptMetaSummary_FieldIndex.Fluff:
-                    return "Fluff";
+                case ScriptMetaSummary_FieldIndex.Unknown:
+                    return "Unknown";
                 case ScriptMetaSummary_FieldIndex.RefCount:
                     return "RefCount";
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
@@ -1148,7 +1140,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
                     return true;
-                case ScriptMetaSummary_FieldIndex.Fluff:
+                case ScriptMetaSummary_FieldIndex.Unknown:
                 case ScriptMetaSummary_FieldIndex.RefCount:
                 case ScriptMetaSummary_FieldIndex.VariableCount:
                 case ScriptMetaSummary_FieldIndex.Type:
@@ -1165,7 +1157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
                     return true;
-                case ScriptMetaSummary_FieldIndex.Fluff:
+                case ScriptMetaSummary_FieldIndex.Unknown:
                 case ScriptMetaSummary_FieldIndex.RefCount:
                 case ScriptMetaSummary_FieldIndex.VariableCount:
                 case ScriptMetaSummary_FieldIndex.Type:
@@ -1180,8 +1172,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptMetaSummary_FieldIndex enu = (ScriptMetaSummary_FieldIndex)index;
             switch (enu)
             {
-                case ScriptMetaSummary_FieldIndex.Fluff:
-                    return typeof(Byte[]);
+                case ScriptMetaSummary_FieldIndex.Unknown:
+                    return typeof(Int32);
                 case ScriptMetaSummary_FieldIndex.RefCount:
                     return typeof(UInt32);
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
@@ -1242,7 +1234,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IScriptMetaSummary item)
         {
             ClearPartial();
-            item.Fluff = new byte[4];
+            item.Unknown = default;
             item.RefCount = default;
             item.VariableCount = default;
             item.Type = default;
@@ -1301,7 +1293,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptMetaSummary item,
             MutagenFrame frame)
         {
-            item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Unknown = frame.ReadInt32();
             item.RefCount = frame.ReadUInt32();
             ScriptMetaSummaryBinaryCreateTranslation.FillBinaryCompiledSizeCustomPublic(
                 frame: frame,
@@ -1353,7 +1345,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff.Span, rhs.Fluff.Span);
+            ret.Unknown = item.Unknown == rhs.Unknown;
             ret.RefCount = item.RefCount == rhs.RefCount;
             ret.CompiledSize = item.CompiledSize == rhs.CompiledSize;
             ret.VariableCount = item.VariableCount == rhs.VariableCount;
@@ -1404,9 +1396,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             ScriptMetaSummary.Mask<bool>? printMask = null)
         {
-            if (printMask?.Fluff ?? true)
+            if (printMask?.Unknown ?? true)
             {
-                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
+                fg.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.RefCount ?? true)
             {
@@ -1437,7 +1429,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptMetaSummaryGetter item,
             ScriptMetaSummary.Mask<bool> mask)
         {
-            mask.Fluff = true;
+            mask.Unknown = true;
             mask.RefCount = true;
             mask.CompiledSize = true;
             mask.VariableCount = true;
@@ -1451,7 +1443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff.Span, rhs.Fluff.Span)) return false;
+            if (lhs.Unknown != rhs.Unknown) return false;
             if (lhs.RefCount != rhs.RefCount) return false;
             if (lhs.CompiledSize != rhs.CompiledSize) return false;
             if (lhs.VariableCount != rhs.VariableCount) return false;
@@ -1462,7 +1454,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual int GetHashCode(IScriptMetaSummaryGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Fluff);
+            hash.Add(item.Unknown);
             hash.Add(item.RefCount);
             hash.Add(item.CompiledSize);
             hash.Add(item.VariableCount);
@@ -1498,9 +1490,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)ScriptMetaSummary_FieldIndex.Fluff) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ScriptMetaSummary_FieldIndex.Unknown) ?? true))
             {
-                item.Fluff = rhs.Fluff.ToArray();
+                item.Unknown = rhs.Unknown;
             }
             if ((copyMask?.GetShouldTranslate((int)ScriptMetaSummary_FieldIndex.RefCount) ?? true))
             {
@@ -1603,13 +1595,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)ScriptMetaSummary_FieldIndex.Fluff) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)ScriptMetaSummary_FieldIndex.Unknown) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
+                Int32XmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Fluff),
-                    item: item.Fluff,
-                    fieldIndex: (int)ScriptMetaSummary_FieldIndex.Fluff,
+                    name: nameof(item.Unknown),
+                    item: item.Unknown,
+                    fieldIndex: (int)ScriptMetaSummary_FieldIndex.Unknown,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)ScriptMetaSummary_FieldIndex.RefCount) ?? true))
@@ -1745,13 +1737,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (name)
             {
-                case "Fluff":
-                    errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.Fluff);
+                case "Unknown":
+                    errorMask?.PushIndex((int)ScriptMetaSummary_FieldIndex.Unknown);
                     try
                     {
-                        item.Fluff = ByteArrayXmlTranslation.Instance.Parse(
+                        item.Unknown = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            fallbackLength: 4,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)
@@ -2006,9 +1997,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptMetaSummaryGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Fluff);
+            writer.Write(item.Unknown);
             writer.Write(item.RefCount);
             ScriptMetaSummaryBinaryWriteTranslation.WriteBinaryCompiledSize(
                 writer: writer,
@@ -2147,7 +2136,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(0x0, 0x4).ToArray();
+        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
         public UInt32 RefCount => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
         public Int32 CompiledSize => GetCompiledSizeCustom(location: 0x8);
         public UInt32 VariableCount => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0xC, 0x4));

@@ -55,16 +55,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region ParentIndex
         public UInt16 ParentIndex { get; set; } = default;
         #endregion
-        #region Unknown1
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Unknown1 = new byte[2];
-        public Byte[] Unknown1
-        {
-            get => _Unknown1;
-            set => this._Unknown1 = value ?? new byte[2];
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IRegionDataObjectGetter.Unknown1 => this.Unknown1;
+        #region Unknown
+        public Int16 Unknown { get; set; } = default;
         #endregion
         #region Density
         public Single Density { get; set; } = default;
@@ -288,7 +280,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Object = initialValue;
                 this.ParentIndex = initialValue;
-                this.Unknown1 = initialValue;
+                this.Unknown = initialValue;
                 this.Density = initialValue;
                 this.Clustering = initialValue;
                 this.MinSlope = initialValue;
@@ -308,7 +300,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(
                 TItem Object,
                 TItem ParentIndex,
-                TItem Unknown1,
+                TItem Unknown,
                 TItem Density,
                 TItem Clustering,
                 TItem MinSlope,
@@ -326,7 +318,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Object = Object;
                 this.ParentIndex = ParentIndex;
-                this.Unknown1 = Unknown1;
+                this.Unknown = Unknown;
                 this.Density = Density;
                 this.Clustering = Clustering;
                 this.MinSlope = MinSlope;
@@ -354,7 +346,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             public TItem Object;
             public TItem ParentIndex;
-            public TItem Unknown1;
+            public TItem Unknown;
             public TItem Density;
             public TItem Clustering;
             public TItem MinSlope;
@@ -383,7 +375,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return false;
                 if (!object.Equals(this.Object, rhs.Object)) return false;
                 if (!object.Equals(this.ParentIndex, rhs.ParentIndex)) return false;
-                if (!object.Equals(this.Unknown1, rhs.Unknown1)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.Density, rhs.Density)) return false;
                 if (!object.Equals(this.Clustering, rhs.Clustering)) return false;
                 if (!object.Equals(this.MinSlope, rhs.MinSlope)) return false;
@@ -405,7 +397,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var hash = new HashCode();
                 hash.Add(this.Object);
                 hash.Add(this.ParentIndex);
-                hash.Add(this.Unknown1);
+                hash.Add(this.Unknown);
                 hash.Add(this.Density);
                 hash.Add(this.Clustering);
                 hash.Add(this.MinSlope);
@@ -430,7 +422,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!eval(this.Object)) return false;
                 if (!eval(this.ParentIndex)) return false;
-                if (!eval(this.Unknown1)) return false;
+                if (!eval(this.Unknown)) return false;
                 if (!eval(this.Density)) return false;
                 if (!eval(this.Clustering)) return false;
                 if (!eval(this.MinSlope)) return false;
@@ -454,7 +446,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (eval(this.Object)) return true;
                 if (eval(this.ParentIndex)) return true;
-                if (eval(this.Unknown1)) return true;
+                if (eval(this.Unknown)) return true;
                 if (eval(this.Density)) return true;
                 if (eval(this.Clustering)) return true;
                 if (eval(this.MinSlope)) return true;
@@ -485,7 +477,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 obj.Object = eval(this.Object);
                 obj.ParentIndex = eval(this.ParentIndex);
-                obj.Unknown1 = eval(this.Unknown1);
+                obj.Unknown = eval(this.Unknown);
                 obj.Density = eval(this.Density);
                 obj.Clustering = eval(this.Clustering);
                 obj.MinSlope = eval(this.MinSlope);
@@ -530,9 +522,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendItem(ParentIndex, "ParentIndex");
                     }
-                    if (printMask?.Unknown1 ?? true)
+                    if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Unknown1, "Unknown1");
+                        fg.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.Density ?? true)
                     {
@@ -617,7 +609,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public Exception? Object;
             public Exception? ParentIndex;
-            public Exception? Unknown1;
+            public Exception? Unknown;
             public Exception? Density;
             public Exception? Clustering;
             public Exception? MinSlope;
@@ -644,8 +636,8 @@ namespace Mutagen.Bethesda.Oblivion
                         return Object;
                     case RegionDataObject_FieldIndex.ParentIndex:
                         return ParentIndex;
-                    case RegionDataObject_FieldIndex.Unknown1:
-                        return Unknown1;
+                    case RegionDataObject_FieldIndex.Unknown:
+                        return Unknown;
                     case RegionDataObject_FieldIndex.Density:
                         return Density;
                     case RegionDataObject_FieldIndex.Clustering:
@@ -690,8 +682,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case RegionDataObject_FieldIndex.ParentIndex:
                         this.ParentIndex = ex;
                         break;
-                    case RegionDataObject_FieldIndex.Unknown1:
-                        this.Unknown1 = ex;
+                    case RegionDataObject_FieldIndex.Unknown:
+                        this.Unknown = ex;
                         break;
                     case RegionDataObject_FieldIndex.Density:
                         this.Density = ex;
@@ -751,8 +743,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case RegionDataObject_FieldIndex.ParentIndex:
                         this.ParentIndex = (Exception?)obj;
                         break;
-                    case RegionDataObject_FieldIndex.Unknown1:
-                        this.Unknown1 = (Exception?)obj;
+                    case RegionDataObject_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
                         break;
                     case RegionDataObject_FieldIndex.Density:
                         this.Density = (Exception?)obj;
@@ -806,7 +798,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Overall != null) return true;
                 if (Object != null) return true;
                 if (ParentIndex != null) return true;
-                if (Unknown1 != null) return true;
+                if (Unknown != null) return true;
                 if (Density != null) return true;
                 if (Clustering != null) return true;
                 if (MinSlope != null) return true;
@@ -857,7 +849,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 fg.AppendItem(Object, "Object");
                 fg.AppendItem(ParentIndex, "ParentIndex");
-                fg.AppendItem(Unknown1, "Unknown1");
+                fg.AppendItem(Unknown, "Unknown");
                 fg.AppendItem(Density, "Density");
                 fg.AppendItem(Clustering, "Clustering");
                 fg.AppendItem(MinSlope, "MinSlope");
@@ -882,7 +874,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var ret = new ErrorMask();
                 ret.Object = this.Object.Combine(rhs.Object);
                 ret.ParentIndex = this.ParentIndex.Combine(rhs.ParentIndex);
-                ret.Unknown1 = this.Unknown1.Combine(rhs.Unknown1);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.Density = this.Density.Combine(rhs.Density);
                 ret.Clustering = this.Clustering.Combine(rhs.Clustering);
                 ret.MinSlope = this.MinSlope.Combine(rhs.MinSlope);
@@ -920,7 +912,7 @@ namespace Mutagen.Bethesda.Oblivion
             private TranslationCrystal? _crystal;
             public bool Object;
             public bool ParentIndex;
-            public bool Unknown1;
+            public bool Unknown;
             public bool Density;
             public bool Clustering;
             public bool MinSlope;
@@ -942,7 +934,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Object = defaultOn;
                 this.ParentIndex = defaultOn;
-                this.Unknown1 = defaultOn;
+                this.Unknown = defaultOn;
                 this.Density = defaultOn;
                 this.Clustering = defaultOn;
                 this.MinSlope = defaultOn;
@@ -974,7 +966,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret.Add((Object, null));
                 ret.Add((ParentIndex, null));
-                ret.Add((Unknown1, null));
+                ret.Add((Unknown, null));
                 ret.Add((Density, null));
                 ret.Add((Clustering, null));
                 ret.Add((MinSlope, null));
@@ -1061,7 +1053,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new IFormLink<OblivionMajorRecord> Object { get; }
         new UInt16 ParentIndex { get; set; }
-        new Byte[] Unknown1 { get; set; }
+        new Int16 Unknown { get; set; }
         new Single Density { get; set; }
         new Byte Clustering { get; set; }
         new Byte MinSlope { get; set; }
@@ -1094,7 +1086,7 @@ namespace Mutagen.Bethesda.Oblivion
         static ILoquiRegistration Registration => RegionDataObject_Registration.Instance;
         IFormLinkGetter<IOblivionMajorRecordGetter> Object { get; }
         UInt16 ParentIndex { get; }
-        ReadOnlyMemorySlice<Byte> Unknown1 { get; }
+        Int16 Unknown { get; }
         Single Density { get; }
         Byte Clustering { get; }
         Byte MinSlope { get; }
@@ -1417,7 +1409,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         Object = 0,
         ParentIndex = 1,
-        Unknown1 = 2,
+        Unknown = 2,
         Density = 3,
         Clustering = 4,
         MinSlope = 5,
@@ -1485,8 +1477,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)RegionDataObject_FieldIndex.Object;
                 case "PARENTINDEX":
                     return (ushort)RegionDataObject_FieldIndex.ParentIndex;
-                case "UNKNOWN1":
-                    return (ushort)RegionDataObject_FieldIndex.Unknown1;
+                case "UNKNOWN":
+                    return (ushort)RegionDataObject_FieldIndex.Unknown;
                 case "DENSITY":
                     return (ushort)RegionDataObject_FieldIndex.Density;
                 case "CLUSTERING":
@@ -1527,7 +1519,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RegionDataObject_FieldIndex.Object:
                 case RegionDataObject_FieldIndex.ParentIndex:
-                case RegionDataObject_FieldIndex.Unknown1:
+                case RegionDataObject_FieldIndex.Unknown:
                 case RegionDataObject_FieldIndex.Density:
                 case RegionDataObject_FieldIndex.Clustering:
                 case RegionDataObject_FieldIndex.MinSlope:
@@ -1555,7 +1547,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RegionDataObject_FieldIndex.Object:
                 case RegionDataObject_FieldIndex.ParentIndex:
-                case RegionDataObject_FieldIndex.Unknown1:
+                case RegionDataObject_FieldIndex.Unknown:
                 case RegionDataObject_FieldIndex.Density:
                 case RegionDataObject_FieldIndex.Clustering:
                 case RegionDataObject_FieldIndex.MinSlope:
@@ -1583,7 +1575,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RegionDataObject_FieldIndex.Object:
                 case RegionDataObject_FieldIndex.ParentIndex:
-                case RegionDataObject_FieldIndex.Unknown1:
+                case RegionDataObject_FieldIndex.Unknown:
                 case RegionDataObject_FieldIndex.Density:
                 case RegionDataObject_FieldIndex.Clustering:
                 case RegionDataObject_FieldIndex.MinSlope:
@@ -1613,8 +1605,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Object";
                 case RegionDataObject_FieldIndex.ParentIndex:
                     return "ParentIndex";
-                case RegionDataObject_FieldIndex.Unknown1:
-                    return "Unknown1";
+                case RegionDataObject_FieldIndex.Unknown:
+                    return "Unknown";
                 case RegionDataObject_FieldIndex.Density:
                     return "Density";
                 case RegionDataObject_FieldIndex.Clustering:
@@ -1655,7 +1647,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RegionDataObject_FieldIndex.Object:
                 case RegionDataObject_FieldIndex.ParentIndex:
-                case RegionDataObject_FieldIndex.Unknown1:
+                case RegionDataObject_FieldIndex.Unknown:
                 case RegionDataObject_FieldIndex.Density:
                 case RegionDataObject_FieldIndex.Clustering:
                 case RegionDataObject_FieldIndex.MinSlope:
@@ -1683,7 +1675,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RegionDataObject_FieldIndex.Object:
                 case RegionDataObject_FieldIndex.ParentIndex:
-                case RegionDataObject_FieldIndex.Unknown1:
+                case RegionDataObject_FieldIndex.Unknown:
                 case RegionDataObject_FieldIndex.Density:
                 case RegionDataObject_FieldIndex.Clustering:
                 case RegionDataObject_FieldIndex.MinSlope:
@@ -1713,8 +1705,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(IFormLink<OblivionMajorRecord>);
                 case RegionDataObject_FieldIndex.ParentIndex:
                     return typeof(UInt16);
-                case RegionDataObject_FieldIndex.Unknown1:
-                    return typeof(Byte[]);
+                case RegionDataObject_FieldIndex.Unknown:
+                    return typeof(Int16);
                 case RegionDataObject_FieldIndex.Density:
                     return typeof(Single);
                 case RegionDataObject_FieldIndex.Clustering:
@@ -1795,7 +1787,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Object.FormKey = FormKey.Null;
             item.ParentIndex = default;
-            item.Unknown1 = new byte[2];
+            item.Unknown = default;
             item.Density = default;
             item.Clustering = default;
             item.MinSlope = default;
@@ -1849,7 +1841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame,
                 defaultVal: FormKey.Null);
             item.ParentIndex = frame.ReadUInt16();
-            item.Unknown1 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(2));
+            item.Unknown = frame.ReadInt16();
             item.Density = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.Clustering = frame.ReadUInt8();
             item.MinSlope = frame.ReadUInt8();
@@ -1908,7 +1900,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.Object = object.Equals(item.Object, rhs.Object);
             ret.ParentIndex = item.ParentIndex == rhs.ParentIndex;
-            ret.Unknown1 = MemoryExtensions.SequenceEqual(item.Unknown1.Span, rhs.Unknown1.Span);
+            ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Density = item.Density.EqualsWithin(rhs.Density);
             ret.Clustering = item.Clustering == rhs.Clustering;
             ret.MinSlope = item.MinSlope == rhs.MinSlope;
@@ -1977,9 +1969,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(item.ParentIndex, "ParentIndex");
             }
-            if (printMask?.Unknown1 ?? true)
+            if (printMask?.Unknown ?? true)
             {
-                fg.AppendLine($"Unknown1 => {SpanExt.ToHexString(item.Unknown1)}");
+                fg.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.Density ?? true)
             {
@@ -2052,7 +2044,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             mask.Object = true;
             mask.ParentIndex = true;
-            mask.Unknown1 = true;
+            mask.Unknown = true;
             mask.Density = true;
             mask.Clustering = true;
             mask.MinSlope = true;
@@ -2078,7 +2070,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null || rhs == null) return false;
             if (!lhs.Object.Equals(rhs.Object)) return false;
             if (lhs.ParentIndex != rhs.ParentIndex) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unknown1.Span, rhs.Unknown1.Span)) return false;
+            if (lhs.Unknown != rhs.Unknown) return false;
             if (!lhs.Density.EqualsWithin(rhs.Density)) return false;
             if (lhs.Clustering != rhs.Clustering) return false;
             if (lhs.MinSlope != rhs.MinSlope) return false;
@@ -2101,7 +2093,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var hash = new HashCode();
             hash.Add(item.Object);
             hash.Add(item.ParentIndex);
-            hash.Add(item.Unknown1);
+            hash.Add(item.Unknown);
             hash.Add(item.Density);
             hash.Add(item.Clustering);
             hash.Add(item.MinSlope);
@@ -2156,9 +2148,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.ParentIndex = rhs.ParentIndex;
             }
-            if ((copyMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Unknown1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Unknown) ?? true))
             {
-                item.Unknown1 = rhs.Unknown1.ToArray();
+                item.Unknown = rhs.Unknown;
             }
             if ((copyMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Density) ?? true))
             {
@@ -2323,13 +2315,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)RegionDataObject_FieldIndex.ParentIndex,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Unknown1) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Unknown) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
+                Int16XmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown1),
-                    item: item.Unknown1,
-                    fieldIndex: (int)RegionDataObject_FieldIndex.Unknown1,
+                    name: nameof(item.Unknown),
+                    item: item.Unknown,
+                    fieldIndex: (int)RegionDataObject_FieldIndex.Unknown,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)RegionDataObject_FieldIndex.Density) ?? true))
@@ -2600,13 +2592,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown1":
-                    errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Unknown1);
+                case "Unknown":
+                    errorMask?.PushIndex((int)RegionDataObject_FieldIndex.Unknown);
                     try
                     {
-                        item.Unknown1 = ByteArrayXmlTranslation.Instance.Parse(
+                        item.Unknown = Int16XmlTranslation.Instance.Parse(
                             node: node,
-                            fallbackLength: 2,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)
@@ -3051,9 +3042,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.Object);
             writer.Write(item.ParentIndex);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Unknown1);
+            writer.Write(item.Unknown);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Density);
@@ -3200,7 +3189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public IFormLinkGetter<IOblivionMajorRecordGetter> Object => new FormLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public UInt16 ParentIndex => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x4, 0x2));
-        public ReadOnlyMemorySlice<Byte> Unknown1 => _data.Span.Slice(0x6, 0x2).ToArray();
+        public Int16 Unknown => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x6, 0x2));
         public Single Density => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
         public Byte Clustering => _data.Span[0xC];
         public Byte MinSlope => _data.Span[0xD];

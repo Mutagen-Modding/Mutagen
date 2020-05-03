@@ -190,26 +190,10 @@ namespace Mutagen.Bethesda.Oblivion
         ILandscapeGetter? ICellGetter.Landscape => this.Landscape;
         #endregion
         #region Timestamp
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Timestamp = new byte[4];
-        public Byte[] Timestamp
-        {
-            get => _Timestamp;
-            set => this._Timestamp = value ?? new byte[4];
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> ICellGetter.Timestamp => this.Timestamp;
+        public Int32 Timestamp { get; set; } = default;
         #endregion
         #region PersistentTimestamp
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _PersistentTimestamp = new byte[4];
-        public Byte[] PersistentTimestamp
-        {
-            get => _PersistentTimestamp;
-            set => this._PersistentTimestamp = value ?? new byte[4];
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> ICellGetter.PersistentTimestamp => this.PersistentTimestamp;
+        public Int32 PersistentTimestamp { get; set; } = default;
         #endregion
         #region Persistent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -226,15 +210,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region TemporaryTimestamp
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _TemporaryTimestamp = new byte[4];
-        public Byte[] TemporaryTimestamp
-        {
-            get => _TemporaryTimestamp;
-            set => this._TemporaryTimestamp = value ?? new byte[4];
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> ICellGetter.TemporaryTimestamp => this.TemporaryTimestamp;
+        public Int32 TemporaryTimestamp { get; set; } = default;
         #endregion
         #region Temporary
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -251,15 +227,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region VisibleWhenDistantTimestamp
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _VisibleWhenDistantTimestamp = new byte[4];
-        public Byte[] VisibleWhenDistantTimestamp
-        {
-            get => _VisibleWhenDistantTimestamp;
-            set => this._VisibleWhenDistantTimestamp = value ?? new byte[4];
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> ICellGetter.VisibleWhenDistantTimestamp => this.VisibleWhenDistantTimestamp;
+        public Int32 VisibleWhenDistantTimestamp { get; set; } = default;
         #endregion
         #region VisibleWhenDistant
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1699,12 +1667,12 @@ namespace Mutagen.Bethesda.Oblivion
         new IFormLinkNullable<Global> GlobalVariable { get; }
         new PathGrid? PathGrid { get; set; }
         new Landscape? Landscape { get; set; }
-        new Byte[] Timestamp { get; set; }
-        new Byte[] PersistentTimestamp { get; set; }
+        new Int32 Timestamp { get; set; }
+        new Int32 PersistentTimestamp { get; set; }
         new ExtendedList<IPlaced> Persistent { get; }
-        new Byte[] TemporaryTimestamp { get; set; }
+        new Int32 TemporaryTimestamp { get; set; }
         new ExtendedList<IPlaced> Temporary { get; }
-        new Byte[] VisibleWhenDistantTimestamp { get; set; }
+        new Int32 VisibleWhenDistantTimestamp { get; set; }
         new ExtendedList<IPlaced> VisibleWhenDistant { get; }
     }
 
@@ -1739,12 +1707,12 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkNullableGetter<IGlobalGetter> GlobalVariable { get; }
         IPathGridGetter? PathGrid { get; }
         ILandscapeGetter? Landscape { get; }
-        ReadOnlyMemorySlice<Byte> Timestamp { get; }
-        ReadOnlyMemorySlice<Byte> PersistentTimestamp { get; }
+        Int32 Timestamp { get; }
+        Int32 PersistentTimestamp { get; }
         IReadOnlyList<IPlacedGetter> Persistent { get; }
-        ReadOnlyMemorySlice<Byte> TemporaryTimestamp { get; }
+        Int32 TemporaryTimestamp { get; }
         IReadOnlyList<IPlacedGetter> Temporary { get; }
-        ReadOnlyMemorySlice<Byte> VisibleWhenDistantTimestamp { get; }
+        Int32 VisibleWhenDistantTimestamp { get; }
         IReadOnlyList<IPlacedGetter> VisibleWhenDistant { get; }
 
     }
@@ -2439,17 +2407,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.Landscape:
                     return typeof(Landscape);
                 case Cell_FieldIndex.Timestamp:
-                    return typeof(Byte[]);
+                    return typeof(Int32);
                 case Cell_FieldIndex.PersistentTimestamp:
-                    return typeof(Byte[]);
+                    return typeof(Int32);
                 case Cell_FieldIndex.Persistent:
                     return typeof(ExtendedList<IPlaced>);
                 case Cell_FieldIndex.TemporaryTimestamp:
-                    return typeof(Byte[]);
+                    return typeof(Int32);
                 case Cell_FieldIndex.Temporary:
                     return typeof(ExtendedList<IPlaced>);
                 case Cell_FieldIndex.VisibleWhenDistantTimestamp:
-                    return typeof(Byte[]);
+                    return typeof(Int32);
                 case Cell_FieldIndex.VisibleWhenDistant:
                     return typeof(ExtendedList<IPlaced>);
                 default:
@@ -2535,12 +2503,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.GlobalVariable.FormKey = null;
             item.PathGrid = null;
             item.Landscape = null;
-            item.Timestamp = new byte[4];
-            item.PersistentTimestamp = new byte[4];
+            item.Timestamp = default;
+            item.PersistentTimestamp = default;
             item.Persistent.Clear();
-            item.TemporaryTimestamp = new byte[4];
+            item.TemporaryTimestamp = default;
             item.Temporary.Clear();
-            item.VisibleWhenDistantTimestamp = new byte[4];
+            item.VisibleWhenDistantTimestamp = default;
             item.VisibleWhenDistant.Clear();
             base.Clear(item);
         }
@@ -2897,18 +2865,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.Landscape,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Timestamp = MemoryExtensions.SequenceEqual(item.Timestamp.Span, rhs.Timestamp.Span);
-            ret.PersistentTimestamp = MemoryExtensions.SequenceEqual(item.PersistentTimestamp.Span, rhs.PersistentTimestamp.Span);
+            ret.Timestamp = item.Timestamp == rhs.Timestamp;
+            ret.PersistentTimestamp = item.PersistentTimestamp == rhs.PersistentTimestamp;
             ret.Persistent = item.Persistent.CollectionEqualsHelper(
                 rhs.Persistent,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsIMask(loqRhs, include),
                 include);
-            ret.TemporaryTimestamp = MemoryExtensions.SequenceEqual(item.TemporaryTimestamp.Span, rhs.TemporaryTimestamp.Span);
+            ret.TemporaryTimestamp = item.TemporaryTimestamp == rhs.TemporaryTimestamp;
             ret.Temporary = item.Temporary.CollectionEqualsHelper(
                 rhs.Temporary,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsIMask(loqRhs, include),
                 include);
-            ret.VisibleWhenDistantTimestamp = MemoryExtensions.SequenceEqual(item.VisibleWhenDistantTimestamp.Span, rhs.VisibleWhenDistantTimestamp.Span);
+            ret.VisibleWhenDistantTimestamp = item.VisibleWhenDistantTimestamp == rhs.VisibleWhenDistantTimestamp;
             ret.VisibleWhenDistant = item.VisibleWhenDistant.CollectionEqualsHelper(
                 rhs.VisibleWhenDistant,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsIMask(loqRhs, include),
@@ -3050,11 +3018,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Timestamp ?? true)
             {
-                fg.AppendLine($"Timestamp => {SpanExt.ToHexString(item.Timestamp)}");
+                fg.AppendItem(item.Timestamp, "Timestamp");
             }
             if (printMask?.PersistentTimestamp ?? true)
             {
-                fg.AppendLine($"PersistentTimestamp => {SpanExt.ToHexString(item.PersistentTimestamp)}");
+                fg.AppendItem(item.PersistentTimestamp, "PersistentTimestamp");
             }
             if (printMask?.Persistent?.Overall ?? true)
             {
@@ -3076,7 +3044,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.TemporaryTimestamp ?? true)
             {
-                fg.AppendLine($"TemporaryTimestamp => {SpanExt.ToHexString(item.TemporaryTimestamp)}");
+                fg.AppendItem(item.TemporaryTimestamp, "TemporaryTimestamp");
             }
             if (printMask?.Temporary?.Overall ?? true)
             {
@@ -3098,7 +3066,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.VisibleWhenDistantTimestamp ?? true)
             {
-                fg.AppendLine($"VisibleWhenDistantTimestamp => {SpanExt.ToHexString(item.VisibleWhenDistantTimestamp)}");
+                fg.AppendItem(item.VisibleWhenDistantTimestamp, "VisibleWhenDistantTimestamp");
             }
             if (printMask?.VisibleWhenDistant?.Overall ?? true)
             {
@@ -3259,12 +3227,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!lhs.GlobalVariable.Equals(rhs.GlobalVariable)) return false;
             if (!object.Equals(lhs.PathGrid, rhs.PathGrid)) return false;
             if (!object.Equals(lhs.Landscape, rhs.Landscape)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Timestamp.Span, rhs.Timestamp.Span)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.PersistentTimestamp.Span, rhs.PersistentTimestamp.Span)) return false;
+            if (lhs.Timestamp != rhs.Timestamp) return false;
+            if (lhs.PersistentTimestamp != rhs.PersistentTimestamp) return false;
             if (!lhs.Persistent.SequenceEqual(rhs.Persistent)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.TemporaryTimestamp.Span, rhs.TemporaryTimestamp.Span)) return false;
+            if (lhs.TemporaryTimestamp != rhs.TemporaryTimestamp) return false;
             if (!lhs.Temporary.SequenceEqual(rhs.Temporary)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.VisibleWhenDistantTimestamp.Span, rhs.VisibleWhenDistantTimestamp.Span)) return false;
+            if (lhs.VisibleWhenDistantTimestamp != rhs.VisibleWhenDistantTimestamp) return false;
             if (!lhs.VisibleWhenDistant.SequenceEqual(rhs.VisibleWhenDistant)) return false;
             return true;
         }
@@ -3738,11 +3706,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Timestamp) ?? true))
             {
-                item.Timestamp = rhs.Timestamp.ToArray();
+                item.Timestamp = rhs.Timestamp;
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.PersistentTimestamp) ?? true))
             {
-                item.PersistentTimestamp = rhs.PersistentTimestamp.ToArray();
+                item.PersistentTimestamp = rhs.PersistentTimestamp;
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Persistent) ?? true))
             {
@@ -3768,7 +3736,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.TemporaryTimestamp) ?? true))
             {
-                item.TemporaryTimestamp = rhs.TemporaryTimestamp.ToArray();
+                item.TemporaryTimestamp = rhs.TemporaryTimestamp;
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Temporary) ?? true))
             {
@@ -3794,7 +3762,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.VisibleWhenDistantTimestamp) ?? true))
             {
-                item.VisibleWhenDistantTimestamp = rhs.VisibleWhenDistantTimestamp.ToArray();
+                item.VisibleWhenDistantTimestamp = rhs.VisibleWhenDistantTimestamp;
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.VisibleWhenDistant) ?? true))
             {
@@ -4149,7 +4117,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Timestamp) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
+                Int32XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Timestamp),
                     item: item.Timestamp,
@@ -4158,7 +4126,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)Cell_FieldIndex.PersistentTimestamp) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
+                Int32XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.PersistentTimestamp),
                     item: item.PersistentTimestamp,
@@ -4189,7 +4157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)Cell_FieldIndex.TemporaryTimestamp) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
+                Int32XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.TemporaryTimestamp),
                     item: item.TemporaryTimestamp,
@@ -4220,7 +4188,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)Cell_FieldIndex.VisibleWhenDistantTimestamp) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
+                Int32XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.VisibleWhenDistantTimestamp),
                     item: item.VisibleWhenDistantTimestamp,
@@ -4640,9 +4608,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)Cell_FieldIndex.Timestamp);
                     try
                     {
-                        item.Timestamp = ByteArrayXmlTranslation.Instance.Parse(
+                        item.Timestamp = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            fallbackLength: 4,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)
@@ -4659,9 +4626,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)Cell_FieldIndex.PersistentTimestamp);
                     try
                     {
-                        item.PersistentTimestamp = ByteArrayXmlTranslation.Instance.Parse(
+                        item.PersistentTimestamp = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            fallbackLength: 4,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)
@@ -4706,9 +4672,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)Cell_FieldIndex.TemporaryTimestamp);
                     try
                     {
-                        item.TemporaryTimestamp = ByteArrayXmlTranslation.Instance.Parse(
+                        item.TemporaryTimestamp = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            fallbackLength: 4,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)
@@ -4753,9 +4718,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)Cell_FieldIndex.VisibleWhenDistantTimestamp);
                     try
                     {
-                        item.VisibleWhenDistantTimestamp = ByteArrayXmlTranslation.Instance.Parse(
+                        item.VisibleWhenDistantTimestamp = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            fallbackLength: 4,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)

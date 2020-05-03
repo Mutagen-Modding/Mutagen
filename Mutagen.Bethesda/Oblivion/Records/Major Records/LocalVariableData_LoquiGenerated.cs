@@ -48,30 +48,22 @@ namespace Mutagen.Bethesda.Oblivion
         #region Index
         public Int32 Index { get; set; } = default;
         #endregion
-        #region Fluff
+        #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Fluff = new byte[12];
-        public Byte[] Fluff
+        private Byte[] _Unknown = new byte[12];
+        public Byte[] Unknown
         {
-            get => _Fluff;
-            set => this._Fluff = value ?? new byte[12];
+            get => _Unknown;
+            set => this._Unknown = value ?? new byte[12];
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> ILocalVariableDataGetter.Fluff => this.Fluff;
+        ReadOnlyMemorySlice<Byte> ILocalVariableDataGetter.Unknown => this.Unknown;
         #endregion
         #region Flags
         public Script.LocalVariableFlag Flags { get; set; } = default;
         #endregion
-        #region Fluff2
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Fluff2 = new byte[4];
-        public Byte[] Fluff2
-        {
-            get => _Fluff2;
-            set => this._Fluff2 = value ?? new byte[4];
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> ILocalVariableDataGetter.Fluff2 => this.Fluff2;
+        #region Unknown2
+        public Int32 Unknown2 { get; set; } = default;
         #endregion
 
         #region To String
@@ -244,21 +236,21 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(TItem initialValue)
             {
                 this.Index = initialValue;
-                this.Fluff = initialValue;
+                this.Unknown = initialValue;
                 this.Flags = initialValue;
-                this.Fluff2 = initialValue;
+                this.Unknown2 = initialValue;
             }
 
             public Mask(
                 TItem Index,
-                TItem Fluff,
+                TItem Unknown,
                 TItem Flags,
-                TItem Fluff2)
+                TItem Unknown2)
             {
                 this.Index = Index;
-                this.Fluff = Fluff;
+                this.Unknown = Unknown;
                 this.Flags = Flags;
-                this.Fluff2 = Fluff2;
+                this.Unknown2 = Unknown2;
             }
 
             #pragma warning disable CS8618
@@ -271,9 +263,9 @@ namespace Mutagen.Bethesda.Oblivion
 
             #region Members
             public TItem Index;
-            public TItem Fluff;
+            public TItem Unknown;
             public TItem Flags;
-            public TItem Fluff2;
+            public TItem Unknown2;
             #endregion
 
             #region Equals
@@ -287,18 +279,18 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Index, rhs.Index)) return false;
-                if (!object.Equals(this.Fluff, rhs.Fluff)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.Fluff2, rhs.Fluff2)) return false;
+                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Index);
-                hash.Add(this.Fluff);
+                hash.Add(this.Unknown);
                 hash.Add(this.Flags);
-                hash.Add(this.Fluff2);
+                hash.Add(this.Unknown2);
                 return hash.ToHashCode();
             }
 
@@ -308,9 +300,9 @@ namespace Mutagen.Bethesda.Oblivion
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Index)) return false;
-                if (!eval(this.Fluff)) return false;
+                if (!eval(this.Unknown)) return false;
                 if (!eval(this.Flags)) return false;
-                if (!eval(this.Fluff2)) return false;
+                if (!eval(this.Unknown2)) return false;
                 return true;
             }
             #endregion
@@ -319,9 +311,9 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Index)) return true;
-                if (eval(this.Fluff)) return true;
+                if (eval(this.Unknown)) return true;
                 if (eval(this.Flags)) return true;
-                if (eval(this.Fluff2)) return true;
+                if (eval(this.Unknown2)) return true;
                 return false;
             }
             #endregion
@@ -337,9 +329,9 @@ namespace Mutagen.Bethesda.Oblivion
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Index = eval(this.Index);
-                obj.Fluff = eval(this.Fluff);
+                obj.Unknown = eval(this.Unknown);
                 obj.Flags = eval(this.Flags);
-                obj.Fluff2 = eval(this.Fluff2);
+                obj.Unknown2 = eval(this.Unknown2);
             }
             #endregion
 
@@ -366,17 +358,17 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendItem(Index, "Index");
                     }
-                    if (printMask?.Fluff ?? true)
+                    if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Fluff, "Fluff");
+                        fg.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.Flags ?? true)
                     {
                         fg.AppendItem(Flags, "Flags");
                     }
-                    if (printMask?.Fluff2 ?? true)
+                    if (printMask?.Unknown2 ?? true)
                     {
-                        fg.AppendItem(Fluff2, "Fluff2");
+                        fg.AppendItem(Unknown2, "Unknown2");
                     }
                 }
                 fg.AppendLine("]");
@@ -404,9 +396,9 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
             public Exception? Index;
-            public Exception? Fluff;
+            public Exception? Unknown;
             public Exception? Flags;
-            public Exception? Fluff2;
+            public Exception? Unknown2;
             #endregion
 
             #region IErrorMask
@@ -417,12 +409,12 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     case LocalVariableData_FieldIndex.Index:
                         return Index;
-                    case LocalVariableData_FieldIndex.Fluff:
-                        return Fluff;
+                    case LocalVariableData_FieldIndex.Unknown:
+                        return Unknown;
                     case LocalVariableData_FieldIndex.Flags:
                         return Flags;
-                    case LocalVariableData_FieldIndex.Fluff2:
-                        return Fluff2;
+                    case LocalVariableData_FieldIndex.Unknown2:
+                        return Unknown2;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -436,14 +428,14 @@ namespace Mutagen.Bethesda.Oblivion
                     case LocalVariableData_FieldIndex.Index:
                         this.Index = ex;
                         break;
-                    case LocalVariableData_FieldIndex.Fluff:
-                        this.Fluff = ex;
+                    case LocalVariableData_FieldIndex.Unknown:
+                        this.Unknown = ex;
                         break;
                     case LocalVariableData_FieldIndex.Flags:
                         this.Flags = ex;
                         break;
-                    case LocalVariableData_FieldIndex.Fluff2:
-                        this.Fluff2 = ex;
+                    case LocalVariableData_FieldIndex.Unknown2:
+                        this.Unknown2 = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -458,14 +450,14 @@ namespace Mutagen.Bethesda.Oblivion
                     case LocalVariableData_FieldIndex.Index:
                         this.Index = (Exception?)obj;
                         break;
-                    case LocalVariableData_FieldIndex.Fluff:
-                        this.Fluff = (Exception?)obj;
+                    case LocalVariableData_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
                         break;
                     case LocalVariableData_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
-                    case LocalVariableData_FieldIndex.Fluff2:
-                        this.Fluff2 = (Exception?)obj;
+                    case LocalVariableData_FieldIndex.Unknown2:
+                        this.Unknown2 = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -476,9 +468,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (Overall != null) return true;
                 if (Index != null) return true;
-                if (Fluff != null) return true;
+                if (Unknown != null) return true;
                 if (Flags != null) return true;
-                if (Fluff2 != null) return true;
+                if (Unknown2 != null) return true;
                 return false;
             }
             #endregion
@@ -514,9 +506,9 @@ namespace Mutagen.Bethesda.Oblivion
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(Index, "Index");
-                fg.AppendItem(Fluff, "Fluff");
+                fg.AppendItem(Unknown, "Unknown");
                 fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Fluff2, "Fluff2");
+                fg.AppendItem(Unknown2, "Unknown2");
             }
             #endregion
 
@@ -526,9 +518,9 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Index = this.Index.Combine(rhs.Index);
-                ret.Fluff = this.Fluff.Combine(rhs.Fluff);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Fluff2 = this.Fluff2.Combine(rhs.Fluff2);
+                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -551,18 +543,18 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             private TranslationCrystal? _crystal;
             public bool Index;
-            public bool Fluff;
+            public bool Unknown;
             public bool Flags;
-            public bool Fluff2;
+            public bool Unknown2;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
                 this.Index = defaultOn;
-                this.Fluff = defaultOn;
+                this.Unknown = defaultOn;
                 this.Flags = defaultOn;
-                this.Fluff2 = defaultOn;
+                this.Unknown2 = defaultOn;
             }
 
             #endregion
@@ -579,9 +571,9 @@ namespace Mutagen.Bethesda.Oblivion
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Index, null));
-                ret.Add((Fluff, null));
+                ret.Add((Unknown, null));
                 ret.Add((Flags, null));
-                ret.Add((Fluff2, null));
+                ret.Add((Unknown2, null));
             }
         }
         #endregion
@@ -652,9 +644,9 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<ILocalVariableData>
     {
         new Int32 Index { get; set; }
-        new Byte[] Fluff { get; set; }
+        new Byte[] Unknown { get; set; }
         new Script.LocalVariableFlag Flags { get; set; }
-        new Byte[] Fluff2 { get; set; }
+        new Int32 Unknown2 { get; set; }
     }
 
     public partial interface ILocalVariableDataGetter :
@@ -671,9 +663,9 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => LocalVariableData_Registration.Instance;
         Int32 Index { get; }
-        ReadOnlyMemorySlice<Byte> Fluff { get; }
+        ReadOnlyMemorySlice<Byte> Unknown { get; }
         Script.LocalVariableFlag Flags { get; }
-        ReadOnlyMemorySlice<Byte> Fluff2 { get; }
+        Int32 Unknown2 { get; }
 
     }
 
@@ -981,9 +973,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     public enum LocalVariableData_FieldIndex
     {
         Index = 0,
-        Fluff = 1,
+        Unknown = 1,
         Flags = 2,
-        Fluff2 = 3,
+        Unknown2 = 3,
     }
     #endregion
 
@@ -1035,12 +1027,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case "INDEX":
                     return (ushort)LocalVariableData_FieldIndex.Index;
-                case "FLUFF":
-                    return (ushort)LocalVariableData_FieldIndex.Fluff;
+                case "UNKNOWN":
+                    return (ushort)LocalVariableData_FieldIndex.Unknown;
                 case "FLAGS":
                     return (ushort)LocalVariableData_FieldIndex.Flags;
-                case "FLUFF2":
-                    return (ushort)LocalVariableData_FieldIndex.Fluff2;
+                case "UNKNOWN2":
+                    return (ushort)LocalVariableData_FieldIndex.Unknown2;
                 default:
                     return null;
             }
@@ -1052,9 +1044,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LocalVariableData_FieldIndex.Index:
-                case LocalVariableData_FieldIndex.Fluff:
+                case LocalVariableData_FieldIndex.Unknown:
                 case LocalVariableData_FieldIndex.Flags:
-                case LocalVariableData_FieldIndex.Fluff2:
+                case LocalVariableData_FieldIndex.Unknown2:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1067,9 +1059,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LocalVariableData_FieldIndex.Index:
-                case LocalVariableData_FieldIndex.Fluff:
+                case LocalVariableData_FieldIndex.Unknown:
                 case LocalVariableData_FieldIndex.Flags:
-                case LocalVariableData_FieldIndex.Fluff2:
+                case LocalVariableData_FieldIndex.Unknown2:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1082,9 +1074,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LocalVariableData_FieldIndex.Index:
-                case LocalVariableData_FieldIndex.Fluff:
+                case LocalVariableData_FieldIndex.Unknown:
                 case LocalVariableData_FieldIndex.Flags:
-                case LocalVariableData_FieldIndex.Fluff2:
+                case LocalVariableData_FieldIndex.Unknown2:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1098,12 +1090,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case LocalVariableData_FieldIndex.Index:
                     return "Index";
-                case LocalVariableData_FieldIndex.Fluff:
-                    return "Fluff";
+                case LocalVariableData_FieldIndex.Unknown:
+                    return "Unknown";
                 case LocalVariableData_FieldIndex.Flags:
                     return "Flags";
-                case LocalVariableData_FieldIndex.Fluff2:
-                    return "Fluff2";
+                case LocalVariableData_FieldIndex.Unknown2:
+                    return "Unknown2";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1115,9 +1107,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LocalVariableData_FieldIndex.Index:
-                case LocalVariableData_FieldIndex.Fluff:
+                case LocalVariableData_FieldIndex.Unknown:
                 case LocalVariableData_FieldIndex.Flags:
-                case LocalVariableData_FieldIndex.Fluff2:
+                case LocalVariableData_FieldIndex.Unknown2:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1130,9 +1122,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LocalVariableData_FieldIndex.Index:
-                case LocalVariableData_FieldIndex.Fluff:
+                case LocalVariableData_FieldIndex.Unknown:
                 case LocalVariableData_FieldIndex.Flags:
-                case LocalVariableData_FieldIndex.Fluff2:
+                case LocalVariableData_FieldIndex.Unknown2:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1146,12 +1138,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case LocalVariableData_FieldIndex.Index:
                     return typeof(Int32);
-                case LocalVariableData_FieldIndex.Fluff:
+                case LocalVariableData_FieldIndex.Unknown:
                     return typeof(Byte[]);
                 case LocalVariableData_FieldIndex.Flags:
                     return typeof(Script.LocalVariableFlag);
-                case LocalVariableData_FieldIndex.Fluff2:
-                    return typeof(Byte[]);
+                case LocalVariableData_FieldIndex.Unknown2:
+                    return typeof(Int32);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1205,9 +1197,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.Index = default;
-            item.Fluff = new byte[12];
+            item.Unknown = new byte[12];
             item.Flags = default;
-            item.Fluff2 = new byte[4];
+            item.Unknown2 = default;
         }
         
         #region Xml Translation
@@ -1244,9 +1236,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame)
         {
             item.Index = frame.ReadInt32();
-            item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(12));
+            item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(12));
             item.Flags = EnumBinaryTranslation<Script.LocalVariableFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Fluff2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Unknown2 = frame.ReadInt32();
         }
         
         public virtual void CopyInFromBinary(
@@ -1293,9 +1285,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Index = item.Index == rhs.Index;
-            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff.Span, rhs.Fluff.Span);
+            ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Fluff2 = MemoryExtensions.SequenceEqual(item.Fluff2.Span, rhs.Fluff2.Span);
+            ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
         }
         
         public string ToString(
@@ -1346,17 +1338,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(item.Index, "Index");
             }
-            if (printMask?.Fluff ?? true)
+            if (printMask?.Unknown ?? true)
             {
-                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
+                fg.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
             }
             if (printMask?.Flags ?? true)
             {
                 fg.AppendItem(item.Flags, "Flags");
             }
-            if (printMask?.Fluff2 ?? true)
+            if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendLine($"Fluff2 => {SpanExt.ToHexString(item.Fluff2)}");
+                fg.AppendItem(item.Unknown2, "Unknown2");
             }
         }
         
@@ -1372,9 +1364,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LocalVariableData.Mask<bool> mask)
         {
             mask.Index = true;
-            mask.Fluff = true;
+            mask.Unknown = true;
             mask.Flags = true;
-            mask.Fluff2 = true;
+            mask.Unknown2 = true;
         }
         
         #region Equals and Hash
@@ -1385,9 +1377,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (lhs.Index != rhs.Index) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff.Span, rhs.Fluff.Span)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff2.Span, rhs.Fluff2.Span)) return false;
+            if (lhs.Unknown2 != rhs.Unknown2) return false;
             return true;
         }
         
@@ -1395,9 +1387,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Index);
-            hash.Add(item.Fluff);
+            hash.Add(item.Unknown);
             hash.Add(item.Flags);
-            hash.Add(item.Fluff2);
+            hash.Add(item.Unknown2);
             return hash.ToHashCode();
         }
         
@@ -1433,17 +1425,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.Index = rhs.Index;
             }
-            if ((copyMask?.GetShouldTranslate((int)LocalVariableData_FieldIndex.Fluff) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LocalVariableData_FieldIndex.Unknown) ?? true))
             {
-                item.Fluff = rhs.Fluff.ToArray();
+                item.Unknown = rhs.Unknown.ToArray();
             }
             if ((copyMask?.GetShouldTranslate((int)LocalVariableData_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
             }
-            if ((copyMask?.GetShouldTranslate((int)LocalVariableData_FieldIndex.Fluff2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LocalVariableData_FieldIndex.Unknown2) ?? true))
             {
-                item.Fluff2 = rhs.Fluff2.ToArray();
+                item.Unknown2 = rhs.Unknown2;
             }
         }
         
@@ -1543,13 +1535,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)LocalVariableData_FieldIndex.Index,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)LocalVariableData_FieldIndex.Fluff) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)LocalVariableData_FieldIndex.Unknown) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Fluff),
-                    item: item.Fluff,
-                    fieldIndex: (int)LocalVariableData_FieldIndex.Fluff,
+                    name: nameof(item.Unknown),
+                    item: item.Unknown,
+                    fieldIndex: (int)LocalVariableData_FieldIndex.Unknown,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)LocalVariableData_FieldIndex.Flags) ?? true))
@@ -1561,13 +1553,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)LocalVariableData_FieldIndex.Flags,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)LocalVariableData_FieldIndex.Fluff2) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)LocalVariableData_FieldIndex.Unknown2) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
+                Int32XmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Fluff2),
-                    item: item.Fluff2,
-                    fieldIndex: (int)LocalVariableData_FieldIndex.Fluff2,
+                    name: nameof(item.Unknown2),
+                    item: item.Unknown2,
+                    fieldIndex: (int)LocalVariableData_FieldIndex.Unknown2,
                     errorMask: errorMask);
             }
         }
@@ -1694,11 +1686,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Fluff":
-                    errorMask?.PushIndex((int)LocalVariableData_FieldIndex.Fluff);
+                case "Unknown":
+                    errorMask?.PushIndex((int)LocalVariableData_FieldIndex.Unknown);
                     try
                     {
-                        item.Fluff = ByteArrayXmlTranslation.Instance.Parse(
+                        item.Unknown = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             fallbackLength: 12,
                             errorMask: errorMask);
@@ -1731,13 +1723,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Fluff2":
-                    errorMask?.PushIndex((int)LocalVariableData_FieldIndex.Fluff2);
+                case "Unknown2":
+                    errorMask?.PushIndex((int)LocalVariableData_FieldIndex.Unknown2);
                     try
                     {
-                        item.Fluff2 = ByteArrayXmlTranslation.Instance.Parse(
+                        item.Unknown2 = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            fallbackLength: 4,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)
@@ -1928,14 +1919,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             writer.Write(item.Index);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Fluff);
+                item: item.Unknown);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Script.LocalVariableFlag>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Fluff2);
+            writer.Write(item.Unknown2);
         }
 
         public void Write(
@@ -2053,9 +2042,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public Int32 Index => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(0x4, 0xC).ToArray();
+        public ReadOnlyMemorySlice<Byte> Unknown => _data.Span.Slice(0x4, 0xC).ToArray();
         public Script.LocalVariableFlag Flags => (Script.LocalVariableFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x10, 0x4));
-        public ReadOnlyMemorySlice<Byte> Fluff2 => _data.Span.Slice(0x14, 0x4).ToArray();
+        public Int32 Unknown2 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x14, 0x4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

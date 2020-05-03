@@ -4,7 +4,7 @@
     <Fields>
       <Int32 name="BlockNumber" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
-      <ByteArray name="LastModified" byteLength="4" nullable="NotNull" />
+      <Int32 name="LastModified" />
       <RefList name="SubBlocks" refName="CellSubBlock" thread="true" />
     </Fields>
   </Object>
@@ -12,7 +12,7 @@
     <Fields>
       <Int32 name="BlockNumber" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
-      <ByteArray name="LastModified" byteLength="4" nullable="NotNull" />
+      <Int32 name="LastModified" />
       <RefList name="Cells" refName="Cell" binaryOverlay="Custom" />
     </Fields>
   </Object>
@@ -35,16 +35,16 @@
       <FormLink name="GlobalVariable" recordType="XGLB" refName="Global" />
       <RefDirect name="PathGrid" binary="NoGeneration" refName="PathGrid" />
       <RefDirect name="Landscape" binary="NoGeneration" refName="Landscape" />
-      <ByteArray name="Timestamp" binary="NoGeneration" byteLength="4" nullable="NotNull" />
-      <ByteArray name="PersistentTimestamp" binary="NoGeneration" byteLength="4" nullable="NotNull" />
+      <Int32 name="Timestamp" binary="NoGeneration" />
+      <Int32 name="PersistentTimestamp" binary="NoGeneration" />
       <RefList name="Persistent" binary="NoGeneration" objType="Record" >
         <Interface>IPlaced</Interface>
       </RefList>
-      <ByteArray name="TemporaryTimestamp" binary="NoGeneration" byteLength="4" nullable="NotNull" />
+      <Int32 name="TemporaryTimestamp" binary="NoGeneration" />
       <RefList name="Temporary" binary="NoGeneration" objType="Record" >
         <Interface>IPlaced</Interface>
       </RefList>
-      <ByteArray name="VisibleWhenDistantTimestamp" binary="NoGeneration" byteLength="4" nullable="NotNull" />
+      <Int32 name="VisibleWhenDistantTimestamp" binary="NoGeneration" />
       <RefList name="VisibleWhenDistant" binary="NoGeneration" objType="Record" >
         <Interface>IPlaced</Interface>
       </RefList>

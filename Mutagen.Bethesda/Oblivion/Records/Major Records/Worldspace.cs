@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var grupType = (GroupTypeEnum)frame.Reader.ReadInt32();
                 if (grupType == GroupTypeEnum.WorldChildren)
                 {
-                    obj.SubCellsTimestamp = frame.Reader.ReadBytes(4);
+                    obj.SubCellsTimestamp = frame.Reader.ReadInt32();
                     if (formKey != obj.FormKey)
                     {
                         throw new ArgumentException("Cell children group did not match the FormID of the parent worldspace.");
@@ -243,7 +243,7 @@ namespace Mutagen.Bethesda.Oblivion
             private int? _TopCellLocation;
             public ICellGetter? TopCell => _TopCellLocation.HasValue ? CellBinaryOverlay.CellFactory(new BinaryMemoryReadStream(_grupData!.Value.Slice(_TopCellLocation!.Value)), _package) : default;
 
-            public ReadOnlyMemorySlice<byte> SubCellsTimestamp => _grupData != null ? _package.Meta.Group(_grupData.Value).LastModifiedSpan.ToArray() : UtilityTranslation.Zeros.Slice(0, 4);
+            public int SubCellsTimestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.Meta.Group(_grupData.Value).LastModifiedSpan) : 0;
 
             public IReadOnlyList<IWorldspaceBlockGetter> SubCells { get; private set; } = ListExt.Empty<IWorldspaceBlockGetter>();
 

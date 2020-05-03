@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var formKey = FormKey.Factory(frame.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan));
                 if (groupMeta.GroupType == (int)GroupTypeEnum.CellChildren)
                 {
-                    obj.Timestamp = groupMeta.LastModifiedSpan.ToArray();
+                    obj.Timestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedSpan);
                     frame.Position += groupMeta.HeaderLength;
                     if (formKey != obj.FormKey)
                     {
@@ -134,11 +134,11 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (persistentParse)
                 {
-                    obj.PersistentTimestamp = groupMeta.LastModifiedSpan.ToArray();
+                    obj.PersistentTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedSpan);
                 }
                 else
                 {
-                    obj.VisibleWhenDistantTimestamp = groupMeta.LastModifiedSpan.ToArray();
+                    obj.VisibleWhenDistantTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedSpan);
                 }
                 coll.AddRange(
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.Parse(
@@ -211,7 +211,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
                 }
-                obj.TemporaryTimestamp = groupMeta.LastModifiedSpan.ToArray();
+                obj.TemporaryTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedSpan);
                 var items = Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.Parse(
                     frame: frame,
                     transl: (MutagenFrame r, RecordType header, out IPlaced placed) =>
@@ -363,18 +363,18 @@ namespace Mutagen.Bethesda.Oblivion
             private int? _landscapeLocation;
             public ILandscapeGetter? Landscape => _landscapeLocation.HasValue ? LandscapeBinaryOverlay.LandscapeFactory(new BinaryMemoryReadStream(_grupData!.Value.Slice(_landscapeLocation!.Value)), _package) : default;
 
-            public ReadOnlyMemorySlice<byte> Timestamp => _grupData != null ? _package.Meta.Group(_grupData.Value).LastModifiedSpan.ToArray() : UtilityTranslation.Zeros.Slice(0, 4);
+            public int Timestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.Meta.Group(_grupData.Value).LastModifiedSpan) : 0;
 
             private int? _persistentLocation;
-            public ReadOnlyMemorySlice<byte> PersistentTimestamp => _persistentLocation.HasValue ? _package.Meta.Group(_grupData!.Value.Slice(_persistentLocation.Value)).LastModifiedSpan.ToArray() : UtilityTranslation.Zeros.Slice(0, 4);
+            public int PersistentTimestamp => _persistentLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_package.Meta.Group(_grupData!.Value.Slice(_persistentLocation.Value)).LastModifiedSpan) : 0;
             public IReadOnlyList<IPlacedGetter> Persistent { get; private set; } = ListExt.Empty<IPlacedGetter>();
 
             private int? _temporaryLocation;
-            public ReadOnlyMemorySlice<byte> TemporaryTimestamp => _temporaryLocation.HasValue ? _package.Meta.Group(_grupData!.Value.Slice(_temporaryLocation.Value)).LastModifiedSpan.ToArray() : UtilityTranslation.Zeros.Slice(0, 4);
+            public int TemporaryTimestamp => _temporaryLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_package.Meta.Group(_grupData!.Value.Slice(_temporaryLocation.Value)).LastModifiedSpan) : 0;
             public IReadOnlyList<IPlacedGetter> Temporary { get; private set; } = ListExt.Empty<IPlacedGetter>();
 
             private int? _visibleWhenDistantLocation;
-            public ReadOnlyMemorySlice<byte> VisibleWhenDistantTimestamp => _visibleWhenDistantLocation.HasValue ? _package.Meta.Group(_grupData!.Value.Slice(_visibleWhenDistantLocation.Value)).LastModifiedSpan.ToArray() : UtilityTranslation.Zeros.Slice(0, 4);
+            public int VisibleWhenDistantTimestamp => _visibleWhenDistantLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_package.Meta.Group(_grupData!.Value.Slice(_visibleWhenDistantLocation.Value)).LastModifiedSpan) : 0;
             public IReadOnlyList<IPlacedGetter> VisibleWhenDistant { get; private set; } = ListExt.Empty<IPlacedGetter>();
 
             public static int[] ParseRecordLocations(BinaryMemoryReadStream stream, BinaryOverlayFactoryPackage package)

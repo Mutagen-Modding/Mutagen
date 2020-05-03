@@ -55,16 +55,16 @@ namespace Mutagen.Bethesda.Oblivion
         #region Rank
         public Byte Rank { get; set; } = default;
         #endregion
-        #region Fluff
+        #region Unused
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Fluff = new byte[3];
-        public Byte[] Fluff
+        private Byte[] _Unused = new byte[3];
+        public Byte[] Unused
         {
-            get => _Fluff;
-            set => this._Fluff = value ?? new byte[3];
+            get => _Unused;
+            set => this._Unused = value ?? new byte[3];
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IRankPlacementGetter.Fluff => this.Fluff;
+        ReadOnlyMemorySlice<Byte> IRankPlacementGetter.Unused => this.Unused;
         #endregion
 
         #region To String
@@ -238,17 +238,17 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Faction = initialValue;
                 this.Rank = initialValue;
-                this.Fluff = initialValue;
+                this.Unused = initialValue;
             }
 
             public Mask(
                 TItem Faction,
                 TItem Rank,
-                TItem Fluff)
+                TItem Unused)
             {
                 this.Faction = Faction;
                 this.Rank = Rank;
-                this.Fluff = Fluff;
+                this.Unused = Unused;
             }
 
             #pragma warning disable CS8618
@@ -262,7 +262,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             public TItem Faction;
             public TItem Rank;
-            public TItem Fluff;
+            public TItem Unused;
             #endregion
 
             #region Equals
@@ -277,7 +277,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return false;
                 if (!object.Equals(this.Faction, rhs.Faction)) return false;
                 if (!object.Equals(this.Rank, rhs.Rank)) return false;
-                if (!object.Equals(this.Fluff, rhs.Fluff)) return false;
+                if (!object.Equals(this.Unused, rhs.Unused)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -285,7 +285,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var hash = new HashCode();
                 hash.Add(this.Faction);
                 hash.Add(this.Rank);
-                hash.Add(this.Fluff);
+                hash.Add(this.Unused);
                 return hash.ToHashCode();
             }
 
@@ -296,7 +296,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!eval(this.Faction)) return false;
                 if (!eval(this.Rank)) return false;
-                if (!eval(this.Fluff)) return false;
+                if (!eval(this.Unused)) return false;
                 return true;
             }
             #endregion
@@ -306,7 +306,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (eval(this.Faction)) return true;
                 if (eval(this.Rank)) return true;
-                if (eval(this.Fluff)) return true;
+                if (eval(this.Unused)) return true;
                 return false;
             }
             #endregion
@@ -323,7 +323,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 obj.Faction = eval(this.Faction);
                 obj.Rank = eval(this.Rank);
-                obj.Fluff = eval(this.Fluff);
+                obj.Unused = eval(this.Unused);
             }
             #endregion
 
@@ -354,9 +354,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendItem(Rank, "Rank");
                     }
-                    if (printMask?.Fluff ?? true)
+                    if (printMask?.Unused ?? true)
                     {
-                        fg.AppendItem(Fluff, "Fluff");
+                        fg.AppendItem(Unused, "Unused");
                     }
                 }
                 fg.AppendLine("]");
@@ -385,7 +385,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public Exception? Faction;
             public Exception? Rank;
-            public Exception? Fluff;
+            public Exception? Unused;
             #endregion
 
             #region IErrorMask
@@ -398,8 +398,8 @@ namespace Mutagen.Bethesda.Oblivion
                         return Faction;
                     case RankPlacement_FieldIndex.Rank:
                         return Rank;
-                    case RankPlacement_FieldIndex.Fluff:
-                        return Fluff;
+                    case RankPlacement_FieldIndex.Unused:
+                        return Unused;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -416,8 +416,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case RankPlacement_FieldIndex.Rank:
                         this.Rank = ex;
                         break;
-                    case RankPlacement_FieldIndex.Fluff:
-                        this.Fluff = ex;
+                    case RankPlacement_FieldIndex.Unused:
+                        this.Unused = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -435,8 +435,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case RankPlacement_FieldIndex.Rank:
                         this.Rank = (Exception?)obj;
                         break;
-                    case RankPlacement_FieldIndex.Fluff:
-                        this.Fluff = (Exception?)obj;
+                    case RankPlacement_FieldIndex.Unused:
+                        this.Unused = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Overall != null) return true;
                 if (Faction != null) return true;
                 if (Rank != null) return true;
-                if (Fluff != null) return true;
+                if (Unused != null) return true;
                 return false;
             }
             #endregion
@@ -485,7 +485,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 fg.AppendItem(Faction, "Faction");
                 fg.AppendItem(Rank, "Rank");
-                fg.AppendItem(Fluff, "Fluff");
+                fg.AppendItem(Unused, "Unused");
             }
             #endregion
 
@@ -496,7 +496,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var ret = new ErrorMask();
                 ret.Faction = this.Faction.Combine(rhs.Faction);
                 ret.Rank = this.Rank.Combine(rhs.Rank);
-                ret.Fluff = this.Fluff.Combine(rhs.Fluff);
+                ret.Unused = this.Unused.Combine(rhs.Unused);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Oblivion
             private TranslationCrystal? _crystal;
             public bool Faction;
             public bool Rank;
-            public bool Fluff;
+            public bool Unused;
             #endregion
 
             #region Ctors
@@ -528,7 +528,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Faction = defaultOn;
                 this.Rank = defaultOn;
-                this.Fluff = defaultOn;
+                this.Unused = defaultOn;
             }
 
             #endregion
@@ -546,7 +546,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret.Add((Faction, null));
                 ret.Add((Rank, null));
-                ret.Add((Fluff, null));
+                ret.Add((Unused, null));
             }
         }
         #endregion
@@ -620,7 +620,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new IFormLink<Faction> Faction { get; }
         new Byte Rank { get; set; }
-        new Byte[] Fluff { get; set; }
+        new Byte[] Unused { get; set; }
     }
 
     public partial interface IRankPlacementGetter :
@@ -639,7 +639,7 @@ namespace Mutagen.Bethesda.Oblivion
         static ILoquiRegistration Registration => RankPlacement_Registration.Instance;
         IFormLinkGetter<IFactionGetter> Faction { get; }
         Byte Rank { get; }
-        ReadOnlyMemorySlice<Byte> Fluff { get; }
+        ReadOnlyMemorySlice<Byte> Unused { get; }
 
     }
 
@@ -948,7 +948,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         Faction = 0,
         Rank = 1,
-        Fluff = 2,
+        Unused = 2,
     }
     #endregion
 
@@ -1002,8 +1002,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)RankPlacement_FieldIndex.Faction;
                 case "RANK":
                     return (ushort)RankPlacement_FieldIndex.Rank;
-                case "FLUFF":
-                    return (ushort)RankPlacement_FieldIndex.Fluff;
+                case "UNUSED":
+                    return (ushort)RankPlacement_FieldIndex.Unused;
                 default:
                     return null;
             }
@@ -1016,7 +1016,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RankPlacement_FieldIndex.Faction:
                 case RankPlacement_FieldIndex.Rank:
-                case RankPlacement_FieldIndex.Fluff:
+                case RankPlacement_FieldIndex.Unused:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1030,7 +1030,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RankPlacement_FieldIndex.Faction:
                 case RankPlacement_FieldIndex.Rank:
-                case RankPlacement_FieldIndex.Fluff:
+                case RankPlacement_FieldIndex.Unused:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1044,7 +1044,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RankPlacement_FieldIndex.Faction:
                 case RankPlacement_FieldIndex.Rank:
-                case RankPlacement_FieldIndex.Fluff:
+                case RankPlacement_FieldIndex.Unused:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1060,8 +1060,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Faction";
                 case RankPlacement_FieldIndex.Rank:
                     return "Rank";
-                case RankPlacement_FieldIndex.Fluff:
-                    return "Fluff";
+                case RankPlacement_FieldIndex.Unused:
+                    return "Unused";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1074,7 +1074,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RankPlacement_FieldIndex.Faction:
                 case RankPlacement_FieldIndex.Rank:
-                case RankPlacement_FieldIndex.Fluff:
+                case RankPlacement_FieldIndex.Unused:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1088,7 +1088,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RankPlacement_FieldIndex.Faction:
                 case RankPlacement_FieldIndex.Rank:
-                case RankPlacement_FieldIndex.Fluff:
+                case RankPlacement_FieldIndex.Unused:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1104,7 +1104,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(IFormLink<Faction>);
                 case RankPlacement_FieldIndex.Rank:
                     return typeof(Byte);
-                case RankPlacement_FieldIndex.Fluff:
+                case RankPlacement_FieldIndex.Unused:
                     return typeof(Byte[]);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1160,7 +1160,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Faction.FormKey = FormKey.Null;
             item.Rank = default;
-            item.Fluff = new byte[3];
+            item.Unused = new byte[3];
         }
         
         #region Xml Translation
@@ -1200,7 +1200,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame,
                 defaultVal: FormKey.Null);
             item.Rank = frame.ReadUInt8();
-            item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+            item.Unused = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
         }
         
         public virtual void CopyInFromBinary(
@@ -1248,7 +1248,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.Faction = object.Equals(item.Faction, rhs.Faction);
             ret.Rank = item.Rank == rhs.Rank;
-            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff.Span, rhs.Fluff.Span);
+            ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
         }
         
         public string ToString(
@@ -1303,9 +1303,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(item.Rank, "Rank");
             }
-            if (printMask?.Fluff ?? true)
+            if (printMask?.Unused ?? true)
             {
-                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
+                fg.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
             }
         }
         
@@ -1322,7 +1322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             mask.Faction = true;
             mask.Rank = true;
-            mask.Fluff = true;
+            mask.Unused = true;
         }
         
         #region Equals and Hash
@@ -1334,7 +1334,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null || rhs == null) return false;
             if (!lhs.Faction.Equals(rhs.Faction)) return false;
             if (lhs.Rank != rhs.Rank) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff.Span, rhs.Fluff.Span)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
             return true;
         }
         
@@ -1343,7 +1343,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var hash = new HashCode();
             hash.Add(item.Faction);
             hash.Add(item.Rank);
-            hash.Add(item.Fluff);
+            hash.Add(item.Unused);
             return hash.ToHashCode();
         }
         
@@ -1384,9 +1384,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.Rank = rhs.Rank;
             }
-            if ((copyMask?.GetShouldTranslate((int)RankPlacement_FieldIndex.Fluff) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)RankPlacement_FieldIndex.Unused) ?? true))
             {
-                item.Fluff = rhs.Fluff.ToArray();
+                item.Unused = rhs.Unused.ToArray();
             }
         }
         
@@ -1495,13 +1495,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)RankPlacement_FieldIndex.Rank,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)RankPlacement_FieldIndex.Fluff) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)RankPlacement_FieldIndex.Unused) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Fluff),
-                    item: item.Fluff,
-                    fieldIndex: (int)RankPlacement_FieldIndex.Fluff,
+                    name: nameof(item.Unused),
+                    item: item.Unused,
+                    fieldIndex: (int)RankPlacement_FieldIndex.Unused,
                     errorMask: errorMask);
             }
         }
@@ -1646,11 +1646,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Fluff":
-                    errorMask?.PushIndex((int)RankPlacement_FieldIndex.Fluff);
+                case "Unused":
+                    errorMask?.PushIndex((int)RankPlacement_FieldIndex.Unused);
                     try
                     {
-                        item.Fluff = ByteArrayXmlTranslation.Instance.Parse(
+                        item.Unused = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             fallbackLength: 3,
                             errorMask: errorMask);
@@ -1846,7 +1846,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             writer.Write(item.Rank);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Fluff);
+                item: item.Unused);
         }
 
         public void Write(
@@ -1966,7 +1966,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public IFormLinkGetter<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Byte Rank => _data.Span[0x4];
-        public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(0x5, 0x3).ToArray();
+        public ReadOnlyMemorySlice<Byte> Unused => _data.Span.Slice(0x5, 0x3).ToArray();
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

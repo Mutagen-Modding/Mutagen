@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!groupMeta.IsGroup) return;
                 if (groupMeta.GroupType == (int)GroupTypeEnum.TopicChildren)
                 {
-                    obj.Timestamp = groupMeta.LastModifiedSpan.ToArray();
+                    obj.Timestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedSpan);
                     if (FormKey.Factory(frame.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan)) != obj.FormKey)
                     {
                         throw new ArgumentException("Dialog children group did not match the FormID of the parent.");
@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             private ReadOnlyMemorySlice<byte>? _grupData;
 
-            public ReadOnlyMemorySlice<byte> Timestamp => _grupData != null ? _package.Meta.Group(_grupData.Value).LastModifiedSpan.ToArray() : default(ReadOnlyMemorySlice<byte>);
+            public int Timestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.Meta.Group(_grupData.Value).LastModifiedSpan) : 0;
 
             public IReadOnlyList<IDialogItemGetter> Items { get; private set; } = ListExt.Empty<IDialogItemGetter>();
 

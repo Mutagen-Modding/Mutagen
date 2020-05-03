@@ -41,7 +41,7 @@
         <FormLink refName="Eye" />
       </List>
       <RefDirect name="FaceGenData" refName="FaceGenData" />
-      <ByteArray name="Unknown" recordType="SNAM" byteLength="2" nullable="NotNull" />
+      <Int16 name="Unknown" recordType="SNAM" />
     </Fields>
   </Object>
   <Object name="RaceData" objType="Subrecord" recordType="DATA" GUID="a601027e-c79b-4987-bfae-8c172c8b13e5" ID="205">
@@ -53,7 +53,7 @@
       <RefDirect name="SkillBoost4" refName="SkillBoost" />
       <RefDirect name="SkillBoost5" refName="SkillBoost" />
       <RefDirect name="SkillBoost6" refName="SkillBoost" />
-      <ByteArray name="Fluff" byteLength="4" nullable="NotNull" />
+      <Int32 name="Unused" />
       <Gendered name="Height">
         <Fields>
           <Float />

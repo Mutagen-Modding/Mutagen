@@ -8,7 +8,7 @@
       </List>
       <String name="Name" recordType="FULL" />
       <Enum name="DialogType" recordType="DATA" enumName="DialogType" byteLength="1" />
-      <ByteArray name="Timestamp" binary="NoGeneration" byteLength="4" nullable="NotNull" />
+      <Int32 name="Timestamp" binary="NoGeneration" />
       <RefList name="Items" binary="NoGeneration" refName="DialogItem" />
     </Fields>
   </Object>
@@ -49,9 +49,9 @@
     <Fields>
       <Enum name="Emotion" enumName="EmotionType" byteLength="4" />
       <Int32 name="EmotionValue" />
-      <ByteArray name="Fluff1" byteLength="4" nullable="NotNull" />
+      <Int32 name="Unknown" />
       <UInt8 name="ResponseNumber" />
-      <ByteArray name="Fluff2" byteLength="3" nullable="NotNull" />
+      <ByteArray name="Unknown2" byteLength="3" nullable="NotNull" />
     </Fields>
   </Object>
 </Loqui>

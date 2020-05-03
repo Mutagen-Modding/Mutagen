@@ -12,7 +12,7 @@
     <Fields>
       <P3Float name="Point" />
       <UInt8 name="NumConnections" />
-      <ByteArray name="FluffBytes" byteLength="3" nullable="NotNull" />
+      <ByteArray name="Unused" byteLength="3" nullable="NotNull" />
       <List name="Connections" binary="NoGeneration" >
         <Int16 />
       </List>

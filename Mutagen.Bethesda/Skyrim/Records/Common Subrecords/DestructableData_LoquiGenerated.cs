@@ -55,15 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Boolean VATSTargetable { get; set; } = default;
         #endregion
         #region Unknown
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Unknown = new byte[2];
-        public Byte[] Unknown
-        {
-            get => _Unknown;
-            set => this._Unknown = value ?? new byte[2];
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IDestructableDataGetter.Unknown => this.Unknown;
+        public Int16 Unknown { get; set; } = default;
         #endregion
 
         #region To String
@@ -646,7 +638,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Int32 Health { get; set; }
         new Byte DESTCount { get; set; }
         new Boolean VATSTargetable { get; set; }
-        new Byte[] Unknown { get; set; }
+        new Int16 Unknown { get; set; }
     }
 
     public partial interface IDestructableDataGetter :
@@ -665,7 +657,7 @@ namespace Mutagen.Bethesda.Skyrim
         Int32 Health { get; }
         Byte DESTCount { get; }
         Boolean VATSTargetable { get; }
-        ReadOnlyMemorySlice<Byte> Unknown { get; }
+        Int16 Unknown { get; }
 
     }
 
@@ -1143,7 +1135,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case DestructableData_FieldIndex.VATSTargetable:
                     return typeof(Boolean);
                 case DestructableData_FieldIndex.Unknown:
-                    return typeof(Byte[]);
+                    return typeof(Int16);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1199,7 +1191,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Health = default;
             item.DESTCount = default;
             item.VATSTargetable = default;
-            item.Unknown = new byte[2];
+            item.Unknown = default;
         }
         
         #region Xml Translation
@@ -1238,7 +1230,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Health = frame.ReadInt32();
             item.DESTCount = frame.ReadUInt8();
             item.VATSTargetable = frame.ReadBoolean();
-            item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(2));
+            item.Unknown = frame.ReadInt16();
         }
         
         public virtual void CopyInFromBinary(
@@ -1287,7 +1279,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Health = item.Health == rhs.Health;
             ret.DESTCount = item.DESTCount == rhs.DESTCount;
             ret.VATSTargetable = item.VATSTargetable == rhs.VATSTargetable;
-            ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
+            ret.Unknown = item.Unknown == rhs.Unknown;
         }
         
         public string ToString(
@@ -1348,7 +1340,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (printMask?.Unknown ?? true)
             {
-                fg.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
+                fg.AppendItem(item.Unknown, "Unknown");
             }
         }
         
@@ -1379,7 +1371,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.Health != rhs.Health) return false;
             if (lhs.DESTCount != rhs.DESTCount) return false;
             if (lhs.VATSTargetable != rhs.VATSTargetable) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
+            if (lhs.Unknown != rhs.Unknown) return false;
             return true;
         }
         
@@ -1435,7 +1427,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DestructableData_FieldIndex.Unknown) ?? true))
             {
-                item.Unknown = rhs.Unknown.ToArray();
+                item.Unknown = rhs.Unknown;
             }
         }
         
@@ -1555,7 +1547,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)DestructableData_FieldIndex.Unknown) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
+                Int16XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Unknown),
                     item: item.Unknown,
@@ -1726,9 +1718,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)DestructableData_FieldIndex.Unknown);
                     try
                     {
-                        item.Unknown = ByteArrayXmlTranslation.Instance.Parse(
+                        item.Unknown = Int16XmlTranslation.Instance.Parse(
                             node: node,
-                            fallbackLength: 2,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)
@@ -1919,9 +1910,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             writer.Write(item.Health);
             writer.Write(item.DESTCount);
             writer.Write(item.VATSTargetable);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Unknown);
+            writer.Write(item.Unknown);
         }
 
         public void Write(
@@ -2041,7 +2030,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Int32 Health => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
         public Byte DESTCount => _data.Span[0x4];
         public Boolean VATSTargetable => _data.Slice(0x5, 0x1)[0] == 1;
-        public ReadOnlyMemorySlice<Byte> Unknown => _data.Span.Slice(0x6, 0x2).ToArray();
+        public Int16 Unknown => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x6, 0x2));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

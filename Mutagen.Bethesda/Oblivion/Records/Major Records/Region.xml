@@ -44,7 +44,7 @@
     <Fields>
       <FormLink name="Object" refName="OblivionMajorRecord" />
       <UInt16 name="ParentIndex" />
-      <ByteArray name="Unknown1" nullable="NotNull" byteLength="2" />
+      <Int16 name="Unknown" />
       <Float name="Density" />
       <UInt8 name="Clustering" />
       <UInt8 name="MinSlope" />

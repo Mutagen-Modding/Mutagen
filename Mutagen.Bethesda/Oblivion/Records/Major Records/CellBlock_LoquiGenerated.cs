@@ -53,15 +53,7 @@ namespace Mutagen.Bethesda.Oblivion
         public GroupTypeEnum GroupType { get; set; } = default;
         #endregion
         #region LastModified
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _LastModified = new byte[4];
-        public Byte[] LastModified
-        {
-            get => _LastModified;
-            set => this._LastModified = value ?? new byte[4];
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> ICellBlockGetter.LastModified => this.LastModified;
+        public Int32 LastModified { get; set; } = default;
         #endregion
         #region SubBlocks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -744,7 +736,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Int32 BlockNumber { get; set; }
         new GroupTypeEnum GroupType { get; set; }
-        new Byte[] LastModified { get; set; }
+        new Int32 LastModified { get; set; }
         new ExtendedList<CellSubBlock> SubBlocks { get; }
     }
 
@@ -765,7 +757,7 @@ namespace Mutagen.Bethesda.Oblivion
         static ILoquiRegistration Registration => CellBlock_Registration.Instance;
         Int32 BlockNumber { get; }
         GroupTypeEnum GroupType { get; }
-        ReadOnlyMemorySlice<Byte> LastModified { get; }
+        Int32 LastModified { get; }
         IReadOnlyList<ICellSubBlockGetter> SubBlocks { get; }
 
     }
@@ -1273,7 +1265,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case CellBlock_FieldIndex.GroupType:
                     return typeof(GroupTypeEnum);
                 case CellBlock_FieldIndex.LastModified:
-                    return typeof(Byte[]);
+                    return typeof(Int32);
                 case CellBlock_FieldIndex.SubBlocks:
                     return typeof(ExtendedList<CellSubBlock>);
                 default:
@@ -1330,7 +1322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.BlockNumber = default;
             item.GroupType = default;
-            item.LastModified = new byte[4];
+            item.LastModified = default;
             item.SubBlocks.Clear();
         }
         
@@ -1389,7 +1381,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.BlockNumber = frame.ReadInt32();
             item.GroupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.LastModified = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.LastModified = frame.ReadInt32();
         }
         
         protected static TryGet<int?> FillBinaryRecordTypes(
@@ -1468,7 +1460,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.BlockNumber = item.BlockNumber == rhs.BlockNumber;
             ret.GroupType = item.GroupType == rhs.GroupType;
-            ret.LastModified = MemoryExtensions.SequenceEqual(item.LastModified.Span, rhs.LastModified.Span);
+            ret.LastModified = item.LastModified == rhs.LastModified;
             ret.SubBlocks = item.SubBlocks.CollectionEqualsHelper(
                 rhs.SubBlocks,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1529,7 +1521,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.LastModified ?? true)
             {
-                fg.AppendLine($"LastModified => {SpanExt.ToHexString(item.LastModified)}");
+                fg.AppendItem(item.LastModified, "LastModified");
             }
             if (printMask?.SubBlocks?.Overall ?? true)
             {
@@ -1578,7 +1570,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null || rhs == null) return false;
             if (lhs.BlockNumber != rhs.BlockNumber) return false;
             if (lhs.GroupType != rhs.GroupType) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.LastModified.Span, rhs.LastModified.Span)) return false;
+            if (lhs.LastModified != rhs.LastModified) return false;
             if (!lhs.SubBlocks.SequenceEqual(rhs.SubBlocks)) return false;
             return true;
         }
@@ -1678,7 +1670,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)CellBlock_FieldIndex.LastModified) ?? true))
             {
-                item.LastModified = rhs.LastModified.ToArray();
+                item.LastModified = rhs.LastModified;
             }
             if ((copyMask?.GetShouldTranslate((int)CellBlock_FieldIndex.SubBlocks) ?? true))
             {
@@ -1813,7 +1805,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)CellBlock_FieldIndex.LastModified) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
+                Int32XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.LastModified),
                     item: item.LastModified,
@@ -1988,9 +1980,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)CellBlock_FieldIndex.LastModified);
                     try
                     {
-                        item.LastModified = ByteArrayXmlTranslation.Instance.Parse(
+                        item.LastModified = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            fallbackLength: 4,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)
@@ -2211,9 +2202,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer,
                 item.GroupType,
                 length: 4);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.LastModified);
+            writer.Write(item.LastModified);
         }
 
         public static void WriteRecordTypes(
@@ -2361,7 +2350,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public Int32 BlockNumber => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
         public GroupTypeEnum GroupType => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
-        public ReadOnlyMemorySlice<Byte> LastModified => _data.Span.Slice(0x8, 0x4).ToArray();
+        public Int32 LastModified => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x8, 0x4));
         public IReadOnlyList<ICellSubBlockGetter> SubBlocks { get; private set; } = ListExt.Empty<CellSubBlockBinaryOverlay>();
         partial void CustomCtor(
             IBinaryReadStream stream,

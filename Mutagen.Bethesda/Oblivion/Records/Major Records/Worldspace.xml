@@ -17,7 +17,7 @@
       <ByteArray name="OffsetData" recordType="OFST" binary="Custom" binaryOverlay="Custom" />
       <RefDirect name="Road" refName="Road" binary="NoGeneration" />
       <RefDirect name="TopCell" refName="Cell" binary="NoGeneration" />
-      <ByteArray name="SubCellsTimestamp" binary="NoGeneration" byteLength="4" nullable="NotNull" />
+      <Int32 name="SubCellsTimestamp" binary="NoGeneration" />
       <RefList name="SubCells" refName="WorldspaceBlock" binary="NoGeneration" thread="true" />
       <Bool name="UsingOffsetLength" binary="NoGeneration" />
     </Fields>
@@ -27,7 +27,7 @@
       <Int16 name="BlockNumberY" />
       <Int16 name="BlockNumberX" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
-      <ByteArray name="LastModified" byteLength="4" nullable="NotNull" />
+      <Int32 name="LastModified" />
       <RefList name="Items" refName="WorldspaceSubBlock" thread="true" />
     </Fields>
   </Object>
@@ -36,7 +36,7 @@
       <Int16 name="BlockNumberY" />
       <Int16 name="BlockNumberX" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
-      <ByteArray name="LastModified" byteLength="4" nullable="NotNull" />
+      <Int32 name="LastModified" />
       <RefList name="Items" refName="Cell" binaryOverlay="Custom" />
     </Fields>
   </Object>

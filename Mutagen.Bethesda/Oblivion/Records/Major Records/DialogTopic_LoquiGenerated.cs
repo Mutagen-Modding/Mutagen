@@ -85,15 +85,7 @@ namespace Mutagen.Bethesda.Oblivion
         DialogType? IDialogTopicGetter.DialogType => this.DialogType;
         #endregion
         #region Timestamp
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Timestamp = new byte[4];
-        public Byte[] Timestamp
-        {
-            get => _Timestamp;
-            set => this._Timestamp = value ?? new byte[4];
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IDialogTopicGetter.Timestamp => this.Timestamp;
+        public Int32 Timestamp { get; set; } = default;
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -895,7 +887,7 @@ namespace Mutagen.Bethesda.Oblivion
         new ExtendedList<IFormLink<Quest>>? Quests { get; set; }
         new String? Name { get; set; }
         new DialogType? DialogType { get; set; }
-        new Byte[] Timestamp { get; set; }
+        new Int32 Timestamp { get; set; }
         new ExtendedList<DialogItem> Items { get; }
     }
 
@@ -919,7 +911,7 @@ namespace Mutagen.Bethesda.Oblivion
         IReadOnlyList<IFormLinkGetter<IQuestGetter>>? Quests { get; }
         String? Name { get; }
         DialogType? DialogType { get; }
-        ReadOnlyMemorySlice<Byte> Timestamp { get; }
+        Int32 Timestamp { get; }
         IReadOnlyList<IDialogItemGetter> Items { get; }
 
     }
@@ -1432,7 +1424,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogTopic_FieldIndex.DialogType:
                     return typeof(DialogType);
                 case DialogTopic_FieldIndex.Timestamp:
-                    return typeof(Byte[]);
+                    return typeof(Int32);
                 case DialogTopic_FieldIndex.Items:
                     return typeof(ExtendedList<DialogItem>);
                 default:
@@ -1494,7 +1486,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Quests = null;
             item.Name = default;
             item.DialogType = default;
-            item.Timestamp = new byte[4];
+            item.Timestamp = default;
             item.Items.Clear();
             base.Clear(item);
         }
@@ -1738,7 +1730,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 include);
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.DialogType = item.DialogType == rhs.DialogType;
-            ret.Timestamp = MemoryExtensions.SequenceEqual(item.Timestamp.Span, rhs.Timestamp.Span);
+            ret.Timestamp = item.Timestamp == rhs.Timestamp;
             ret.Items = item.Items.CollectionEqualsHelper(
                 rhs.Items,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1825,7 +1817,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.Timestamp ?? true)
             {
-                fg.AppendLine($"Timestamp => {SpanExt.ToHexString(item.Timestamp)}");
+                fg.AppendItem(item.Timestamp, "Timestamp");
             }
             if (printMask?.Items?.Overall ?? true)
             {
@@ -1921,7 +1913,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!lhs.Quests.SequenceEqual(rhs.Quests)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (lhs.DialogType != rhs.DialogType) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Timestamp.Span, rhs.Timestamp.Span)) return false;
+            if (lhs.Timestamp != rhs.Timestamp) return false;
             if (!lhs.Items.SequenceEqual(rhs.Items)) return false;
             return true;
         }
@@ -2130,7 +2122,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Timestamp) ?? true))
             {
-                item.Timestamp = rhs.Timestamp.ToArray();
+                item.Timestamp = rhs.Timestamp;
             }
             if ((copyMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Items) ?? true))
             {
@@ -2342,7 +2334,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)DialogTopic_FieldIndex.Timestamp) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
+                Int32XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Timestamp),
                     item: item.Timestamp,
@@ -2546,9 +2538,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)DialogTopic_FieldIndex.Timestamp);
                     try
                     {
-                        item.Timestamp = ByteArrayXmlTranslation.Instance.Parse(
+                        item.Timestamp = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            fallbackLength: 4,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)

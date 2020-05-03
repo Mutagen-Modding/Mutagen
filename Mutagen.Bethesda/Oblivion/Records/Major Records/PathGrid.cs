@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 reader.Slice(4).GetFloat(),
                 reader.Slice(8).GetFloat());
             numConn = reader[12];
-            pt.FluffBytes = reader.Slice(13, 3).ToArray();
+            pt.Unused = reader.Slice(13, 3).ToArray();
             return pt;
         }
     }
@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer.Write(pt.Point.Y);
                     writer.Write(pt.Point.Z);
                     writer.Write((byte)(pt.Connections.Count));
-                    writer.Write(pt.FluffBytes);
+                    writer.Write(pt.Unused);
                     if (pt.Connections.Count > 0)
                     {
                         anyConnections = true;

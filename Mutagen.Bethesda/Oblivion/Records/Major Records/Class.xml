@@ -13,7 +13,7 @@
     <Fields>
       <Enum name="TrainedSkill" enumName="Skill" byteLength="1" />
       <UInt8 name="MaximumTrainingLevel" max="100" min="0" />
-      <ByteArray name="Fluff" byteLength="2" nullable="NotNull" />
+      <Int16 name="Unknown" />
     </Fields>
   </Object>
   <Object name="ClassData" recordType="DATA" objType="Subrecord" GUID="3c5fc61b-fde2-42c8-adf4-66340f5e4d61" ID="178">

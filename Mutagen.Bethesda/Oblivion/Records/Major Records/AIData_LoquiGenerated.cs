@@ -66,16 +66,8 @@ namespace Mutagen.Bethesda.Oblivion
         #region MaximumTrainingLevel
         public Byte MaximumTrainingLevel { get; set; } = default;
         #endregion
-        #region Fluff
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Fluff = new byte[2];
-        public Byte[] Fluff
-        {
-            get => _Fluff;
-            set => this._Fluff = value ?? new byte[2];
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IAIDataGetter.Fluff => this.Fluff;
+        #region Unused
+        public Int16 Unused { get; set; } = default;
         #endregion
 
         #region To String
@@ -254,7 +246,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.BuySellServices = initialValue;
                 this.Teaches = initialValue;
                 this.MaximumTrainingLevel = initialValue;
-                this.Fluff = initialValue;
+                this.Unused = initialValue;
             }
 
             public Mask(
@@ -265,7 +257,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem BuySellServices,
                 TItem Teaches,
                 TItem MaximumTrainingLevel,
-                TItem Fluff)
+                TItem Unused)
             {
                 this.Aggression = Aggression;
                 this.Confidence = Confidence;
@@ -274,7 +266,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.BuySellServices = BuySellServices;
                 this.Teaches = Teaches;
                 this.MaximumTrainingLevel = MaximumTrainingLevel;
-                this.Fluff = Fluff;
+                this.Unused = Unused;
             }
 
             #pragma warning disable CS8618
@@ -293,7 +285,7 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem BuySellServices;
             public TItem Teaches;
             public TItem MaximumTrainingLevel;
-            public TItem Fluff;
+            public TItem Unused;
             #endregion
 
             #region Equals
@@ -313,7 +305,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.BuySellServices, rhs.BuySellServices)) return false;
                 if (!object.Equals(this.Teaches, rhs.Teaches)) return false;
                 if (!object.Equals(this.MaximumTrainingLevel, rhs.MaximumTrainingLevel)) return false;
-                if (!object.Equals(this.Fluff, rhs.Fluff)) return false;
+                if (!object.Equals(this.Unused, rhs.Unused)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -326,7 +318,7 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.BuySellServices);
                 hash.Add(this.Teaches);
                 hash.Add(this.MaximumTrainingLevel);
-                hash.Add(this.Fluff);
+                hash.Add(this.Unused);
                 return hash.ToHashCode();
             }
 
@@ -342,7 +334,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.BuySellServices)) return false;
                 if (!eval(this.Teaches)) return false;
                 if (!eval(this.MaximumTrainingLevel)) return false;
-                if (!eval(this.Fluff)) return false;
+                if (!eval(this.Unused)) return false;
                 return true;
             }
             #endregion
@@ -357,7 +349,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (eval(this.BuySellServices)) return true;
                 if (eval(this.Teaches)) return true;
                 if (eval(this.MaximumTrainingLevel)) return true;
-                if (eval(this.Fluff)) return true;
+                if (eval(this.Unused)) return true;
                 return false;
             }
             #endregion
@@ -379,7 +371,7 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.BuySellServices = eval(this.BuySellServices);
                 obj.Teaches = eval(this.Teaches);
                 obj.MaximumTrainingLevel = eval(this.MaximumTrainingLevel);
-                obj.Fluff = eval(this.Fluff);
+                obj.Unused = eval(this.Unused);
             }
             #endregion
 
@@ -430,9 +422,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendItem(MaximumTrainingLevel, "MaximumTrainingLevel");
                     }
-                    if (printMask?.Fluff ?? true)
+                    if (printMask?.Unused ?? true)
                     {
-                        fg.AppendItem(Fluff, "Fluff");
+                        fg.AppendItem(Unused, "Unused");
                     }
                 }
                 fg.AppendLine("]");
@@ -466,7 +458,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Exception? BuySellServices;
             public Exception? Teaches;
             public Exception? MaximumTrainingLevel;
-            public Exception? Fluff;
+            public Exception? Unused;
             #endregion
 
             #region IErrorMask
@@ -489,8 +481,8 @@ namespace Mutagen.Bethesda.Oblivion
                         return Teaches;
                     case AIData_FieldIndex.MaximumTrainingLevel:
                         return MaximumTrainingLevel;
-                    case AIData_FieldIndex.Fluff:
-                        return Fluff;
+                    case AIData_FieldIndex.Unused:
+                        return Unused;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -522,8 +514,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case AIData_FieldIndex.MaximumTrainingLevel:
                         this.MaximumTrainingLevel = ex;
                         break;
-                    case AIData_FieldIndex.Fluff:
-                        this.Fluff = ex;
+                    case AIData_FieldIndex.Unused:
+                        this.Unused = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -556,8 +548,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case AIData_FieldIndex.MaximumTrainingLevel:
                         this.MaximumTrainingLevel = (Exception?)obj;
                         break;
-                    case AIData_FieldIndex.Fluff:
-                        this.Fluff = (Exception?)obj;
+                    case AIData_FieldIndex.Unused:
+                        this.Unused = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -574,7 +566,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (BuySellServices != null) return true;
                 if (Teaches != null) return true;
                 if (MaximumTrainingLevel != null) return true;
-                if (Fluff != null) return true;
+                if (Unused != null) return true;
                 return false;
             }
             #endregion
@@ -616,7 +608,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendItem(BuySellServices, "BuySellServices");
                 fg.AppendItem(Teaches, "Teaches");
                 fg.AppendItem(MaximumTrainingLevel, "MaximumTrainingLevel");
-                fg.AppendItem(Fluff, "Fluff");
+                fg.AppendItem(Unused, "Unused");
             }
             #endregion
 
@@ -632,7 +624,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.BuySellServices = this.BuySellServices.Combine(rhs.BuySellServices);
                 ret.Teaches = this.Teaches.Combine(rhs.Teaches);
                 ret.MaximumTrainingLevel = this.MaximumTrainingLevel.Combine(rhs.MaximumTrainingLevel);
-                ret.Fluff = this.Fluff.Combine(rhs.Fluff);
+                ret.Unused = this.Unused.Combine(rhs.Unused);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -661,7 +653,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool BuySellServices;
             public bool Teaches;
             public bool MaximumTrainingLevel;
-            public bool Fluff;
+            public bool Unused;
             #endregion
 
             #region Ctors
@@ -674,7 +666,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.BuySellServices = defaultOn;
                 this.Teaches = defaultOn;
                 this.MaximumTrainingLevel = defaultOn;
-                this.Fluff = defaultOn;
+                this.Unused = defaultOn;
             }
 
             #endregion
@@ -697,7 +689,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((BuySellServices, null));
                 ret.Add((Teaches, null));
                 ret.Add((MaximumTrainingLevel, null));
-                ret.Add((Fluff, null));
+                ret.Add((Unused, null));
             }
         }
         #endregion
@@ -774,7 +766,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Npc.BuySellServiceFlag BuySellServices { get; set; }
         new Skill Teaches { get; set; }
         new Byte MaximumTrainingLevel { get; set; }
-        new Byte[] Fluff { get; set; }
+        new Int16 Unused { get; set; }
     }
 
     public partial interface IAIDataGetter :
@@ -797,7 +789,7 @@ namespace Mutagen.Bethesda.Oblivion
         Npc.BuySellServiceFlag BuySellServices { get; }
         Skill Teaches { get; }
         Byte MaximumTrainingLevel { get; }
-        ReadOnlyMemorySlice<Byte> Fluff { get; }
+        Int16 Unused { get; }
 
     }
 
@@ -1111,7 +1103,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         BuySellServices = 4,
         Teaches = 5,
         MaximumTrainingLevel = 6,
-        Fluff = 7,
+        Unused = 7,
     }
     #endregion
 
@@ -1175,8 +1167,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)AIData_FieldIndex.Teaches;
                 case "MAXIMUMTRAININGLEVEL":
                     return (ushort)AIData_FieldIndex.MaximumTrainingLevel;
-                case "FLUFF":
-                    return (ushort)AIData_FieldIndex.Fluff;
+                case "UNUSED":
+                    return (ushort)AIData_FieldIndex.Unused;
                 default:
                     return null;
             }
@@ -1194,7 +1186,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AIData_FieldIndex.BuySellServices:
                 case AIData_FieldIndex.Teaches:
                 case AIData_FieldIndex.MaximumTrainingLevel:
-                case AIData_FieldIndex.Fluff:
+                case AIData_FieldIndex.Unused:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1213,7 +1205,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AIData_FieldIndex.BuySellServices:
                 case AIData_FieldIndex.Teaches:
                 case AIData_FieldIndex.MaximumTrainingLevel:
-                case AIData_FieldIndex.Fluff:
+                case AIData_FieldIndex.Unused:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1232,7 +1224,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AIData_FieldIndex.BuySellServices:
                 case AIData_FieldIndex.Teaches:
                 case AIData_FieldIndex.MaximumTrainingLevel:
-                case AIData_FieldIndex.Fluff:
+                case AIData_FieldIndex.Unused:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1258,8 +1250,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Teaches";
                 case AIData_FieldIndex.MaximumTrainingLevel:
                     return "MaximumTrainingLevel";
-                case AIData_FieldIndex.Fluff:
-                    return "Fluff";
+                case AIData_FieldIndex.Unused:
+                    return "Unused";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1277,7 +1269,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AIData_FieldIndex.BuySellServices:
                 case AIData_FieldIndex.Teaches:
                 case AIData_FieldIndex.MaximumTrainingLevel:
-                case AIData_FieldIndex.Fluff:
+                case AIData_FieldIndex.Unused:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1296,7 +1288,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AIData_FieldIndex.BuySellServices:
                 case AIData_FieldIndex.Teaches:
                 case AIData_FieldIndex.MaximumTrainingLevel:
-                case AIData_FieldIndex.Fluff:
+                case AIData_FieldIndex.Unused:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1322,8 +1314,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Skill);
                 case AIData_FieldIndex.MaximumTrainingLevel:
                     return typeof(Byte);
-                case AIData_FieldIndex.Fluff:
-                    return typeof(Byte[]);
+                case AIData_FieldIndex.Unused:
+                    return typeof(Int16);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1383,7 +1375,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.BuySellServices = default;
             item.Teaches = default;
             item.MaximumTrainingLevel = default;
-            item.Fluff = new byte[2];
+            item.Unused = default;
         }
         
         #region Xml Translation
@@ -1426,7 +1418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.BuySellServices = EnumBinaryTranslation<Npc.BuySellServiceFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.Teaches = EnumBinaryTranslation<Skill>.Instance.Parse(frame: frame.SpawnWithLength(1));
             item.MaximumTrainingLevel = frame.ReadUInt8();
-            item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(2));
+            item.Unused = frame.ReadInt16();
         }
         
         public virtual void CopyInFromBinary(
@@ -1479,7 +1471,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.BuySellServices = item.BuySellServices == rhs.BuySellServices;
             ret.Teaches = item.Teaches == rhs.Teaches;
             ret.MaximumTrainingLevel = item.MaximumTrainingLevel == rhs.MaximumTrainingLevel;
-            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff.Span, rhs.Fluff.Span);
+            ret.Unused = item.Unused == rhs.Unused;
         }
         
         public string ToString(
@@ -1554,9 +1546,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(item.MaximumTrainingLevel, "MaximumTrainingLevel");
             }
-            if (printMask?.Fluff ?? true)
+            if (printMask?.Unused ?? true)
             {
-                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
+                fg.AppendItem(item.Unused, "Unused");
             }
         }
         
@@ -1578,7 +1570,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.BuySellServices = true;
             mask.Teaches = true;
             mask.MaximumTrainingLevel = true;
-            mask.Fluff = true;
+            mask.Unused = true;
         }
         
         #region Equals and Hash
@@ -1595,7 +1587,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs.BuySellServices != rhs.BuySellServices) return false;
             if (lhs.Teaches != rhs.Teaches) return false;
             if (lhs.MaximumTrainingLevel != rhs.MaximumTrainingLevel) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff.Span, rhs.Fluff.Span)) return false;
+            if (lhs.Unused != rhs.Unused) return false;
             return true;
         }
         
@@ -1609,7 +1601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             hash.Add(item.BuySellServices);
             hash.Add(item.Teaches);
             hash.Add(item.MaximumTrainingLevel);
-            hash.Add(item.Fluff);
+            hash.Add(item.Unused);
             return hash.ToHashCode();
         }
         
@@ -1669,9 +1661,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.MaximumTrainingLevel = rhs.MaximumTrainingLevel;
             }
-            if ((copyMask?.GetShouldTranslate((int)AIData_FieldIndex.Fluff) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AIData_FieldIndex.Unused) ?? true))
             {
-                item.Fluff = rhs.Fluff.ToArray();
+                item.Unused = rhs.Unused;
             }
         }
         
@@ -1825,13 +1817,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)AIData_FieldIndex.MaximumTrainingLevel,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)AIData_FieldIndex.Fluff) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)AIData_FieldIndex.Unused) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
+                Int16XmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Fluff),
-                    item: item.Fluff,
-                    fieldIndex: (int)AIData_FieldIndex.Fluff,
+                    name: nameof(item.Unused),
+                    item: item.Unused,
+                    fieldIndex: (int)AIData_FieldIndex.Unused,
                     errorMask: errorMask);
             }
         }
@@ -2066,13 +2058,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Fluff":
-                    errorMask?.PushIndex((int)AIData_FieldIndex.Fluff);
+                case "Unused":
+                    errorMask?.PushIndex((int)AIData_FieldIndex.Unused);
                     try
                     {
-                        item.Fluff = ByteArrayXmlTranslation.Instance.Parse(
+                        item.Unused = Int16XmlTranslation.Instance.Parse(
                             node: node,
-                            fallbackLength: 2,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)
@@ -2273,9 +2264,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.Teaches,
                 length: 1);
             writer.Write(item.MaximumTrainingLevel);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Fluff);
+            writer.Write(item.Unused);
         }
 
         public void Write(
@@ -2399,7 +2388,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Npc.BuySellServiceFlag BuySellServices => (Npc.BuySellServiceFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         public Skill Teaches => (Skill)_data.Span.Slice(0x8, 0x1)[0];
         public Byte MaximumTrainingLevel => _data.Span[0x9];
-        public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(0xA, 0x2).ToArray();
+        public Int16 Unused => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xA, 0x2));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

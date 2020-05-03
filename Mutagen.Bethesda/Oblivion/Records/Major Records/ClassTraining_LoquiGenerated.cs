@@ -52,16 +52,8 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte MaximumTrainingLevel { get; set; } = default;
         public static RangeUInt8 MaximumTrainingLevel_Range = new RangeUInt8(0, 100);
         #endregion
-        #region Fluff
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Fluff = new byte[2];
-        public Byte[] Fluff
-        {
-            get => _Fluff;
-            set => this._Fluff = value ?? new byte[2];
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IClassTrainingGetter.Fluff => this.Fluff;
+        #region Unknown
+        public Int16 Unknown { get; set; } = default;
         #endregion
 
         #region To String
@@ -235,17 +227,17 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.TrainedSkill = initialValue;
                 this.MaximumTrainingLevel = initialValue;
-                this.Fluff = initialValue;
+                this.Unknown = initialValue;
             }
 
             public Mask(
                 TItem TrainedSkill,
                 TItem MaximumTrainingLevel,
-                TItem Fluff)
+                TItem Unknown)
             {
                 this.TrainedSkill = TrainedSkill;
                 this.MaximumTrainingLevel = MaximumTrainingLevel;
-                this.Fluff = Fluff;
+                this.Unknown = Unknown;
             }
 
             #pragma warning disable CS8618
@@ -259,7 +251,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             public TItem TrainedSkill;
             public TItem MaximumTrainingLevel;
-            public TItem Fluff;
+            public TItem Unknown;
             #endregion
 
             #region Equals
@@ -274,7 +266,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return false;
                 if (!object.Equals(this.TrainedSkill, rhs.TrainedSkill)) return false;
                 if (!object.Equals(this.MaximumTrainingLevel, rhs.MaximumTrainingLevel)) return false;
-                if (!object.Equals(this.Fluff, rhs.Fluff)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -282,7 +274,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var hash = new HashCode();
                 hash.Add(this.TrainedSkill);
                 hash.Add(this.MaximumTrainingLevel);
-                hash.Add(this.Fluff);
+                hash.Add(this.Unknown);
                 return hash.ToHashCode();
             }
 
@@ -293,7 +285,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!eval(this.TrainedSkill)) return false;
                 if (!eval(this.MaximumTrainingLevel)) return false;
-                if (!eval(this.Fluff)) return false;
+                if (!eval(this.Unknown)) return false;
                 return true;
             }
             #endregion
@@ -303,7 +295,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (eval(this.TrainedSkill)) return true;
                 if (eval(this.MaximumTrainingLevel)) return true;
-                if (eval(this.Fluff)) return true;
+                if (eval(this.Unknown)) return true;
                 return false;
             }
             #endregion
@@ -320,7 +312,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 obj.TrainedSkill = eval(this.TrainedSkill);
                 obj.MaximumTrainingLevel = eval(this.MaximumTrainingLevel);
-                obj.Fluff = eval(this.Fluff);
+                obj.Unknown = eval(this.Unknown);
             }
             #endregion
 
@@ -351,9 +343,9 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendItem(MaximumTrainingLevel, "MaximumTrainingLevel");
                     }
-                    if (printMask?.Fluff ?? true)
+                    if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Fluff, "Fluff");
+                        fg.AppendItem(Unknown, "Unknown");
                     }
                 }
                 fg.AppendLine("]");
@@ -382,7 +374,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public Exception? TrainedSkill;
             public Exception? MaximumTrainingLevel;
-            public Exception? Fluff;
+            public Exception? Unknown;
             #endregion
 
             #region IErrorMask
@@ -395,8 +387,8 @@ namespace Mutagen.Bethesda.Oblivion
                         return TrainedSkill;
                     case ClassTraining_FieldIndex.MaximumTrainingLevel:
                         return MaximumTrainingLevel;
-                    case ClassTraining_FieldIndex.Fluff:
-                        return Fluff;
+                    case ClassTraining_FieldIndex.Unknown:
+                        return Unknown;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -413,8 +405,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case ClassTraining_FieldIndex.MaximumTrainingLevel:
                         this.MaximumTrainingLevel = ex;
                         break;
-                    case ClassTraining_FieldIndex.Fluff:
-                        this.Fluff = ex;
+                    case ClassTraining_FieldIndex.Unknown:
+                        this.Unknown = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -432,8 +424,8 @@ namespace Mutagen.Bethesda.Oblivion
                     case ClassTraining_FieldIndex.MaximumTrainingLevel:
                         this.MaximumTrainingLevel = (Exception?)obj;
                         break;
-                    case ClassTraining_FieldIndex.Fluff:
-                        this.Fluff = (Exception?)obj;
+                    case ClassTraining_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -445,7 +437,7 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Overall != null) return true;
                 if (TrainedSkill != null) return true;
                 if (MaximumTrainingLevel != null) return true;
-                if (Fluff != null) return true;
+                if (Unknown != null) return true;
                 return false;
             }
             #endregion
@@ -482,7 +474,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 fg.AppendItem(TrainedSkill, "TrainedSkill");
                 fg.AppendItem(MaximumTrainingLevel, "MaximumTrainingLevel");
-                fg.AppendItem(Fluff, "Fluff");
+                fg.AppendItem(Unknown, "Unknown");
             }
             #endregion
 
@@ -493,7 +485,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var ret = new ErrorMask();
                 ret.TrainedSkill = this.TrainedSkill.Combine(rhs.TrainedSkill);
                 ret.MaximumTrainingLevel = this.MaximumTrainingLevel.Combine(rhs.MaximumTrainingLevel);
-                ret.Fluff = this.Fluff.Combine(rhs.Fluff);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -517,7 +509,7 @@ namespace Mutagen.Bethesda.Oblivion
             private TranslationCrystal? _crystal;
             public bool TrainedSkill;
             public bool MaximumTrainingLevel;
-            public bool Fluff;
+            public bool Unknown;
             #endregion
 
             #region Ctors
@@ -525,7 +517,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.TrainedSkill = defaultOn;
                 this.MaximumTrainingLevel = defaultOn;
-                this.Fluff = defaultOn;
+                this.Unknown = defaultOn;
             }
 
             #endregion
@@ -543,7 +535,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret.Add((TrainedSkill, null));
                 ret.Add((MaximumTrainingLevel, null));
-                ret.Add((Fluff, null));
+                ret.Add((Unknown, null));
             }
         }
         #endregion
@@ -611,7 +603,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Skill TrainedSkill { get; set; }
         new Byte MaximumTrainingLevel { get; set; }
-        new Byte[] Fluff { get; set; }
+        new Int16 Unknown { get; set; }
     }
 
     public partial interface IClassTrainingGetter :
@@ -629,7 +621,7 @@ namespace Mutagen.Bethesda.Oblivion
         static ILoquiRegistration Registration => ClassTraining_Registration.Instance;
         Skill TrainedSkill { get; }
         Byte MaximumTrainingLevel { get; }
-        ReadOnlyMemorySlice<Byte> Fluff { get; }
+        Int16 Unknown { get; }
 
     }
 
@@ -938,7 +930,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         TrainedSkill = 0,
         MaximumTrainingLevel = 1,
-        Fluff = 2,
+        Unknown = 2,
     }
     #endregion
 
@@ -992,8 +984,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)ClassTraining_FieldIndex.TrainedSkill;
                 case "MAXIMUMTRAININGLEVEL":
                     return (ushort)ClassTraining_FieldIndex.MaximumTrainingLevel;
-                case "FLUFF":
-                    return (ushort)ClassTraining_FieldIndex.Fluff;
+                case "UNKNOWN":
+                    return (ushort)ClassTraining_FieldIndex.Unknown;
                 default:
                     return null;
             }
@@ -1006,7 +998,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case ClassTraining_FieldIndex.TrainedSkill:
                 case ClassTraining_FieldIndex.MaximumTrainingLevel:
-                case ClassTraining_FieldIndex.Fluff:
+                case ClassTraining_FieldIndex.Unknown:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1020,7 +1012,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case ClassTraining_FieldIndex.TrainedSkill:
                 case ClassTraining_FieldIndex.MaximumTrainingLevel:
-                case ClassTraining_FieldIndex.Fluff:
+                case ClassTraining_FieldIndex.Unknown:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1034,7 +1026,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case ClassTraining_FieldIndex.TrainedSkill:
                 case ClassTraining_FieldIndex.MaximumTrainingLevel:
-                case ClassTraining_FieldIndex.Fluff:
+                case ClassTraining_FieldIndex.Unknown:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1050,8 +1042,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "TrainedSkill";
                 case ClassTraining_FieldIndex.MaximumTrainingLevel:
                     return "MaximumTrainingLevel";
-                case ClassTraining_FieldIndex.Fluff:
-                    return "Fluff";
+                case ClassTraining_FieldIndex.Unknown:
+                    return "Unknown";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1064,7 +1056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case ClassTraining_FieldIndex.TrainedSkill:
                 case ClassTraining_FieldIndex.MaximumTrainingLevel:
-                case ClassTraining_FieldIndex.Fluff:
+                case ClassTraining_FieldIndex.Unknown:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1078,7 +1070,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case ClassTraining_FieldIndex.TrainedSkill:
                 case ClassTraining_FieldIndex.MaximumTrainingLevel:
-                case ClassTraining_FieldIndex.Fluff:
+                case ClassTraining_FieldIndex.Unknown:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1094,8 +1086,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Skill);
                 case ClassTraining_FieldIndex.MaximumTrainingLevel:
                     return typeof(Byte);
-                case ClassTraining_FieldIndex.Fluff:
-                    return typeof(Byte[]);
+                case ClassTraining_FieldIndex.Unknown:
+                    return typeof(Int16);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1148,7 +1140,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.TrainedSkill = default;
             item.MaximumTrainingLevel = default;
-            item.Fluff = new byte[2];
+            item.Unknown = default;
         }
         
         #region Xml Translation
@@ -1186,7 +1178,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.TrainedSkill = EnumBinaryTranslation<Skill>.Instance.Parse(frame: frame.SpawnWithLength(1));
             item.MaximumTrainingLevel = frame.ReadUInt8();
-            item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(2));
+            item.Unknown = frame.ReadInt16();
         }
         
         public virtual void CopyInFromBinary(
@@ -1231,7 +1223,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.TrainedSkill = item.TrainedSkill == rhs.TrainedSkill;
             ret.MaximumTrainingLevel = item.MaximumTrainingLevel == rhs.MaximumTrainingLevel;
-            ret.Fluff = MemoryExtensions.SequenceEqual(item.Fluff.Span, rhs.Fluff.Span);
+            ret.Unknown = item.Unknown == rhs.Unknown;
         }
         
         public string ToString(
@@ -1286,9 +1278,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(item.MaximumTrainingLevel, "MaximumTrainingLevel");
             }
-            if (printMask?.Fluff ?? true)
+            if (printMask?.Unknown ?? true)
             {
-                fg.AppendLine($"Fluff => {SpanExt.ToHexString(item.Fluff)}");
+                fg.AppendItem(item.Unknown, "Unknown");
             }
         }
         
@@ -1305,7 +1297,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             mask.TrainedSkill = true;
             mask.MaximumTrainingLevel = true;
-            mask.Fluff = true;
+            mask.Unknown = true;
         }
         
         #region Equals and Hash
@@ -1317,7 +1309,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null || rhs == null) return false;
             if (lhs.TrainedSkill != rhs.TrainedSkill) return false;
             if (lhs.MaximumTrainingLevel != rhs.MaximumTrainingLevel) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff.Span, rhs.Fluff.Span)) return false;
+            if (lhs.Unknown != rhs.Unknown) return false;
             return true;
         }
         
@@ -1326,7 +1318,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var hash = new HashCode();
             hash.Add(item.TrainedSkill);
             hash.Add(item.MaximumTrainingLevel);
-            hash.Add(item.Fluff);
+            hash.Add(item.Unknown);
             return hash.ToHashCode();
         }
         
@@ -1366,9 +1358,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.MaximumTrainingLevel = rhs.MaximumTrainingLevel;
             }
-            if ((copyMask?.GetShouldTranslate((int)ClassTraining_FieldIndex.Fluff) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ClassTraining_FieldIndex.Unknown) ?? true))
             {
-                item.Fluff = rhs.Fluff.ToArray();
+                item.Unknown = rhs.Unknown;
             }
         }
         
@@ -1477,13 +1469,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)ClassTraining_FieldIndex.Fluff) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)ClassTraining_FieldIndex.Unknown) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
+                Int16XmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Fluff),
-                    item: item.Fluff,
-                    fieldIndex: (int)ClassTraining_FieldIndex.Fluff,
+                    name: nameof(item.Unknown),
+                    item: item.Unknown,
+                    fieldIndex: (int)ClassTraining_FieldIndex.Unknown,
                     errorMask: errorMask);
             }
         }
@@ -1628,13 +1620,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Fluff":
-                    errorMask?.PushIndex((int)ClassTraining_FieldIndex.Fluff);
+                case "Unknown":
+                    errorMask?.PushIndex((int)ClassTraining_FieldIndex.Unknown);
                     try
                     {
-                        item.Fluff = ByteArrayXmlTranslation.Instance.Parse(
+                        item.Unknown = Int16XmlTranslation.Instance.Parse(
                             node: node,
-                            fallbackLength: 2,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)
@@ -1827,9 +1818,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.TrainedSkill,
                 length: 1);
             writer.Write(item.MaximumTrainingLevel);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Fluff);
+            writer.Write(item.Unknown);
         }
 
         public void Write(
@@ -1942,7 +1931,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public Skill TrainedSkill => (Skill)_data.Span.Slice(0x0, 0x1)[0];
         public Byte MaximumTrainingLevel => _data.Span[0x1];
-        public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(0x2, 0x2).ToArray();
+        public Int16 Unknown => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x2, 0x2));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

@@ -61,7 +61,7 @@
       <Enum name="BuySellServices" enumName="Npc.BuySellServiceFlag" byteLength="4" />
       <Enum name="Teaches" enumName="Skill" byteLength="1" />
       <UInt8 name="MaximumTrainingLevel" />
-      <ByteArray name="Fluff" byteLength="2" nullable="NotNull" />
+      <Int16 name="Unused" />
     </Fields>
   </Object>
   <Object name="NpcData" objType="Subrecord" recordType="DATA" GUID="6ec3a936-c2df-43d5-a3a1-641ca180cdaa" ID="200">
@@ -102,7 +102,7 @@
     <Fields>
       <FormLink name="Faction" refName="Faction" />
       <UInt8 name="Rank" />
-      <ByteArray name="Fluff" byteLength="3" nullable="NotNull" />
+      <ByteArray name="Unused" byteLength="3" nullable="NotNull" />
     </Fields>
   </Object>
   <Object name="ItemEntry" objType="Subrecord" recordType="CNTO" GUID="c4622b63-e996-4d1d-b707-e75cba9c197d" ID="86">

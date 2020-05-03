@@ -180,15 +180,7 @@ namespace Mutagen.Bethesda.Oblivion
         ICellGetter? IWorldspaceGetter.TopCell => this.TopCell;
         #endregion
         #region SubCellsTimestamp
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _SubCellsTimestamp = new byte[4];
-        public Byte[] SubCellsTimestamp
-        {
-            get => _SubCellsTimestamp;
-            set => this._SubCellsTimestamp = value ?? new byte[4];
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IWorldspaceGetter.SubCellsTimestamp => this.SubCellsTimestamp;
+        public Int32 SubCellsTimestamp { get; set; } = default;
         #endregion
         #region SubCells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1262,7 +1254,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte[]? OffsetData { get; set; }
         new Road? Road { get; set; }
         new Cell? TopCell { get; set; }
-        new Byte[] SubCellsTimestamp { get; set; }
+        new Int32 SubCellsTimestamp { get; set; }
         new ExtendedList<WorldspaceBlock> SubCells { get; }
         new Boolean UsingOffsetLength { get; set; }
     }
@@ -1297,7 +1289,7 @@ namespace Mutagen.Bethesda.Oblivion
         ReadOnlyMemorySlice<Byte>? OffsetData { get; }
         IRoadGetter? Road { get; }
         ICellGetter? TopCell { get; }
-        ReadOnlyMemorySlice<Byte> SubCellsTimestamp { get; }
+        Int32 SubCellsTimestamp { get; }
         IReadOnlyList<IWorldspaceBlockGetter> SubCells { get; }
         Boolean UsingOffsetLength { get; }
 
@@ -1941,7 +1933,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Worldspace_FieldIndex.TopCell:
                     return typeof(Cell);
                 case Worldspace_FieldIndex.SubCellsTimestamp:
-                    return typeof(Byte[]);
+                    return typeof(Int32);
                 case Worldspace_FieldIndex.SubCells:
                     return typeof(ExtendedList<WorldspaceBlock>);
                 case Worldspace_FieldIndex.UsingOffsetLength:
@@ -2026,7 +2018,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.OffsetData = default;
             item.Road = null;
             item.TopCell = null;
-            item.SubCellsTimestamp = new byte[4];
+            item.SubCellsTimestamp = default;
             item.SubCells.Clear();
             item.UsingOffsetLength = default;
             base.Clear(item);
@@ -2377,7 +2369,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.TopCell,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.SubCellsTimestamp = MemoryExtensions.SequenceEqual(item.SubCellsTimestamp.Span, rhs.SubCellsTimestamp.Span);
+            ret.SubCellsTimestamp = item.SubCellsTimestamp == rhs.SubCellsTimestamp;
             ret.SubCells = item.SubCells.CollectionEqualsHelper(
                 rhs.SubCells,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -2501,7 +2493,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (printMask?.SubCellsTimestamp ?? true)
             {
-                fg.AppendLine($"SubCellsTimestamp => {SpanExt.ToHexString(item.SubCellsTimestamp)}");
+                fg.AppendItem(item.SubCellsTimestamp, "SubCellsTimestamp");
             }
             if (printMask?.SubCells?.Overall ?? true)
             {
@@ -2657,7 +2649,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!MemorySliceExt.Equal(lhs.OffsetData, rhs.OffsetData)) return false;
             if (!object.Equals(lhs.Road, rhs.Road)) return false;
             if (!object.Equals(lhs.TopCell, rhs.TopCell)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.SubCellsTimestamp.Span, rhs.SubCellsTimestamp.Span)) return false;
+            if (lhs.SubCellsTimestamp != rhs.SubCellsTimestamp) return false;
             if (!lhs.SubCells.SequenceEqual(rhs.SubCells)) return false;
             if (lhs.UsingOffsetLength != rhs.UsingOffsetLength) return false;
             return true;
@@ -3069,7 +3061,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCellsTimestamp) ?? true))
             {
-                item.SubCellsTimestamp = rhs.SubCellsTimestamp.ToArray();
+                item.SubCellsTimestamp = rhs.SubCellsTimestamp;
             }
             if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCells) ?? true))
             {
@@ -3411,7 +3403,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCellsTimestamp) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
+                Int32XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.SubCellsTimestamp),
                     item: item.SubCellsTimestamp,
@@ -3812,9 +3804,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)Worldspace_FieldIndex.SubCellsTimestamp);
                     try
                     {
-                        item.SubCellsTimestamp = ByteArrayXmlTranslation.Instance.Parse(
+                        item.SubCellsTimestamp = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            fallbackLength: 4,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)

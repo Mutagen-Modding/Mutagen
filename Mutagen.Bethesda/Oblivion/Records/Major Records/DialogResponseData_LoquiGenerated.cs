@@ -51,30 +51,22 @@ namespace Mutagen.Bethesda.Oblivion
         #region EmotionValue
         public Int32 EmotionValue { get; set; } = default;
         #endregion
-        #region Fluff1
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Fluff1 = new byte[4];
-        public Byte[] Fluff1
-        {
-            get => _Fluff1;
-            set => this._Fluff1 = value ?? new byte[4];
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IDialogResponseDataGetter.Fluff1 => this.Fluff1;
+        #region Unknown
+        public Int32 Unknown { get; set; } = default;
         #endregion
         #region ResponseNumber
         public Byte ResponseNumber { get; set; } = default;
         #endregion
-        #region Fluff2
+        #region Unknown2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte[] _Fluff2 = new byte[3];
-        public Byte[] Fluff2
+        private Byte[] _Unknown2 = new byte[3];
+        public Byte[] Unknown2
         {
-            get => _Fluff2;
-            set => this._Fluff2 = value ?? new byte[3];
+            get => _Unknown2;
+            set => this._Unknown2 = value ?? new byte[3];
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IDialogResponseDataGetter.Fluff2 => this.Fluff2;
+        ReadOnlyMemorySlice<Byte> IDialogResponseDataGetter.Unknown2 => this.Unknown2;
         #endregion
 
         #region To String
@@ -248,23 +240,23 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Emotion = initialValue;
                 this.EmotionValue = initialValue;
-                this.Fluff1 = initialValue;
+                this.Unknown = initialValue;
                 this.ResponseNumber = initialValue;
-                this.Fluff2 = initialValue;
+                this.Unknown2 = initialValue;
             }
 
             public Mask(
                 TItem Emotion,
                 TItem EmotionValue,
-                TItem Fluff1,
+                TItem Unknown,
                 TItem ResponseNumber,
-                TItem Fluff2)
+                TItem Unknown2)
             {
                 this.Emotion = Emotion;
                 this.EmotionValue = EmotionValue;
-                this.Fluff1 = Fluff1;
+                this.Unknown = Unknown;
                 this.ResponseNumber = ResponseNumber;
-                this.Fluff2 = Fluff2;
+                this.Unknown2 = Unknown2;
             }
 
             #pragma warning disable CS8618
@@ -278,9 +270,9 @@ namespace Mutagen.Bethesda.Oblivion
             #region Members
             public TItem Emotion;
             public TItem EmotionValue;
-            public TItem Fluff1;
+            public TItem Unknown;
             public TItem ResponseNumber;
-            public TItem Fluff2;
+            public TItem Unknown2;
             #endregion
 
             #region Equals
@@ -295,9 +287,9 @@ namespace Mutagen.Bethesda.Oblivion
                 if (rhs == null) return false;
                 if (!object.Equals(this.Emotion, rhs.Emotion)) return false;
                 if (!object.Equals(this.EmotionValue, rhs.EmotionValue)) return false;
-                if (!object.Equals(this.Fluff1, rhs.Fluff1)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.ResponseNumber, rhs.ResponseNumber)) return false;
-                if (!object.Equals(this.Fluff2, rhs.Fluff2)) return false;
+                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -305,9 +297,9 @@ namespace Mutagen.Bethesda.Oblivion
                 var hash = new HashCode();
                 hash.Add(this.Emotion);
                 hash.Add(this.EmotionValue);
-                hash.Add(this.Fluff1);
+                hash.Add(this.Unknown);
                 hash.Add(this.ResponseNumber);
-                hash.Add(this.Fluff2);
+                hash.Add(this.Unknown2);
                 return hash.ToHashCode();
             }
 
@@ -318,9 +310,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!eval(this.Emotion)) return false;
                 if (!eval(this.EmotionValue)) return false;
-                if (!eval(this.Fluff1)) return false;
+                if (!eval(this.Unknown)) return false;
                 if (!eval(this.ResponseNumber)) return false;
-                if (!eval(this.Fluff2)) return false;
+                if (!eval(this.Unknown2)) return false;
                 return true;
             }
             #endregion
@@ -330,9 +322,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (eval(this.Emotion)) return true;
                 if (eval(this.EmotionValue)) return true;
-                if (eval(this.Fluff1)) return true;
+                if (eval(this.Unknown)) return true;
                 if (eval(this.ResponseNumber)) return true;
-                if (eval(this.Fluff2)) return true;
+                if (eval(this.Unknown2)) return true;
                 return false;
             }
             #endregion
@@ -349,9 +341,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 obj.Emotion = eval(this.Emotion);
                 obj.EmotionValue = eval(this.EmotionValue);
-                obj.Fluff1 = eval(this.Fluff1);
+                obj.Unknown = eval(this.Unknown);
                 obj.ResponseNumber = eval(this.ResponseNumber);
-                obj.Fluff2 = eval(this.Fluff2);
+                obj.Unknown2 = eval(this.Unknown2);
             }
             #endregion
 
@@ -382,17 +374,17 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         fg.AppendItem(EmotionValue, "EmotionValue");
                     }
-                    if (printMask?.Fluff1 ?? true)
+                    if (printMask?.Unknown ?? true)
                     {
-                        fg.AppendItem(Fluff1, "Fluff1");
+                        fg.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.ResponseNumber ?? true)
                     {
                         fg.AppendItem(ResponseNumber, "ResponseNumber");
                     }
-                    if (printMask?.Fluff2 ?? true)
+                    if (printMask?.Unknown2 ?? true)
                     {
-                        fg.AppendItem(Fluff2, "Fluff2");
+                        fg.AppendItem(Unknown2, "Unknown2");
                     }
                 }
                 fg.AppendLine("]");
@@ -421,9 +413,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
             public Exception? Emotion;
             public Exception? EmotionValue;
-            public Exception? Fluff1;
+            public Exception? Unknown;
             public Exception? ResponseNumber;
-            public Exception? Fluff2;
+            public Exception? Unknown2;
             #endregion
 
             #region IErrorMask
@@ -436,12 +428,12 @@ namespace Mutagen.Bethesda.Oblivion
                         return Emotion;
                     case DialogResponseData_FieldIndex.EmotionValue:
                         return EmotionValue;
-                    case DialogResponseData_FieldIndex.Fluff1:
-                        return Fluff1;
+                    case DialogResponseData_FieldIndex.Unknown:
+                        return Unknown;
                     case DialogResponseData_FieldIndex.ResponseNumber:
                         return ResponseNumber;
-                    case DialogResponseData_FieldIndex.Fluff2:
-                        return Fluff2;
+                    case DialogResponseData_FieldIndex.Unknown2:
+                        return Unknown2;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -458,14 +450,14 @@ namespace Mutagen.Bethesda.Oblivion
                     case DialogResponseData_FieldIndex.EmotionValue:
                         this.EmotionValue = ex;
                         break;
-                    case DialogResponseData_FieldIndex.Fluff1:
-                        this.Fluff1 = ex;
+                    case DialogResponseData_FieldIndex.Unknown:
+                        this.Unknown = ex;
                         break;
                     case DialogResponseData_FieldIndex.ResponseNumber:
                         this.ResponseNumber = ex;
                         break;
-                    case DialogResponseData_FieldIndex.Fluff2:
-                        this.Fluff2 = ex;
+                    case DialogResponseData_FieldIndex.Unknown2:
+                        this.Unknown2 = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -483,14 +475,14 @@ namespace Mutagen.Bethesda.Oblivion
                     case DialogResponseData_FieldIndex.EmotionValue:
                         this.EmotionValue = (Exception?)obj;
                         break;
-                    case DialogResponseData_FieldIndex.Fluff1:
-                        this.Fluff1 = (Exception?)obj;
+                    case DialogResponseData_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
                         break;
                     case DialogResponseData_FieldIndex.ResponseNumber:
                         this.ResponseNumber = (Exception?)obj;
                         break;
-                    case DialogResponseData_FieldIndex.Fluff2:
-                        this.Fluff2 = (Exception?)obj;
+                    case DialogResponseData_FieldIndex.Unknown2:
+                        this.Unknown2 = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -502,9 +494,9 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Overall != null) return true;
                 if (Emotion != null) return true;
                 if (EmotionValue != null) return true;
-                if (Fluff1 != null) return true;
+                if (Unknown != null) return true;
                 if (ResponseNumber != null) return true;
-                if (Fluff2 != null) return true;
+                if (Unknown2 != null) return true;
                 return false;
             }
             #endregion
@@ -541,9 +533,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 fg.AppendItem(Emotion, "Emotion");
                 fg.AppendItem(EmotionValue, "EmotionValue");
-                fg.AppendItem(Fluff1, "Fluff1");
+                fg.AppendItem(Unknown, "Unknown");
                 fg.AppendItem(ResponseNumber, "ResponseNumber");
-                fg.AppendItem(Fluff2, "Fluff2");
+                fg.AppendItem(Unknown2, "Unknown2");
             }
             #endregion
 
@@ -554,9 +546,9 @@ namespace Mutagen.Bethesda.Oblivion
                 var ret = new ErrorMask();
                 ret.Emotion = this.Emotion.Combine(rhs.Emotion);
                 ret.EmotionValue = this.EmotionValue.Combine(rhs.EmotionValue);
-                ret.Fluff1 = this.Fluff1.Combine(rhs.Fluff1);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.ResponseNumber = this.ResponseNumber.Combine(rhs.ResponseNumber);
-                ret.Fluff2 = this.Fluff2.Combine(rhs.Fluff2);
+                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -580,9 +572,9 @@ namespace Mutagen.Bethesda.Oblivion
             private TranslationCrystal? _crystal;
             public bool Emotion;
             public bool EmotionValue;
-            public bool Fluff1;
+            public bool Unknown;
             public bool ResponseNumber;
-            public bool Fluff2;
+            public bool Unknown2;
             #endregion
 
             #region Ctors
@@ -590,9 +582,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.Emotion = defaultOn;
                 this.EmotionValue = defaultOn;
-                this.Fluff1 = defaultOn;
+                this.Unknown = defaultOn;
                 this.ResponseNumber = defaultOn;
-                this.Fluff2 = defaultOn;
+                this.Unknown2 = defaultOn;
             }
 
             #endregion
@@ -610,9 +602,9 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret.Add((Emotion, null));
                 ret.Add((EmotionValue, null));
-                ret.Add((Fluff1, null));
+                ret.Add((Unknown, null));
                 ret.Add((ResponseNumber, null));
-                ret.Add((Fluff2, null));
+                ret.Add((Unknown2, null));
             }
         }
         #endregion
@@ -684,9 +676,9 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new EmotionType Emotion { get; set; }
         new Int32 EmotionValue { get; set; }
-        new Byte[] Fluff1 { get; set; }
+        new Int32 Unknown { get; set; }
         new Byte ResponseNumber { get; set; }
-        new Byte[] Fluff2 { get; set; }
+        new Byte[] Unknown2 { get; set; }
     }
 
     public partial interface IDialogResponseDataGetter :
@@ -704,9 +696,9 @@ namespace Mutagen.Bethesda.Oblivion
         static ILoquiRegistration Registration => DialogResponseData_Registration.Instance;
         EmotionType Emotion { get; }
         Int32 EmotionValue { get; }
-        ReadOnlyMemorySlice<Byte> Fluff1 { get; }
+        Int32 Unknown { get; }
         Byte ResponseNumber { get; }
-        ReadOnlyMemorySlice<Byte> Fluff2 { get; }
+        ReadOnlyMemorySlice<Byte> Unknown2 { get; }
 
     }
 
@@ -1015,9 +1007,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         Emotion = 0,
         EmotionValue = 1,
-        Fluff1 = 2,
+        Unknown = 2,
         ResponseNumber = 3,
-        Fluff2 = 4,
+        Unknown2 = 4,
     }
     #endregion
 
@@ -1071,12 +1063,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)DialogResponseData_FieldIndex.Emotion;
                 case "EMOTIONVALUE":
                     return (ushort)DialogResponseData_FieldIndex.EmotionValue;
-                case "FLUFF1":
-                    return (ushort)DialogResponseData_FieldIndex.Fluff1;
+                case "UNKNOWN":
+                    return (ushort)DialogResponseData_FieldIndex.Unknown;
                 case "RESPONSENUMBER":
                     return (ushort)DialogResponseData_FieldIndex.ResponseNumber;
-                case "FLUFF2":
-                    return (ushort)DialogResponseData_FieldIndex.Fluff2;
+                case "UNKNOWN2":
+                    return (ushort)DialogResponseData_FieldIndex.Unknown2;
                 default:
                     return null;
             }
@@ -1089,9 +1081,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case DialogResponseData_FieldIndex.Emotion:
                 case DialogResponseData_FieldIndex.EmotionValue:
-                case DialogResponseData_FieldIndex.Fluff1:
+                case DialogResponseData_FieldIndex.Unknown:
                 case DialogResponseData_FieldIndex.ResponseNumber:
-                case DialogResponseData_FieldIndex.Fluff2:
+                case DialogResponseData_FieldIndex.Unknown2:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1105,9 +1097,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case DialogResponseData_FieldIndex.Emotion:
                 case DialogResponseData_FieldIndex.EmotionValue:
-                case DialogResponseData_FieldIndex.Fluff1:
+                case DialogResponseData_FieldIndex.Unknown:
                 case DialogResponseData_FieldIndex.ResponseNumber:
-                case DialogResponseData_FieldIndex.Fluff2:
+                case DialogResponseData_FieldIndex.Unknown2:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1121,9 +1113,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case DialogResponseData_FieldIndex.Emotion:
                 case DialogResponseData_FieldIndex.EmotionValue:
-                case DialogResponseData_FieldIndex.Fluff1:
+                case DialogResponseData_FieldIndex.Unknown:
                 case DialogResponseData_FieldIndex.ResponseNumber:
-                case DialogResponseData_FieldIndex.Fluff2:
+                case DialogResponseData_FieldIndex.Unknown2:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1139,12 +1131,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Emotion";
                 case DialogResponseData_FieldIndex.EmotionValue:
                     return "EmotionValue";
-                case DialogResponseData_FieldIndex.Fluff1:
-                    return "Fluff1";
+                case DialogResponseData_FieldIndex.Unknown:
+                    return "Unknown";
                 case DialogResponseData_FieldIndex.ResponseNumber:
                     return "ResponseNumber";
-                case DialogResponseData_FieldIndex.Fluff2:
-                    return "Fluff2";
+                case DialogResponseData_FieldIndex.Unknown2:
+                    return "Unknown2";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1157,9 +1149,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case DialogResponseData_FieldIndex.Emotion:
                 case DialogResponseData_FieldIndex.EmotionValue:
-                case DialogResponseData_FieldIndex.Fluff1:
+                case DialogResponseData_FieldIndex.Unknown:
                 case DialogResponseData_FieldIndex.ResponseNumber:
-                case DialogResponseData_FieldIndex.Fluff2:
+                case DialogResponseData_FieldIndex.Unknown2:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1173,9 +1165,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case DialogResponseData_FieldIndex.Emotion:
                 case DialogResponseData_FieldIndex.EmotionValue:
-                case DialogResponseData_FieldIndex.Fluff1:
+                case DialogResponseData_FieldIndex.Unknown:
                 case DialogResponseData_FieldIndex.ResponseNumber:
-                case DialogResponseData_FieldIndex.Fluff2:
+                case DialogResponseData_FieldIndex.Unknown2:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1191,11 +1183,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(EmotionType);
                 case DialogResponseData_FieldIndex.EmotionValue:
                     return typeof(Int32);
-                case DialogResponseData_FieldIndex.Fluff1:
-                    return typeof(Byte[]);
+                case DialogResponseData_FieldIndex.Unknown:
+                    return typeof(Int32);
                 case DialogResponseData_FieldIndex.ResponseNumber:
                     return typeof(Byte);
-                case DialogResponseData_FieldIndex.Fluff2:
+                case DialogResponseData_FieldIndex.Unknown2:
                     return typeof(Byte[]);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1251,9 +1243,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Emotion = default;
             item.EmotionValue = default;
-            item.Fluff1 = new byte[4];
+            item.Unknown = default;
             item.ResponseNumber = default;
-            item.Fluff2 = new byte[3];
+            item.Unknown2 = new byte[3];
         }
         
         #region Xml Translation
@@ -1291,9 +1283,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Emotion = EnumBinaryTranslation<EmotionType>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.EmotionValue = frame.ReadInt32();
-            item.Fluff1 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Unknown = frame.ReadInt32();
             item.ResponseNumber = frame.ReadUInt8();
-            item.Fluff2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+            item.Unknown2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
         }
         
         public virtual void CopyInFromBinary(
@@ -1341,9 +1333,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.Emotion = item.Emotion == rhs.Emotion;
             ret.EmotionValue = item.EmotionValue == rhs.EmotionValue;
-            ret.Fluff1 = MemoryExtensions.SequenceEqual(item.Fluff1.Span, rhs.Fluff1.Span);
+            ret.Unknown = item.Unknown == rhs.Unknown;
             ret.ResponseNumber = item.ResponseNumber == rhs.ResponseNumber;
-            ret.Fluff2 = MemoryExtensions.SequenceEqual(item.Fluff2.Span, rhs.Fluff2.Span);
+            ret.Unknown2 = MemoryExtensions.SequenceEqual(item.Unknown2.Span, rhs.Unknown2.Span);
         }
         
         public string ToString(
@@ -1398,17 +1390,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 fg.AppendItem(item.EmotionValue, "EmotionValue");
             }
-            if (printMask?.Fluff1 ?? true)
+            if (printMask?.Unknown ?? true)
             {
-                fg.AppendLine($"Fluff1 => {SpanExt.ToHexString(item.Fluff1)}");
+                fg.AppendItem(item.Unknown, "Unknown");
             }
             if (printMask?.ResponseNumber ?? true)
             {
                 fg.AppendItem(item.ResponseNumber, "ResponseNumber");
             }
-            if (printMask?.Fluff2 ?? true)
+            if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendLine($"Fluff2 => {SpanExt.ToHexString(item.Fluff2)}");
+                fg.AppendLine($"Unknown2 => {SpanExt.ToHexString(item.Unknown2)}");
             }
         }
         
@@ -1425,9 +1417,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             mask.Emotion = true;
             mask.EmotionValue = true;
-            mask.Fluff1 = true;
+            mask.Unknown = true;
             mask.ResponseNumber = true;
-            mask.Fluff2 = true;
+            mask.Unknown2 = true;
         }
         
         #region Equals and Hash
@@ -1439,9 +1431,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (lhs == null || rhs == null) return false;
             if (lhs.Emotion != rhs.Emotion) return false;
             if (lhs.EmotionValue != rhs.EmotionValue) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff1.Span, rhs.Fluff1.Span)) return false;
+            if (lhs.Unknown != rhs.Unknown) return false;
             if (lhs.ResponseNumber != rhs.ResponseNumber) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff2.Span, rhs.Fluff2.Span)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Unknown2.Span, rhs.Unknown2.Span)) return false;
             return true;
         }
         
@@ -1450,9 +1442,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var hash = new HashCode();
             hash.Add(item.Emotion);
             hash.Add(item.EmotionValue);
-            hash.Add(item.Fluff1);
+            hash.Add(item.Unknown);
             hash.Add(item.ResponseNumber);
-            hash.Add(item.Fluff2);
+            hash.Add(item.Unknown2);
             return hash.ToHashCode();
         }
         
@@ -1492,17 +1484,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 item.EmotionValue = rhs.EmotionValue;
             }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.Fluff1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.Unknown) ?? true))
             {
-                item.Fluff1 = rhs.Fluff1.ToArray();
+                item.Unknown = rhs.Unknown;
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.ResponseNumber) ?? true))
             {
                 item.ResponseNumber = rhs.ResponseNumber;
             }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.Fluff2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.Unknown2) ?? true))
             {
-                item.Fluff2 = rhs.Fluff2.ToArray();
+                item.Unknown2 = rhs.Unknown2.ToArray();
             }
         }
         
@@ -1611,13 +1603,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)DialogResponseData_FieldIndex.EmotionValue,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.Fluff1) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.Unknown) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
+                Int32XmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Fluff1),
-                    item: item.Fluff1,
-                    fieldIndex: (int)DialogResponseData_FieldIndex.Fluff1,
+                    name: nameof(item.Unknown),
+                    item: item.Unknown,
+                    fieldIndex: (int)DialogResponseData_FieldIndex.Unknown,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.ResponseNumber) ?? true))
@@ -1629,13 +1621,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)DialogResponseData_FieldIndex.ResponseNumber,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.Fluff2) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)DialogResponseData_FieldIndex.Unknown2) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Fluff2),
-                    item: item.Fluff2,
-                    fieldIndex: (int)DialogResponseData_FieldIndex.Fluff2,
+                    name: nameof(item.Unknown2),
+                    item: item.Unknown2,
+                    fieldIndex: (int)DialogResponseData_FieldIndex.Unknown2,
                     errorMask: errorMask);
             }
         }
@@ -1780,13 +1772,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Fluff1":
-                    errorMask?.PushIndex((int)DialogResponseData_FieldIndex.Fluff1);
+                case "Unknown":
+                    errorMask?.PushIndex((int)DialogResponseData_FieldIndex.Unknown);
                     try
                     {
-                        item.Fluff1 = ByteArrayXmlTranslation.Instance.Parse(
+                        item.Unknown = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            fallbackLength: 4,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)
@@ -1817,11 +1808,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Fluff2":
-                    errorMask?.PushIndex((int)DialogResponseData_FieldIndex.Fluff2);
+                case "Unknown2":
+                    errorMask?.PushIndex((int)DialogResponseData_FieldIndex.Unknown2);
                     try
                     {
-                        item.Fluff2 = ByteArrayXmlTranslation.Instance.Parse(
+                        item.Unknown2 = ByteArrayXmlTranslation.Instance.Parse(
                             node: node,
                             fallbackLength: 3,
                             errorMask: errorMask);
@@ -2016,13 +2007,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.Emotion,
                 length: 4);
             writer.Write(item.EmotionValue);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Fluff1);
+            writer.Write(item.Unknown);
             writer.Write(item.ResponseNumber);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Fluff2);
+                item: item.Unknown2);
         }
 
         public void Write(
@@ -2141,9 +2130,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public EmotionType Emotion => (EmotionType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
         public Int32 EmotionValue => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
-        public ReadOnlyMemorySlice<Byte> Fluff1 => _data.Span.Slice(0x8, 0x4).ToArray();
+        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x8, 0x4));
         public Byte ResponseNumber => _data.Span[0xC];
-        public ReadOnlyMemorySlice<Byte> Fluff2 => _data.Span.Slice(0xD, 0x3).ToArray();
+        public ReadOnlyMemorySlice<Byte> Unknown2 => _data.Span.Slice(0xD, 0x3).ToArray();
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

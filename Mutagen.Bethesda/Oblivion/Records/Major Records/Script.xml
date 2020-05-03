@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Script" objType="Record" recordType="SCPT" baseClass="OblivionMajorRecord" GUID="4eda2162-86bb-49f3-babd-a9ea5ad8d928" ID="46">
     <Fields>
@@ -17,7 +17,7 @@
   </Object>
   <Object name="ScriptMetaSummary" objType="Subrecord" recordType="SCHR" GUID="80c1bfa2-bdf3-4bc9-aeb7-306536cdbc91" ID="47">
     <Fields>
-      <ByteArray name="Fluff" byteLength="4" nullable="NotNull" />
+      <Int32 name="Unknown" />
       <UInt32 name="RefCount" />
       <Int32 name="CompiledSize" derivative="true" binary="Custom" byteLength="4" />
       <UInt32 name="VariableCount" />
@@ -33,9 +33,9 @@
   <Object name="LocalVariableData" objType="Subrecord" recordType="SLSD" GUID="02fb12f0-9bb2-4675-9624-502859e58bd6" ID="207">
     <Fields>
       <Int32 name="Index" />
-      <ByteArray name="Fluff" byteLength="12" nullable="NotNull" />
+      <ByteArray name="Unknown" byteLength="12" nullable="NotNull" />
       <Enum name="Flags" enumName="Script.LocalVariableFlag" byteLength="4" />
-      <ByteArray name="Fluff2" byteLength="4" nullable="NotNull" />
+      <Int32 name="Unknown2" />
     </Fields>
   </Object>
   <Object name="ScriptReference" abstract="true" objType="Subrecord" GUID="5eb6ddcc-5ba8-4da7-87f5-99b6038a61c7" ID="50">

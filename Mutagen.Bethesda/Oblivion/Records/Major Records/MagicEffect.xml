@@ -17,7 +17,7 @@
     <Fields>
       <Enum name="Flags" enumName="MagicEffect.MagicFlag" byteLength="4" />
       <Float name="BaseCost" />
-      <ByteArray name="Unused" byteLength="4" nullable="NotNull" />
+      <Int32 name="Unused" />
       <Enum name="MagicSchool" enumName="MagicSchool" byteLength="4" />
       <Enum name="Resistance" enumName="Resistance" byteLength="4" />
       <UInt32 name="CounterEffectCount" />

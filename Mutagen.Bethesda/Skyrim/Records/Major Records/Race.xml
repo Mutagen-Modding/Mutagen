@@ -115,7 +115,7 @@
       <RefDirect name="SkillBoost4" refName="SkillBoost" />
       <RefDirect name="SkillBoost5" refName="SkillBoost" />
       <RefDirect name="SkillBoost6" refName="SkillBoost" />
-      <ByteArray name="Fluff" byteLength="2" nullable="NotNull" />
+      <Int16 name="Unknown" />
       <Gendered name="Height" >
         <Fields>
           <Float />
