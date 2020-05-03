@@ -69,9 +69,6 @@
     <Compile Include="Skyrim\Interfaces\INpcTemplate.cs" />
     <Compile Include="Skyrim\Interfaces\IObjectBounded.cs" />
     <Compile Include="Skyrim\Interfaces\IHarvestTarget.cs" />
-    <Compile Include="Skyrim\Records\Common Subrecords\ContainerEntryData.cs">
-      <DependentUpon>ContainerEntry.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\DestructionStageData.cs">
       <DependentUpon>Destructible.xml</DependentUpon>
     </Compile>
@@ -80,6 +77,9 @@
     </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\Effect.cs">
       <DependentUpon>Effect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ExtraData.cs">
+      <DependentUpon>ExtraData.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\AcousticSpace.cs">
       <DependentUpon>AcousticSpace.xml</DependentUpon>
@@ -1667,27 +1667,6 @@
     <Compile Include="Skyrim\Records\Major Records\ContainerData_LoquiGenerated.cs">
       <DependentUpon>Container.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Common Subrecords\ContainerEntry_LoquiGenerated.cs">
-      <DependentUpon>ContainerEntry.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Common Subrecords\ContainerOwnerTarget_LoquiGenerated.cs">
-      <DependentUpon>ContainerEntry.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Common Subrecords\ContainerNpcOwner_LoquiGenerated.cs">
-      <DependentUpon>ContainerEntry.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Common Subrecords\ContainerFactionOwner_LoquiGenerated.cs">
-      <DependentUpon>ContainerEntry.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Common Subrecords\ContainerNoOwner_LoquiGenerated.cs">
-      <DependentUpon>ContainerEntry.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Common Subrecords\ContainerItem_LoquiGenerated.cs">
-      <DependentUpon>ContainerEntry.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Common Subrecords\ContainerEntryData_LoquiGenerated.cs">
-      <DependentUpon>ContainerEntry.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Major Records\Door_LoquiGenerated.cs">
       <DependentUpon>Door.xml</DependentUpon>
     </Compile>
@@ -1822,6 +1801,27 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\TintLayer_LoquiGenerated.cs">
       <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ExtraData_LoquiGenerated.cs">
+      <DependentUpon>ExtraData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\OwnerTarget_LoquiGenerated.cs">
+      <DependentUpon>ExtraData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\NpcOwner_LoquiGenerated.cs">
+      <DependentUpon>ExtraData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\FactionOwner_LoquiGenerated.cs">
+      <DependentUpon>ExtraData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\NoOwner_LoquiGenerated.cs">
+      <DependentUpon>ExtraData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ContainerEntry_LoquiGenerated.cs">
+      <DependentUpon>Container.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ContainerItem_LoquiGenerated.cs">
+      <DependentUpon>Container.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

@@ -32,15 +32,15 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class ContainerNoOwner :
-        ContainerOwnerTarget,
-        IContainerNoOwner,
-        ILoquiObjectSetter<ContainerNoOwner>,
-        IEquatable<ContainerNoOwner>,
+    public partial class NoOwner :
+        OwnerTarget,
+        INoOwner,
+        ILoquiObjectSetter<NoOwner>,
+        IEquatable<NoOwner>,
         IEqualsMask
     {
         #region Ctor
-        public ContainerNoOwner()
+        public NoOwner()
         {
             CustomCtor();
         }
@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         protected IFormLink<Global> _Global = new FormLink<Global>();
         public IFormLink<Global> Global => this._Global;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IGlobalGetter> IContainerNoOwnerGetter.Global => this.Global;
+        IFormLinkGetter<IGlobalGetter> INoOwnerGetter.Global => this.Global;
         #endregion
 
         #region To String
@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            ContainerNoOwnerMixIn.ToString(
+            NoOwnerMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -74,29 +74,29 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IContainerNoOwnerGetter rhs)) return false;
-            return ((ContainerNoOwnerCommon)((IContainerNoOwnerGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is INoOwnerGetter rhs)) return false;
+            return ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ContainerNoOwner obj)
+        public bool Equals(NoOwner obj)
         {
-            return ((ContainerNoOwnerCommon)((IContainerNoOwnerGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ContainerNoOwnerCommon)((IContainerNoOwnerGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ContainerNoOwnerXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => NoOwnerXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((ContainerNoOwnerXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((NoOwnerXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -105,9 +105,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static new ContainerNoOwner CreateFromXml(
+        public static new NoOwner CreateFromXml(
             XElement node,
-            ContainerNoOwner.TranslationMask? translationMask = null)
+            NoOwner.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -116,27 +116,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static ContainerNoOwner CreateFromXml(
+        public static NoOwner CreateFromXml(
             XElement node,
-            out ContainerNoOwner.ErrorMask errorMask,
-            ContainerNoOwner.TranslationMask? translationMask = null)
+            out NoOwner.ErrorMask errorMask,
+            NoOwner.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ContainerNoOwner.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NoOwner.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public new static ContainerNoOwner CreateFromXml(
+        public new static NoOwner CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new ContainerNoOwner();
-            ((ContainerNoOwnerSetterCommon)((IContainerNoOwnerGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new NoOwner();
+            ((NoOwnerSetterCommon)((INoOwnerGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -144,9 +144,9 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ContainerNoOwner CreateFromXml(
+        public static NoOwner CreateFromXml(
             string path,
-            ContainerNoOwner.TranslationMask? translationMask = null)
+            NoOwner.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -154,10 +154,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static ContainerNoOwner CreateFromXml(
+        public static NoOwner CreateFromXml(
             string path,
-            out ContainerNoOwner.ErrorMask errorMask,
-            ContainerNoOwner.TranslationMask? translationMask = null)
+            out NoOwner.ErrorMask errorMask,
+            NoOwner.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -166,10 +166,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static ContainerNoOwner CreateFromXml(
+        public static NoOwner CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            ContainerNoOwner.TranslationMask? translationMask = null)
+            NoOwner.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -178,9 +178,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static ContainerNoOwner CreateFromXml(
+        public static NoOwner CreateFromXml(
             Stream stream,
-            ContainerNoOwner.TranslationMask? translationMask = null)
+            NoOwner.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -188,10 +188,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static ContainerNoOwner CreateFromXml(
+        public static NoOwner CreateFromXml(
             Stream stream,
-            out ContainerNoOwner.ErrorMask errorMask,
-            ContainerNoOwner.TranslationMask? translationMask = null)
+            out NoOwner.ErrorMask errorMask,
+            NoOwner.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -200,10 +200,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static ContainerNoOwner CreateFromXml(
+        public static NoOwner CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ContainerNoOwner.TranslationMask? translationMask = null)
+            NoOwner.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -218,7 +218,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public new class Mask<TItem> :
-            ContainerOwnerTarget.Mask<TItem>,
+            OwnerTarget.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
             where TItem : notnull
@@ -302,7 +302,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new ContainerNoOwner.Mask<R>();
+                var ret = new NoOwner.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -321,16 +321,16 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(ContainerNoOwner.Mask<bool>? printMask = null)
+            public string ToString(NoOwner.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, ContainerNoOwner.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, NoOwner.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ContainerNoOwner.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(NoOwner.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -350,7 +350,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public new class ErrorMask :
-            ContainerOwnerTarget.ErrorMask,
+            OwnerTarget.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -361,12 +361,12 @@ namespace Mutagen.Bethesda.Skyrim
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                ContainerNoOwner_FieldIndex enu = (ContainerNoOwner_FieldIndex)index;
+                NoOwner_FieldIndex enu = (NoOwner_FieldIndex)index;
                 switch (enu)
                 {
-                    case ContainerNoOwner_FieldIndex.RawOwnerData:
+                    case NoOwner_FieldIndex.RawOwnerData:
                         return RawOwnerData;
-                    case ContainerNoOwner_FieldIndex.Global:
+                    case NoOwner_FieldIndex.Global:
                         return Global;
                     default:
                         return base.GetNthMask(index);
@@ -375,13 +375,13 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthException(int index, Exception ex)
             {
-                ContainerNoOwner_FieldIndex enu = (ContainerNoOwner_FieldIndex)index;
+                NoOwner_FieldIndex enu = (NoOwner_FieldIndex)index;
                 switch (enu)
                 {
-                    case ContainerNoOwner_FieldIndex.RawOwnerData:
+                    case NoOwner_FieldIndex.RawOwnerData:
                         this.RawOwnerData = ex;
                         break;
-                    case ContainerNoOwner_FieldIndex.Global:
+                    case NoOwner_FieldIndex.Global:
                         this.Global = ex;
                         break;
                     default:
@@ -392,13 +392,13 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthMask(int index, object obj)
             {
-                ContainerNoOwner_FieldIndex enu = (ContainerNoOwner_FieldIndex)index;
+                NoOwner_FieldIndex enu = (NoOwner_FieldIndex)index;
                 switch (enu)
                 {
-                    case ContainerNoOwner_FieldIndex.RawOwnerData:
+                    case NoOwner_FieldIndex.RawOwnerData:
                         this.RawOwnerData = (Exception?)obj;
                         break;
-                    case ContainerNoOwner_FieldIndex.Global:
+                    case NoOwner_FieldIndex.Global:
                         this.Global = (Exception?)obj;
                         break;
                     default:
@@ -477,7 +477,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         }
         public new class TranslationMask :
-            ContainerOwnerTarget.TranslationMask,
+            OwnerTarget.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -506,36 +506,36 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public override IEnumerable<ILinkGetter> Links => ContainerNoOwnerCommon.Instance.GetLinks(this);
+        public override IEnumerable<ILinkGetter> Links => NoOwnerCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ContainerNoOwnerBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => NoOwnerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((ContainerNoOwnerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((NoOwnerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static new ContainerNoOwner CreateFromBinary(MutagenFrame frame)
+        public static new NoOwner CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public new static ContainerNoOwner CreateFromBinary(
+        public new static NoOwner CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new ContainerNoOwner();
-            ((ContainerNoOwnerSetterCommon)((IContainerNoOwnerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new NoOwner();
+            ((NoOwnerSetterCommon)((INoOwnerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -548,39 +548,39 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IContainerNoOwnerGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INoOwnerGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((ContainerNoOwnerSetterCommon)((IContainerNoOwnerGetter)this).CommonSetterInstance()!).Clear(this);
+            ((NoOwnerSetterCommon)((INoOwnerGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new ContainerNoOwner GetNew()
+        internal static new NoOwner GetNew()
         {
-            return new ContainerNoOwner();
+            return new NoOwner();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IContainerNoOwner :
-        IContainerNoOwnerGetter,
-        IContainerOwnerTarget,
-        ILoquiObjectSetter<IContainerNoOwner>
+    public partial interface INoOwner :
+        INoOwnerGetter,
+        IOwnerTarget,
+        ILoquiObjectSetter<INoOwner>
     {
         new UInt32 RawOwnerData { get; set; }
         new IFormLink<Global> Global { get; }
     }
 
-    public partial interface IContainerNoOwnerGetter :
-        IContainerOwnerTargetGetter,
-        ILoquiObject<IContainerNoOwnerGetter>,
+    public partial interface INoOwnerGetter :
+        IOwnerTargetGetter,
+        ILoquiObject<INoOwnerGetter>,
         IXmlItem,
         ILinkContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => ContainerNoOwner_Registration.Instance;
+        static ILoquiRegistration Registration => NoOwner_Registration.Instance;
         UInt32 RawOwnerData { get; }
         IFormLinkGetter<IGlobalGetter> Global { get; }
 
@@ -589,42 +589,42 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static partial class ContainerNoOwnerMixIn
+    public static partial class NoOwnerMixIn
     {
-        public static void Clear(this IContainerNoOwner item)
+        public static void Clear(this INoOwner item)
         {
-            ((ContainerNoOwnerSetterCommon)((IContainerNoOwnerGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((NoOwnerSetterCommon)((INoOwnerGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ContainerNoOwner.Mask<bool> GetEqualsMask(
-            this IContainerNoOwnerGetter item,
-            IContainerNoOwnerGetter rhs,
+        public static NoOwner.Mask<bool> GetEqualsMask(
+            this INoOwnerGetter item,
+            INoOwnerGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ContainerNoOwnerCommon)((IContainerNoOwnerGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((NoOwnerCommon)((INoOwnerGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IContainerNoOwnerGetter item,
+            this INoOwnerGetter item,
             string? name = null,
-            ContainerNoOwner.Mask<bool>? printMask = null)
+            NoOwner.Mask<bool>? printMask = null)
         {
-            return ((ContainerNoOwnerCommon)((IContainerNoOwnerGetter)item).CommonInstance()!).ToString(
+            return ((NoOwnerCommon)((INoOwnerGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IContainerNoOwnerGetter item,
+            this INoOwnerGetter item,
             FileGeneration fg,
             string? name = null,
-            ContainerNoOwner.Mask<bool>? printMask = null)
+            NoOwner.Mask<bool>? printMask = null)
         {
-            ((ContainerNoOwnerCommon)((IContainerNoOwnerGetter)item).CommonInstance()!).ToString(
+            ((NoOwnerCommon)((INoOwnerGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -632,86 +632,86 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this IContainerNoOwnerGetter item,
-            ContainerNoOwner.Mask<bool?> checkMask)
+            this INoOwnerGetter item,
+            NoOwner.Mask<bool?> checkMask)
         {
-            return ((ContainerNoOwnerCommon)((IContainerNoOwnerGetter)item).CommonInstance()!).HasBeenSet(
+            return ((NoOwnerCommon)((INoOwnerGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static ContainerNoOwner.Mask<bool> GetHasBeenSetMask(this IContainerNoOwnerGetter item)
+        public static NoOwner.Mask<bool> GetHasBeenSetMask(this INoOwnerGetter item)
         {
-            var ret = new ContainerNoOwner.Mask<bool>(false);
-            ((ContainerNoOwnerCommon)((IContainerNoOwnerGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new NoOwner.Mask<bool>(false);
+            ((NoOwnerCommon)((INoOwnerGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IContainerNoOwnerGetter item,
-            IContainerNoOwnerGetter rhs)
+            this INoOwnerGetter item,
+            INoOwnerGetter rhs)
         {
-            return ((ContainerNoOwnerCommon)((IContainerNoOwnerGetter)item).CommonInstance()!).Equals(
+            return ((NoOwnerCommon)((INoOwnerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this IContainerNoOwner lhs,
-            IContainerNoOwnerGetter rhs,
-            out ContainerNoOwner.ErrorMask errorMask,
-            ContainerNoOwner.TranslationMask? copyMask = null)
+            this INoOwner lhs,
+            INoOwnerGetter rhs,
+            out NoOwner.ErrorMask errorMask,
+            NoOwner.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ContainerNoOwnerSetterTranslationCommon)((IContainerNoOwnerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((NoOwnerSetterTranslationCommon)((INoOwnerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = ContainerNoOwner.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NoOwner.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IContainerNoOwner lhs,
-            IContainerNoOwnerGetter rhs,
+            this INoOwner lhs,
+            INoOwnerGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ContainerNoOwnerSetterTranslationCommon)((IContainerNoOwnerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((NoOwnerSetterTranslationCommon)((INoOwnerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static ContainerNoOwner DeepCopy(
-            this IContainerNoOwnerGetter item,
-            ContainerNoOwner.TranslationMask? copyMask = null)
+        public static NoOwner DeepCopy(
+            this INoOwnerGetter item,
+            NoOwner.TranslationMask? copyMask = null)
         {
-            return ((ContainerNoOwnerSetterTranslationCommon)((IContainerNoOwnerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((NoOwnerSetterTranslationCommon)((INoOwnerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static ContainerNoOwner DeepCopy(
-            this IContainerNoOwnerGetter item,
-            out ContainerNoOwner.ErrorMask errorMask,
-            ContainerNoOwner.TranslationMask? copyMask = null)
+        public static NoOwner DeepCopy(
+            this INoOwnerGetter item,
+            out NoOwner.ErrorMask errorMask,
+            NoOwner.TranslationMask? copyMask = null)
         {
-            return ((ContainerNoOwnerSetterTranslationCommon)((IContainerNoOwnerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((NoOwnerSetterTranslationCommon)((INoOwnerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static ContainerNoOwner DeepCopy(
-            this IContainerNoOwnerGetter item,
+        public static NoOwner DeepCopy(
+            this INoOwnerGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((ContainerNoOwnerSetterTranslationCommon)((IContainerNoOwnerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((NoOwnerSetterTranslationCommon)((INoOwnerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -720,9 +720,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IContainerNoOwner item,
+            this INoOwner item,
             XElement node,
-            ContainerNoOwner.TranslationMask? translationMask = null)
+            NoOwner.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -733,10 +733,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IContainerNoOwner item,
+            this INoOwner item,
             XElement node,
-            out ContainerNoOwner.ErrorMask errorMask,
-            ContainerNoOwner.TranslationMask? translationMask = null)
+            out NoOwner.ErrorMask errorMask,
+            NoOwner.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -744,16 +744,16 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ContainerNoOwner.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NoOwner.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this IContainerNoOwner item,
+            this INoOwner item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((ContainerNoOwnerSetterCommon)((IContainerNoOwnerGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((NoOwnerSetterCommon)((INoOwnerGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -761,9 +761,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IContainerNoOwner item,
+            this INoOwner item,
             string path,
-            ContainerNoOwner.TranslationMask? translationMask = null)
+            NoOwner.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -773,10 +773,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IContainerNoOwner item,
+            this INoOwner item,
             string path,
-            out ContainerNoOwner.ErrorMask errorMask,
-            ContainerNoOwner.TranslationMask? translationMask = null)
+            out NoOwner.ErrorMask errorMask,
+            NoOwner.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -787,10 +787,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IContainerNoOwner item,
+            this INoOwner item,
             string path,
             ErrorMaskBuilder? errorMask,
-            ContainerNoOwner.TranslationMask? translationMask = null)
+            NoOwner.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -801,9 +801,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IContainerNoOwner item,
+            this INoOwner item,
             Stream stream,
-            ContainerNoOwner.TranslationMask? translationMask = null)
+            NoOwner.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -813,10 +813,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IContainerNoOwner item,
+            this INoOwner item,
             Stream stream,
-            out ContainerNoOwner.ErrorMask errorMask,
-            ContainerNoOwner.TranslationMask? translationMask = null)
+            out NoOwner.ErrorMask errorMask,
+            NoOwner.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -827,10 +827,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IContainerNoOwner item,
+            this INoOwner item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ContainerNoOwner.TranslationMask? translationMask = null)
+            NoOwner.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -845,7 +845,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IContainerNoOwner item,
+            this INoOwner item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -855,11 +855,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromBinary(
-            this IContainerNoOwner item,
+            this INoOwner item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((ContainerNoOwnerSetterCommon)((IContainerNoOwnerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((NoOwnerSetterCommon)((INoOwnerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -875,7 +875,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum ContainerNoOwner_FieldIndex
+    public enum NoOwner_FieldIndex
     {
         RawOwnerData = 0,
         Global = 1,
@@ -883,9 +883,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ContainerNoOwner_Registration : ILoquiRegistration
+    public partial class NoOwner_Registration : ILoquiRegistration
     {
-        public static readonly ContainerNoOwner_Registration Instance = new ContainerNoOwner_Registration();
+        public static readonly NoOwner_Registration Instance = new NoOwner_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
@@ -900,23 +900,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(ContainerNoOwner.Mask<>);
+        public static readonly Type MaskType = typeof(NoOwner.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ContainerNoOwner.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(NoOwner.ErrorMask);
 
-        public static readonly Type ClassType = typeof(ContainerNoOwner);
+        public static readonly Type ClassType = typeof(NoOwner);
 
-        public static readonly Type GetterType = typeof(IContainerNoOwnerGetter);
+        public static readonly Type GetterType = typeof(INoOwnerGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IContainerNoOwner);
+        public static readonly Type SetterType = typeof(INoOwner);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.ContainerNoOwner";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.NoOwner";
 
-        public const string Name = "ContainerNoOwner";
+        public const string Name = "NoOwner";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -929,9 +929,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (str.Upper)
             {
                 case "RAWOWNERDATA":
-                    return (ushort)ContainerNoOwner_FieldIndex.RawOwnerData;
+                    return (ushort)NoOwner_FieldIndex.RawOwnerData;
                 case "GLOBAL":
-                    return (ushort)ContainerNoOwner_FieldIndex.Global;
+                    return (ushort)NoOwner_FieldIndex.Global;
                 default:
                     return null;
             }
@@ -939,101 +939,101 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            ContainerNoOwner_FieldIndex enu = (ContainerNoOwner_FieldIndex)index;
+            NoOwner_FieldIndex enu = (NoOwner_FieldIndex)index;
             switch (enu)
             {
-                case ContainerNoOwner_FieldIndex.RawOwnerData:
-                case ContainerNoOwner_FieldIndex.Global:
+                case NoOwner_FieldIndex.RawOwnerData:
+                case NoOwner_FieldIndex.Global:
                     return false;
                 default:
-                    return ContainerOwnerTarget_Registration.GetNthIsEnumerable(index);
+                    return OwnerTarget_Registration.GetNthIsEnumerable(index);
             }
         }
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            ContainerNoOwner_FieldIndex enu = (ContainerNoOwner_FieldIndex)index;
+            NoOwner_FieldIndex enu = (NoOwner_FieldIndex)index;
             switch (enu)
             {
-                case ContainerNoOwner_FieldIndex.RawOwnerData:
-                case ContainerNoOwner_FieldIndex.Global:
+                case NoOwner_FieldIndex.RawOwnerData:
+                case NoOwner_FieldIndex.Global:
                     return false;
                 default:
-                    return ContainerOwnerTarget_Registration.GetNthIsLoqui(index);
+                    return OwnerTarget_Registration.GetNthIsLoqui(index);
             }
         }
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            ContainerNoOwner_FieldIndex enu = (ContainerNoOwner_FieldIndex)index;
+            NoOwner_FieldIndex enu = (NoOwner_FieldIndex)index;
             switch (enu)
             {
-                case ContainerNoOwner_FieldIndex.RawOwnerData:
-                case ContainerNoOwner_FieldIndex.Global:
+                case NoOwner_FieldIndex.RawOwnerData:
+                case NoOwner_FieldIndex.Global:
                     return false;
                 default:
-                    return ContainerOwnerTarget_Registration.GetNthIsSingleton(index);
+                    return OwnerTarget_Registration.GetNthIsSingleton(index);
             }
         }
 
         public static string GetNthName(ushort index)
         {
-            ContainerNoOwner_FieldIndex enu = (ContainerNoOwner_FieldIndex)index;
+            NoOwner_FieldIndex enu = (NoOwner_FieldIndex)index;
             switch (enu)
             {
-                case ContainerNoOwner_FieldIndex.RawOwnerData:
+                case NoOwner_FieldIndex.RawOwnerData:
                     return "RawOwnerData";
-                case ContainerNoOwner_FieldIndex.Global:
+                case NoOwner_FieldIndex.Global:
                     return "Global";
                 default:
-                    return ContainerOwnerTarget_Registration.GetNthName(index);
+                    return OwnerTarget_Registration.GetNthName(index);
             }
         }
 
         public static bool IsNthDerivative(ushort index)
         {
-            ContainerNoOwner_FieldIndex enu = (ContainerNoOwner_FieldIndex)index;
+            NoOwner_FieldIndex enu = (NoOwner_FieldIndex)index;
             switch (enu)
             {
-                case ContainerNoOwner_FieldIndex.RawOwnerData:
-                case ContainerNoOwner_FieldIndex.Global:
+                case NoOwner_FieldIndex.RawOwnerData:
+                case NoOwner_FieldIndex.Global:
                     return false;
                 default:
-                    return ContainerOwnerTarget_Registration.IsNthDerivative(index);
+                    return OwnerTarget_Registration.IsNthDerivative(index);
             }
         }
 
         public static bool IsProtected(ushort index)
         {
-            ContainerNoOwner_FieldIndex enu = (ContainerNoOwner_FieldIndex)index;
+            NoOwner_FieldIndex enu = (NoOwner_FieldIndex)index;
             switch (enu)
             {
-                case ContainerNoOwner_FieldIndex.RawOwnerData:
-                case ContainerNoOwner_FieldIndex.Global:
+                case NoOwner_FieldIndex.RawOwnerData:
+                case NoOwner_FieldIndex.Global:
                     return false;
                 default:
-                    return ContainerOwnerTarget_Registration.IsProtected(index);
+                    return OwnerTarget_Registration.IsProtected(index);
             }
         }
 
         public static Type GetNthType(ushort index)
         {
-            ContainerNoOwner_FieldIndex enu = (ContainerNoOwner_FieldIndex)index;
+            NoOwner_FieldIndex enu = (NoOwner_FieldIndex)index;
             switch (enu)
             {
-                case ContainerNoOwner_FieldIndex.RawOwnerData:
+                case NoOwner_FieldIndex.RawOwnerData:
                     return typeof(UInt32);
-                case ContainerNoOwner_FieldIndex.Global:
+                case NoOwner_FieldIndex.Global:
                     return typeof(IFormLink<Global>);
                 default:
-                    return ContainerOwnerTarget_Registration.GetNthType(index);
+                    return OwnerTarget_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(ContainerNoOwnerXmlWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(NoOwnerXmlWriteTranslation);
         public const int NumStructFields = 2;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryWriteTranslation = typeof(ContainerNoOwnerBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(NoOwnerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1066,13 +1066,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ContainerNoOwnerSetterCommon : ContainerOwnerTargetSetterCommon
+    public partial class NoOwnerSetterCommon : OwnerTargetSetterCommon
     {
-        public new static readonly ContainerNoOwnerSetterCommon Instance = new ContainerNoOwnerSetterCommon();
+        public new static readonly NoOwnerSetterCommon Instance = new NoOwnerSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IContainerNoOwner item)
+        public void Clear(INoOwner item)
         {
             ClearPartial();
             item.RawOwnerData = default;
@@ -1080,14 +1080,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.Clear(item);
         }
         
-        public override void Clear(IContainerOwnerTarget item)
+        public override void Clear(IOwnerTarget item)
         {
-            Clear(item: (IContainerNoOwner)item);
+            Clear(item: (INoOwner)item);
         }
         
         #region Xml Translation
         public virtual void CopyInFromXml(
-            IContainerNoOwner item,
+            INoOwner item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1096,7 +1096,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    ContainerNoOwnerXmlCreateTranslation.FillPublicElementXml(
+                    NoOwnerXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1112,13 +1112,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override void CopyInFromXml(
-            IContainerOwnerTarget item,
+            IOwnerTarget item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
             CopyInFromXml(
-                item: (ContainerNoOwner)item,
+                item: (NoOwner)item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1128,7 +1128,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Binary Translation
         protected static void FillBinaryStructs(
-            IContainerNoOwner item,
+            INoOwner item,
             MutagenFrame frame)
         {
             item.RawOwnerData = frame.ReadUInt32();
@@ -1138,7 +1138,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public virtual void CopyInFromBinary(
-            IContainerNoOwner item,
+            INoOwner item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1150,12 +1150,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override void CopyInFromBinary(
-            IContainerOwnerTarget item,
+            IOwnerTarget item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (ContainerNoOwner)item,
+                item: (NoOwner)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1163,17 +1163,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ContainerNoOwnerCommon : ContainerOwnerTargetCommon
+    public partial class NoOwnerCommon : OwnerTargetCommon
     {
-        public new static readonly ContainerNoOwnerCommon Instance = new ContainerNoOwnerCommon();
+        public new static readonly NoOwnerCommon Instance = new NoOwnerCommon();
 
-        public ContainerNoOwner.Mask<bool> GetEqualsMask(
-            IContainerNoOwnerGetter item,
-            IContainerNoOwnerGetter rhs,
+        public NoOwner.Mask<bool> GetEqualsMask(
+            INoOwnerGetter item,
+            INoOwnerGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ContainerNoOwner.Mask<bool>(false);
-            ((ContainerNoOwnerCommon)((IContainerNoOwnerGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new NoOwner.Mask<bool>(false);
+            ((NoOwnerCommon)((INoOwnerGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1182,9 +1182,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IContainerNoOwnerGetter item,
-            IContainerNoOwnerGetter rhs,
-            ContainerNoOwner.Mask<bool> ret,
+            INoOwnerGetter item,
+            INoOwnerGetter rhs,
+            NoOwner.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1194,9 +1194,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public string ToString(
-            IContainerNoOwnerGetter item,
+            INoOwnerGetter item,
             string? name = null,
-            ContainerNoOwner.Mask<bool>? printMask = null)
+            NoOwner.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1208,18 +1208,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IContainerNoOwnerGetter item,
+            INoOwnerGetter item,
             FileGeneration fg,
             string? name = null,
-            ContainerNoOwner.Mask<bool>? printMask = null)
+            NoOwner.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ContainerNoOwner =>");
+                fg.AppendLine($"NoOwner =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ContainerNoOwner) =>");
+                fg.AppendLine($"{name} (NoOwner) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1233,11 +1233,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IContainerNoOwnerGetter item,
+            INoOwnerGetter item,
             FileGeneration fg,
-            ContainerNoOwner.Mask<bool>? printMask = null)
+            NoOwner.Mask<bool>? printMask = null)
         {
-            ContainerOwnerTargetCommon.ToStringFields(
+            OwnerTargetCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
@@ -1252,8 +1252,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public bool HasBeenSet(
-            IContainerNoOwnerGetter item,
-            ContainerNoOwner.Mask<bool?> checkMask)
+            INoOwnerGetter item,
+            NoOwner.Mask<bool?> checkMask)
         {
             return base.HasBeenSet(
                 item: item,
@@ -1261,8 +1261,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillHasBeenSetMask(
-            IContainerNoOwnerGetter item,
-            ContainerNoOwner.Mask<bool> mask)
+            INoOwnerGetter item,
+            NoOwner.Mask<bool> mask)
         {
             mask.RawOwnerData = true;
             mask.Global = true;
@@ -1271,7 +1271,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 mask: mask);
         }
         
-        public static ContainerNoOwner_FieldIndex ConvertFieldIndex(ContainerOwnerTarget_FieldIndex index)
+        public static NoOwner_FieldIndex ConvertFieldIndex(OwnerTarget_FieldIndex index)
         {
             switch (index)
             {
@@ -1282,8 +1282,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IContainerNoOwnerGetter? lhs,
-            IContainerNoOwnerGetter? rhs)
+            INoOwnerGetter? lhs,
+            INoOwnerGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1294,15 +1294,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override bool Equals(
-            IContainerOwnerTargetGetter? lhs,
-            IContainerOwnerTargetGetter? rhs)
+            IOwnerTargetGetter? lhs,
+            IOwnerTargetGetter? rhs)
         {
             return Equals(
-                lhs: (IContainerNoOwnerGetter?)lhs,
-                rhs: rhs as IContainerNoOwnerGetter);
+                lhs: (INoOwnerGetter?)lhs,
+                rhs: rhs as INoOwnerGetter);
         }
         
-        public virtual int GetHashCode(IContainerNoOwnerGetter item)
+        public virtual int GetHashCode(INoOwnerGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.RawOwnerData);
@@ -1311,9 +1311,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return hash.ToHashCode();
         }
         
-        public override int GetHashCode(IContainerOwnerTargetGetter item)
+        public override int GetHashCode(IOwnerTargetGetter item)
         {
-            return GetHashCode(item: (IContainerNoOwnerGetter)item);
+            return GetHashCode(item: (INoOwnerGetter)item);
         }
         
         #endregion
@@ -1321,11 +1321,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override object GetNew()
         {
-            return ContainerNoOwner.GetNew();
+            return NoOwner.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IContainerNoOwnerGetter obj)
+        public IEnumerable<ILinkGetter> GetLinks(INoOwnerGetter obj)
         {
             foreach (var item in base.GetLinks(obj))
             {
@@ -1338,14 +1338,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ContainerNoOwnerSetterTranslationCommon : ContainerOwnerTargetSetterTranslationCommon
+    public partial class NoOwnerSetterTranslationCommon : OwnerTargetSetterTranslationCommon
     {
-        public new static readonly ContainerNoOwnerSetterTranslationCommon Instance = new ContainerNoOwnerSetterTranslationCommon();
+        public new static readonly NoOwnerSetterTranslationCommon Instance = new NoOwnerSetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            IContainerNoOwner item,
-            IContainerNoOwnerGetter rhs,
+            INoOwner item,
+            INoOwnerGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1354,11 +1354,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs,
                 errorMask,
                 copyMask);
-            if ((copyMask?.GetShouldTranslate((int)ContainerNoOwner_FieldIndex.RawOwnerData) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NoOwner_FieldIndex.RawOwnerData) ?? true))
             {
                 item.RawOwnerData = rhs.RawOwnerData;
             }
-            if ((copyMask?.GetShouldTranslate((int)ContainerNoOwner_FieldIndex.Global) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)NoOwner_FieldIndex.Global) ?? true))
             {
                 item.Global.FormKey = rhs.Global.FormKey;
             }
@@ -1366,37 +1366,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         
         public override void DeepCopyIn(
-            IContainerOwnerTarget item,
-            IContainerOwnerTargetGetter rhs,
+            IOwnerTarget item,
+            IOwnerTargetGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IContainerNoOwner)item,
-                rhs: (IContainerNoOwnerGetter)rhs,
+                item: (INoOwner)item,
+                rhs: (INoOwnerGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
         #endregion
         
-        public ContainerNoOwner DeepCopy(
-            IContainerNoOwnerGetter item,
-            ContainerNoOwner.TranslationMask? copyMask = null)
+        public NoOwner DeepCopy(
+            INoOwnerGetter item,
+            NoOwner.TranslationMask? copyMask = null)
         {
-            ContainerNoOwner ret = (ContainerNoOwner)((ContainerNoOwnerCommon)((IContainerNoOwnerGetter)item).CommonInstance()!).GetNew();
+            NoOwner ret = (NoOwner)((NoOwnerCommon)((INoOwnerGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public ContainerNoOwner DeepCopy(
-            IContainerNoOwnerGetter item,
-            out ContainerNoOwner.ErrorMask errorMask,
-            ContainerNoOwner.TranslationMask? copyMask = null)
+        public NoOwner DeepCopy(
+            INoOwnerGetter item,
+            out NoOwner.ErrorMask errorMask,
+            NoOwner.TranslationMask? copyMask = null)
         {
-            ContainerNoOwner ret = (ContainerNoOwner)((ContainerNoOwnerCommon)((IContainerNoOwnerGetter)item).CommonInstance()!).GetNew();
+            NoOwner ret = (NoOwner)((NoOwnerCommon)((INoOwnerGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1404,12 +1404,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public ContainerNoOwner DeepCopy(
-            IContainerNoOwnerGetter item,
+        public NoOwner DeepCopy(
+            INoOwnerGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            ContainerNoOwner ret = (ContainerNoOwner)((ContainerNoOwnerCommon)((IContainerNoOwnerGetter)item).CommonInstance()!).GetNew();
+            NoOwner ret = (NoOwner)((NoOwnerCommon)((INoOwnerGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1424,21 +1424,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ContainerNoOwner
+    public partial class NoOwner
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ContainerNoOwner_Registration.Instance;
-        public new static ContainerNoOwner_Registration Registration => ContainerNoOwner_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => NoOwner_Registration.Instance;
+        public new static NoOwner_Registration Registration => NoOwner_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ContainerNoOwnerCommon.Instance;
+        protected override object CommonInstance() => NoOwnerCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return ContainerNoOwnerSetterCommon.Instance;
+            return NoOwnerSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ContainerNoOwnerSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => NoOwnerSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1449,55 +1449,55 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ContainerNoOwnerXmlWriteTranslation :
-        ContainerOwnerTargetXmlWriteTranslation,
+    public partial class NoOwnerXmlWriteTranslation :
+        OwnerTargetXmlWriteTranslation,
         IXmlWriteTranslator
     {
-        public new readonly static ContainerNoOwnerXmlWriteTranslation Instance = new ContainerNoOwnerXmlWriteTranslation();
+        public new readonly static NoOwnerXmlWriteTranslation Instance = new NoOwnerXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IContainerNoOwnerGetter item,
+            INoOwnerGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ContainerOwnerTargetXmlWriteTranslation.WriteToNodeXml(
+            OwnerTargetXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)ContainerNoOwner_FieldIndex.RawOwnerData) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)NoOwner_FieldIndex.RawOwnerData) ?? true))
             {
                 UInt32XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.RawOwnerData),
                     item: item.RawOwnerData,
-                    fieldIndex: (int)ContainerNoOwner_FieldIndex.RawOwnerData,
+                    fieldIndex: (int)NoOwner_FieldIndex.RawOwnerData,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)ContainerNoOwner_FieldIndex.Global) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)NoOwner_FieldIndex.Global) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Global),
                     item: item.Global.FormKey,
-                    fieldIndex: (int)ContainerNoOwner_FieldIndex.Global,
+                    fieldIndex: (int)NoOwner_FieldIndex.Global,
                     errorMask: errorMask);
             }
         }
 
         public void Write(
             XElement node,
-            IContainerNoOwnerGetter item,
+            INoOwnerGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.ContainerNoOwner");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.NoOwner");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.ContainerNoOwner");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.NoOwner");
             }
             WriteToNodeXml(
                 item: item,
@@ -1514,7 +1514,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IContainerNoOwnerGetter)item,
+                item: (INoOwnerGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1523,13 +1523,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public override void Write(
             XElement node,
-            IContainerOwnerTargetGetter item,
+            IOwnerTargetGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
             Write(
-                item: (IContainerNoOwnerGetter)item,
+                item: (INoOwnerGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1538,12 +1538,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ContainerNoOwnerXmlCreateTranslation : ContainerOwnerTargetXmlCreateTranslation
+    public partial class NoOwnerXmlCreateTranslation : OwnerTargetXmlCreateTranslation
     {
-        public new readonly static ContainerNoOwnerXmlCreateTranslation Instance = new ContainerNoOwnerXmlCreateTranslation();
+        public new readonly static NoOwnerXmlCreateTranslation Instance = new NoOwnerXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IContainerNoOwner item,
+            INoOwner item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1552,7 +1552,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    ContainerNoOwnerXmlCreateTranslation.FillPublicElementXml(
+                    NoOwnerXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1568,7 +1568,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            IContainerNoOwner item,
+            INoOwner item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1577,7 +1577,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "RawOwnerData":
-                    errorMask?.PushIndex((int)ContainerNoOwner_FieldIndex.RawOwnerData);
+                    errorMask?.PushIndex((int)NoOwner_FieldIndex.RawOwnerData);
                     try
                     {
                         item.RawOwnerData = UInt32XmlTranslation.Instance.Parse(
@@ -1595,7 +1595,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Global":
-                    errorMask?.PushIndex((int)ContainerNoOwner_FieldIndex.Global);
+                    errorMask?.PushIndex((int)NoOwner_FieldIndex.Global);
                     try
                     {
                         item.Global.FormKey = FormKeyXmlTranslation.Instance.Parse(
@@ -1613,7 +1613,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 default:
-                    ContainerOwnerTargetXmlCreateTranslation.FillPublicElementXml(
+                    OwnerTargetXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -1629,30 +1629,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Xml Write Mixins
-    public static class ContainerNoOwnerXmlTranslationMixIn
+    public static class NoOwnerXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IContainerNoOwnerGetter item,
+            this INoOwnerGetter item,
             XElement node,
-            out ContainerNoOwner.ErrorMask errorMask,
-            ContainerNoOwner.TranslationMask? translationMask = null,
+            out NoOwner.ErrorMask errorMask,
+            NoOwner.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((ContainerNoOwnerXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((NoOwnerXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ContainerNoOwner.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = NoOwner.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this IContainerNoOwnerGetter item,
+            this INoOwnerGetter item,
             string path,
-            out ContainerNoOwner.ErrorMask errorMask,
-            ContainerNoOwner.TranslationMask? translationMask = null,
+            out NoOwner.ErrorMask errorMask,
+            NoOwner.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1666,10 +1666,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IContainerNoOwnerGetter item,
+            this INoOwnerGetter item,
             Stream stream,
-            out ContainerNoOwner.ErrorMask errorMask,
-            ContainerNoOwner.TranslationMask? translationMask = null,
+            out NoOwner.ErrorMask errorMask,
+            NoOwner.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1692,14 +1692,14 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ContainerNoOwnerBinaryWriteTranslation :
-        ContainerOwnerTargetBinaryWriteTranslation,
+    public partial class NoOwnerBinaryWriteTranslation :
+        OwnerTargetBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static ContainerNoOwnerBinaryWriteTranslation Instance = new ContainerNoOwnerBinaryWriteTranslation();
+        public new readonly static NoOwnerBinaryWriteTranslation Instance = new NoOwnerBinaryWriteTranslation();
 
         public static void WriteEmbedded(
-            IContainerNoOwnerGetter item,
+            INoOwnerGetter item,
             MutagenWriter writer)
         {
             writer.Write(item.RawOwnerData);
@@ -1710,7 +1710,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public void Write(
             MutagenWriter writer,
-            IContainerNoOwnerGetter item,
+            INoOwnerGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             WriteEmbedded(
@@ -1724,27 +1724,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IContainerNoOwnerGetter)item,
+                item: (INoOwnerGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public override void Write(
             MutagenWriter writer,
-            IContainerOwnerTargetGetter item,
+            IOwnerTargetGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IContainerNoOwnerGetter)item,
+                item: (INoOwnerGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class ContainerNoOwnerBinaryCreateTranslation : ContainerOwnerTargetBinaryCreateTranslation
+    public partial class NoOwnerBinaryCreateTranslation : OwnerTargetBinaryCreateTranslation
     {
-        public new readonly static ContainerNoOwnerBinaryCreateTranslation Instance = new ContainerNoOwnerBinaryCreateTranslation();
+        public new readonly static NoOwnerBinaryCreateTranslation Instance = new NoOwnerBinaryCreateTranslation();
 
     }
 
@@ -1752,7 +1752,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class ContainerNoOwnerBinaryTranslationMixIn
+    public static class NoOwnerBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1761,35 +1761,35 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ContainerNoOwnerBinaryOverlay :
-        ContainerOwnerTargetBinaryOverlay,
-        IContainerNoOwnerGetter
+    public partial class NoOwnerBinaryOverlay :
+        OwnerTargetBinaryOverlay,
+        INoOwnerGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ContainerNoOwner_Registration.Instance;
-        public new static ContainerNoOwner_Registration Registration => ContainerNoOwner_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => NoOwner_Registration.Instance;
+        public new static NoOwner_Registration Registration => NoOwner_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => ContainerNoOwnerCommon.Instance;
+        protected override object CommonInstance() => NoOwnerCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => ContainerNoOwnerSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => NoOwnerSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IContainerNoOwnerGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INoOwnerGetter)rhs, include);
 
-        public override IEnumerable<ILinkGetter> Links => ContainerNoOwnerCommon.Instance.GetLinks(this);
+        public override IEnumerable<ILinkGetter> Links => NoOwnerCommon.Instance.GetLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => ContainerNoOwnerXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => NoOwnerXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((ContainerNoOwnerXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((NoOwnerXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -1797,12 +1797,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => ContainerNoOwnerBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => NoOwnerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((ContainerNoOwnerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((NoOwnerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
@@ -1815,7 +1815,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int finalPos,
             int offset);
 
-        protected ContainerNoOwnerBinaryOverlay(
+        protected NoOwnerBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1824,12 +1824,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static ContainerNoOwnerBinaryOverlay ContainerNoOwnerFactory(
+        public static NoOwnerBinaryOverlay NoOwnerFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new ContainerNoOwnerBinaryOverlay(
+            var ret = new NoOwnerBinaryOverlay(
                 bytes: stream.RemainingMemory.Slice(0, 0x8),
                 package: package);
             int offset = stream.Position;
@@ -1841,12 +1841,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static ContainerNoOwnerBinaryOverlay ContainerNoOwnerFactory(
+        public static NoOwnerBinaryOverlay NoOwnerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            return ContainerNoOwnerFactory(
+            return NoOwnerFactory(
                 stream: new BinaryMemoryReadStream(slice),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
@@ -1858,7 +1858,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             string? name = null)
         {
-            ContainerNoOwnerMixIn.ToString(
+            NoOwnerMixIn.ToString(
                 item: this,
                 name: name);
         }

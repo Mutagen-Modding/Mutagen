@@ -32,41 +32,22 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class ContainerEntry :
-        IContainerEntry,
-        ILoquiObjectSetter<ContainerEntry>,
-        IEquatable<ContainerEntry>,
+    public partial class ExtraData :
+        IExtraData,
+        ILoquiObjectSetter<ExtraData>,
+        IEquatable<ExtraData>,
         IEqualsMask
     {
         #region Ctor
-        public ContainerEntry()
+        public ExtraData()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Item
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ContainerItem _Item = new ContainerItem();
-        public ContainerItem Item
-        {
-            get => _Item;
-            set => _Item = value ?? new ContainerItem();
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IContainerItemGetter IContainerEntryGetter.Item => _Item;
-        #endregion
-        #region Data
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ContainerEntryData? _Data;
-        public ContainerEntryData? Data
-        {
-            get => _Data;
-            set => _Data = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IContainerEntryDataGetter? IContainerEntryGetter.Data => this.Data;
+        #region ItemCondition
+        public Single ItemCondition { get; set; } = default;
         #endregion
 
         #region To String
@@ -75,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            ContainerEntryMixIn.ToString(
+            ExtraDataMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -85,22 +66,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IContainerEntryGetter rhs)) return false;
-            return ((ContainerEntryCommon)((IContainerEntryGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IExtraDataGetter rhs)) return false;
+            return ((ExtraDataCommon)((IExtraDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ContainerEntry obj)
+        public bool Equals(ExtraData obj)
         {
-            return ((ContainerEntryCommon)((IContainerEntryGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ExtraDataCommon)((IExtraDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ContainerEntryCommon)((IContainerEntryGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ExtraDataCommon)((IExtraDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => ContainerEntryXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => ExtraDataXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -109,7 +90,7 @@ namespace Mutagen.Bethesda.Skyrim
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((ContainerEntryXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((ExtraDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -118,9 +99,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static ContainerEntry CreateFromXml(
+        public static ExtraData CreateFromXml(
             XElement node,
-            ContainerEntry.TranslationMask? translationMask = null)
+            ExtraData.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -129,27 +110,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static ContainerEntry CreateFromXml(
+        public static ExtraData CreateFromXml(
             XElement node,
-            out ContainerEntry.ErrorMask errorMask,
-            ContainerEntry.TranslationMask? translationMask = null)
+            out ExtraData.ErrorMask errorMask,
+            ExtraData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ContainerEntry.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ExtraData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public static ContainerEntry CreateFromXml(
+        public static ExtraData CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new ContainerEntry();
-            ((ContainerEntrySetterCommon)((IContainerEntryGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new ExtraData();
+            ((ExtraDataSetterCommon)((IExtraDataGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -157,9 +138,9 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ContainerEntry CreateFromXml(
+        public static ExtraData CreateFromXml(
             string path,
-            ContainerEntry.TranslationMask? translationMask = null)
+            ExtraData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -167,10 +148,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static ContainerEntry CreateFromXml(
+        public static ExtraData CreateFromXml(
             string path,
-            out ContainerEntry.ErrorMask errorMask,
-            ContainerEntry.TranslationMask? translationMask = null)
+            out ExtraData.ErrorMask errorMask,
+            ExtraData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -179,10 +160,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static ContainerEntry CreateFromXml(
+        public static ExtraData CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            ContainerEntry.TranslationMask? translationMask = null)
+            ExtraData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -191,9 +172,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static ContainerEntry CreateFromXml(
+        public static ExtraData CreateFromXml(
             Stream stream,
-            ContainerEntry.TranslationMask? translationMask = null)
+            ExtraData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -201,10 +182,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static ContainerEntry CreateFromXml(
+        public static ExtraData CreateFromXml(
             Stream stream,
-            out ContainerEntry.ErrorMask errorMask,
-            ContainerEntry.TranslationMask? translationMask = null)
+            out ExtraData.ErrorMask errorMask,
+            ExtraData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -213,10 +194,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static ContainerEntry CreateFromXml(
+        public static ExtraData CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ContainerEntry.TranslationMask? translationMask = null)
+            ExtraData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -238,16 +219,16 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Item = new MaskItem<TItem, ContainerItem.Mask<TItem>?>(initialValue, new ContainerItem.Mask<TItem>(initialValue));
-                this.Data = new MaskItem<TItem, ContainerEntryData.Mask<TItem>?>(initialValue, new ContainerEntryData.Mask<TItem>(initialValue));
+                this.Owner = new MaskItem<TItem, OwnerTarget.Mask<TItem>?>(initialValue, new OwnerTarget.Mask<TItem>(initialValue));
+                this.ItemCondition = initialValue;
             }
 
             public Mask(
-                TItem Item,
-                TItem Data)
+                TItem Owner,
+                TItem ItemCondition)
             {
-                this.Item = new MaskItem<TItem, ContainerItem.Mask<TItem>?>(Item, new ContainerItem.Mask<TItem>(Item));
-                this.Data = new MaskItem<TItem, ContainerEntryData.Mask<TItem>?>(Data, new ContainerEntryData.Mask<TItem>(Data));
+                this.Owner = new MaskItem<TItem, OwnerTarget.Mask<TItem>?>(Owner, new OwnerTarget.Mask<TItem>(Owner));
+                this.ItemCondition = ItemCondition;
             }
 
             #pragma warning disable CS8618
@@ -259,8 +240,8 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public MaskItem<TItem, ContainerItem.Mask<TItem>?>? Item { get; set; }
-            public MaskItem<TItem, ContainerEntryData.Mask<TItem>?>? Data { get; set; }
+            public MaskItem<TItem, OwnerTarget.Mask<TItem>?>? Owner { get; set; }
+            public TItem ItemCondition;
             #endregion
 
             #region Equals
@@ -273,15 +254,15 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Item, rhs.Item)) return false;
-                if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.Owner, rhs.Owner)) return false;
+                if (!object.Equals(this.ItemCondition, rhs.ItemCondition)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Item);
-                hash.Add(this.Data);
+                hash.Add(this.Owner);
+                hash.Add(this.ItemCondition);
                 return hash.ToHashCode();
             }
 
@@ -290,16 +271,12 @@ namespace Mutagen.Bethesda.Skyrim
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (Item != null)
+                if (Owner != null)
                 {
-                    if (!eval(this.Item.Overall)) return false;
-                    if (this.Item.Specific != null && !this.Item.Specific.All(eval)) return false;
+                    if (!eval(this.Owner.Overall)) return false;
+                    if (this.Owner.Specific != null && !this.Owner.Specific.All(eval)) return false;
                 }
-                if (Data != null)
-                {
-                    if (!eval(this.Data.Overall)) return false;
-                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
-                }
+                if (!eval(this.ItemCondition)) return false;
                 return true;
             }
             #endregion
@@ -307,16 +284,12 @@ namespace Mutagen.Bethesda.Skyrim
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (Item != null)
+                if (Owner != null)
                 {
-                    if (eval(this.Item.Overall)) return true;
-                    if (this.Item.Specific != null && this.Item.Specific.Any(eval)) return true;
+                    if (eval(this.Owner.Overall)) return true;
+                    if (this.Owner.Specific != null && this.Owner.Specific.Any(eval)) return true;
                 }
-                if (Data != null)
-                {
-                    if (eval(this.Data.Overall)) return true;
-                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
-                }
+                if (eval(this.ItemCondition)) return true;
                 return false;
             }
             #endregion
@@ -324,15 +297,15 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new ContainerEntry.Mask<R>();
+                var ret = new ExtraData.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Item = this.Item == null ? null : new MaskItem<R, ContainerItem.Mask<R>?>(eval(this.Item.Overall), this.Item.Specific?.Translate(eval));
-                obj.Data = this.Data == null ? null : new MaskItem<R, ContainerEntryData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
+                obj.Owner = this.Owner == null ? null : new MaskItem<R, OwnerTarget.Mask<R>?>(eval(this.Owner.Overall), this.Owner.Specific?.Translate(eval));
+                obj.ItemCondition = eval(this.ItemCondition);
             }
             #endregion
 
@@ -342,26 +315,26 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(ContainerEntry.Mask<bool>? printMask = null)
+            public string ToString(ExtraData.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, ContainerEntry.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, ExtraData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ContainerEntry.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(ExtraData.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Item?.Overall ?? true)
+                    if (printMask?.Owner?.Overall ?? true)
                     {
-                        Item?.ToString(fg);
+                        Owner?.ToString(fg);
                     }
-                    if (printMask?.Data?.Overall ?? true)
+                    if (printMask?.ItemCondition ?? true)
                     {
-                        Data?.ToString(fg);
+                        fg.AppendItem(ItemCondition, "ItemCondition");
                     }
                 }
                 fg.AppendLine("]");
@@ -388,20 +361,20 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
-            public MaskItem<Exception?, ContainerItem.ErrorMask?>? Item;
-            public MaskItem<Exception?, ContainerEntryData.ErrorMask?>? Data;
+            public MaskItem<Exception?, OwnerTarget.ErrorMask?>? Owner;
+            public Exception? ItemCondition;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                ContainerEntry_FieldIndex enu = (ContainerEntry_FieldIndex)index;
+                ExtraData_FieldIndex enu = (ExtraData_FieldIndex)index;
                 switch (enu)
                 {
-                    case ContainerEntry_FieldIndex.Item:
-                        return Item;
-                    case ContainerEntry_FieldIndex.Data:
-                        return Data;
+                    case ExtraData_FieldIndex.Owner:
+                        return Owner;
+                    case ExtraData_FieldIndex.ItemCondition:
+                        return ItemCondition;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -409,14 +382,14 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void SetNthException(int index, Exception ex)
             {
-                ContainerEntry_FieldIndex enu = (ContainerEntry_FieldIndex)index;
+                ExtraData_FieldIndex enu = (ExtraData_FieldIndex)index;
                 switch (enu)
                 {
-                    case ContainerEntry_FieldIndex.Item:
-                        this.Item = new MaskItem<Exception?, ContainerItem.ErrorMask?>(ex, null);
+                    case ExtraData_FieldIndex.Owner:
+                        this.Owner = new MaskItem<Exception?, OwnerTarget.ErrorMask?>(ex, null);
                         break;
-                    case ContainerEntry_FieldIndex.Data:
-                        this.Data = new MaskItem<Exception?, ContainerEntryData.ErrorMask?>(ex, null);
+                    case ExtraData_FieldIndex.ItemCondition:
+                        this.ItemCondition = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -425,14 +398,14 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void SetNthMask(int index, object obj)
             {
-                ContainerEntry_FieldIndex enu = (ContainerEntry_FieldIndex)index;
+                ExtraData_FieldIndex enu = (ExtraData_FieldIndex)index;
                 switch (enu)
                 {
-                    case ContainerEntry_FieldIndex.Item:
-                        this.Item = (MaskItem<Exception?, ContainerItem.ErrorMask?>?)obj;
+                    case ExtraData_FieldIndex.Owner:
+                        this.Owner = (MaskItem<Exception?, OwnerTarget.ErrorMask?>?)obj;
                         break;
-                    case ContainerEntry_FieldIndex.Data:
-                        this.Data = (MaskItem<Exception?, ContainerEntryData.ErrorMask?>?)obj;
+                    case ExtraData_FieldIndex.ItemCondition:
+                        this.ItemCondition = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -442,8 +415,8 @@ namespace Mutagen.Bethesda.Skyrim
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Item != null) return true;
-                if (Data != null) return true;
+                if (Owner != null) return true;
+                if (ItemCondition != null) return true;
                 return false;
             }
             #endregion
@@ -478,8 +451,8 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                Item?.ToString(fg);
-                Data?.ToString(fg);
+                Owner?.ToString(fg);
+                fg.AppendItem(ItemCondition, "ItemCondition");
             }
             #endregion
 
@@ -488,8 +461,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Item = this.Item.Combine(rhs.Item, (l, r) => l.Combine(r));
-                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
+                ret.Owner = this.Owner.Combine(rhs.Owner, (l, r) => l.Combine(r));
+                ret.ItemCondition = this.ItemCondition.Combine(rhs.ItemCondition);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -511,15 +484,15 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public MaskItem<bool, ContainerItem.TranslationMask?> Item;
-            public MaskItem<bool, ContainerEntryData.TranslationMask?> Data;
+            public MaskItem<bool, OwnerTarget.TranslationMask?> Owner;
+            public bool ItemCondition;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.Item = new MaskItem<bool, ContainerItem.TranslationMask?>(defaultOn, null);
-                this.Data = new MaskItem<bool, ContainerEntryData.TranslationMask?>(defaultOn, null);
+                this.Owner = new MaskItem<bool, OwnerTarget.TranslationMask?>(defaultOn, null);
+                this.ItemCondition = defaultOn;
             }
 
             #endregion
@@ -535,47 +508,47 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Item?.Overall ?? true, Item?.Specific?.GetCrystal()));
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((Owner?.Overall ?? true, Owner?.Specific?.GetCrystal()));
+                ret.Add((ItemCondition, null));
             }
         }
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = ContainerEntry_Registration.TriggeringRecordType;
+        public new static readonly RecordType GrupRecordType = ExtraData_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<ILinkGetter> Links => ContainerEntryCommon.Instance.GetLinks(this);
+        public IEnumerable<ILinkGetter> Links => ExtraDataCommon.Instance.GetLinks(this);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ContainerEntryBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ExtraDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((ContainerEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ExtraDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static ContainerEntry CreateFromBinary(MutagenFrame frame)
+        public static ExtraData CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public static ContainerEntry CreateFromBinary(
+        public static ExtraData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new ContainerEntry();
-            ((ContainerEntrySetterCommon)((IContainerEntryGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new ExtraData();
+            ((ExtraDataSetterCommon)((IExtraDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -588,33 +561,33 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IContainerEntryGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IExtraDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((ContainerEntrySetterCommon)((IContainerEntryGetter)this).CommonSetterInstance()!).Clear(this);
+            ((ExtraDataSetterCommon)((IExtraDataGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static ContainerEntry GetNew()
+        internal static ExtraData GetNew()
         {
-            return new ContainerEntry();
+            return new ExtraData();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IContainerEntry :
-        IContainerEntryGetter,
-        ILoquiObjectSetter<IContainerEntry>
+    public partial interface IExtraData :
+        IExtraDataGetter,
+        ILoquiObjectSetter<IExtraData>
     {
-        new ContainerItem Item { get; set; }
-        new ContainerEntryData? Data { get; set; }
+        new OwnerTarget Owner { get; set; }
+        new Single ItemCondition { get; set; }
     }
 
-    public partial interface IContainerEntryGetter :
+    public partial interface IExtraDataGetter :
         ILoquiObject,
-        ILoquiObject<IContainerEntryGetter>,
+        ILoquiObject<IExtraDataGetter>,
         IXmlItem,
         ILinkContainer,
         IBinaryItem
@@ -625,51 +598,51 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ContainerEntry_Registration.Instance;
-        IContainerItemGetter Item { get; }
-        IContainerEntryDataGetter? Data { get; }
+        static ILoquiRegistration Registration => ExtraData_Registration.Instance;
+        IOwnerTargetGetter Owner { get; }
+        Single ItemCondition { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class ContainerEntryMixIn
+    public static partial class ExtraDataMixIn
     {
-        public static void Clear(this IContainerEntry item)
+        public static void Clear(this IExtraData item)
         {
-            ((ContainerEntrySetterCommon)((IContainerEntryGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((ExtraDataSetterCommon)((IExtraDataGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ContainerEntry.Mask<bool> GetEqualsMask(
-            this IContainerEntryGetter item,
-            IContainerEntryGetter rhs,
+        public static ExtraData.Mask<bool> GetEqualsMask(
+            this IExtraDataGetter item,
+            IExtraDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ContainerEntryCommon)((IContainerEntryGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((ExtraDataCommon)((IExtraDataGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IContainerEntryGetter item,
+            this IExtraDataGetter item,
             string? name = null,
-            ContainerEntry.Mask<bool>? printMask = null)
+            ExtraData.Mask<bool>? printMask = null)
         {
-            return ((ContainerEntryCommon)((IContainerEntryGetter)item).CommonInstance()!).ToString(
+            return ((ExtraDataCommon)((IExtraDataGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IContainerEntryGetter item,
+            this IExtraDataGetter item,
             FileGeneration fg,
             string? name = null,
-            ContainerEntry.Mask<bool>? printMask = null)
+            ExtraData.Mask<bool>? printMask = null)
         {
-            ((ContainerEntryCommon)((IContainerEntryGetter)item).CommonInstance()!).ToString(
+            ((ExtraDataCommon)((IExtraDataGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -677,38 +650,38 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this IContainerEntryGetter item,
-            ContainerEntry.Mask<bool?> checkMask)
+            this IExtraDataGetter item,
+            ExtraData.Mask<bool?> checkMask)
         {
-            return ((ContainerEntryCommon)((IContainerEntryGetter)item).CommonInstance()!).HasBeenSet(
+            return ((ExtraDataCommon)((IExtraDataGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static ContainerEntry.Mask<bool> GetHasBeenSetMask(this IContainerEntryGetter item)
+        public static ExtraData.Mask<bool> GetHasBeenSetMask(this IExtraDataGetter item)
         {
-            var ret = new ContainerEntry.Mask<bool>(false);
-            ((ContainerEntryCommon)((IContainerEntryGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new ExtraData.Mask<bool>(false);
+            ((ExtraDataCommon)((IExtraDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IContainerEntryGetter item,
-            IContainerEntryGetter rhs)
+            this IExtraDataGetter item,
+            IExtraDataGetter rhs)
         {
-            return ((ContainerEntryCommon)((IContainerEntryGetter)item).CommonInstance()!).Equals(
+            return ((ExtraDataCommon)((IExtraDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this IContainerEntry lhs,
-            IContainerEntryGetter rhs,
-            ContainerEntry.TranslationMask? copyMask = null)
+            this IExtraData lhs,
+            IExtraDataGetter rhs,
+            ExtraData.TranslationMask? copyMask = null)
         {
-            ((ContainerEntrySetterTranslationCommon)((IContainerEntryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ExtraDataSetterTranslationCommon)((IExtraDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -716,59 +689,59 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this IContainerEntry lhs,
-            IContainerEntryGetter rhs,
-            out ContainerEntry.ErrorMask errorMask,
-            ContainerEntry.TranslationMask? copyMask = null)
+            this IExtraData lhs,
+            IExtraDataGetter rhs,
+            out ExtraData.ErrorMask errorMask,
+            ExtraData.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ContainerEntrySetterTranslationCommon)((IContainerEntryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ExtraDataSetterTranslationCommon)((IExtraDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = ContainerEntry.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ExtraData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IContainerEntry lhs,
-            IContainerEntryGetter rhs,
+            this IExtraData lhs,
+            IExtraDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ContainerEntrySetterTranslationCommon)((IContainerEntryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ExtraDataSetterTranslationCommon)((IExtraDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static ContainerEntry DeepCopy(
-            this IContainerEntryGetter item,
-            ContainerEntry.TranslationMask? copyMask = null)
+        public static ExtraData DeepCopy(
+            this IExtraDataGetter item,
+            ExtraData.TranslationMask? copyMask = null)
         {
-            return ((ContainerEntrySetterTranslationCommon)((IContainerEntryGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ExtraDataSetterTranslationCommon)((IExtraDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static ContainerEntry DeepCopy(
-            this IContainerEntryGetter item,
-            out ContainerEntry.ErrorMask errorMask,
-            ContainerEntry.TranslationMask? copyMask = null)
+        public static ExtraData DeepCopy(
+            this IExtraDataGetter item,
+            out ExtraData.ErrorMask errorMask,
+            ExtraData.TranslationMask? copyMask = null)
         {
-            return ((ContainerEntrySetterTranslationCommon)((IContainerEntryGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ExtraDataSetterTranslationCommon)((IExtraDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static ContainerEntry DeepCopy(
-            this IContainerEntryGetter item,
+        public static ExtraData DeepCopy(
+            this IExtraDataGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((ContainerEntrySetterTranslationCommon)((IContainerEntryGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ExtraDataSetterTranslationCommon)((IExtraDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -777,9 +750,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IContainerEntry item,
+            this IExtraData item,
             XElement node,
-            ContainerEntry.TranslationMask? translationMask = null)
+            ExtraData.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -790,10 +763,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IContainerEntry item,
+            this IExtraData item,
             XElement node,
-            out ContainerEntry.ErrorMask errorMask,
-            ContainerEntry.TranslationMask? translationMask = null)
+            out ExtraData.ErrorMask errorMask,
+            ExtraData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -801,16 +774,16 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ContainerEntry.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ExtraData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this IContainerEntry item,
+            this IExtraData item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((ContainerEntrySetterCommon)((IContainerEntryGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((ExtraDataSetterCommon)((IExtraDataGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -818,9 +791,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IContainerEntry item,
+            this IExtraData item,
             string path,
-            ContainerEntry.TranslationMask? translationMask = null)
+            ExtraData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -830,10 +803,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IContainerEntry item,
+            this IExtraData item,
             string path,
-            out ContainerEntry.ErrorMask errorMask,
-            ContainerEntry.TranslationMask? translationMask = null)
+            out ExtraData.ErrorMask errorMask,
+            ExtraData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -844,10 +817,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IContainerEntry item,
+            this IExtraData item,
             string path,
             ErrorMaskBuilder? errorMask,
-            ContainerEntry.TranslationMask? translationMask = null)
+            ExtraData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -858,9 +831,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IContainerEntry item,
+            this IExtraData item,
             Stream stream,
-            ContainerEntry.TranslationMask? translationMask = null)
+            ExtraData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -870,10 +843,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IContainerEntry item,
+            this IExtraData item,
             Stream stream,
-            out ContainerEntry.ErrorMask errorMask,
-            ContainerEntry.TranslationMask? translationMask = null)
+            out ExtraData.ErrorMask errorMask,
+            ExtraData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -884,10 +857,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IContainerEntry item,
+            this IExtraData item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            ContainerEntry.TranslationMask? translationMask = null)
+            ExtraData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -902,7 +875,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IContainerEntry item,
+            this IExtraData item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -912,11 +885,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromBinary(
-            this IContainerEntry item,
+            this IExtraData item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((ContainerEntrySetterCommon)((IContainerEntryGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((ExtraDataSetterCommon)((IExtraDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -932,48 +905,48 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum ContainerEntry_FieldIndex
+    public enum ExtraData_FieldIndex
     {
-        Item = 0,
-        Data = 1,
+        Owner = 0,
+        ItemCondition = 1,
     }
     #endregion
 
     #region Registration
-    public partial class ContainerEntry_Registration : ILoquiRegistration
+    public partial class ExtraData_Registration : ILoquiRegistration
     {
-        public static readonly ContainerEntry_Registration Instance = new ContainerEntry_Registration();
+        public static readonly ExtraData_Registration Instance = new ExtraData_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 171,
+            msgID: 173,
             version: 0);
 
-        public const string GUID = "012b2a3c-ad31-4b45-a5ca-f54760049575";
+        public const string GUID = "ab8e5a24-10e4-44e7-8b6f-a44bda2492f9";
 
         public const ushort AdditionalFieldCount = 2;
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(ContainerEntry.Mask<>);
+        public static readonly Type MaskType = typeof(ExtraData.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ContainerEntry.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ExtraData.ErrorMask);
 
-        public static readonly Type ClassType = typeof(ContainerEntry);
+        public static readonly Type ClassType = typeof(ExtraData);
 
-        public static readonly Type GetterType = typeof(IContainerEntryGetter);
+        public static readonly Type GetterType = typeof(IExtraDataGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IContainerEntry);
+        public static readonly Type SetterType = typeof(IExtraData);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.ContainerEntry";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.ExtraData";
 
-        public const string Name = "ContainerEntry";
+        public const string Name = "ExtraData";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -985,10 +958,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "ITEM":
-                    return (ushort)ContainerEntry_FieldIndex.Item;
-                case "DATA":
-                    return (ushort)ContainerEntry_FieldIndex.Data;
+                case "OWNER":
+                    return (ushort)ExtraData_FieldIndex.Owner;
+                case "ITEMCONDITION":
+                    return (ushort)ExtraData_FieldIndex.ItemCondition;
                 default:
                     return null;
             }
@@ -996,11 +969,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            ContainerEntry_FieldIndex enu = (ContainerEntry_FieldIndex)index;
+            ExtraData_FieldIndex enu = (ExtraData_FieldIndex)index;
             switch (enu)
             {
-                case ContainerEntry_FieldIndex.Item:
-                case ContainerEntry_FieldIndex.Data:
+                case ExtraData_FieldIndex.Owner:
+                case ExtraData_FieldIndex.ItemCondition:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1009,12 +982,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            ContainerEntry_FieldIndex enu = (ContainerEntry_FieldIndex)index;
+            ExtraData_FieldIndex enu = (ExtraData_FieldIndex)index;
             switch (enu)
             {
-                case ContainerEntry_FieldIndex.Item:
-                case ContainerEntry_FieldIndex.Data:
+                case ExtraData_FieldIndex.Owner:
                     return true;
+                case ExtraData_FieldIndex.ItemCondition:
+                    return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1022,11 +996,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            ContainerEntry_FieldIndex enu = (ContainerEntry_FieldIndex)index;
+            ExtraData_FieldIndex enu = (ExtraData_FieldIndex)index;
             switch (enu)
             {
-                case ContainerEntry_FieldIndex.Item:
-                case ContainerEntry_FieldIndex.Data:
+                case ExtraData_FieldIndex.Owner:
+                case ExtraData_FieldIndex.ItemCondition:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1035,13 +1009,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static string GetNthName(ushort index)
         {
-            ContainerEntry_FieldIndex enu = (ContainerEntry_FieldIndex)index;
+            ExtraData_FieldIndex enu = (ExtraData_FieldIndex)index;
             switch (enu)
             {
-                case ContainerEntry_FieldIndex.Item:
-                    return "Item";
-                case ContainerEntry_FieldIndex.Data:
-                    return "Data";
+                case ExtraData_FieldIndex.Owner:
+                    return "Owner";
+                case ExtraData_FieldIndex.ItemCondition:
+                    return "ItemCondition";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1049,11 +1023,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            ContainerEntry_FieldIndex enu = (ContainerEntry_FieldIndex)index;
+            ExtraData_FieldIndex enu = (ExtraData_FieldIndex)index;
             switch (enu)
             {
-                case ContainerEntry_FieldIndex.Item:
-                case ContainerEntry_FieldIndex.Data:
+                case ExtraData_FieldIndex.Owner:
+                case ExtraData_FieldIndex.ItemCondition:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1062,11 +1036,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsProtected(ushort index)
         {
-            ContainerEntry_FieldIndex enu = (ContainerEntry_FieldIndex)index;
+            ExtraData_FieldIndex enu = (ExtraData_FieldIndex)index;
             switch (enu)
             {
-                case ContainerEntry_FieldIndex.Item:
-                case ContainerEntry_FieldIndex.Data:
+                case ExtraData_FieldIndex.Owner:
+                case ExtraData_FieldIndex.ItemCondition:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1075,25 +1049,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static Type GetNthType(ushort index)
         {
-            ContainerEntry_FieldIndex enu = (ContainerEntry_FieldIndex)index;
+            ExtraData_FieldIndex enu = (ExtraData_FieldIndex)index;
             switch (enu)
             {
-                case ContainerEntry_FieldIndex.Item:
-                    return typeof(ContainerItem);
-                case ContainerEntry_FieldIndex.Data:
-                    return typeof(ContainerEntryData);
+                case ExtraData_FieldIndex.Owner:
+                    return typeof(OwnerTarget);
+                case ExtraData_FieldIndex.ItemCondition:
+                    return typeof(Single);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(ContainerEntryXmlWriteTranslation);
-        public static readonly RecordType CNTO_HEADER = new RecordType("CNTO");
+        public static readonly Type XmlWriteTranslation = typeof(ExtraDataXmlWriteTranslation);
         public static readonly RecordType COED_HEADER = new RecordType("COED");
-        public static readonly RecordType TriggeringRecordType = CNTO_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 2;
-        public static readonly Type BinaryWriteTranslation = typeof(ContainerEntryBinaryWriteTranslation);
+        public static readonly RecordType TriggeringRecordType = COED_HEADER;
+        public const int NumStructFields = 2;
+        public const int NumTypedFields = 0;
+        public static readonly Type BinaryWriteTranslation = typeof(ExtraDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1126,22 +1099,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ContainerEntrySetterCommon
+    public partial class ExtraDataSetterCommon
     {
-        public static readonly ContainerEntrySetterCommon Instance = new ContainerEntrySetterCommon();
+        public static readonly ExtraDataSetterCommon Instance = new ExtraDataSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IContainerEntry item)
+        public void Clear(IExtraData item)
         {
             ClearPartial();
-            item.Item = new ContainerItem();
-            item.Data = null;
+            item.Owner.Clear();
+            item.ItemCondition = default;
         }
         
         #region Xml Translation
         public virtual void CopyInFromXml(
-            IContainerEntry item,
+            IExtraData item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1150,7 +1123,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    ContainerEntryXmlCreateTranslation.FillPublicElementXml(
+                    ExtraDataXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1169,65 +1142,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Binary Translation
         protected static void FillBinaryStructs(
-            IContainerEntry item,
+            IExtraData item,
             MutagenFrame frame)
         {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IContainerEntry item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x4F544E43: // CNTO
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ContainerEntry_FieldIndex.Item) return TryGet<int?>.Failure;
-                    item.Item = Mutagen.Bethesda.Skyrim.ContainerItem.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)ContainerEntry_FieldIndex.Item);
-                }
-                case 0x44454F43: // COED
-                {
-                    item.Data = Mutagen.Bethesda.Skyrim.ContainerEntryData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)ContainerEntry_FieldIndex.Data);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
+            ExtraDataBinaryCreateTranslation.FillBinaryOwnerCustomPublic(
+                frame: frame,
+                item: item);
+            item.ItemCondition = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
         }
         
         public virtual void CopyInFromBinary(
-            IContainerEntry item,
+            IExtraData item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                recordTypeConverter.ConvertToCustom(ExtraData_Registration.COED_HEADER)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: FillBinaryStructs);
         }
         
         #endregion
         
     }
-    public partial class ContainerEntryCommon
+    public partial class ExtraDataCommon
     {
-        public static readonly ContainerEntryCommon Instance = new ContainerEntryCommon();
+        public static readonly ExtraDataCommon Instance = new ExtraDataCommon();
 
-        public ContainerEntry.Mask<bool> GetEqualsMask(
-            IContainerEntryGetter item,
-            IContainerEntryGetter rhs,
+        public ExtraData.Mask<bool> GetEqualsMask(
+            IExtraDataGetter item,
+            IExtraDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ContainerEntry.Mask<bool>(false);
-            ((ContainerEntryCommon)((IContainerEntryGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new ExtraData.Mask<bool>(false);
+            ((ExtraDataCommon)((IExtraDataGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1236,24 +1188,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IContainerEntryGetter item,
-            IContainerEntryGetter rhs,
-            ContainerEntry.Mask<bool> ret,
+            IExtraDataGetter item,
+            IExtraDataGetter rhs,
+            ExtraData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Item = MaskItemExt.Factory(item.Item.GetEqualsMask(rhs.Item, include), include);
-            ret.Data = EqualsMaskHelper.EqualsHelper(
-                item.Data,
-                rhs.Data,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.Owner = MaskItemExt.Factory(item.Owner.GetEqualsMask(rhs.Owner, include), include);
+            ret.ItemCondition = item.ItemCondition.EqualsWithin(rhs.ItemCondition);
         }
         
         public string ToString(
-            IContainerEntryGetter item,
+            IExtraDataGetter item,
             string? name = null,
-            ContainerEntry.Mask<bool>? printMask = null)
+            ExtraData.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1265,18 +1213,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IContainerEntryGetter item,
+            IExtraDataGetter item,
             FileGeneration fg,
             string? name = null,
-            ContainerEntry.Mask<bool>? printMask = null)
+            ExtraData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ContainerEntry =>");
+                fg.AppendLine($"ExtraData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ContainerEntry) =>");
+                fg.AppendLine($"{name} (ExtraData) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1290,59 +1238,52 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IContainerEntryGetter item,
+            IExtraDataGetter item,
             FileGeneration fg,
-            ContainerEntry.Mask<bool>? printMask = null)
+            ExtraData.Mask<bool>? printMask = null)
         {
-            if (printMask?.Item?.Overall ?? true)
+            if (printMask?.Owner?.Overall ?? true)
             {
-                item.Item?.ToString(fg, "Item");
+                item.Owner?.ToString(fg, "Owner");
             }
-            if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+            if (printMask?.ItemCondition ?? true)
             {
-                DataItem?.ToString(fg, "Data");
+                fg.AppendItem(item.ItemCondition, "ItemCondition");
             }
         }
         
         public bool HasBeenSet(
-            IContainerEntryGetter item,
-            ContainerEntry.Mask<bool?> checkMask)
+            IExtraDataGetter item,
+            ExtraData.Mask<bool?> checkMask)
         {
-            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
-            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
             return true;
         }
         
         public void FillHasBeenSetMask(
-            IContainerEntryGetter item,
-            ContainerEntry.Mask<bool> mask)
+            IExtraDataGetter item,
+            ExtraData.Mask<bool> mask)
         {
-            mask.Item = new MaskItem<bool, ContainerItem.Mask<bool>?>(true, item.Item?.GetHasBeenSetMask());
-            var itemData = item.Data;
-            mask.Data = new MaskItem<bool, ContainerEntryData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
+            mask.Owner = new MaskItem<bool, OwnerTarget.Mask<bool>?>(true, item.Owner?.GetHasBeenSetMask());
+            mask.ItemCondition = true;
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IContainerEntryGetter? lhs,
-            IContainerEntryGetter? rhs)
+            IExtraDataGetter? lhs,
+            IExtraDataGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!object.Equals(lhs.Item, rhs.Item)) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            if (!object.Equals(lhs.Owner, rhs.Owner)) return false;
+            if (!lhs.ItemCondition.EqualsWithin(rhs.ItemCondition)) return false;
             return true;
         }
         
-        public virtual int GetHashCode(IContainerEntryGetter item)
+        public virtual int GetHashCode(IExtraDataGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Item);
-            if (item.Data.TryGet(out var Dataitem))
-            {
-                hash.Add(Dataitem);
-            }
+            hash.Add(item.Owner);
+            hash.Add(item.ItemCondition);
             return hash.ToHashCode();
         }
         
@@ -1351,19 +1292,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public object GetNew()
         {
-            return ContainerEntry.GetNew();
+            return ExtraData.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IContainerEntryGetter obj)
+        public IEnumerable<ILinkGetter> GetLinks(IExtraDataGetter obj)
         {
-            foreach (var item in obj.Item.Links)
+            if (obj.Owner is ILinkContainer OwnerlinkCont)
             {
-                yield return item;
-            }
-            if (obj.Data is ILinkContainer DatalinkCont)
-            {
-                foreach (var item in DatalinkCont.Links)
+                foreach (var item in OwnerlinkCont.Links)
                 {
                     yield return item;
                 }
@@ -1374,26 +1311,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class ContainerEntrySetterTranslationCommon
+    public partial class ExtraDataSetterTranslationCommon
     {
-        public static readonly ContainerEntrySetterTranslationCommon Instance = new ContainerEntrySetterTranslationCommon();
+        public static readonly ExtraDataSetterTranslationCommon Instance = new ExtraDataSetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            IContainerEntry item,
-            IContainerEntryGetter rhs,
+            IExtraData item,
+            IExtraDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)ContainerEntry_FieldIndex.Item) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ExtraData_FieldIndex.Owner) ?? true))
             {
-                errorMask?.PushIndex((int)ContainerEntry_FieldIndex.Item);
+                errorMask?.PushIndex((int)ExtraData_FieldIndex.Owner);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)ContainerEntry_FieldIndex.Item) ?? true))
+                    if ((copyMask?.GetShouldTranslate((int)ExtraData_FieldIndex.Owner) ?? true))
                     {
-                        item.Item = rhs.Item.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)ContainerEntry_FieldIndex.Item),
+                        item.Owner = rhs.Owner.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)ExtraData_FieldIndex.Owner),
                             errorMask: errorMask);
                     }
                 }
@@ -1407,53 +1344,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)ContainerEntry_FieldIndex.Data) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ExtraData_FieldIndex.ItemCondition) ?? true))
             {
-                errorMask?.PushIndex((int)ContainerEntry_FieldIndex.Data);
-                try
-                {
-                    if(rhs.Data.TryGet(out var rhsData))
-                    {
-                        item.Data = rhsData.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)ContainerEntry_FieldIndex.Data));
-                    }
-                    else
-                    {
-                        item.Data = default;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ItemCondition = rhs.ItemCondition;
             }
         }
         
         #endregion
         
-        public ContainerEntry DeepCopy(
-            IContainerEntryGetter item,
-            ContainerEntry.TranslationMask? copyMask = null)
+        public ExtraData DeepCopy(
+            IExtraDataGetter item,
+            ExtraData.TranslationMask? copyMask = null)
         {
-            ContainerEntry ret = (ContainerEntry)((ContainerEntryCommon)((IContainerEntryGetter)item).CommonInstance()!).GetNew();
+            ExtraData ret = (ExtraData)((ExtraDataCommon)((IExtraDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public ContainerEntry DeepCopy(
-            IContainerEntryGetter item,
-            out ContainerEntry.ErrorMask errorMask,
-            ContainerEntry.TranslationMask? copyMask = null)
+        public ExtraData DeepCopy(
+            IExtraDataGetter item,
+            out ExtraData.ErrorMask errorMask,
+            ExtraData.TranslationMask? copyMask = null)
         {
-            ContainerEntry ret = (ContainerEntry)((ContainerEntryCommon)((IContainerEntryGetter)item).CommonInstance()!).GetNew();
+            ExtraData ret = (ExtraData)((ExtraDataCommon)((IExtraDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1461,12 +1376,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public ContainerEntry DeepCopy(
-            IContainerEntryGetter item,
+        public ExtraData DeepCopy(
+            IExtraDataGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            ContainerEntry ret = (ContainerEntry)((ContainerEntryCommon)((IContainerEntryGetter)item).CommonInstance()!).GetNew();
+            ExtraData ret = (ExtraData)((ExtraDataCommon)((IExtraDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1481,27 +1396,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ContainerEntry
+    public partial class ExtraData
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ContainerEntry_Registration.Instance;
-        public static ContainerEntry_Registration Registration => ContainerEntry_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ExtraData_Registration.Instance;
+        public static ExtraData_Registration Registration => ExtraData_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ContainerEntryCommon.Instance;
+        protected object CommonInstance() => ExtraDataCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return ContainerEntrySetterCommon.Instance;
+            return ExtraDataSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ContainerEntrySetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ExtraDataSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IContainerEntryGetter.CommonInstance() => this.CommonInstance();
+        object IExtraDataGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IContainerEntryGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IExtraDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IContainerEntryGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IExtraDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1512,55 +1427,50 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ContainerEntryXmlWriteTranslation : IXmlWriteTranslator
+    public partial class ExtraDataXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static ContainerEntryXmlWriteTranslation Instance = new ContainerEntryXmlWriteTranslation();
+        public readonly static ExtraDataXmlWriteTranslation Instance = new ExtraDataXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IContainerEntryGetter item,
+            IExtraDataGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)ContainerEntry_FieldIndex.Item) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)ExtraData_FieldIndex.Owner) ?? true))
             {
-                var ItemItem = item.Item;
-                ((ContainerItemXmlWriteTranslation)((IXmlItem)ItemItem).XmlWriteTranslator).Write(
-                    item: ItemItem,
+                var OwnerItem = item.Owner;
+                ((OwnerTargetXmlWriteTranslation)((IXmlItem)OwnerItem).XmlWriteTranslator).Write(
+                    item: OwnerItem,
                     node: node,
-                    name: nameof(item.Item),
-                    fieldIndex: (int)ContainerEntry_FieldIndex.Item,
+                    name: nameof(item.Owner),
+                    fieldIndex: (int)ExtraData_FieldIndex.Owner,
                     errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ContainerEntry_FieldIndex.Item));
+                    translationMask: translationMask?.GetSubCrystal((int)ExtraData_FieldIndex.Owner));
             }
-            if ((item.Data != null)
-                && (translationMask?.GetShouldTranslate((int)ContainerEntry_FieldIndex.Data) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)ExtraData_FieldIndex.ItemCondition) ?? true))
             {
-                if (item.Data.TryGet(out var DataItem))
-                {
-                    ((ContainerEntryDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
-                        item: DataItem,
-                        node: node,
-                        name: nameof(item.Data),
-                        fieldIndex: (int)ContainerEntry_FieldIndex.Data,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)ContainerEntry_FieldIndex.Data));
-                }
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ItemCondition),
+                    item: item.ItemCondition,
+                    fieldIndex: (int)ExtraData_FieldIndex.ItemCondition,
+                    errorMask: errorMask);
             }
         }
 
         public void Write(
             XElement node,
-            IContainerEntryGetter item,
+            IExtraDataGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.ContainerEntry");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.ExtraData");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.ContainerEntry");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.ExtraData");
             }
             WriteToNodeXml(
                 item: item,
@@ -1577,7 +1487,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IContainerEntryGetter)item,
+                item: (IExtraDataGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1586,7 +1496,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public void Write(
             XElement node,
-            IContainerEntryGetter item,
+            IExtraDataGetter item,
             ErrorMaskBuilder? errorMask,
             int fieldIndex,
             TranslationCrystal? translationMask,
@@ -1596,7 +1506,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             try
             {
                 Write(
-                    item: (IContainerEntryGetter)item,
+                    item: (IExtraDataGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1615,12 +1525,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class ContainerEntryXmlCreateTranslation
+    public partial class ExtraDataXmlCreateTranslation
     {
-        public readonly static ContainerEntryXmlCreateTranslation Instance = new ContainerEntryXmlCreateTranslation();
+        public readonly static ExtraDataXmlCreateTranslation Instance = new ExtraDataXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IContainerEntry item,
+            IExtraData item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1629,7 +1539,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    ContainerEntryXmlCreateTranslation.FillPublicElementXml(
+                    ExtraDataXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1645,7 +1555,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            IContainerEntry item,
+            IExtraData item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1653,14 +1563,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
-                case "Item":
-                    errorMask?.PushIndex((int)ContainerEntry_FieldIndex.Item);
+                case "Owner":
+                    errorMask?.PushIndex((int)ExtraData_FieldIndex.Owner);
                     try
                     {
-                        item.Item = LoquiXmlTranslation<ContainerItem>.Instance.Parse(
+                        item.Owner = LoquiXmlTranslation<OwnerTarget>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)ContainerEntry_FieldIndex.Item));
+                            translationMask: translationMask?.GetSubCrystal((int)ExtraData_FieldIndex.Owner));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1672,14 +1582,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Data":
-                    errorMask?.PushIndex((int)ContainerEntry_FieldIndex.Data);
+                case "ItemCondition":
+                    errorMask?.PushIndex((int)ExtraData_FieldIndex.ItemCondition);
                     try
                     {
-                        item.Data = LoquiXmlTranslation<ContainerEntryData>.Instance.Parse(
+                        item.ItemCondition = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)ContainerEntry_FieldIndex.Data));
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1702,30 +1611,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Xml Write Mixins
-    public static class ContainerEntryXmlTranslationMixIn
+    public static class ExtraDataXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IContainerEntryGetter item,
+            this IExtraDataGetter item,
             XElement node,
-            out ContainerEntry.ErrorMask errorMask,
-            ContainerEntry.TranslationMask? translationMask = null,
+            out ExtraData.ErrorMask errorMask,
+            ExtraData.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((ContainerEntryXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((ExtraDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = ContainerEntry.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ExtraData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this IContainerEntryGetter item,
+            this IExtraDataGetter item,
             string path,
-            out ContainerEntry.ErrorMask errorMask,
-            ContainerEntry.TranslationMask? translationMask = null,
+            out ExtraData.ErrorMask errorMask,
+            ExtraData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1739,7 +1648,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IContainerEntryGetter item,
+            this IExtraDataGetter item,
             string path,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1756,10 +1665,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IContainerEntryGetter item,
+            this IExtraDataGetter item,
             Stream stream,
-            out ContainerEntry.ErrorMask errorMask,
-            ContainerEntry.TranslationMask? translationMask = null,
+            out ExtraData.ErrorMask errorMask,
+            ExtraData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1773,7 +1682,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IContainerEntryGetter item,
+            this IExtraDataGetter item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1790,13 +1699,13 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IContainerEntryGetter item,
+            this IExtraDataGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
             string? name = null)
         {
-            ((ContainerEntryXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((ExtraDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1805,12 +1714,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IContainerEntryGetter item,
+            this IExtraDataGetter item,
             XElement node,
             string? name = null,
-            ContainerEntry.TranslationMask? translationMask = null)
+            ExtraData.TranslationMask? translationMask = null)
         {
-            ((ContainerEntryXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((ExtraDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1819,12 +1728,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IContainerEntryGetter item,
+            this IExtraDataGetter item,
             string path,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((ContainerEntryXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((ExtraDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1834,12 +1743,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IContainerEntryGetter item,
+            this IExtraDataGetter item,
             Stream stream,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((ContainerEntryXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((ExtraDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1858,38 +1767,49 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ContainerEntryBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class ExtraDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ContainerEntryBinaryWriteTranslation Instance = new ContainerEntryBinaryWriteTranslation();
+        public readonly static ExtraDataBinaryWriteTranslation Instance = new ExtraDataBinaryWriteTranslation();
 
-        public static void WriteRecordTypes(
-            IContainerEntryGetter item,
+        static partial void WriteBinaryOwnerCustom(
             MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+            IExtraDataGetter item);
+
+        public static void WriteBinaryOwner(
+            MutagenWriter writer,
+            IExtraDataGetter item)
         {
-            var ItemItem = item.Item;
-            ((ContainerItemBinaryWriteTranslation)((IBinaryItem)ItemItem).BinaryWriteTranslator).Write(
-                item: ItemItem,
+            WriteBinaryOwnerCustom(
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
-            if (item.Data.TryGet(out var DataItem))
-            {
-                ((ContainerEntryDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
-                    item: DataItem,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
-            }
+                item: item);
+        }
+
+        public static void WriteEmbedded(
+            IExtraDataGetter item,
+            MutagenWriter writer)
+        {
+            ExtraDataBinaryWriteTranslation.WriteBinaryOwner(
+                writer: writer,
+                item: item);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.ItemCondition);
         }
 
         public void Write(
             MutagenWriter writer,
-            IContainerEntryGetter item,
+            IExtraDataGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            WriteRecordTypes(
-                item: item,
+            using (HeaderExport.ExportHeader(
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                record: recordTypeConverter.ConvertToCustom(ExtraData_Registration.COED_HEADER),
+                type: ObjectType.Subrecord))
+            {
+                WriteEmbedded(
+                    item: item,
+                    writer: writer);
+            }
         }
 
         public void Write(
@@ -1898,16 +1818,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IContainerEntryGetter)item,
+                item: (IExtraDataGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class ContainerEntryBinaryCreateTranslation
+    public partial class ExtraDataBinaryCreateTranslation
     {
-        public readonly static ContainerEntryBinaryCreateTranslation Instance = new ContainerEntryBinaryCreateTranslation();
+        public readonly static ExtraDataBinaryCreateTranslation Instance = new ExtraDataBinaryCreateTranslation();
+
+        static partial void FillBinaryOwnerCustom(
+            MutagenFrame frame,
+            IExtraData item);
+
+        public static void FillBinaryOwnerCustomPublic(
+            MutagenFrame frame,
+            IExtraData item)
+        {
+            FillBinaryOwnerCustom(
+                frame: frame,
+                item: item);
+        }
 
     }
 
@@ -1915,13 +1848,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class ContainerEntryBinaryTranslationMixIn
+    public static class ExtraDataBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IContainerEntryGetter item,
+            this IExtraDataGetter item,
             MutagenWriter writer)
         {
-            ((ContainerEntryBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((ExtraDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 recordTypeConverter: null);
@@ -1934,34 +1867,34 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ContainerEntryBinaryOverlay :
+    public partial class ExtraDataBinaryOverlay :
         BinaryOverlay,
-        IContainerEntryGetter
+        IExtraDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ContainerEntry_Registration.Instance;
-        public static ContainerEntry_Registration Registration => ContainerEntry_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ExtraData_Registration.Instance;
+        public static ExtraData_Registration Registration => ExtraData_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ContainerEntryCommon.Instance;
+        protected object CommonInstance() => ExtraDataCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ContainerEntrySetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ExtraDataSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IContainerEntryGetter.CommonInstance() => this.CommonInstance();
+        object IExtraDataGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IContainerEntryGetter.CommonSetterInstance() => null;
+        object? IExtraDataGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IContainerEntryGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IExtraDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IContainerEntryGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IExtraDataGetter)rhs, include);
 
-        public IEnumerable<ILinkGetter> Links => ContainerEntryCommon.Instance.GetLinks(this);
+        public IEnumerable<ILinkGetter> Links => ExtraDataCommon.Instance.GetLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => ContainerEntryXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => ExtraDataXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -1970,7 +1903,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((ContainerEntryXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((ExtraDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -1978,37 +1911,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ContainerEntryBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ExtraDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((ContainerEntryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ExtraDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
-        #region Item
-        private RangeInt32? _ItemLocation;
-        private bool _Item_IsSet => _ItemLocation.HasValue;
-        private IContainerItemGetter? _Item => _Item_IsSet ? ContainerItemBinaryOverlay.ContainerItemFactory(new BinaryMemoryReadStream(_data.Slice(_ItemLocation!.Value.Min)), _package) : default;
-        public IContainerItemGetter Item => _Item ?? new ContainerItem();
-        #endregion
-        #region Data
-        private RangeInt32? _DataLocation;
-        private bool _Data_IsSet => _DataLocation.HasValue;
-        public IContainerEntryDataGetter? Data => _Data_IsSet ? ContainerEntryDataBinaryOverlay.ContainerEntryDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
-        public bool Data_IsSet => _DataLocation.HasValue;
-        #endregion
+        public IOwnerTargetGetter Owner => GetOwnerCustom(location: 0x0);
+        public Single ItemCondition => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
+        private int OwnerEndingPos;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected ContainerEntryBinaryOverlay(
+        protected ExtraDataBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -2017,72 +1941,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static ContainerEntryBinaryOverlay ContainerEntryFactory(
+        public static ExtraDataBinaryOverlay ExtraDataFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new ContainerEntryBinaryOverlay(
-                bytes: stream.RemainingMemory,
+            var ret = new ExtraDataBinaryOverlay(
+                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.Meta),
                 package: package);
-            int offset = stream.Position;
+            var finalPos = checked((int)(stream.Position + package.Meta.Subrecord(stream.RemainingSpan).TotalLength));
+            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
+            stream.Position += 0x4 + package.Meta.SubConstants.HeaderLength;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,
-                offset: 0);
-            ret.FillTypelessSubrecordTypes(
-                stream: stream,
-                finalPos: stream.Length,
-                offset: offset,
-                recordTypeConverter: recordTypeConverter,
-                fill: ret.FillRecordType);
+                offset: offset);
             return ret;
         }
 
-        public static ContainerEntryBinaryOverlay ContainerEntryFactory(
+        public static ExtraDataBinaryOverlay ExtraDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            return ContainerEntryFactory(
+            return ExtraDataFactory(
                 stream: new BinaryMemoryReadStream(slice),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
-            int finalPos,
-            int offset,
-            RecordType type,
-            int? lastParsed,
-            RecordTypeConverter? recordTypeConverter)
-        {
-            type = recordTypeConverter.ConvertToStandard(type);
-            switch (type.TypeInt)
-            {
-                case 0x4F544E43: // CNTO
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ContainerEntry_FieldIndex.Item) return TryGet<int?>.Failure;
-                    _ItemLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)ContainerEntry_FieldIndex.Item);
-                }
-                case 0x44454F43: // COED
-                {
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)ContainerEntry_FieldIndex.Data);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
         #region To String
 
         public void ToString(
             FileGeneration fg,
             string? name = null)
         {
-            ContainerEntryMixIn.ToString(
+            ExtraDataMixIn.ToString(
                 item: this,
                 name: name);
         }
