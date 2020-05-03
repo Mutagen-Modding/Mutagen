@@ -7,14 +7,14 @@ namespace Mutagen.Bethesda.Skyrim
     /// <summary>
     /// Used for specifying which records are allowed as an Object Effect
     /// </summary>
-    public interface IEffectRecord : IMajorRecordCommon, IEffectRecordGetter
+    public interface IEffectRecord : ISkyrimMajorRecordInternal, IEffectRecordGetter
     {
     }
 
     /// <summary>
     /// Used for specifying which records are allowed as an Object Effect
     /// </summary>
-    public interface IEffectRecordGetter : IMajorRecordCommonGetter
+    public interface IEffectRecordGetter : ISkyrimMajorRecordGetter
     {
     }
 }

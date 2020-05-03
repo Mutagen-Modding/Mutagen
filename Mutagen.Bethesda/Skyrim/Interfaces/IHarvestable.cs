@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Skyrim
     /// <summary>
     /// Common interface for records that can be harvested
     /// </summary>
-    public interface IHarvestable : IMajorRecordCommon, IHarvestableGetter
+    public interface IHarvestable : ISkyrimMajorRecordInternal, IHarvestableGetter
     {
         new IFormLinkNullable<IHarvestTarget> Ingredient { get; }
         new IFormLinkNullable<SoundDescriptor> HarvestSound { get; }
@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Skyrim
     /// <summary>
     /// Common interface for records that can be harvested
     /// </summary>
-    public interface IHarvestableGetter : IMajorRecordCommonGetter
+    public interface IHarvestableGetter : ISkyrimMajorRecordGetter
     {
         IFormLinkNullableGetter<IHarvestTargetGetter> Ingredient { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> HarvestSound { get; }
