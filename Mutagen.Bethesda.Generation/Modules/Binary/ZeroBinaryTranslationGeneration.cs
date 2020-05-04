@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Generation
             throw new NotImplementedException();
         }
 
-        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
+        public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
         {
             ZeroType zero = typeGen as ZeroType;
             return zero.Length;

@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
             this.PreferDirectTranslation = false;
         }
 
-        public override void GenerateWrapperFields(
+        public override async Task GenerateWrapperFields(
             FileGeneration fg,
             ObjectGeneration objGen, 
             TypeGeneration typeGen,
@@ -27,12 +27,12 @@ namespace Mutagen.Bethesda.Generation
         {
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             if (data.RecordType.HasValue
-                || this.ExpectedLength(objGen, typeGen) == null)
+                || await this.ExpectedLength(objGen, typeGen) == null)
             {
                 return;
                 throw new NotImplementedException();
             }
-            fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => FormKeyBinaryTranslation.Instance.Parse({dataAccessor}.Span.Slice({passedLengthAccessor}, {this.ExpectedLength(objGen, typeGen).Value}), this._package.MasterReferences!);");
+            fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => FormKeyBinaryTranslation.Instance.Parse({dataAccessor}.Span.Slice({passedLengthAccessor}, {(await this.ExpectedLength(objGen, typeGen)).Value}), this._package.MasterReferences!);");
         }
 
         public override void GenerateCopyInRet(

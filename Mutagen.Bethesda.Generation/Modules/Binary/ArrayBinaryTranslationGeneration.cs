@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.Generation
 {
     public class ArrayBinaryTranslationGeneration : ListBinaryTranslationGeneration
     {
-        public override void GenerateWrapperFields(
+        public override async Task GenerateWrapperFields(
             FileGeneration fg, 
             ObjectGeneration objGen, 
             TypeGeneration typeGen, 
@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Generation
             var data = arr.GetFieldData();
             if (data.BinaryOverlayFallback != BinaryGenerationType.Normal)
             {
-                base.GenerateWrapperFields(fg, objGen, typeGen, dataAccessor, currentPosition, passedLengthAccessor);
+                await base.GenerateWrapperFields(fg, objGen, typeGen, dataAccessor, currentPosition, passedLengthAccessor);
                 return;
             }
             var subGen = this.Module.GetTypeGeneration(arr.SubTypeGeneration.GetType());
@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
+        public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
         {
             ArrayType arr = typeGen as ArrayType;
             if (arr.FixedSize.HasValue)
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Generation
                 else if (arr.SubTypeGeneration is LoquiType loqui
                     && this.Module.TryGetTypeGeneration(loqui.GetType(), out var loquiGen))
                 {
-                    return arr.FixedSize.Value * loquiGen.GetPassedAmount(objGen, loqui);
+                    return arr.FixedSize.Value * await loquiGen.GetPassedAmount(objGen, loqui);
                 }
                 throw new NotImplementedException();
             }

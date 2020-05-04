@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Generation
             }
         }
         
-        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
+        public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
         {
             BufferType buf = typeGen as BufferType;
             return buf.Length;

@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override void GenerateWrapperFields(
+        public override async Task GenerateWrapperFields(
             FileGeneration fg,
             ObjectGeneration objGen, 
             TypeGeneration typeGen, 
@@ -137,12 +137,12 @@ namespace Mutagen.Bethesda.Generation
                 case BinaryGenerationType.NoGeneration:
                     return;
                 case BinaryGenerationType.Custom:
-                    this.Module.CustomLogic.GenerateForCustomFlagWrapperFields(
+                    await this.Module.CustomLogic.GenerateForCustomFlagWrapperFields(
                         fg,
                         objGen,
                         typeGen,
                         dataAccessor,
-                        ref currentPosition);
+                        currentPosition);
                     return;
                 default:
                     throw new NotImplementedException();
@@ -183,17 +183,17 @@ namespace Mutagen.Bethesda.Generation
 
         }
 
-        public override int? GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
+        public override async Task<int?> GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
         {
             var data = typeGen.GetFieldData();
             if (!data.RecordType.HasValue)
             {
-                return this.ExpectedLength(objGen, typeGen) ?? null;
+                return await this.ExpectedLength(objGen, typeGen) ?? null;
             }
             return 0;
         }
 
-        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
+        public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
         {
             var eType = typeGen as EnumType;
             return eType.ByteLength;

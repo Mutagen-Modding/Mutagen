@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Generation
 {
     public class NothingBinaryTranslationGeneration : BinaryTranslationGeneration
     {
-        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
+        public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
         {
             return 0;
         }

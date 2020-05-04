@@ -261,7 +261,7 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override void GenerateWrapperFields(
+        public override async Task GenerateWrapperFields(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
@@ -279,12 +279,12 @@ namespace Mutagen.Bethesda.Generation
                 case BinaryGenerationType.NoGeneration:
                     return;
                 case BinaryGenerationType.Custom:
-                    this.Module.CustomLogic.GenerateForCustomFlagWrapperFields(
+                    await this.Module.CustomLogic.GenerateForCustomFlagWrapperFields(
                         fg,
                         objGen,
                         typeGen,
                         dataAccessor,
-                        ref currentPosition);
+                        currentPosition);
                     return;
                 default:
                     throw new NotImplementedException();
@@ -430,7 +430,7 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
+        public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
         {
             LoquiType loqui = typeGen as LoquiType;
             if (loqui.TargetObjectGeneration == null) return null;
@@ -442,10 +442,36 @@ namespace Mutagen.Bethesda.Generation
             foreach (var item in loqui.TargetObjectGeneration.IterateFields(includeBaseClass: true))
             {
                 if (!this.Module.TryGetTypeGeneration(item.GetType(), out var gen)) continue;
-                var len = gen.ExpectedLength(objGen, item);
+                var len = await gen.ExpectedLength(objGen, item);
                 if (len == null) return null;
                 sum += len.Value;
             }
+
+            //if (loqui.TargetObjectGeneration.Abstract)
+            //{
+            //    int? absSum = null;
+            //    foreach (var obj in await loqui.TargetObjectGeneration.InheritingObjects())
+            //    {
+            //        int objectSum = 0;
+            //        foreach (var item in loqui.TargetObjectGeneration.IterateFields(includeBaseClass: true))
+            //        {
+            //            if (!this.Module.TryGetTypeGeneration(item.GetType(), out var gen)) continue;
+            //            var len = await gen.ExpectedLength(objGen, item);
+            //            if (len == null) return null;
+            //            objectSum += len.Value;
+            //        }
+            //        if (absSum == null)
+            //        {
+            //            absSum = objectSum;
+            //        }
+            //        else if (absSum.Value != objectSum)
+            //        {
+            //            // Inheriting objects don't agree on their length, so we can't expect a certain length
+            //            return null;
+            //        }
+            //    }
+            //}
+
             return sum;
         }
 

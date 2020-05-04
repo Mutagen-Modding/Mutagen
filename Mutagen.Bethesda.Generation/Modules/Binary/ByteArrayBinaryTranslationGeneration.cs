@@ -114,7 +114,7 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override void GenerateWrapperFields(
+        public override async Task GenerateWrapperFields(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
@@ -131,12 +131,12 @@ namespace Mutagen.Bethesda.Generation
                 case BinaryGenerationType.NoGeneration:
                     return;
                 case BinaryGenerationType.Custom:
-                    this.Module.CustomLogic.GenerateForCustomFlagWrapperFields(
+                    await this.Module.CustomLogic.GenerateForCustomFlagWrapperFields(
                         fg,
                         objGen,
                         typeGen,
                         dataAccessor,
-                        ref currentPosition);
+                        currentPosition);
                     return;
                 default:
                     throw new NotImplementedException();
@@ -153,7 +153,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (typeGen.HasBeenSet)
                 {
-                    fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => {dataAccessor}.Length >= {(currentPosition + this.ExpectedLength(objGen, typeGen).Value)} ? {dataAccessor}.Span.Slice({currentPosition}, {data.Length.Value}).ToArray() : default(ReadOnlyMemorySlice<byte>?);");
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => {dataAccessor}.Length >= {(currentPosition + (await this.ExpectedLength(objGen, typeGen)).Value)} ? {dataAccessor}.Span.Slice({currentPosition}, {data.Length.Value}).ToArray() : default(ReadOnlyMemorySlice<byte>?);");
                 }
                 else
                 {
@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override int? GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
+        public override async Task<int?> GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
         {
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             if (!data.RecordType.HasValue)
@@ -175,7 +175,7 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
+        public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
         {
             ByteArrayType bType = typeGen as ByteArrayType;
             return bType.Length;

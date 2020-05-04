@@ -218,7 +218,7 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override void GenerateWrapperFields(
+        public override async Task GenerateWrapperFields(
             FileGeneration fg,
             ObjectGeneration objGen, 
             TypeGeneration typeGen, 
@@ -241,11 +241,11 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                if (this.ExpectedLength(objGen, typeGen) == null)
+                if (await this.ExpectedLength(objGen, typeGen) == null)
                 {
                     throw new NotImplementedException();
                 }
-                fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice({passedLengthAccessor}, 0x{this.ExpectedLength(objGen, typeGen).Value:X})", "_package")};");
+                fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice({passedLengthAccessor}, 0x{(await this.ExpectedLength(objGen, typeGen)).Value:X})", "_package")};");
             }
         }
     }

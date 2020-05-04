@@ -1520,7 +1520,7 @@ namespace Mutagen.Bethesda.Generation
                         switch (data.BinaryOverlayFallback)
                         {
                             case BinaryGenerationType.Custom:
-                                passedLength += CustomLogic.ExpectedLength(obj, field).Value;
+                                passedLength += (await CustomLogic.ExpectedLength(obj, field)).Value;
                                 continue;
                             case BinaryGenerationType.Normal:
                                 break;
@@ -1529,7 +1529,7 @@ namespace Mutagen.Bethesda.Generation
                         }
                         if (!data.HasTrigger)
                         {
-                            var amount = typeGen.GetPassedAmount(obj, field);
+                            var amount = await typeGen.GetPassedAmount(obj, field);
                             passedLength += amount.Value;
                         }
                     }
@@ -1574,7 +1574,7 @@ namespace Mutagen.Bethesda.Generation
                                 passedAccessor += $" + 0x{passedLength.Value:X}";
                             }
                         }
-                        typeGen.GenerateWrapperFields(
+                        await typeGen.GenerateWrapperFields(
                             fg,
                             obj,
                             field,
@@ -1589,7 +1589,7 @@ namespace Mutagen.Bethesda.Generation
                             }
                             else
                             {
-                                var amount = typeGen.GetPassedAmount(obj, field);
+                                var amount = await typeGen.GetPassedAmount(obj, field);
                                 if (amount == null)
                                 {
                                     passedLength = null;
@@ -1634,7 +1634,7 @@ namespace Mutagen.Bethesda.Generation
                     var data = field.Item.Field.GetFieldData();
                     if (!data.HasTrigger && passedLength != null)
                     {
-                        var amount = typeGen.GetPassedAmount(obj, field.Item.Field);
+                        var amount = await typeGen.GetPassedAmount(obj, field.Item.Field);
                         if (amount == null)
                         {
                             passedLength = null;
@@ -1933,7 +1933,7 @@ namespace Mutagen.Bethesda.Generation
                             var data = field.Item.Field.GetFieldData();
                             if (!data.HasTrigger)
                             {
-                                var amount = typeGen.GetPassedAmount(obj, field.Item.Field);
+                                var amount = await typeGen.GetPassedAmount(obj, field.Item.Field);
                                 if (amount == null)
                                 {
                                     if (field.Item.Field is CustomLogic) continue;
@@ -2132,7 +2132,7 @@ namespace Mutagen.Bethesda.Generation
                                         }
                                         else if (field.GetFieldData().BinaryOverlayFallback != BinaryGenerationType.NoGeneration)
                                         {
-                                            passedLen += typeGen.ExpectedLength(obj, field).Value;
+                                            passedLen += (await typeGen.ExpectedLength(obj, field)).Value;
                                         }
                                     }
                                     // Not advancing stream position, but only because breaks only occur in situations

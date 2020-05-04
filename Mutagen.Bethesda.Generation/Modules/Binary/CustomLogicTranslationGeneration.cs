@@ -213,12 +213,12 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public void GenerateForCustomFlagWrapperFields(
+        public async Task GenerateForCustomFlagWrapperFields(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
             Accessor dataAccessor,
-            ref int? currentPosition)
+            int? currentPosition)
         {
             var fieldData = typeGen.GetFieldData();
             var gen = this.Module.GetTypeGeneration(typeGen.GetType());
@@ -252,11 +252,11 @@ namespace Mutagen.Bethesda.Generation
             }
             if (!fieldData.HasTrigger)
             {
-                currentPosition += fieldData.Length ?? gen.ExpectedLength(objGen, typeGen);
+                currentPosition += fieldData.Length ?? await gen.ExpectedLength(objGen, typeGen);
             }
         }
 
-        public override void GenerateWrapperFields(
+        public override async Task GenerateWrapperFields(
             FileGeneration fg, 
             ObjectGeneration objGen, 
             TypeGeneration typeGen, 
@@ -288,7 +288,7 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
+        public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
         {
             CustomLogic custom = typeGen as CustomLogic;
             var data = typeGen.GetFieldData();

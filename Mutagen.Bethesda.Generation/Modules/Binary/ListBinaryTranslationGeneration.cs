@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Generation
             throw new NotImplementedException();
         }
 
-        public override void GenerateWrapperFields(
+        public override async Task GenerateWrapperFields(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
@@ -499,11 +499,11 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => BinaryOverlaySetList<{list.SubTypeGeneration.TypeName(getter: true)}>.FactoryByStartIndex({dataAccessor}.Slice({currentPosition}), _package, {subGen.ExpectedLength(objGen, list.SubTypeGeneration)}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
+                fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => BinaryOverlaySetList<{list.SubTypeGeneration.TypeName(getter: true)}>.FactoryByStartIndex({dataAccessor}.Slice({currentPosition}), _package, {await subGen.ExpectedLength(objGen, list.SubTypeGeneration)}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
             }
         }
 
-        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
+        public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
         {
             return null;
         }
@@ -558,7 +558,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 typeName = list.SubTypeGeneration.TypeName(getter: true);
             }
-            var expectedLen = subGen.ExpectedLength(objGen, list.SubTypeGeneration);
+            var expectedLen = await subGen.ExpectedLength(objGen, list.SubTypeGeneration);
             switch (listBinaryType)
             {
                 case ListBinaryType.SubTrigger:
@@ -704,7 +704,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             args.Add($"mem: stream.RemainingMemory.Slice(0, subLen)");
                             args.Add($"package: _package");
-                            args.Add($"itemLength: {subGen.ExpectedLength(objGen, list.SubTypeGeneration)}");
+                            args.Add($"itemLength: {await subGen.ExpectedLength(objGen, list.SubTypeGeneration)}");
                             if (subGenTypes.Count <= 1)
                             {
                                 args.Add($"getter: (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")}");

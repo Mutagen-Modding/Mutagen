@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.Generation
             };
         }
 
-        public override void GenerateWrapperFields(
+        public override async Task GenerateWrapperFields(
             FileGeneration fg, 
             ObjectGeneration objGen, 
             TypeGeneration typeGen,
@@ -38,12 +38,12 @@ namespace Mutagen.Bethesda.Generation
                 case BinaryGenerationType.NoGeneration:
                     return;
                 case BinaryGenerationType.Custom:
-                    this.Module.CustomLogic.GenerateForCustomFlagWrapperFields(
+                    await this.Module.CustomLogic.GenerateForCustomFlagWrapperFields(
                         fg,
                         objGen,
                         typeGen,
                         dataAccessor,
-                        ref currentPosition);
+                        currentPosition);
                     return;
                 default:
                     throw new NotImplementedException();

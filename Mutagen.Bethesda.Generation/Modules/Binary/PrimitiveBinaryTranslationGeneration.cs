@@ -196,7 +196,7 @@ namespace Mutagen.Bethesda.Generation
             return $"BinaryPrimitives.Read{typeGen.TypeName(getter: true)}LittleEndian({dataAccessor})";
         }
 
-        public override void GenerateWrapperFields(
+        public override async Task GenerateWrapperFields(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
@@ -213,12 +213,12 @@ namespace Mutagen.Bethesda.Generation
                 case BinaryGenerationType.NoGeneration:
                     return;
                 case BinaryGenerationType.Custom:
-                    this.Module.CustomLogic.GenerateForCustomFlagWrapperFields(
+                    await this.Module.CustomLogic.GenerateForCustomFlagWrapperFields(
                         fg,
                         objGen,
                         typeGen,
                         dataAccessor,
-                        ref currentPosition);
+                        currentPosition);
                     return;
                 default:
                     throw new NotImplementedException();
@@ -234,7 +234,7 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                var expectedLen = this.ExpectedLength(objGen, typeGen);
+                var expectedLen = await this.ExpectedLength(objGen, typeGen);
                 if (this.CustomWrapper != null)
                 {
                     if (CustomWrapper(fg, objGen, typeGen, dataAccessor, passedLengthAccessor)) return;
@@ -249,19 +249,18 @@ namespace Mutagen.Bethesda.Generation
                     }
                     else
                     {
-                        var expected = this.ExpectedLength(objGen, typeGen).Value;
-                        string passed = int.TryParse(passedLengthAccessor.TrimStart("0x"), System.Globalization.NumberStyles.HexNumber, null, out var passedInt) ? (passedInt + expected).ToString() : $"({passedLengthAccessor} + {expected})";
-                        fg.AppendLine($"public {typeGen.TypeName(getter: true)}? {typeGen.Name} => {dataAccessor}.Length >= {passed} ? {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Slice({passedLengthAccessor}{(expectedLen != null ? $", 0x{this.ExpectedLength(objGen, typeGen).Value:X}" : null)})", "_package")} : {typeGen.GetDefault()};");
+                        string passed = int.TryParse(passedLengthAccessor.TrimStart("0x"), System.Globalization.NumberStyles.HexNumber, null, out var passedInt) ? (passedInt + expectedLen.Value).ToString() : $"({passedLengthAccessor} + {expectedLen.Value})";
+                        fg.AppendLine($"public {typeGen.TypeName(getter: true)}? {typeGen.Name} => {dataAccessor}.Length >= {passed} ? {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Slice({passedLengthAccessor}{(expectedLen != null ? $", 0x{expectedLen.Value:X}" : null)})", "_package")} : {typeGen.GetDefault()};");
                     }
                 }
                 else
                 {
-                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Slice({passedLengthAccessor}{(expectedLen != null ? $", 0x{this.ExpectedLength(objGen, typeGen).Value:X}" : null)})", "_package")};");
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Slice({passedLengthAccessor}{(expectedLen != null ? $", 0x{expectedLen.Value:X}" : null)})", "_package")};");
                 }
             }
         }
 
-        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
+        public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
         {
             return typeGen.GetFieldData().Length ?? this._ExpectedLength;
         }

@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Generation
 {
     public class GenderedTypeBinaryTranslationGeneration : BinaryTranslationGeneration
     {
-        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
+        public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
         {
             GenderedType gender = typeGen as GenderedType;
 
@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.Generation
                 throw new ArgumentException("Unsupported type generator: " + gender.SubTypeGeneration);
             }
 
-            var expected = subTransl.ExpectedLength(objGen, gender.SubTypeGeneration);
+            var expected = await subTransl.ExpectedLength(objGen, gender.SubTypeGeneration);
             if (expected == null) return null;
             return expected.Value * 2;
         }
@@ -211,7 +211,7 @@ namespace Mutagen.Bethesda.Generation
             throw new NotImplementedException();
         }
 
-        public override void GenerateWrapperFields(
+        public override async Task GenerateWrapperFields(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
@@ -228,12 +228,12 @@ namespace Mutagen.Bethesda.Generation
                 case BinaryGenerationType.NoGeneration:
                     return;
                 case BinaryGenerationType.Custom:
-                    this.Module.CustomLogic.GenerateForCustomFlagWrapperFields(
+                    await this.Module.CustomLogic.GenerateForCustomFlagWrapperFields(
                         fg,
                         objGen,
                         typeGen,
                         dataAccessor,
-                        ref currentPosition);
+                        currentPosition);
                     return;
                 default:
                     throw new NotImplementedException();
@@ -245,7 +245,7 @@ namespace Mutagen.Bethesda.Generation
             if (typeGen.HasBeenSet
                 && !gendered.ItemHasBeenSet)
             {
-                var subLen = subBin.ExpectedLength(objGen, gendered.SubTypeGeneration).Value;
+                var subLen = (await subBin.ExpectedLength(objGen, gendered.SubTypeGeneration)).Value;
                 if (typeGen.HasBeenSet)
                 {
                     fg.AppendLine($"private int? _{typeGen.Name}Location;");
@@ -270,7 +270,7 @@ namespace Mutagen.Bethesda.Generation
             else if (!typeGen.HasBeenSet
                 && !gendered.ItemHasBeenSet)
             {
-                var subLen = subBin.ExpectedLength(objGen, gendered.SubTypeGeneration).Value;
+                var subLen = (await subBin.ExpectedLength(objGen, gendered.SubTypeGeneration)).Value;
                 if (typeGen.HasBeenSet)
                 {
                     throw new NotImplementedException();

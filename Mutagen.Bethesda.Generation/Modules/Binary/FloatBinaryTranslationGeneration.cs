@@ -19,9 +19,9 @@ namespace Mutagen.Bethesda.Generation
             this.CustomWrite = WriteFloat;
         }
 
-        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
+        public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
         {
-            if (typeGen.GetFieldData().Binary != BinaryGenerationType.Normal) return base.ExpectedLength(objGen, typeGen);
+            if (typeGen.GetFieldData().Binary != BinaryGenerationType.Normal) return await base.ExpectedLength(objGen, typeGen);
             var floatType = typeGen as Mutagen.Bethesda.Generation.FloatType;
             switch (floatType.StorageType)
             {

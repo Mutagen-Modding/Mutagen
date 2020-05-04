@@ -271,7 +271,7 @@ namespace Mutagen.Bethesda.Generation
             throw new NotImplementedException();
         }
 
-        public override void GenerateWrapperFields(
+        public override async Task GenerateWrapperFields(
             FileGeneration fg,
             ObjectGeneration objGen, 
             TypeGeneration typeGen,
@@ -281,8 +281,8 @@ namespace Mutagen.Bethesda.Generation
         {
         }
 
-        public override int? GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen) => 0;
+        public override async Task<int?> GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen) => 0;
 
-        public override int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen) => null;
+        public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen) => null;
     }
 }

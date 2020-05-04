@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.Generation
         public List<ParamTest> AdditionalWriteParams = new List<ParamTest>();
         public List<ParamTest> AdditionalCopyInParams = new List<ParamTest>();
         public List<ParamTest> AdditionalCopyInRetParams = new List<ParamTest>();
-        public abstract int? ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen);
+        public abstract Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen);
 
         public virtual bool AllowDirectWrite(
             ObjectGeneration objGen,
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor translationAccessor,
             Accessor converterAccessor);
 
-        public virtual void GenerateWrapperFields(
+        public virtual async Task GenerateWrapperFields(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
@@ -91,12 +91,12 @@ namespace Mutagen.Bethesda.Generation
         {
         }
 
-        public virtual int? GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
+        public virtual async Task<int?> GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen)
         {
             var data = typeGen.GetFieldData();
             if (!data.HasTrigger)
             {
-                return this.ExpectedLength(objGen, typeGen);
+                return await this.ExpectedLength(objGen, typeGen);
             }
             return null;
         }
