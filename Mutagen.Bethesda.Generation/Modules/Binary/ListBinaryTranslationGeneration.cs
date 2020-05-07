@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Generation
         const string AsyncItemKey = "ListAsyncItem";
         const string ThreadKey = "ListThread";
         public const string CounterRecordType = "ListCounterRecordType";
-        public const string PrependCountType = "ListPrependCountType";
+        public const string CounterByteLength = "CounterByteLength";
 
         public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
         {
@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Generation
             var listType = field as ListType;
             listType.CustomData[ThreadKey] = node.GetAttribute<bool>("thread", false);
             listType.CustomData[CounterRecordType] = node.GetAttribute("counterRecType", null);
-            listType.CustomData[PrependCountType] = node.GetAttribute("prependCount", default(byte));
+            listType.CustomData[CounterByteLength] = node.GetAttribute("counterLength", default(byte));
             var asyncItem = node.GetAttribute<bool>("asyncItems", false);
             if (asyncItem && listType.SubTypeGeneration is LoquiType loqui)
             {
@@ -73,6 +73,12 @@ namespace Mutagen.Bethesda.Generation
                 default:
                     break;
             }
+
+            if (listType.CustomData[CounterRecordType] != null
+                && ((byte)listType.CustomData[CounterByteLength]) == 0)
+            {
+                listType.CustomData[CounterByteLength] = (byte)4;
+            }
         }
 
         private ListBinaryType GetListType(
@@ -86,8 +92,8 @@ namespace Mutagen.Bethesda.Generation
             {
                 return ListBinaryType.CounterRecord;
             }
-            if (list.CustomData.TryGetValue(PrependCountType, out var prependCountRecType)
-                && prependCountRecType is byte prependCount
+            if (list.CustomData.TryGetValue(CounterByteLength, out var prependCountObj)
+                && prependCountObj is byte prependCount
                 && prependCount > 0)
             {
                 return ListBinaryType.PrependCount;
@@ -172,6 +178,8 @@ namespace Mutagen.Bethesda.Generation
                     case ListBinaryType.CounterRecord:
                         var counterType = new RecordType(list.CustomData[CounterRecordType] as string);
                         args.Add($"counterType: {objGen.RecordTypeHeaderName(counterType)}");
+                        var counterLength = (byte)list.CustomData[CounterByteLength];
+                        args.Add($"counterLength: {counterLength}");
                         if (subData.HasTrigger
                             && !subData.HandleTrigger)
                         {
@@ -191,7 +199,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             args.Add($"recordType: recordTypeConverter.ConvertToCustom({data.TriggeringRecordSetAccessor})");
                         }
-                        byte countLen = (byte)list.CustomData[PrependCountType];
+                        byte countLen = (byte)list.CustomData[CounterByteLength];
                         switch (countLen)
                         {
                             case 2:
@@ -267,7 +275,20 @@ namespace Mutagen.Bethesda.Generation
             if (typeGen.CustomData.TryGetValue(CounterRecordType, out var counterRecObj)
                 && counterRecObj is string counterRecType)
             {
-                fg.AppendLine("var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.ReadSubrecordFrame().Content);");
+                switch ((byte)typeGen.CustomData[CounterByteLength])
+                {
+                    case 1:
+                        fg.AppendLine("var amount = frame.ReadSubrecordFrame().Content[0];");
+                        break;
+                    case 2:
+                        fg.AppendLine("var amount = BinaryPrimitives.ReadInt16LittleEndian(frame.ReadSubrecordFrame().Content);");
+                        break;
+                    case 4:
+                        fg.AppendLine("var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.ReadSubrecordFrame().Content);");
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
             }
             else if (data.MarkerType.HasValue)
             {
@@ -329,7 +350,7 @@ namespace Mutagen.Bethesda.Generation
                                 }
                                 break;
                             case ListBinaryType.PrependCount:
-                                byte countLen = (byte)list.CustomData[PrependCountType];
+                                byte countLen = (byte)list.CustomData[CounterByteLength];
                                 switch (countLen)
                                 {
                                     case 2:
@@ -762,7 +783,20 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine("stream.Position += subLen;");
                     break;
                 case ListBinaryType.CounterRecord:
-                    fg.AppendLine($"var count = BinaryPrimitives.{nameof(BinaryPrimitives.ReadUInt32LittleEndian)}(_package.Meta.ReadSubrecordFrame(stream).Content);");
+                    switch ((byte)list.CustomData[CounterByteLength])
+                    {
+                        case 1:
+                            fg.AppendLine($"var count = _package.Meta.ReadSubrecordFrame(stream).Content[0];");
+                            break;
+                        case 2:
+                            fg.AppendLine($"var count = BinaryPrimitives.{nameof(BinaryPrimitives.ReadUInt16LittleEndian)}(_package.Meta.ReadSubrecordFrame(stream).Content);");
+                            break;
+                        case 4:
+                            fg.AppendLine($"var count = BinaryPrimitives.{nameof(BinaryPrimitives.ReadUInt32LittleEndian)}(_package.Meta.ReadSubrecordFrame(stream).Content);");
+                            break;
+                        default:
+                            throw new NotImplementedException();
+                    }
                     if (subData.HasTrigger)
                     {
                         if (expectedLen.HasValue)
@@ -873,7 +907,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         fg.AppendLine("stream.Position += _package.Meta.SubConstants.HeaderLength;");
                     }
-                    byte countLen = (byte)list.CustomData[PrependCountType];
+                    byte countLen = (byte)list.CustomData[CounterByteLength];
                     switch (countLen)
                     {
                         case 2:

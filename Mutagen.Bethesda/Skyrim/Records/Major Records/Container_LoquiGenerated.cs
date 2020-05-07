@@ -3158,6 +3158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Items,
                 counterType: Container_Registration.COCT_HEADER,
+                counterLength: 4,
                 transl: (MutagenWriter subWriter, IContainerEntryGetter subItem, RecordTypeConverter? conv) =>
                 {
                     if (subItem.TryGet(out var Item))

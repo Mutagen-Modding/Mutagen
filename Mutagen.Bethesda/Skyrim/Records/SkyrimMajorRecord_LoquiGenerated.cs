@@ -1082,7 +1082,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType KYWD_HEADER = new RecordType("KYWD");
         public static readonly RecordType LTEX_HEADER = new RecordType("LTEX");
         public static readonly RecordType LVLI_HEADER = new RecordType("LVLI");
-        public static readonly RecordType LVLN_HEADER = new RecordType("LVLN");
         public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
         public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
         public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
@@ -1091,7 +1090,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType MISC_HEADER = new RecordType("MISC");
         public static readonly RecordType MSTT_HEADER = new RecordType("MSTT");
         public static readonly RecordType MOVT_HEADER = new RecordType("MOVT");
-        public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
         public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
         public static readonly RecordType OTFT_HEADER = new RecordType("OTFT");
         public static readonly RecordType PACK_HEADER = new RecordType("PACK");
@@ -1111,6 +1109,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType TREE_HEADER = new RecordType("TREE");
         public static readonly RecordType VTYP_HEADER = new RecordType("VTYP");
         public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
+        public static readonly RecordType LVLN_HEADER = new RecordType("LVLN");
+        public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
         public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
         public static readonly RecordType SHOU_HEADER = new RecordType("SHOU");
         public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
@@ -1160,7 +1160,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         KYWD_HEADER,
                         LTEX_HEADER,
                         LVLI_HEADER,
-                        LVLN_HEADER,
                         LIGH_HEADER,
                         LCRT_HEADER,
                         MGEF_HEADER,
@@ -1169,7 +1168,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         MISC_HEADER,
                         MSTT_HEADER,
                         MOVT_HEADER,
-                        NPC__HEADER,
                         ENCH_HEADER,
                         OTFT_HEADER,
                         PACK_HEADER,
@@ -1189,6 +1187,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         TREE_HEADER,
                         VTYP_HEADER,
                         WEAP_HEADER,
+                        LVLN_HEADER,
+                        NPC__HEADER,
                         LVSP_HEADER,
                         SHOU_HEADER,
                         SPEL_HEADER

@@ -282,6 +282,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="counterLength" >
+            <xs:annotation>
+              <xs:documentation>
+                Number of bytes for the counter
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
@@ -302,6 +309,13 @@
             <xs:annotation>
               <xs:documentation>
                 Record type of a counter subrecord the list starts with.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="counterLength" >
+            <xs:annotation>
+              <xs:documentation>
+                Number of bytes for the counter
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>

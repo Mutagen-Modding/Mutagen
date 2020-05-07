@@ -7812,6 +7812,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.ActorEffect,
                 counterType: Race_Registration.SPCT_HEADER,
+                counterLength: 4,
                 recordType: recordTypeConverter.ConvertToCustom(Race_Registration.SPLO_HEADER),
                 subRecordPerItem: true,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IASpellGetter> subItem, RecordTypeConverter? conv) =>
@@ -7835,6 +7836,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Keywords,
                 counterType: Race_Registration.KSIZ_HEADER,
+                counterLength: 4,
                 recordType: recordTypeConverter.ConvertToCustom(Race_Registration.KWDA_HEADER),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
                 {

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ANpcSpawn" objType="Record" abstract="true" baseClass="SkyrimMajorRecord" GUID="ca120ae9-2087-4d08-afe1-0f26890217f1" ID="221" />
+</Loqui>

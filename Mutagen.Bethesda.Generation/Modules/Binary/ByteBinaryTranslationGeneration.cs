@@ -48,19 +48,19 @@ namespace Mutagen.Bethesda.Generation
                 default:
                     throw new NotImplementedException();
             }
-            if (typeGen.HasBeenSet)
+            if (data.HasTrigger)
             {
                 fg.AppendLine($"private int? _{typeGen.Name}Location;");
                 if (typeGen.CanBeNullable(getter: true))
                 {
                     dataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}({dataAccessor}, _{typeGen.Name}Location.Value, _package.Meta)";
-                    fg.AppendLine($"public {typeGen.TypeName(getter: true)}? {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {dataAccessor}[0] : default(Byte?);");
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {dataAccessor}[0] : default(Byte{(typeGen.HasBeenSet ? "?" : null)});");
                 }
                 else
                 {
                     fg.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
                     dataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}({dataAccessor}, _{typeGen.Name}Location.Value, _package.Meta)";
-                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {dataAccessor}[0] : default(Byte?);");
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {dataAccessor}[0] : default(Byte{(typeGen.HasBeenSet ? "?" : null)});");
                 }
             }
             else

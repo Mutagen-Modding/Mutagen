@@ -66,7 +66,6 @@
     <Compile Include="Skyrim\Interfaces\IIcons.cs" />
     <Compile Include="Skyrim\Interfaces\IItem.cs" />
     <Compile Include="Skyrim\Interfaces\IEffectRecord.cs" />
-    <Compile Include="Skyrim\Interfaces\INpcTemplate.cs" />
     <Compile Include="Skyrim\Interfaces\IObjectBounded.cs" />
     <Compile Include="Skyrim\Interfaces\IHarvestTarget.cs" />
     <Compile Include="Skyrim\Records\Common Subrecords\DestructionStageData.cs">
@@ -143,6 +142,9 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\IngredientEffectData.cs">
       <DependentUpon>Ingredient.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\LeveledNpc.cs">
+      <DependentUpon>LeveledNpc.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Light.cs">
       <DependentUpon>Light.xml</DependentUpon>
@@ -1253,9 +1255,6 @@
     <Compile Include="Oblivion\Records\Major Records\ANpc_LoquiGenerated.cs">
       <DependentUpon>ANpc.xml</DependentUpon>
     </Compile>
-    <Compile Include="Oblivion\Records\Major Records\NpcSpawn_LoquiGenerated.cs">
-      <DependentUpon>NpcSpawn.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Major Records\Npc_LoquiGenerated.cs">
       <DependentUpon>Npc.xml</DependentUpon>
     </Compile>
@@ -1822,6 +1821,18 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\ContainerItem_LoquiGenerated.cs">
       <DependentUpon>Container.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Oblivion\Records\Major Records\ANpcSpawn_LoquiGenerated.cs">
+      <DependentUpon>ANpcSpawn.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\LeveledEntry_LoquiGenerated.cs">
+      <DependentUpon>LeveledEntry.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\LeveledEntryData_LoquiGenerated.cs">
+      <DependentUpon>LeveledEntry.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ANpcSpawn_LoquiGenerated.cs">
+      <DependentUpon>ANpcSpawn.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class LeveledNpc :
-        SkyrimMajorRecord,
+        ANpcSpawn,
         ILeveledNpcInternal,
         ILoquiObjectSetter<LeveledNpc>,
         IEquatable<LeveledNpc>,
@@ -48,6 +48,55 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region ObjectBounds
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ObjectBounds _ObjectBounds = new ObjectBounds();
+        public ObjectBounds ObjectBounds
+        {
+            get => _ObjectBounds;
+            set => _ObjectBounds = value ?? new ObjectBounds();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter ILeveledNpcGetter.ObjectBounds => _ObjectBounds;
+        #endregion
+        #region ChanceNone
+        public Byte ChanceNone { get; set; } = default;
+        #endregion
+        #region Flags
+        public Byte Flags { get; set; } = default;
+        #endregion
+        #region Global
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormLinkNullable<Global> _Global = new FormLinkNullable<Global>();
+        public IFormLinkNullable<Global> Global => this._Global;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IGlobalGetter> ILeveledNpcGetter.Global => this.Global;
+        #endregion
+        #region Entries
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<LeveledEntry<ANpcSpawn>>? _Entries;
+        public ExtendedList<LeveledEntry<ANpcSpawn>>? Entries
+        {
+            get => this._Entries;
+            set => this._Entries = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ILeveledEntryGetter<IANpcSpawnGetter>>? ILeveledNpcGetter.Entries => _Entries;
+        #endregion
+
+        #endregion
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? ILeveledNpcGetter.Model => this.Model;
+        #endregion
 
         #region To String
 
@@ -209,7 +258,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public new class Mask<TItem> :
-            SkyrimMajorRecord.Mask<TItem>,
+            ANpcSpawn.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
             where TItem : notnull
@@ -218,6 +267,12 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.ChanceNone = initialValue;
+                this.Flags = initialValue;
+                this.Global = initialValue;
+                this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LeveledEntry.Mask<TItem>?>>());
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -226,7 +281,13 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem ObjectBounds,
+                TItem ChanceNone,
+                TItem Flags,
+                TItem Global,
+                TItem Entries,
+                TItem Model)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -235,6 +296,12 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.ChanceNone = ChanceNone;
+                this.Flags = Flags;
+                this.Global = Global;
+                this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledEntry.Mask<TItem>?>>?>(Entries, Enumerable.Empty<MaskItemIndexed<TItem, LeveledEntry.Mask<TItem>?>>());
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
             }
 
             #pragma warning disable CS8618
@@ -243,6 +310,15 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem ChanceNone;
+            public TItem Flags;
+            public TItem Global;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledEntry.Mask<TItem>?>>?>? Entries;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             #endregion
 
             #region Equals
@@ -256,11 +332,23 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.ChanceNone, rhs.ChanceNone)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Global, rhs.Global)) return false;
+                if (!object.Equals(this.Entries, rhs.Entries)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.ChanceNone);
+                hash.Add(this.Flags);
+                hash.Add(this.Global);
+                hash.Add(this.Entries);
+                hash.Add(this.Model);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -271,6 +359,31 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.ChanceNone)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Global)) return false;
+                if (this.Entries != null)
+                {
+                    if (!eval(this.Entries.Overall)) return false;
+                    if (this.Entries.Specific != null)
+                    {
+                        foreach (var item in this.Entries.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -279,6 +392,31 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.ChanceNone)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.Global)) return true;
+                if (this.Entries != null)
+                {
+                    if (eval(this.Entries.Overall)) return true;
+                    if (this.Entries.Specific != null)
+                    {
+                        foreach (var item in this.Entries.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -294,6 +432,26 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.ChanceNone = eval(this.ChanceNone);
+                obj.Flags = eval(this.Flags);
+                obj.Global = eval(this.Global);
+                if (Entries != null)
+                {
+                    obj.Entries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LeveledEntry.Mask<R>?>>?>(eval(this.Entries.Overall), Enumerable.Empty<MaskItemIndexed<R, LeveledEntry.Mask<R>?>>());
+                    if (Entries.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, LeveledEntry.Mask<R>?>>();
+                        obj.Entries.Specific = l;
+                        foreach (var item in Entries.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, LeveledEntry.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LeveledEntry.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
             }
             #endregion
 
@@ -316,6 +474,49 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.ToString(fg);
+                    }
+                    if (printMask?.ChanceNone ?? true)
+                    {
+                        fg.AppendItem(ChanceNone, "ChanceNone");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.Global ?? true)
+                    {
+                        fg.AppendItem(Global, "Global");
+                    }
+                    if ((printMask?.Entries?.Overall ?? true)
+                        && Entries.TryGet(out var EntriesItem))
+                    {
+                        fg.AppendLine("Entries =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(EntriesItem.Overall);
+                            if (EntriesItem.Specific != null)
+                            {
+                                foreach (var subItem in EntriesItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -324,15 +525,36 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public new class ErrorMask :
-            SkyrimMajorRecord.ErrorMask,
+            ANpcSpawn.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? ChanceNone;
+            public Exception? Flags;
+            public Exception? Global;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<ANpcSpawn.ErrorMask>?>>?>? Entries;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 LeveledNpc_FieldIndex enu = (LeveledNpc_FieldIndex)index;
                 switch (enu)
                 {
+                    case LeveledNpc_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case LeveledNpc_FieldIndex.ChanceNone:
+                        return ChanceNone;
+                    case LeveledNpc_FieldIndex.Flags:
+                        return Flags;
+                    case LeveledNpc_FieldIndex.Global:
+                        return Global;
+                    case LeveledNpc_FieldIndex.Entries:
+                        return Entries;
+                    case LeveledNpc_FieldIndex.Model:
+                        return Model;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -343,6 +565,24 @@ namespace Mutagen.Bethesda.Skyrim
                 LeveledNpc_FieldIndex enu = (LeveledNpc_FieldIndex)index;
                 switch (enu)
                 {
+                    case LeveledNpc_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case LeveledNpc_FieldIndex.ChanceNone:
+                        this.ChanceNone = ex;
+                        break;
+                    case LeveledNpc_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case LeveledNpc_FieldIndex.Global:
+                        this.Global = ex;
+                        break;
+                    case LeveledNpc_FieldIndex.Entries:
+                        this.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<ANpcSpawn.ErrorMask>?>>?>(ex, null);
+                        break;
+                    case LeveledNpc_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -354,6 +594,24 @@ namespace Mutagen.Bethesda.Skyrim
                 LeveledNpc_FieldIndex enu = (LeveledNpc_FieldIndex)index;
                 switch (enu)
                 {
+                    case LeveledNpc_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case LeveledNpc_FieldIndex.ChanceNone:
+                        this.ChanceNone = (Exception?)obj;
+                        break;
+                    case LeveledNpc_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case LeveledNpc_FieldIndex.Global:
+                        this.Global = (Exception?)obj;
+                        break;
+                    case LeveledNpc_FieldIndex.Entries:
+                        this.Entries = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<ANpcSpawn.ErrorMask>?>>?>)obj;
+                        break;
+                    case LeveledNpc_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -363,6 +621,12 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ObjectBounds != null) return true;
+                if (ChanceNone != null) return true;
+                if (Flags != null) return true;
+                if (Global != null) return true;
+                if (Entries != null) return true;
+                if (Model != null) return true;
                 return false;
             }
             #endregion
@@ -398,6 +662,33 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                ObjectBounds?.ToString(fg);
+                fg.AppendItem(ChanceNone, "ChanceNone");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(Global, "Global");
+                if (Entries.TryGet(out var EntriesItem))
+                {
+                    fg.AppendLine("Entries =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(EntriesItem.Overall);
+                        if (EntriesItem.Specific != null)
+                        {
+                            foreach (var subItem in EntriesItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                Model?.ToString(fg);
             }
             #endregion
 
@@ -406,6 +697,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.ChanceNone = this.ChanceNone.Combine(rhs.ChanceNone);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Global = this.Global.Combine(rhs.Global);
+                ret.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<ANpcSpawn.ErrorMask>?>>?>(ExceptionExt.Combine(this.Entries?.Overall, rhs.Entries?.Overall), ExceptionExt.Combine(this.Entries?.Specific, rhs.Entries?.Specific));
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -424,22 +721,49 @@ namespace Mutagen.Bethesda.Skyrim
 
         }
         public new class TranslationMask :
-            SkyrimMajorRecord.TranslationMask,
+            ANpcSpawn.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
+            public bool ChanceNone;
+            public bool Flags;
+            public bool Global;
+            public MaskItem<bool, LeveledEntry.TranslationMask<ANpcSpawn.TranslationMask>?> Entries;
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
+                this.ChanceNone = defaultOn;
+                this.Flags = defaultOn;
+                this.Global = defaultOn;
+                this.Entries = new MaskItem<bool, LeveledEntry.TranslationMask<ANpcSpawn.TranslationMask>?>(defaultOn, null);
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
+                ret.Add((ChanceNone, null));
+                ret.Add((Flags, null));
+                ret.Add((Global, null));
+                ret.Add((Entries?.Overall ?? true, Entries?.Specific?.GetCrystal()));
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+            }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = LeveledNpc_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public override IEnumerable<ILinkGetter> Links => LeveledNpcCommon.Instance.GetLinks(this);
         public LeveledNpc(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -516,27 +840,38 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface ILeveledNpc :
         ILeveledNpcGetter,
-        ISkyrimMajorRecord,
-        INpcTemplate,
+        IANpcSpawn,
         ILoquiObjectSetter<ILeveledNpcInternal>
     {
+        new ObjectBounds ObjectBounds { get; set; }
+        new Byte ChanceNone { get; set; }
+        new Byte Flags { get; set; }
+        new IFormLinkNullable<Global> Global { get; }
+        new ExtendedList<LeveledEntry<ANpcSpawn>>? Entries { get; set; }
+        new Model? Model { get; set; }
     }
 
     public partial interface ILeveledNpcInternal :
-        ISkyrimMajorRecordInternal,
+        IANpcSpawnInternal,
         ILeveledNpc,
         ILeveledNpcGetter
     {
     }
 
     public partial interface ILeveledNpcGetter :
-        ISkyrimMajorRecordGetter,
-        INpcTemplateGetter,
+        IANpcSpawnGetter,
         ILoquiObject<ILeveledNpcGetter>,
         IXmlItem,
+        ILinkContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => LeveledNpc_Registration.Instance;
+        IObjectBoundsGetter ObjectBounds { get; }
+        Byte ChanceNone { get; }
+        Byte Flags { get; }
+        IFormLinkNullableGetter<IGlobalGetter> Global { get; }
+        IReadOnlyList<ILeveledEntryGetter<IANpcSpawnGetter>>? Entries { get; }
+        IModelGetter? Model { get; }
 
     }
 
@@ -837,6 +1172,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        ObjectBounds = 6,
+        ChanceNone = 7,
+        Flags = 8,
+        Global = 9,
+        Entries = 10,
+        Model = 11,
     }
     #endregion
 
@@ -854,9 +1195,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "4197e9ea-0f51-44d8-867e-f33c9b48f4c4";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(LeveledNpc.Mask<>);
 
@@ -886,6 +1227,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "OBJECTBOUNDS":
+                    return (ushort)LeveledNpc_FieldIndex.ObjectBounds;
+                case "CHANCENONE":
+                    return (ushort)LeveledNpc_FieldIndex.ChanceNone;
+                case "FLAGS":
+                    return (ushort)LeveledNpc_FieldIndex.Flags;
+                case "GLOBAL":
+                    return (ushort)LeveledNpc_FieldIndex.Global;
+                case "ENTRIES":
+                    return (ushort)LeveledNpc_FieldIndex.Entries;
+                case "MODEL":
+                    return (ushort)LeveledNpc_FieldIndex.Model;
                 default:
                     return null;
             }
@@ -896,8 +1249,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LeveledNpc_FieldIndex enu = (LeveledNpc_FieldIndex)index;
             switch (enu)
             {
+                case LeveledNpc_FieldIndex.Entries:
+                    return true;
+                case LeveledNpc_FieldIndex.ObjectBounds:
+                case LeveledNpc_FieldIndex.ChanceNone:
+                case LeveledNpc_FieldIndex.Flags:
+                case LeveledNpc_FieldIndex.Global:
+                case LeveledNpc_FieldIndex.Model:
+                    return false;
                 default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
+                    return ANpcSpawn_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -906,8 +1267,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LeveledNpc_FieldIndex enu = (LeveledNpc_FieldIndex)index;
             switch (enu)
             {
+                case LeveledNpc_FieldIndex.ObjectBounds:
+                case LeveledNpc_FieldIndex.Entries:
+                case LeveledNpc_FieldIndex.Model:
+                    return true;
+                case LeveledNpc_FieldIndex.ChanceNone:
+                case LeveledNpc_FieldIndex.Flags:
+                case LeveledNpc_FieldIndex.Global:
+                    return false;
                 default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
+                    return ANpcSpawn_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -916,8 +1285,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LeveledNpc_FieldIndex enu = (LeveledNpc_FieldIndex)index;
             switch (enu)
             {
+                case LeveledNpc_FieldIndex.ObjectBounds:
+                case LeveledNpc_FieldIndex.ChanceNone:
+                case LeveledNpc_FieldIndex.Flags:
+                case LeveledNpc_FieldIndex.Global:
+                case LeveledNpc_FieldIndex.Entries:
+                case LeveledNpc_FieldIndex.Model:
+                    return false;
                 default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
+                    return ANpcSpawn_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -926,8 +1302,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LeveledNpc_FieldIndex enu = (LeveledNpc_FieldIndex)index;
             switch (enu)
             {
+                case LeveledNpc_FieldIndex.ObjectBounds:
+                    return "ObjectBounds";
+                case LeveledNpc_FieldIndex.ChanceNone:
+                    return "ChanceNone";
+                case LeveledNpc_FieldIndex.Flags:
+                    return "Flags";
+                case LeveledNpc_FieldIndex.Global:
+                    return "Global";
+                case LeveledNpc_FieldIndex.Entries:
+                    return "Entries";
+                case LeveledNpc_FieldIndex.Model:
+                    return "Model";
                 default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
+                    return ANpcSpawn_Registration.GetNthName(index);
             }
         }
 
@@ -936,8 +1324,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LeveledNpc_FieldIndex enu = (LeveledNpc_FieldIndex)index;
             switch (enu)
             {
+                case LeveledNpc_FieldIndex.ObjectBounds:
+                case LeveledNpc_FieldIndex.ChanceNone:
+                case LeveledNpc_FieldIndex.Flags:
+                case LeveledNpc_FieldIndex.Global:
+                case LeveledNpc_FieldIndex.Entries:
+                case LeveledNpc_FieldIndex.Model:
+                    return false;
                 default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
+                    return ANpcSpawn_Registration.IsNthDerivative(index);
             }
         }
 
@@ -946,8 +1341,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LeveledNpc_FieldIndex enu = (LeveledNpc_FieldIndex)index;
             switch (enu)
             {
+                case LeveledNpc_FieldIndex.ObjectBounds:
+                case LeveledNpc_FieldIndex.ChanceNone:
+                case LeveledNpc_FieldIndex.Flags:
+                case LeveledNpc_FieldIndex.Global:
+                case LeveledNpc_FieldIndex.Entries:
+                case LeveledNpc_FieldIndex.Model:
+                    return false;
                 default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
+                    return ANpcSpawn_Registration.IsProtected(index);
             }
         }
 
@@ -956,16 +1358,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LeveledNpc_FieldIndex enu = (LeveledNpc_FieldIndex)index;
             switch (enu)
             {
+                case LeveledNpc_FieldIndex.ObjectBounds:
+                    return typeof(ObjectBounds);
+                case LeveledNpc_FieldIndex.ChanceNone:
+                    return typeof(Byte);
+                case LeveledNpc_FieldIndex.Flags:
+                    return typeof(Byte);
+                case LeveledNpc_FieldIndex.Global:
+                    return typeof(IFormLinkNullable<Global>);
+                case LeveledNpc_FieldIndex.Entries:
+                    return typeof(ExtendedList<LeveledEntry<ANpcSpawn>>);
+                case LeveledNpc_FieldIndex.Model:
+                    return typeof(Model);
                 default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
+                    return ANpcSpawn_Registration.GetNthType(index);
             }
         }
 
         public static readonly Type XmlWriteTranslation = typeof(LeveledNpcXmlWriteTranslation);
         public static readonly RecordType LVLN_HEADER = new RecordType("LVLN");
+        public static readonly RecordType OBND_HEADER = new RecordType("OBND");
+        public static readonly RecordType LVLD_HEADER = new RecordType("LVLD");
+        public static readonly RecordType LVLF_HEADER = new RecordType("LVLF");
+        public static readonly RecordType LVLG_HEADER = new RecordType("LVLG");
+        public static readonly RecordType LLCT_HEADER = new RecordType("LLCT");
+        public static readonly RecordType LVLO_HEADER = new RecordType("LVLO");
+        public static readonly RecordType COED_HEADER = new RecordType("COED");
+        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType TriggeringRecordType = LVLN_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
+        public const int NumTypedFields = 6;
         public static readonly Type BinaryWriteTranslation = typeof(LeveledNpcBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -999,7 +1421,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LeveledNpcSetterCommon : SkyrimMajorRecordSetterCommon
+    public partial class LeveledNpcSetterCommon : ANpcSpawnSetterCommon
     {
         public new static readonly LeveledNpcSetterCommon Instance = new LeveledNpcSetterCommon();
 
@@ -1008,7 +1430,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ILeveledNpcInternal item)
         {
             ClearPartial();
+            item.ObjectBounds = new ObjectBounds();
+            item.ChanceNone = default;
+            item.Flags = default;
+            item.Global.FormKey = null;
+            item.Entries = null;
+            item.Model = null;
             base.Clear(item);
+        }
+        
+        public override void Clear(IANpcSpawnInternal item)
+        {
+            Clear(item: (ILeveledNpcInternal)item);
         }
         
         public override void Clear(ISkyrimMajorRecordInternal item)
@@ -1032,7 +1465,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
+                    ANpcSpawnSetterCommon.FillPrivateElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -1074,6 +1507,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override void CopyInFromXml(
+            IANpcSpawnInternal item,
+            XElement node,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
+        {
+            CopyInFromXml(
+                item: (LeveledNpc)item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        
+        public override void CopyInFromXml(
             ISkyrimMajorRecordInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -1107,9 +1553,80 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILeveledNpcInternal item,
             MutagenFrame frame)
         {
-            SkyrimMajorRecordSetterCommon.FillBinaryStructs(
+            ANpcSpawnSetterCommon.FillBinaryStructs(
                 item: item,
                 frame: frame);
+        }
+        
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            ILeveledNpcInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x444E424F: // OBND
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)LeveledNpc_FieldIndex.ObjectBounds);
+                }
+                case 0x444C564C: // LVLD
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.ChanceNone = frame.ReadUInt8();
+                    return TryGet<int?>.Succeed((int)LeveledNpc_FieldIndex.ChanceNone);
+                }
+                case 0x464C564C: // LVLF
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.Flags = frame.ReadUInt8();
+                    return TryGet<int?>.Succeed((int)LeveledNpc_FieldIndex.Flags);
+                }
+                case 0x474C564C: // LVLG
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.Global.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)LeveledNpc_FieldIndex.Global);
+                }
+                case 0x54434C4C: // LLCT
+                {
+                    var amount = frame.ReadSubrecordFrame().Content[0];
+                    item.Entries = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<ANpcSpawn>>.Instance.ParsePerItem(
+                            frame: frame,
+                            amount: amount,
+                            triggeringRecord: LeveledEntry_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: (MutagenFrame r, out LeveledEntry<ANpcSpawn> listSubItem, RecordTypeConverter? conv) =>
+                            {
+                                return LoquiBinaryTranslation<LeveledEntry<ANpcSpawn>>.Instance.Parse(
+                                    frame: r,
+                                    item: out listSubItem!,
+                                    recordTypeConverter: conv);
+                            })
+                        .ToExtendedList<LeveledEntry<ANpcSpawn>>();
+                    return TryGet<int?>.Succeed((int)LeveledNpc_FieldIndex.Entries);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)LeveledNpc_FieldIndex.Model);
+                }
+                default:
+                    return ANpcSpawnSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
         }
         
         public virtual void CopyInFromBinary(
@@ -1124,6 +1641,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+        }
+        
+        public override void CopyInFromBinary(
+            IANpcSpawnInternal item,
+            MutagenFrame frame,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            CopyInFromBinary(
+                item: (LeveledNpc)item,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
         }
         
         public override void CopyInFromBinary(
@@ -1151,7 +1679,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LeveledNpcCommon : SkyrimMajorRecordCommon
+    public partial class LeveledNpcCommon : ANpcSpawnCommon
     {
         public new static readonly LeveledNpcCommon Instance = new LeveledNpcCommon();
 
@@ -1176,6 +1704,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.ChanceNone = item.ChanceNone == rhs.ChanceNone;
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Global = object.Equals(item.Global, rhs.Global);
+            ret.Entries = item.Entries.CollectionEqualsHelper(
+                rhs.Entries,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1223,16 +1764,61 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             LeveledNpc.Mask<bool>? printMask = null)
         {
-            SkyrimMajorRecordCommon.ToStringFields(
+            ANpcSpawnCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+            }
+            if (printMask?.ChanceNone ?? true)
+            {
+                fg.AppendItem(item.ChanceNone, "ChanceNone");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendItem(item.Flags, "Flags");
+            }
+            if ((printMask?.Global ?? true)
+                && item.Global.TryGet(out var GlobalItem))
+            {
+                fg.AppendItem(GlobalItem, "Global");
+            }
+            if ((printMask?.Entries?.Overall ?? true)
+                && item.Entries.TryGet(out var EntriesItem))
+            {
+                fg.AppendLine("Entries =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in EntriesItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
+            {
+                ModelItem?.ToString(fg, "Model");
+            }
         }
         
         public bool HasBeenSet(
             ILeveledNpcGetter item,
             LeveledNpc.Mask<bool?> checkMask)
         {
+            if (checkMask.Global.HasValue && checkMask.Global.Value != (item.Global.FormKey != null)) return false;
+            if (checkMask.Entries?.Overall.HasValue ?? false && checkMask.Entries!.Overall.Value != (item.Entries != null)) return false;
+            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
+            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1242,12 +1828,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILeveledNpcGetter item,
             LeveledNpc.Mask<bool> mask)
         {
+            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
+            mask.ChanceNone = true;
+            mask.Flags = true;
+            mask.Global = (item.Global.FormKey != null);
+            if (item.Entries.TryGet(out var EntriesItem))
+            {
+                mask.Entries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LeveledEntry.Mask<bool>?>>?>(true, EntriesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LeveledEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            var itemModel = item.Model;
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
         }
         
-        public static LeveledNpc_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
+        public static LeveledNpc_FieldIndex ConvertFieldIndex(ANpcSpawn_FieldIndex index)
+        {
+            switch (index)
+            {
+                case ANpcSpawn_FieldIndex.MajorRecordFlagsRaw:
+                    return (LeveledNpc_FieldIndex)((int)index);
+                case ANpcSpawn_FieldIndex.FormKey:
+                    return (LeveledNpc_FieldIndex)((int)index);
+                case ANpcSpawn_FieldIndex.Version:
+                    return (LeveledNpc_FieldIndex)((int)index);
+                case ANpcSpawn_FieldIndex.EditorID:
+                    return (LeveledNpc_FieldIndex)((int)index);
+                case ANpcSpawn_FieldIndex.FormVersion:
+                    return (LeveledNpc_FieldIndex)((int)index);
+                case ANpcSpawn_FieldIndex.Version2:
+                    return (LeveledNpc_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static new LeveledNpc_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1293,7 +1910,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            if (lhs.ChanceNone != rhs.ChanceNone) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (!lhs.Global.Equals(rhs.Global)) return false;
+            if (!lhs.Entries.SequenceEqual(rhs.Entries)) return false;
+            if (!object.Equals(lhs.Model, rhs.Model)) return false;
             return true;
+        }
+        
+        public override bool Equals(
+            IANpcSpawnGetter? lhs,
+            IANpcSpawnGetter? rhs)
+        {
+            return Equals(
+                lhs: (ILeveledNpcGetter?)lhs,
+                rhs: rhs as ILeveledNpcGetter);
         }
         
         public override bool Equals(
@@ -1317,8 +1949,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ILeveledNpcGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.ObjectBounds);
+            hash.Add(item.ChanceNone);
+            hash.Add(item.Flags);
+            if (item.Global.TryGet(out var Globalitem))
+            {
+                hash.Add(Globalitem);
+            }
+            hash.Add(item.Entries);
+            if (item.Model.TryGet(out var Modelitem))
+            {
+                hash.Add(Modelitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
+        }
+        
+        public override int GetHashCode(IANpcSpawnGetter item)
+        {
+            return GetHashCode(item: (ILeveledNpcGetter)item);
         }
         
         public override int GetHashCode(ISkyrimMajorRecordGetter item)
@@ -1346,6 +1995,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
+            yield return obj.Global;
+            if (obj.Entries != null)
+            {
+                foreach (var item in obj.Entries.WhereCastable<ILeveledEntryGetter<IANpcSpawnGetter>, ILinkContainer>()
+                    .SelectMany((f) => f.Links))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Model != null)
+            {
+                foreach (var item in obj.Model.Links)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -1363,7 +2028,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LeveledNpcSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    public partial class LeveledNpcSetterTranslationCommon : ANpcSpawnSetterTranslationCommon
     {
         public new static readonly LeveledNpcSetterTranslationCommon Instance = new LeveledNpcSetterTranslationCommon();
 
@@ -1388,10 +2053,128 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             base.DeepCopyIn(
-                (ISkyrimMajorRecord)item,
-                (ISkyrimMajorRecordGetter)rhs,
+                (IANpcSpawn)item,
+                (IANpcSpawnGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)LeveledNpc_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)LeveledNpc_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.ChanceNone) ?? true))
+            {
+                item.ChanceNone = rhs.ChanceNone;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Global) ?? true))
+            {
+                item.Global.FormKey = rhs.Global.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Entries) ?? true))
+            {
+                errorMask?.PushIndex((int)LeveledNpc_FieldIndex.Entries);
+                try
+                {
+                    if ((rhs.Entries != null))
+                    {
+                        item.Entries = 
+                            rhs.Entries
+                            .Select(r =>
+                            {
+                                return r.DeepCopy<ANpcSpawn, IANpcSpawnGetter>(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<LeveledEntry<ANpcSpawn>>();
+                    }
+                    else
+                    {
+                        item.Entries = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)LeveledNpc_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model.TryGet(out var rhsModel))
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)LeveledNpc_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+        }
+        
+        public override void DeepCopyIn(
+            IANpcSpawnInternal item,
+            IANpcSpawnGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
+        {
+            this.DeepCopyIn(
+                item: (ILeveledNpcInternal)item,
+                rhs: (ILeveledNpcGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyIn(
+            IANpcSpawn item,
+            IANpcSpawnGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
+        {
+            this.DeepCopyIn(
+                item: (ILeveledNpc)item,
+                rhs: (ILeveledNpcGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
         }
         
         public override void DeepCopyIn(
@@ -1518,7 +2301,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class LeveledNpcXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
+        ANpcSpawnXmlWriteTranslation,
         IXmlWriteTranslator
     {
         public new readonly static LeveledNpcXmlWriteTranslation Instance = new LeveledNpcXmlWriteTranslation();
@@ -1529,11 +2312,87 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
+            ANpcSpawnXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((translationMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.ObjectBounds) ?? true))
+            {
+                var ObjectBoundsItem = item.ObjectBounds;
+                ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
+                    item: ObjectBoundsItem,
+                    node: node,
+                    name: nameof(item.ObjectBounds),
+                    fieldIndex: (int)LeveledNpc_FieldIndex.ObjectBounds,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)LeveledNpc_FieldIndex.ObjectBounds));
+            }
+            if ((translationMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.ChanceNone) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ChanceNone),
+                    item: item.ChanceNone,
+                    fieldIndex: (int)LeveledNpc_FieldIndex.ChanceNone,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Flags) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)LeveledNpc_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
+            if ((item.Global.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Global) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Global),
+                    item: item.Global.FormKey.Value,
+                    fieldIndex: (int)LeveledNpc_FieldIndex.Global,
+                    errorMask: errorMask);
+            }
+            if ((item.Entries != null)
+                && (translationMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Entries) ?? true))
+            {
+                ListXmlTranslation<ILeveledEntryGetter<IANpcSpawnGetter>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Entries),
+                    item: item.Entries,
+                    fieldIndex: (int)LeveledNpc_FieldIndex.Entries,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)LeveledNpc_FieldIndex.Entries),
+                    transl: (XElement subNode, ILeveledEntryGetter<IANpcSpawnGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        if (subItem.TryGet(out var Item))
+                        {
+                            ((LeveledEntryXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write<IANpcSpawnGetter>(
+                                item: Item,
+                                node: subNode,
+                                name: null,
+                                errorMask: listSubMask,
+                                translationMask: listTranslMask);
+                        }
+                    });
+            }
+            if ((item.Model != null)
+                && (translationMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Model) ?? true))
+            {
+                if (item.Model.TryGet(out var ModelItem))
+                {
+                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                        item: ModelItem,
+                        node: node,
+                        name: nameof(item.Model),
+                        fieldIndex: (int)LeveledNpc_FieldIndex.Model,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)LeveledNpc_FieldIndex.Model));
+                }
+            }
         }
 
         public void Write(
@@ -1559,6 +2418,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             XElement node,
             object item,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
+        {
+            Write(
+                item: (ILeveledNpcGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
+            IANpcSpawnGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
@@ -1603,7 +2477,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LeveledNpcXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
+    public partial class LeveledNpcXmlCreateTranslation : ANpcSpawnXmlCreateTranslation
     {
         public new readonly static LeveledNpcXmlCreateTranslation Instance = new LeveledNpcXmlCreateTranslation();
 
@@ -1641,8 +2515,128 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "ObjectBounds":
+                    errorMask?.PushIndex((int)LeveledNpc_FieldIndex.ObjectBounds);
+                    try
+                    {
+                        item.ObjectBounds = LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)LeveledNpc_FieldIndex.ObjectBounds));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ChanceNone":
+                    errorMask?.PushIndex((int)LeveledNpc_FieldIndex.ChanceNone);
+                    try
+                    {
+                        item.ChanceNone = ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    errorMask?.PushIndex((int)LeveledNpc_FieldIndex.Flags);
+                    try
+                    {
+                        item.Flags = ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Global":
+                    errorMask?.PushIndex((int)LeveledNpc_FieldIndex.Global);
+                    try
+                    {
+                        item.Global.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Entries":
+                    errorMask?.PushIndex((int)LeveledNpc_FieldIndex.Entries);
+                    try
+                    {
+                        if (ListXmlTranslation<LeveledEntry<ANpcSpawn>>.Instance.Parse(
+                            node: node,
+                            enumer: out var EntriesItem,
+                            transl: LoquiXmlTranslation<LeveledEntry<ANpcSpawn>>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Entries = EntriesItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Entries = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Model":
+                    errorMask?.PushIndex((int)LeveledNpc_FieldIndex.Model);
+                    try
+                    {
+                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)LeveledNpc_FieldIndex.Model));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
+                    ANpcSpawnXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -1722,10 +2716,60 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class LeveledNpcBinaryWriteTranslation :
-        SkyrimMajorRecordBinaryWriteTranslation,
+        ANpcSpawnBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new readonly static LeveledNpcBinaryWriteTranslation Instance = new LeveledNpcBinaryWriteTranslation();
+
+        public static void WriteRecordTypes(
+            ILeveledNpcGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.ChanceNone,
+                header: recordTypeConverter.ConvertToCustom(LeveledNpc_Registration.LVLD_HEADER));
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Flags,
+                header: recordTypeConverter.ConvertToCustom(LeveledNpc_Registration.LVLF_HEADER));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Global,
+                header: recordTypeConverter.ConvertToCustom(LeveledNpc_Registration.LVLG_HEADER));
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<ILeveledEntryGetter<IANpcSpawnGetter>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Entries,
+                counterType: LeveledNpc_Registration.LLCT_HEADER,
+                counterLength: 1,
+                transl: (MutagenWriter subWriter, ILeveledEntryGetter<IANpcSpawnGetter> subItem, RecordTypeConverter? conv) =>
+                {
+                    if (subItem.TryGet(out var Item))
+                    {
+                        ((LeveledEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write<IANpcSpawnGetter>(
+                            item: Item,
+                            writer: subWriter,
+                            recordTypeConverter: conv);
+                    }
+                });
+            if (item.Model.TryGet(out var ModelItem))
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+        }
 
         public void Write(
             MutagenWriter writer,
@@ -1740,7 +2784,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1750,6 +2794,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void Write(
             MutagenWriter writer,
             object item,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            Write(
+                item: (ILeveledNpcGetter)item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IANpcSpawnGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
@@ -1782,7 +2837,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LeveledNpcBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    public partial class LeveledNpcBinaryCreateTranslation : ANpcSpawnBinaryCreateTranslation
     {
         public new readonly static LeveledNpcBinaryCreateTranslation Instance = new LeveledNpcBinaryCreateTranslation();
 
@@ -1802,7 +2857,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class LeveledNpcBinaryOverlay :
-        SkyrimMajorRecordBinaryOverlay,
+        ANpcSpawnBinaryOverlay,
         ILeveledNpcGetter
     {
         #region Common Routing
@@ -1820,6 +2875,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledNpcGetter)rhs, include);
 
+        public override IEnumerable<ILinkGetter> Links => LeveledNpcCommon.Instance.GetLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => LeveledNpcXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
@@ -1847,6 +2903,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private bool _ObjectBounds_IsSet => _ObjectBoundsLocation.HasValue;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBounds_IsSet ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation!.Value.Min)), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        #region ChanceNone
+        private int? _ChanceNoneLocation;
+        public Byte ChanceNone => _ChanceNoneLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _ChanceNoneLocation.Value, _package.Meta)[0] : default(Byte);
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public Byte Flags => _FlagsLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation.Value, _package.Meta)[0] : default(Byte);
+        #endregion
+        #region Global
+        private int? _GlobalLocation;
+        public bool Global_IsSet => _GlobalLocation.HasValue;
+        public IFormLinkNullableGetter<IGlobalGetter> Global => _GlobalLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _GlobalLocation.Value, _package.Meta)))) : FormLinkNullable<IGlobalGetter>.Empty;
+        #endregion
+        public IReadOnlyList<ILeveledEntryGetter<IANpcSpawnGetter>>? Entries { get; private set; }
+        #region Model
+        public IModelGetter? Model { get; private set; }
+        public bool Model_IsSet => Model != null;
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -1897,6 +2977,71 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case 0x444E424F: // OBND
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)LeveledNpc_FieldIndex.ObjectBounds);
+                }
+                case 0x444C564C: // LVLD
+                {
+                    _ChanceNoneLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)LeveledNpc_FieldIndex.ChanceNone);
+                }
+                case 0x464C564C: // LVLF
+                {
+                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)LeveledNpc_FieldIndex.Flags);
+                }
+                case 0x474C564C: // LVLG
+                {
+                    _GlobalLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)LeveledNpc_FieldIndex.Global);
+                }
+                case 0x54434C4C: // LLCT
+                {
+                    var count = _package.Meta.ReadSubrecordFrame(stream).Content[0];
+                    this.Entries = BinaryOverlaySetList<LeveledEntryBinaryOverlay<IANpcSpawnGetter>>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter,
+                        getter: (s, p, recConv) => LeveledEntryBinaryOverlay<IANpcSpawnGetter>.LeveledEntryFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        locs: ParseRecordLocationsByCount(
+                            stream: stream,
+                            count: count,
+                            trigger: LeveledEntry_Registration.TriggeringRecordTypes,
+                            constants: _package.Meta.SubConstants,
+                            skipHeader: false));
+                    return TryGet<int?>.Succeed((int)LeveledNpc_FieldIndex.Entries);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)LeveledNpc_FieldIndex.Model);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
         #region To String
 
         public override void ToString(

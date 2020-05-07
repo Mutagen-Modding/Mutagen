@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LeveledEntry" objType="Subrecord" GUID="4ca55ff0-b26f-4600-b790-686497d17d7c" ID="219">
+    <Generic name="T" isClass="true">
+      <Where>SkyrimMajorRecord</Where>
+    </Generic>
+    <Fields>
+      <RefDirect name="Data" refName="LeveledEntryData">
+        <GenericMapping TypeOnObject="T" TypeOnRef="T" />
+      </RefDirect>
+      <RefDirect name="ExtraData" refName="ExtraData" />
+    </Fields>
+  </Object>
+  <Object name="LeveledEntryData" objType="Subrecord" recordType="LVLO" GUID="f56a5c29-cf6d-45ed-8337-9ee291c42fe2" ID="220">
+    <Generic name="T" isClass="true">
+      <Where>SkyrimMajorRecord</Where>
+    </Generic>
+    <Fields>
+      <Int16 name="Level" />
+      <Int16 name="Unknown" />
+      <FormLink name="Reference">
+        <Generic>T</Generic>
+      </FormLink>
+      <Int16 name="Count" />
+      <Int16 name="Unknown2" />
+    </Fields>
+  </Object>
+</Loqui>

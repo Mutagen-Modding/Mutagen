@@ -2774,7 +2774,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (INpcInternal)item);
         }
         
-        public override void Clear(INpcSpawnInternal item)
+        public override void Clear(IANpcSpawnInternal item)
         {
             Clear(item: (INpcInternal)item);
         }
@@ -2855,7 +2855,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void CopyInFromXml(
-            INpcSpawnInternal item,
+            IANpcSpawnInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -3147,7 +3147,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void CopyInFromBinary(
-            INpcSpawnInternal item,
+            IANpcSpawnInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -3605,19 +3605,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static new Npc_FieldIndex ConvertFieldIndex(NpcSpawn_FieldIndex index)
+        public static new Npc_FieldIndex ConvertFieldIndex(ANpcSpawn_FieldIndex index)
         {
             switch (index)
             {
-                case NpcSpawn_FieldIndex.MajorRecordFlagsRaw:
+                case ANpcSpawn_FieldIndex.MajorRecordFlagsRaw:
                     return (Npc_FieldIndex)((int)index);
-                case NpcSpawn_FieldIndex.FormKey:
+                case ANpcSpawn_FieldIndex.FormKey:
                     return (Npc_FieldIndex)((int)index);
-                case NpcSpawn_FieldIndex.Version:
+                case ANpcSpawn_FieldIndex.Version:
                     return (Npc_FieldIndex)((int)index);
-                case NpcSpawn_FieldIndex.EditorID:
+                case ANpcSpawn_FieldIndex.EditorID:
                     return (Npc_FieldIndex)((int)index);
-                case NpcSpawn_FieldIndex.OblivionMajorRecordFlags:
+                case ANpcSpawn_FieldIndex.OblivionMajorRecordFlags:
                     return (Npc_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -3704,8 +3704,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override bool Equals(
-            INpcSpawnGetter? lhs,
-            INpcSpawnGetter? rhs)
+            IANpcSpawnGetter? lhs,
+            IANpcSpawnGetter? rhs)
         {
             return Equals(
                 lhs: (INpcGetter?)lhs,
@@ -3816,7 +3816,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return GetHashCode(item: (INpcGetter)item);
         }
         
-        public override int GetHashCode(INpcSpawnGetter item)
+        public override int GetHashCode(IANpcSpawnGetter item)
         {
             return GetHashCode(item: (INpcGetter)item);
         }
@@ -4295,8 +4295,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void DeepCopyIn(
-            INpcSpawnInternal item,
-            INpcSpawnGetter rhs,
+            IANpcSpawnInternal item,
+            IANpcSpawnGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -4308,8 +4308,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void DeepCopyIn(
-            INpcSpawn item,
-            INpcSpawnGetter rhs,
+            IANpcSpawn item,
+            IANpcSpawnGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -4820,7 +4820,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             XElement node,
-            INpcSpawnGetter item,
+            IANpcSpawnGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
@@ -5664,7 +5664,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             MutagenWriter writer,
-            INpcSpawnGetter item,
+            IANpcSpawnGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(

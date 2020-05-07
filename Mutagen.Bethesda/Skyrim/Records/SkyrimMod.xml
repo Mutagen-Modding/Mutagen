@@ -41,6 +41,7 @@
       <Group name="Weapons" refName="Weapon" />
       <Group name="Ammunitions" refName="Ammunition" />
       <Group name="Npcs" refName="Npc" />
+      <Group name="LeveledNpcs" refName="LeveledNpc" />
     </Fields>
   </Object>
 </Loqui>

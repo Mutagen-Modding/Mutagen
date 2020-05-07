@@ -1101,11 +1101,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
         public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
         public static readonly RecordType CLOT_HEADER = new RecordType("CLOT");
-        public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
-        public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
         public static readonly RecordType LVLC_HEADER = new RecordType("LVLC");
         public static readonly RecordType CREA_HEADER = new RecordType("CREA");
         public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
+        public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
+        public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
         public static readonly RecordType CELL_HEADER = new RecordType("CELL");
         public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
@@ -1182,11 +1182,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         WEAP_HEADER,
                         ARMO_HEADER,
                         CLOT_HEADER,
-                        LVSP_HEADER,
-                        SPEL_HEADER,
                         LVLC_HEADER,
                         CREA_HEADER,
                         NPC__HEADER,
+                        LVSP_HEADER,
+                        SPEL_HEADER,
                         CELL_HEADER,
                         WRLD_HEADER
                     })

@@ -81,6 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
             _Weapons_Object = new Group<Weapon>(this);
             _Ammunitions_Object = new Group<Ammunition>(this);
             _Npcs_Object = new Group<Npc>(this);
+            _LeveledNpcs_Object = new Group<LeveledNpc>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -359,6 +360,13 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<INpcGetter> ISkyrimModGetter.Npcs => _Npcs_Object;
         #endregion
+        #region LeveledNpcs
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<LeveledNpc> _LeveledNpcs_Object;
+        public Group<LeveledNpc> LeveledNpcs => _LeveledNpcs_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<ILeveledNpcGetter> ISkyrimModGetter.LeveledNpcs => _LeveledNpcs_Object;
+        #endregion
 
         #region To String
 
@@ -568,6 +576,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Weapons = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Ammunitions = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Npcs = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.LeveledNpcs = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -609,7 +618,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Furniture,
                 TItem Weapons,
                 TItem Ammunitions,
-                TItem Npcs)
+                TItem Npcs,
+                TItem LeveledNpcs)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -650,6 +660,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Weapons = new MaskItem<TItem, Group.Mask<TItem>?>(Weapons, new Group.Mask<TItem>(Weapons));
                 this.Ammunitions = new MaskItem<TItem, Group.Mask<TItem>?>(Ammunitions, new Group.Mask<TItem>(Ammunitions));
                 this.Npcs = new MaskItem<TItem, Group.Mask<TItem>?>(Npcs, new Group.Mask<TItem>(Npcs));
+                this.LeveledNpcs = new MaskItem<TItem, Group.Mask<TItem>?>(LeveledNpcs, new Group.Mask<TItem>(LeveledNpcs));
             }
 
             #pragma warning disable CS8618
@@ -700,6 +711,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? Weapons { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Ammunitions { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Npcs { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? LeveledNpcs { get; set; }
             #endregion
 
             #region Equals
@@ -751,6 +763,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Weapons, rhs.Weapons)) return false;
                 if (!object.Equals(this.Ammunitions, rhs.Ammunitions)) return false;
                 if (!object.Equals(this.Npcs, rhs.Npcs)) return false;
+                if (!object.Equals(this.LeveledNpcs, rhs.LeveledNpcs)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -795,6 +808,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Weapons);
                 hash.Add(this.Ammunitions);
                 hash.Add(this.Npcs);
+                hash.Add(this.LeveledNpcs);
                 return hash.ToHashCode();
             }
 
@@ -998,6 +1012,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Npcs.Overall)) return false;
                     if (this.Npcs.Specific != null && !this.Npcs.Specific.All(eval)) return false;
                 }
+                if (LeveledNpcs != null)
+                {
+                    if (!eval(this.LeveledNpcs.Overall)) return false;
+                    if (this.LeveledNpcs.Specific != null && !this.LeveledNpcs.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1200,6 +1219,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Npcs.Overall)) return true;
                     if (this.Npcs.Specific != null && this.Npcs.Specific.Any(eval)) return true;
                 }
+                if (LeveledNpcs != null)
+                {
+                    if (eval(this.LeveledNpcs.Overall)) return true;
+                    if (this.LeveledNpcs.Specific != null && this.LeveledNpcs.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1253,6 +1277,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Weapons = this.Weapons == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Weapons.Overall), this.Weapons.Specific?.Translate(eval));
                 obj.Ammunitions = this.Ammunitions == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Ammunitions.Overall), this.Ammunitions.Specific?.Translate(eval));
                 obj.Npcs = this.Npcs == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Npcs.Overall), this.Npcs.Specific?.Translate(eval));
+                obj.LeveledNpcs = this.LeveledNpcs == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LeveledNpcs.Overall), this.LeveledNpcs.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1431,6 +1456,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Npcs?.ToString(fg);
                     }
+                    if (printMask?.LeveledNpcs?.Overall ?? true)
+                    {
+                        LeveledNpcs?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -1495,6 +1524,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<Weapon.ErrorMask>?>? Weapons;
             public MaskItem<Exception?, Group.ErrorMask<Ammunition.ErrorMask>?>? Ammunitions;
             public MaskItem<Exception?, Group.ErrorMask<Npc.ErrorMask>?>? Npcs;
+            public MaskItem<Exception?, Group.ErrorMask<LeveledNpc.ErrorMask>?>? LeveledNpcs;
             #endregion
 
             #region IErrorMask
@@ -1581,6 +1611,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Ammunitions;
                     case SkyrimMod_FieldIndex.Npcs:
                         return Npcs;
+                    case SkyrimMod_FieldIndex.LeveledNpcs:
+                        return LeveledNpcs;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1707,6 +1739,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.Npcs:
                         this.Npcs = new MaskItem<Exception?, Group.ErrorMask<Npc.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.LeveledNpcs:
+                        this.LeveledNpcs = new MaskItem<Exception?, Group.ErrorMask<LeveledNpc.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1835,6 +1870,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.Npcs:
                         this.Npcs = (MaskItem<Exception?, Group.ErrorMask<Npc.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.LeveledNpcs:
+                        this.LeveledNpcs = (MaskItem<Exception?, Group.ErrorMask<LeveledNpc.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1882,6 +1920,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Weapons != null) return true;
                 if (Ammunitions != null) return true;
                 if (Npcs != null) return true;
+                if (LeveledNpcs != null) return true;
                 return false;
             }
             #endregion
@@ -1955,6 +1994,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Weapons?.ToString(fg);
                 Ammunitions?.ToString(fg);
                 Npcs?.ToString(fg);
+                LeveledNpcs?.ToString(fg);
             }
             #endregion
 
@@ -2002,6 +2042,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Weapons = this.Weapons.Combine(rhs.Weapons, (l, r) => l.Combine(r));
                 ret.Ammunitions = this.Ammunitions.Combine(rhs.Ammunitions, (l, r) => l.Combine(r));
                 ret.Npcs = this.Npcs.Combine(rhs.Npcs, (l, r) => l.Combine(r));
+                ret.LeveledNpcs = this.LeveledNpcs.Combine(rhs.LeveledNpcs, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2062,6 +2103,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<Weapon.TranslationMask>?> Weapons;
             public MaskItem<bool, Group.TranslationMask<Ammunition.TranslationMask>?> Ammunitions;
             public MaskItem<bool, Group.TranslationMask<Npc.TranslationMask>?> Npcs;
+            public MaskItem<bool, Group.TranslationMask<LeveledNpc.TranslationMask>?> LeveledNpcs;
             #endregion
 
             #region Ctors
@@ -2106,6 +2148,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Weapons = new MaskItem<bool, Group.TranslationMask<Weapon.TranslationMask>?>(defaultOn, null);
                 this.Ammunitions = new MaskItem<bool, Group.TranslationMask<Ammunition.TranslationMask>?>(defaultOn, null);
                 this.Npcs = new MaskItem<bool, Group.TranslationMask<Npc.TranslationMask>?>(defaultOn, null);
+                this.LeveledNpcs = new MaskItem<bool, Group.TranslationMask<LeveledNpc.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -2160,6 +2203,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Weapons?.Overall ?? true, Weapons?.Specific?.GetCrystal()));
                 ret.Add((Ammunitions?.Overall ?? true, Ammunitions?.Specific?.GetCrystal()));
                 ret.Add((Npcs?.Overall ?? true, Npcs?.Specific?.GetCrystal()));
+                ret.Add((LeveledNpcs?.Overall ?? true, LeveledNpcs?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -2212,6 +2256,7 @@ namespace Mutagen.Bethesda.Skyrim
             _Weapons_Object = new Group<Weapon>(this);
             _Ammunitions_Object = new Group<Ammunition>(this);
             _Npcs_Object = new Group<Npc>(this);
+            _LeveledNpcs_Object = new Group<LeveledNpc>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -2368,6 +2413,10 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.Npcs ?? true)
             {
                 this.Npcs.RecordCache.Set(rhsMod.Npcs.RecordCache.Items);
+            }
+            if (mask?.LeveledNpcs ?? true)
+            {
+                this.LeveledNpcs.RecordCache.Set(rhsMod.LeveledNpcs.RecordCache.Items);
             }
         }
 
@@ -2642,6 +2691,13 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Npc>());
             }
+            if (mask?.LeveledNpcs ?? true)
+            {
+                this.LeveledNpcs.RecordCache.Set(
+                    rhs.LeveledNpcs.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<LeveledNpc>());
+            }
             Dictionary<FormKey, IMajorRecordCommon> router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var package = this.CreateLinkCache();
@@ -2705,6 +2761,7 @@ namespace Mutagen.Bethesda.Skyrim
             count += Weapons.RecordCache.Count > 0 ? 1 : 0;
             count += Ammunitions.RecordCache.Count > 0 ? 1 : 0;
             count += Npcs.RecordCache.Count > 0 ? 1 : 0;
+            count += LeveledNpcs.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -2937,6 +2994,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<Weapon> Weapons { get; }
         new Group<Ammunition> Ammunitions { get; }
         new Group<Npc> Npcs { get; }
+        new Group<LeveledNpc> LeveledNpcs { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -2993,6 +3051,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IWeaponGetter> Weapons { get; }
         IGroupGetter<IAmmunitionGetter> Ammunitions { get; }
         IGroupGetter<INpcGetter> Npcs { get; }
+        IGroupGetter<ILeveledNpcGetter> LeveledNpcs { get; }
 
     }
 
@@ -3471,6 +3530,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Weapons = 36,
         Ammunitions = 37,
         Npcs = 38,
+        LeveledNpcs = 39,
     }
     #endregion
 
@@ -3488,9 +3548,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 39;
+        public const ushort AdditionalFieldCount = 40;
 
-        public const ushort FieldCount = 39;
+        public const ushort FieldCount = 40;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -3598,6 +3658,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.Ammunitions;
                 case "NPCS":
                     return (ushort)SkyrimMod_FieldIndex.Npcs;
+                case "LEVELEDNPCS":
+                    return (ushort)SkyrimMod_FieldIndex.LeveledNpcs;
                 default:
                     return null;
             }
@@ -3647,6 +3709,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Weapons:
                 case SkyrimMod_FieldIndex.Ammunitions:
                 case SkyrimMod_FieldIndex.Npcs:
+                case SkyrimMod_FieldIndex.LeveledNpcs:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3697,6 +3760,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Weapons:
                 case SkyrimMod_FieldIndex.Ammunitions:
                 case SkyrimMod_FieldIndex.Npcs:
+                case SkyrimMod_FieldIndex.LeveledNpcs:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3747,6 +3811,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Weapons:
                 case SkyrimMod_FieldIndex.Ammunitions:
                 case SkyrimMod_FieldIndex.Npcs:
+                case SkyrimMod_FieldIndex.LeveledNpcs:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3836,6 +3901,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Ammunitions";
                 case SkyrimMod_FieldIndex.Npcs:
                     return "Npcs";
+                case SkyrimMod_FieldIndex.LeveledNpcs:
+                    return "LeveledNpcs";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3885,6 +3952,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Weapons:
                 case SkyrimMod_FieldIndex.Ammunitions:
                 case SkyrimMod_FieldIndex.Npcs:
+                case SkyrimMod_FieldIndex.LeveledNpcs:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3936,6 +4004,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Weapons:
                 case SkyrimMod_FieldIndex.Ammunitions:
                 case SkyrimMod_FieldIndex.Npcs:
+                case SkyrimMod_FieldIndex.LeveledNpcs:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4025,6 +4094,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<Ammunition>);
                 case SkyrimMod_FieldIndex.Npcs:
                     return typeof(Group<Npc>);
+                case SkyrimMod_FieldIndex.LeveledNpcs:
+                    return typeof(Group<LeveledNpc>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -4070,9 +4141,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
         public static readonly RecordType AMMO_HEADER = new RecordType("AMMO");
         public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
+        public static readonly RecordType LVLN_HEADER = new RecordType("LVLN");
         public static readonly RecordType TriggeringRecordType = TES4_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 39;
+        public const int NumTypedFields = 40;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -4153,6 +4225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Weapons.Clear();
             item.Ammunitions.Clear();
             item.Npcs.Clear();
+            item.LeveledNpcs.Clear();
         }
         
         #region Xml Translation
@@ -4800,6 +4873,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Npcs);
                 }
+                case 0x4E4C564C: // LVLN
+                {
+                    if (importMask?.LeveledNpcs ?? true)
+                    {
+                        item.LeveledNpcs.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LeveledNpcs);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -4890,6 +4977,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Weapons = MaskItemExt.Factory(item.Weapons.GetEqualsMask(rhs.Weapons, include), include);
             ret.Ammunitions = MaskItemExt.Factory(item.Ammunitions.GetEqualsMask(rhs.Ammunitions, include), include);
             ret.Npcs = MaskItemExt.Factory(item.Npcs.GetEqualsMask(rhs.Npcs, include), include);
+            ret.LeveledNpcs = MaskItemExt.Factory(item.LeveledNpcs.GetEqualsMask(rhs.LeveledNpcs, include), include);
         }
         
         public string ToString(
@@ -5092,6 +5180,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Npcs?.ToString(fg, "Npcs");
             }
+            if (printMask?.LeveledNpcs?.Overall ?? true)
+            {
+                item.LeveledNpcs?.ToString(fg, "LeveledNpcs");
+            }
         }
         
         public bool HasBeenSet(
@@ -5144,6 +5236,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Weapons = new MaskItem<bool, Group.Mask<bool>?>(true, item.Weapons?.GetHasBeenSetMask());
             mask.Ammunitions = new MaskItem<bool, Group.Mask<bool>?>(true, item.Ammunitions?.GetHasBeenSetMask());
             mask.Npcs = new MaskItem<bool, Group.Mask<bool>?>(true, item.Npcs?.GetHasBeenSetMask());
+            mask.LeveledNpcs = new MaskItem<bool, Group.Mask<bool>?>(true, item.LeveledNpcs?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -5192,6 +5285,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Weapons, rhs.Weapons)) return false;
             if (!object.Equals(lhs.Ammunitions, rhs.Ammunitions)) return false;
             if (!object.Equals(lhs.Npcs, rhs.Npcs)) return false;
+            if (!object.Equals(lhs.LeveledNpcs, rhs.LeveledNpcs)) return false;
             return true;
         }
         
@@ -5237,6 +5331,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Weapons);
             hash.Add(item.Ammunitions);
             hash.Add(item.Npcs);
+            hash.Add(item.LeveledNpcs);
             return hash.ToHashCode();
         }
         
@@ -5444,6 +5539,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "INpc":
                 case "INpcInternal":
                     return obj.Npcs.RecordCache;
+                case "LeveledNpc":
+                case "ILeveledNpcGetter":
+                case "ILeveledNpc":
+                case "ILeveledNpcInternal":
+                    return obj.LeveledNpcs.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown group type: {typeof(T)}");
             }
@@ -5460,7 +5560,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var modHeader = item.ModHeader.DeepCopy() as ModHeader;
             modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
             modHeader.WriteToBinary(new MutagenWriter(stream, GameConstants.Skyrim, masterRefs));
-            Stream[] outputStreams = new Stream[38];
+            Stream[] outputStreams = new Stream[39];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams));
@@ -5500,6 +5600,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.Weapons, masterRefs, 35, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Ammunitions, masterRefs, 36, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Npcs, masterRefs, 37, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.LeveledNpcs, masterRefs, 38, outputStreams));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -5813,6 +5914,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.LeveledNpcs is ILinkContainer LeveledNpcslinkCont)
+            {
+                foreach (var item in LeveledNpcslinkCont.Links)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -5967,6 +6075,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.Npcs.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LeveledNpcs.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -6326,6 +6438,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "INpc":
                 case "INpcInternal":
                     foreach (var item in obj.Npcs.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LeveledNpc":
+                case "ILeveledNpcGetter":
+                case "ILeveledNpc":
+                case "ILeveledNpcInternal":
+                    foreach (var item in obj.LeveledNpcs.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -7129,6 +7250,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.LeveledNpcs) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.LeveledNpcs);
+                try
+                {
+                    item.LeveledNpcs.DeepCopyIn(
+                        rhs: rhs.LeveledNpcs,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.LeveledNpcs));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -7646,6 +7787,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.Npcs,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Npcs));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.LeveledNpcs) ?? true))
+            {
+                var LeveledNpcsItem = item.LeveledNpcs;
+                ((GroupXmlWriteTranslation)((IXmlItem)LeveledNpcsItem).XmlWriteTranslator).Write<ILeveledNpcGetter>(
+                    item: LeveledNpcsItem,
+                    node: node,
+                    name: nameof(item.LeveledNpcs),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.LeveledNpcs,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.LeveledNpcs));
             }
         }
 
@@ -8475,6 +8627,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "LeveledNpcs":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.LeveledNpcs);
+                    try
+                    {
+                        item.LeveledNpcs.CopyInFromXml<LeveledNpc>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -8682,6 +8853,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Weapons;
         public bool Ammunitions;
         public bool Npcs;
+        public bool LeveledNpcs;
         public GroupMask()
         {
         }
@@ -8725,6 +8897,7 @@ namespace Mutagen.Bethesda.Skyrim
             Weapons = defaultValue;
             Ammunitions = defaultValue;
             Npcs = defaultValue;
+            LeveledNpcs = defaultValue;
         }
     }
 
@@ -9172,6 +9345,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                 }
             }
+            if (importMask?.LeveledNpcs ?? true)
+            {
+                var LeveledNpcsItem = item.LeveledNpcs;
+                if (LeveledNpcsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)LeveledNpcsItem).BinaryWriteTranslator).Write<ILeveledNpcGetter>(
+                        item: LeveledNpcsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
         }
 
         public void Write(
@@ -9590,6 +9774,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<INpcGetter>? _Npcs => _Npcs_IsSet ? GroupBinaryOverlay<INpcGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _NpcsLocation!.Value.Min, _NpcsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<INpcGetter> Npcs => _Npcs ?? new Group<Npc>(this);
         #endregion
+        #region LeveledNpcs
+        private RangeInt64? _LeveledNpcsLocation;
+        private bool _LeveledNpcs_IsSet => _LeveledNpcsLocation.HasValue;
+        private IGroupGetter<ILeveledNpcGetter>? _LeveledNpcs => _LeveledNpcs_IsSet ? GroupBinaryOverlay<ILeveledNpcGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _LeveledNpcsLocation!.Value.Min, _LeveledNpcsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<ILeveledNpcGetter> LeveledNpcs => _LeveledNpcs ?? new Group<LeveledNpc>(this);
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             long finalPos,
@@ -9868,6 +10058,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _NpcsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Npcs);
+                }
+                case 0x4E4C564C: // LVLN
+                {
+                    _LeveledNpcsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LeveledNpcs);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

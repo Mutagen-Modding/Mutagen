@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class LeveledCreature :
-        NpcSpawn,
+        ANpcSpawn,
         ILeveledCreatureInternal,
         ILoquiObjectSetter<LeveledCreature>,
         IEquatable<LeveledCreature>,
@@ -72,15 +72,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LeveledEntry<NpcSpawn>> _Entries = new ExtendedList<LeveledEntry<NpcSpawn>>();
-        public ExtendedList<LeveledEntry<NpcSpawn>> Entries
+        private ExtendedList<LeveledEntry<ANpcSpawn>> _Entries = new ExtendedList<LeveledEntry<ANpcSpawn>>();
+        public ExtendedList<LeveledEntry<ANpcSpawn>> Entries
         {
             get => this._Entries;
             protected set => this._Entries = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ILeveledEntryGetter<INpcSpawnGetter>> ILeveledCreatureGetter.Entries => _Entries;
+        IReadOnlyList<ILeveledEntryGetter<IANpcSpawnGetter>> ILeveledCreatureGetter.Entries => _Entries;
         #endregion
 
         #endregion
@@ -259,7 +259,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public new class Mask<TItem> :
-            NpcSpawn.Mask<TItem>,
+            ANpcSpawn.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
             where TItem : notnull
@@ -495,13 +495,13 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public new class ErrorMask :
-            NpcSpawn.ErrorMask,
+            ANpcSpawn.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
             public Exception? ChanceNone;
             public Exception? Flags;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<NpcSpawn.ErrorMask>?>>?>? Entries;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<ANpcSpawn.ErrorMask>?>>?>? Entries;
             public Exception? Script;
             public Exception? Template;
             #endregion
@@ -539,7 +539,7 @@ namespace Mutagen.Bethesda.Oblivion
                         this.Flags = ex;
                         break;
                     case LeveledCreature_FieldIndex.Entries:
-                        this.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<NpcSpawn.ErrorMask>?>>?>(ex, null);
+                        this.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<ANpcSpawn.ErrorMask>?>>?>(ex, null);
                         break;
                     case LeveledCreature_FieldIndex.Script:
                         this.Script = ex;
@@ -565,7 +565,7 @@ namespace Mutagen.Bethesda.Oblivion
                         this.Flags = (Exception?)obj;
                         break;
                     case LeveledCreature_FieldIndex.Entries:
-                        this.Entries = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<NpcSpawn.ErrorMask>?>>?>)obj;
+                        this.Entries = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<ANpcSpawn.ErrorMask>?>>?>)obj;
                         break;
                     case LeveledCreature_FieldIndex.Script:
                         this.Script = (Exception?)obj;
@@ -658,7 +658,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var ret = new ErrorMask();
                 ret.ChanceNone = this.ChanceNone.Combine(rhs.ChanceNone);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<NpcSpawn.ErrorMask>?>>?>(ExceptionExt.Combine(this.Entries?.Overall, rhs.Entries?.Overall), ExceptionExt.Combine(this.Entries?.Specific, rhs.Entries?.Specific));
+                ret.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledEntry.ErrorMask<ANpcSpawn.ErrorMask>?>>?>(ExceptionExt.Combine(this.Entries?.Overall, rhs.Entries?.Overall), ExceptionExt.Combine(this.Entries?.Specific, rhs.Entries?.Specific));
                 ret.Script = this.Script.Combine(rhs.Script);
                 ret.Template = this.Template.Combine(rhs.Template);
                 return ret;
@@ -679,13 +679,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         }
         public new class TranslationMask :
-            NpcSpawn.TranslationMask,
+            ANpcSpawn.TranslationMask,
             ITranslationMask
         {
             #region Members
             public bool ChanceNone;
             public bool Flags;
-            public MaskItem<bool, LeveledEntry.TranslationMask<NpcSpawn.TranslationMask>?> Entries;
+            public MaskItem<bool, LeveledEntry.TranslationMask<ANpcSpawn.TranslationMask>?> Entries;
             public bool Script;
             public bool Template;
             #endregion
@@ -696,7 +696,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.ChanceNone = defaultOn;
                 this.Flags = defaultOn;
-                this.Entries = new MaskItem<bool, LeveledEntry.TranslationMask<NpcSpawn.TranslationMask>?>(defaultOn, null);
+                this.Entries = new MaskItem<bool, LeveledEntry.TranslationMask<ANpcSpawn.TranslationMask>?>(defaultOn, null);
                 this.Script = defaultOn;
                 this.Template = defaultOn;
             }
@@ -795,25 +795,25 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface ILeveledCreature :
         ILeveledCreatureGetter,
-        INpcSpawn,
+        IANpcSpawn,
         ILoquiObjectSetter<ILeveledCreatureInternal>
     {
         new Byte? ChanceNone { get; set; }
         new LeveledFlag? Flags { get; set; }
-        new ExtendedList<LeveledEntry<NpcSpawn>> Entries { get; }
+        new ExtendedList<LeveledEntry<ANpcSpawn>> Entries { get; }
         new IFormLinkNullable<Script> Script { get; }
         new IFormLinkNullable<ANpc> Template { get; }
     }
 
     public partial interface ILeveledCreatureInternal :
-        INpcSpawnInternal,
+        IANpcSpawnInternal,
         ILeveledCreature,
         ILeveledCreatureGetter
     {
     }
 
     public partial interface ILeveledCreatureGetter :
-        INpcSpawnGetter,
+        IANpcSpawnGetter,
         ILoquiObject<ILeveledCreatureGetter>,
         IXmlItem,
         ILinkContainer,
@@ -822,7 +822,7 @@ namespace Mutagen.Bethesda.Oblivion
         static ILoquiRegistration Registration => LeveledCreature_Registration.Instance;
         Byte? ChanceNone { get; }
         LeveledFlag? Flags { get; }
-        IReadOnlyList<ILeveledEntryGetter<INpcSpawnGetter>> Entries { get; }
+        IReadOnlyList<ILeveledEntryGetter<IANpcSpawnGetter>> Entries { get; }
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
         IFormLinkNullableGetter<IANpcGetter> Template { get; }
 
@@ -1206,7 +1206,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledCreature_FieldIndex.Template:
                     return false;
                 default:
-                    return NpcSpawn_Registration.GetNthIsEnumerable(index);
+                    return ANpcSpawn_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -1223,7 +1223,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledCreature_FieldIndex.Template:
                     return false;
                 default:
-                    return NpcSpawn_Registration.GetNthIsLoqui(index);
+                    return ANpcSpawn_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -1239,7 +1239,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledCreature_FieldIndex.Template:
                     return false;
                 default:
-                    return NpcSpawn_Registration.GetNthIsSingleton(index);
+                    return ANpcSpawn_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -1259,7 +1259,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledCreature_FieldIndex.Template:
                     return "Template";
                 default:
-                    return NpcSpawn_Registration.GetNthName(index);
+                    return ANpcSpawn_Registration.GetNthName(index);
             }
         }
 
@@ -1275,7 +1275,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledCreature_FieldIndex.Template:
                     return false;
                 default:
-                    return NpcSpawn_Registration.IsNthDerivative(index);
+                    return ANpcSpawn_Registration.IsNthDerivative(index);
             }
         }
 
@@ -1291,7 +1291,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledCreature_FieldIndex.Template:
                     return false;
                 default:
-                    return NpcSpawn_Registration.IsProtected(index);
+                    return ANpcSpawn_Registration.IsProtected(index);
             }
         }
 
@@ -1305,13 +1305,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledCreature_FieldIndex.Flags:
                     return typeof(LeveledFlag);
                 case LeveledCreature_FieldIndex.Entries:
-                    return typeof(ExtendedList<LeveledEntry<NpcSpawn>>);
+                    return typeof(ExtendedList<LeveledEntry<ANpcSpawn>>);
                 case LeveledCreature_FieldIndex.Script:
                     return typeof(IFormLinkNullable<Script>);
                 case LeveledCreature_FieldIndex.Template:
                     return typeof(IFormLinkNullable<ANpc>);
                 default:
-                    return NpcSpawn_Registration.GetNthType(index);
+                    return ANpcSpawn_Registration.GetNthType(index);
             }
         }
 
@@ -1358,7 +1358,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class LeveledCreatureSetterCommon : NpcSpawnSetterCommon
+    public partial class LeveledCreatureSetterCommon : ANpcSpawnSetterCommon
     {
         public new static readonly LeveledCreatureSetterCommon Instance = new LeveledCreatureSetterCommon();
 
@@ -1375,7 +1375,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Clear(item);
         }
         
-        public override void Clear(INpcSpawnInternal item)
+        public override void Clear(IANpcSpawnInternal item)
         {
             Clear(item: (ILeveledCreatureInternal)item);
         }
@@ -1401,7 +1401,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (name)
             {
                 default:
-                    NpcSpawnSetterCommon.FillPrivateElementXml(
+                    ANpcSpawnSetterCommon.FillPrivateElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -1443,7 +1443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void CopyInFromXml(
-            INpcSpawnInternal item,
+            IANpcSpawnInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1489,7 +1489,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILeveledCreatureInternal item,
             MutagenFrame frame)
         {
-            NpcSpawnSetterCommon.FillBinaryStructs(
+            ANpcSpawnSetterCommon.FillBinaryStructs(
                 item: item,
                 frame: frame);
         }
@@ -1519,13 +1519,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4F4C564C: // LVLO
                 {
                     item.Entries.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<NpcSpawn>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<ANpcSpawn>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: LeveledCreature_Registration.LVLO_HEADER,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out LeveledEntry<NpcSpawn> listSubItem, RecordTypeConverter? conv) =>
+                            transl: (MutagenFrame r, out LeveledEntry<ANpcSpawn> listSubItem, RecordTypeConverter? conv) =>
                             {
-                                return LoquiBinaryTranslation<LeveledEntry<NpcSpawn>>.Instance.Parse(
+                                return LoquiBinaryTranslation<LeveledEntry<ANpcSpawn>>.Instance.Parse(
                                     frame: r,
                                     item: out listSubItem!,
                                     recordTypeConverter: conv);
@@ -1549,7 +1549,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Template);
                 }
                 default:
-                    return NpcSpawnSetterCommon.FillBinaryRecordTypes(
+                    return ANpcSpawnSetterCommon.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -1573,7 +1573,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void CopyInFromBinary(
-            INpcSpawnInternal item,
+            IANpcSpawnInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1608,7 +1608,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LeveledCreatureCommon : NpcSpawnCommon
+    public partial class LeveledCreatureCommon : ANpcSpawnCommon
     {
         public new static readonly LeveledCreatureCommon Instance = new LeveledCreatureCommon();
 
@@ -1688,7 +1688,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             LeveledCreature.Mask<bool>? printMask = null)
         {
-            NpcSpawnCommon.ToStringFields(
+            ANpcSpawnCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
@@ -1760,19 +1760,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 mask: mask);
         }
         
-        public static LeveledCreature_FieldIndex ConvertFieldIndex(NpcSpawn_FieldIndex index)
+        public static LeveledCreature_FieldIndex ConvertFieldIndex(ANpcSpawn_FieldIndex index)
         {
             switch (index)
             {
-                case NpcSpawn_FieldIndex.MajorRecordFlagsRaw:
+                case ANpcSpawn_FieldIndex.MajorRecordFlagsRaw:
                     return (LeveledCreature_FieldIndex)((int)index);
-                case NpcSpawn_FieldIndex.FormKey:
+                case ANpcSpawn_FieldIndex.FormKey:
                     return (LeveledCreature_FieldIndex)((int)index);
-                case NpcSpawn_FieldIndex.Version:
+                case ANpcSpawn_FieldIndex.Version:
                     return (LeveledCreature_FieldIndex)((int)index);
-                case NpcSpawn_FieldIndex.EditorID:
+                case ANpcSpawn_FieldIndex.EditorID:
                     return (LeveledCreature_FieldIndex)((int)index);
-                case NpcSpawn_FieldIndex.OblivionMajorRecordFlags:
+                case ANpcSpawn_FieldIndex.OblivionMajorRecordFlags:
                     return (LeveledCreature_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -1832,8 +1832,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override bool Equals(
-            INpcSpawnGetter? lhs,
-            INpcSpawnGetter? rhs)
+            IANpcSpawnGetter? lhs,
+            IANpcSpawnGetter? rhs)
         {
             return Equals(
                 lhs: (ILeveledCreatureGetter?)lhs,
@@ -1882,7 +1882,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return hash.ToHashCode();
         }
         
-        public override int GetHashCode(INpcSpawnGetter item)
+        public override int GetHashCode(IANpcSpawnGetter item)
         {
             return GetHashCode(item: (ILeveledCreatureGetter)item);
         }
@@ -1935,7 +1935,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class LeveledCreatureSetterTranslationCommon : NpcSpawnSetterTranslationCommon
+    public partial class LeveledCreatureSetterTranslationCommon : ANpcSpawnSetterTranslationCommon
     {
         public new static readonly LeveledCreatureSetterTranslationCommon Instance = new LeveledCreatureSetterTranslationCommon();
 
@@ -1960,8 +1960,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             base.DeepCopyIn(
-                (INpcSpawn)item,
-                (INpcSpawnGetter)rhs,
+                (IANpcSpawn)item,
+                (IANpcSpawnGetter)rhs,
                 errorMask,
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.ChanceNone) ?? true))
@@ -1981,7 +1981,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs.Entries
                         .Select(r =>
                         {
-                            return r.DeepCopy<NpcSpawn, INpcSpawnGetter>(
+                            return r.DeepCopy<ANpcSpawn, IANpcSpawnGetter>(
                                 errorMask: errorMask,
                                 default(TranslationCrystal));
                         }));
@@ -2007,8 +2007,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void DeepCopyIn(
-            INpcSpawnInternal item,
-            INpcSpawnGetter rhs,
+            IANpcSpawnInternal item,
+            IANpcSpawnGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -2020,8 +2020,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void DeepCopyIn(
-            INpcSpawn item,
-            INpcSpawnGetter rhs,
+            IANpcSpawn item,
+            IANpcSpawnGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -2156,7 +2156,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class LeveledCreatureXmlWriteTranslation :
-        NpcSpawnXmlWriteTranslation,
+        ANpcSpawnXmlWriteTranslation,
         IXmlWriteTranslator
     {
         public new readonly static LeveledCreatureXmlWriteTranslation Instance = new LeveledCreatureXmlWriteTranslation();
@@ -2167,7 +2167,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            NpcSpawnXmlWriteTranslation.WriteToNodeXml(
+            ANpcSpawnXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -2194,18 +2194,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Entries) ?? true))
             {
-                ListXmlTranslation<ILeveledEntryGetter<INpcSpawnGetter>>.Instance.Write(
+                ListXmlTranslation<ILeveledEntryGetter<IANpcSpawnGetter>>.Instance.Write(
                     node: node,
                     name: nameof(item.Entries),
                     item: item.Entries,
                     fieldIndex: (int)LeveledCreature_FieldIndex.Entries,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)LeveledCreature_FieldIndex.Entries),
-                    transl: (XElement subNode, ILeveledEntryGetter<INpcSpawnGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    transl: (XElement subNode, ILeveledEntryGetter<IANpcSpawnGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         if (subItem.TryGet(out var Item))
                         {
-                            ((LeveledEntryXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write<INpcSpawnGetter>(
+                            ((LeveledEntryXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write<IANpcSpawnGetter>(
                                 item: Item,
                                 node: subNode,
                                 name: null,
@@ -2273,7 +2273,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             XElement node,
-            INpcSpawnGetter item,
+            IANpcSpawnGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
@@ -2318,7 +2318,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class LeveledCreatureXmlCreateTranslation : NpcSpawnXmlCreateTranslation
+    public partial class LeveledCreatureXmlCreateTranslation : ANpcSpawnXmlCreateTranslation
     {
         public new readonly static LeveledCreatureXmlCreateTranslation Instance = new LeveledCreatureXmlCreateTranslation();
 
@@ -2396,10 +2396,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)LeveledCreature_FieldIndex.Entries);
                     try
                     {
-                        if (ListXmlTranslation<LeveledEntry<NpcSpawn>>.Instance.Parse(
+                        if (ListXmlTranslation<LeveledEntry<ANpcSpawn>>.Instance.Parse(
                             node: node,
                             enumer: out var EntriesItem,
-                            transl: LoquiXmlTranslation<LeveledEntry<NpcSpawn>>.Instance.Parse,
+                            transl: LoquiXmlTranslation<LeveledEntry<ANpcSpawn>>.Instance.Parse,
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
@@ -2457,7 +2457,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    NpcSpawnXmlCreateTranslation.FillPublicElementXml(
+                    ANpcSpawnXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -2537,7 +2537,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class LeveledCreatureBinaryWriteTranslation :
-        NpcSpawnBinaryWriteTranslation,
+        ANpcSpawnBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new readonly static LeveledCreatureBinaryWriteTranslation Instance = new LeveledCreatureBinaryWriteTranslation();
@@ -2560,14 +2560,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.Flags,
                 length: 1,
                 header: recordTypeConverter.ConvertToCustom(LeveledCreature_Registration.LVLF_HEADER));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<ILeveledEntryGetter<INpcSpawnGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<ILeveledEntryGetter<IANpcSpawnGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Entries,
-                transl: (MutagenWriter subWriter, ILeveledEntryGetter<INpcSpawnGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, ILeveledEntryGetter<IANpcSpawnGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     if (subItem.TryGet(out var Item))
                     {
-                        ((LeveledEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write<INpcSpawnGetter>(
+                        ((LeveledEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write<IANpcSpawnGetter>(
                             item: Item,
                             writer: subWriter,
                             recordTypeConverter: conv);
@@ -2616,7 +2616,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             MutagenWriter writer,
-            INpcSpawnGetter item,
+            IANpcSpawnGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
@@ -2649,7 +2649,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class LeveledCreatureBinaryCreateTranslation : NpcSpawnBinaryCreateTranslation
+    public partial class LeveledCreatureBinaryCreateTranslation : ANpcSpawnBinaryCreateTranslation
     {
         public new readonly static LeveledCreatureBinaryCreateTranslation Instance = new LeveledCreatureBinaryCreateTranslation();
 
@@ -2669,7 +2669,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class LeveledCreatureBinaryOverlay :
-        NpcSpawnBinaryOverlay,
+        ANpcSpawnBinaryOverlay,
         ILeveledCreatureGetter
     {
         #region Common Routing
@@ -2724,7 +2724,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private bool Flags_IsSet => _FlagsLocation.HasValue;
         public LeveledFlag? Flags => Flags_IsSet ? (LeveledFlag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(LeveledFlag?);
         #endregion
-        public IReadOnlyList<ILeveledEntryGetter<INpcSpawnGetter>> Entries { get; private set; } = ListExt.Empty<LeveledEntryBinaryOverlay<INpcSpawnGetter>>();
+        public IReadOnlyList<ILeveledEntryGetter<IANpcSpawnGetter>> Entries { get; private set; } = ListExt.Empty<LeveledEntryBinaryOverlay<IANpcSpawnGetter>>();
         #region Script
         private int? _ScriptLocation;
         public bool Script_IsSet => _ScriptLocation.HasValue;
@@ -2808,11 +2808,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case 0x4F4C564C: // LVLO
                 {
-                    this.Entries = BinaryOverlaySetList<LeveledEntryBinaryOverlay<INpcSpawnGetter>>.FactoryByArray(
+                    this.Entries = BinaryOverlaySetList<LeveledEntryBinaryOverlay<IANpcSpawnGetter>>.FactoryByArray(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
-                        getter: (s, p, recConv) => LeveledEntryBinaryOverlay<INpcSpawnGetter>.LeveledEntryFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => LeveledEntryBinaryOverlay<IANpcSpawnGetter>.LeveledEntryFactory(new BinaryMemoryReadStream(s), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,

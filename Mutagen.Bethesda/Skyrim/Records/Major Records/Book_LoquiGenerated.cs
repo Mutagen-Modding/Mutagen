@@ -3701,6 +3701,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Keywords,
                 counterType: Book_Registration.KSIZ_HEADER,
+                counterLength: 4,
                 recordType: recordTypeConverter.ConvertToCustom(Book_Registration.KWDA_HEADER),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
                 {

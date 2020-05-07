@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="LeveledCreature" objType="Record" recordType="LVLC" baseClass="NpcSpawn" GUID="3b7a7716-fb68-4925-94fc-7ec66bea9349" ID="93">
+  <Object name="LeveledCreature" objType="Record" recordType="LVLC" baseClass="ANpcSpawn" GUID="3b7a7716-fb68-4925-94fc-7ec66bea9349" ID="93">
     <Fields>
       <UInt8 name="ChanceNone" recordType="LVLD" />
       <Enum name="Flags" enumName="LeveledFlag" byteLength="1" recordType="LVLF" />
       <RefList name="Entries" refName="LeveledEntry">
-        <GenericSpecification TypeToSpecify="T" Definition="NpcSpawn" />
+        <GenericSpecification TypeToSpecify="T" Definition="ANpcSpawn" />
       </RefList>
       <FormLink name="Script" refName="Script" recordType="SCRI" />
       <FormLink name="Template" refName="ANpc" recordType="TNAM" />

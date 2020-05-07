@@ -189,6 +189,29 @@ namespace Mutagen.Bethesda.Binary
             this.Writer.Write(i);
         }
 
+        /// <summary>
+        /// Writes an int, limited to the given number of bytes
+        /// </summary>
+        /// <param name="i">Number to write</param>
+        /// <param name="length">Number of bytes to write out</param>
+        public void Write(int i, byte length)
+        {
+            switch (length)
+            {
+                case 1:
+                    this.Writer.Write(checked((byte)i));
+                    break;
+                case 2:
+                    this.Writer.Write(checked((short)i));
+                    break;
+                case 4:
+                    this.Writer.Write(i);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
         /// <inheritdoc/>
         public void Write(int? i)
         {

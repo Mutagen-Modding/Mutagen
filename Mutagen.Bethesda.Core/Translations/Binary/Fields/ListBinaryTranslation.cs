@@ -502,12 +502,13 @@ namespace Mutagen.Bethesda.Binary
             IReadOnlyList<T>? items,
             RecordType counterType,
             RecordType recordType,
-            BinarySubWriteDelegate<T> transl)
+            BinarySubWriteDelegate<T> transl,
+            byte counterLength)
         {
             if (items == null) return;
             using (HeaderExport.ExportHeader(writer, counterType, ObjectType.Subrecord))
             {
-                writer.Write(items.Count);
+                writer.Write(items.Count, counterLength);
             }
             using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
             {
@@ -524,13 +525,14 @@ namespace Mutagen.Bethesda.Binary
             RecordType counterType,
             RecordType recordType,
             BinaryMasterWriteDelegate<T> transl,
+            byte counterLength,
             bool subRecordPerItem = false,
             RecordTypeConverter? recordTypeConverter = null)
         {
             if (items == null) return;
             using (HeaderExport.ExportHeader(writer, counterType, ObjectType.Subrecord))
             {
-                writer.Write(items.Count);
+                writer.Write(items.Count, counterLength);
             }
             if (subRecordPerItem)
             {
@@ -559,12 +561,13 @@ namespace Mutagen.Bethesda.Binary
             IReadOnlyList<T>? items,
             RecordType counterType,
             BinaryMasterWriteDelegate<T> transl,
+            byte counterLength,
             RecordTypeConverter? recordTypeConverter = null)
         {
             if (items == null) return;
             using (HeaderExport.ExportHeader(writer, counterType, ObjectType.Subrecord))
             {
-                writer.Write(items.Count);
+                writer.Write(items.Count, counterLength);
             }
             foreach (var item in items)
             {

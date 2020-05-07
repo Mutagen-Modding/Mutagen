@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
     public partial class Npc :
-        SkyrimMajorRecord,
+        ANpcSpawn,
         INpcInternal,
         ILoquiObjectSetter<Npc>,
         IEquatable<Npc>,
@@ -112,10 +112,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Template
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<INpcTemplate> _Template = new FormLinkNullable<INpcTemplate>();
-        public IFormLinkNullable<INpcTemplate> Template => this._Template;
+        protected IFormLinkNullable<ANpcSpawn> _Template = new FormLinkNullable<ANpcSpawn>();
+        public IFormLinkNullable<ANpcSpawn> Template => this._Template;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<INpcTemplateGetter> INpcGetter.Template => this.Template;
+        IFormLinkNullableGetter<IANpcSpawnGetter> INpcGetter.Template => this.Template;
         #endregion
         #region Race
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -652,7 +652,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public new class Mask<TItem> :
-            SkyrimMajorRecord.Mask<TItem>,
+            ANpcSpawn.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
             where TItem : notnull
@@ -1910,7 +1910,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public new class ErrorMask :
-            SkyrimMajorRecord.ErrorMask,
+            ANpcSpawn.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -2742,7 +2742,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         }
         public new class TranslationMask :
-            SkyrimMajorRecord.TranslationMask,
+            ANpcSpawn.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -2983,9 +2983,8 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface INpc :
         INpcGetter,
-        ISkyrimMajorRecord,
+        IANpcSpawn,
         IObjectBounded,
-        INpcTemplate,
         INamed,
         ILoquiObjectSetter<INpcInternal>
     {
@@ -2995,7 +2994,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<RankPlacement> Factions { get; }
         new IFormLinkNullable<LeveledItem> DeathItem { get; }
         new IFormLinkNullable<VoiceType> Voice { get; }
-        new IFormLinkNullable<INpcTemplate> Template { get; }
+        new IFormLinkNullable<ANpcSpawn> Template { get; }
         new IFormLinkNullable<Race> Race { get; }
         new ExtendedList<IFormLink<ASpell>>? ActorEffect { get; set; }
         new Destructible? Destructible { get; set; }
@@ -3041,16 +3040,15 @@ namespace Mutagen.Bethesda.Skyrim
     }
 
     public partial interface INpcInternal :
-        ISkyrimMajorRecordInternal,
+        IANpcSpawnInternal,
         INpc,
         INpcGetter
     {
     }
 
     public partial interface INpcGetter :
-        ISkyrimMajorRecordGetter,
+        IANpcSpawnGetter,
         IObjectBoundedGetter,
-        INpcTemplateGetter,
         INamedGetter,
         ILoquiObject<INpcGetter>,
         IXmlItem,
@@ -3064,7 +3062,7 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IRankPlacementGetter> Factions { get; }
         IFormLinkNullableGetter<ILeveledItemGetter> DeathItem { get; }
         IFormLinkNullableGetter<IVoiceTypeGetter> Voice { get; }
-        IFormLinkNullableGetter<INpcTemplateGetter> Template { get; }
+        IFormLinkNullableGetter<IANpcSpawnGetter> Template { get; }
         IFormLinkNullableGetter<IRaceGetter> Race { get; }
         IReadOnlyList<IFormLinkGetter<IASpellGetter>>? ActorEffect { get; }
         IDestructibleGetter? Destructible { get; }
@@ -3649,7 +3647,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Npc_FieldIndex.FaceParts:
                     return false;
                 default:
-                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
+                    return ANpcSpawn_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -3706,7 +3704,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Npc_FieldIndex.TextureLighting:
                     return false;
                 default:
-                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
+                    return ANpcSpawn_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -3762,7 +3760,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Npc_FieldIndex.TintLayers:
                     return false;
                 default:
-                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
+                    return ANpcSpawn_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -3862,7 +3860,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Npc_FieldIndex.TintLayers:
                     return "TintLayers";
                 default:
-                    return SkyrimMajorRecord_Registration.GetNthName(index);
+                    return ANpcSpawn_Registration.GetNthName(index);
             }
         }
 
@@ -3918,7 +3916,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Npc_FieldIndex.TintLayers:
                     return false;
                 default:
-                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
+                    return ANpcSpawn_Registration.IsNthDerivative(index);
             }
         }
 
@@ -3974,7 +3972,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Npc_FieldIndex.TintLayers:
                     return false;
                 default:
-                    return SkyrimMajorRecord_Registration.IsProtected(index);
+                    return ANpcSpawn_Registration.IsProtected(index);
             }
         }
 
@@ -3996,7 +3994,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Npc_FieldIndex.Voice:
                     return typeof(IFormLinkNullable<VoiceType>);
                 case Npc_FieldIndex.Template:
-                    return typeof(IFormLinkNullable<INpcTemplate>);
+                    return typeof(IFormLinkNullable<ANpcSpawn>);
                 case Npc_FieldIndex.Race:
                     return typeof(IFormLinkNullable<Race>);
                 case Npc_FieldIndex.ActorEffect:
@@ -4074,7 +4072,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Npc_FieldIndex.TintLayers:
                     return typeof(ExtendedList<TintLayer>);
                 default:
-                    return SkyrimMajorRecord_Registration.GetNthType(index);
+                    return ANpcSpawn_Registration.GetNthType(index);
             }
         }
 
@@ -4175,7 +4173,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class NpcSetterCommon : SkyrimMajorRecordSetterCommon
+    public partial class NpcSetterCommon : ANpcSpawnSetterCommon
     {
         public new static readonly NpcSetterCommon Instance = new NpcSetterCommon();
 
@@ -4232,6 +4230,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             base.Clear(item);
         }
         
+        public override void Clear(IANpcSpawnInternal item)
+        {
+            Clear(item: (INpcInternal)item);
+        }
+        
         public override void Clear(ISkyrimMajorRecordInternal item)
         {
             Clear(item: (INpcInternal)item);
@@ -4253,7 +4256,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 default:
-                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
+                    ANpcSpawnSetterCommon.FillPrivateElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -4295,6 +4298,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override void CopyInFromXml(
+            IANpcSpawnInternal item,
+            XElement node,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
+        {
+            CopyInFromXml(
+                item: (Npc)item,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+        
+        public override void CopyInFromXml(
             ISkyrimMajorRecordInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
@@ -4328,7 +4344,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INpcInternal item,
             MutagenFrame frame)
         {
-            SkyrimMajorRecordSetterCommon.FillBinaryStructs(
+            ANpcSpawnSetterCommon.FillBinaryStructs(
                 item: item,
                 frame: frame);
         }
@@ -4752,7 +4768,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.TintLayers);
                 }
                 default:
-                    return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
+                    return ANpcSpawnSetterCommon.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -4773,6 +4789,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: FillBinaryStructs,
                 fillTyped: FillBinaryRecordTypes);
+        }
+        
+        public override void CopyInFromBinary(
+            IANpcSpawnInternal item,
+            MutagenFrame frame,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            CopyInFromBinary(
+                item: (Npc)item,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
         }
         
         public override void CopyInFromBinary(
@@ -4800,7 +4827,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NpcCommon : SkyrimMajorRecordCommon
+    public partial class NpcCommon : ANpcSpawnCommon
     {
         public new static readonly NpcCommon Instance = new NpcCommon();
 
@@ -4976,7 +5003,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             Npc.Mask<bool>? printMask = null)
         {
-            SkyrimMajorRecordCommon.ToStringFields(
+            ANpcSpawnCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
@@ -5458,7 +5485,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 mask: mask);
         }
         
-        public static Npc_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
+        public static Npc_FieldIndex ConvertFieldIndex(ANpcSpawn_FieldIndex index)
+        {
+            switch (index)
+            {
+                case ANpcSpawn_FieldIndex.MajorRecordFlagsRaw:
+                    return (Npc_FieldIndex)((int)index);
+                case ANpcSpawn_FieldIndex.FormKey:
+                    return (Npc_FieldIndex)((int)index);
+                case ANpcSpawn_FieldIndex.Version:
+                    return (Npc_FieldIndex)((int)index);
+                case ANpcSpawn_FieldIndex.EditorID:
+                    return (Npc_FieldIndex)((int)index);
+                case ANpcSpawn_FieldIndex.FormVersion:
+                    return (Npc_FieldIndex)((int)index);
+                case ANpcSpawn_FieldIndex.Version2:
+                    return (Npc_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+        
+        public static new Npc_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -5550,6 +5598,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.FaceParts, rhs.FaceParts)) return false;
             if (!lhs.TintLayers.SequenceEqual(rhs.TintLayers)) return false;
             return true;
+        }
+        
+        public override bool Equals(
+            IANpcSpawnGetter? lhs,
+            IANpcSpawnGetter? rhs)
+        {
+            return Equals(
+                lhs: (INpcGetter?)lhs,
+                rhs: rhs as INpcGetter);
         }
         
         public override bool Equals(
@@ -5727,6 +5784,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return hash.ToHashCode();
         }
         
+        public override int GetHashCode(IANpcSpawnGetter item)
+        {
+            return GetHashCode(item: (INpcGetter)item);
+        }
+        
         public override int GetHashCode(ISkyrimMajorRecordGetter item)
         {
             return GetHashCode(item: (INpcGetter)item);
@@ -5861,7 +5923,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class NpcSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    public partial class NpcSetterTranslationCommon : ANpcSpawnSetterTranslationCommon
     {
         public new static readonly NpcSetterTranslationCommon Instance = new NpcSetterTranslationCommon();
 
@@ -5886,8 +5948,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             base.DeepCopyIn(
-                (ISkyrimMajorRecord)item,
-                (ISkyrimMajorRecordGetter)rhs,
+                (IANpcSpawn)item,
+                (IANpcSpawnGetter)rhs,
                 errorMask,
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.VirtualMachineAdapter) ?? true))
@@ -6482,6 +6544,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override void DeepCopyIn(
+            IANpcSpawnInternal item,
+            IANpcSpawnGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
+        {
+            this.DeepCopyIn(
+                item: (INpcInternal)item,
+                rhs: (INpcGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyIn(
+            IANpcSpawn item,
+            IANpcSpawnGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask)
+        {
+            this.DeepCopyIn(
+                item: (INpc)item,
+                rhs: (INpcGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask);
+        }
+        
+        public override void DeepCopyIn(
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,
             ErrorMaskBuilder? errorMask,
@@ -6605,7 +6693,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class NpcXmlWriteTranslation :
-        SkyrimMajorRecordXmlWriteTranslation,
+        ANpcSpawnXmlWriteTranslation,
         IXmlWriteTranslator
     {
         public new readonly static NpcXmlWriteTranslation Instance = new NpcXmlWriteTranslation();
@@ -6616,7 +6704,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
+            ANpcSpawnXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -7241,6 +7329,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public override void Write(
             XElement node,
+            IANpcSpawnGetter item,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask,
+            string? name = null)
+        {
+            Write(
+                item: (INpcGetter)item,
+                name: name,
+                node: node,
+                errorMask: errorMask,
+                translationMask: translationMask);
+        }
+
+        public override void Write(
+            XElement node,
             ISkyrimMajorRecordGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
@@ -7271,7 +7374,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class NpcXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
+    public partial class NpcXmlCreateTranslation : ANpcSpawnXmlCreateTranslation
     {
         public new readonly static NpcXmlCreateTranslation Instance = new NpcXmlCreateTranslation();
 
@@ -8219,7 +8322,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 default:
-                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
+                    ANpcSpawnXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -8299,7 +8402,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class NpcBinaryWriteTranslation :
-        SkyrimMajorRecordBinaryWriteTranslation,
+        ANpcSpawnBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new readonly static NpcBinaryWriteTranslation Instance = new NpcBinaryWriteTranslation();
@@ -8365,6 +8468,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.ActorEffect,
                 counterType: Npc_Registration.SPCT_HEADER,
+                counterLength: 4,
                 recordType: recordTypeConverter.ConvertToCustom(Npc_Registration.SPLO_HEADER),
                 subRecordPerItem: true,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IASpellGetter> subItem, RecordTypeConverter? conv) =>
@@ -8425,6 +8529,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Perks,
                 counterType: Npc_Registration.PRKZ_HEADER,
+                counterLength: 4,
                 transl: (MutagenWriter subWriter, IPerkPlacementGetter subItem, RecordTypeConverter? conv) =>
                 {
                     if (subItem.TryGet(out var Item))
@@ -8439,6 +8544,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Items,
                 counterType: Npc_Registration.COCT_HEADER,
+                counterLength: 4,
                 transl: (MutagenWriter subWriter, IContainerEntryGetter subItem, RecordTypeConverter? conv) =>
                 {
                     if (subItem.TryGet(out var Item))
@@ -8470,6 +8576,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Keywords,
                 counterType: Npc_Registration.KSIZ_HEADER,
+                counterLength: 4,
                 recordType: recordTypeConverter.ConvertToCustom(Npc_Registration.KWDA_HEADER),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
                 {
@@ -8632,6 +8739,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public override void Write(
             MutagenWriter writer,
+            IANpcSpawnGetter item,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            Write(
+                item: (INpcGetter)item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -8654,7 +8772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class NpcBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    public partial class NpcBinaryCreateTranslation : ANpcSpawnBinaryCreateTranslation
     {
         public new readonly static NpcBinaryCreateTranslation Instance = new NpcBinaryCreateTranslation();
 
@@ -8674,7 +8792,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class NpcBinaryOverlay :
-        SkyrimMajorRecordBinaryOverlay,
+        ANpcSpawnBinaryOverlay,
         INpcGetter
     {
         #region Common Routing
@@ -8753,7 +8871,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Template
         private int? _TemplateLocation;
         public bool Template_IsSet => _TemplateLocation.HasValue;
-        public IFormLinkNullableGetter<INpcTemplateGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<INpcTemplateGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TemplateLocation.Value, _package.Meta)))) : FormLinkNullable<INpcTemplateGetter>.Empty;
+        public IFormLinkNullableGetter<IANpcSpawnGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<IANpcSpawnGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TemplateLocation.Value, _package.Meta)))) : FormLinkNullable<IANpcSpawnGetter>.Empty;
         #endregion
         #region Race
         private int? _RaceLocation;

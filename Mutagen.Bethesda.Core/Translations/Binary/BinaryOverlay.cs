@@ -364,6 +364,64 @@ namespace Mutagen.Bethesda.Binary
             return ret.ToArray();
         }
 
+        /// <summary>
+        /// Finds locations of a number of records given by count that match a set of record types.
+        /// A new location is marked each time a record type that has already been encounterd is seen
+        /// </summary>
+        /// <param name="stream">Stream to read and progress</param>
+        /// <param name="count">Number of expected records</param>
+        /// <param name="trigger">Set of record types expected within one record</param>
+        /// <param name="constants">Metadata for reference</param>
+        /// <param name="skipHeader">Whether to skip the header in the return location values</param>
+        /// <returns>Array of located positions relative to the stream's position at the start</returns>
+        public static int[] ParseRecordLocationsByCount(
+            BinaryMemoryReadStream stream,
+            uint count,
+            ICollectionGetter<RecordType> trigger,
+            RecordHeaderConstants constants,
+            bool skipHeader)
+        {
+            var ret = new List<int>();
+            var set = new HashSet<RecordType>();
+            var startingPos = stream.Position;
+            while (ret.Count < count)
+            {
+                var varMeta = constants.GetVariableMeta(stream);
+                var recType = varMeta.RecordType;
+                if (trigger.Contains(recType))
+                {
+                    // If new record type we haven't seen before in our current record, just continue
+                    if (set.Add(recType) && ret.Count > 0)
+                    {
+                        stream.Position += (int)varMeta.TotalLength;
+                        continue;
+                    }
+
+                    // Otherwise mark as a new record location
+                    if (skipHeader)
+                    {
+                        stream.Position += varMeta.HeaderLength;
+                        ret.Add(stream.Position - startingPos);
+                        stream.Position += (int)varMeta.RecordLength;
+                    }
+                    else
+                    {
+                        ret.Add(stream.Position - startingPos);
+                        stream.Position += (int)varMeta.TotalLength;
+                    }
+
+                    // Clear set of seen types
+                    set.Clear();
+                    set.Add(recType);
+                }
+                else
+                {
+                    stream.Position += (int)varMeta.TotalLength;
+                }
+            }
+            return ret.ToArray();
+        }
+
         public static int[] ParseRecordLocations(
             BinaryMemoryReadStream stream,
             long finalPos,
