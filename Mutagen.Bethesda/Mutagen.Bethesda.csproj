@@ -176,9 +176,6 @@
     <Compile Include="Skyrim\Records\Major Records\PcLevelMult.cs">
       <DependentUpon>Npc.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\PlayerSkills.cs">
-      <DependentUpon>Npc.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Major Records\Scroll.cs">
       <DependentUpon>Scroll.xml</DependentUpon>
     </Compile>

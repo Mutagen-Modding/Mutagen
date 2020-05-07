@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using System.Net.WebSockets;
+using Mutagen.Bethesda.Binary;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -15,6 +17,13 @@ namespace Mutagen.Bethesda.Generation
         public virtual string TranslatorName => "DictBinaryTranslation";
         
         const string ThreadKey = "DictThread";
+
+        public enum DictBinaryType
+        {
+            SubTrigger,
+            Trigger,
+            EnumMap,
+        }
 
         public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
         {
@@ -47,22 +56,26 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        private ListBinaryType GetDictType(
-            DictType dict,
-            MutagenFieldData data,
-            MutagenFieldData subData)
+        private DictBinaryType GetDictType(DictType dict)
         {
+            var data = dict.GetFieldData();
+            var subData = dict.ValueTypeGen.GetFieldData();
             if (subData.HasTrigger)
             {
-                return ListBinaryType.SubTrigger;
+                return DictBinaryType.SubTrigger;
             }
             else if (data.RecordType.HasValue)
             {
-                return ListBinaryType.Trigger;
+                return DictBinaryType.Trigger;
+            }
+            else if (dict.Mode == DictMode.KeyValue
+                && dict.KeyTypeGen is EnumType)
+            {
+                return DictBinaryType.EnumMap;
             }
             else
             {
-                throw new ArgumentException();
+                throw new NotImplementedException();
             }
         }
 
@@ -77,58 +90,61 @@ namespace Mutagen.Bethesda.Generation
             Accessor converterAccessor)
         {
             var dict = typeGen as DictType;
-            if (dict.Mode != DictMode.KeyedValue)
-            {
-                throw new NotImplementedException();
-            }
-            if (!this.Module.TryGetTypeGeneration(dict.ValueTypeGen.GetType(), out var subTransl))
-            {
-                throw new ArgumentException("Unsupported type generator: " + dict.ValueTypeGen);
-            }
+            var subData = dict.ValueTypeGen.GetFieldData();
 
             if (typeGen.TryGetFieldData(out var data)
                 && data.MarkerType.HasValue)
             {
                 fg.AppendLine($"using (HeaderExport.ExportHeader(writer, {objGen.RegistrationName}.{data.MarkerType.Value.Type}_HEADER, ObjectType.Subrecord)) {{ }}");
             }
-
-            var subData = dict.ValueTypeGen.GetFieldData();
-
-            ListBinaryType listBinaryType = GetDictType(dict, data, subData);
-
-            using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}ListBinaryTranslation<{dict.ValueTypeGen.TypeName(getter: true)}>.Instance.Write"))
+            var binaryType = GetDictType(dict);
+            if (!this.Module.TryGetTypeGeneration(dict.ValueTypeGen.GetType(), out var valTransl))
             {
-                args.Add($"writer: {writerAccessor}");
-                args.Add($"items: {itemAccessor.PropertyOrDirectAccess}.Items");
-                if (listBinaryType == ListBinaryType.Trigger)
+                throw new ArgumentException("Unsupported type generator: " + dict.ValueTypeGen);
+            }
+
+            if (dict.Mode == DictMode.KeyedValue
+                || binaryType == DictBinaryType.EnumMap)
+            {
+                var term = binaryType == DictBinaryType.EnumMap ? "Dict" : "List";
+                using (var args = new ArgsWrapper(fg,
+                    $"{this.Namespace}{term}BinaryTranslation<{dict.ValueTypeGen.TypeName(getter: true)}>.Instance.Write"))
                 {
-                    args.Add($"recordType: {objGen.RecordTypeHeaderName(data.RecordType.Value)}");
-                }
-                if (subTransl.AllowDirectWrite(objGen, typeGen))
-                {
-                    args.Add($"transl: {subTransl.GetTranslatorInstance(dict.ValueTypeGen, getter: true)}.Write");
-                }
-                else
-                {
-                    args.Add((gen) =>
+                    args.Add($"writer: {writerAccessor}");
+                    args.Add($"items: {itemAccessor.PropertyOrDirectAccess}{(binaryType == DictBinaryType.EnumMap ? null : ".Items")}");
+                    if (binaryType == DictBinaryType.Trigger)
                     {
-                        gen.AppendLine($"transl: (MutagenWriter r, {dict.ValueTypeGen.TypeName(getter: true)} dictSubItem) =>");
-                        using (new BraceWrapper(gen))
+                        args.Add($"recordType: {objGen.RecordTypeHeaderName(data.RecordType.Value)}");
+                    }
+                    if (valTransl.AllowDirectWrite(objGen, typeGen))
+                    {
+                        args.Add($"transl: {valTransl.GetTranslatorInstance(dict.ValueTypeGen, getter: true)}.Write");
+                    }
+                    else
+                    {
+                        args.Add((gen) =>
                         {
-                            LoquiType targetLoqui = dict.ValueTypeGen as LoquiType;
-                            subTransl.GenerateWrite(
-                                fg: gen,
-                                objGen: objGen,
-                                typeGen: targetLoqui,
-                                itemAccessor: new Accessor("dictSubItem"),
-                                writerAccessor: "r",
-                                translationAccessor: "dictTranslMask",
-                                errorMaskAccessor: null,
-                                converterAccessor: null);
-                        }
-                    });
+                            gen.AppendLine($"transl: (MutagenWriter r, {dict.ValueTypeGen.TypeName(getter: true)} dictSubItem) =>");
+                            using (new BraceWrapper(gen))
+                            {
+                                LoquiType targetLoqui = dict.ValueTypeGen as LoquiType;
+                                valTransl.GenerateWrite(
+                                    fg: gen,
+                                    objGen: objGen,
+                                    typeGen: targetLoqui,
+                                    itemAccessor: new Accessor("dictSubItem"),
+                                    writerAccessor: "r",
+                                    translationAccessor: "dictTranslMask",
+                                    errorMaskAccessor: null,
+                                    converterAccessor: null);
+                            }
+                        });
+                    }
                 }
+            }
+            else
+            {
+                throw new NotImplementedException();
             }
         }
 
@@ -150,33 +166,37 @@ namespace Mutagen.Bethesda.Generation
             }
             var isAsync = subTransl.IsAsync(dict.ValueTypeGen, read: true);
 
-            ListBinaryType listBinaryType = GetDictType(dict, data, subData);
+            var binaryType = GetDictType(dict);
 
             if (data.MarkerType.HasValue)
             {
                 fg.AppendLine("frame.Position += Constants.SUBRECORD_LENGTH + long; // Skip marker");
             }
-            else if (listBinaryType == ListBinaryType.Trigger)
+            else if (binaryType == DictBinaryType.Trigger)
             {
                 fg.AppendLine("frame.Position += Constants.SUBRECORD_LENGTH;");
             }
 
+            var term = binaryType == DictBinaryType.EnumMap ? "Dict" : "List";
+
             using (var args = new ArgsWrapper(fg,
-                $"{Loqui.Generation.Utility.Await(isAsync)}{this.Namespace}List{(isAsync ? "Async" : null)}BinaryTranslation<{dict.ValueTypeGen.TypeName(getter: false)}>.Instance.Parse",
+                $"{Loqui.Generation.Utility.Await(isAsync)}{this.Namespace}{term}{(isAsync ? "Async" : null)}BinaryTranslation<{dict.ValueTypeGen.TypeName(getter: false)}>.Instance.Parse{(binaryType == DictBinaryType.EnumMap ? $"<{dict.KeyTypeGen.TypeName(false)}>" : null)}",
                 suffixLine: Loqui.Generation.Utility.ConfigAwait(isAsync)))
             {
-                if (listBinaryType == ListBinaryType.SubTrigger)
+                switch (binaryType)
                 {
-                    args.Add($"frame: frame");
-                    args.Add($"triggeringRecord: {subData.TriggeringRecordSetAccessor}");
-                }
-                else if (listBinaryType == ListBinaryType.Trigger)
-                {
-                    args.Add($"frame: frame.Spawn(long)");
-                }
-                else
-                {
-                    throw new NotImplementedException();
+                    case DictBinaryType.SubTrigger:
+                        args.AddPassArg($"frame");
+                        args.Add($"triggeringRecord: {subData.TriggeringRecordSetAccessor}");
+                        break;
+                    case DictBinaryType.Trigger:
+                        args.Add($"frame: frame.Spawn(long)");
+                        break;
+                    case DictBinaryType.EnumMap:
+                        args.AddPassArg($"frame");
+                        break;
+                    default:
+                        throw new NotImplementedException();
                 }
                 args.Add($"item: {itemAccessor.PropertyAccess}");
                 var subGenTypes = subData.GenerationTypes.ToList();
@@ -279,10 +299,39 @@ namespace Mutagen.Bethesda.Generation
             int? passedLength,
             string passedLengthAccessor)
         {
+            DictType dict = typeGen as DictType;
+            if (GetDictType(dict) != DictBinaryType.EnumMap)
+            {
+                // Special case for Groups
+                return;
+            }
+
+            if (!this.Module.TryGetTypeGeneration(dict.ValueTypeGen.GetType(), out var subTransl))
+            {
+                throw new ArgumentException("Unsupported type generator: " + dict.ValueTypeGen);
+            }
+
+            using (var args = new ArgsWrapper(fg,
+                $"public IReadOnlyDictionary<{dict.KeyTypeGen.TypeName(getter: true)}, {dict.ValueTypeGen.TypeName(getter: true)}> {typeGen.Name} => DictBinaryTranslation<{dict.ValueTypeGen.TypeName(getter: false)}>.Instance.Parse<{dict.KeyTypeGen.TypeName(false)}>"))
+            {
+                args.Add($"new {nameof(MutagenFrame)}(new {nameof(MutagenMemoryReadStream)}({dataAccessor}.Slice({passedLengthAccessor}), _package.Meta, _package.MasterReferences))");
+                args.Add($"new Dictionary<{dict.KeyTypeGen.TypeName(getter: true)}, {dict.ValueTypeGen.TypeName(getter: true)}>()");
+                args.Add($"{subTransl.GetTranslatorInstance(dict.ValueTypeGen, getter: true)}.Parse");
+            }
         }
 
-        public override async Task<int?> GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen) => 0;
+        public override async Task<int?> GetPassedAmount(ObjectGeneration objGen, TypeGeneration typeGen) => await ExpectedLength(objGen, typeGen);
 
-        public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen) => null;
+        public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
+        {
+            DictType dict = typeGen as DictType;
+            if (GetDictType(dict) != DictBinaryType.EnumMap) return null;
+            if (!this.Module.TryGetTypeGeneration(dict.ValueTypeGen.GetType(), out var subTransl))
+            {
+                throw new ArgumentException("Unsupported type generator: " + dict.ValueTypeGen);
+            }
+            var perLength = await subTransl.ExpectedLength(objGen, dict.ValueTypeGen);
+            return dict.NumEnumKeys.Value * perLength;
+        }
     }
 }

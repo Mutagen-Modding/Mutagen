@@ -116,7 +116,7 @@
   </Object>
   <Object name="PlayerSkills" recordType="DNAM" objType="Subrecord" GUID="c03007ea-a1f3-4964-aa68-166d211a5176" ID="209">
     <Fields>
-      <Dict name="SkillValues" binary="Custom" byteLength="18" >
+      <Dict name="SkillValues" numEnumKeys="18" >
         <Key>
           <Enum enumName="Skill" />
         </Key>
@@ -124,7 +124,7 @@
           <UInt8 />
         </Value>
       </Dict>
-      <Dict name="SkillOffsets" binary="Custom" byteLength="18" >
+      <Dict name="SkillOffsets" numEnumKeys="18" >
         <Key>
           <Enum enumName="Skill" />
         </Key>

@@ -1700,12 +1700,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlayerSkills item,
             MutagenFrame frame)
         {
-            PlayerSkillsBinaryCreateTranslation.FillBinarySkillValuesCustomPublic(
+            Mutagen.Bethesda.Binary.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
                 frame: frame,
-                item: item);
-            PlayerSkillsBinaryCreateTranslation.FillBinarySkillOffsetsCustomPublic(
+                item: item.SkillValues,
+                transl: ByteBinaryTranslation.Instance.Parse);
+            Mutagen.Bethesda.Binary.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
                 frame: frame,
-                item: item);
+                item: item.SkillOffsets,
+                transl: ByteBinaryTranslation.Instance.Parse);
             item.Health = frame.ReadUInt16();
             item.Magicka = frame.ReadUInt16();
             item.Stamina = frame.ReadUInt16();
@@ -2663,42 +2665,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static PlayerSkillsBinaryWriteTranslation Instance = new PlayerSkillsBinaryWriteTranslation();
 
-        static partial void WriteBinarySkillValuesCustom(
-            MutagenWriter writer,
-            IPlayerSkillsGetter item);
-
-        public static void WriteBinarySkillValues(
-            MutagenWriter writer,
-            IPlayerSkillsGetter item)
-        {
-            WriteBinarySkillValuesCustom(
-                writer: writer,
-                item: item);
-        }
-
-        static partial void WriteBinarySkillOffsetsCustom(
-            MutagenWriter writer,
-            IPlayerSkillsGetter item);
-
-        public static void WriteBinarySkillOffsets(
-            MutagenWriter writer,
-            IPlayerSkillsGetter item)
-        {
-            WriteBinarySkillOffsetsCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IPlayerSkillsGetter item,
             MutagenWriter writer)
         {
-            PlayerSkillsBinaryWriteTranslation.WriteBinarySkillValues(
+            Mutagen.Bethesda.Binary.DictBinaryTranslation<Byte>.Instance.Write(
                 writer: writer,
-                item: item);
-            PlayerSkillsBinaryWriteTranslation.WriteBinarySkillOffsets(
+                items: item.SkillValues,
+                transl: ByteBinaryTranslation.Instance.Write);
+            Mutagen.Bethesda.Binary.DictBinaryTranslation<Byte>.Instance.Write(
                 writer: writer,
-                item: item);
+                items: item.SkillOffsets,
+                transl: ByteBinaryTranslation.Instance.Write);
             writer.Write(item.Health);
             writer.Write(item.Magicka);
             writer.Write(item.Stamina);
@@ -2744,32 +2722,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class PlayerSkillsBinaryCreateTranslation
     {
         public readonly static PlayerSkillsBinaryCreateTranslation Instance = new PlayerSkillsBinaryCreateTranslation();
-
-        static partial void FillBinarySkillValuesCustom(
-            MutagenFrame frame,
-            IPlayerSkills item);
-
-        public static void FillBinarySkillValuesCustomPublic(
-            MutagenFrame frame,
-            IPlayerSkills item)
-        {
-            FillBinarySkillValuesCustom(
-                frame: frame,
-                item: item);
-        }
-
-        static partial void FillBinarySkillOffsetsCustom(
-            MutagenFrame frame,
-            IPlayerSkills item);
-
-        public static void FillBinarySkillOffsetsCustomPublic(
-            MutagenFrame frame,
-            IPlayerSkills item)
-        {
-            FillBinarySkillOffsetsCustom(
-                frame: frame,
-                item: item);
-        }
 
     }
 
@@ -2852,6 +2804,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region SkillValues
+        public IReadOnlyDictionary<Skill, Byte> SkillValues => DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
+            new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(0x0), _package.Meta, _package.MasterReferences)),
+            new Dictionary<Skill, Byte>(),
+            ByteBinaryTranslation.Instance.Parse);
+        #endregion
+        #region SkillOffsets
+        public IReadOnlyDictionary<Skill, Byte> SkillOffsets => DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
+            new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(0x12), _package.Meta, _package.MasterReferences)),
+            new Dictionary<Skill, Byte>(),
+            ByteBinaryTranslation.Instance.Parse);
+        #endregion
         public UInt16 Health => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x24, 0x2));
         public UInt16 Magicka => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x26, 0x2));
         public UInt16 Stamina => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x28, 0x2));
@@ -2883,7 +2847,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.Subrecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
-            stream.Position += 0x10 + package.Meta.SubConstants.HeaderLength;
+            stream.Position += 0x34 + package.Meta.SubConstants.HeaderLength;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,

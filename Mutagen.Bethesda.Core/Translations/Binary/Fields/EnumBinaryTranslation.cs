@@ -10,6 +10,7 @@ namespace Mutagen.Bethesda.Binary
     {
         public readonly static EnumBinaryTranslation<E> Instance = new EnumBinaryTranslation<E>();
         public readonly static UnderlyingType Underlying;
+        public readonly static int EnumSize = EnumExt.GetSize<E>();
 
         public enum UnderlyingType
         {

@@ -54,6 +54,7 @@
     <Compile Include="Links\LoadOrderLinkCache.cs" />
     <Compile Include="Load Order\LoadOrder.cs" />
     <Compile Include="Records\Interfaces\INamedRequired.cs" />
+    <Compile Include="Translations\Binary\Fields\DictBinaryTranslation.cs" />
     <Compile Include="Utility\RecordInfoCache.cs" />
     <Compile Include="Persistance\TextFileFormKeyAllocator.cs" />
     <Compile Include="Records\AMod.cs" />

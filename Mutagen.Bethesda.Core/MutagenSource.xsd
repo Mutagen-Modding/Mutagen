@@ -272,6 +272,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="numEnumKeys" type="xs:byte" >
+            <xs:annotation>
+              <xs:documentation>
+                Number of values the assigned enum key offers
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
