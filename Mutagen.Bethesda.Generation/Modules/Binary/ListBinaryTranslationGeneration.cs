@@ -786,7 +786,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             args.Add($"mem: stream.RemainingMemory.Slice(0, subLen)");
                             args.Add($"package: _package");
-                            args.Add($"itemLength: {expectedLen}");
+                            args.Add($"itemLength: 0x{expectedLen:X}");
                             if (subData.HasTrigger && !subData.HandleTrigger)
                             {
                                 args.Add($"subrecordType: {subData.TriggeringRecordSetAccessor}");

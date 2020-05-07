@@ -8543,7 +8543,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.ActorEffect = BinaryOverlaySetList<IFormLinkGetter<IASpellGetter>>.FactoryByCount(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
-                        itemLength: 4,
+                        itemLength: 0x4,
                         subrecordType: Race_Registration.SPLO_HEADER,
                         count: count,
                         getter: (s, p) => new FormLink<IASpellGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
@@ -8568,7 +8568,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Keywords = BinaryOverlaySetList<IFormLinkGetter<IKeywordGetter>>.FactoryByCount(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
-                        itemLength: 4,
+                        itemLength: 0x4,
                         count: count,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
