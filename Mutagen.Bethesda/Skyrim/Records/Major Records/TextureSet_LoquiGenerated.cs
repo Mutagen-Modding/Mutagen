@@ -2465,24 +2465,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
-        private bool _ObjectBounds_IsSet => _ObjectBoundsLocation.HasValue;
-        private IObjectBoundsGetter? _ObjectBounds => _ObjectBounds_IsSet ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation!.Value.Min)), _package) : default;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation!.Value.Min)), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
-        #region Textures
         public ITexturesGetter? Textures { get; private set; }
-        public bool Textures_IsSet => Textures != null;
-        #endregion
         #region Decal
         private RangeInt32? _DecalLocation;
-        private bool _Decal_IsSet => _DecalLocation.HasValue;
-        public IDecalGetter? Decal => _Decal_IsSet ? DecalBinaryOverlay.DecalFactory(new BinaryMemoryReadStream(_data.Slice(_DecalLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IDecalGetter? Decal => _DecalLocation.HasValue ? DecalBinaryOverlay.DecalFactory(new BinaryMemoryReadStream(_data.Slice(_DecalLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Decal_IsSet => _DecalLocation.HasValue;
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        private bool Flags_IsSet => _FlagsLocation.HasValue;
-        public TextureSet.Flag? Flags => Flags_IsSet ? (TextureSet.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)) : default(TextureSet.Flag?);
+        public TextureSet.Flag? Flags => _FlagsLocation.HasValue ? (TextureSet.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)) : default(TextureSet.Flag?);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

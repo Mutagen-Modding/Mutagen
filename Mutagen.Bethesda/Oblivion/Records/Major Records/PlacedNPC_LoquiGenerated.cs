@@ -3169,14 +3169,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region DistantLODData
         private RangeInt32? _DistantLODDataLocation;
-        private bool _DistantLODData_IsSet => _DistantLODDataLocation.HasValue;
-        public IDistantLODDataGetter? DistantLODData => _DistantLODData_IsSet ? DistantLODDataBinaryOverlay.DistantLODDataFactory(new BinaryMemoryReadStream(_data.Slice(_DistantLODDataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IDistantLODDataGetter? DistantLODData => _DistantLODDataLocation.HasValue ? DistantLODDataBinaryOverlay.DistantLODDataFactory(new BinaryMemoryReadStream(_data.Slice(_DistantLODDataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool DistantLODData_IsSet => _DistantLODDataLocation.HasValue;
         #endregion
         #region EnableParent
         private RangeInt32? _EnableParentLocation;
-        private bool _EnableParent_IsSet => _EnableParentLocation.HasValue;
-        public IEnableParentGetter? EnableParent => _EnableParent_IsSet ? EnableParentBinaryOverlay.EnableParentFactory(new BinaryMemoryReadStream(_data.Slice(_EnableParentLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IEnableParentGetter? EnableParent => _EnableParentLocation.HasValue ? EnableParentBinaryOverlay.EnableParentFactory(new BinaryMemoryReadStream(_data.Slice(_EnableParentLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool EnableParent_IsSet => _EnableParentLocation.HasValue;
         #endregion
         #region MerchantContainer
@@ -3197,10 +3195,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _ScaleLocation;
         public Single? Scale => _ScaleLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _ScaleLocation.Value, _package.Meta)) : default(Single?);
         #endregion
-        #region Location
         public ILocationGetter? Location { get; private set; }
-        public bool Location_IsSet => Location != null;
-        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

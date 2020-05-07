@@ -4297,8 +4297,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IRelationGetter> Relations { get; private set; } = ListExt.Empty<RelationBinaryOverlay>();
         #region Flags
         private int? _FlagsLocation;
-        private bool Flags_IsSet => _FlagsLocation.HasValue;
-        public Faction.FactionFlag? Flags => Flags_IsSet ? (Faction.FactionFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)) : default(Faction.FactionFlag?);
+        public Faction.FactionFlag? Flags => _FlagsLocation.HasValue ? (Faction.FactionFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)) : default(Faction.FactionFlag?);
         #endregion
         #region PrisonMarker
         private int? _PrisonMarkerLocation;
@@ -4332,8 +4331,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region CrimeValues
         private RangeInt32? _CrimeValuesLocation;
-        private bool _CrimeValues_IsSet => _CrimeValuesLocation.HasValue;
-        public ICrimeValuesGetter? CrimeValues => _CrimeValues_IsSet ? CrimeValuesBinaryOverlay.CrimeValuesFactory(new BinaryMemoryReadStream(_data.Slice(_CrimeValuesLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ICrimeValuesGetter? CrimeValues => _CrimeValuesLocation.HasValue ? CrimeValuesBinaryOverlay.CrimeValuesFactory(new BinaryMemoryReadStream(_data.Slice(_CrimeValuesLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool CrimeValues_IsSet => _CrimeValuesLocation.HasValue;
         #endregion
         public IReadOnlyList<IRankGetter> Ranks { get; private set; } = ListExt.Empty<RankBinaryOverlay>();
@@ -4349,14 +4347,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region VendorValues
         private RangeInt32? _VendorValuesLocation;
-        private bool _VendorValues_IsSet => _VendorValuesLocation.HasValue;
-        public IVendorValuesGetter? VendorValues => _VendorValues_IsSet ? VendorValuesBinaryOverlay.VendorValuesFactory(new BinaryMemoryReadStream(_data.Slice(_VendorValuesLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IVendorValuesGetter? VendorValues => _VendorValuesLocation.HasValue ? VendorValuesBinaryOverlay.VendorValuesFactory(new BinaryMemoryReadStream(_data.Slice(_VendorValuesLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool VendorValues_IsSet => _VendorValuesLocation.HasValue;
         #endregion
         #region VendorLocation
         private RangeInt32? _VendorLocationLocation;
-        private bool _VendorLocation_IsSet => _VendorLocationLocation.HasValue;
-        public IVendorLocationGetter? VendorLocation => _VendorLocation_IsSet ? VendorLocationBinaryOverlay.VendorLocationFactory(new BinaryMemoryReadStream(_data.Slice(_VendorLocationLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IVendorLocationGetter? VendorLocation => _VendorLocationLocation.HasValue ? VendorLocationBinaryOverlay.VendorLocationFactory(new BinaryMemoryReadStream(_data.Slice(_VendorLocationLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool VendorLocation_IsSet => _VendorLocationLocation.HasValue;
         #endregion
         #region Conditions

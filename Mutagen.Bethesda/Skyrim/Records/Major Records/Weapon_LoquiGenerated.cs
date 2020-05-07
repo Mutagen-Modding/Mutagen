@@ -5984,24 +5984,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
-        private bool _VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
-        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapter_IsSet ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
         #endregion
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
-        private bool _ObjectBounds_IsSet => _ObjectBoundsLocation.HasValue;
-        private IObjectBoundsGetter? _ObjectBounds => _ObjectBounds_IsSet ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation!.Value.Min)), _package) : default;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation!.Value.Min)), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
         #region Name
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
         #endregion
-        #region Model
         public IModelGetter? Model { get; private set; }
-        public bool Model_IsSet => Model != null;
-        #endregion
         #region LargeIconFilename
         private int? _LargeIconFilenameLocation;
         public String? LargeIconFilename => _LargeIconFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _LargeIconFilenameLocation.Value, _package.Meta)) : default(string?);
@@ -6019,10 +6014,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _EnchantmentAmountLocation;
         public UInt16? EnchantmentAmount => _EnchantmentAmountLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EnchantmentAmountLocation.Value, _package.Meta)) : default(UInt16?);
         #endregion
-        #region Destructible
         public IDestructibleGetter? Destructible { get; private set; }
-        public bool Destructible_IsSet => Destructible != null;
-        #endregion
         #region EquipmentType
         private int? _EquipmentTypeLocation;
         public bool EquipmentType_IsSet => _EquipmentTypeLocation.HasValue;
@@ -6053,10 +6045,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _DescriptionLocation;
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta)) : default(string?);
         #endregion
-        #region ScopeModel
         public IModelGetter? ScopeModel { get; private set; }
-        public bool ScopeModel_IsSet => ScopeModel != null;
-        #endregion
         #region Unused
         private int? _UnusedLocation;
         public ReadOnlyMemorySlice<Byte>? Unused => _UnusedLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _UnusedLocation.Value, _package.Meta).ToArray() : default(ReadOnlyMemorySlice<byte>?);
@@ -6108,26 +6097,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region BasicStats
         private RangeInt32? _BasicStatsLocation;
-        private bool _BasicStats_IsSet => _BasicStatsLocation.HasValue;
-        public IWeaponBasicStatsGetter? BasicStats => _BasicStats_IsSet ? WeaponBasicStatsBinaryOverlay.WeaponBasicStatsFactory(new BinaryMemoryReadStream(_data.Slice(_BasicStatsLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IWeaponBasicStatsGetter? BasicStats => _BasicStatsLocation.HasValue ? WeaponBasicStatsBinaryOverlay.WeaponBasicStatsFactory(new BinaryMemoryReadStream(_data.Slice(_BasicStatsLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool BasicStats_IsSet => _BasicStatsLocation.HasValue;
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        private bool _Data_IsSet => _DataLocation.HasValue;
-        public IWeaponDataGetter? Data => _Data_IsSet ? WeaponDataBinaryOverlay.WeaponDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IWeaponDataGetter? Data => _DataLocation.HasValue ? WeaponDataBinaryOverlay.WeaponDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region Critical
         private RangeInt32? _CriticalLocation;
-        private bool _Critical_IsSet => _CriticalLocation.HasValue;
-        public ICriticalDataGetter? Critical => _Critical_IsSet ? CriticalDataBinaryOverlay.CriticalDataFactory(new BinaryMemoryReadStream(_data.Slice(_CriticalLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ICriticalDataGetter? Critical => _CriticalLocation.HasValue ? CriticalDataBinaryOverlay.CriticalDataFactory(new BinaryMemoryReadStream(_data.Slice(_CriticalLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Critical_IsSet => _CriticalLocation.HasValue;
         #endregion
         #region DetectionSoundLevel
         private int? _DetectionSoundLevelLocation;
-        private bool DetectionSoundLevel_IsSet => _DetectionSoundLevelLocation.HasValue;
-        public SoundLevel? DetectionSoundLevel => DetectionSoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _DetectionSoundLevelLocation!.Value, _package.Meta)) : default(SoundLevel?);
+        public SoundLevel? DetectionSoundLevel => _DetectionSoundLevelLocation.HasValue ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _DetectionSoundLevelLocation!.Value, _package.Meta)) : default(SoundLevel?);
         #endregion
         #region Template
         private int? _TemplateLocation;

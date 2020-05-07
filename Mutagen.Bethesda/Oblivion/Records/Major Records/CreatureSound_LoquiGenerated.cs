@@ -2101,8 +2101,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region SoundType
         private int? _SoundTypeLocation;
-        private bool SoundType_IsSet => _SoundTypeLocation.HasValue;
-        public CreatureSound.CreatureSoundType? SoundType => SoundType_IsSet ? (CreatureSound.CreatureSoundType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundTypeLocation!.Value, _package.Meta)) : default(CreatureSound.CreatureSoundType?);
+        public CreatureSound.CreatureSoundType? SoundType => _SoundTypeLocation.HasValue ? (CreatureSound.CreatureSoundType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundTypeLocation!.Value, _package.Meta)) : default(CreatureSound.CreatureSoundType?);
         #endregion
         public IReadOnlyList<ISoundItemGetter> Sounds { get; private set; } = ListExt.Empty<SoundItemBinaryOverlay>();
         partial void CustomCtor(

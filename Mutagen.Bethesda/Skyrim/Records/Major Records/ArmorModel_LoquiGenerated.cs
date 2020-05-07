@@ -2111,10 +2111,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        #region Model
         public IModelGetter? Model { get; private set; }
-        public bool Model_IsSet => Model != null;
-        #endregion
         #region LargeIconFilename
         private int? _LargeIconFilenameLocation;
         public String? LargeIconFilename => _LargeIconFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _LargeIconFilenameLocation.Value, _package.Meta)) : default(string?);

@@ -2388,18 +2388,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
         #endregion
-        #region Model
         public IModelGetter? Model { get; private set; }
-        public bool Model_IsSet => Model != null;
-        #endregion
         #region Icon
         private int? _IconLocation;
         public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _IconLocation.Value, _package.Meta)) : default(string?);
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        private bool Flags_IsSet => _FlagsLocation.HasValue;
-        public Hair.HairFlag? Flags => Flags_IsSet ? (Hair.HairFlag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(Hair.HairFlag?);
+        public Hair.HairFlag? Flags => _FlagsLocation.HasValue ? (Hair.HairFlag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(Hair.HairFlag?);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

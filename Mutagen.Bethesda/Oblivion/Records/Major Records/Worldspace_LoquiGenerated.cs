@@ -4261,14 +4261,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region MapData
         private RangeInt32? _MapDataLocation;
-        private bool _MapData_IsSet => _MapDataLocation.HasValue;
-        public IMapDataGetter? MapData => _MapData_IsSet ? MapDataBinaryOverlay.MapDataFactory(new BinaryMemoryReadStream(_data.Slice(_MapDataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IMapDataGetter? MapData => _MapDataLocation.HasValue ? MapDataBinaryOverlay.MapDataFactory(new BinaryMemoryReadStream(_data.Slice(_MapDataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool MapData_IsSet => _MapDataLocation.HasValue;
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        private bool Flags_IsSet => _FlagsLocation.HasValue;
-        public Worldspace.Flag? Flags => Flags_IsSet ? (Worldspace.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(Worldspace.Flag?);
+        public Worldspace.Flag? Flags => _FlagsLocation.HasValue ? (Worldspace.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(Worldspace.Flag?);
         #endregion
         #region ObjectBoundsMin
         private int? _ObjectBoundsMinLocation;
@@ -4280,8 +4278,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Music
         private int? _MusicLocation;
-        private bool Music_IsSet => _MusicLocation.HasValue;
-        public MusicType? Music => Music_IsSet ? (MusicType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MusicLocation!.Value, _package.Meta)) : default(MusicType?);
+        public MusicType? Music => _MusicLocation.HasValue ? (MusicType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MusicLocation!.Value, _package.Meta)) : default(MusicType?);
         #endregion
         #region OffsetLength
         partial void OffsetLengthCustomParse(

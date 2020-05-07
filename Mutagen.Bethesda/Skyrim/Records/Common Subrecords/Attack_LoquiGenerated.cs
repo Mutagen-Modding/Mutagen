@@ -1992,8 +1992,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region AttackData
         private RangeInt32? _AttackDataLocation;
-        private bool _AttackData_IsSet => _AttackDataLocation.HasValue;
-        public IAttackDataGetter? AttackData => _AttackData_IsSet ? AttackDataBinaryOverlay.AttackDataFactory(new BinaryMemoryReadStream(_data.Slice(_AttackDataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IAttackDataGetter? AttackData => _AttackDataLocation.HasValue ? AttackDataBinaryOverlay.AttackDataFactory(new BinaryMemoryReadStream(_data.Slice(_AttackDataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool AttackData_IsSet => _AttackDataLocation.HasValue;
         #endregion
         #region AttackEvent

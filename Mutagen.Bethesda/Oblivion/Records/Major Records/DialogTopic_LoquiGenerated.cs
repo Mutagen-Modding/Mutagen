@@ -2863,8 +2863,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region DialogType
         private int? _DialogTypeLocation;
-        private bool DialogType_IsSet => _DialogTypeLocation.HasValue;
-        public DialogType? DialogType => DialogType_IsSet ? (DialogType)HeaderTranslation.ExtractSubrecordSpan(_data, _DialogTypeLocation!.Value, _package.Meta)[0] : default(DialogType?);
+        public DialogType? DialogType => _DialogTypeLocation.HasValue ? (DialogType)HeaderTranslation.ExtractSubrecordSpan(_data, _DialogTypeLocation!.Value, _package.Meta)[0] : default(DialogType?);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

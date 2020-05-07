@@ -2539,10 +2539,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
         #endregion
-        #region Model
         public IModelGetter? Model { get; private set; }
-        public bool Model_IsSet => Model != null;
-        #endregion
         #region Script
         private int? _ScriptLocation;
         public bool Script_IsSet => _ScriptLocation.HasValue;
@@ -2555,8 +2552,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region SeasonalIngredientProduction
         private RangeInt32? _SeasonalIngredientProductionLocation;
-        private bool _SeasonalIngredientProduction_IsSet => _SeasonalIngredientProductionLocation.HasValue;
-        public ISeasonalIngredientProductionGetter? SeasonalIngredientProduction => _SeasonalIngredientProduction_IsSet ? SeasonalIngredientProductionBinaryOverlay.SeasonalIngredientProductionFactory(new BinaryMemoryReadStream(_data.Slice(_SeasonalIngredientProductionLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ISeasonalIngredientProductionGetter? SeasonalIngredientProduction => _SeasonalIngredientProductionLocation.HasValue ? SeasonalIngredientProductionBinaryOverlay.SeasonalIngredientProductionFactory(new BinaryMemoryReadStream(_data.Slice(_SeasonalIngredientProductionLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool SeasonalIngredientProduction_IsSet => _SeasonalIngredientProductionLocation.HasValue;
         #endregion
         partial void CustomCtor(

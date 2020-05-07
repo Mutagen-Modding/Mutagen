@@ -8841,20 +8841,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
-        private bool _VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
-        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapter_IsSet ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
         #endregion
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
-        private bool _ObjectBounds_IsSet => _ObjectBoundsLocation.HasValue;
-        private IObjectBoundsGetter? _ObjectBounds => _ObjectBounds_IsSet ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation!.Value.Min)), _package) : default;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation!.Value.Min)), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
         #region Configuration
         private RangeInt32? _ConfigurationLocation;
-        private bool _Configuration_IsSet => _ConfigurationLocation.HasValue;
-        public INpcConfigurationGetter? Configuration => _Configuration_IsSet ? NpcConfigurationBinaryOverlay.NpcConfigurationFactory(new BinaryMemoryReadStream(_data.Slice(_ConfigurationLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public INpcConfigurationGetter? Configuration => _ConfigurationLocation.HasValue ? NpcConfigurationBinaryOverlay.NpcConfigurationFactory(new BinaryMemoryReadStream(_data.Slice(_ConfigurationLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Configuration_IsSet => _ConfigurationLocation.HasValue;
         #endregion
         public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = ListExt.Empty<RankPlacementBinaryOverlay>();
@@ -8879,10 +8876,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IFormLinkNullableGetter<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _RaceLocation.Value, _package.Meta)))) : FormLinkNullable<IRaceGetter>.Empty;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IASpellGetter>>? ActorEffect { get; private set; }
-        #region Destructible
         public IDestructibleGetter? Destructible { get; private set; }
-        public bool Destructible_IsSet => Destructible != null;
-        #endregion
         #region WornArmor
         private int? _WornArmorLocation;
         public bool WornArmor_IsSet => _WornArmorLocation.HasValue;
@@ -8923,8 +8917,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IContainerEntryGetter>? Items { get; private set; }
         #region AIData
         private RangeInt32? _AIDataLocation;
-        private bool _AIData_IsSet => _AIDataLocation.HasValue;
-        public IAIDataGetter? AIData => _AIData_IsSet ? AIDataBinaryOverlay.AIDataFactory(new BinaryMemoryReadStream(_data.Slice(_AIDataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IAIDataGetter? AIData => _AIDataLocation.HasValue ? AIDataBinaryOverlay.AIDataFactory(new BinaryMemoryReadStream(_data.Slice(_AIDataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool AIData_IsSet => _AIDataLocation.HasValue;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IPackageGetter>>? Packages { get; private set; }
@@ -8944,8 +8937,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region PlayerSkills
         private RangeInt32? _PlayerSkillsLocation;
-        private bool _PlayerSkills_IsSet => _PlayerSkillsLocation.HasValue;
-        public IPlayerSkillsGetter? PlayerSkills => _PlayerSkills_IsSet ? PlayerSkillsBinaryOverlay.PlayerSkillsFactory(new BinaryMemoryReadStream(_data.Slice(_PlayerSkillsLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IPlayerSkillsGetter? PlayerSkills => _PlayerSkillsLocation.HasValue ? PlayerSkillsBinaryOverlay.PlayerSkillsFactory(new BinaryMemoryReadStream(_data.Slice(_PlayerSkillsLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool PlayerSkills_IsSet => _PlayerSkillsLocation.HasValue;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IHeadPartGetter>>? HeadParts { get; private set; }
@@ -8978,13 +8970,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region SoundLevel
         private int? _SoundLevelLocation;
-        private bool SoundLevel_IsSet => _SoundLevelLocation.HasValue;
-        public SoundLevel? SoundLevel => SoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLevelLocation!.Value, _package.Meta)) : default(SoundLevel?);
+        public SoundLevel? SoundLevel => _SoundLevelLocation.HasValue ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLevelLocation!.Value, _package.Meta)) : default(SoundLevel?);
         #endregion
-        #region Sound
         public IANpcSoundDefinitionGetter? Sound { get; private set; }
-        public bool Sound_IsSet => Sound != null;
-        #endregion
         #region DefaultOutfit
         private int? _DefaultOutfitLocation;
         public bool DefaultOutfit_IsSet => _DefaultOutfitLocation.HasValue;
@@ -9016,14 +9004,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region FaceMorph
         private RangeInt32? _FaceMorphLocation;
-        private bool _FaceMorph_IsSet => _FaceMorphLocation.HasValue;
-        public INpcFaceMorphGetter? FaceMorph => _FaceMorph_IsSet ? NpcFaceMorphBinaryOverlay.NpcFaceMorphFactory(new BinaryMemoryReadStream(_data.Slice(_FaceMorphLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public INpcFaceMorphGetter? FaceMorph => _FaceMorphLocation.HasValue ? NpcFaceMorphBinaryOverlay.NpcFaceMorphFactory(new BinaryMemoryReadStream(_data.Slice(_FaceMorphLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool FaceMorph_IsSet => _FaceMorphLocation.HasValue;
         #endregion
         #region FaceParts
         private RangeInt32? _FacePartsLocation;
-        private bool _FaceParts_IsSet => _FacePartsLocation.HasValue;
-        public INpcFacePartsGetter? FaceParts => _FaceParts_IsSet ? NpcFacePartsBinaryOverlay.NpcFacePartsFactory(new BinaryMemoryReadStream(_data.Slice(_FacePartsLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public INpcFacePartsGetter? FaceParts => _FacePartsLocation.HasValue ? NpcFacePartsBinaryOverlay.NpcFacePartsFactory(new BinaryMemoryReadStream(_data.Slice(_FacePartsLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool FaceParts_IsSet => _FacePartsLocation.HasValue;
         #endregion
         public IReadOnlyList<ITintLayerGetter> TintLayers { get; private set; } = ListExt.Empty<TintLayerBinaryOverlay>();

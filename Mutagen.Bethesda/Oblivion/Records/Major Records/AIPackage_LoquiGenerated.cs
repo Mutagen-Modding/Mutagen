@@ -2780,26 +2780,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Data
         private RangeInt32? _DataLocation;
-        private bool _Data_IsSet => _DataLocation.HasValue;
-        public IAIPackageDataGetter? Data => _Data_IsSet ? AIPackageDataBinaryOverlay.AIPackageDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IAIPackageDataGetter? Data => _DataLocation.HasValue ? AIPackageDataBinaryOverlay.AIPackageDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region Location
         private RangeInt32? _LocationLocation;
-        private bool _Location_IsSet => _LocationLocation.HasValue;
-        public IAIPackageLocationGetter? Location => _Location_IsSet ? AIPackageLocationBinaryOverlay.AIPackageLocationFactory(new BinaryMemoryReadStream(_data.Slice(_LocationLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IAIPackageLocationGetter? Location => _LocationLocation.HasValue ? AIPackageLocationBinaryOverlay.AIPackageLocationFactory(new BinaryMemoryReadStream(_data.Slice(_LocationLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Location_IsSet => _LocationLocation.HasValue;
         #endregion
         #region Schedule
         private RangeInt32? _ScheduleLocation;
-        private bool _Schedule_IsSet => _ScheduleLocation.HasValue;
-        public IAIPackageScheduleGetter? Schedule => _Schedule_IsSet ? AIPackageScheduleBinaryOverlay.AIPackageScheduleFactory(new BinaryMemoryReadStream(_data.Slice(_ScheduleLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IAIPackageScheduleGetter? Schedule => _ScheduleLocation.HasValue ? AIPackageScheduleBinaryOverlay.AIPackageScheduleFactory(new BinaryMemoryReadStream(_data.Slice(_ScheduleLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Schedule_IsSet => _ScheduleLocation.HasValue;
         #endregion
         #region Target
         private RangeInt32? _TargetLocation;
-        private bool _Target_IsSet => _TargetLocation.HasValue;
-        public IAIPackageTargetGetter? Target => _Target_IsSet ? AIPackageTargetBinaryOverlay.AIPackageTargetFactory(new BinaryMemoryReadStream(_data.Slice(_TargetLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IAIPackageTargetGetter? Target => _TargetLocation.HasValue ? AIPackageTargetBinaryOverlay.AIPackageTargetFactory(new BinaryMemoryReadStream(_data.Slice(_TargetLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Target_IsSet => _TargetLocation.HasValue;
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = ListExt.Empty<ConditionBinaryOverlay>();

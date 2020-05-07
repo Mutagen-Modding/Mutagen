@@ -2797,8 +2797,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        private bool Flags_IsSet => _FlagsLocation.HasValue;
-        public Water.Flag? Flags => Flags_IsSet ? (Water.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(Water.Flag?);
+        public Water.Flag? Flags => _FlagsLocation.HasValue ? (Water.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(Water.Flag?);
         #endregion
         #region MaterialID
         private int? _MaterialIDLocation;
@@ -2818,8 +2817,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region RelatedWaters
         private RangeInt32? _RelatedWatersLocation;
-        private bool _RelatedWaters_IsSet => _RelatedWatersLocation.HasValue;
-        public IRelatedWatersGetter? RelatedWaters => _RelatedWaters_IsSet ? RelatedWatersBinaryOverlay.RelatedWatersFactory(new BinaryMemoryReadStream(_data.Slice(_RelatedWatersLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IRelatedWatersGetter? RelatedWaters => _RelatedWatersLocation.HasValue ? RelatedWatersBinaryOverlay.RelatedWatersFactory(new BinaryMemoryReadStream(_data.Slice(_RelatedWatersLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool RelatedWaters_IsSet => _RelatedWatersLocation.HasValue;
         #endregion
         partial void CustomCtor(

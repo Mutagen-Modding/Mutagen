@@ -2677,8 +2677,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region MetadataSummary
         private RangeInt32? _MetadataSummaryLocation;
-        private bool _MetadataSummary_IsSet => _MetadataSummaryLocation.HasValue;
-        private IScriptMetaSummaryGetter? _MetadataSummary => _MetadataSummary_IsSet ? ScriptMetaSummaryBinaryOverlay.ScriptMetaSummaryFactory(new BinaryMemoryReadStream(_data.Slice(_MetadataSummaryLocation!.Value.Min)), _package) : default;
+        private IScriptMetaSummaryGetter? _MetadataSummary => _MetadataSummaryLocation.HasValue ? ScriptMetaSummaryBinaryOverlay.ScriptMetaSummaryFactory(new BinaryMemoryReadStream(_data.Slice(_MetadataSummaryLocation!.Value.Min)), _package) : default;
         public IScriptMetaSummaryGetter MetadataSummary => _MetadataSummary ?? new ScriptMetaSummary();
         #endregion
         #region CompiledScript

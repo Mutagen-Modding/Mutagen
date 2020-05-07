@@ -2879,10 +2879,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
         #endregion
-        #region Model
         public IModelGetter? Model { get; private set; }
-        public bool Model_IsSet => Model != null;
-        #endregion
         #region Icon
         private int? _IconLocation;
         public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _IconLocation.Value, _package.Meta)) : default(string?);
@@ -2894,19 +2891,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        private bool _Data_IsSet => _DataLocation.HasValue;
-        public ISoulGemDataGetter? Data => _Data_IsSet ? SoulGemDataBinaryOverlay.SoulGemDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ISoulGemDataGetter? Data => _DataLocation.HasValue ? SoulGemDataBinaryOverlay.SoulGemDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region ContainedSoul
         private int? _ContainedSoulLocation;
-        private bool ContainedSoul_IsSet => _ContainedSoulLocation.HasValue;
-        public SoulLevel? ContainedSoul => ContainedSoul_IsSet ? (SoulLevel)HeaderTranslation.ExtractSubrecordSpan(_data, _ContainedSoulLocation!.Value, _package.Meta)[0] : default(SoulLevel?);
+        public SoulLevel? ContainedSoul => _ContainedSoulLocation.HasValue ? (SoulLevel)HeaderTranslation.ExtractSubrecordSpan(_data, _ContainedSoulLocation!.Value, _package.Meta)[0] : default(SoulLevel?);
         #endregion
         #region MaximumCapacity
         private int? _MaximumCapacityLocation;
-        private bool MaximumCapacity_IsSet => _MaximumCapacityLocation.HasValue;
-        public SoulLevel? MaximumCapacity => MaximumCapacity_IsSet ? (SoulLevel)HeaderTranslation.ExtractSubrecordSpan(_data, _MaximumCapacityLocation!.Value, _package.Meta)[0] : default(SoulLevel?);
+        public SoulLevel? MaximumCapacity => _MaximumCapacityLocation.HasValue ? (SoulLevel)HeaderTranslation.ExtractSubrecordSpan(_data, _MaximumCapacityLocation!.Value, _package.Meta)[0] : default(SoulLevel?);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

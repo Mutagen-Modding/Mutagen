@@ -2197,14 +2197,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Data
         private RangeInt32? _DataLocation;
-        private bool _Data_IsSet => _DataLocation.HasValue;
-        public ICombatStyleDataGetter? Data => _Data_IsSet ? CombatStyleDataBinaryOverlay.CombatStyleDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ICombatStyleDataGetter? Data => _DataLocation.HasValue ? CombatStyleDataBinaryOverlay.CombatStyleDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region Advanced
         private RangeInt32? _AdvancedLocation;
-        private bool _Advanced_IsSet => _AdvancedLocation.HasValue;
-        public ICombatStyleAdvancedGetter? Advanced => _Advanced_IsSet ? CombatStyleAdvancedBinaryOverlay.CombatStyleAdvancedFactory(new BinaryMemoryReadStream(_data.Slice(_AdvancedLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ICombatStyleAdvancedGetter? Advanced => _AdvancedLocation.HasValue ? CombatStyleAdvancedBinaryOverlay.CombatStyleAdvancedFactory(new BinaryMemoryReadStream(_data.Slice(_AdvancedLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Advanced_IsSet => _AdvancedLocation.HasValue;
         #endregion
         partial void CustomCtor(

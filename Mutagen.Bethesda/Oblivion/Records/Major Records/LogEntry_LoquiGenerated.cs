@@ -2379,18 +2379,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Flags
         private int? _FlagsLocation;
-        private bool Flags_IsSet => _FlagsLocation.HasValue;
-        public LogEntry.Flag? Flags => Flags_IsSet ? (LogEntry.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(LogEntry.Flag?);
+        public LogEntry.Flag? Flags => _FlagsLocation.HasValue ? (LogEntry.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(LogEntry.Flag?);
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = ListExt.Empty<ConditionBinaryOverlay>();
         #region Entry
         private int? _EntryLocation;
         public String? Entry => _EntryLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _EntryLocation.Value, _package.Meta)) : default(string?);
         #endregion
-        #region ResultScript
         public IScriptFieldsGetter? ResultScript { get; private set; }
-        public bool ResultScript_IsSet => ResultScript != null;
-        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

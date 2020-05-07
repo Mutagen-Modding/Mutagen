@@ -2711,10 +2711,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        #region Model
         public IModelGetter? Model { get; private set; }
-        public bool Model_IsSet => Model != null;
-        #endregion
         #region Icon
         private int? _IconLocation;
         public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _IconLocation.Value, _package.Meta)) : default(string?);
@@ -2722,14 +2719,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlyList<UInt32>? SpeedTreeSeeds { get; private set; }
         #region Data
         private RangeInt32? _DataLocation;
-        private bool _Data_IsSet => _DataLocation.HasValue;
-        public ITreeDataGetter? Data => _Data_IsSet ? TreeDataBinaryOverlay.TreeDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ITreeDataGetter? Data => _DataLocation.HasValue ? TreeDataBinaryOverlay.TreeDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region BillboardDimensions
         private RangeInt32? _BillboardDimensionsLocation;
-        private bool _BillboardDimensions_IsSet => _BillboardDimensionsLocation.HasValue;
-        public IDimensionsGetter? BillboardDimensions => _BillboardDimensions_IsSet ? DimensionsBinaryOverlay.DimensionsFactory(new BinaryMemoryReadStream(_data.Slice(_BillboardDimensionsLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IDimensionsGetter? BillboardDimensions => _BillboardDimensionsLocation.HasValue ? DimensionsBinaryOverlay.DimensionsFactory(new BinaryMemoryReadStream(_data.Slice(_BillboardDimensionsLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool BillboardDimensions_IsSet => _BillboardDimensionsLocation.HasValue;
         #endregion
         partial void CustomCtor(

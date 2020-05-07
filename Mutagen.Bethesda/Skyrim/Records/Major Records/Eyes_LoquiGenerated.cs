@@ -2243,8 +2243,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        private bool Flags_IsSet => _FlagsLocation.HasValue;
-        public Eyes.Flag? Flags => Flags_IsSet ? (Eyes.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(Eyes.Flag?);
+        public Eyes.Flag? Flags => _FlagsLocation.HasValue ? (Eyes.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(Eyes.Flag?);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

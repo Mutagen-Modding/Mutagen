@@ -2131,10 +2131,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        #region Model
         public IModelGetter? Model { get; private set; }
-        public bool Model_IsSet => Model != null;
-        #endregion
         public IReadOnlyList<IBodyPartGetter> BodyParts { get; private set; } = ListExt.Empty<BodyPartBinaryOverlay>();
         partial void CustomCtor(
             IBinaryReadStream stream,

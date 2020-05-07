@@ -3282,27 +3282,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _TextureUpperLayerLocation;
         public String? TextureUpperLayer => _TextureUpperLayerLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureUpperLayerLocation.Value, _package.Meta)) : default(string?);
         #endregion
-        #region Model
         public IModelGetter? Model { get; private set; }
-        public bool Model_IsSet => Model != null;
-        #endregion
         public IReadOnlyList<IWeatherTypeGetter>? WeatherTypes { get; private set; }
         #region FogDistance
         private RangeInt32? _FogDistanceLocation;
-        private bool _FogDistance_IsSet => _FogDistanceLocation.HasValue;
-        public IFogDistanceGetter? FogDistance => _FogDistance_IsSet ? FogDistanceBinaryOverlay.FogDistanceFactory(new BinaryMemoryReadStream(_data.Slice(_FogDistanceLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IFogDistanceGetter? FogDistance => _FogDistanceLocation.HasValue ? FogDistanceBinaryOverlay.FogDistanceFactory(new BinaryMemoryReadStream(_data.Slice(_FogDistanceLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool FogDistance_IsSet => _FogDistanceLocation.HasValue;
         #endregion
         #region HDRData
         private RangeInt32? _HDRDataLocation;
-        private bool _HDRData_IsSet => _HDRDataLocation.HasValue;
-        public IHDRDataGetter? HDRData => _HDRData_IsSet ? HDRDataBinaryOverlay.HDRDataFactory(new BinaryMemoryReadStream(_data.Slice(_HDRDataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IHDRDataGetter? HDRData => _HDRDataLocation.HasValue ? HDRDataBinaryOverlay.HDRDataFactory(new BinaryMemoryReadStream(_data.Slice(_HDRDataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool HDRData_IsSet => _HDRDataLocation.HasValue;
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        private bool _Data_IsSet => _DataLocation.HasValue;
-        public IWeatherDataGetter? Data => _Data_IsSet ? WeatherDataBinaryOverlay.WeatherDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IWeatherDataGetter? Data => _DataLocation.HasValue ? WeatherDataBinaryOverlay.WeatherDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         public IReadOnlyList<IWeatherSoundGetter> Sounds { get; private set; } = ListExt.Empty<WeatherSoundBinaryOverlay>();

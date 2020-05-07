@@ -2061,14 +2061,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        private bool _Data_IsSet => _DataLocation.HasValue;
-        private IEffectDataGetter? _Data => _Data_IsSet ? EffectDataBinaryOverlay.EffectDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
+        private IEffectDataGetter? _Data => _DataLocation.HasValue ? EffectDataBinaryOverlay.EffectDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
         public IEffectDataGetter Data => _Data ?? new EffectData();
         #endregion
-        #region ScriptEffect
         public IScriptEffectGetter? ScriptEffect { get; private set; }
-        public bool ScriptEffect_IsSet => ScriptEffect != null;
-        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

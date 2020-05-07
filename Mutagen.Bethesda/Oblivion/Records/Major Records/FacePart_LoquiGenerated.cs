@@ -2093,13 +2093,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Index
         private int? _IndexLocation;
-        private bool Index_IsSet => _IndexLocation.HasValue;
-        public Race.FaceIndex? Index => Index_IsSet ? (Race.FaceIndex)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IndexLocation!.Value, _package.Meta)) : default(Race.FaceIndex?);
+        public Race.FaceIndex? Index => _IndexLocation.HasValue ? (Race.FaceIndex)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IndexLocation!.Value, _package.Meta)) : default(Race.FaceIndex?);
         #endregion
-        #region Model
         public IModelGetter? Model { get; private set; }
-        public bool Model_IsSet => Model != null;
-        #endregion
         #region Icon
         private int? _IconLocation;
         public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _IconLocation.Value, _package.Meta)) : default(string?);

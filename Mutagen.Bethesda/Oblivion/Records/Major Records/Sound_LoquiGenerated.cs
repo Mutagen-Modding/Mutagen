@@ -2169,12 +2169,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Data
         private RecordType _DataType;
         private RangeInt32? _DataLocation;
-        private bool _Data_IsSet => _DataLocation.HasValue;
         public ISoundDataInternalGetter? Data
         {
             get
             {
-                if (!_Data_IsSet) return default;
+                if (!_DataLocation.HasValue) return default;
                 switch (_DataType.TypeInt)
                 {
                     case 0x44444E53: // SNDD

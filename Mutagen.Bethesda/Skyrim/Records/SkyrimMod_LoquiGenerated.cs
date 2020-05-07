@@ -9542,242 +9542,202 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region ModHeader
         private RangeInt64? _ModHeaderLocation;
-        private bool _ModHeader_IsSet => _ModHeaderLocation.HasValue;
-        private IModHeaderGetter? _ModHeader => _ModHeader_IsSet ? ModHeaderBinaryOverlay.ModHeaderFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ModHeaderLocation!.Value.Min, _ModHeaderLocation!.Value.Max)), _package) : default;
+        private IModHeaderGetter? _ModHeader => _ModHeaderLocation.HasValue ? ModHeaderBinaryOverlay.ModHeaderFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ModHeaderLocation!.Value.Min, _ModHeaderLocation!.Value.Max)), _package) : default;
         public IModHeaderGetter ModHeader => _ModHeader ?? new ModHeader();
         #endregion
         #region GameSettings
         private RangeInt64? _GameSettingsLocation;
-        private bool _GameSettings_IsSet => _GameSettingsLocation.HasValue;
-        private IGroupGetter<IGameSettingGetter>? _GameSettings => _GameSettings_IsSet ? GroupBinaryOverlay<IGameSettingGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _GameSettingsLocation!.Value.Min, _GameSettingsLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<IGameSettingGetter>? _GameSettings => _GameSettingsLocation.HasValue ? GroupBinaryOverlay<IGameSettingGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _GameSettingsLocation!.Value.Min, _GameSettingsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IGameSettingGetter> GameSettings => _GameSettings ?? new Group<GameSetting>(this);
         #endregion
         #region Keywords
         private RangeInt64? _KeywordsLocation;
-        private bool _Keywords_IsSet => _KeywordsLocation.HasValue;
-        private IGroupGetter<IKeywordGetter>? _Keywords => _Keywords_IsSet ? GroupBinaryOverlay<IKeywordGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _KeywordsLocation!.Value.Min, _KeywordsLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<IKeywordGetter>? _Keywords => _KeywordsLocation.HasValue ? GroupBinaryOverlay<IKeywordGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _KeywordsLocation!.Value.Min, _KeywordsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IKeywordGetter> Keywords => _Keywords ?? new Group<Keyword>(this);
         #endregion
         #region LocationReferenceTypes
         private RangeInt64? _LocationReferenceTypesLocation;
-        private bool _LocationReferenceTypes_IsSet => _LocationReferenceTypesLocation.HasValue;
-        private IGroupGetter<ILocationReferenceTypeGetter>? _LocationReferenceTypes => _LocationReferenceTypes_IsSet ? GroupBinaryOverlay<ILocationReferenceTypeGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _LocationReferenceTypesLocation!.Value.Min, _LocationReferenceTypesLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<ILocationReferenceTypeGetter>? _LocationReferenceTypes => _LocationReferenceTypesLocation.HasValue ? GroupBinaryOverlay<ILocationReferenceTypeGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _LocationReferenceTypesLocation!.Value.Min, _LocationReferenceTypesLocation!.Value.Max)), _package) : default;
         public IGroupGetter<ILocationReferenceTypeGetter> LocationReferenceTypes => _LocationReferenceTypes ?? new Group<LocationReferenceType>(this);
         #endregion
         #region Actions
         private RangeInt64? _ActionsLocation;
-        private bool _Actions_IsSet => _ActionsLocation.HasValue;
-        private IGroupGetter<IActionRecordGetter>? _Actions => _Actions_IsSet ? GroupBinaryOverlay<IActionRecordGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ActionsLocation!.Value.Min, _ActionsLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<IActionRecordGetter>? _Actions => _ActionsLocation.HasValue ? GroupBinaryOverlay<IActionRecordGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ActionsLocation!.Value.Min, _ActionsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IActionRecordGetter> Actions => _Actions ?? new Group<ActionRecord>(this);
         #endregion
         #region TextureSets
         private RangeInt64? _TextureSetsLocation;
-        private bool _TextureSets_IsSet => _TextureSetsLocation.HasValue;
-        private IGroupGetter<ITextureSetGetter>? _TextureSets => _TextureSets_IsSet ? GroupBinaryOverlay<ITextureSetGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _TextureSetsLocation!.Value.Min, _TextureSetsLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<ITextureSetGetter>? _TextureSets => _TextureSetsLocation.HasValue ? GroupBinaryOverlay<ITextureSetGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _TextureSetsLocation!.Value.Min, _TextureSetsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<ITextureSetGetter> TextureSets => _TextureSets ?? new Group<TextureSet>(this);
         #endregion
         #region Globals
         private RangeInt64? _GlobalsLocation;
-        private bool _Globals_IsSet => _GlobalsLocation.HasValue;
-        private IGroupGetter<IGlobalGetter>? _Globals => _Globals_IsSet ? GroupBinaryOverlay<IGlobalGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _GlobalsLocation!.Value.Min, _GlobalsLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<IGlobalGetter>? _Globals => _GlobalsLocation.HasValue ? GroupBinaryOverlay<IGlobalGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _GlobalsLocation!.Value.Min, _GlobalsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IGlobalGetter> Globals => _Globals ?? new Group<Global>(this);
         #endregion
         #region Classes
         private RangeInt64? _ClassesLocation;
-        private bool _Classes_IsSet => _ClassesLocation.HasValue;
-        private IGroupGetter<IClassGetter>? _Classes => _Classes_IsSet ? GroupBinaryOverlay<IClassGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ClassesLocation!.Value.Min, _ClassesLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<IClassGetter>? _Classes => _ClassesLocation.HasValue ? GroupBinaryOverlay<IClassGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ClassesLocation!.Value.Min, _ClassesLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IClassGetter> Classes => _Classes ?? new Group<Class>(this);
         #endregion
         #region Factions
         private RangeInt64? _FactionsLocation;
-        private bool _Factions_IsSet => _FactionsLocation.HasValue;
-        private IGroupGetter<IFactionGetter>? _Factions => _Factions_IsSet ? GroupBinaryOverlay<IFactionGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _FactionsLocation!.Value.Min, _FactionsLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<IFactionGetter>? _Factions => _FactionsLocation.HasValue ? GroupBinaryOverlay<IFactionGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _FactionsLocation!.Value.Min, _FactionsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IFactionGetter> Factions => _Factions ?? new Group<Faction>(this);
         #endregion
         #region HeadParts
         private RangeInt64? _HeadPartsLocation;
-        private bool _HeadParts_IsSet => _HeadPartsLocation.HasValue;
-        private IGroupGetter<IHeadPartGetter>? _HeadParts => _HeadParts_IsSet ? GroupBinaryOverlay<IHeadPartGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _HeadPartsLocation!.Value.Min, _HeadPartsLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<IHeadPartGetter>? _HeadParts => _HeadPartsLocation.HasValue ? GroupBinaryOverlay<IHeadPartGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _HeadPartsLocation!.Value.Min, _HeadPartsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IHeadPartGetter> HeadParts => _HeadParts ?? new Group<HeadPart>(this);
         #endregion
         #region Hairs
         private RangeInt64? _HairsLocation;
-        private bool _Hairs_IsSet => _HairsLocation.HasValue;
-        private IGroupGetter<IHairGetter>? _Hairs => _Hairs_IsSet ? GroupBinaryOverlay<IHairGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _HairsLocation!.Value.Min, _HairsLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<IHairGetter>? _Hairs => _HairsLocation.HasValue ? GroupBinaryOverlay<IHairGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _HairsLocation!.Value.Min, _HairsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IHairGetter> Hairs => _Hairs ?? new Group<Hair>(this);
         #endregion
         #region Eyes
         private RangeInt64? _EyesLocation;
-        private bool _Eyes_IsSet => _EyesLocation.HasValue;
-        private IGroupGetter<IEyesGetter>? _Eyes => _Eyes_IsSet ? GroupBinaryOverlay<IEyesGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _EyesLocation!.Value.Min, _EyesLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<IEyesGetter>? _Eyes => _EyesLocation.HasValue ? GroupBinaryOverlay<IEyesGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _EyesLocation!.Value.Min, _EyesLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IEyesGetter> Eyes => _Eyes ?? new Group<Eyes>(this);
         #endregion
         #region Races
         private RangeInt64? _RacesLocation;
-        private bool _Races_IsSet => _RacesLocation.HasValue;
-        private IGroupGetter<IRaceGetter>? _Races => _Races_IsSet ? GroupBinaryOverlay<IRaceGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _RacesLocation!.Value.Min, _RacesLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<IRaceGetter>? _Races => _RacesLocation.HasValue ? GroupBinaryOverlay<IRaceGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _RacesLocation!.Value.Min, _RacesLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IRaceGetter> Races => _Races ?? new Group<Race>(this);
         #endregion
         #region SoundMarkers
         private RangeInt64? _SoundMarkersLocation;
-        private bool _SoundMarkers_IsSet => _SoundMarkersLocation.HasValue;
-        private IGroupGetter<ISoundMarkerGetter>? _SoundMarkers => _SoundMarkers_IsSet ? GroupBinaryOverlay<ISoundMarkerGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _SoundMarkersLocation!.Value.Min, _SoundMarkersLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<ISoundMarkerGetter>? _SoundMarkers => _SoundMarkersLocation.HasValue ? GroupBinaryOverlay<ISoundMarkerGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _SoundMarkersLocation!.Value.Min, _SoundMarkersLocation!.Value.Max)), _package) : default;
         public IGroupGetter<ISoundMarkerGetter> SoundMarkers => _SoundMarkers ?? new Group<SoundMarker>(this);
         #endregion
         #region AcousticSpaces
         private RangeInt64? _AcousticSpacesLocation;
-        private bool _AcousticSpaces_IsSet => _AcousticSpacesLocation.HasValue;
-        private IGroupGetter<IAcousticSpaceGetter>? _AcousticSpaces => _AcousticSpaces_IsSet ? GroupBinaryOverlay<IAcousticSpaceGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _AcousticSpacesLocation!.Value.Min, _AcousticSpacesLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<IAcousticSpaceGetter>? _AcousticSpaces => _AcousticSpacesLocation.HasValue ? GroupBinaryOverlay<IAcousticSpaceGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _AcousticSpacesLocation!.Value.Min, _AcousticSpacesLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IAcousticSpaceGetter> AcousticSpaces => _AcousticSpaces ?? new Group<AcousticSpace>(this);
         #endregion
         #region MagicEffects
         private RangeInt64? _MagicEffectsLocation;
-        private bool _MagicEffects_IsSet => _MagicEffectsLocation.HasValue;
-        private IGroupGetter<IMagicEffectGetter>? _MagicEffects => _MagicEffects_IsSet ? GroupBinaryOverlay<IMagicEffectGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _MagicEffectsLocation!.Value.Min, _MagicEffectsLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<IMagicEffectGetter>? _MagicEffects => _MagicEffectsLocation.HasValue ? GroupBinaryOverlay<IMagicEffectGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _MagicEffectsLocation!.Value.Min, _MagicEffectsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IMagicEffectGetter> MagicEffects => _MagicEffects ?? new Group<MagicEffect>(this);
         #endregion
         #region LandTextures
         private RangeInt64? _LandTexturesLocation;
-        private bool _LandTextures_IsSet => _LandTexturesLocation.HasValue;
-        private IGroupGetter<ILandTextureGetter>? _LandTextures => _LandTextures_IsSet ? GroupBinaryOverlay<ILandTextureGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _LandTexturesLocation!.Value.Min, _LandTexturesLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<ILandTextureGetter>? _LandTextures => _LandTexturesLocation.HasValue ? GroupBinaryOverlay<ILandTextureGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _LandTexturesLocation!.Value.Min, _LandTexturesLocation!.Value.Max)), _package) : default;
         public IGroupGetter<ILandTextureGetter> LandTextures => _LandTextures ?? new Group<LandTexture>(this);
         #endregion
         #region ObjectEffects
         private RangeInt64? _ObjectEffectsLocation;
-        private bool _ObjectEffects_IsSet => _ObjectEffectsLocation.HasValue;
-        private IGroupGetter<IObjectEffectGetter>? _ObjectEffects => _ObjectEffects_IsSet ? GroupBinaryOverlay<IObjectEffectGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ObjectEffectsLocation!.Value.Min, _ObjectEffectsLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<IObjectEffectGetter>? _ObjectEffects => _ObjectEffectsLocation.HasValue ? GroupBinaryOverlay<IObjectEffectGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ObjectEffectsLocation!.Value.Min, _ObjectEffectsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IObjectEffectGetter> ObjectEffects => _ObjectEffects ?? new Group<ObjectEffect>(this);
         #endregion
         #region Spells
         private RangeInt64? _SpellsLocation;
-        private bool _Spells_IsSet => _SpellsLocation.HasValue;
-        private IGroupGetter<ISpellGetter>? _Spells => _Spells_IsSet ? GroupBinaryOverlay<ISpellGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _SpellsLocation!.Value.Min, _SpellsLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<ISpellGetter>? _Spells => _SpellsLocation.HasValue ? GroupBinaryOverlay<ISpellGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _SpellsLocation!.Value.Min, _SpellsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<ISpellGetter> Spells => _Spells ?? new Group<Spell>(this);
         #endregion
         #region Scrolls
         private RangeInt64? _ScrollsLocation;
-        private bool _Scrolls_IsSet => _ScrollsLocation.HasValue;
-        private IGroupGetter<IScrollGetter>? _Scrolls => _Scrolls_IsSet ? GroupBinaryOverlay<IScrollGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ScrollsLocation!.Value.Min, _ScrollsLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<IScrollGetter>? _Scrolls => _ScrollsLocation.HasValue ? GroupBinaryOverlay<IScrollGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ScrollsLocation!.Value.Min, _ScrollsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IScrollGetter> Scrolls => _Scrolls ?? new Group<Scroll>(this);
         #endregion
         #region Activators
         private RangeInt64? _ActivatorsLocation;
-        private bool _Activators_IsSet => _ActivatorsLocation.HasValue;
-        private IGroupGetter<IActivatorGetter>? _Activators => _Activators_IsSet ? GroupBinaryOverlay<IActivatorGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ActivatorsLocation!.Value.Min, _ActivatorsLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<IActivatorGetter>? _Activators => _ActivatorsLocation.HasValue ? GroupBinaryOverlay<IActivatorGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ActivatorsLocation!.Value.Min, _ActivatorsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IActivatorGetter> Activators => _Activators ?? new Group<Activator>(this);
         #endregion
         #region TalkingActivators
         private RangeInt64? _TalkingActivatorsLocation;
-        private bool _TalkingActivators_IsSet => _TalkingActivatorsLocation.HasValue;
-        private IGroupGetter<ITalkingActivatorGetter>? _TalkingActivators => _TalkingActivators_IsSet ? GroupBinaryOverlay<ITalkingActivatorGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _TalkingActivatorsLocation!.Value.Min, _TalkingActivatorsLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<ITalkingActivatorGetter>? _TalkingActivators => _TalkingActivatorsLocation.HasValue ? GroupBinaryOverlay<ITalkingActivatorGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _TalkingActivatorsLocation!.Value.Min, _TalkingActivatorsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<ITalkingActivatorGetter> TalkingActivators => _TalkingActivators ?? new Group<TalkingActivator>(this);
         #endregion
         #region Armors
         private RangeInt64? _ArmorsLocation;
-        private bool _Armors_IsSet => _ArmorsLocation.HasValue;
-        private IGroupGetter<IArmorGetter>? _Armors => _Armors_IsSet ? GroupBinaryOverlay<IArmorGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ArmorsLocation!.Value.Min, _ArmorsLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<IArmorGetter>? _Armors => _ArmorsLocation.HasValue ? GroupBinaryOverlay<IArmorGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ArmorsLocation!.Value.Min, _ArmorsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IArmorGetter> Armors => _Armors ?? new Group<Armor>(this);
         #endregion
         #region Books
         private RangeInt64? _BooksLocation;
-        private bool _Books_IsSet => _BooksLocation.HasValue;
-        private IGroupGetter<IBookGetter>? _Books => _Books_IsSet ? GroupBinaryOverlay<IBookGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _BooksLocation!.Value.Min, _BooksLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<IBookGetter>? _Books => _BooksLocation.HasValue ? GroupBinaryOverlay<IBookGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _BooksLocation!.Value.Min, _BooksLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IBookGetter> Books => _Books ?? new Group<Book>(this);
         #endregion
         #region Containers
         private RangeInt64? _ContainersLocation;
-        private bool _Containers_IsSet => _ContainersLocation.HasValue;
-        private IGroupGetter<IContainerGetter>? _Containers => _Containers_IsSet ? GroupBinaryOverlay<IContainerGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ContainersLocation!.Value.Min, _ContainersLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<IContainerGetter>? _Containers => _ContainersLocation.HasValue ? GroupBinaryOverlay<IContainerGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ContainersLocation!.Value.Min, _ContainersLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IContainerGetter> Containers => _Containers ?? new Group<Container>(this);
         #endregion
         #region Doors
         private RangeInt64? _DoorsLocation;
-        private bool _Doors_IsSet => _DoorsLocation.HasValue;
-        private IGroupGetter<IDoorGetter>? _Doors => _Doors_IsSet ? GroupBinaryOverlay<IDoorGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _DoorsLocation!.Value.Min, _DoorsLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<IDoorGetter>? _Doors => _DoorsLocation.HasValue ? GroupBinaryOverlay<IDoorGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _DoorsLocation!.Value.Min, _DoorsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IDoorGetter> Doors => _Doors ?? new Group<Door>(this);
         #endregion
         #region Ingredients
         private RangeInt64? _IngredientsLocation;
-        private bool _Ingredients_IsSet => _IngredientsLocation.HasValue;
-        private IGroupGetter<IIngredientGetter>? _Ingredients => _Ingredients_IsSet ? GroupBinaryOverlay<IIngredientGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _IngredientsLocation!.Value.Min, _IngredientsLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<IIngredientGetter>? _Ingredients => _IngredientsLocation.HasValue ? GroupBinaryOverlay<IIngredientGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _IngredientsLocation!.Value.Min, _IngredientsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IIngredientGetter> Ingredients => _Ingredients ?? new Group<Ingredient>(this);
         #endregion
         #region Lights
         private RangeInt64? _LightsLocation;
-        private bool _Lights_IsSet => _LightsLocation.HasValue;
-        private IGroupGetter<ILightGetter>? _Lights => _Lights_IsSet ? GroupBinaryOverlay<ILightGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _LightsLocation!.Value.Min, _LightsLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<ILightGetter>? _Lights => _LightsLocation.HasValue ? GroupBinaryOverlay<ILightGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _LightsLocation!.Value.Min, _LightsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<ILightGetter> Lights => _Lights ?? new Group<Light>(this);
         #endregion
         #region MiscItems
         private RangeInt64? _MiscItemsLocation;
-        private bool _MiscItems_IsSet => _MiscItemsLocation.HasValue;
-        private IGroupGetter<IMiscItemGetter>? _MiscItems => _MiscItems_IsSet ? GroupBinaryOverlay<IMiscItemGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _MiscItemsLocation!.Value.Min, _MiscItemsLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<IMiscItemGetter>? _MiscItems => _MiscItemsLocation.HasValue ? GroupBinaryOverlay<IMiscItemGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _MiscItemsLocation!.Value.Min, _MiscItemsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IMiscItemGetter> MiscItems => _MiscItems ?? new Group<MiscItem>(this);
         #endregion
         #region AlchemicalApparatuses
         private RangeInt64? _AlchemicalApparatusesLocation;
-        private bool _AlchemicalApparatuses_IsSet => _AlchemicalApparatusesLocation.HasValue;
-        private IGroupGetter<IAlchemicalApparatusGetter>? _AlchemicalApparatuses => _AlchemicalApparatuses_IsSet ? GroupBinaryOverlay<IAlchemicalApparatusGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _AlchemicalApparatusesLocation!.Value.Min, _AlchemicalApparatusesLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<IAlchemicalApparatusGetter>? _AlchemicalApparatuses => _AlchemicalApparatusesLocation.HasValue ? GroupBinaryOverlay<IAlchemicalApparatusGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _AlchemicalApparatusesLocation!.Value.Min, _AlchemicalApparatusesLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IAlchemicalApparatusGetter> AlchemicalApparatuses => _AlchemicalApparatuses ?? new Group<AlchemicalApparatus>(this);
         #endregion
         #region Statics
         private RangeInt64? _StaticsLocation;
-        private bool _Statics_IsSet => _StaticsLocation.HasValue;
-        private IGroupGetter<IStaticGetter>? _Statics => _Statics_IsSet ? GroupBinaryOverlay<IStaticGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _StaticsLocation!.Value.Min, _StaticsLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<IStaticGetter>? _Statics => _StaticsLocation.HasValue ? GroupBinaryOverlay<IStaticGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _StaticsLocation!.Value.Min, _StaticsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IStaticGetter> Statics => _Statics ?? new Group<Static>(this);
         #endregion
         #region MoveableStatics
         private RangeInt64? _MoveableStaticsLocation;
-        private bool _MoveableStatics_IsSet => _MoveableStaticsLocation.HasValue;
-        private IGroupGetter<IMoveableStaticGetter>? _MoveableStatics => _MoveableStatics_IsSet ? GroupBinaryOverlay<IMoveableStaticGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _MoveableStaticsLocation!.Value.Min, _MoveableStaticsLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<IMoveableStaticGetter>? _MoveableStatics => _MoveableStaticsLocation.HasValue ? GroupBinaryOverlay<IMoveableStaticGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _MoveableStaticsLocation!.Value.Min, _MoveableStaticsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IMoveableStaticGetter> MoveableStatics => _MoveableStatics ?? new Group<MoveableStatic>(this);
         #endregion
         #region Grasses
         private RangeInt64? _GrassesLocation;
-        private bool _Grasses_IsSet => _GrassesLocation.HasValue;
-        private IGroupGetter<IGrassGetter>? _Grasses => _Grasses_IsSet ? GroupBinaryOverlay<IGrassGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _GrassesLocation!.Value.Min, _GrassesLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<IGrassGetter>? _Grasses => _GrassesLocation.HasValue ? GroupBinaryOverlay<IGrassGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _GrassesLocation!.Value.Min, _GrassesLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IGrassGetter> Grasses => _Grasses ?? new Group<Grass>(this);
         #endregion
         #region Trees
         private RangeInt64? _TreesLocation;
-        private bool _Trees_IsSet => _TreesLocation.HasValue;
-        private IGroupGetter<ITreeGetter>? _Trees => _Trees_IsSet ? GroupBinaryOverlay<ITreeGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _TreesLocation!.Value.Min, _TreesLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<ITreeGetter>? _Trees => _TreesLocation.HasValue ? GroupBinaryOverlay<ITreeGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _TreesLocation!.Value.Min, _TreesLocation!.Value.Max)), _package) : default;
         public IGroupGetter<ITreeGetter> Trees => _Trees ?? new Group<Tree>(this);
         #endregion
         #region Florae
         private RangeInt64? _FloraeLocation;
-        private bool _Florae_IsSet => _FloraeLocation.HasValue;
-        private IGroupGetter<IFloraGetter>? _Florae => _Florae_IsSet ? GroupBinaryOverlay<IFloraGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _FloraeLocation!.Value.Min, _FloraeLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<IFloraGetter>? _Florae => _FloraeLocation.HasValue ? GroupBinaryOverlay<IFloraGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _FloraeLocation!.Value.Min, _FloraeLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IFloraGetter> Florae => _Florae ?? new Group<Flora>(this);
         #endregion
         #region Furniture
         private RangeInt64? _FurnitureLocation;
-        private bool _Furniture_IsSet => _FurnitureLocation.HasValue;
-        private IGroupGetter<IFurnitureGetter>? _Furniture => _Furniture_IsSet ? GroupBinaryOverlay<IFurnitureGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _FurnitureLocation!.Value.Min, _FurnitureLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<IFurnitureGetter>? _Furniture => _FurnitureLocation.HasValue ? GroupBinaryOverlay<IFurnitureGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _FurnitureLocation!.Value.Min, _FurnitureLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IFurnitureGetter> Furniture => _Furniture ?? new Group<Furniture>(this);
         #endregion
         #region Weapons
         private RangeInt64? _WeaponsLocation;
-        private bool _Weapons_IsSet => _WeaponsLocation.HasValue;
-        private IGroupGetter<IWeaponGetter>? _Weapons => _Weapons_IsSet ? GroupBinaryOverlay<IWeaponGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _WeaponsLocation!.Value.Min, _WeaponsLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<IWeaponGetter>? _Weapons => _WeaponsLocation.HasValue ? GroupBinaryOverlay<IWeaponGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _WeaponsLocation!.Value.Min, _WeaponsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IWeaponGetter> Weapons => _Weapons ?? new Group<Weapon>(this);
         #endregion
         #region Ammunitions
         private RangeInt64? _AmmunitionsLocation;
-        private bool _Ammunitions_IsSet => _AmmunitionsLocation.HasValue;
-        private IGroupGetter<IAmmunitionGetter>? _Ammunitions => _Ammunitions_IsSet ? GroupBinaryOverlay<IAmmunitionGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _AmmunitionsLocation!.Value.Min, _AmmunitionsLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<IAmmunitionGetter>? _Ammunitions => _AmmunitionsLocation.HasValue ? GroupBinaryOverlay<IAmmunitionGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _AmmunitionsLocation!.Value.Min, _AmmunitionsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IAmmunitionGetter> Ammunitions => _Ammunitions ?? new Group<Ammunition>(this);
         #endregion
         #region Npcs
         private RangeInt64? _NpcsLocation;
-        private bool _Npcs_IsSet => _NpcsLocation.HasValue;
-        private IGroupGetter<INpcGetter>? _Npcs => _Npcs_IsSet ? GroupBinaryOverlay<INpcGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _NpcsLocation!.Value.Min, _NpcsLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<INpcGetter>? _Npcs => _NpcsLocation.HasValue ? GroupBinaryOverlay<INpcGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _NpcsLocation!.Value.Min, _NpcsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<INpcGetter> Npcs => _Npcs ?? new Group<Npc>(this);
         #endregion
         #region LeveledNpcs
         private RangeInt64? _LeveledNpcsLocation;
-        private bool _LeveledNpcs_IsSet => _LeveledNpcsLocation.HasValue;
-        private IGroupGetter<ILeveledNpcGetter>? _LeveledNpcs => _LeveledNpcs_IsSet ? GroupBinaryOverlay<ILeveledNpcGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _LeveledNpcsLocation!.Value.Min, _LeveledNpcsLocation!.Value.Max)), _package) : default;
+        private IGroupGetter<ILeveledNpcGetter>? _LeveledNpcs => _LeveledNpcsLocation.HasValue ? GroupBinaryOverlay<ILeveledNpcGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _LeveledNpcsLocation!.Value.Min, _LeveledNpcsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<ILeveledNpcGetter> LeveledNpcs => _LeveledNpcs ?? new Group<LeveledNpc>(this);
         #endregion
         partial void CustomCtor(

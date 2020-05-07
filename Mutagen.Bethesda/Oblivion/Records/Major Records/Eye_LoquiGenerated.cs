@@ -2238,8 +2238,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        private bool Flags_IsSet => _FlagsLocation.HasValue;
-        public Eye.Flag? Flags => Flags_IsSet ? (Eye.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(Eye.Flag?);
+        public Eye.Flag? Flags => _FlagsLocation.HasValue ? (Eye.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(Eye.Flag?);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

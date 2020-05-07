@@ -1994,13 +1994,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Index
         private int? _IndexLocation;
-        private bool Index_IsSet => _IndexLocation.HasValue;
-        public BodyData.PartIndex? Index => Index_IsSet ? (BodyData.PartIndex)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IndexLocation!.Value, _package.Meta)) : default(BodyData.PartIndex?);
+        public BodyData.PartIndex? Index => _IndexLocation.HasValue ? (BodyData.PartIndex)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IndexLocation!.Value, _package.Meta)) : default(BodyData.PartIndex?);
         #endregion
-        #region Model
         public IModelGetter? Model { get; private set; }
-        public bool Model_IsSet => Model != null;
-        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

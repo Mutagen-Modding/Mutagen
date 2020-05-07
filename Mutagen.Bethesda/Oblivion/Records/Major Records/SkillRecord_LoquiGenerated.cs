@@ -2834,8 +2834,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Skill
         private int? _SkillLocation;
-        private bool Skill_IsSet => _SkillLocation.HasValue;
-        public ActorValue? Skill => Skill_IsSet ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SkillLocation!.Value, _package.Meta)) : default(ActorValue?);
+        public ActorValue? Skill => _SkillLocation.HasValue ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SkillLocation!.Value, _package.Meta)) : default(ActorValue?);
         #endregion
         #region Description
         private int? _DescriptionLocation;
@@ -2847,8 +2846,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        private bool _Data_IsSet => _DataLocation.HasValue;
-        public ISkillDataGetter? Data => _Data_IsSet ? SkillDataBinaryOverlay.SkillDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ISkillDataGetter? Data => _DataLocation.HasValue ? SkillDataBinaryOverlay.SkillDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region ApprenticeText

@@ -2686,15 +2686,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        #region Model
         public IModelGetter? Model { get; private set; }
-        public bool Model_IsSet => Model != null;
-        #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = ListExt.Empty<ConditionBinaryOverlay>();
         #region AnimationGroupSection
         private int? _AnimationGroupSectionLocation;
-        private bool AnimationGroupSection_IsSet => _AnimationGroupSectionLocation.HasValue;
-        public IdleAnimation.AnimationGroupSectionEnum? AnimationGroupSection => AnimationGroupSection_IsSet ? (IdleAnimation.AnimationGroupSectionEnum)HeaderTranslation.ExtractSubrecordSpan(_data, _AnimationGroupSectionLocation!.Value, _package.Meta)[0] : default(IdleAnimation.AnimationGroupSectionEnum?);
+        public IdleAnimation.AnimationGroupSectionEnum? AnimationGroupSection => _AnimationGroupSectionLocation.HasValue ? (IdleAnimation.AnimationGroupSectionEnum)HeaderTranslation.ExtractSubrecordSpan(_data, _AnimationGroupSectionLocation!.Value, _package.Meta)[0] : default(IdleAnimation.AnimationGroupSectionEnum?);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>>? RelatedIdleAnimations { get; private set; }
         partial void CustomCtor(

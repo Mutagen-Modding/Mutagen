@@ -129,8 +129,8 @@ namespace Mutagen.Bethesda.Generation
 
         public override async Task GenerateWrapperFields(
             FileGeneration fg,
-            ObjectGeneration objGen, 
-            TypeGeneration typeGen, 
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
             Accessor dataAccessor,
             int? currentPosition,
             string passedLengthAccessor)
@@ -160,7 +160,6 @@ namespace Mutagen.Bethesda.Generation
             if (hasBeenSet)
             {
                 fg.AppendLine($"private int? _{typeGen.Name}Location;");
-                fg.AppendLine($"{(typeGen.CanBeNullable(getter: true) ? "private" : "public")} bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
             }
             string slice;
             if (data.RecordType.HasValue)
@@ -177,12 +176,11 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (typeGen.CanBeNullable(getter: true))
                 {
-                    fg.AppendLine($"public {eType.TypeName(getter: true)}? {eType.Name} => {typeGen.Name}_IsSet ? {getType} : default({eType.TypeName(getter: true)}?);");
+                    fg.AppendLine($"public {eType.TypeName(getter: true)}? {eType.Name} => _{typeGen.Name}Location.HasValue ? {getType} : default({eType.TypeName(getter: true)}?);");
                 }
                 else
                 {
                     fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => {getType};");
-                    fg.AppendLine($"public bool {eType.Name}_IsSet => _{typeGen.Name}_IsSet;");
                 }
             }
             else if (eType.HasBeenSetFallbackInt != null)

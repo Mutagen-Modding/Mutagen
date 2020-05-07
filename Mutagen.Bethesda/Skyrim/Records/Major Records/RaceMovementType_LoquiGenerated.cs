@@ -1986,8 +1986,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Overrides
         private RangeInt32? _OverridesLocation;
-        private bool _Overrides_IsSet => _OverridesLocation.HasValue;
-        public ISpeedOverridesGetter? Overrides => _Overrides_IsSet ? SpeedOverridesBinaryOverlay.SpeedOverridesFactory(new BinaryMemoryReadStream(_data.Slice(_OverridesLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ISpeedOverridesGetter? Overrides => _OverridesLocation.HasValue ? SpeedOverridesBinaryOverlay.SpeedOverridesFactory(new BinaryMemoryReadStream(_data.Slice(_OverridesLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Overrides_IsSet => _OverridesLocation.HasValue;
         #endregion
         partial void CustomCtor(

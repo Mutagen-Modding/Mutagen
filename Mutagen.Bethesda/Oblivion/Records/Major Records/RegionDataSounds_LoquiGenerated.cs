@@ -2055,8 +2055,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region MusicType
         private int? _MusicTypeLocation;
-        private bool MusicType_IsSet => _MusicTypeLocation.HasValue;
-        public MusicType? MusicType => MusicType_IsSet ? (MusicType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MusicTypeLocation!.Value, _package.Meta)) : default(MusicType?);
+        public MusicType? MusicType => _MusicTypeLocation.HasValue ? (MusicType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MusicTypeLocation!.Value, _package.Meta)) : default(MusicType?);
         #endregion
         public IReadOnlyList<IRegionSoundGetter>? Sounds { get; private set; }
         partial void CustomCtor(

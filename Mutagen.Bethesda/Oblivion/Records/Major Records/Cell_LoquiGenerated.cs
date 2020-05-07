@@ -5093,8 +5093,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        private bool Flags_IsSet => _FlagsLocation.HasValue;
-        public Cell.Flag? Flags => Flags_IsSet ? (Cell.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(Cell.Flag?);
+        public Cell.Flag? Flags => _FlagsLocation.HasValue ? (Cell.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(Cell.Flag?);
         #endregion
         #region Grid
         private int? _GridLocation;
@@ -5102,15 +5101,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Lighting
         private RangeInt32? _LightingLocation;
-        private bool _Lighting_IsSet => _LightingLocation.HasValue;
-        public ICellLightingGetter? Lighting => _Lighting_IsSet ? CellLightingBinaryOverlay.CellLightingFactory(new BinaryMemoryReadStream(_data.Slice(_LightingLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ICellLightingGetter? Lighting => _LightingLocation.HasValue ? CellLightingBinaryOverlay.CellLightingFactory(new BinaryMemoryReadStream(_data.Slice(_LightingLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Lighting_IsSet => _LightingLocation.HasValue;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IRegionGetter>>? Regions { get; private set; }
         #region MusicType
         private int? _MusicTypeLocation;
-        private bool MusicType_IsSet => _MusicTypeLocation.HasValue;
-        public MusicType? MusicType => MusicType_IsSet ? (MusicType)HeaderTranslation.ExtractSubrecordSpan(_data, _MusicTypeLocation!.Value, _package.Meta)[0] : default(MusicType?);
+        public MusicType? MusicType => _MusicTypeLocation.HasValue ? (MusicType)HeaderTranslation.ExtractSubrecordSpan(_data, _MusicTypeLocation!.Value, _package.Meta)[0] : default(MusicType?);
         #endregion
         #region WaterHeight
         private int? _WaterHeightLocation;

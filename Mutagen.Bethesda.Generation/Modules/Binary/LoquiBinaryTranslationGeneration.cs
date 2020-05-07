@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                // We want to cache retrievals, in case it's a wrapper being written
+                // We want to cache retrievals, in case it's a wrapper being written 
                 fg.AppendLine($"var {typeGen.Name}Item = {itemAccessor.DirectAccess};");
                 itemAccessor = $"{typeGen.Name}Item";
             }
@@ -309,21 +309,19 @@ namespace Mutagen.Bethesda.Generation
                 recConverter = $"{objGen.RegistrationName}.{loqui.Name}Converter";
             }
 
+            var isRequiredRecord = !loqui.HasBeenSet && data.HasTrigger;
             if (loqui.GetFieldData()?.HasTrigger ?? false)
             {
                 if (loqui.TargetObjectGeneration.IsTypelessStruct())
                 {
-                    if (loqui.SingletonType != SingletonLevel.None)
+                    if (loqui.SingletonType != SingletonLevel.None
+                        || isRequiredRecord)
                     {
                         fg.AppendLine($"private {loqui.Interface(getter: true, internalInterface: true)}? _{typeGen.Name};");
                     }
-                    else
+                    else if (loqui.HasBeenSet)
                     {
-                        fg.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} {{ get; private set; }}");
-                        if (typeGen.HasBeenSet)
-                        {
-                            fg.AppendLine($"public bool {typeGen.Name}_IsSet => {typeGen.Name} != null;");
-                        }
+                        fg.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)}? {typeGen.Name} {{ get; private set; }}");
                     }
                 }
                 else
@@ -338,7 +336,6 @@ namespace Mutagen.Bethesda.Generation
                         fg.AppendLine($"private {nameof(RecordType)} _{typeGen.Name}Type;");
                     }
                     fg.AppendLine($"private {GetLocationObjectString(objGen)}? _{typeGen.Name}Location;");
-                    fg.AppendLine($"private bool _{typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
                     using (new LineWrapper(fg))
                     {
                         if (loqui.SingletonType == SingletonLevel.None)
@@ -350,14 +347,15 @@ namespace Mutagen.Bethesda.Generation
                             fg.Append($"private ");
                         }
                         fg.Append($"{loqui.Interface(getter: true, internalInterface: true)}{(typeGen.CanBeNullable(getter: true) ? "?" : null)} ");
-                        if (loqui.SingletonType != SingletonLevel.None)
+                        if (loqui.SingletonType != SingletonLevel.None
+                            || isRequiredRecord)
                         {
                             fg.Append("_");
                         }
                         fg.Append($"{typeGen.Name}");
                         if (!severalSubTypes)
                         {
-                            fg.Append($" => _{typeGen.Name}_IsSet ? ");
+                            fg.Append($" => _{typeGen.Name}Location.HasValue ? ");
                             fg.Append($"{this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({DataAccessor(dataAccessor, $"_{typeGen.Name}Location!.Value.Min", $"_{typeGen.Name}Location!.Value.Max")}), _package");
                             if (loqui.SingletonType == SingletonLevel.None)
                             {
@@ -374,7 +372,7 @@ namespace Mutagen.Bethesda.Generation
                             fg.AppendLine("get");
                             using (new BraceWrapper(fg))
                             {
-                                fg.AppendLine($"if (!_{typeGen.Name}_IsSet) return default;");
+                                fg.AppendLine($"if (!_{typeGen.Name}Location.HasValue) return default;");
                                 fg.AppendLine($"switch (_{typeGen.Name}Type.TypeInt)");
                                 using (new BraceWrapper(fg))
                                 {
@@ -420,11 +418,12 @@ namespace Mutagen.Bethesda.Generation
                 }
             }
 
-            if (loqui.SingletonType != SingletonLevel.None)
+            if (loqui.SingletonType != SingletonLevel.None
+                || isRequiredRecord)
             {
                 fg.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)} {typeGen.Name} => _{typeGen.Name} ?? new {loqui.DirectTypeName}({(loqui.ThisConstruction ? "this" : null)});");
             }
-            else if (typeGen.HasBeenSet && !loqui.TargetObjectGeneration.IsTypelessStruct())
+            else if (loqui.HasBeenSet && !loqui.TargetObjectGeneration.IsTypelessStruct())
             {
                 fg.AppendLine($"public bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
             }
@@ -465,7 +464,7 @@ namespace Mutagen.Bethesda.Generation
                     }
                     else if (absSum.Value != objectSum)
                     {
-                        // Inheriting objects don't agree on their length, so we can't expect a certain length
+                        // Inheriting objects don't agree on their length, so we can't expect a certain length 
                         return null;
                     }
                 }
@@ -512,7 +511,14 @@ namespace Mutagen.Bethesda.Generation
             switch (loqui.SingletonType)
             {
                 case SingletonLevel.None:
-                    accessor = typeGen.Name;
+                    if (loqui.HasBeenSet)
+                    {
+                        accessor = typeGen.Name;
+                    }
+                    else
+                    {
+                        accessor = $"_{typeGen.Name}";
+                    }
                     break;
                 case SingletonLevel.NotNull:
                 case SingletonLevel.Singleton:

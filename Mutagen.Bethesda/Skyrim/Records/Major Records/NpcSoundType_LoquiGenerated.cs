@@ -2101,8 +2101,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Type
         private int? _TypeLocation;
-        private bool Type_IsSet => _TypeLocation.HasValue;
-        public NpcSoundType.SoundType? Type => Type_IsSet ? (NpcSoundType.SoundType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TypeLocation!.Value, _package.Meta)) : default(NpcSoundType.SoundType?);
+        public NpcSoundType.SoundType? Type => _TypeLocation.HasValue ? (NpcSoundType.SoundType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TypeLocation!.Value, _package.Meta)) : default(NpcSoundType.SoundType?);
         #endregion
         public IReadOnlyList<INpcSoundGetter> Sounds { get; private set; } = ListExt.Empty<NpcSoundBinaryOverlay>();
         partial void CustomCtor(

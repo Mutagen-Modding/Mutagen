@@ -5767,14 +5767,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
         #endregion
-        #region Model
         public IModelGetter? Model { get; private set; }
-        public bool Model_IsSet => Model != null;
-        #endregion
         #region Configuration
         private RangeInt32? _ConfigurationLocation;
-        private bool _Configuration_IsSet => _ConfigurationLocation.HasValue;
-        public INpcConfigurationGetter? Configuration => _Configuration_IsSet ? NpcConfigurationBinaryOverlay.NpcConfigurationFactory(new BinaryMemoryReadStream(_data.Slice(_ConfigurationLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public INpcConfigurationGetter? Configuration => _ConfigurationLocation.HasValue ? NpcConfigurationBinaryOverlay.NpcConfigurationFactory(new BinaryMemoryReadStream(_data.Slice(_ConfigurationLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Configuration_IsSet => _ConfigurationLocation.HasValue;
         #endregion
         public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = ListExt.Empty<RankPlacementBinaryOverlay>();
@@ -5797,8 +5793,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlyList<IItemEntryGetter> Items { get; private set; } = ListExt.Empty<ItemEntryBinaryOverlay>();
         #region AIData
         private RangeInt32? _AIDataLocation;
-        private bool _AIData_IsSet => _AIDataLocation.HasValue;
-        public IAIDataGetter? AIData => _AIData_IsSet ? AIDataBinaryOverlay.AIDataFactory(new BinaryMemoryReadStream(_data.Slice(_AIDataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IAIDataGetter? AIData => _AIDataLocation.HasValue ? AIDataBinaryOverlay.AIDataFactory(new BinaryMemoryReadStream(_data.Slice(_AIDataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool AIData_IsSet => _AIDataLocation.HasValue;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IAIPackageGetter>>? AIPackages { get; private set; }
@@ -5810,8 +5805,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Stats
         private RangeInt32? _StatsLocation;
-        private bool _Stats_IsSet => _StatsLocation.HasValue;
-        public INpcDataGetter? Stats => _Stats_IsSet ? NpcDataBinaryOverlay.NpcDataFactory(new BinaryMemoryReadStream(_data.Slice(_StatsLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public INpcDataGetter? Stats => _StatsLocation.HasValue ? NpcDataBinaryOverlay.NpcDataFactory(new BinaryMemoryReadStream(_data.Slice(_StatsLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Stats_IsSet => _StatsLocation.HasValue;
         #endregion
         #region Hair

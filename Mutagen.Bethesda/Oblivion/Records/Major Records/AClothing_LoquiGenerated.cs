@@ -3476,30 +3476,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region ClothingFlags
         private RangeInt32? _ClothingFlagsLocation;
-        private bool _ClothingFlags_IsSet => _ClothingFlagsLocation.HasValue;
-        public IClothingFlagsGetter? ClothingFlags => _ClothingFlags_IsSet ? ClothingFlagsBinaryOverlay.ClothingFlagsFactory(new BinaryMemoryReadStream(_data.Slice(_ClothingFlagsLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IClothingFlagsGetter? ClothingFlags => _ClothingFlagsLocation.HasValue ? ClothingFlagsBinaryOverlay.ClothingFlagsFactory(new BinaryMemoryReadStream(_data.Slice(_ClothingFlagsLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool ClothingFlags_IsSet => _ClothingFlagsLocation.HasValue;
         #endregion
-        #region MaleBipedModel
         public IModelGetter? MaleBipedModel { get; private set; }
-        public bool MaleBipedModel_IsSet => MaleBipedModel != null;
-        #endregion
-        #region MaleWorldModel
         public IModelGetter? MaleWorldModel { get; private set; }
-        public bool MaleWorldModel_IsSet => MaleWorldModel != null;
-        #endregion
         #region MaleIcon
         private int? _MaleIconLocation;
         public String? MaleIcon => _MaleIconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MaleIconLocation.Value, _package.Meta)) : default(string?);
         #endregion
-        #region FemaleBipedModel
         public IModelGetter? FemaleBipedModel { get; private set; }
-        public bool FemaleBipedModel_IsSet => FemaleBipedModel != null;
-        #endregion
-        #region FemaleWorldModel
         public IModelGetter? FemaleWorldModel { get; private set; }
-        public bool FemaleWorldModel_IsSet => FemaleWorldModel != null;
-        #endregion
         #region FemaleIcon
         private int? _FemaleIconLocation;
         public String? FemaleIcon => _FemaleIconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FemaleIconLocation.Value, _package.Meta)) : default(string?);

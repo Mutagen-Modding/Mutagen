@@ -2004,14 +2004,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Item
         private RangeInt32? _ItemLocation;
-        private bool _Item_IsSet => _ItemLocation.HasValue;
-        private IContainerItemGetter? _Item => _Item_IsSet ? ContainerItemBinaryOverlay.ContainerItemFactory(new BinaryMemoryReadStream(_data.Slice(_ItemLocation!.Value.Min)), _package) : default;
+        private IContainerItemGetter? _Item => _ItemLocation.HasValue ? ContainerItemBinaryOverlay.ContainerItemFactory(new BinaryMemoryReadStream(_data.Slice(_ItemLocation!.Value.Min)), _package) : default;
         public IContainerItemGetter Item => _Item ?? new ContainerItem();
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        private bool _Data_IsSet => _DataLocation.HasValue;
-        public IExtraDataGetter? Data => _Data_IsSet ? ExtraDataBinaryOverlay.ExtraDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IExtraDataGetter? Data => _DataLocation.HasValue ? ExtraDataBinaryOverlay.ExtraDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         partial void CustomCtor(

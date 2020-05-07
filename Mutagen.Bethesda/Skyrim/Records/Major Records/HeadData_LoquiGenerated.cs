@@ -3714,10 +3714,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public IReadOnlyList<IHeadPartReferenceGetter> HeadParts { get; private set; } = ListExt.Empty<HeadPartReferenceBinaryOverlay>();
-        #region AvailableMorphs
         public IAvailableMorphsGetter? AvailableMorphs { get; private set; }
-        public bool AvailableMorphs_IsSet => AvailableMorphs != null;
-        #endregion
         public IReadOnlyList<IFormLinkGetter<INpcGetter>>? RacePresets { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IColorRecordGetter>>? AvailableHairColors { get; private set; }
         public IReadOnlyList<IFormLinkGetter<ITextureSetGetter>>? FaceDetails { get; private set; }
@@ -3727,10 +3724,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IFormLinkNullableGetter<ITextureSetGetter> DefaultFaceTexture => _DefaultFaceTextureLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _DefaultFaceTextureLocation.Value, _package.Meta)))) : FormLinkNullable<ITextureSetGetter>.Empty;
         #endregion
         public IReadOnlyList<ITintAssetsGetter> TintMasks { get; private set; } = ListExt.Empty<TintAssetsBinaryOverlay>();
-        #region Model
         public IModelGetter? Model { get; private set; }
-        public bool Model_IsSet => Model != null;
-        #endregion
         #region MorphRace
         private int? _MorphRaceLocation;
         public bool MorphRace_IsSet => _MorphRaceLocation.HasValue;

@@ -2953,8 +2953,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Int32 Version => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x8, 0x4));
         #region Stats
         private RangeInt32? _StatsLocation;
-        private bool _Stats_IsSet => _StatsLocation.HasValue;
-        private IModStatsGetter? _Stats => _Stats_IsSet ? ModStatsBinaryOverlay.ModStatsFactory(new BinaryMemoryReadStream(_data.Slice(_StatsLocation!.Value.Min)), _package) : default;
+        private IModStatsGetter? _Stats => _StatsLocation.HasValue ? ModStatsBinaryOverlay.ModStatsFactory(new BinaryMemoryReadStream(_data.Slice(_StatsLocation!.Value.Min)), _package) : default;
         public IModStatsGetter Stats => _Stats ?? new ModStats();
         #endregion
         #region TypeOffsets

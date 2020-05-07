@@ -8290,15 +8290,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region BodyTemplate
         private RangeInt32? _BodyTemplateLocation;
-        private bool _BodyTemplate_IsSet => _BodyTemplateLocation.HasValue;
-        public IBodyTemplateGetter? BodyTemplate => _BodyTemplate_IsSet ? BodyTemplateBinaryOverlay.BodyTemplateFactory(new BinaryMemoryReadStream(_data.Slice(_BodyTemplateLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IBodyTemplateGetter? BodyTemplate => _BodyTemplateLocation.HasValue ? BodyTemplateBinaryOverlay.BodyTemplateFactory(new BinaryMemoryReadStream(_data.Slice(_BodyTemplateLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool BodyTemplate_IsSet => _BodyTemplateLocation.HasValue;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         #region Data
         private RangeInt32? _DataLocation;
-        private bool _Data_IsSet => _DataLocation.HasValue;
-        public IRaceDataGetter? Data => _Data_IsSet ? RaceDataBinaryOverlay.RaceDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IRaceDataGetter? Data => _DataLocation.HasValue ? RaceDataBinaryOverlay.RaceDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region SkeletalModel
@@ -8414,8 +8412,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IRaceMovementTypeGetter> MovementTypes { get; private set; } = ListExt.Empty<RaceMovementTypeBinaryOverlay>();
         #region EquipmentFlags
         private int? _EquipmentFlagsLocation;
-        private bool EquipmentFlags_IsSet => _EquipmentFlagsLocation.HasValue;
-        public EquipTypeFlag? EquipmentFlags => EquipmentFlags_IsSet ? (EquipTypeFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EquipmentFlagsLocation!.Value, _package.Meta)) : default(EquipTypeFlag?);
+        public EquipTypeFlag? EquipmentFlags => _EquipmentFlagsLocation.HasValue ? (EquipTypeFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EquipmentFlagsLocation!.Value, _package.Meta)) : default(EquipTypeFlag?);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IEquipTypeGetter>>? EquipmentSlots { get; private set; }
         #region UnarmedEquipSlot

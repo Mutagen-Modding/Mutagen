@@ -2158,10 +2158,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        #region Model
         public IModelGetter? Model { get; private set; }
-        public bool Model_IsSet => Model != null;
-        #endregion
         #region IdleAnimation
         private int? _IdleAnimationLocation;
         public bool IdleAnimation_IsSet => _IdleAnimationLocation.HasValue;

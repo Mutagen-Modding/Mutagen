@@ -2526,24 +2526,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
-        private bool _ObjectBounds_IsSet => _ObjectBoundsLocation.HasValue;
-        private IObjectBoundsGetter? _ObjectBounds => _ObjectBounds_IsSet ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation!.Value.Min)), _package) : default;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation!.Value.Min)), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
-        #region Model
         public IModelGetter? Model { get; private set; }
-        public bool Model_IsSet => Model != null;
-        #endregion
         #region DirectionMaterial
         private RangeInt32? _DirectionMaterialLocation;
-        private bool _DirectionMaterial_IsSet => _DirectionMaterialLocation.HasValue;
-        public IDirectionMaterialGetter? DirectionMaterial => _DirectionMaterial_IsSet ? DirectionMaterialBinaryOverlay.DirectionMaterialFactory(new BinaryMemoryReadStream(_data.Slice(_DirectionMaterialLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IDirectionMaterialGetter? DirectionMaterial => _DirectionMaterialLocation.HasValue ? DirectionMaterialBinaryOverlay.DirectionMaterialFactory(new BinaryMemoryReadStream(_data.Slice(_DirectionMaterialLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool DirectionMaterial_IsSet => _DirectionMaterialLocation.HasValue;
         #endregion
         #region Lod
         private RangeInt32? _LodLocation;
-        private bool _Lod_IsSet => _LodLocation.HasValue;
-        public ILodGetter? Lod => _Lod_IsSet ? LodBinaryOverlay.LodFactory(new BinaryMemoryReadStream(_data.Slice(_LodLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ILodGetter? Lod => _LodLocation.HasValue ? LodBinaryOverlay.LodFactory(new BinaryMemoryReadStream(_data.Slice(_LodLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Lod_IsSet => _LodLocation.HasValue;
         #endregion
         partial void CustomCtor(

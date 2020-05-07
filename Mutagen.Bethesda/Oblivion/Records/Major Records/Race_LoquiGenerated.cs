@@ -4821,8 +4821,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlyList<IRaceRelationGetter> Relations { get; private set; } = ListExt.Empty<RaceRelationBinaryOverlay>();
         #region Data
         private RangeInt32? _DataLocation;
-        private bool _Data_IsSet => _DataLocation.HasValue;
-        public IRaceDataGetter? Data => _Data_IsSet ? RaceDataBinaryOverlay.RaceDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IRaceDataGetter? Data => _DataLocation.HasValue ? RaceDataBinaryOverlay.RaceDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region Voices
@@ -4886,10 +4885,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         public IReadOnlyList<IFormLinkGetter<IHairGetter>>? Hairs { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IEyeGetter>>? Eyes { get; private set; }
-        #region FaceGenData
         public IFaceGenDataGetter? FaceGenData { get; private set; }
-        public bool FaceGenData_IsSet => FaceGenData != null;
-        #endregion
         #region Unknown
         private int? _UnknownLocation;
         public Int16? Unknown => _UnknownLocation.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownLocation.Value, _package.Meta)) : default(Int16?);

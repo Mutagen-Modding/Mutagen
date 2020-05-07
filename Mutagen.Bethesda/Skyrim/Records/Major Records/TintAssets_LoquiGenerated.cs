@@ -2450,8 +2450,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region MaskType
         private int? _MaskTypeLocation;
-        private bool MaskType_IsSet => _MaskTypeLocation.HasValue;
-        public TintAssets.TintMaskType? MaskType => MaskType_IsSet ? (TintAssets.TintMaskType)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MaskTypeLocation!.Value, _package.Meta)) : default(TintAssets.TintMaskType?);
+        public TintAssets.TintMaskType? MaskType => _MaskTypeLocation.HasValue ? (TintAssets.TintMaskType)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MaskTypeLocation!.Value, _package.Meta)) : default(TintAssets.TintMaskType?);
         #endregion
         #region PresetDefault
         private int? _PresetDefaultLocation;
