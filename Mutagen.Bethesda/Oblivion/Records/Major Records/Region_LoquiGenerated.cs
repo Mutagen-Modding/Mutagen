@@ -3132,7 +3132,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             using (HeaderExport.ExportHeader(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Region_Registration.REGN_HEADER),
-                type: ObjectType.Record))
+                type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,

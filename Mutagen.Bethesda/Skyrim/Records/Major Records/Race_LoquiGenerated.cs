@@ -8108,7 +8108,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.ExportHeader(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Race_Registration.RACE_HEADER),
-                type: ObjectType.Record))
+                type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
                     item: item,

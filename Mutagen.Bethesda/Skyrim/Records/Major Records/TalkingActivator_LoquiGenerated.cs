@@ -3257,7 +3257,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.ExportHeader(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(TalkingActivator_Registration.TACT_HEADER),
-                type: ObjectType.Record))
+                type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,

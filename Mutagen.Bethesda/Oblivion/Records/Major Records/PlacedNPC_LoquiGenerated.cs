@@ -3023,7 +3023,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 header: recordTypeConverter.ConvertToCustom(PlacedNpc_Registration.XSCL_HEADER));
             if (item.Location.TryGet(out var LocationItem))
             {
-                using (HeaderExport.ExportHeader(writer, PlacedNpc_Registration.DATA_HEADER, ObjectType.Subrecord))
+                using (HeaderExport.ExportHeader(writer, PlacedNpc_Registration.DATA_HEADER, Mutagen.Bethesda.Binary.ObjectType.Subrecord))
                 {
                     ((LocationBinaryWriteTranslation)((IBinaryItem)LocationItem).BinaryWriteTranslator).Write(
                         item: LocationItem,
@@ -3041,7 +3041,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             using (HeaderExport.ExportHeader(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(PlacedNpc_Registration.ACHR_HEADER),
-                type: ObjectType.Record))
+                type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,

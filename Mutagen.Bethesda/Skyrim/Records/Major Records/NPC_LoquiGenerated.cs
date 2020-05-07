@@ -8600,7 +8600,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 binaryType: StringBinaryType.NullTerminate);
             if (item.PlayerSkills.TryGet(out var PlayerSkillsItem))
             {
-                using (HeaderExport.ExportHeader(writer, Npc_Registration.DATA_HEADER, ObjectType.Subrecord)) { }
+                using (HeaderExport.ExportHeader(writer, Npc_Registration.DATA_HEADER, Mutagen.Bethesda.Binary.ObjectType.Subrecord)) { }
                 ((PlayerSkillsBinaryWriteTranslation)((IBinaryItem)PlayerSkillsItem).BinaryWriteTranslator).Write(
                     item: PlayerSkillsItem,
                     writer: writer,
@@ -8714,7 +8714,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.ExportHeader(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Npc_Registration.NPC__HEADER),
-                type: ObjectType.Record))
+                type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,

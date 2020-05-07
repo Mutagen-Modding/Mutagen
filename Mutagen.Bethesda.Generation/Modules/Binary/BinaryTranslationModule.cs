@@ -1149,7 +1149,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add("writer: writer");
                     args.Add($"record: recordTypeConverter.ConvertToCustom({obj.RecordTypeHeaderName(obj.GetRecordType())})");
-                    args.Add($"type: {nameof(ObjectType)}.{obj.GetObjectType()}");
+                    args.Add($"type: Mutagen.Bethesda.Binary.{nameof(ObjectType)}.{obj.GetObjectType()}");
                 }
             }
             using (new BraceWrapper(fg, doIt: hasRecType))

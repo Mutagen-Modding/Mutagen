@@ -1758,7 +1758,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.ExportHeader(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(HavokData_Registration.HNAM_HEADER),
-                type: ObjectType.Subrecord))
+                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,

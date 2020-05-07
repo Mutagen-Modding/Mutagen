@@ -2201,7 +2201,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             using (HeaderExport.ExportHeader(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(CreatureAIData_Registration.AIDT_HEADER),
-                type: ObjectType.Subrecord))
+                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,

@@ -4708,7 +4708,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 });
             if (item.WeightValue.TryGet(out var WeightValueItem))
             {
-                using (HeaderExport.ExportHeader(writer, Armor_Registration.DATA_HEADER, ObjectType.Subrecord))
+                using (HeaderExport.ExportHeader(writer, Armor_Registration.DATA_HEADER, Mutagen.Bethesda.Binary.ObjectType.Subrecord))
                 {
                     ((WeightValueBinaryWriteTranslation)((IBinaryItem)WeightValueItem).BinaryWriteTranslator).Write(
                         item: WeightValueItem,
@@ -4734,7 +4734,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.ExportHeader(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Armor_Registration.ARMO_HEADER),
-                type: ObjectType.Record))
+                type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,

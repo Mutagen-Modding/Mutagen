@@ -97,13 +97,13 @@ namespace Mutagen.Bethesda.Generation
                     if (loquiGen.TryGetFieldData(out var data)
                         && data.MarkerType.HasValue)
                     {
-                        fg.AppendLine($"using (HeaderExport.ExportHeader(writer, {objGen.RegistrationName}.{data.MarkerType.Value.Type}_HEADER, ObjectType.Subrecord)) {{ }}");
+                        fg.AppendLine($"using (HeaderExport.ExportHeader(writer, {objGen.RegistrationName}.{data.MarkerType.Value.Type}_HEADER, Mutagen.Bethesda.Binary.ObjectType.Subrecord)) {{ }}");
                     }
                     var needsHeaderWrite = false;
                     if (NeedsHeaderProcessing(loquiGen))
                     {
                         needsHeaderWrite = true;
-                        fg.AppendLine($"using (HeaderExport.ExportHeader(writer, {loquiGen.GetFieldData().TriggeringRecordSetAccessor}, ObjectType.Subrecord))");
+                        fg.AppendLine($"using (HeaderExport.ExportHeader(writer, {loquiGen.GetFieldData().TriggeringRecordSetAccessor}, Mutagen.Bethesda.Binary.ObjectType.Subrecord))");
                     }
                     using (new BraceWrapper(fg, doIt: needsHeaderWrite))
                     {

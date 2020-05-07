@@ -2740,7 +2740,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.ExportHeader(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(GrassData_Registration.DATA_HEADER),
-                type: ObjectType.Subrecord))
+                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,

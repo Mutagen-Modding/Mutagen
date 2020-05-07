@@ -29,7 +29,7 @@
   <Object name="IngredientData" objType="Subrecord" recordType="ENIT" GUID="c4118d6d-037a-40c2-959f-692f05695b79" ID="180">
     <Fields>
       <Int32 name="Value" />
-      <Enum name="Flags" enumName="IngredientEffectData.Flag" byteLength="4" />
+      <Enum name="Flags" enumName="IngredientData.Flag" byteLength="4" />
     </Fields>
   </Object>
 </Loqui>

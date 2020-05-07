@@ -2725,7 +2725,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             using (HeaderExport.ExportHeader(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(DialogTopic_Registration.DIAL_HEADER),
-                type: ObjectType.Record))
+                type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 WriteEmbedded(
                     item: item,

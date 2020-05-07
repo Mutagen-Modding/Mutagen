@@ -2331,7 +2331,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             using (HeaderExport.ExportHeader(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(WorldspaceBlock_Registration.GRUP_HEADER),
-                type: ObjectType.Group))
+                type: Mutagen.Bethesda.Binary.ObjectType.Group))
             {
                 WriteEmbedded(
                     item: item,

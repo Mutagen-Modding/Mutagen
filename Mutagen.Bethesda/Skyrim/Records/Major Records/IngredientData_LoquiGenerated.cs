@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 Value { get; set; } = default;
         #endregion
         #region Flags
-        public IngredientEffectData.Flag Flags { get; set; } = default;
+        public IngredientData.Flag Flags { get; set; } = default;
         #endregion
 
         #region To String
@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IIngredientData>
     {
         new Int32 Value { get; set; }
-        new IngredientEffectData.Flag Flags { get; set; }
+        new IngredientData.Flag Flags { get; set; }
     }
 
     public partial interface IIngredientDataGetter :
@@ -591,7 +591,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => IngredientData_Registration.Instance;
         Int32 Value { get; }
-        IngredientEffectData.Flag Flags { get; }
+        IngredientData.Flag Flags { get; }
 
     }
 
@@ -1056,7 +1056,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case IngredientData_FieldIndex.Value:
                     return typeof(Int32);
                 case IngredientData_FieldIndex.Flags:
-                    return typeof(IngredientEffectData.Flag);
+                    return typeof(IngredientData.Flag);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1147,7 +1147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.Value = frame.ReadInt32();
-            item.Flags = EnumBinaryTranslation<IngredientEffectData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<IngredientData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
         }
         
         public virtual void CopyInFromBinary(
@@ -1422,7 +1422,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)IngredientData_FieldIndex.Flags) ?? true))
             {
-                EnumXmlTranslation<IngredientEffectData.Flag>.Instance.Write(
+                EnumXmlTranslation<IngredientData.Flag>.Instance.Write(
                     node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
@@ -1557,7 +1557,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)IngredientData_FieldIndex.Flags);
                     try
                     {
-                        item.Flags = EnumXmlTranslation<IngredientEffectData.Flag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<IngredientData.Flag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1747,7 +1747,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer)
         {
             writer.Write(item.Value);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<IngredientEffectData.Flag>.Instance.Write(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<IngredientData.Flag>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
@@ -1761,7 +1761,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.ExportHeader(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(IngredientData_Registration.ENIT_HEADER),
-                type: ObjectType.Subrecord))
+                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1868,7 +1868,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public Int32 Value => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public IngredientEffectData.Flag Flags => (IngredientEffectData.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
+        public IngredientData.Flag Flags => (IngredientData.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

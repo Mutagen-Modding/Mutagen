@@ -1785,7 +1785,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             using (HeaderExport.ExportHeader(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(ItemEntry_Registration.CNTO_HEADER),
-                type: ObjectType.Subrecord))
+                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,

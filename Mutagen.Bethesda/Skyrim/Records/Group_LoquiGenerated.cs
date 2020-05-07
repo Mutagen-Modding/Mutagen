@@ -1937,7 +1937,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.ExportHeader(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(Group_Registration.GRUP_HEADER),
-                type: ObjectType.Group))
+                type: Mutagen.Bethesda.Binary.ObjectType.Group))
             {
                 WriteEmbedded(
                     item: item,

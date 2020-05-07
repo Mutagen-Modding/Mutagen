@@ -140,7 +140,7 @@
     <Compile Include="Skyrim\Records\Major Records\Ingredient.cs">
       <DependentUpon>Ingredient.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\IngredientEffectData.cs">
+    <Compile Include="Skyrim\Records\Major Records\IngredientData.cs">
       <DependentUpon>Ingredient.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\LeveledNpc.cs">
@@ -1609,9 +1609,6 @@
     <Compile Include="Skyrim\Records\Common Subrecords\BodyTemplate_LoquiGenerated.cs">
       <DependentUpon>BodyTemplate.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\ArmorData_LoquiGenerated.cs">
-      <DependentUpon>Armor.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Major Records\ArmorAddon_LoquiGenerated.cs">
       <DependentUpon>ArmorAddon.xml</DependentUpon>
     </Compile>
@@ -1667,9 +1664,6 @@
       <DependentUpon>Door.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\IngredientData_LoquiGenerated.cs">
-      <DependentUpon>Ingredient.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Major Records\IngredientEffectData_LoquiGenerated.cs">
       <DependentUpon>Ingredient.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\LightData_LoquiGenerated.cs">
