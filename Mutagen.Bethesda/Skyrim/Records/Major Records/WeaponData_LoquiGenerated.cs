@@ -126,8 +126,15 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte> IWeaponDataGetter.Unknown3 => this.Unknown3;
         #endregion
         #region Skill
-        public readonly static Skill _Skill_Default = Skill.None;
-        public Skill Skill { get; set; } = default;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Skill? _Skill;
+        public Skill? Skill
+        {
+            get => this._Skill;
+            set => this._Skill = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Skill? IWeaponDataGetter.Skill => this.Skill;
         #endregion
         #region Unknown4
         public Int64 Unknown4 { get; set; } = default;
@@ -1357,7 +1364,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single RumbleRightMotorStrength { get; set; }
         new Single RumbleDuration { get; set; }
         new Byte[] Unknown3 { get; set; }
-        new Skill Skill { get; set; }
+        new Skill? Skill { get; set; }
         new Int64 Unknown4 { get; set; }
         new ActorValueExtended Resist { get; set; }
         new Int32 Unknown5 { get; set; }
@@ -1398,7 +1405,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single RumbleRightMotorStrength { get; }
         Single RumbleDuration { get; }
         ReadOnlyMemorySlice<Byte> Unknown3 { get; }
-        Skill Skill { get; }
+        Skill? Skill { get; }
         Int64 Unknown4 { get; }
         ActorValueExtended Resist { get; }
         Int32 Unknown5 { get; }
@@ -2229,7 +2236,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.RumbleRightMotorStrength = default;
             item.RumbleDuration = default;
             item.Unknown3 = new byte[12];
-            item.Skill = WeaponData._Skill_Default;
+            item.Skill = default;
             item.Unknown4 = default;
             item.Resist = WeaponData._Resist_Default;
             item.Unknown5 = default;
@@ -2295,6 +2302,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.RumbleRightMotorStrength = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.RumbleDuration = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.Unknown3 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(12));
+            if (frame.Complete) return;
             item.Skill = EnumBinaryTranslation<Skill>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.Unknown4 = frame.ReadInt64();
             item.Resist = EnumBinaryTranslation<ActorValueExtended>.Instance.Parse(frame: frame.SpawnWithLength(4));
@@ -2501,9 +2509,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendLine($"Unknown3 => {SpanExt.ToHexString(item.Unknown3)}");
             }
-            if (printMask?.Skill ?? true)
+            if ((printMask?.Skill ?? true)
+                && item.Skill.TryGet(out var SkillItem))
             {
-                fg.AppendItem(item.Skill, "Skill");
+                fg.AppendItem(SkillItem, "Skill");
             }
             if (printMask?.Unknown4 ?? true)
             {
@@ -2527,6 +2536,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeaponDataGetter item,
             WeaponData.Mask<bool?> checkMask)
         {
+            if (checkMask.Skill.HasValue && checkMask.Skill.Value != (item.Skill != null)) return false;
             return true;
         }
         
@@ -2555,7 +2565,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.RumbleRightMotorStrength = true;
             mask.RumbleDuration = true;
             mask.Unknown3 = true;
-            mask.Skill = true;
+            mask.Skill = (item.Skill != null);
             mask.Unknown4 = true;
             mask.Resist = true;
             mask.Unknown5 = true;
@@ -2622,7 +2632,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.RumbleRightMotorStrength);
             hash.Add(item.RumbleDuration);
             hash.Add(item.Unknown3);
-            hash.Add(item.Skill);
+            if (item.Skill.TryGet(out var Skillitem))
+            {
+                hash.Add(Skillitem);
+            }
             hash.Add(item.Unknown4);
             hash.Add(item.Resist);
             hash.Add(item.Unknown5);
@@ -3040,7 +3053,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)WeaponData_FieldIndex.Unknown3,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)WeaponData_FieldIndex.Skill) ?? true))
+            if ((item.Skill != null)
+                && (translationMask?.GetShouldTranslate((int)WeaponData_FieldIndex.Skill) ?? true))
             {
                 EnumXmlTranslation<Skill>.Instance.Write(
                     node: node,
@@ -3921,7 +3935,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.Unknown3);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
                 writer,
-                item.Skill,
+                ((int?)item.Skill) ?? -1,
                 length: 4);
             writer.Write(item.Unknown4);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValueExtended>.Instance.Write(
@@ -4100,7 +4114,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single RumbleRightMotorStrength => SpanExt.GetFloat(_data.Slice(0x38, 0x4));
         public Single RumbleDuration => SpanExt.GetFloat(_data.Slice(0x3C, 0x4));
         public ReadOnlyMemorySlice<Byte> Unknown3 => _data.Span.Slice(0x40, 0xC).ToArray();
-        public Skill Skill => (Skill)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4C, 0x4));
+        #region Skill
+        public Skill? Skill
+        {
+            get
+            {
+                var val = (Skill)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4C, 0x4));
+                if (((int)val) == -1) return null;
+                return val;
+            }
+        }
+        #endregion
         public Int64 Unknown4 => BinaryPrimitives.ReadInt64LittleEndian(_data.Slice(0x50, 0x8));
         public ActorValueExtended Resist => (ActorValueExtended)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x58, 0x4));
         public Int32 Unknown5 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x5C, 0x4));

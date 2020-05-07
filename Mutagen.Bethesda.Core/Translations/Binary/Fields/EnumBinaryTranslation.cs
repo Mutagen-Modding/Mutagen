@@ -1,5 +1,6 @@
 ﻿using Loqui.Internal;
 using Noggog;
+using ReactiveUI;
 using System;
 
 namespace Mutagen.Bethesda.Binary
@@ -72,6 +73,24 @@ namespace Mutagen.Bethesda.Binary
         public void Write(MutagenWriter writer, E item, long length)
         {
             WriteValue(writer, item, length);
+        }
+
+        public void Write(MutagenWriter writer, int item, long length)
+        {
+            switch (length)
+            {
+                case 1:
+                    writer.Write((byte)item);
+                    break;
+                case 2:
+                    writer.Write((ushort)item);
+                    break;
+                case 4:
+                    writer.Write(item);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         public void Write(

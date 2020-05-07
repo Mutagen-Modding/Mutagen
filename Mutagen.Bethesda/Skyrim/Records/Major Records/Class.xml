@@ -12,7 +12,7 @@
   <Object name="ClassData" objType="Subrecord" recordType="DATA" GUID="34be387d-c309-4620-be5f-49b0e7037fc4" ID="133">
     <Fields>
       <Int32 name="Unknown" />
-      <Enum name="Teaches" byteLength="1" enumName="Skill" default="Skill.None" />
+      <Enum name="Teaches" byteLength="1" enumName="Skill" hasBeenSet="True" hasBeenSetBinaryFallback="-1" />
       <UInt8 name="MaxTrainingLevel" />
       <UInt8 name="OneHandedWeight" />
       <UInt8 name="TwoHandedWeight" />

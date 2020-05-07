@@ -38,11 +38,19 @@ namespace Mutagen.Bethesda.Generation
         {
             var eType = typeGen as EnumType;
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
+            var hasBeenSet = typeGen.HasBeenSet && eType.HasBeenSetFallbackInt == null;
             using (var args = new ArgsWrapper(fg,
-                $"{Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Write{(typeGen.HasBeenSet ? "Nullable" : null)}"))
+                $"{Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Write{(hasBeenSet ? "Nullable" : null)}"))
             {
                 args.Add(writerAccessor.DirectAccess);
-                args.Add($"{itemAccessor.DirectAccess}");
+                if (eType.HasBeenSetFallbackInt == null)
+                {
+                    args.Add($"{itemAccessor.DirectAccess}");
+                }
+                else
+                {
+                    args.Add($"((int?){itemAccessor.DirectAccess}) ?? {eType.HasBeenSetFallbackInt}");
+                }
                 args.Add($"length: {eType.ByteLength}");
                 if (this.DoErrorMasks)
                 {
@@ -129,6 +137,7 @@ namespace Mutagen.Bethesda.Generation
         {
             var eType = typeGen as EnumType;
             var data = typeGen.GetFieldData();
+            var hasBeenSet = typeGen.HasBeenSet && eType.HasBeenSetFallbackInt == null;
             switch (data.BinaryOverlayFallback)
             {
                 case BinaryGenerationType.Normal:
@@ -148,7 +157,7 @@ namespace Mutagen.Bethesda.Generation
                     throw new NotImplementedException();
             }
 
-            if (typeGen.HasBeenSet)
+            if (hasBeenSet)
             {
                 fg.AppendLine($"private int? _{typeGen.Name}Location;");
                 fg.AppendLine($"{(typeGen.CanBeNullable(getter: true) ? "private" : "public")} bool {typeGen.Name}_IsSet => _{typeGen.Name}Location.HasValue;");
@@ -164,7 +173,7 @@ namespace Mutagen.Bethesda.Generation
             }
             var getType = GenerateForTypicalWrapper(objGen, typeGen, slice, "_package");
 
-            if (typeGen.HasBeenSet)
+            if (hasBeenSet)
             {
                 if (typeGen.CanBeNullable(getter: true))
                 {
@@ -174,6 +183,20 @@ namespace Mutagen.Bethesda.Generation
                 {
                     fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => {getType};");
                     fg.AppendLine($"public bool {eType.Name}_IsSet => _{typeGen.Name}_IsSet;");
+                }
+            }
+            else if (eType.HasBeenSetFallbackInt != null)
+            {
+                fg.AppendLine($"public {eType.TypeName(getter: true)}? {eType.Name}");
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine("get");
+                    using (new BraceWrapper(fg))
+                    {
+                        fg.AppendLine($"var val = {getType};");
+                        fg.AppendLine($"if (((int)val) == {eType.HasBeenSetFallbackInt}) return null;");
+                        fg.AppendLine("return val;");
+                    }
                 }
             }
             else

@@ -88,7 +88,15 @@ namespace Mutagen.Bethesda.Skyrim
                         FormLinkBinaryTranslation.Instance.Write(writer, spell.Spell);
                         break;
                     case BookSkill skill:
-                        writer.Write((int)skill.Skill);
+                        var skillVal = skill.Skill;
+                        if (skillVal == null)
+                        {
+                            writer.Write(-1);
+                        }
+                        else
+                        {
+                            writer.Write((int)skillVal);
+                        }
                         break;
                     case BookTeachesNothing nothing:
                         writer.Write(nothing.RawContent);

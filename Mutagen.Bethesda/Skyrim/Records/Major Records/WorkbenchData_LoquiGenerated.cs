@@ -49,8 +49,15 @@ namespace Mutagen.Bethesda.Skyrim
         public WorkbenchData.Type BenchType { get; set; } = default;
         #endregion
         #region UsesSkill
-        public readonly static Skill _UsesSkill_Default = Skill.None;
-        public Skill UsesSkill { get; set; } = default;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Skill? _UsesSkill;
+        public Skill? UsesSkill
+        {
+            get => this._UsesSkill;
+            set => this._UsesSkill = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Skill? IWorkbenchDataGetter.UsesSkill => this.UsesSkill;
         #endregion
 
         #region To String
@@ -575,7 +582,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWorkbenchData>
     {
         new WorkbenchData.Type BenchType { get; set; }
-        new Skill UsesSkill { get; set; }
+        new Skill? UsesSkill { get; set; }
     }
 
     public partial interface IWorkbenchDataGetter :
@@ -592,7 +599,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => WorkbenchData_Registration.Instance;
         WorkbenchData.Type BenchType { get; }
-        Skill UsesSkill { get; }
+        Skill? UsesSkill { get; }
 
     }
 
@@ -1111,7 +1118,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.BenchType = default;
-            item.UsesSkill = WorkbenchData._UsesSkill_Default;
+            item.UsesSkill = default;
         }
         
         #region Xml Translation
@@ -1148,6 +1155,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.BenchType = EnumBinaryTranslation<WorkbenchData.Type>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            if (frame.Complete) return;
             item.UsesSkill = EnumBinaryTranslation<Skill>.Instance.Parse(frame: frame.SpawnWithLength(1));
         }
         
@@ -1246,9 +1254,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.BenchType, "BenchType");
             }
-            if (printMask?.UsesSkill ?? true)
+            if ((printMask?.UsesSkill ?? true)
+                && item.UsesSkill.TryGet(out var UsesSkillItem))
             {
-                fg.AppendItem(item.UsesSkill, "UsesSkill");
+                fg.AppendItem(UsesSkillItem, "UsesSkill");
             }
         }
         
@@ -1256,6 +1265,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorkbenchDataGetter item,
             WorkbenchData.Mask<bool?> checkMask)
         {
+            if (checkMask.UsesSkill.HasValue && checkMask.UsesSkill.Value != (item.UsesSkill != null)) return false;
             return true;
         }
         
@@ -1264,7 +1274,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WorkbenchData.Mask<bool> mask)
         {
             mask.BenchType = true;
-            mask.UsesSkill = true;
+            mask.UsesSkill = (item.UsesSkill != null);
         }
         
         #region Equals and Hash
@@ -1283,7 +1293,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.BenchType);
-            hash.Add(item.UsesSkill);
+            if (item.UsesSkill.TryGet(out var UsesSkillitem))
+            {
+                hash.Add(UsesSkillitem);
+            }
             return hash.ToHashCode();
         }
         
@@ -1421,7 +1434,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)WorkbenchData_FieldIndex.BenchType,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)WorkbenchData_FieldIndex.UsesSkill) ?? true))
+            if ((item.UsesSkill != null)
+                && (translationMask?.GetShouldTranslate((int)WorkbenchData_FieldIndex.UsesSkill) ?? true))
             {
                 EnumXmlTranslation<Skill>.Instance.Write(
                     node: node,
@@ -1753,7 +1767,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 length: 1);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
                 writer,
-                item.UsesSkill,
+                ((int?)item.UsesSkill) ?? -1,
                 length: 1);
         }
 
@@ -1872,7 +1886,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public WorkbenchData.Type BenchType => (WorkbenchData.Type)_data.Span.Slice(0x0, 0x1)[0];
-        public Skill UsesSkill => (Skill)_data.Span.Slice(0x1, 0x1)[0];
+        #region UsesSkill
+        public Skill? UsesSkill
+        {
+            get
+            {
+                var val = (Skill)_data.Span.Slice(0x1, 0x1)[0];
+                if (((int)val) == -1) return null;
+                return val;
+            }
+        }
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

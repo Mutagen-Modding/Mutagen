@@ -49,8 +49,15 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 Unknown { get; set; } = default;
         #endregion
         #region Teaches
-        public readonly static Skill _Teaches_Default = Skill.None;
-        public Skill Teaches { get; set; } = default;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Skill? _Teaches;
+        public Skill? Teaches
+        {
+            get => this._Teaches;
+            set => this._Teaches = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Skill? IClassDataGetter.Teaches => this.Teaches;
         #endregion
         #region MaxTrainingLevel
         public Byte MaxTrainingLevel { get; set; } = default;
@@ -1350,7 +1357,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IClassData>
     {
         new Int32 Unknown { get; set; }
-        new Skill Teaches { get; set; }
+        new Skill? Teaches { get; set; }
         new Byte MaxTrainingLevel { get; set; }
         new Byte OneHandedWeight { get; set; }
         new Byte TwoHandedWeight { get; set; }
@@ -1392,7 +1399,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ClassData_Registration.Instance;
         Int32 Unknown { get; }
-        Skill Teaches { get; }
+        Skill? Teaches { get; }
         Byte MaxTrainingLevel { get; }
         Byte OneHandedWeight { get; }
         Byte TwoHandedWeight { get; }
@@ -2236,7 +2243,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Unknown = default;
-            item.Teaches = ClassData._Teaches_Default;
+            item.Teaches = default;
             item.MaxTrainingLevel = default;
             item.OneHandedWeight = default;
             item.TwoHandedWeight = default;
@@ -2298,6 +2305,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.Unknown = frame.ReadInt32();
+            if (frame.Complete) return;
             item.Teaches = EnumBinaryTranslation<Skill>.Instance.Parse(frame: frame.SpawnWithLength(1));
             item.MaxTrainingLevel = frame.ReadUInt8();
             item.OneHandedWeight = frame.ReadUInt8();
@@ -2446,9 +2454,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Unknown, "Unknown");
             }
-            if (printMask?.Teaches ?? true)
+            if ((printMask?.Teaches ?? true)
+                && item.Teaches.TryGet(out var TeachesItem))
             {
-                fg.AppendItem(item.Teaches, "Teaches");
+                fg.AppendItem(TeachesItem, "Teaches");
             }
             if (printMask?.MaxTrainingLevel ?? true)
             {
@@ -2556,6 +2565,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IClassDataGetter item,
             ClassData.Mask<bool?> checkMask)
         {
+            if (checkMask.Teaches.HasValue && checkMask.Teaches.Value != (item.Teaches != null)) return false;
             return true;
         }
         
@@ -2564,7 +2574,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClassData.Mask<bool> mask)
         {
             mask.Unknown = true;
-            mask.Teaches = true;
+            mask.Teaches = (item.Teaches != null);
             mask.MaxTrainingLevel = true;
             mask.OneHandedWeight = true;
             mask.TwoHandedWeight = true;
@@ -2633,7 +2643,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Unknown);
-            hash.Add(item.Teaches);
+            if (item.Teaches.TryGet(out var Teachesitem))
+            {
+                hash.Add(Teachesitem);
+            }
             hash.Add(item.MaxTrainingLevel);
             hash.Add(item.OneHandedWeight);
             hash.Add(item.TwoHandedWeight);
@@ -2896,7 +2909,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)ClassData_FieldIndex.Unknown,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.Teaches) ?? true))
+            if ((item.Teaches != null)
+                && (translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.Teaches) ?? true))
             {
                 EnumXmlTranslation<Skill>.Instance.Write(
                     node: node,
@@ -3900,7 +3914,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             writer.Write(item.Unknown);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
                 writer,
-                item.Teaches,
+                ((int?)item.Teaches) ?? -1,
                 length: 1);
             writer.Write(item.MaxTrainingLevel);
             writer.Write(item.OneHandedWeight);
@@ -4046,7 +4060,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public Skill Teaches => (Skill)_data.Span.Slice(0x4, 0x1)[0];
+        #region Teaches
+        public Skill? Teaches
+        {
+            get
+            {
+                var val = (Skill)_data.Span.Slice(0x4, 0x1)[0];
+                if (((int)val) == -1) return null;
+                return val;
+            }
+        }
+        #endregion
         public Byte MaxTrainingLevel => _data.Span[0x5];
         public Byte OneHandedWeight => _data.Span[0x6];
         public Byte TwoHandedWeight => _data.Span[0x7];

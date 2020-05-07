@@ -48,8 +48,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Skill
-        public readonly static Skill _Skill_Default = Skill.None;
-        public Skill Skill { get; set; } = default;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Skill? _Skill;
+        public Skill? Skill
+        {
+            get => this._Skill;
+            set => this._Skill = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Skill? IBookSkillGetter.Skill => this.Skill;
         #endregion
 
         #region To String
@@ -523,7 +530,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBookTeachTarget,
         ILoquiObjectSetter<IBookSkill>
     {
-        new Skill Skill { get; set; }
+        new Skill? Skill { get; set; }
     }
 
     public partial interface IBookSkillGetter :
@@ -533,7 +540,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => BookSkill_Registration.Instance;
-        Skill Skill { get; }
+        Skill? Skill { get; }
 
     }
 
@@ -1014,7 +1021,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IBookSkill item)
         {
             ClearPartial();
-            item.Skill = BookSkill._Skill_Default;
+            item.Skill = default;
             base.Clear(item);
         }
         
@@ -1069,6 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBookSkill item,
             MutagenFrame frame)
         {
+            if (frame.Complete) return;
             item.Skill = EnumBinaryTranslation<Skill>.Instance.Parse(frame: frame.SpawnWithLength(4));
         }
         
@@ -1175,9 +1183,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Skill ?? true)
+            if ((printMask?.Skill ?? true)
+                && item.Skill.TryGet(out var SkillItem))
             {
-                fg.AppendItem(item.Skill, "Skill");
+                fg.AppendItem(SkillItem, "Skill");
             }
         }
         
@@ -1185,6 +1194,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBookSkillGetter item,
             BookSkill.Mask<bool?> checkMask)
         {
+            if (checkMask.Skill.HasValue && checkMask.Skill.Value != (item.Skill != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1194,7 +1204,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBookSkillGetter item,
             BookSkill.Mask<bool> mask)
         {
-            mask.Skill = true;
+            mask.Skill = (item.Skill != null);
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1233,7 +1243,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IBookSkillGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Skill);
+            if (item.Skill.TryGet(out var Skillitem))
+            {
+                hash.Add(Skillitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1388,7 +1401,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)BookSkill_FieldIndex.Skill) ?? true))
+            if ((item.Skill != null)
+                && (translationMask?.GetShouldTranslate((int)BookSkill_FieldIndex.Skill) ?? true))
             {
                 EnumXmlTranslation<Skill>.Instance.Write(
                     node: node,
@@ -1599,7 +1613,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
                 writer,
-                item.Skill,
+                ((int?)item.Skill) ?? -1,
                 length: 4);
         }
 
@@ -1702,7 +1716,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Skill Skill => (Skill)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
+        #region Skill
+        public Skill? Skill
+        {
+            get
+            {
+                var val = (Skill)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
+                if (((int)val) == -1) return null;
+                return val;
+            }
+        }
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

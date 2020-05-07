@@ -24,6 +24,5 @@ namespace Mutagen.Bethesda.Skyrim
         Illusion = 21,
         Restoration = 22,
         Enchanting = 23,
-        None = -1
     }
 }

@@ -83,7 +83,7 @@
       <Float name="RumbleRightMotorStrength" />
       <Float name="RumbleDuration" />
       <ByteArray name="Unknown3" nullable="NotNull" byteLength="12" />
-      <Enum name="Skill" enumName="Skill" byteLength="4" default="Skill.None" />
+      <Enum name="Skill" enumName="Skill" byteLength="4" hasBeenSet="True" hasBeenSetBinaryFallback="-1" />
       <Int64 name="Unknown4" />
       <Enum name="Resist" enumName="ActorValueExtended" byteLength="4" default="ActorValueExtended.None" />
       <Int32 name="Unknown5" />

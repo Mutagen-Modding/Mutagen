@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class PlayerSkillsBinaryCreateTranslation
         {
-            public static readonly int SkillsSize = EnumExt.GetSize<Skill>() - 1;
+            public static readonly int SkillsSize = EnumExt.GetSize<Skill>();
 
             static partial void FillBinarySkillOffsetsCustom(MutagenFrame frame, IPlayerSkills item)
             {
