@@ -666,6 +666,17 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void DeepCopyIn(
             this ISkillBoost lhs,
+            ISkillBoostGetter rhs)
+        {
+            ((SkillBoostSetterTranslationCommon)((ISkillBoostGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: default);
+        }
+
+        public static void DeepCopyIn(
+            this ISkillBoost lhs,
             ISkillBoostGetter rhs,
             SkillBoost.TranslationMask? copyMask = null)
         {
@@ -673,7 +684,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(

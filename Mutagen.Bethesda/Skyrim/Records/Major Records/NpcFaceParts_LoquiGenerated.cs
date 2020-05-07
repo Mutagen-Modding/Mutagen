@@ -735,6 +735,17 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void DeepCopyIn(
             this INpcFaceParts lhs,
+            INpcFacePartsGetter rhs)
+        {
+            ((NpcFacePartsSetterTranslationCommon)((INpcFacePartsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: default);
+        }
+
+        public static void DeepCopyIn(
+            this INpcFaceParts lhs,
             INpcFacePartsGetter rhs,
             NpcFaceParts.TranslationMask? copyMask = null)
         {
@@ -742,7 +753,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(

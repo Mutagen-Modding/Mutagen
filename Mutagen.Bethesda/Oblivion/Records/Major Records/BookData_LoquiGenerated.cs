@@ -735,6 +735,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void DeepCopyIn(
             this IBookData lhs,
+            IBookDataGetter rhs)
+        {
+            ((BookDataSetterTranslationCommon)((IBookDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: default);
+        }
+
+        public static void DeepCopyIn(
+            this IBookData lhs,
             IBookDataGetter rhs,
             BookData.TranslationMask? copyMask = null)
         {
@@ -742,7 +753,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(

@@ -669,6 +669,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void DeepCopyIn(
             this IClothingFlags lhs,
+            IClothingFlagsGetter rhs)
+        {
+            ((ClothingFlagsSetterTranslationCommon)((IClothingFlagsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: default);
+        }
+
+        public static void DeepCopyIn(
+            this IClothingFlags lhs,
             IClothingFlagsGetter rhs,
             ClothingFlags.TranslationMask? copyMask = null)
         {
@@ -676,7 +687,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(

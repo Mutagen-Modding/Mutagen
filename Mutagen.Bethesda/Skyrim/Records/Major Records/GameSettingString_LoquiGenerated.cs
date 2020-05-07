@@ -1564,8 +1564,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             base.DeepCopyIn(
-                item,
-                rhs,
+                (IGameSetting)item,
+                (IGameSettingGetter)rhs,
                 errorMask,
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)GameSettingString_FieldIndex.Data) ?? true))

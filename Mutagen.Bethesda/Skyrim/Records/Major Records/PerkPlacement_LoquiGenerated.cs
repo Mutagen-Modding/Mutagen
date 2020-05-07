@@ -717,6 +717,17 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void DeepCopyIn(
             this IPerkPlacement lhs,
+            IPerkPlacementGetter rhs)
+        {
+            ((PerkPlacementSetterTranslationCommon)((IPerkPlacementGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: default);
+        }
+
+        public static void DeepCopyIn(
+            this IPerkPlacement lhs,
             IPerkPlacementGetter rhs,
             PerkPlacement.TranslationMask? copyMask = null)
         {
@@ -724,7 +735,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(

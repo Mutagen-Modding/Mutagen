@@ -760,6 +760,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void DeepCopyIn(
             this IPointToReferenceMapping lhs,
+            IPointToReferenceMappingGetter rhs)
+        {
+            ((PointToReferenceMappingSetterTranslationCommon)((IPointToReferenceMappingGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: default);
+        }
+
+        public static void DeepCopyIn(
+            this IPointToReferenceMapping lhs,
             IPointToReferenceMappingGetter rhs,
             PointToReferenceMapping.TranslationMask? copyMask = null)
         {
@@ -767,7 +778,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(

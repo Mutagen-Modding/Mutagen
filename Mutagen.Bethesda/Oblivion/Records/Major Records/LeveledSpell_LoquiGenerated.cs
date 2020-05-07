@@ -1814,8 +1814,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             base.DeepCopyIn(
-                item,
-                rhs,
+                (IASpell)item,
+                (IASpellGetter)rhs,
                 errorMask,
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)LeveledSpell_FieldIndex.ChanceNone) ?? true))
@@ -1835,7 +1835,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs.Entries
                         .Select(r =>
                         {
-                            return r.DeepCopy<ASpell, IASpellGetter, ASpell.TranslationMask>(
+                            return r.DeepCopy<ASpell, IASpellGetter>(
                                 errorMask: errorMask,
                                 default(TranslationCrystal));
                         }));

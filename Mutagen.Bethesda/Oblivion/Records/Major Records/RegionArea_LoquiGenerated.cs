@@ -757,6 +757,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void DeepCopyIn(
             this IRegionArea lhs,
+            IRegionAreaGetter rhs)
+        {
+            ((RegionAreaSetterTranslationCommon)((IRegionAreaGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: default);
+        }
+
+        public static void DeepCopyIn(
+            this IRegionArea lhs,
             IRegionAreaGetter rhs,
             RegionArea.TranslationMask? copyMask = null)
         {
@@ -764,7 +775,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(

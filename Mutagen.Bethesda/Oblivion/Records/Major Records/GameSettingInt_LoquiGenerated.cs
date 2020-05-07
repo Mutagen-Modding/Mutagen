@@ -1555,8 +1555,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             base.DeepCopyIn(
-                item,
-                rhs,
+                (IGameSetting)item,
+                (IGameSettingGetter)rhs,
                 errorMask,
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)GameSettingInt_FieldIndex.Data) ?? true))

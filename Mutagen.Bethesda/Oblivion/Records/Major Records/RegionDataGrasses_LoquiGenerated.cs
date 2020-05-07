@@ -1439,8 +1439,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             base.DeepCopyIn(
-                item,
-                rhs,
+                (IRegionData)item,
+                (IRegionDataGetter)rhs,
                 errorMask,
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)RegionDataGrasses_FieldIndex.Grasses) ?? true))

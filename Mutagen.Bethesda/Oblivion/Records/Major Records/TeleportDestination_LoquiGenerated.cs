@@ -709,6 +709,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void DeepCopyIn(
             this ITeleportDestination lhs,
+            ITeleportDestinationGetter rhs)
+        {
+            ((TeleportDestinationSetterTranslationCommon)((ITeleportDestinationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: default);
+        }
+
+        public static void DeepCopyIn(
+            this ITeleportDestination lhs,
             ITeleportDestinationGetter rhs,
             TeleportDestination.TranslationMask? copyMask = null)
         {
@@ -716,7 +727,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(

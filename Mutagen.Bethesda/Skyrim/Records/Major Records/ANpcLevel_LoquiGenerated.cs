@@ -573,6 +573,17 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void DeepCopyIn(
             this IANpcLevel lhs,
+            IANpcLevelGetter rhs)
+        {
+            ((ANpcLevelSetterTranslationCommon)((IANpcLevelGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: default);
+        }
+
+        public static void DeepCopyIn(
+            this IANpcLevel lhs,
             IANpcLevelGetter rhs,
             ANpcLevel.TranslationMask? copyMask = null)
         {
@@ -580,7 +591,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(

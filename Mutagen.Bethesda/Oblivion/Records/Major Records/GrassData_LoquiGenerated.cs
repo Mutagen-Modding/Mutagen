@@ -999,6 +999,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void DeepCopyIn(
             this IGrassData lhs,
+            IGrassDataGetter rhs)
+        {
+            ((GrassDataSetterTranslationCommon)((IGrassDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: default);
+        }
+
+        public static void DeepCopyIn(
+            this IGrassData lhs,
             IGrassDataGetter rhs,
             GrassData.TranslationMask? copyMask = null)
         {
@@ -1006,7 +1017,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(

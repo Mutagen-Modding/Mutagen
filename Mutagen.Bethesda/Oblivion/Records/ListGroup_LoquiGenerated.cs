@@ -429,6 +429,19 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
+        public static void DeepCopyIn<T, TGetter>(
+            this IListGroup<T> lhs,
+            IListGroupGetter<TGetter> rhs)
+            where T : class, ICellBlock, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
+        {
+            ((ListGroupSetterTranslationCommon)((IListGroupGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: default);
+        }
+
         public static void DeepCopyIn<T, TGetter, T_TranslMask>(
             this IListGroup<T> lhs,
             IListGroupGetter<TGetter> rhs,
@@ -441,7 +454,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyIn<T, TGetter, T_ErrMask, T_TranslMask>(
@@ -505,13 +518,12 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: out errorMask);
         }
 
-        public static ListGroup<T> DeepCopy<T, TGetter, T_TranslMask>(
+        public static ListGroup<T> DeepCopy<T, TGetter>(
             this IListGroupGetter<TGetter> item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
             where T : class, ICellBlock, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, ICellBlockGetter, IXmlItem, IBinaryItem
-            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
         {
             return ((ListGroupSetterTranslationCommon)((IListGroupGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter>(
                 item: item,

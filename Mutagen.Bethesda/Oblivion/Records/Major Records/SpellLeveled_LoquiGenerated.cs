@@ -1510,8 +1510,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             base.DeepCopyIn(
-                item,
-                rhs,
+                (ISpell)item,
+                (ISpellGetter)rhs,
                 errorMask,
                 copyMask);
         }

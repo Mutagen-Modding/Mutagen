@@ -752,6 +752,17 @@ namespace Mutagen.Bethesda
 
         public static void DeepCopyIn(
             this IMajorRecordInternal lhs,
+            IMajorRecordGetter rhs)
+        {
+            ((MajorRecordSetterTranslationCommon)((IMajorRecordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: default);
+        }
+
+        public static void DeepCopyIn(
+            this IMajorRecordInternal lhs,
             IMajorRecordGetter rhs,
             MajorRecord.TranslationMask? copyMask = null)
         {
@@ -759,7 +770,7 @@ namespace Mutagen.Bethesda
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(

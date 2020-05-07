@@ -713,6 +713,17 @@ namespace Mutagen.Bethesda.Tests
 
         public static void DeepCopyIn(
             this ITargetGroup lhs,
+            ITargetGroupGetter rhs)
+        {
+            ((TargetGroupSetterTranslationCommon)((ITargetGroupGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: default);
+        }
+
+        public static void DeepCopyIn(
+            this ITargetGroup lhs,
             ITargetGroupGetter rhs,
             TargetGroup.TranslationMask? copyMask = null)
         {
@@ -720,7 +731,7 @@ namespace Mutagen.Bethesda.Tests
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(

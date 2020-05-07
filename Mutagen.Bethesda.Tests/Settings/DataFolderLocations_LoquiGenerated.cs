@@ -625,6 +625,17 @@ namespace Mutagen.Bethesda.Tests
 
         public static void DeepCopyIn(
             this IDataFolderLocations lhs,
+            IDataFolderLocationsGetter rhs)
+        {
+            ((DataFolderLocationsSetterTranslationCommon)((IDataFolderLocationsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: default);
+        }
+
+        public static void DeepCopyIn(
+            this IDataFolderLocations lhs,
             IDataFolderLocationsGetter rhs,
             DataFolderLocations.TranslationMask? copyMask = null)
         {
@@ -632,7 +643,7 @@ namespace Mutagen.Bethesda.Tests
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(

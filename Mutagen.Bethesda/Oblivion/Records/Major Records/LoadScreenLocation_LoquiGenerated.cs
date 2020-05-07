@@ -713,6 +713,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void DeepCopyIn(
             this ILoadScreenLocation lhs,
+            ILoadScreenLocationGetter rhs)
+        {
+            ((LoadScreenLocationSetterTranslationCommon)((ILoadScreenLocationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: default);
+        }
+
+        public static void DeepCopyIn(
+            this ILoadScreenLocation lhs,
             ILoadScreenLocationGetter rhs,
             LoadScreenLocation.TranslationMask? copyMask = null)
         {
@@ -720,7 +731,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(

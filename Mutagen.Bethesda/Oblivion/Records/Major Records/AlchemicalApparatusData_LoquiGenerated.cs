@@ -736,6 +736,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void DeepCopyIn(
             this IAlchemicalApparatusData lhs,
+            IAlchemicalApparatusDataGetter rhs)
+        {
+            ((AlchemicalApparatusDataSetterTranslationCommon)((IAlchemicalApparatusDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: default);
+        }
+
+        public static void DeepCopyIn(
+            this IAlchemicalApparatusData lhs,
             IAlchemicalApparatusDataGetter rhs,
             AlchemicalApparatusData.TranslationMask? copyMask = null)
         {
@@ -743,7 +754,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(

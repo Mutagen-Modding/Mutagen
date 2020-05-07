@@ -1450,8 +1450,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             base.DeepCopyIn(
-                item,
-                rhs,
+                (ISimpleModel)item,
+                (ISimpleModelGetter)rhs,
                 errorMask,
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)Model_FieldIndex.AlternateTextures) ?? true))

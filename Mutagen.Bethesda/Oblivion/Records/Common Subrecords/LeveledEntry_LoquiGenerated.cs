@@ -432,6 +432,19 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs: rhs);
         }
 
+        public static void DeepCopyIn<T, TGetter>(
+            this ILeveledEntry<T> lhs,
+            ILeveledEntryGetter<TGetter> rhs)
+            where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
+            where TGetter : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+        {
+            ((LeveledEntrySetterTranslationCommon)((ILeveledEntryGetter<T>)lhs).CommonSetterTranslationInstance()!).DeepCopyIn<T, TGetter>(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: default);
+        }
+
         public static void DeepCopyIn<T, TGetter, T_TranslMask>(
             this ILeveledEntry<T> lhs,
             ILeveledEntryGetter<TGetter> rhs,
@@ -444,7 +457,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyIn<T, TGetter, T_ErrMask, T_TranslMask>(
@@ -508,13 +521,12 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: out errorMask);
         }
 
-        public static LeveledEntry<T> DeepCopy<T, TGetter, T_TranslMask>(
+        public static LeveledEntry<T> DeepCopy<T, TGetter>(
             this ILeveledEntryGetter<TGetter> item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
             where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem, TGetter, ILoquiObjectSetter<T>
             where TGetter : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
-            where T_TranslMask : OblivionMajorRecord.TranslationMask, ITranslationMask
         {
             return ((LeveledEntrySetterTranslationCommon)((ILeveledEntryGetter<TGetter>)item).CommonSetterTranslationInstance()!).DeepCopy<T, TGetter>(
                 item: item,

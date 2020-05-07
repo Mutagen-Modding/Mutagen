@@ -834,6 +834,17 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void DeepCopyIn(
             this ICreatureConfiguration lhs,
+            ICreatureConfigurationGetter rhs)
+        {
+            ((CreatureConfigurationSetterTranslationCommon)((ICreatureConfigurationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: default);
+        }
+
+        public static void DeepCopyIn(
+            this ICreatureConfiguration lhs,
             ICreatureConfigurationGetter rhs,
             CreatureConfiguration.TranslationMask? copyMask = null)
         {
@@ -841,7 +852,7 @@ namespace Mutagen.Bethesda.Oblivion
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(

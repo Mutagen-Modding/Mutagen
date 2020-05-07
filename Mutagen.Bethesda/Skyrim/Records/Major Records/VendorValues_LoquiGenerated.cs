@@ -801,6 +801,17 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void DeepCopyIn(
             this IVendorValues lhs,
+            IVendorValuesGetter rhs)
+        {
+            ((VendorValuesSetterTranslationCommon)((IVendorValuesGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: default);
+        }
+
+        public static void DeepCopyIn(
+            this IVendorValues lhs,
             IVendorValuesGetter rhs,
             VendorValues.TranslationMask? copyMask = null)
         {
@@ -808,7 +819,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(

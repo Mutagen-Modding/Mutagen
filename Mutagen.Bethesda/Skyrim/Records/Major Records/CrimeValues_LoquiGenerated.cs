@@ -972,6 +972,17 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void DeepCopyIn(
             this ICrimeValues lhs,
+            ICrimeValuesGetter rhs)
+        {
+            ((CrimeValuesSetterTranslationCommon)((ICrimeValuesGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+                item: lhs,
+                rhs: rhs,
+                errorMask: default,
+                copyMask: default);
+        }
+
+        public static void DeepCopyIn(
+            this ICrimeValues lhs,
             ICrimeValuesGetter rhs,
             CrimeValues.TranslationMask? copyMask = null)
         {
@@ -979,7 +990,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
-                copyMask: default);
+                copyMask: copyMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(

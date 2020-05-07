@@ -1960,8 +1960,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             base.DeepCopyIn(
-                item,
-                rhs,
+                (INpcSpawn)item,
+                (INpcSpawnGetter)rhs,
                 errorMask,
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.ChanceNone) ?? true))
@@ -1981,7 +1981,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         rhs.Entries
                         .Select(r =>
                         {
-                            return r.DeepCopy<NpcSpawn, INpcSpawnGetter, NpcSpawn.TranslationMask>(
+                            return r.DeepCopy<NpcSpawn, INpcSpawnGetter>(
                                 errorMask: errorMask,
                                 default(TranslationCrystal));
                         }));
