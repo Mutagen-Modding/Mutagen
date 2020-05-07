@@ -56,7 +56,8 @@ namespace Mutagen.Bethesda.Binary
             RecordType subrecordType,
             int itemLength,
             uint count,
-            BinaryOverlay.SpanFactory<T> getter)
+            BinaryOverlay.SpanFactory<T> getter,
+            bool skipHeader = true)
         {
             if ((mem.Length / (itemLength + package.Meta.SubConstants.HeaderLength)) != count)
             {
@@ -67,7 +68,8 @@ namespace Mutagen.Bethesda.Binary
                 package,
                 getter,
                 itemLength,
-                subrecordType);
+                subrecordType,
+                skipHeader: skipHeader);
         }
 
         public static IReadOnlyList<T> FactoryByCount(
@@ -275,13 +277,16 @@ namespace Mutagen.Bethesda.Binary
             private readonly BinaryOverlay.SpanFactory<T> _getter;
             private readonly RecordType _recordType;
             private readonly int _totalItemLength;
+            private readonly int _sliceOffset;
+            private readonly int _itemOffset;
 
             public BinaryOverlayListByStartIndexWithRecord(
                 ReadOnlyMemorySlice<byte> mem,
                 BinaryOverlayFactoryPackage package,
                 BinaryOverlay.SpanFactory<T> getter,
                 int itemLength,
-                RecordType recordType)
+                RecordType recordType,
+                bool skipHeader)
             {
                 this._mem = mem;
                 this._package = package;
@@ -289,6 +294,16 @@ namespace Mutagen.Bethesda.Binary
                 this._itemLength = itemLength;
                 this._recordType = recordType;
                 this._totalItemLength = itemLength + this._package.Meta.SubConstants.HeaderLength;
+                if (skipHeader)
+                {
+                    _sliceOffset = this._package.Meta.SubConstants.HeaderLength;
+                    _itemOffset = 0;
+                }
+                else
+                {
+                    _sliceOffset = 0;
+                    _itemOffset = this._package.Meta.SubConstants.HeaderLength;
+                }
             }
 
             public T this[int index]
@@ -305,7 +320,7 @@ namespace Mutagen.Bethesda.Binary
                     {
                         throw new ArgumentException($"Unexpected record length: {subMeta.ContentLength} != {this._itemLength}");
                     }
-                    return _getter(_mem.Slice(startIndex + _package.Meta.SubConstants.HeaderLength, _itemLength), _package);
+                    return _getter(_mem.Slice(startIndex + _sliceOffset, _itemLength + _itemOffset), _package);
                 }
             }
 

@@ -9096,9 +9096,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     this.Perks = BinaryOverlaySetList<PerkPlacementBinaryOverlay>.FactoryByCount(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
-                        itemLength: 0xE,
+                        itemLength: 0x8,
+                        subrecordType: Npc_Registration.PRKR_HEADER,
                         count: count,
-                        getter: (s, p) => PerkPlacementBinaryOverlay.PerkPlacementFactory(s, p));
+                        getter: (s, p) => PerkPlacementBinaryOverlay.PerkPlacementFactory(s, p),
+                        skipHeader: false);
                     stream.Position += subLen;
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Perks);
                 }

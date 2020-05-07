@@ -1926,7 +1926,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public IOwnerTargetGetter Owner => GetOwnerCustom(location: 0x0);
         public Single ItemCondition => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
-        private int OwnerEndingPos;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -1951,7 +1950,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.Subrecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
-            stream.Position += 0x4 + package.Meta.SubConstants.HeaderLength;
+            stream.Position += 0xC + package.Meta.SubConstants.HeaderLength;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,

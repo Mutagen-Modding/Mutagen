@@ -769,10 +769,6 @@ namespace Mutagen.Bethesda.Generation
                         {
                             fg.AppendLine($"var subLen = checked((int)(({expectedLen} + _package.Meta.SubConstants.HeaderLength) * count));");
                         }
-                        if (loqui != null)
-                        {
-                            expectedLen += GameConstants.Get(objGen.GetObjectData().GameMode.Value).SubConstants.HeaderLength;
-                        }
                     }
                     else
                     {
@@ -787,7 +783,7 @@ namespace Mutagen.Bethesda.Generation
                             args.Add($"mem: stream.RemainingMemory.Slice(0, subLen)");
                             args.Add($"package: _package");
                             args.Add($"itemLength: 0x{expectedLen:X}");
-                            if (subData.HasTrigger && !subData.HandleTrigger)
+                            if (subData.HasTrigger)
                             {
                                 args.Add($"subrecordType: {subData.TriggeringRecordSetAccessor}");
                             }
@@ -826,6 +822,10 @@ namespace Mutagen.Bethesda.Generation
                                         }
                                     }
                                 });
+                            }
+                            if (subData.HasTrigger && subData.HandleTrigger)
+                            {
+                                args.Add("skipHeader: false");
                             }
                         }
                         fg.AppendLine("stream.Position += subLen;");

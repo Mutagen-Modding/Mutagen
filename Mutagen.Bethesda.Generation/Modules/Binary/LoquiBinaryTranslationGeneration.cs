@@ -434,43 +434,43 @@ namespace Mutagen.Bethesda.Generation
         {
             LoquiType loqui = typeGen as LoquiType;
             if (loqui.TargetObjectGeneration == null) return null;
-            // ToDo
-            // Upgrade this to actually find inheriting objects
-            // Abstract is just a good "estimation"
-            if (loqui.TargetObjectGeneration.Abstract) return null;
+
             var sum = 0;
             foreach (var item in loqui.TargetObjectGeneration.IterateFields(includeBaseClass: true))
             {
+                if (item.HasBeenSet) return null;
                 if (!this.Module.TryGetTypeGeneration(item.GetType(), out var gen)) continue;
-                var len = await gen.ExpectedLength(objGen, item);
+                var len = await gen.ExpectedLength(loqui.TargetObjectGeneration, item);
                 if (len == null) return null;
                 sum += len.Value;
             }
 
-            //if (loqui.TargetObjectGeneration.Abstract)
-            //{
-            //    int? absSum = null;
-            //    foreach (var obj in await loqui.TargetObjectGeneration.InheritingObjects())
-            //    {
-            //        int objectSum = 0;
-            //        foreach (var item in loqui.TargetObjectGeneration.IterateFields(includeBaseClass: true))
-            //        {
-            //            if (!this.Module.TryGetTypeGeneration(item.GetType(), out var gen)) continue;
-            //            var len = await gen.ExpectedLength(objGen, item);
-            //            if (len == null) return null;
-            //            objectSum += len.Value;
-            //        }
-            //        if (absSum == null)
-            //        {
-            //            absSum = objectSum;
-            //        }
-            //        else if (absSum.Value != objectSum)
-            //        {
-            //            // Inheriting objects don't agree on their length, so we can't expect a certain length
-            //            return null;
-            //        }
-            //    }
-            //}
+            if (loqui.TargetObjectGeneration.Abstract)
+            {
+                int? absSum = null;
+                foreach (var inheritingObj in await loqui.TargetObjectGeneration.InheritingObjects())
+                {
+                    int objectSum = 0;
+                    foreach (var item in inheritingObj.IterateFields(includeBaseClass: true))
+                    {
+                        if (item.HasBeenSet) return null;
+                        if (!this.Module.TryGetTypeGeneration(item.GetType(), out var gen)) continue;
+                        var len = await gen.ExpectedLength(inheritingObj, item);
+                        if (len == null) return null;
+                        objectSum += len.Value;
+                    }
+                    if (absSum == null)
+                    {
+                        absSum = objectSum;
+                    }
+                    else if (absSum.Value != objectSum)
+                    {
+                        // Inheriting objects don't agree on their length, so we can't expect a certain length
+                        return null;
+                    }
+                }
+                sum += absSum.Value;
+            }
 
             return sum;
         }
