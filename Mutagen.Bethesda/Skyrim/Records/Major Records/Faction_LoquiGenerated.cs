@@ -74,22 +74,14 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Faction.FactionFlag? _Flags;
-        public Faction.FactionFlag? Flags
-        {
-            get => this._Flags;
-            set => this._Flags = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Faction.FactionFlag? IFactionGetter.Flags => this.Flags;
+        public Faction.FactionFlag Flags { get; set; } = default;
         #endregion
-        #region PrisonMarker
+        #region ExteriorJailMarker
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<PlacedObject> _PrisonMarker = new FormLinkNullable<PlacedObject>();
-        public IFormLinkNullable<PlacedObject> PrisonMarker => this._PrisonMarker;
+        protected IFormLinkNullable<PlacedObject> _ExteriorJailMarker = new FormLinkNullable<PlacedObject>();
+        public IFormLinkNullable<PlacedObject> ExteriorJailMarker => this._ExteriorJailMarker;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.PrisonMarker => this.PrisonMarker;
+        IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.ExteriorJailMarker => this.ExteriorJailMarker;
         #endregion
         #region FollowerWaitMarker
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -98,26 +90,26 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.FollowerWaitMarker => this.FollowerWaitMarker;
         #endregion
-        #region EvidenceChest
+        #region StolenGoodsContainer
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<PlacedObject> _EvidenceChest = new FormLinkNullable<PlacedObject>();
-        public IFormLinkNullable<PlacedObject> EvidenceChest => this._EvidenceChest;
+        protected IFormLinkNullable<PlacedObject> _StolenGoodsContainer = new FormLinkNullable<PlacedObject>();
+        public IFormLinkNullable<PlacedObject> StolenGoodsContainer => this._StolenGoodsContainer;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.EvidenceChest => this.EvidenceChest;
+        IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.StolenGoodsContainer => this.StolenGoodsContainer;
         #endregion
-        #region PlayerBelongingsChest
+        #region PlayerInventoryContainer
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<PlacedObject> _PlayerBelongingsChest = new FormLinkNullable<PlacedObject>();
-        public IFormLinkNullable<PlacedObject> PlayerBelongingsChest => this._PlayerBelongingsChest;
+        protected IFormLinkNullable<PlacedObject> _PlayerInventoryContainer = new FormLinkNullable<PlacedObject>();
+        public IFormLinkNullable<PlacedObject> PlayerInventoryContainer => this._PlayerInventoryContainer;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.PlayerBelongingsChest => this.PlayerBelongingsChest;
+        IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.PlayerInventoryContainer => this.PlayerInventoryContainer;
         #endregion
-        #region CrimeGroup
+        #region SharedCrimeFactionList
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<FormList> _CrimeGroup = new FormLinkNullable<FormList>();
-        public IFormLinkNullable<FormList> CrimeGroup => this._CrimeGroup;
+        protected IFormLinkNullable<FormList> _SharedCrimeFactionList = new FormLinkNullable<FormList>();
+        public IFormLinkNullable<FormList> SharedCrimeFactionList => this._SharedCrimeFactionList;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IFormListGetter> IFactionGetter.CrimeGroup => this.CrimeGroup;
+        IFormLinkNullableGetter<IFormListGetter> IFactionGetter.SharedCrimeFactionList => this.SharedCrimeFactionList;
         #endregion
         #region JailOutfit
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -151,19 +143,19 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region VendorList
+        #region VendorBuySellList
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<FormList> _VendorList = new FormLinkNullable<FormList>();
-        public IFormLinkNullable<FormList> VendorList => this._VendorList;
+        protected IFormLinkNullable<FormList> _VendorBuySellList = new FormLinkNullable<FormList>();
+        public IFormLinkNullable<FormList> VendorBuySellList => this._VendorBuySellList;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IFormListGetter> IFactionGetter.VendorList => this.VendorList;
+        IFormLinkNullableGetter<IFormListGetter> IFactionGetter.VendorBuySellList => this.VendorBuySellList;
         #endregion
-        #region VendorChest
+        #region MerchantContainer
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<PlacedObject> _VendorChest = new FormLinkNullable<PlacedObject>();
-        public IFormLinkNullable<PlacedObject> VendorChest => this._VendorChest;
+        protected IFormLinkNullable<PlacedObject> _MerchantContainer = new FormLinkNullable<PlacedObject>();
+        public IFormLinkNullable<PlacedObject> MerchantContainer => this._MerchantContainer;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.VendorChest => this.VendorChest;
+        IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.MerchantContainer => this.MerchantContainer;
         #endregion
         #region VendorValues
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -178,14 +170,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region VendorLocation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private VendorLocation? _VendorLocation;
-        public VendorLocation? VendorLocation
+        private Location? _VendorLocation;
+        public Location? VendorLocation
         {
             get => _VendorLocation;
             set => _VendorLocation = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IVendorLocationGetter? IFactionGetter.VendorLocation => this.VendorLocation;
+        ILocationGetter? IFactionGetter.VendorLocation => this.VendorLocation;
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -374,18 +366,18 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Name = initialValue;
                 this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>());
                 this.Flags = initialValue;
-                this.PrisonMarker = initialValue;
+                this.ExteriorJailMarker = initialValue;
                 this.FollowerWaitMarker = initialValue;
-                this.EvidenceChest = initialValue;
-                this.PlayerBelongingsChest = initialValue;
-                this.CrimeGroup = initialValue;
+                this.StolenGoodsContainer = initialValue;
+                this.PlayerInventoryContainer = initialValue;
+                this.SharedCrimeFactionList = initialValue;
                 this.JailOutfit = initialValue;
                 this.CrimeValues = new MaskItem<TItem, CrimeValues.Mask<TItem>?>(initialValue, new CrimeValues.Mask<TItem>(initialValue));
                 this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>());
-                this.VendorList = initialValue;
-                this.VendorChest = initialValue;
+                this.VendorBuySellList = initialValue;
+                this.MerchantContainer = initialValue;
                 this.VendorValues = new MaskItem<TItem, VendorValues.Mask<TItem>?>(initialValue, new VendorValues.Mask<TItem>(initialValue));
-                this.VendorLocation = new MaskItem<TItem, VendorLocation.Mask<TItem>?>(initialValue, new VendorLocation.Mask<TItem>(initialValue));
+                this.VendorLocation = new MaskItem<TItem, Location.Mask<TItem>?>(initialValue, new Location.Mask<TItem>(initialValue));
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
             }
 
@@ -399,16 +391,16 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Name,
                 TItem Relations,
                 TItem Flags,
-                TItem PrisonMarker,
+                TItem ExteriorJailMarker,
                 TItem FollowerWaitMarker,
-                TItem EvidenceChest,
-                TItem PlayerBelongingsChest,
-                TItem CrimeGroup,
+                TItem StolenGoodsContainer,
+                TItem PlayerInventoryContainer,
+                TItem SharedCrimeFactionList,
                 TItem JailOutfit,
                 TItem CrimeValues,
                 TItem Ranks,
-                TItem VendorList,
-                TItem VendorChest,
+                TItem VendorBuySellList,
+                TItem MerchantContainer,
                 TItem VendorValues,
                 TItem VendorLocation,
                 TItem Conditions)
@@ -423,18 +415,18 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Name = Name;
                 this.Relations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>?>(Relations, Enumerable.Empty<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>());
                 this.Flags = Flags;
-                this.PrisonMarker = PrisonMarker;
+                this.ExteriorJailMarker = ExteriorJailMarker;
                 this.FollowerWaitMarker = FollowerWaitMarker;
-                this.EvidenceChest = EvidenceChest;
-                this.PlayerBelongingsChest = PlayerBelongingsChest;
-                this.CrimeGroup = CrimeGroup;
+                this.StolenGoodsContainer = StolenGoodsContainer;
+                this.PlayerInventoryContainer = PlayerInventoryContainer;
+                this.SharedCrimeFactionList = SharedCrimeFactionList;
                 this.JailOutfit = JailOutfit;
                 this.CrimeValues = new MaskItem<TItem, CrimeValues.Mask<TItem>?>(CrimeValues, new CrimeValues.Mask<TItem>(CrimeValues));
                 this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>(Ranks, Enumerable.Empty<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>());
-                this.VendorList = VendorList;
-                this.VendorChest = VendorChest;
+                this.VendorBuySellList = VendorBuySellList;
+                this.MerchantContainer = MerchantContainer;
                 this.VendorValues = new MaskItem<TItem, VendorValues.Mask<TItem>?>(VendorValues, new VendorValues.Mask<TItem>(VendorValues));
-                this.VendorLocation = new MaskItem<TItem, VendorLocation.Mask<TItem>?>(VendorLocation, new VendorLocation.Mask<TItem>(VendorLocation));
+                this.VendorLocation = new MaskItem<TItem, Location.Mask<TItem>?>(VendorLocation, new Location.Mask<TItem>(VendorLocation));
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
             }
 
@@ -450,18 +442,18 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Name;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Relation.Mask<TItem>?>>?>? Relations;
             public TItem Flags;
-            public TItem PrisonMarker;
+            public TItem ExteriorJailMarker;
             public TItem FollowerWaitMarker;
-            public TItem EvidenceChest;
-            public TItem PlayerBelongingsChest;
-            public TItem CrimeGroup;
+            public TItem StolenGoodsContainer;
+            public TItem PlayerInventoryContainer;
+            public TItem SharedCrimeFactionList;
             public TItem JailOutfit;
             public MaskItem<TItem, CrimeValues.Mask<TItem>?>? CrimeValues { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>? Ranks;
-            public TItem VendorList;
-            public TItem VendorChest;
+            public TItem VendorBuySellList;
+            public TItem MerchantContainer;
             public MaskItem<TItem, VendorValues.Mask<TItem>?>? VendorValues { get; set; }
-            public MaskItem<TItem, VendorLocation.Mask<TItem>?>? VendorLocation { get; set; }
+            public MaskItem<TItem, Location.Mask<TItem>?>? VendorLocation { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
             #endregion
 
@@ -479,16 +471,16 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Relations, rhs.Relations)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.PrisonMarker, rhs.PrisonMarker)) return false;
+                if (!object.Equals(this.ExteriorJailMarker, rhs.ExteriorJailMarker)) return false;
                 if (!object.Equals(this.FollowerWaitMarker, rhs.FollowerWaitMarker)) return false;
-                if (!object.Equals(this.EvidenceChest, rhs.EvidenceChest)) return false;
-                if (!object.Equals(this.PlayerBelongingsChest, rhs.PlayerBelongingsChest)) return false;
-                if (!object.Equals(this.CrimeGroup, rhs.CrimeGroup)) return false;
+                if (!object.Equals(this.StolenGoodsContainer, rhs.StolenGoodsContainer)) return false;
+                if (!object.Equals(this.PlayerInventoryContainer, rhs.PlayerInventoryContainer)) return false;
+                if (!object.Equals(this.SharedCrimeFactionList, rhs.SharedCrimeFactionList)) return false;
                 if (!object.Equals(this.JailOutfit, rhs.JailOutfit)) return false;
                 if (!object.Equals(this.CrimeValues, rhs.CrimeValues)) return false;
                 if (!object.Equals(this.Ranks, rhs.Ranks)) return false;
-                if (!object.Equals(this.VendorList, rhs.VendorList)) return false;
-                if (!object.Equals(this.VendorChest, rhs.VendorChest)) return false;
+                if (!object.Equals(this.VendorBuySellList, rhs.VendorBuySellList)) return false;
+                if (!object.Equals(this.MerchantContainer, rhs.MerchantContainer)) return false;
                 if (!object.Equals(this.VendorValues, rhs.VendorValues)) return false;
                 if (!object.Equals(this.VendorLocation, rhs.VendorLocation)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
@@ -500,16 +492,16 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Name);
                 hash.Add(this.Relations);
                 hash.Add(this.Flags);
-                hash.Add(this.PrisonMarker);
+                hash.Add(this.ExteriorJailMarker);
                 hash.Add(this.FollowerWaitMarker);
-                hash.Add(this.EvidenceChest);
-                hash.Add(this.PlayerBelongingsChest);
-                hash.Add(this.CrimeGroup);
+                hash.Add(this.StolenGoodsContainer);
+                hash.Add(this.PlayerInventoryContainer);
+                hash.Add(this.SharedCrimeFactionList);
                 hash.Add(this.JailOutfit);
                 hash.Add(this.CrimeValues);
                 hash.Add(this.Ranks);
-                hash.Add(this.VendorList);
-                hash.Add(this.VendorChest);
+                hash.Add(this.VendorBuySellList);
+                hash.Add(this.MerchantContainer);
                 hash.Add(this.VendorValues);
                 hash.Add(this.VendorLocation);
                 hash.Add(this.Conditions);
@@ -537,11 +529,11 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 if (!eval(this.Flags)) return false;
-                if (!eval(this.PrisonMarker)) return false;
+                if (!eval(this.ExteriorJailMarker)) return false;
                 if (!eval(this.FollowerWaitMarker)) return false;
-                if (!eval(this.EvidenceChest)) return false;
-                if (!eval(this.PlayerBelongingsChest)) return false;
-                if (!eval(this.CrimeGroup)) return false;
+                if (!eval(this.StolenGoodsContainer)) return false;
+                if (!eval(this.PlayerInventoryContainer)) return false;
+                if (!eval(this.SharedCrimeFactionList)) return false;
                 if (!eval(this.JailOutfit)) return false;
                 if (CrimeValues != null)
                 {
@@ -560,8 +552,8 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (!eval(this.VendorList)) return false;
-                if (!eval(this.VendorChest)) return false;
+                if (!eval(this.VendorBuySellList)) return false;
+                if (!eval(this.MerchantContainer)) return false;
                 if (VendorValues != null)
                 {
                     if (!eval(this.VendorValues.Overall)) return false;
@@ -606,11 +598,11 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 if (eval(this.Flags)) return true;
-                if (eval(this.PrisonMarker)) return true;
+                if (eval(this.ExteriorJailMarker)) return true;
                 if (eval(this.FollowerWaitMarker)) return true;
-                if (eval(this.EvidenceChest)) return true;
-                if (eval(this.PlayerBelongingsChest)) return true;
-                if (eval(this.CrimeGroup)) return true;
+                if (eval(this.StolenGoodsContainer)) return true;
+                if (eval(this.PlayerInventoryContainer)) return true;
+                if (eval(this.SharedCrimeFactionList)) return true;
                 if (eval(this.JailOutfit)) return true;
                 if (CrimeValues != null)
                 {
@@ -629,8 +621,8 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (eval(this.VendorList)) return true;
-                if (eval(this.VendorChest)) return true;
+                if (eval(this.VendorBuySellList)) return true;
+                if (eval(this.MerchantContainer)) return true;
                 if (VendorValues != null)
                 {
                     if (eval(this.VendorValues.Overall)) return true;
@@ -685,11 +677,11 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 obj.Flags = eval(this.Flags);
-                obj.PrisonMarker = eval(this.PrisonMarker);
+                obj.ExteriorJailMarker = eval(this.ExteriorJailMarker);
                 obj.FollowerWaitMarker = eval(this.FollowerWaitMarker);
-                obj.EvidenceChest = eval(this.EvidenceChest);
-                obj.PlayerBelongingsChest = eval(this.PlayerBelongingsChest);
-                obj.CrimeGroup = eval(this.CrimeGroup);
+                obj.StolenGoodsContainer = eval(this.StolenGoodsContainer);
+                obj.PlayerInventoryContainer = eval(this.PlayerInventoryContainer);
+                obj.SharedCrimeFactionList = eval(this.SharedCrimeFactionList);
                 obj.JailOutfit = eval(this.JailOutfit);
                 obj.CrimeValues = this.CrimeValues == null ? null : new MaskItem<R, CrimeValues.Mask<R>?>(eval(this.CrimeValues.Overall), this.CrimeValues.Specific?.Translate(eval));
                 if (Ranks != null)
@@ -707,10 +699,10 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                obj.VendorList = eval(this.VendorList);
-                obj.VendorChest = eval(this.VendorChest);
+                obj.VendorBuySellList = eval(this.VendorBuySellList);
+                obj.MerchantContainer = eval(this.MerchantContainer);
                 obj.VendorValues = this.VendorValues == null ? null : new MaskItem<R, VendorValues.Mask<R>?>(eval(this.VendorValues.Overall), this.VendorValues.Specific?.Translate(eval));
-                obj.VendorLocation = this.VendorLocation == null ? null : new MaskItem<R, VendorLocation.Mask<R>?>(eval(this.VendorLocation.Overall), this.VendorLocation.Specific?.Translate(eval));
+                obj.VendorLocation = this.VendorLocation == null ? null : new MaskItem<R, Location.Mask<R>?>(eval(this.VendorLocation.Overall), this.VendorLocation.Specific?.Translate(eval));
                 if (Conditions != null)
                 {
                     obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
@@ -779,25 +771,25 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(Flags, "Flags");
                     }
-                    if (printMask?.PrisonMarker ?? true)
+                    if (printMask?.ExteriorJailMarker ?? true)
                     {
-                        fg.AppendItem(PrisonMarker, "PrisonMarker");
+                        fg.AppendItem(ExteriorJailMarker, "ExteriorJailMarker");
                     }
                     if (printMask?.FollowerWaitMarker ?? true)
                     {
                         fg.AppendItem(FollowerWaitMarker, "FollowerWaitMarker");
                     }
-                    if (printMask?.EvidenceChest ?? true)
+                    if (printMask?.StolenGoodsContainer ?? true)
                     {
-                        fg.AppendItem(EvidenceChest, "EvidenceChest");
+                        fg.AppendItem(StolenGoodsContainer, "StolenGoodsContainer");
                     }
-                    if (printMask?.PlayerBelongingsChest ?? true)
+                    if (printMask?.PlayerInventoryContainer ?? true)
                     {
-                        fg.AppendItem(PlayerBelongingsChest, "PlayerBelongingsChest");
+                        fg.AppendItem(PlayerInventoryContainer, "PlayerInventoryContainer");
                     }
-                    if (printMask?.CrimeGroup ?? true)
+                    if (printMask?.SharedCrimeFactionList ?? true)
                     {
-                        fg.AppendItem(CrimeGroup, "CrimeGroup");
+                        fg.AppendItem(SharedCrimeFactionList, "SharedCrimeFactionList");
                     }
                     if (printMask?.JailOutfit ?? true)
                     {
@@ -830,13 +822,13 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.VendorList ?? true)
+                    if (printMask?.VendorBuySellList ?? true)
                     {
-                        fg.AppendItem(VendorList, "VendorList");
+                        fg.AppendItem(VendorBuySellList, "VendorBuySellList");
                     }
-                    if (printMask?.VendorChest ?? true)
+                    if (printMask?.MerchantContainer ?? true)
                     {
-                        fg.AppendItem(VendorChest, "VendorChest");
+                        fg.AppendItem(MerchantContainer, "MerchantContainer");
                     }
                     if (printMask?.VendorValues?.Overall ?? true)
                     {
@@ -884,18 +876,18 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Name;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Relation.ErrorMask?>>?>? Relations;
             public Exception? Flags;
-            public Exception? PrisonMarker;
+            public Exception? ExteriorJailMarker;
             public Exception? FollowerWaitMarker;
-            public Exception? EvidenceChest;
-            public Exception? PlayerBelongingsChest;
-            public Exception? CrimeGroup;
+            public Exception? StolenGoodsContainer;
+            public Exception? PlayerInventoryContainer;
+            public Exception? SharedCrimeFactionList;
             public Exception? JailOutfit;
             public MaskItem<Exception?, CrimeValues.ErrorMask?>? CrimeValues;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>? Ranks;
-            public Exception? VendorList;
-            public Exception? VendorChest;
+            public Exception? VendorBuySellList;
+            public Exception? MerchantContainer;
             public MaskItem<Exception?, VendorValues.ErrorMask?>? VendorValues;
-            public MaskItem<Exception?, VendorLocation.ErrorMask?>? VendorLocation;
+            public MaskItem<Exception?, Location.ErrorMask?>? VendorLocation;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
             #endregion
 
@@ -911,26 +903,26 @@ namespace Mutagen.Bethesda.Skyrim
                         return Relations;
                     case Faction_FieldIndex.Flags:
                         return Flags;
-                    case Faction_FieldIndex.PrisonMarker:
-                        return PrisonMarker;
+                    case Faction_FieldIndex.ExteriorJailMarker:
+                        return ExteriorJailMarker;
                     case Faction_FieldIndex.FollowerWaitMarker:
                         return FollowerWaitMarker;
-                    case Faction_FieldIndex.EvidenceChest:
-                        return EvidenceChest;
-                    case Faction_FieldIndex.PlayerBelongingsChest:
-                        return PlayerBelongingsChest;
-                    case Faction_FieldIndex.CrimeGroup:
-                        return CrimeGroup;
+                    case Faction_FieldIndex.StolenGoodsContainer:
+                        return StolenGoodsContainer;
+                    case Faction_FieldIndex.PlayerInventoryContainer:
+                        return PlayerInventoryContainer;
+                    case Faction_FieldIndex.SharedCrimeFactionList:
+                        return SharedCrimeFactionList;
                     case Faction_FieldIndex.JailOutfit:
                         return JailOutfit;
                     case Faction_FieldIndex.CrimeValues:
                         return CrimeValues;
                     case Faction_FieldIndex.Ranks:
                         return Ranks;
-                    case Faction_FieldIndex.VendorList:
-                        return VendorList;
-                    case Faction_FieldIndex.VendorChest:
-                        return VendorChest;
+                    case Faction_FieldIndex.VendorBuySellList:
+                        return VendorBuySellList;
+                    case Faction_FieldIndex.MerchantContainer:
+                        return MerchantContainer;
                     case Faction_FieldIndex.VendorValues:
                         return VendorValues;
                     case Faction_FieldIndex.VendorLocation:
@@ -956,20 +948,20 @@ namespace Mutagen.Bethesda.Skyrim
                     case Faction_FieldIndex.Flags:
                         this.Flags = ex;
                         break;
-                    case Faction_FieldIndex.PrisonMarker:
-                        this.PrisonMarker = ex;
+                    case Faction_FieldIndex.ExteriorJailMarker:
+                        this.ExteriorJailMarker = ex;
                         break;
                     case Faction_FieldIndex.FollowerWaitMarker:
                         this.FollowerWaitMarker = ex;
                         break;
-                    case Faction_FieldIndex.EvidenceChest:
-                        this.EvidenceChest = ex;
+                    case Faction_FieldIndex.StolenGoodsContainer:
+                        this.StolenGoodsContainer = ex;
                         break;
-                    case Faction_FieldIndex.PlayerBelongingsChest:
-                        this.PlayerBelongingsChest = ex;
+                    case Faction_FieldIndex.PlayerInventoryContainer:
+                        this.PlayerInventoryContainer = ex;
                         break;
-                    case Faction_FieldIndex.CrimeGroup:
-                        this.CrimeGroup = ex;
+                    case Faction_FieldIndex.SharedCrimeFactionList:
+                        this.SharedCrimeFactionList = ex;
                         break;
                     case Faction_FieldIndex.JailOutfit:
                         this.JailOutfit = ex;
@@ -980,17 +972,17 @@ namespace Mutagen.Bethesda.Skyrim
                     case Faction_FieldIndex.Ranks:
                         this.Ranks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>(ex, null);
                         break;
-                    case Faction_FieldIndex.VendorList:
-                        this.VendorList = ex;
+                    case Faction_FieldIndex.VendorBuySellList:
+                        this.VendorBuySellList = ex;
                         break;
-                    case Faction_FieldIndex.VendorChest:
-                        this.VendorChest = ex;
+                    case Faction_FieldIndex.MerchantContainer:
+                        this.MerchantContainer = ex;
                         break;
                     case Faction_FieldIndex.VendorValues:
                         this.VendorValues = new MaskItem<Exception?, VendorValues.ErrorMask?>(ex, null);
                         break;
                     case Faction_FieldIndex.VendorLocation:
-                        this.VendorLocation = new MaskItem<Exception?, VendorLocation.ErrorMask?>(ex, null);
+                        this.VendorLocation = new MaskItem<Exception?, Location.ErrorMask?>(ex, null);
                         break;
                     case Faction_FieldIndex.Conditions:
                         this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
@@ -1015,20 +1007,20 @@ namespace Mutagen.Bethesda.Skyrim
                     case Faction_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
-                    case Faction_FieldIndex.PrisonMarker:
-                        this.PrisonMarker = (Exception?)obj;
+                    case Faction_FieldIndex.ExteriorJailMarker:
+                        this.ExteriorJailMarker = (Exception?)obj;
                         break;
                     case Faction_FieldIndex.FollowerWaitMarker:
                         this.FollowerWaitMarker = (Exception?)obj;
                         break;
-                    case Faction_FieldIndex.EvidenceChest:
-                        this.EvidenceChest = (Exception?)obj;
+                    case Faction_FieldIndex.StolenGoodsContainer:
+                        this.StolenGoodsContainer = (Exception?)obj;
                         break;
-                    case Faction_FieldIndex.PlayerBelongingsChest:
-                        this.PlayerBelongingsChest = (Exception?)obj;
+                    case Faction_FieldIndex.PlayerInventoryContainer:
+                        this.PlayerInventoryContainer = (Exception?)obj;
                         break;
-                    case Faction_FieldIndex.CrimeGroup:
-                        this.CrimeGroup = (Exception?)obj;
+                    case Faction_FieldIndex.SharedCrimeFactionList:
+                        this.SharedCrimeFactionList = (Exception?)obj;
                         break;
                     case Faction_FieldIndex.JailOutfit:
                         this.JailOutfit = (Exception?)obj;
@@ -1039,17 +1031,17 @@ namespace Mutagen.Bethesda.Skyrim
                     case Faction_FieldIndex.Ranks:
                         this.Ranks = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>)obj;
                         break;
-                    case Faction_FieldIndex.VendorList:
-                        this.VendorList = (Exception?)obj;
+                    case Faction_FieldIndex.VendorBuySellList:
+                        this.VendorBuySellList = (Exception?)obj;
                         break;
-                    case Faction_FieldIndex.VendorChest:
-                        this.VendorChest = (Exception?)obj;
+                    case Faction_FieldIndex.MerchantContainer:
+                        this.MerchantContainer = (Exception?)obj;
                         break;
                     case Faction_FieldIndex.VendorValues:
                         this.VendorValues = (MaskItem<Exception?, VendorValues.ErrorMask?>?)obj;
                         break;
                     case Faction_FieldIndex.VendorLocation:
-                        this.VendorLocation = (MaskItem<Exception?, VendorLocation.ErrorMask?>?)obj;
+                        this.VendorLocation = (MaskItem<Exception?, Location.ErrorMask?>?)obj;
                         break;
                     case Faction_FieldIndex.Conditions:
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
@@ -1066,16 +1058,16 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Name != null) return true;
                 if (Relations != null) return true;
                 if (Flags != null) return true;
-                if (PrisonMarker != null) return true;
+                if (ExteriorJailMarker != null) return true;
                 if (FollowerWaitMarker != null) return true;
-                if (EvidenceChest != null) return true;
-                if (PlayerBelongingsChest != null) return true;
-                if (CrimeGroup != null) return true;
+                if (StolenGoodsContainer != null) return true;
+                if (PlayerInventoryContainer != null) return true;
+                if (SharedCrimeFactionList != null) return true;
                 if (JailOutfit != null) return true;
                 if (CrimeValues != null) return true;
                 if (Ranks != null) return true;
-                if (VendorList != null) return true;
-                if (VendorChest != null) return true;
+                if (VendorBuySellList != null) return true;
+                if (MerchantContainer != null) return true;
                 if (VendorValues != null) return true;
                 if (VendorLocation != null) return true;
                 if (Conditions != null) return true;
@@ -1138,11 +1130,11 @@ namespace Mutagen.Bethesda.Skyrim
                     fg.AppendLine("]");
                 }
                 fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(PrisonMarker, "PrisonMarker");
+                fg.AppendItem(ExteriorJailMarker, "ExteriorJailMarker");
                 fg.AppendItem(FollowerWaitMarker, "FollowerWaitMarker");
-                fg.AppendItem(EvidenceChest, "EvidenceChest");
-                fg.AppendItem(PlayerBelongingsChest, "PlayerBelongingsChest");
-                fg.AppendItem(CrimeGroup, "CrimeGroup");
+                fg.AppendItem(StolenGoodsContainer, "StolenGoodsContainer");
+                fg.AppendItem(PlayerInventoryContainer, "PlayerInventoryContainer");
+                fg.AppendItem(SharedCrimeFactionList, "SharedCrimeFactionList");
                 fg.AppendItem(JailOutfit, "JailOutfit");
                 CrimeValues?.ToString(fg);
                 if (Ranks.TryGet(out var RanksItem))
@@ -1167,8 +1159,8 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                fg.AppendItem(VendorList, "VendorList");
-                fg.AppendItem(VendorChest, "VendorChest");
+                fg.AppendItem(VendorBuySellList, "VendorBuySellList");
+                fg.AppendItem(MerchantContainer, "MerchantContainer");
                 VendorValues?.ToString(fg);
                 VendorLocation?.ToString(fg);
                 if (Conditions.TryGet(out var ConditionsItem))
@@ -1204,16 +1196,16 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Relations = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Relation.ErrorMask?>>?>(ExceptionExt.Combine(this.Relations?.Overall, rhs.Relations?.Overall), ExceptionExt.Combine(this.Relations?.Specific, rhs.Relations?.Specific));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.PrisonMarker = this.PrisonMarker.Combine(rhs.PrisonMarker);
+                ret.ExteriorJailMarker = this.ExteriorJailMarker.Combine(rhs.ExteriorJailMarker);
                 ret.FollowerWaitMarker = this.FollowerWaitMarker.Combine(rhs.FollowerWaitMarker);
-                ret.EvidenceChest = this.EvidenceChest.Combine(rhs.EvidenceChest);
-                ret.PlayerBelongingsChest = this.PlayerBelongingsChest.Combine(rhs.PlayerBelongingsChest);
-                ret.CrimeGroup = this.CrimeGroup.Combine(rhs.CrimeGroup);
+                ret.StolenGoodsContainer = this.StolenGoodsContainer.Combine(rhs.StolenGoodsContainer);
+                ret.PlayerInventoryContainer = this.PlayerInventoryContainer.Combine(rhs.PlayerInventoryContainer);
+                ret.SharedCrimeFactionList = this.SharedCrimeFactionList.Combine(rhs.SharedCrimeFactionList);
                 ret.JailOutfit = this.JailOutfit.Combine(rhs.JailOutfit);
                 ret.CrimeValues = this.CrimeValues.Combine(rhs.CrimeValues, (l, r) => l.Combine(r));
                 ret.Ranks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>(ExceptionExt.Combine(this.Ranks?.Overall, rhs.Ranks?.Overall), ExceptionExt.Combine(this.Ranks?.Specific, rhs.Ranks?.Specific));
-                ret.VendorList = this.VendorList.Combine(rhs.VendorList);
-                ret.VendorChest = this.VendorChest.Combine(rhs.VendorChest);
+                ret.VendorBuySellList = this.VendorBuySellList.Combine(rhs.VendorBuySellList);
+                ret.MerchantContainer = this.MerchantContainer.Combine(rhs.MerchantContainer);
                 ret.VendorValues = this.VendorValues.Combine(rhs.VendorValues, (l, r) => l.Combine(r));
                 ret.VendorLocation = this.VendorLocation.Combine(rhs.VendorLocation, (l, r) => l.Combine(r));
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
@@ -1242,18 +1234,18 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Name;
             public MaskItem<bool, Relation.TranslationMask?> Relations;
             public bool Flags;
-            public bool PrisonMarker;
+            public bool ExteriorJailMarker;
             public bool FollowerWaitMarker;
-            public bool EvidenceChest;
-            public bool PlayerBelongingsChest;
-            public bool CrimeGroup;
+            public bool StolenGoodsContainer;
+            public bool PlayerInventoryContainer;
+            public bool SharedCrimeFactionList;
             public bool JailOutfit;
             public MaskItem<bool, CrimeValues.TranslationMask?> CrimeValues;
             public MaskItem<bool, Rank.TranslationMask?> Ranks;
-            public bool VendorList;
-            public bool VendorChest;
+            public bool VendorBuySellList;
+            public bool MerchantContainer;
             public MaskItem<bool, VendorValues.TranslationMask?> VendorValues;
-            public MaskItem<bool, VendorLocation.TranslationMask?> VendorLocation;
+            public MaskItem<bool, Location.TranslationMask?> VendorLocation;
             public MaskItem<bool, Condition.TranslationMask?> Conditions;
             #endregion
 
@@ -1264,18 +1256,18 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Name = defaultOn;
                 this.Relations = new MaskItem<bool, Relation.TranslationMask?>(defaultOn, null);
                 this.Flags = defaultOn;
-                this.PrisonMarker = defaultOn;
+                this.ExteriorJailMarker = defaultOn;
                 this.FollowerWaitMarker = defaultOn;
-                this.EvidenceChest = defaultOn;
-                this.PlayerBelongingsChest = defaultOn;
-                this.CrimeGroup = defaultOn;
+                this.StolenGoodsContainer = defaultOn;
+                this.PlayerInventoryContainer = defaultOn;
+                this.SharedCrimeFactionList = defaultOn;
                 this.JailOutfit = defaultOn;
                 this.CrimeValues = new MaskItem<bool, CrimeValues.TranslationMask?>(defaultOn, null);
                 this.Ranks = new MaskItem<bool, Rank.TranslationMask?>(defaultOn, null);
-                this.VendorList = defaultOn;
-                this.VendorChest = defaultOn;
+                this.VendorBuySellList = defaultOn;
+                this.MerchantContainer = defaultOn;
                 this.VendorValues = new MaskItem<bool, VendorValues.TranslationMask?>(defaultOn, null);
-                this.VendorLocation = new MaskItem<bool, VendorLocation.TranslationMask?>(defaultOn, null);
+                this.VendorLocation = new MaskItem<bool, Location.TranslationMask?>(defaultOn, null);
                 this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
             }
 
@@ -1287,16 +1279,16 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Name, null));
                 ret.Add((Relations?.Overall ?? true, Relations?.Specific?.GetCrystal()));
                 ret.Add((Flags, null));
-                ret.Add((PrisonMarker, null));
+                ret.Add((ExteriorJailMarker, null));
                 ret.Add((FollowerWaitMarker, null));
-                ret.Add((EvidenceChest, null));
-                ret.Add((PlayerBelongingsChest, null));
-                ret.Add((CrimeGroup, null));
+                ret.Add((StolenGoodsContainer, null));
+                ret.Add((PlayerInventoryContainer, null));
+                ret.Add((SharedCrimeFactionList, null));
                 ret.Add((JailOutfit, null));
                 ret.Add((CrimeValues?.Overall ?? true, CrimeValues?.Specific?.GetCrystal()));
                 ret.Add((Ranks?.Overall ?? true, Ranks?.Specific?.GetCrystal()));
-                ret.Add((VendorList, null));
-                ret.Add((VendorChest, null));
+                ret.Add((VendorBuySellList, null));
+                ret.Add((MerchantContainer, null));
                 ret.Add((VendorValues?.Overall ?? true, VendorValues?.Specific?.GetCrystal()));
                 ret.Add((VendorLocation?.Overall ?? true, VendorLocation?.Specific?.GetCrystal()));
                 ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
@@ -1386,23 +1378,25 @@ namespace Mutagen.Bethesda.Skyrim
         IFactionGetter,
         ISkyrimMajorRecord,
         INamed,
+        IRelatable,
+        IObjectId,
         ILoquiObjectSetter<IFactionInternal>
     {
         new String? Name { get; set; }
         new ExtendedList<Relation> Relations { get; }
-        new Faction.FactionFlag? Flags { get; set; }
-        new IFormLinkNullable<PlacedObject> PrisonMarker { get; }
+        new Faction.FactionFlag Flags { get; set; }
+        new IFormLinkNullable<PlacedObject> ExteriorJailMarker { get; }
         new IFormLinkNullable<PlacedObject> FollowerWaitMarker { get; }
-        new IFormLinkNullable<PlacedObject> EvidenceChest { get; }
-        new IFormLinkNullable<PlacedObject> PlayerBelongingsChest { get; }
-        new IFormLinkNullable<FormList> CrimeGroup { get; }
+        new IFormLinkNullable<PlacedObject> StolenGoodsContainer { get; }
+        new IFormLinkNullable<PlacedObject> PlayerInventoryContainer { get; }
+        new IFormLinkNullable<FormList> SharedCrimeFactionList { get; }
         new IFormLinkNullable<Outfit> JailOutfit { get; }
         new CrimeValues? CrimeValues { get; set; }
         new ExtendedList<Rank> Ranks { get; }
-        new IFormLinkNullable<FormList> VendorList { get; }
-        new IFormLinkNullable<PlacedObject> VendorChest { get; }
+        new IFormLinkNullable<FormList> VendorBuySellList { get; }
+        new IFormLinkNullable<PlacedObject> MerchantContainer { get; }
         new VendorValues? VendorValues { get; set; }
-        new VendorLocation? VendorLocation { get; set; }
+        new Location? VendorLocation { get; set; }
         new ExtendedList<Condition>? Conditions { get; set; }
     }
 
@@ -1416,6 +1410,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IFactionGetter :
         ISkyrimMajorRecordGetter,
         INamedGetter,
+        IRelatableGetter,
+        IObjectIdGetter,
         ILoquiObject<IFactionGetter>,
         IXmlItem,
         ILinkContainer,
@@ -1424,19 +1420,19 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => Faction_Registration.Instance;
         String? Name { get; }
         IReadOnlyList<IRelationGetter> Relations { get; }
-        Faction.FactionFlag? Flags { get; }
-        IFormLinkNullableGetter<IPlacedObjectGetter> PrisonMarker { get; }
+        Faction.FactionFlag Flags { get; }
+        IFormLinkNullableGetter<IPlacedObjectGetter> ExteriorJailMarker { get; }
         IFormLinkNullableGetter<IPlacedObjectGetter> FollowerWaitMarker { get; }
-        IFormLinkNullableGetter<IPlacedObjectGetter> EvidenceChest { get; }
-        IFormLinkNullableGetter<IPlacedObjectGetter> PlayerBelongingsChest { get; }
-        IFormLinkNullableGetter<IFormListGetter> CrimeGroup { get; }
+        IFormLinkNullableGetter<IPlacedObjectGetter> StolenGoodsContainer { get; }
+        IFormLinkNullableGetter<IPlacedObjectGetter> PlayerInventoryContainer { get; }
+        IFormLinkNullableGetter<IFormListGetter> SharedCrimeFactionList { get; }
         IFormLinkNullableGetter<IOutfitGetter> JailOutfit { get; }
         ICrimeValuesGetter? CrimeValues { get; }
         IReadOnlyList<IRankGetter> Ranks { get; }
-        IFormLinkNullableGetter<IFormListGetter> VendorList { get; }
-        IFormLinkNullableGetter<IPlacedObjectGetter> VendorChest { get; }
+        IFormLinkNullableGetter<IFormListGetter> VendorBuySellList { get; }
+        IFormLinkNullableGetter<IPlacedObjectGetter> MerchantContainer { get; }
         IVendorValuesGetter? VendorValues { get; }
-        IVendorLocationGetter? VendorLocation { get; }
+        ILocationGetter? VendorLocation { get; }
         IReadOnlyList<IConditionGetter>? Conditions { get; }
 
     }
@@ -1741,16 +1737,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Name = 6,
         Relations = 7,
         Flags = 8,
-        PrisonMarker = 9,
+        ExteriorJailMarker = 9,
         FollowerWaitMarker = 10,
-        EvidenceChest = 11,
-        PlayerBelongingsChest = 12,
-        CrimeGroup = 13,
+        StolenGoodsContainer = 11,
+        PlayerInventoryContainer = 12,
+        SharedCrimeFactionList = 13,
         JailOutfit = 14,
         CrimeValues = 15,
         Ranks = 16,
-        VendorList = 17,
-        VendorChest = 18,
+        VendorBuySellList = 17,
+        MerchantContainer = 18,
         VendorValues = 19,
         VendorLocation = 20,
         Conditions = 21,
@@ -1809,26 +1805,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Faction_FieldIndex.Relations;
                 case "FLAGS":
                     return (ushort)Faction_FieldIndex.Flags;
-                case "PRISONMARKER":
-                    return (ushort)Faction_FieldIndex.PrisonMarker;
+                case "EXTERIORJAILMARKER":
+                    return (ushort)Faction_FieldIndex.ExteriorJailMarker;
                 case "FOLLOWERWAITMARKER":
                     return (ushort)Faction_FieldIndex.FollowerWaitMarker;
-                case "EVIDENCECHEST":
-                    return (ushort)Faction_FieldIndex.EvidenceChest;
-                case "PLAYERBELONGINGSCHEST":
-                    return (ushort)Faction_FieldIndex.PlayerBelongingsChest;
-                case "CRIMEGROUP":
-                    return (ushort)Faction_FieldIndex.CrimeGroup;
+                case "STOLENGOODSCONTAINER":
+                    return (ushort)Faction_FieldIndex.StolenGoodsContainer;
+                case "PLAYERINVENTORYCONTAINER":
+                    return (ushort)Faction_FieldIndex.PlayerInventoryContainer;
+                case "SHAREDCRIMEFACTIONLIST":
+                    return (ushort)Faction_FieldIndex.SharedCrimeFactionList;
                 case "JAILOUTFIT":
                     return (ushort)Faction_FieldIndex.JailOutfit;
                 case "CRIMEVALUES":
                     return (ushort)Faction_FieldIndex.CrimeValues;
                 case "RANKS":
                     return (ushort)Faction_FieldIndex.Ranks;
-                case "VENDORLIST":
-                    return (ushort)Faction_FieldIndex.VendorList;
-                case "VENDORCHEST":
-                    return (ushort)Faction_FieldIndex.VendorChest;
+                case "VENDORBUYSELLLIST":
+                    return (ushort)Faction_FieldIndex.VendorBuySellList;
+                case "MERCHANTCONTAINER":
+                    return (ushort)Faction_FieldIndex.MerchantContainer;
                 case "VENDORVALUES":
                     return (ushort)Faction_FieldIndex.VendorValues;
                 case "VENDORLOCATION":
@@ -1851,15 +1847,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return true;
                 case Faction_FieldIndex.Name:
                 case Faction_FieldIndex.Flags:
-                case Faction_FieldIndex.PrisonMarker:
+                case Faction_FieldIndex.ExteriorJailMarker:
                 case Faction_FieldIndex.FollowerWaitMarker:
-                case Faction_FieldIndex.EvidenceChest:
-                case Faction_FieldIndex.PlayerBelongingsChest:
-                case Faction_FieldIndex.CrimeGroup:
+                case Faction_FieldIndex.StolenGoodsContainer:
+                case Faction_FieldIndex.PlayerInventoryContainer:
+                case Faction_FieldIndex.SharedCrimeFactionList:
                 case Faction_FieldIndex.JailOutfit:
                 case Faction_FieldIndex.CrimeValues:
-                case Faction_FieldIndex.VendorList:
-                case Faction_FieldIndex.VendorChest:
+                case Faction_FieldIndex.VendorBuySellList:
+                case Faction_FieldIndex.MerchantContainer:
                 case Faction_FieldIndex.VendorValues:
                 case Faction_FieldIndex.VendorLocation:
                     return false;
@@ -1882,14 +1878,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return true;
                 case Faction_FieldIndex.Name:
                 case Faction_FieldIndex.Flags:
-                case Faction_FieldIndex.PrisonMarker:
+                case Faction_FieldIndex.ExteriorJailMarker:
                 case Faction_FieldIndex.FollowerWaitMarker:
-                case Faction_FieldIndex.EvidenceChest:
-                case Faction_FieldIndex.PlayerBelongingsChest:
-                case Faction_FieldIndex.CrimeGroup:
+                case Faction_FieldIndex.StolenGoodsContainer:
+                case Faction_FieldIndex.PlayerInventoryContainer:
+                case Faction_FieldIndex.SharedCrimeFactionList:
                 case Faction_FieldIndex.JailOutfit:
-                case Faction_FieldIndex.VendorList:
-                case Faction_FieldIndex.VendorChest:
+                case Faction_FieldIndex.VendorBuySellList:
+                case Faction_FieldIndex.MerchantContainer:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1904,16 +1900,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Faction_FieldIndex.Name:
                 case Faction_FieldIndex.Relations:
                 case Faction_FieldIndex.Flags:
-                case Faction_FieldIndex.PrisonMarker:
+                case Faction_FieldIndex.ExteriorJailMarker:
                 case Faction_FieldIndex.FollowerWaitMarker:
-                case Faction_FieldIndex.EvidenceChest:
-                case Faction_FieldIndex.PlayerBelongingsChest:
-                case Faction_FieldIndex.CrimeGroup:
+                case Faction_FieldIndex.StolenGoodsContainer:
+                case Faction_FieldIndex.PlayerInventoryContainer:
+                case Faction_FieldIndex.SharedCrimeFactionList:
                 case Faction_FieldIndex.JailOutfit:
                 case Faction_FieldIndex.CrimeValues:
                 case Faction_FieldIndex.Ranks:
-                case Faction_FieldIndex.VendorList:
-                case Faction_FieldIndex.VendorChest:
+                case Faction_FieldIndex.VendorBuySellList:
+                case Faction_FieldIndex.MerchantContainer:
                 case Faction_FieldIndex.VendorValues:
                 case Faction_FieldIndex.VendorLocation:
                 case Faction_FieldIndex.Conditions:
@@ -1934,26 +1930,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Relations";
                 case Faction_FieldIndex.Flags:
                     return "Flags";
-                case Faction_FieldIndex.PrisonMarker:
-                    return "PrisonMarker";
+                case Faction_FieldIndex.ExteriorJailMarker:
+                    return "ExteriorJailMarker";
                 case Faction_FieldIndex.FollowerWaitMarker:
                     return "FollowerWaitMarker";
-                case Faction_FieldIndex.EvidenceChest:
-                    return "EvidenceChest";
-                case Faction_FieldIndex.PlayerBelongingsChest:
-                    return "PlayerBelongingsChest";
-                case Faction_FieldIndex.CrimeGroup:
-                    return "CrimeGroup";
+                case Faction_FieldIndex.StolenGoodsContainer:
+                    return "StolenGoodsContainer";
+                case Faction_FieldIndex.PlayerInventoryContainer:
+                    return "PlayerInventoryContainer";
+                case Faction_FieldIndex.SharedCrimeFactionList:
+                    return "SharedCrimeFactionList";
                 case Faction_FieldIndex.JailOutfit:
                     return "JailOutfit";
                 case Faction_FieldIndex.CrimeValues:
                     return "CrimeValues";
                 case Faction_FieldIndex.Ranks:
                     return "Ranks";
-                case Faction_FieldIndex.VendorList:
-                    return "VendorList";
-                case Faction_FieldIndex.VendorChest:
-                    return "VendorChest";
+                case Faction_FieldIndex.VendorBuySellList:
+                    return "VendorBuySellList";
+                case Faction_FieldIndex.MerchantContainer:
+                    return "MerchantContainer";
                 case Faction_FieldIndex.VendorValues:
                     return "VendorValues";
                 case Faction_FieldIndex.VendorLocation:
@@ -1973,16 +1969,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Faction_FieldIndex.Name:
                 case Faction_FieldIndex.Relations:
                 case Faction_FieldIndex.Flags:
-                case Faction_FieldIndex.PrisonMarker:
+                case Faction_FieldIndex.ExteriorJailMarker:
                 case Faction_FieldIndex.FollowerWaitMarker:
-                case Faction_FieldIndex.EvidenceChest:
-                case Faction_FieldIndex.PlayerBelongingsChest:
-                case Faction_FieldIndex.CrimeGroup:
+                case Faction_FieldIndex.StolenGoodsContainer:
+                case Faction_FieldIndex.PlayerInventoryContainer:
+                case Faction_FieldIndex.SharedCrimeFactionList:
                 case Faction_FieldIndex.JailOutfit:
                 case Faction_FieldIndex.CrimeValues:
                 case Faction_FieldIndex.Ranks:
-                case Faction_FieldIndex.VendorList:
-                case Faction_FieldIndex.VendorChest:
+                case Faction_FieldIndex.VendorBuySellList:
+                case Faction_FieldIndex.MerchantContainer:
                 case Faction_FieldIndex.VendorValues:
                 case Faction_FieldIndex.VendorLocation:
                 case Faction_FieldIndex.Conditions:
@@ -2000,16 +1996,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Faction_FieldIndex.Name:
                 case Faction_FieldIndex.Relations:
                 case Faction_FieldIndex.Flags:
-                case Faction_FieldIndex.PrisonMarker:
+                case Faction_FieldIndex.ExteriorJailMarker:
                 case Faction_FieldIndex.FollowerWaitMarker:
-                case Faction_FieldIndex.EvidenceChest:
-                case Faction_FieldIndex.PlayerBelongingsChest:
-                case Faction_FieldIndex.CrimeGroup:
+                case Faction_FieldIndex.StolenGoodsContainer:
+                case Faction_FieldIndex.PlayerInventoryContainer:
+                case Faction_FieldIndex.SharedCrimeFactionList:
                 case Faction_FieldIndex.JailOutfit:
                 case Faction_FieldIndex.CrimeValues:
                 case Faction_FieldIndex.Ranks:
-                case Faction_FieldIndex.VendorList:
-                case Faction_FieldIndex.VendorChest:
+                case Faction_FieldIndex.VendorBuySellList:
+                case Faction_FieldIndex.MerchantContainer:
                 case Faction_FieldIndex.VendorValues:
                 case Faction_FieldIndex.VendorLocation:
                 case Faction_FieldIndex.Conditions:
@@ -2030,15 +2026,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(ExtendedList<Relation>);
                 case Faction_FieldIndex.Flags:
                     return typeof(Faction.FactionFlag);
-                case Faction_FieldIndex.PrisonMarker:
+                case Faction_FieldIndex.ExteriorJailMarker:
                     return typeof(IFormLinkNullable<PlacedObject>);
                 case Faction_FieldIndex.FollowerWaitMarker:
                     return typeof(IFormLinkNullable<PlacedObject>);
-                case Faction_FieldIndex.EvidenceChest:
+                case Faction_FieldIndex.StolenGoodsContainer:
                     return typeof(IFormLinkNullable<PlacedObject>);
-                case Faction_FieldIndex.PlayerBelongingsChest:
+                case Faction_FieldIndex.PlayerInventoryContainer:
                     return typeof(IFormLinkNullable<PlacedObject>);
-                case Faction_FieldIndex.CrimeGroup:
+                case Faction_FieldIndex.SharedCrimeFactionList:
                     return typeof(IFormLinkNullable<FormList>);
                 case Faction_FieldIndex.JailOutfit:
                     return typeof(IFormLinkNullable<Outfit>);
@@ -2046,14 +2042,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(CrimeValues);
                 case Faction_FieldIndex.Ranks:
                     return typeof(ExtendedList<Rank>);
-                case Faction_FieldIndex.VendorList:
+                case Faction_FieldIndex.VendorBuySellList:
                     return typeof(IFormLinkNullable<FormList>);
-                case Faction_FieldIndex.VendorChest:
+                case Faction_FieldIndex.MerchantContainer:
                     return typeof(IFormLinkNullable<PlacedObject>);
                 case Faction_FieldIndex.VendorValues:
                     return typeof(VendorValues);
                 case Faction_FieldIndex.VendorLocation:
-                    return typeof(VendorLocation);
+                    return typeof(Location);
                 case Faction_FieldIndex.Conditions:
                     return typeof(ExtendedList<Condition>);
                 default:
@@ -2076,6 +2072,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType RNAM_HEADER = new RecordType("RNAM");
         public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
         public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
+        public static readonly RecordType INAM_HEADER = new RecordType("INAM");
         public static readonly RecordType VEND_HEADER = new RecordType("VEND");
         public static readonly RecordType VENC_HEADER = new RecordType("VENC");
         public static readonly RecordType VENV_HEADER = new RecordType("VENV");
@@ -2130,16 +2127,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Name = default;
             item.Relations.Clear();
             item.Flags = default;
-            item.PrisonMarker.FormKey = null;
+            item.ExteriorJailMarker.FormKey = null;
             item.FollowerWaitMarker.FormKey = null;
-            item.EvidenceChest.FormKey = null;
-            item.PlayerBelongingsChest.FormKey = null;
-            item.CrimeGroup.FormKey = null;
+            item.StolenGoodsContainer.FormKey = null;
+            item.PlayerInventoryContainer.FormKey = null;
+            item.SharedCrimeFactionList.FormKey = null;
             item.JailOutfit.FormKey = null;
             item.CrimeValues = null;
             item.Ranks.Clear();
-            item.VendorList.FormKey = null;
-            item.VendorChest.FormKey = null;
+            item.VendorBuySellList.FormKey = null;
+            item.MerchantContainer.FormKey = null;
             item.VendorValues = null;
             item.VendorLocation = null;
             item.Conditions = null;
@@ -2290,10 +2287,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4C49414A: // JAIL
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.PrisonMarker.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.ExteriorJailMarker.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.PrisonMarker);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.ExteriorJailMarker);
                 }
                 case 0x54494157: // WAIT
                 {
@@ -2306,26 +2303,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4C4F5453: // STOL
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.EvidenceChest.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.StolenGoodsContainer.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.EvidenceChest);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.StolenGoodsContainer);
                 }
                 case 0x4E434C50: // PLCN
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.PlayerBelongingsChest.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.PlayerInventoryContainer.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.PlayerBelongingsChest);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.PlayerInventoryContainer);
                 }
                 case 0x52475243: // CRGR
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.CrimeGroup.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.SharedCrimeFactionList.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.CrimeGroup);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.SharedCrimeFactionList);
                 }
                 case 0x54554F4A: // JOUT
                 {
@@ -2343,6 +2340,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E52: // RNAM
                 case 0x4D414E4D: // MNAM
                 case 0x4D414E46: // FNAM
+                case 0x4D414E49: // INAM
                 {
                     item.Ranks.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Rank>.Instance.Parse(
@@ -2361,18 +2359,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x444E4556: // VEND
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.VendorList.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.VendorBuySellList.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorList);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorBuySellList);
                 }
                 case 0x434E4556: // VENC
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.VendorChest.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.MerchantContainer.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorChest);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.MerchantContainer);
                 }
                 case 0x564E4556: // VENV
                 {
@@ -2381,7 +2379,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x44564C50: // PLVD
                 {
-                    item.VendorLocation = Mutagen.Bethesda.Skyrim.VendorLocation.CreateFromBinary(frame: frame);
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength; // Skip header
+                    item.VendorLocation = Mutagen.Bethesda.Skyrim.Location.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorLocation);
                 }
                 case 0x43544943: // CITC
@@ -2471,11 +2470,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.PrisonMarker = object.Equals(item.PrisonMarker, rhs.PrisonMarker);
+            ret.ExteriorJailMarker = object.Equals(item.ExteriorJailMarker, rhs.ExteriorJailMarker);
             ret.FollowerWaitMarker = object.Equals(item.FollowerWaitMarker, rhs.FollowerWaitMarker);
-            ret.EvidenceChest = object.Equals(item.EvidenceChest, rhs.EvidenceChest);
-            ret.PlayerBelongingsChest = object.Equals(item.PlayerBelongingsChest, rhs.PlayerBelongingsChest);
-            ret.CrimeGroup = object.Equals(item.CrimeGroup, rhs.CrimeGroup);
+            ret.StolenGoodsContainer = object.Equals(item.StolenGoodsContainer, rhs.StolenGoodsContainer);
+            ret.PlayerInventoryContainer = object.Equals(item.PlayerInventoryContainer, rhs.PlayerInventoryContainer);
+            ret.SharedCrimeFactionList = object.Equals(item.SharedCrimeFactionList, rhs.SharedCrimeFactionList);
             ret.JailOutfit = object.Equals(item.JailOutfit, rhs.JailOutfit);
             ret.CrimeValues = EqualsMaskHelper.EqualsHelper(
                 item.CrimeValues,
@@ -2486,8 +2485,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Ranks,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.VendorList = object.Equals(item.VendorList, rhs.VendorList);
-            ret.VendorChest = object.Equals(item.VendorChest, rhs.VendorChest);
+            ret.VendorBuySellList = object.Equals(item.VendorBuySellList, rhs.VendorBuySellList);
+            ret.MerchantContainer = object.Equals(item.MerchantContainer, rhs.MerchantContainer);
             ret.VendorValues = EqualsMaskHelper.EqualsHelper(
                 item.VendorValues,
                 rhs.VendorValues,
@@ -2576,35 +2575,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+            if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(FlagsItem, "Flags");
+                fg.AppendItem(item.Flags, "Flags");
             }
-            if ((printMask?.PrisonMarker ?? true)
-                && item.PrisonMarker.TryGet(out var PrisonMarkerItem))
+            if ((printMask?.ExteriorJailMarker ?? true)
+                && item.ExteriorJailMarker.TryGet(out var ExteriorJailMarkerItem))
             {
-                fg.AppendItem(PrisonMarkerItem, "PrisonMarker");
+                fg.AppendItem(ExteriorJailMarkerItem, "ExteriorJailMarker");
             }
             if ((printMask?.FollowerWaitMarker ?? true)
                 && item.FollowerWaitMarker.TryGet(out var FollowerWaitMarkerItem))
             {
                 fg.AppendItem(FollowerWaitMarkerItem, "FollowerWaitMarker");
             }
-            if ((printMask?.EvidenceChest ?? true)
-                && item.EvidenceChest.TryGet(out var EvidenceChestItem))
+            if ((printMask?.StolenGoodsContainer ?? true)
+                && item.StolenGoodsContainer.TryGet(out var StolenGoodsContainerItem))
             {
-                fg.AppendItem(EvidenceChestItem, "EvidenceChest");
+                fg.AppendItem(StolenGoodsContainerItem, "StolenGoodsContainer");
             }
-            if ((printMask?.PlayerBelongingsChest ?? true)
-                && item.PlayerBelongingsChest.TryGet(out var PlayerBelongingsChestItem))
+            if ((printMask?.PlayerInventoryContainer ?? true)
+                && item.PlayerInventoryContainer.TryGet(out var PlayerInventoryContainerItem))
             {
-                fg.AppendItem(PlayerBelongingsChestItem, "PlayerBelongingsChest");
+                fg.AppendItem(PlayerInventoryContainerItem, "PlayerInventoryContainer");
             }
-            if ((printMask?.CrimeGroup ?? true)
-                && item.CrimeGroup.TryGet(out var CrimeGroupItem))
+            if ((printMask?.SharedCrimeFactionList ?? true)
+                && item.SharedCrimeFactionList.TryGet(out var SharedCrimeFactionListItem))
             {
-                fg.AppendItem(CrimeGroupItem, "CrimeGroup");
+                fg.AppendItem(SharedCrimeFactionListItem, "SharedCrimeFactionList");
             }
             if ((printMask?.JailOutfit ?? true)
                 && item.JailOutfit.TryGet(out var JailOutfitItem))
@@ -2634,15 +2632,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.VendorList ?? true)
-                && item.VendorList.TryGet(out var VendorListItem))
+            if ((printMask?.VendorBuySellList ?? true)
+                && item.VendorBuySellList.TryGet(out var VendorBuySellListItem))
             {
-                fg.AppendItem(VendorListItem, "VendorList");
+                fg.AppendItem(VendorBuySellListItem, "VendorBuySellList");
             }
-            if ((printMask?.VendorChest ?? true)
-                && item.VendorChest.TryGet(out var VendorChestItem))
+            if ((printMask?.MerchantContainer ?? true)
+                && item.MerchantContainer.TryGet(out var MerchantContainerItem))
             {
-                fg.AppendItem(VendorChestItem, "VendorChest");
+                fg.AppendItem(MerchantContainerItem, "MerchantContainer");
             }
             if ((printMask?.VendorValues?.Overall ?? true)
                 && item.VendorValues.TryGet(out var VendorValuesItem))
@@ -2680,17 +2678,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Faction.Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
-            if (checkMask.PrisonMarker.HasValue && checkMask.PrisonMarker.Value != (item.PrisonMarker.FormKey != null)) return false;
+            if (checkMask.ExteriorJailMarker.HasValue && checkMask.ExteriorJailMarker.Value != (item.ExteriorJailMarker.FormKey != null)) return false;
             if (checkMask.FollowerWaitMarker.HasValue && checkMask.FollowerWaitMarker.Value != (item.FollowerWaitMarker.FormKey != null)) return false;
-            if (checkMask.EvidenceChest.HasValue && checkMask.EvidenceChest.Value != (item.EvidenceChest.FormKey != null)) return false;
-            if (checkMask.PlayerBelongingsChest.HasValue && checkMask.PlayerBelongingsChest.Value != (item.PlayerBelongingsChest.FormKey != null)) return false;
-            if (checkMask.CrimeGroup.HasValue && checkMask.CrimeGroup.Value != (item.CrimeGroup.FormKey != null)) return false;
+            if (checkMask.StolenGoodsContainer.HasValue && checkMask.StolenGoodsContainer.Value != (item.StolenGoodsContainer.FormKey != null)) return false;
+            if (checkMask.PlayerInventoryContainer.HasValue && checkMask.PlayerInventoryContainer.Value != (item.PlayerInventoryContainer.FormKey != null)) return false;
+            if (checkMask.SharedCrimeFactionList.HasValue && checkMask.SharedCrimeFactionList.Value != (item.SharedCrimeFactionList.FormKey != null)) return false;
             if (checkMask.JailOutfit.HasValue && checkMask.JailOutfit.Value != (item.JailOutfit.FormKey != null)) return false;
             if (checkMask.CrimeValues?.Overall.HasValue ?? false && checkMask.CrimeValues.Overall.Value != (item.CrimeValues != null)) return false;
             if (checkMask.CrimeValues?.Specific != null && (item.CrimeValues == null || !item.CrimeValues.HasBeenSet(checkMask.CrimeValues.Specific))) return false;
-            if (checkMask.VendorList.HasValue && checkMask.VendorList.Value != (item.VendorList.FormKey != null)) return false;
-            if (checkMask.VendorChest.HasValue && checkMask.VendorChest.Value != (item.VendorChest.FormKey != null)) return false;
+            if (checkMask.VendorBuySellList.HasValue && checkMask.VendorBuySellList.Value != (item.VendorBuySellList.FormKey != null)) return false;
+            if (checkMask.MerchantContainer.HasValue && checkMask.MerchantContainer.Value != (item.MerchantContainer.FormKey != null)) return false;
             if (checkMask.VendorValues?.Overall.HasValue ?? false && checkMask.VendorValues.Overall.Value != (item.VendorValues != null)) return false;
             if (checkMask.VendorValues?.Specific != null && (item.VendorValues == null || !item.VendorValues.HasBeenSet(checkMask.VendorValues.Specific))) return false;
             if (checkMask.VendorLocation?.Overall.HasValue ?? false && checkMask.VendorLocation.Overall.Value != (item.VendorLocation != null)) return false;
@@ -2708,23 +2705,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Name = (item.Name != null);
             var RelationsItem = item.Relations;
             mask.Relations = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Relation.Mask<bool>?>>?>(true, RelationsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Relation.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.Flags = (item.Flags != null);
-            mask.PrisonMarker = (item.PrisonMarker.FormKey != null);
+            mask.Flags = true;
+            mask.ExteriorJailMarker = (item.ExteriorJailMarker.FormKey != null);
             mask.FollowerWaitMarker = (item.FollowerWaitMarker.FormKey != null);
-            mask.EvidenceChest = (item.EvidenceChest.FormKey != null);
-            mask.PlayerBelongingsChest = (item.PlayerBelongingsChest.FormKey != null);
-            mask.CrimeGroup = (item.CrimeGroup.FormKey != null);
+            mask.StolenGoodsContainer = (item.StolenGoodsContainer.FormKey != null);
+            mask.PlayerInventoryContainer = (item.PlayerInventoryContainer.FormKey != null);
+            mask.SharedCrimeFactionList = (item.SharedCrimeFactionList.FormKey != null);
             mask.JailOutfit = (item.JailOutfit.FormKey != null);
             var itemCrimeValues = item.CrimeValues;
             mask.CrimeValues = new MaskItem<bool, CrimeValues.Mask<bool>?>(itemCrimeValues != null, itemCrimeValues?.GetHasBeenSetMask());
             var RanksItem = item.Ranks;
             mask.Ranks = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Rank.Mask<bool>?>>?>(true, RanksItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Rank.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.VendorList = (item.VendorList.FormKey != null);
-            mask.VendorChest = (item.VendorChest.FormKey != null);
+            mask.VendorBuySellList = (item.VendorBuySellList.FormKey != null);
+            mask.MerchantContainer = (item.MerchantContainer.FormKey != null);
             var itemVendorValues = item.VendorValues;
             mask.VendorValues = new MaskItem<bool, VendorValues.Mask<bool>?>(itemVendorValues != null, itemVendorValues?.GetHasBeenSetMask());
             var itemVendorLocation = item.VendorLocation;
-            mask.VendorLocation = new MaskItem<bool, VendorLocation.Mask<bool>?>(itemVendorLocation != null, itemVendorLocation?.GetHasBeenSetMask());
+            mask.VendorLocation = new MaskItem<bool, Location.Mask<bool>?>(itemVendorLocation != null, itemVendorLocation?.GetHasBeenSetMask());
             if (item.Conditions.TryGet(out var ConditionsItem))
             {
                 mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
@@ -2783,16 +2780,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!lhs.Relations.SequenceEqual(rhs.Relations)) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.PrisonMarker.Equals(rhs.PrisonMarker)) return false;
+            if (!lhs.ExteriorJailMarker.Equals(rhs.ExteriorJailMarker)) return false;
             if (!lhs.FollowerWaitMarker.Equals(rhs.FollowerWaitMarker)) return false;
-            if (!lhs.EvidenceChest.Equals(rhs.EvidenceChest)) return false;
-            if (!lhs.PlayerBelongingsChest.Equals(rhs.PlayerBelongingsChest)) return false;
-            if (!lhs.CrimeGroup.Equals(rhs.CrimeGroup)) return false;
+            if (!lhs.StolenGoodsContainer.Equals(rhs.StolenGoodsContainer)) return false;
+            if (!lhs.PlayerInventoryContainer.Equals(rhs.PlayerInventoryContainer)) return false;
+            if (!lhs.SharedCrimeFactionList.Equals(rhs.SharedCrimeFactionList)) return false;
             if (!lhs.JailOutfit.Equals(rhs.JailOutfit)) return false;
             if (!object.Equals(lhs.CrimeValues, rhs.CrimeValues)) return false;
             if (!lhs.Ranks.SequenceEqual(rhs.Ranks)) return false;
-            if (!lhs.VendorList.Equals(rhs.VendorList)) return false;
-            if (!lhs.VendorChest.Equals(rhs.VendorChest)) return false;
+            if (!lhs.VendorBuySellList.Equals(rhs.VendorBuySellList)) return false;
+            if (!lhs.MerchantContainer.Equals(rhs.MerchantContainer)) return false;
             if (!object.Equals(lhs.VendorValues, rhs.VendorValues)) return false;
             if (!object.Equals(lhs.VendorLocation, rhs.VendorLocation)) return false;
             if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
@@ -2825,29 +2822,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 hash.Add(Nameitem);
             }
             hash.Add(item.Relations);
-            if (item.Flags.TryGet(out var Flagsitem))
+            hash.Add(item.Flags);
+            if (item.ExteriorJailMarker.TryGet(out var ExteriorJailMarkeritem))
             {
-                hash.Add(Flagsitem);
-            }
-            if (item.PrisonMarker.TryGet(out var PrisonMarkeritem))
-            {
-                hash.Add(PrisonMarkeritem);
+                hash.Add(ExteriorJailMarkeritem);
             }
             if (item.FollowerWaitMarker.TryGet(out var FollowerWaitMarkeritem))
             {
                 hash.Add(FollowerWaitMarkeritem);
             }
-            if (item.EvidenceChest.TryGet(out var EvidenceChestitem))
+            if (item.StolenGoodsContainer.TryGet(out var StolenGoodsContaineritem))
             {
-                hash.Add(EvidenceChestitem);
+                hash.Add(StolenGoodsContaineritem);
             }
-            if (item.PlayerBelongingsChest.TryGet(out var PlayerBelongingsChestitem))
+            if (item.PlayerInventoryContainer.TryGet(out var PlayerInventoryContaineritem))
             {
-                hash.Add(PlayerBelongingsChestitem);
+                hash.Add(PlayerInventoryContaineritem);
             }
-            if (item.CrimeGroup.TryGet(out var CrimeGroupitem))
+            if (item.SharedCrimeFactionList.TryGet(out var SharedCrimeFactionListitem))
             {
-                hash.Add(CrimeGroupitem);
+                hash.Add(SharedCrimeFactionListitem);
             }
             if (item.JailOutfit.TryGet(out var JailOutfititem))
             {
@@ -2858,13 +2852,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 hash.Add(CrimeValuesitem);
             }
             hash.Add(item.Ranks);
-            if (item.VendorList.TryGet(out var VendorListitem))
+            if (item.VendorBuySellList.TryGet(out var VendorBuySellListitem))
             {
-                hash.Add(VendorListitem);
+                hash.Add(VendorBuySellListitem);
             }
-            if (item.VendorChest.TryGet(out var VendorChestitem))
+            if (item.MerchantContainer.TryGet(out var MerchantContaineritem))
             {
-                hash.Add(VendorChestitem);
+                hash.Add(MerchantContaineritem);
             }
             if (item.VendorValues.TryGet(out var VendorValuesitem))
             {
@@ -2908,17 +2902,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            yield return obj.PrisonMarker;
+            yield return obj.ExteriorJailMarker;
             yield return obj.FollowerWaitMarker;
-            yield return obj.EvidenceChest;
-            yield return obj.PlayerBelongingsChest;
-            yield return obj.CrimeGroup;
+            yield return obj.StolenGoodsContainer;
+            yield return obj.PlayerInventoryContainer;
+            yield return obj.SharedCrimeFactionList;
             yield return obj.JailOutfit;
-            yield return obj.VendorList;
-            yield return obj.VendorChest;
-            if (obj.VendorLocation != null)
+            yield return obj.VendorBuySellList;
+            yield return obj.MerchantContainer;
+            if (obj.VendorLocation is ILinkContainer VendorLocationlinkCont)
             {
-                foreach (var item in obj.VendorLocation.Links)
+                foreach (var item in VendorLocationlinkCont.Links)
                 {
                     yield return item;
                 }
@@ -3009,25 +3003,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Flags = rhs.Flags;
             }
-            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.PrisonMarker) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.ExteriorJailMarker) ?? true))
             {
-                item.PrisonMarker.FormKey = rhs.PrisonMarker.FormKey;
+                item.ExteriorJailMarker.FormKey = rhs.ExteriorJailMarker.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.FollowerWaitMarker) ?? true))
             {
                 item.FollowerWaitMarker.FormKey = rhs.FollowerWaitMarker.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.EvidenceChest) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.StolenGoodsContainer) ?? true))
             {
-                item.EvidenceChest.FormKey = rhs.EvidenceChest.FormKey;
+                item.StolenGoodsContainer.FormKey = rhs.StolenGoodsContainer.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.PlayerBelongingsChest) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.PlayerInventoryContainer) ?? true))
             {
-                item.PlayerBelongingsChest.FormKey = rhs.PlayerBelongingsChest.FormKey;
+                item.PlayerInventoryContainer.FormKey = rhs.PlayerInventoryContainer.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.CrimeGroup) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.SharedCrimeFactionList) ?? true))
             {
-                item.CrimeGroup.FormKey = rhs.CrimeGroup.FormKey;
+                item.SharedCrimeFactionList.FormKey = rhs.SharedCrimeFactionList.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.JailOutfit) ?? true))
             {
@@ -3083,13 +3077,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorList) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorBuySellList) ?? true))
             {
-                item.VendorList.FormKey = rhs.VendorList.FormKey;
+                item.VendorBuySellList.FormKey = rhs.VendorBuySellList.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorChest) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.MerchantContainer) ?? true))
             {
-                item.VendorChest.FormKey = rhs.VendorChest.FormKey;
+                item.MerchantContainer.FormKey = rhs.MerchantContainer.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorValues) ?? true))
             {
@@ -3349,8 +3343,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         }
                     });
             }
-            if ((item.Flags != null)
-                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.Flags) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Faction_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<Faction.FactionFlag>.Instance.Write(
                     node: node,
@@ -3359,14 +3352,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Faction_FieldIndex.Flags,
                     errorMask: errorMask);
             }
-            if ((item.PrisonMarker.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.PrisonMarker) ?? true))
+            if ((item.ExteriorJailMarker.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.ExteriorJailMarker) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.PrisonMarker),
-                    item: item.PrisonMarker.FormKey.Value,
-                    fieldIndex: (int)Faction_FieldIndex.PrisonMarker,
+                    name: nameof(item.ExteriorJailMarker),
+                    item: item.ExteriorJailMarker.FormKey.Value,
+                    fieldIndex: (int)Faction_FieldIndex.ExteriorJailMarker,
                     errorMask: errorMask);
             }
             if ((item.FollowerWaitMarker.FormKey != null)
@@ -3379,34 +3372,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Faction_FieldIndex.FollowerWaitMarker,
                     errorMask: errorMask);
             }
-            if ((item.EvidenceChest.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.EvidenceChest) ?? true))
+            if ((item.StolenGoodsContainer.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.StolenGoodsContainer) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.EvidenceChest),
-                    item: item.EvidenceChest.FormKey.Value,
-                    fieldIndex: (int)Faction_FieldIndex.EvidenceChest,
+                    name: nameof(item.StolenGoodsContainer),
+                    item: item.StolenGoodsContainer.FormKey.Value,
+                    fieldIndex: (int)Faction_FieldIndex.StolenGoodsContainer,
                     errorMask: errorMask);
             }
-            if ((item.PlayerBelongingsChest.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.PlayerBelongingsChest) ?? true))
+            if ((item.PlayerInventoryContainer.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.PlayerInventoryContainer) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.PlayerBelongingsChest),
-                    item: item.PlayerBelongingsChest.FormKey.Value,
-                    fieldIndex: (int)Faction_FieldIndex.PlayerBelongingsChest,
+                    name: nameof(item.PlayerInventoryContainer),
+                    item: item.PlayerInventoryContainer.FormKey.Value,
+                    fieldIndex: (int)Faction_FieldIndex.PlayerInventoryContainer,
                     errorMask: errorMask);
             }
-            if ((item.CrimeGroup.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.CrimeGroup) ?? true))
+            if ((item.SharedCrimeFactionList.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.SharedCrimeFactionList) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.CrimeGroup),
-                    item: item.CrimeGroup.FormKey.Value,
-                    fieldIndex: (int)Faction_FieldIndex.CrimeGroup,
+                    name: nameof(item.SharedCrimeFactionList),
+                    item: item.SharedCrimeFactionList.FormKey.Value,
+                    fieldIndex: (int)Faction_FieldIndex.SharedCrimeFactionList,
                     errorMask: errorMask);
             }
             if ((item.JailOutfit.FormKey != null)
@@ -3455,24 +3448,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         }
                     });
             }
-            if ((item.VendorList.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorList) ?? true))
+            if ((item.VendorBuySellList.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorBuySellList) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.VendorList),
-                    item: item.VendorList.FormKey.Value,
-                    fieldIndex: (int)Faction_FieldIndex.VendorList,
+                    name: nameof(item.VendorBuySellList),
+                    item: item.VendorBuySellList.FormKey.Value,
+                    fieldIndex: (int)Faction_FieldIndex.VendorBuySellList,
                     errorMask: errorMask);
             }
-            if ((item.VendorChest.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorChest) ?? true))
+            if ((item.MerchantContainer.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Faction_FieldIndex.MerchantContainer) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.VendorChest),
-                    item: item.VendorChest.FormKey.Value,
-                    fieldIndex: (int)Faction_FieldIndex.VendorChest,
+                    name: nameof(item.MerchantContainer),
+                    item: item.MerchantContainer.FormKey.Value,
+                    fieldIndex: (int)Faction_FieldIndex.MerchantContainer,
                     errorMask: errorMask);
             }
             if ((item.VendorValues != null)
@@ -3494,7 +3487,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (item.VendorLocation.TryGet(out var VendorLocationItem))
                 {
-                    ((VendorLocationXmlWriteTranslation)((IXmlItem)VendorLocationItem).XmlWriteTranslator).Write(
+                    ((LocationXmlWriteTranslation)((IXmlItem)VendorLocationItem).XmlWriteTranslator).Write(
                         item: VendorLocationItem,
                         node: node,
                         name: nameof(item.VendorLocation),
@@ -3697,11 +3690,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "PrisonMarker":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.PrisonMarker);
+                case "ExteriorJailMarker":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.ExteriorJailMarker);
                     try
                     {
-                        item.PrisonMarker.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.ExteriorJailMarker.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3733,11 +3726,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "EvidenceChest":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.EvidenceChest);
+                case "StolenGoodsContainer":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.StolenGoodsContainer);
                     try
                     {
-                        item.EvidenceChest.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.StolenGoodsContainer.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3751,11 +3744,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "PlayerBelongingsChest":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.PlayerBelongingsChest);
+                case "PlayerInventoryContainer":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.PlayerInventoryContainer);
                     try
                     {
-                        item.PlayerBelongingsChest.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.PlayerInventoryContainer.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3769,11 +3762,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "CrimeGroup":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.CrimeGroup);
+                case "SharedCrimeFactionList":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.SharedCrimeFactionList);
                     try
                     {
-                        item.CrimeGroup.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.SharedCrimeFactionList.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3852,11 +3845,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "VendorList":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.VendorList);
+                case "VendorBuySellList":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.VendorBuySellList);
                     try
                     {
-                        item.VendorList.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.VendorBuySellList.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3870,11 +3863,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "VendorChest":
-                    errorMask?.PushIndex((int)Faction_FieldIndex.VendorChest);
+                case "MerchantContainer":
+                    errorMask?.PushIndex((int)Faction_FieldIndex.MerchantContainer);
                     try
                     {
-                        item.VendorChest.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.MerchantContainer.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3911,7 +3904,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Faction_FieldIndex.VendorLocation);
                     try
                     {
-                        item.VendorLocation = LoquiXmlTranslation<VendorLocation>.Instance.Parse(
+                        item.VendorLocation = LoquiXmlTranslation<Location>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
                             translationMask: translationMask?.GetSubCrystal((int)Faction_FieldIndex.VendorLocation));
@@ -4080,14 +4073,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             recordTypeConverter: conv);
                     }
                 });
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Faction.FactionFlag>.Instance.WriteNullable(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Faction.FactionFlag>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4,
                 header: recordTypeConverter.ConvertToCustom(Faction_Registration.DATA_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.PrisonMarker,
+                item: item.ExteriorJailMarker,
                 header: recordTypeConverter.ConvertToCustom(Faction_Registration.JAIL_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -4095,15 +4088,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(Faction_Registration.WAIT_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.EvidenceChest,
+                item: item.StolenGoodsContainer,
                 header: recordTypeConverter.ConvertToCustom(Faction_Registration.STOL_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.PlayerBelongingsChest,
+                item: item.PlayerInventoryContainer,
                 header: recordTypeConverter.ConvertToCustom(Faction_Registration.PLCN_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.CrimeGroup,
+                item: item.SharedCrimeFactionList,
                 header: recordTypeConverter.ConvertToCustom(Faction_Registration.CRGR_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -4131,11 +4124,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 });
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.VendorList,
+                item: item.VendorBuySellList,
                 header: recordTypeConverter.ConvertToCustom(Faction_Registration.VEND_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.VendorChest,
+                item: item.MerchantContainer,
                 header: recordTypeConverter.ConvertToCustom(Faction_Registration.VENC_HEADER));
             if (item.VendorValues.TryGet(out var VendorValuesItem))
             {
@@ -4146,10 +4139,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (item.VendorLocation.TryGet(out var VendorLocationItem))
             {
-                ((VendorLocationBinaryWriteTranslation)((IBinaryItem)VendorLocationItem).BinaryWriteTranslator).Write(
-                    item: VendorLocationItem,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                using (HeaderExport.ExportHeader(writer, Faction_Registration.PLVD_HEADER, Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                {
+                    ((LocationBinaryWriteTranslation)((IBinaryItem)VendorLocationItem).BinaryWriteTranslator).Write(
+                        item: VendorLocationItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
             }
             FactionBinaryWriteTranslation.WriteBinaryConditions(
                 writer: writer,
@@ -4297,32 +4293,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IRelationGetter> Relations { get; private set; } = ListExt.Empty<RelationBinaryOverlay>();
         #region Flags
         private int? _FlagsLocation;
-        public Faction.FactionFlag? Flags => _FlagsLocation.HasValue ? (Faction.FactionFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)) : default(Faction.FactionFlag?);
+        public Faction.FactionFlag Flags => _FlagsLocation.HasValue ? (Faction.FactionFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)) : default(Faction.FactionFlag);
         #endregion
-        #region PrisonMarker
-        private int? _PrisonMarkerLocation;
-        public bool PrisonMarker_IsSet => _PrisonMarkerLocation.HasValue;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> PrisonMarker => _PrisonMarkerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PrisonMarkerLocation.Value, _package.Meta)))) : FormLinkNullable<IPlacedObjectGetter>.Empty;
+        #region ExteriorJailMarker
+        private int? _ExteriorJailMarkerLocation;
+        public bool ExteriorJailMarker_IsSet => _ExteriorJailMarkerLocation.HasValue;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> ExteriorJailMarker => _ExteriorJailMarkerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ExteriorJailMarkerLocation.Value, _package.Meta)))) : FormLinkNullable<IPlacedObjectGetter>.Empty;
         #endregion
         #region FollowerWaitMarker
         private int? _FollowerWaitMarkerLocation;
         public bool FollowerWaitMarker_IsSet => _FollowerWaitMarkerLocation.HasValue;
         public IFormLinkNullableGetter<IPlacedObjectGetter> FollowerWaitMarker => _FollowerWaitMarkerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FollowerWaitMarkerLocation.Value, _package.Meta)))) : FormLinkNullable<IPlacedObjectGetter>.Empty;
         #endregion
-        #region EvidenceChest
-        private int? _EvidenceChestLocation;
-        public bool EvidenceChest_IsSet => _EvidenceChestLocation.HasValue;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> EvidenceChest => _EvidenceChestLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EvidenceChestLocation.Value, _package.Meta)))) : FormLinkNullable<IPlacedObjectGetter>.Empty;
+        #region StolenGoodsContainer
+        private int? _StolenGoodsContainerLocation;
+        public bool StolenGoodsContainer_IsSet => _StolenGoodsContainerLocation.HasValue;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> StolenGoodsContainer => _StolenGoodsContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _StolenGoodsContainerLocation.Value, _package.Meta)))) : FormLinkNullable<IPlacedObjectGetter>.Empty;
         #endregion
-        #region PlayerBelongingsChest
-        private int? _PlayerBelongingsChestLocation;
-        public bool PlayerBelongingsChest_IsSet => _PlayerBelongingsChestLocation.HasValue;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> PlayerBelongingsChest => _PlayerBelongingsChestLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PlayerBelongingsChestLocation.Value, _package.Meta)))) : FormLinkNullable<IPlacedObjectGetter>.Empty;
+        #region PlayerInventoryContainer
+        private int? _PlayerInventoryContainerLocation;
+        public bool PlayerInventoryContainer_IsSet => _PlayerInventoryContainerLocation.HasValue;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> PlayerInventoryContainer => _PlayerInventoryContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PlayerInventoryContainerLocation.Value, _package.Meta)))) : FormLinkNullable<IPlacedObjectGetter>.Empty;
         #endregion
-        #region CrimeGroup
-        private int? _CrimeGroupLocation;
-        public bool CrimeGroup_IsSet => _CrimeGroupLocation.HasValue;
-        public IFormLinkNullableGetter<IFormListGetter> CrimeGroup => _CrimeGroupLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _CrimeGroupLocation.Value, _package.Meta)))) : FormLinkNullable<IFormListGetter>.Empty;
+        #region SharedCrimeFactionList
+        private int? _SharedCrimeFactionListLocation;
+        public bool SharedCrimeFactionList_IsSet => _SharedCrimeFactionListLocation.HasValue;
+        public IFormLinkNullableGetter<IFormListGetter> SharedCrimeFactionList => _SharedCrimeFactionListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SharedCrimeFactionListLocation.Value, _package.Meta)))) : FormLinkNullable<IFormListGetter>.Empty;
         #endregion
         #region JailOutfit
         private int? _JailOutfitLocation;
@@ -4335,26 +4331,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool CrimeValues_IsSet => _CrimeValuesLocation.HasValue;
         #endregion
         public IReadOnlyList<IRankGetter> Ranks { get; private set; } = ListExt.Empty<RankBinaryOverlay>();
-        #region VendorList
-        private int? _VendorListLocation;
-        public bool VendorList_IsSet => _VendorListLocation.HasValue;
-        public IFormLinkNullableGetter<IFormListGetter> VendorList => _VendorListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VendorListLocation.Value, _package.Meta)))) : FormLinkNullable<IFormListGetter>.Empty;
+        #region VendorBuySellList
+        private int? _VendorBuySellListLocation;
+        public bool VendorBuySellList_IsSet => _VendorBuySellListLocation.HasValue;
+        public IFormLinkNullableGetter<IFormListGetter> VendorBuySellList => _VendorBuySellListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VendorBuySellListLocation.Value, _package.Meta)))) : FormLinkNullable<IFormListGetter>.Empty;
         #endregion
-        #region VendorChest
-        private int? _VendorChestLocation;
-        public bool VendorChest_IsSet => _VendorChestLocation.HasValue;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> VendorChest => _VendorChestLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VendorChestLocation.Value, _package.Meta)))) : FormLinkNullable<IPlacedObjectGetter>.Empty;
+        #region MerchantContainer
+        private int? _MerchantContainerLocation;
+        public bool MerchantContainer_IsSet => _MerchantContainerLocation.HasValue;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> MerchantContainer => _MerchantContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MerchantContainerLocation.Value, _package.Meta)))) : FormLinkNullable<IPlacedObjectGetter>.Empty;
         #endregion
         #region VendorValues
         private RangeInt32? _VendorValuesLocation;
         public IVendorValuesGetter? VendorValues => _VendorValuesLocation.HasValue ? VendorValuesBinaryOverlay.VendorValuesFactory(new BinaryMemoryReadStream(_data.Slice(_VendorValuesLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
         public bool VendorValues_IsSet => _VendorValuesLocation.HasValue;
         #endregion
-        #region VendorLocation
-        private RangeInt32? _VendorLocationLocation;
-        public IVendorLocationGetter? VendorLocation => _VendorLocationLocation.HasValue ? VendorLocationBinaryOverlay.VendorLocationFactory(new BinaryMemoryReadStream(_data.Slice(_VendorLocationLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
-        public bool VendorLocation_IsSet => _VendorLocationLocation.HasValue;
-        #endregion
+        public ILocationGetter? VendorLocation { get; private set; }
         #region Conditions
         partial void ConditionsCustomParse(
             BinaryMemoryReadStream stream,
@@ -4451,8 +4443,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4C49414A: // JAIL
                 {
-                    _PrisonMarkerLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.PrisonMarker);
+                    _ExteriorJailMarkerLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.ExteriorJailMarker);
                 }
                 case 0x54494157: // WAIT
                 {
@@ -4461,18 +4453,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4C4F5453: // STOL
                 {
-                    _EvidenceChestLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.EvidenceChest);
+                    _StolenGoodsContainerLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.StolenGoodsContainer);
                 }
                 case 0x4E434C50: // PLCN
                 {
-                    _PlayerBelongingsChestLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.PlayerBelongingsChest);
+                    _PlayerInventoryContainerLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.PlayerInventoryContainer);
                 }
                 case 0x52475243: // CRGR
                 {
-                    _CrimeGroupLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.CrimeGroup);
+                    _SharedCrimeFactionListLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.SharedCrimeFactionList);
                 }
                 case 0x54554F4A: // JOUT
                 {
@@ -4487,6 +4479,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E52: // RNAM
                 case 0x4D414E4D: // MNAM
                 case 0x4D414E46: // FNAM
+                case 0x4D414E49: // INAM
                 {
                     this.Ranks = this.ParseRepeatedTypelessSubrecord<RankBinaryOverlay>(
                         stream: stream,
@@ -4497,13 +4490,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x444E4556: // VEND
                 {
-                    _VendorListLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorList);
+                    _VendorBuySellListLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorBuySellList);
                 }
                 case 0x434E4556: // VENC
                 {
-                    _VendorChestLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorChest);
+                    _MerchantContainerLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.MerchantContainer);
                 }
                 case 0x564E4556: // VENV
                 {
@@ -4512,7 +4505,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x44564C50: // PLVD
                 {
-                    _VendorLocationLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    stream.Position += _package.Meta.SubConstants.HeaderLength;
+                    this.VendorLocation = LocationBinaryOverlay.LocationFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorLocation);
                 }
                 case 0x43544943: // CITC

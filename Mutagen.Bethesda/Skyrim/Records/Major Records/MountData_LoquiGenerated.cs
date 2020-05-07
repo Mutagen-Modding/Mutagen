@@ -31,32 +31,28 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class VendorLocation :
-        IVendorLocation,
-        ILoquiObjectSetter<VendorLocation>,
-        IEquatable<VendorLocation>,
+    public partial class MountData :
+        IMountData,
+        ILoquiObjectSetter<MountData>,
+        IEquatable<MountData>,
         IEqualsMask
     {
         #region Ctor
-        public VendorLocation()
+        public MountData()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Type
-        public VendorLocation.LocationType Type { get; set; } = default;
+        #region MountOffset
+        public P3Float MountOffset { get; set; } = default;
         #endregion
-        #region Reference
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<SkyrimMajorRecord> _Reference = new FormLink<SkyrimMajorRecord>();
-        public IFormLink<SkyrimMajorRecord> Reference => this._Reference;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ISkyrimMajorRecordGetter> IVendorLocationGetter.Reference => this.Reference;
+        #region DismountOffset
+        public P3Float DismountOffset { get; set; } = default;
         #endregion
-        #region Radius
-        public UInt32 Radius { get; set; } = default;
+        #region MountCameraOffset
+        public P3Float MountCameraOffset { get; set; } = default;
         #endregion
 
         #region To String
@@ -65,7 +61,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            VendorLocationMixIn.ToString(
+            MountDataMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -75,22 +71,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IVendorLocationGetter rhs)) return false;
-            return ((VendorLocationCommon)((IVendorLocationGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IMountDataGetter rhs)) return false;
+            return ((MountDataCommon)((IMountDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(VendorLocation obj)
+        public bool Equals(MountData obj)
         {
-            return ((VendorLocationCommon)((IVendorLocationGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MountDataCommon)((IMountDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((VendorLocationCommon)((IVendorLocationGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((MountDataCommon)((IMountDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => VendorLocationXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => MountDataXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -99,7 +95,7 @@ namespace Mutagen.Bethesda.Skyrim
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((VendorLocationXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((MountDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -108,9 +104,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static VendorLocation CreateFromXml(
+        public static MountData CreateFromXml(
             XElement node,
-            VendorLocation.TranslationMask? translationMask = null)
+            MountData.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -119,27 +115,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static VendorLocation CreateFromXml(
+        public static MountData CreateFromXml(
             XElement node,
-            out VendorLocation.ErrorMask errorMask,
-            VendorLocation.TranslationMask? translationMask = null)
+            out MountData.ErrorMask errorMask,
+            MountData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = VendorLocation.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MountData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public static VendorLocation CreateFromXml(
+        public static MountData CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new VendorLocation();
-            ((VendorLocationSetterCommon)((IVendorLocationGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new MountData();
+            ((MountDataSetterCommon)((IMountDataGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -147,9 +143,9 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static VendorLocation CreateFromXml(
+        public static MountData CreateFromXml(
             string path,
-            VendorLocation.TranslationMask? translationMask = null)
+            MountData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -157,10 +153,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static VendorLocation CreateFromXml(
+        public static MountData CreateFromXml(
             string path,
-            out VendorLocation.ErrorMask errorMask,
-            VendorLocation.TranslationMask? translationMask = null)
+            out MountData.ErrorMask errorMask,
+            MountData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -169,10 +165,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static VendorLocation CreateFromXml(
+        public static MountData CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            VendorLocation.TranslationMask? translationMask = null)
+            MountData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -181,9 +177,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static VendorLocation CreateFromXml(
+        public static MountData CreateFromXml(
             Stream stream,
-            VendorLocation.TranslationMask? translationMask = null)
+            MountData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -191,10 +187,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static VendorLocation CreateFromXml(
+        public static MountData CreateFromXml(
             Stream stream,
-            out VendorLocation.ErrorMask errorMask,
-            VendorLocation.TranslationMask? translationMask = null)
+            out MountData.ErrorMask errorMask,
+            MountData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -203,10 +199,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static VendorLocation CreateFromXml(
+        public static MountData CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            VendorLocation.TranslationMask? translationMask = null)
+            MountData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -228,19 +224,19 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Type = initialValue;
-                this.Reference = initialValue;
-                this.Radius = initialValue;
+                this.MountOffset = initialValue;
+                this.DismountOffset = initialValue;
+                this.MountCameraOffset = initialValue;
             }
 
             public Mask(
-                TItem Type,
-                TItem Reference,
-                TItem Radius)
+                TItem MountOffset,
+                TItem DismountOffset,
+                TItem MountCameraOffset)
             {
-                this.Type = Type;
-                this.Reference = Reference;
-                this.Radius = Radius;
+                this.MountOffset = MountOffset;
+                this.DismountOffset = DismountOffset;
+                this.MountCameraOffset = MountCameraOffset;
             }
 
             #pragma warning disable CS8618
@@ -252,9 +248,9 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem Type;
-            public TItem Reference;
-            public TItem Radius;
+            public TItem MountOffset;
+            public TItem DismountOffset;
+            public TItem MountCameraOffset;
             #endregion
 
             #region Equals
@@ -267,17 +263,17 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Type, rhs.Type)) return false;
-                if (!object.Equals(this.Reference, rhs.Reference)) return false;
-                if (!object.Equals(this.Radius, rhs.Radius)) return false;
+                if (!object.Equals(this.MountOffset, rhs.MountOffset)) return false;
+                if (!object.Equals(this.DismountOffset, rhs.DismountOffset)) return false;
+                if (!object.Equals(this.MountCameraOffset, rhs.MountCameraOffset)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Type);
-                hash.Add(this.Reference);
-                hash.Add(this.Radius);
+                hash.Add(this.MountOffset);
+                hash.Add(this.DismountOffset);
+                hash.Add(this.MountCameraOffset);
                 return hash.ToHashCode();
             }
 
@@ -286,9 +282,9 @@ namespace Mutagen.Bethesda.Skyrim
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Type)) return false;
-                if (!eval(this.Reference)) return false;
-                if (!eval(this.Radius)) return false;
+                if (!eval(this.MountOffset)) return false;
+                if (!eval(this.DismountOffset)) return false;
+                if (!eval(this.MountCameraOffset)) return false;
                 return true;
             }
             #endregion
@@ -296,9 +292,9 @@ namespace Mutagen.Bethesda.Skyrim
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Type)) return true;
-                if (eval(this.Reference)) return true;
-                if (eval(this.Radius)) return true;
+                if (eval(this.MountOffset)) return true;
+                if (eval(this.DismountOffset)) return true;
+                if (eval(this.MountCameraOffset)) return true;
                 return false;
             }
             #endregion
@@ -306,16 +302,16 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new VendorLocation.Mask<R>();
+                var ret = new MountData.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Type = eval(this.Type);
-                obj.Reference = eval(this.Reference);
-                obj.Radius = eval(this.Radius);
+                obj.MountOffset = eval(this.MountOffset);
+                obj.DismountOffset = eval(this.DismountOffset);
+                obj.MountCameraOffset = eval(this.MountCameraOffset);
             }
             #endregion
 
@@ -325,30 +321,30 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(VendorLocation.Mask<bool>? printMask = null)
+            public string ToString(MountData.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, VendorLocation.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, MountData.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(VendorLocation.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(MountData.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Type ?? true)
+                    if (printMask?.MountOffset ?? true)
                     {
-                        fg.AppendItem(Type, "Type");
+                        fg.AppendItem(MountOffset, "MountOffset");
                     }
-                    if (printMask?.Reference ?? true)
+                    if (printMask?.DismountOffset ?? true)
                     {
-                        fg.AppendItem(Reference, "Reference");
+                        fg.AppendItem(DismountOffset, "DismountOffset");
                     }
-                    if (printMask?.Radius ?? true)
+                    if (printMask?.MountCameraOffset ?? true)
                     {
-                        fg.AppendItem(Radius, "Radius");
+                        fg.AppendItem(MountCameraOffset, "MountCameraOffset");
                     }
                 }
                 fg.AppendLine("]");
@@ -375,23 +371,23 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
-            public Exception? Type;
-            public Exception? Reference;
-            public Exception? Radius;
+            public Exception? MountOffset;
+            public Exception? DismountOffset;
+            public Exception? MountCameraOffset;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                VendorLocation_FieldIndex enu = (VendorLocation_FieldIndex)index;
+                MountData_FieldIndex enu = (MountData_FieldIndex)index;
                 switch (enu)
                 {
-                    case VendorLocation_FieldIndex.Type:
-                        return Type;
-                    case VendorLocation_FieldIndex.Reference:
-                        return Reference;
-                    case VendorLocation_FieldIndex.Radius:
-                        return Radius;
+                    case MountData_FieldIndex.MountOffset:
+                        return MountOffset;
+                    case MountData_FieldIndex.DismountOffset:
+                        return DismountOffset;
+                    case MountData_FieldIndex.MountCameraOffset:
+                        return MountCameraOffset;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -399,17 +395,17 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void SetNthException(int index, Exception ex)
             {
-                VendorLocation_FieldIndex enu = (VendorLocation_FieldIndex)index;
+                MountData_FieldIndex enu = (MountData_FieldIndex)index;
                 switch (enu)
                 {
-                    case VendorLocation_FieldIndex.Type:
-                        this.Type = ex;
+                    case MountData_FieldIndex.MountOffset:
+                        this.MountOffset = ex;
                         break;
-                    case VendorLocation_FieldIndex.Reference:
-                        this.Reference = ex;
+                    case MountData_FieldIndex.DismountOffset:
+                        this.DismountOffset = ex;
                         break;
-                    case VendorLocation_FieldIndex.Radius:
-                        this.Radius = ex;
+                    case MountData_FieldIndex.MountCameraOffset:
+                        this.MountCameraOffset = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -418,17 +414,17 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void SetNthMask(int index, object obj)
             {
-                VendorLocation_FieldIndex enu = (VendorLocation_FieldIndex)index;
+                MountData_FieldIndex enu = (MountData_FieldIndex)index;
                 switch (enu)
                 {
-                    case VendorLocation_FieldIndex.Type:
-                        this.Type = (Exception?)obj;
+                    case MountData_FieldIndex.MountOffset:
+                        this.MountOffset = (Exception?)obj;
                         break;
-                    case VendorLocation_FieldIndex.Reference:
-                        this.Reference = (Exception?)obj;
+                    case MountData_FieldIndex.DismountOffset:
+                        this.DismountOffset = (Exception?)obj;
                         break;
-                    case VendorLocation_FieldIndex.Radius:
-                        this.Radius = (Exception?)obj;
+                    case MountData_FieldIndex.MountCameraOffset:
+                        this.MountCameraOffset = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -438,9 +434,9 @@ namespace Mutagen.Bethesda.Skyrim
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Type != null) return true;
-                if (Reference != null) return true;
-                if (Radius != null) return true;
+                if (MountOffset != null) return true;
+                if (DismountOffset != null) return true;
+                if (MountCameraOffset != null) return true;
                 return false;
             }
             #endregion
@@ -475,9 +471,9 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendItem(Type, "Type");
-                fg.AppendItem(Reference, "Reference");
-                fg.AppendItem(Radius, "Radius");
+                fg.AppendItem(MountOffset, "MountOffset");
+                fg.AppendItem(DismountOffset, "DismountOffset");
+                fg.AppendItem(MountCameraOffset, "MountCameraOffset");
             }
             #endregion
 
@@ -486,9 +482,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Type = this.Type.Combine(rhs.Type);
-                ret.Reference = this.Reference.Combine(rhs.Reference);
-                ret.Radius = this.Radius.Combine(rhs.Radius);
+                ret.MountOffset = this.MountOffset.Combine(rhs.MountOffset);
+                ret.DismountOffset = this.DismountOffset.Combine(rhs.DismountOffset);
+                ret.MountCameraOffset = this.MountCameraOffset.Combine(rhs.MountCameraOffset);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -510,17 +506,17 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public bool Type;
-            public bool Reference;
-            public bool Radius;
+            public bool MountOffset;
+            public bool DismountOffset;
+            public bool MountCameraOffset;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.Type = defaultOn;
-                this.Reference = defaultOn;
-                this.Radius = defaultOn;
+                this.MountOffset = defaultOn;
+                this.DismountOffset = defaultOn;
+                this.MountCameraOffset = defaultOn;
             }
 
             #endregion
@@ -536,48 +532,42 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Type, null));
-                ret.Add((Reference, null));
-                ret.Add((Radius, null));
+                ret.Add((MountOffset, null));
+                ret.Add((DismountOffset, null));
+                ret.Add((MountCameraOffset, null));
             }
         }
         #endregion
 
-        #region Mutagen
-        public new static readonly RecordType GrupRecordType = VendorLocation_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<ILinkGetter> Links => VendorLocationCommon.Instance.GetLinks(this);
-        #endregion
-
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => VendorLocationBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => MountDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((VendorLocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((MountDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static VendorLocation CreateFromBinary(MutagenFrame frame)
+        public static MountData CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public static VendorLocation CreateFromBinary(
+        public static MountData CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new VendorLocation();
-            ((VendorLocationSetterCommon)((IVendorLocationGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new MountData();
+            ((MountDataSetterCommon)((IMountDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -590,36 +580,35 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IVendorLocationGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMountDataGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((VendorLocationSetterCommon)((IVendorLocationGetter)this).CommonSetterInstance()!).Clear(this);
+            ((MountDataSetterCommon)((IMountDataGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static VendorLocation GetNew()
+        internal static MountData GetNew()
         {
-            return new VendorLocation();
+            return new MountData();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IVendorLocation :
-        IVendorLocationGetter,
-        ILoquiObjectSetter<IVendorLocation>
+    public partial interface IMountData :
+        IMountDataGetter,
+        ILoquiObjectSetter<IMountData>
     {
-        new VendorLocation.LocationType Type { get; set; }
-        new IFormLink<SkyrimMajorRecord> Reference { get; }
-        new UInt32 Radius { get; set; }
+        new P3Float MountOffset { get; set; }
+        new P3Float DismountOffset { get; set; }
+        new P3Float MountCameraOffset { get; set; }
     }
 
-    public partial interface IVendorLocationGetter :
+    public partial interface IMountDataGetter :
         ILoquiObject,
-        ILoquiObject<IVendorLocationGetter>,
+        ILoquiObject<IMountDataGetter>,
         IXmlItem,
-        ILinkContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -628,52 +617,52 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => VendorLocation_Registration.Instance;
-        VendorLocation.LocationType Type { get; }
-        IFormLinkGetter<ISkyrimMajorRecordGetter> Reference { get; }
-        UInt32 Radius { get; }
+        static ILoquiRegistration Registration => MountData_Registration.Instance;
+        P3Float MountOffset { get; }
+        P3Float DismountOffset { get; }
+        P3Float MountCameraOffset { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class VendorLocationMixIn
+    public static partial class MountDataMixIn
     {
-        public static void Clear(this IVendorLocation item)
+        public static void Clear(this IMountData item)
         {
-            ((VendorLocationSetterCommon)((IVendorLocationGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((MountDataSetterCommon)((IMountDataGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static VendorLocation.Mask<bool> GetEqualsMask(
-            this IVendorLocationGetter item,
-            IVendorLocationGetter rhs,
+        public static MountData.Mask<bool> GetEqualsMask(
+            this IMountDataGetter item,
+            IMountDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((VendorLocationCommon)((IVendorLocationGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((MountDataCommon)((IMountDataGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IVendorLocationGetter item,
+            this IMountDataGetter item,
             string? name = null,
-            VendorLocation.Mask<bool>? printMask = null)
+            MountData.Mask<bool>? printMask = null)
         {
-            return ((VendorLocationCommon)((IVendorLocationGetter)item).CommonInstance()!).ToString(
+            return ((MountDataCommon)((IMountDataGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IVendorLocationGetter item,
+            this IMountDataGetter item,
             FileGeneration fg,
             string? name = null,
-            VendorLocation.Mask<bool>? printMask = null)
+            MountData.Mask<bool>? printMask = null)
         {
-            ((VendorLocationCommon)((IVendorLocationGetter)item).CommonInstance()!).ToString(
+            ((MountDataCommon)((IMountDataGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -681,37 +670,37 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this IVendorLocationGetter item,
-            VendorLocation.Mask<bool?> checkMask)
+            this IMountDataGetter item,
+            MountData.Mask<bool?> checkMask)
         {
-            return ((VendorLocationCommon)((IVendorLocationGetter)item).CommonInstance()!).HasBeenSet(
+            return ((MountDataCommon)((IMountDataGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static VendorLocation.Mask<bool> GetHasBeenSetMask(this IVendorLocationGetter item)
+        public static MountData.Mask<bool> GetHasBeenSetMask(this IMountDataGetter item)
         {
-            var ret = new VendorLocation.Mask<bool>(false);
-            ((VendorLocationCommon)((IVendorLocationGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new MountData.Mask<bool>(false);
+            ((MountDataCommon)((IMountDataGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IVendorLocationGetter item,
-            IVendorLocationGetter rhs)
+            this IMountDataGetter item,
+            IMountDataGetter rhs)
         {
-            return ((VendorLocationCommon)((IVendorLocationGetter)item).CommonInstance()!).Equals(
+            return ((MountDataCommon)((IMountDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this IVendorLocation lhs,
-            IVendorLocationGetter rhs)
+            this IMountData lhs,
+            IMountDataGetter rhs)
         {
-            ((VendorLocationSetterTranslationCommon)((IVendorLocationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MountDataSetterTranslationCommon)((IMountDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -719,11 +708,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this IVendorLocation lhs,
-            IVendorLocationGetter rhs,
-            VendorLocation.TranslationMask? copyMask = null)
+            this IMountData lhs,
+            IMountDataGetter rhs,
+            MountData.TranslationMask? copyMask = null)
         {
-            ((VendorLocationSetterTranslationCommon)((IVendorLocationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MountDataSetterTranslationCommon)((IMountDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -731,59 +720,59 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this IVendorLocation lhs,
-            IVendorLocationGetter rhs,
-            out VendorLocation.ErrorMask errorMask,
-            VendorLocation.TranslationMask? copyMask = null)
+            this IMountData lhs,
+            IMountDataGetter rhs,
+            out MountData.ErrorMask errorMask,
+            MountData.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((VendorLocationSetterTranslationCommon)((IVendorLocationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MountDataSetterTranslationCommon)((IMountDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = VendorLocation.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MountData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IVendorLocation lhs,
-            IVendorLocationGetter rhs,
+            this IMountData lhs,
+            IMountDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((VendorLocationSetterTranslationCommon)((IVendorLocationGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MountDataSetterTranslationCommon)((IMountDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static VendorLocation DeepCopy(
-            this IVendorLocationGetter item,
-            VendorLocation.TranslationMask? copyMask = null)
+        public static MountData DeepCopy(
+            this IMountDataGetter item,
+            MountData.TranslationMask? copyMask = null)
         {
-            return ((VendorLocationSetterTranslationCommon)((IVendorLocationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MountDataSetterTranslationCommon)((IMountDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static VendorLocation DeepCopy(
-            this IVendorLocationGetter item,
-            out VendorLocation.ErrorMask errorMask,
-            VendorLocation.TranslationMask? copyMask = null)
+        public static MountData DeepCopy(
+            this IMountDataGetter item,
+            out MountData.ErrorMask errorMask,
+            MountData.TranslationMask? copyMask = null)
         {
-            return ((VendorLocationSetterTranslationCommon)((IVendorLocationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MountDataSetterTranslationCommon)((IMountDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static VendorLocation DeepCopy(
-            this IVendorLocationGetter item,
+        public static MountData DeepCopy(
+            this IMountDataGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((VendorLocationSetterTranslationCommon)((IVendorLocationGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MountDataSetterTranslationCommon)((IMountDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -792,9 +781,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IVendorLocation item,
+            this IMountData item,
             XElement node,
-            VendorLocation.TranslationMask? translationMask = null)
+            MountData.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -805,10 +794,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IVendorLocation item,
+            this IMountData item,
             XElement node,
-            out VendorLocation.ErrorMask errorMask,
-            VendorLocation.TranslationMask? translationMask = null)
+            out MountData.ErrorMask errorMask,
+            MountData.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -816,16 +805,16 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = VendorLocation.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MountData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this IVendorLocation item,
+            this IMountData item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((VendorLocationSetterCommon)((IVendorLocationGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((MountDataSetterCommon)((IMountDataGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -833,9 +822,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IVendorLocation item,
+            this IMountData item,
             string path,
-            VendorLocation.TranslationMask? translationMask = null)
+            MountData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -845,10 +834,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IVendorLocation item,
+            this IMountData item,
             string path,
-            out VendorLocation.ErrorMask errorMask,
-            VendorLocation.TranslationMask? translationMask = null)
+            out MountData.ErrorMask errorMask,
+            MountData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -859,10 +848,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IVendorLocation item,
+            this IMountData item,
             string path,
             ErrorMaskBuilder? errorMask,
-            VendorLocation.TranslationMask? translationMask = null)
+            MountData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -873,9 +862,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IVendorLocation item,
+            this IMountData item,
             Stream stream,
-            VendorLocation.TranslationMask? translationMask = null)
+            MountData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -885,10 +874,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IVendorLocation item,
+            this IMountData item,
             Stream stream,
-            out VendorLocation.ErrorMask errorMask,
-            VendorLocation.TranslationMask? translationMask = null)
+            out MountData.ErrorMask errorMask,
+            MountData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -899,10 +888,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IVendorLocation item,
+            this IMountData item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            VendorLocation.TranslationMask? translationMask = null)
+            MountData.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -917,7 +906,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IVendorLocation item,
+            this IMountData item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -927,11 +916,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromBinary(
-            this IVendorLocation item,
+            this IMountData item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((VendorLocationSetterCommon)((IVendorLocationGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((MountDataSetterCommon)((IMountDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -947,49 +936,49 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum VendorLocation_FieldIndex
+    public enum MountData_FieldIndex
     {
-        Type = 0,
-        Reference = 1,
-        Radius = 2,
+        MountOffset = 0,
+        DismountOffset = 1,
+        MountCameraOffset = 2,
     }
     #endregion
 
     #region Registration
-    public partial class VendorLocation_Registration : ILoquiRegistration
+    public partial class MountData_Registration : ILoquiRegistration
     {
-        public static readonly VendorLocation_Registration Instance = new VendorLocation_Registration();
+        public static readonly MountData_Registration Instance = new MountData_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 35,
+            msgID: 235,
             version: 0);
 
-        public const string GUID = "5bd28818-6711-45ca-bed6-de977e414602";
+        public const string GUID = "ad650ea7-f5c5-4e2d-8a01-55a11e11488b";
 
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(VendorLocation.Mask<>);
+        public static readonly Type MaskType = typeof(MountData.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(VendorLocation.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(MountData.ErrorMask);
 
-        public static readonly Type ClassType = typeof(VendorLocation);
+        public static readonly Type ClassType = typeof(MountData);
 
-        public static readonly Type GetterType = typeof(IVendorLocationGetter);
+        public static readonly Type GetterType = typeof(IMountDataGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IVendorLocation);
+        public static readonly Type SetterType = typeof(IMountData);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.VendorLocation";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.MountData";
 
-        public const string Name = "VendorLocation";
+        public const string Name = "MountData";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -1001,12 +990,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "TYPE":
-                    return (ushort)VendorLocation_FieldIndex.Type;
-                case "REFERENCE":
-                    return (ushort)VendorLocation_FieldIndex.Reference;
-                case "RADIUS":
-                    return (ushort)VendorLocation_FieldIndex.Radius;
+                case "MOUNTOFFSET":
+                    return (ushort)MountData_FieldIndex.MountOffset;
+                case "DISMOUNTOFFSET":
+                    return (ushort)MountData_FieldIndex.DismountOffset;
+                case "MOUNTCAMERAOFFSET":
+                    return (ushort)MountData_FieldIndex.MountCameraOffset;
                 default:
                     return null;
             }
@@ -1014,12 +1003,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            VendorLocation_FieldIndex enu = (VendorLocation_FieldIndex)index;
+            MountData_FieldIndex enu = (MountData_FieldIndex)index;
             switch (enu)
             {
-                case VendorLocation_FieldIndex.Type:
-                case VendorLocation_FieldIndex.Reference:
-                case VendorLocation_FieldIndex.Radius:
+                case MountData_FieldIndex.MountOffset:
+                case MountData_FieldIndex.DismountOffset:
+                case MountData_FieldIndex.MountCameraOffset:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1028,12 +1017,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            VendorLocation_FieldIndex enu = (VendorLocation_FieldIndex)index;
+            MountData_FieldIndex enu = (MountData_FieldIndex)index;
             switch (enu)
             {
-                case VendorLocation_FieldIndex.Type:
-                case VendorLocation_FieldIndex.Reference:
-                case VendorLocation_FieldIndex.Radius:
+                case MountData_FieldIndex.MountOffset:
+                case MountData_FieldIndex.DismountOffset:
+                case MountData_FieldIndex.MountCameraOffset:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1042,12 +1031,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            VendorLocation_FieldIndex enu = (VendorLocation_FieldIndex)index;
+            MountData_FieldIndex enu = (MountData_FieldIndex)index;
             switch (enu)
             {
-                case VendorLocation_FieldIndex.Type:
-                case VendorLocation_FieldIndex.Reference:
-                case VendorLocation_FieldIndex.Radius:
+                case MountData_FieldIndex.MountOffset:
+                case MountData_FieldIndex.DismountOffset:
+                case MountData_FieldIndex.MountCameraOffset:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1056,15 +1045,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static string GetNthName(ushort index)
         {
-            VendorLocation_FieldIndex enu = (VendorLocation_FieldIndex)index;
+            MountData_FieldIndex enu = (MountData_FieldIndex)index;
             switch (enu)
             {
-                case VendorLocation_FieldIndex.Type:
-                    return "Type";
-                case VendorLocation_FieldIndex.Reference:
-                    return "Reference";
-                case VendorLocation_FieldIndex.Radius:
-                    return "Radius";
+                case MountData_FieldIndex.MountOffset:
+                    return "MountOffset";
+                case MountData_FieldIndex.DismountOffset:
+                    return "DismountOffset";
+                case MountData_FieldIndex.MountCameraOffset:
+                    return "MountCameraOffset";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1072,12 +1061,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            VendorLocation_FieldIndex enu = (VendorLocation_FieldIndex)index;
+            MountData_FieldIndex enu = (MountData_FieldIndex)index;
             switch (enu)
             {
-                case VendorLocation_FieldIndex.Type:
-                case VendorLocation_FieldIndex.Reference:
-                case VendorLocation_FieldIndex.Radius:
+                case MountData_FieldIndex.MountOffset:
+                case MountData_FieldIndex.DismountOffset:
+                case MountData_FieldIndex.MountCameraOffset:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1086,12 +1075,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsProtected(ushort index)
         {
-            VendorLocation_FieldIndex enu = (VendorLocation_FieldIndex)index;
+            MountData_FieldIndex enu = (MountData_FieldIndex)index;
             switch (enu)
             {
-                case VendorLocation_FieldIndex.Type:
-                case VendorLocation_FieldIndex.Reference:
-                case VendorLocation_FieldIndex.Radius:
+                case MountData_FieldIndex.MountOffset:
+                case MountData_FieldIndex.DismountOffset:
+                case MountData_FieldIndex.MountCameraOffset:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1100,26 +1089,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static Type GetNthType(ushort index)
         {
-            VendorLocation_FieldIndex enu = (VendorLocation_FieldIndex)index;
+            MountData_FieldIndex enu = (MountData_FieldIndex)index;
             switch (enu)
             {
-                case VendorLocation_FieldIndex.Type:
-                    return typeof(VendorLocation.LocationType);
-                case VendorLocation_FieldIndex.Reference:
-                    return typeof(IFormLink<SkyrimMajorRecord>);
-                case VendorLocation_FieldIndex.Radius:
-                    return typeof(UInt32);
+                case MountData_FieldIndex.MountOffset:
+                    return typeof(P3Float);
+                case MountData_FieldIndex.DismountOffset:
+                    return typeof(P3Float);
+                case MountData_FieldIndex.MountCameraOffset:
+                    return typeof(P3Float);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(VendorLocationXmlWriteTranslation);
-        public static readonly RecordType PLVD_HEADER = new RecordType("PLVD");
-        public static readonly RecordType TriggeringRecordType = PLVD_HEADER;
+        public static readonly Type XmlWriteTranslation = typeof(MountDataXmlWriteTranslation);
         public const int NumStructFields = 3;
         public const int NumTypedFields = 0;
-        public static readonly Type BinaryWriteTranslation = typeof(VendorLocationBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(MountDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1152,23 +1139,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class VendorLocationSetterCommon
+    public partial class MountDataSetterCommon
     {
-        public static readonly VendorLocationSetterCommon Instance = new VendorLocationSetterCommon();
+        public static readonly MountDataSetterCommon Instance = new MountDataSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IVendorLocation item)
+        public void Clear(IMountData item)
         {
             ClearPartial();
-            item.Type = default;
-            item.Reference.FormKey = FormKey.Null;
-            item.Radius = default;
+            item.MountOffset = default;
+            item.DismountOffset = default;
+            item.MountCameraOffset = default;
         }
         
         #region Xml Translation
         public virtual void CopyInFromXml(
-            IVendorLocation item,
+            IMountData item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1177,7 +1164,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    VendorLocationXmlCreateTranslation.FillPublicElementXml(
+                    MountDataXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1196,24 +1183,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Binary Translation
         protected static void FillBinaryStructs(
-            IVendorLocation item,
+            IMountData item,
             MutagenFrame frame)
         {
-            item.Type = EnumBinaryTranslation<VendorLocation.LocationType>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Reference.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Radius = frame.ReadUInt32();
+            item.MountOffset = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.DismountOffset = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.MountCameraOffset = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
         }
         
         public virtual void CopyInFromBinary(
-            IVendorLocation item,
+            IMountData item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                frame.Reader,
-                recordTypeConverter.ConvertToCustom(VendorLocation_Registration.PLVD_HEADER)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1224,17 +1206,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class VendorLocationCommon
+    public partial class MountDataCommon
     {
-        public static readonly VendorLocationCommon Instance = new VendorLocationCommon();
+        public static readonly MountDataCommon Instance = new MountDataCommon();
 
-        public VendorLocation.Mask<bool> GetEqualsMask(
-            IVendorLocationGetter item,
-            IVendorLocationGetter rhs,
+        public MountData.Mask<bool> GetEqualsMask(
+            IMountDataGetter item,
+            IMountDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new VendorLocation.Mask<bool>(false);
-            ((VendorLocationCommon)((IVendorLocationGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new MountData.Mask<bool>(false);
+            ((MountDataCommon)((IMountDataGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1243,21 +1225,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IVendorLocationGetter item,
-            IVendorLocationGetter rhs,
-            VendorLocation.Mask<bool> ret,
+            IMountDataGetter item,
+            IMountDataGetter rhs,
+            MountData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Type = item.Type == rhs.Type;
-            ret.Reference = object.Equals(item.Reference, rhs.Reference);
-            ret.Radius = item.Radius == rhs.Radius;
+            ret.MountOffset = item.MountOffset.Equals(rhs.MountOffset);
+            ret.DismountOffset = item.DismountOffset.Equals(rhs.DismountOffset);
+            ret.MountCameraOffset = item.MountCameraOffset.Equals(rhs.MountCameraOffset);
         }
         
         public string ToString(
-            IVendorLocationGetter item,
+            IMountDataGetter item,
             string? name = null,
-            VendorLocation.Mask<bool>? printMask = null)
+            MountData.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1269,18 +1251,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IVendorLocationGetter item,
+            IMountDataGetter item,
             FileGeneration fg,
             string? name = null,
-            VendorLocation.Mask<bool>? printMask = null)
+            MountData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"VendorLocation =>");
+                fg.AppendLine($"MountData =>");
             }
             else
             {
-                fg.AppendLine($"{name} (VendorLocation) =>");
+                fg.AppendLine($"{name} (MountData) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1294,59 +1276,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IVendorLocationGetter item,
+            IMountDataGetter item,
             FileGeneration fg,
-            VendorLocation.Mask<bool>? printMask = null)
+            MountData.Mask<bool>? printMask = null)
         {
-            if (printMask?.Type ?? true)
+            if (printMask?.MountOffset ?? true)
             {
-                fg.AppendItem(item.Type, "Type");
+                fg.AppendItem(item.MountOffset, "MountOffset");
             }
-            if (printMask?.Reference ?? true)
+            if (printMask?.DismountOffset ?? true)
             {
-                fg.AppendItem(item.Reference, "Reference");
+                fg.AppendItem(item.DismountOffset, "DismountOffset");
             }
-            if (printMask?.Radius ?? true)
+            if (printMask?.MountCameraOffset ?? true)
             {
-                fg.AppendItem(item.Radius, "Radius");
+                fg.AppendItem(item.MountCameraOffset, "MountCameraOffset");
             }
         }
         
         public bool HasBeenSet(
-            IVendorLocationGetter item,
-            VendorLocation.Mask<bool?> checkMask)
+            IMountDataGetter item,
+            MountData.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
-            IVendorLocationGetter item,
-            VendorLocation.Mask<bool> mask)
+            IMountDataGetter item,
+            MountData.Mask<bool> mask)
         {
-            mask.Type = true;
-            mask.Reference = true;
-            mask.Radius = true;
+            mask.MountOffset = true;
+            mask.DismountOffset = true;
+            mask.MountCameraOffset = true;
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IVendorLocationGetter? lhs,
-            IVendorLocationGetter? rhs)
+            IMountDataGetter? lhs,
+            IMountDataGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Type != rhs.Type) return false;
-            if (!lhs.Reference.Equals(rhs.Reference)) return false;
-            if (lhs.Radius != rhs.Radius) return false;
+            if (!lhs.MountOffset.Equals(rhs.MountOffset)) return false;
+            if (!lhs.DismountOffset.Equals(rhs.DismountOffset)) return false;
+            if (!lhs.MountCameraOffset.Equals(rhs.MountCameraOffset)) return false;
             return true;
         }
         
-        public virtual int GetHashCode(IVendorLocationGetter item)
+        public virtual int GetHashCode(IMountDataGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Type);
-            hash.Add(item.Reference);
-            hash.Add(item.Radius);
+            hash.Add(item.MountOffset);
+            hash.Add(item.DismountOffset);
+            hash.Add(item.MountCameraOffset);
             return hash.ToHashCode();
         }
         
@@ -1355,63 +1337,62 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public object GetNew()
         {
-            return VendorLocation.GetNew();
+            return MountData.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IVendorLocationGetter obj)
+        public IEnumerable<ILinkGetter> GetLinks(IMountDataGetter obj)
         {
-            yield return obj.Reference;
             yield break;
         }
         
         #endregion
         
     }
-    public partial class VendorLocationSetterTranslationCommon
+    public partial class MountDataSetterTranslationCommon
     {
-        public static readonly VendorLocationSetterTranslationCommon Instance = new VendorLocationSetterTranslationCommon();
+        public static readonly MountDataSetterTranslationCommon Instance = new MountDataSetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            IVendorLocation item,
-            IVendorLocationGetter rhs,
+            IMountData item,
+            IMountDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)VendorLocation_FieldIndex.Type) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MountData_FieldIndex.MountOffset) ?? true))
             {
-                item.Type = rhs.Type;
+                item.MountOffset = rhs.MountOffset;
             }
-            if ((copyMask?.GetShouldTranslate((int)VendorLocation_FieldIndex.Reference) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MountData_FieldIndex.DismountOffset) ?? true))
             {
-                item.Reference.FormKey = rhs.Reference.FormKey;
+                item.DismountOffset = rhs.DismountOffset;
             }
-            if ((copyMask?.GetShouldTranslate((int)VendorLocation_FieldIndex.Radius) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MountData_FieldIndex.MountCameraOffset) ?? true))
             {
-                item.Radius = rhs.Radius;
+                item.MountCameraOffset = rhs.MountCameraOffset;
             }
         }
         
         #endregion
         
-        public VendorLocation DeepCopy(
-            IVendorLocationGetter item,
-            VendorLocation.TranslationMask? copyMask = null)
+        public MountData DeepCopy(
+            IMountDataGetter item,
+            MountData.TranslationMask? copyMask = null)
         {
-            VendorLocation ret = (VendorLocation)((VendorLocationCommon)((IVendorLocationGetter)item).CommonInstance()!).GetNew();
+            MountData ret = (MountData)((MountDataCommon)((IMountDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public VendorLocation DeepCopy(
-            IVendorLocationGetter item,
-            out VendorLocation.ErrorMask errorMask,
-            VendorLocation.TranslationMask? copyMask = null)
+        public MountData DeepCopy(
+            IMountDataGetter item,
+            out MountData.ErrorMask errorMask,
+            MountData.TranslationMask? copyMask = null)
         {
-            VendorLocation ret = (VendorLocation)((VendorLocationCommon)((IVendorLocationGetter)item).CommonInstance()!).GetNew();
+            MountData ret = (MountData)((MountDataCommon)((IMountDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1419,12 +1400,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public VendorLocation DeepCopy(
-            IVendorLocationGetter item,
+        public MountData DeepCopy(
+            IMountDataGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            VendorLocation ret = (VendorLocation)((VendorLocationCommon)((IVendorLocationGetter)item).CommonInstance()!).GetNew();
+            MountData ret = (MountData)((MountDataCommon)((IMountDataGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1439,27 +1420,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class VendorLocation
+    public partial class MountData
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => VendorLocation_Registration.Instance;
-        public static VendorLocation_Registration Registration => VendorLocation_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => MountData_Registration.Instance;
+        public static MountData_Registration Registration => MountData_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => VendorLocationCommon.Instance;
+        protected object CommonInstance() => MountDataCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return VendorLocationSetterCommon.Instance;
+            return MountDataSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => VendorLocationSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => MountDataSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IVendorLocationGetter.CommonInstance() => this.CommonInstance();
+        object IMountDataGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IVendorLocationGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IMountDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IVendorLocationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IMountDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1470,57 +1451,57 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class VendorLocationXmlWriteTranslation : IXmlWriteTranslator
+    public partial class MountDataXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static VendorLocationXmlWriteTranslation Instance = new VendorLocationXmlWriteTranslation();
+        public readonly static MountDataXmlWriteTranslation Instance = new MountDataXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IVendorLocationGetter item,
+            IMountDataGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)VendorLocation_FieldIndex.Type) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)MountData_FieldIndex.MountOffset) ?? true))
             {
-                EnumXmlTranslation<VendorLocation.LocationType>.Instance.Write(
+                P3FloatXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Type),
-                    item: item.Type,
-                    fieldIndex: (int)VendorLocation_FieldIndex.Type,
+                    name: nameof(item.MountOffset),
+                    item: item.MountOffset,
+                    fieldIndex: (int)MountData_FieldIndex.MountOffset,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)VendorLocation_FieldIndex.Reference) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)MountData_FieldIndex.DismountOffset) ?? true))
             {
-                FormKeyXmlTranslation.Instance.Write(
+                P3FloatXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Reference),
-                    item: item.Reference.FormKey,
-                    fieldIndex: (int)VendorLocation_FieldIndex.Reference,
+                    name: nameof(item.DismountOffset),
+                    item: item.DismountOffset,
+                    fieldIndex: (int)MountData_FieldIndex.DismountOffset,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)VendorLocation_FieldIndex.Radius) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)MountData_FieldIndex.MountCameraOffset) ?? true))
             {
-                UInt32XmlTranslation.Instance.Write(
+                P3FloatXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Radius),
-                    item: item.Radius,
-                    fieldIndex: (int)VendorLocation_FieldIndex.Radius,
+                    name: nameof(item.MountCameraOffset),
+                    item: item.MountCameraOffset,
+                    fieldIndex: (int)MountData_FieldIndex.MountCameraOffset,
                     errorMask: errorMask);
             }
         }
 
         public void Write(
             XElement node,
-            IVendorLocationGetter item,
+            IMountDataGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.VendorLocation");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.MountData");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.VendorLocation");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.MountData");
             }
             WriteToNodeXml(
                 item: item,
@@ -1537,7 +1518,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IVendorLocationGetter)item,
+                item: (IMountDataGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1546,7 +1527,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public void Write(
             XElement node,
-            IVendorLocationGetter item,
+            IMountDataGetter item,
             ErrorMaskBuilder? errorMask,
             int fieldIndex,
             TranslationCrystal? translationMask,
@@ -1556,7 +1537,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             try
             {
                 Write(
-                    item: (IVendorLocationGetter)item,
+                    item: (IMountDataGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1575,12 +1556,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class VendorLocationXmlCreateTranslation
+    public partial class MountDataXmlCreateTranslation
     {
-        public readonly static VendorLocationXmlCreateTranslation Instance = new VendorLocationXmlCreateTranslation();
+        public readonly static MountDataXmlCreateTranslation Instance = new MountDataXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IVendorLocation item,
+            IMountData item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1589,7 +1570,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    VendorLocationXmlCreateTranslation.FillPublicElementXml(
+                    MountDataXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1605,7 +1586,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            IVendorLocation item,
+            IMountData item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1613,11 +1594,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
-                case "Type":
-                    errorMask?.PushIndex((int)VendorLocation_FieldIndex.Type);
+                case "MountOffset":
+                    errorMask?.PushIndex((int)MountData_FieldIndex.MountOffset);
                     try
                     {
-                        item.Type = EnumXmlTranslation<VendorLocation.LocationType>.Instance.Parse(
+                        item.MountOffset = P3FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1631,11 +1612,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Reference":
-                    errorMask?.PushIndex((int)VendorLocation_FieldIndex.Reference);
+                case "DismountOffset":
+                    errorMask?.PushIndex((int)MountData_FieldIndex.DismountOffset);
                     try
                     {
-                        item.Reference.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.DismountOffset = P3FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1649,11 +1630,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Radius":
-                    errorMask?.PushIndex((int)VendorLocation_FieldIndex.Radius);
+                case "MountCameraOffset":
+                    errorMask?.PushIndex((int)MountData_FieldIndex.MountCameraOffset);
                     try
                     {
-                        item.Radius = UInt32XmlTranslation.Instance.Parse(
+                        item.MountCameraOffset = P3FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1678,30 +1659,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Xml Write Mixins
-    public static class VendorLocationXmlTranslationMixIn
+    public static class MountDataXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IVendorLocationGetter item,
+            this IMountDataGetter item,
             XElement node,
-            out VendorLocation.ErrorMask errorMask,
-            VendorLocation.TranslationMask? translationMask = null,
+            out MountData.ErrorMask errorMask,
+            MountData.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((VendorLocationXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((MountDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = VendorLocation.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MountData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this IVendorLocationGetter item,
+            this IMountDataGetter item,
             string path,
-            out VendorLocation.ErrorMask errorMask,
-            VendorLocation.TranslationMask? translationMask = null,
+            out MountData.ErrorMask errorMask,
+            MountData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1715,7 +1696,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IVendorLocationGetter item,
+            this IMountDataGetter item,
             string path,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1732,10 +1713,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IVendorLocationGetter item,
+            this IMountDataGetter item,
             Stream stream,
-            out VendorLocation.ErrorMask errorMask,
-            VendorLocation.TranslationMask? translationMask = null,
+            out MountData.ErrorMask errorMask,
+            MountData.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1749,7 +1730,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IVendorLocationGetter item,
+            this IMountDataGetter item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1766,13 +1747,13 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IVendorLocationGetter item,
+            this IMountDataGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
             string? name = null)
         {
-            ((VendorLocationXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((MountDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1781,12 +1762,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IVendorLocationGetter item,
+            this IMountDataGetter item,
             XElement node,
             string? name = null,
-            VendorLocation.TranslationMask? translationMask = null)
+            MountData.TranslationMask? translationMask = null)
         {
-            ((VendorLocationXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((MountDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1795,12 +1776,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IVendorLocationGetter item,
+            this IMountDataGetter item,
             string path,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((VendorLocationXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((MountDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1810,12 +1791,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IVendorLocationGetter item,
+            this IMountDataGetter item,
             Stream stream,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((VendorLocationXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((MountDataXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1834,38 +1815,33 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class VendorLocationBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class MountDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static VendorLocationBinaryWriteTranslation Instance = new VendorLocationBinaryWriteTranslation();
+        public readonly static MountDataBinaryWriteTranslation Instance = new MountDataBinaryWriteTranslation();
 
         public static void WriteEmbedded(
-            IVendorLocationGetter item,
+            IMountDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<VendorLocation.LocationType>.Instance.Write(
-                writer,
-                item.Type,
-                length: 4);
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Reference);
-            writer.Write(item.Radius);
+                item: item.MountOffset);
+            Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.DismountOffset);
+            Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.MountCameraOffset);
         }
 
         public void Write(
             MutagenWriter writer,
-            IVendorLocationGetter item,
+            IMountDataGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            using (HeaderExport.ExportHeader(
-                writer: writer,
-                record: recordTypeConverter.ConvertToCustom(VendorLocation_Registration.PLVD_HEADER),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
-            {
-                WriteEmbedded(
-                    item: item,
-                    writer: writer);
-            }
+            WriteEmbedded(
+                item: item,
+                writer: writer);
         }
 
         public void Write(
@@ -1874,16 +1850,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IVendorLocationGetter)item,
+                item: (IMountDataGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class VendorLocationBinaryCreateTranslation
+    public partial class MountDataBinaryCreateTranslation
     {
-        public readonly static VendorLocationBinaryCreateTranslation Instance = new VendorLocationBinaryCreateTranslation();
+        public readonly static MountDataBinaryCreateTranslation Instance = new MountDataBinaryCreateTranslation();
 
     }
 
@@ -1891,13 +1867,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class VendorLocationBinaryTranslationMixIn
+    public static class MountDataBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IVendorLocationGetter item,
+            this IMountDataGetter item,
             MutagenWriter writer)
         {
-            ((VendorLocationBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((MountDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 recordTypeConverter: null);
@@ -1910,34 +1886,33 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class VendorLocationBinaryOverlay :
+    public partial class MountDataBinaryOverlay :
         BinaryOverlay,
-        IVendorLocationGetter
+        IMountDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => VendorLocation_Registration.Instance;
-        public static VendorLocation_Registration Registration => VendorLocation_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => MountData_Registration.Instance;
+        public static MountData_Registration Registration => MountData_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => VendorLocationCommon.Instance;
+        protected object CommonInstance() => MountDataCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => VendorLocationSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => MountDataSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IVendorLocationGetter.CommonInstance() => this.CommonInstance();
+        object IMountDataGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IVendorLocationGetter.CommonSetterInstance() => null;
+        object? IMountDataGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IVendorLocationGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IMountDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IVendorLocationGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMountDataGetter)rhs, include);
 
-        public IEnumerable<ILinkGetter> Links => VendorLocationCommon.Instance.GetLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => VendorLocationXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => MountDataXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -1946,7 +1921,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((VendorLocationXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((MountDataXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -1954,28 +1929,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => VendorLocationBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => MountDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((VendorLocationBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((MountDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public VendorLocation.LocationType Type => (VendorLocation.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
-        public IFormLinkGetter<ISkyrimMajorRecordGetter> Reference => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
-        public UInt32 Radius => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x8, 0x4));
+        public P3Float MountOffset => P3FloatBinaryTranslation.Read(_data.Slice(0x0, 0xC));
+        public P3Float DismountOffset => P3FloatBinaryTranslation.Read(_data.Slice(0xC, 0xC));
+        public P3Float MountCameraOffset => P3FloatBinaryTranslation.Read(_data.Slice(0x18, 0xC));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
             int offset);
 
-        protected VendorLocationBinaryOverlay(
+        protected MountDataBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1984,17 +1959,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static VendorLocationBinaryOverlay VendorLocationFactory(
+        public static MountDataBinaryOverlay MountDataFactory(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new VendorLocationBinaryOverlay(
-                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.Meta),
+            var ret = new MountDataBinaryOverlay(
+                bytes: stream.RemainingMemory.Slice(0, 0x24),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.Meta.Subrecord(stream.RemainingSpan).TotalLength));
-            int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
-            stream.Position += 0xC + package.Meta.SubConstants.HeaderLength;
+            int offset = stream.Position;
+            stream.Position += 0x24;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,
@@ -2002,12 +1976,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static VendorLocationBinaryOverlay VendorLocationFactory(
+        public static MountDataBinaryOverlay MountDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            return VendorLocationFactory(
+            return MountDataFactory(
                 stream: new BinaryMemoryReadStream(slice),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
@@ -2019,7 +1993,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             string? name = null)
         {
-            VendorLocationMixIn.ToString(
+            MountDataMixIn.ToString(
                 item: this,
                 name: name);
         }

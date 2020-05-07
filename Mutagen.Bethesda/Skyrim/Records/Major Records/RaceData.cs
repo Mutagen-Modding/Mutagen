@@ -48,6 +48,9 @@ namespace Mutagen.Bethesda.Skyrim
             NonHostile = 0x0002_0000_0000,
             AllowMountedCombat = 0x0010_0000_0000,
         }
+
+        // ToDo
+        // Remove HeadPartList enums from flags.  Only one can be active, so should set up a way to force that
     }
 
     namespace Internals
@@ -64,14 +67,6 @@ namespace Mutagen.Bethesda.Skyrim
                 flags2 <<= 32;
                 item.Flags |= ((RaceData.Flag)flags2);
             }
-
-            static partial void FillBinaryMountDataCustom(MutagenFrame frame, IRaceData item)
-            {
-                if (!frame.Complete)
-                {
-                    throw new NotImplementedException();
-                }
-            }
         }
 
         public partial class RaceDataBinaryWriteTranslation
@@ -81,12 +76,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ulong flags = (ulong)item.Flags;
                 flags >>= 32;
                 writer.Write((uint)flags);
-            }
-
-            static partial void WriteBinaryMountDataCustom(MutagenWriter writer, IRaceDataGetter item)
-            {
-                //ToDo
-                //Implement Mount Data export
             }
         }
 

@@ -7,16 +7,16 @@ namespace Mutagen.Bethesda.Skyrim
     /// <summary>
     /// Common interface for records that have icons
     /// </summary>
-    public interface IIcons : IIconsGetter
+    public interface IHasIcons : IHasIconsGetter
     {
-        new string? LargeIconFilename { get; set; }
+        new Icons? Icons { get; set; }
     }
 
     /// <summary>
     /// Common interface for records that have icons
     /// </summary>
-    public interface IIconsGetter
+    public interface IHasIconsGetter
     {
-        string? LargeIconFilename { get; }
+        IIconsGetter? Icons { get; }
     }
 }

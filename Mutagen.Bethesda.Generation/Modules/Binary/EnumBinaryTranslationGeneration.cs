@@ -157,7 +157,7 @@ namespace Mutagen.Bethesda.Generation
                     throw new NotImplementedException();
             }
 
-            if (hasBeenSet)
+            if (data.HasTrigger)
             {
                 fg.AppendLine($"private int? _{typeGen.Name}Location;");
             }
@@ -172,18 +172,7 @@ namespace Mutagen.Bethesda.Generation
             }
             var getType = GenerateForTypicalWrapper(objGen, typeGen, slice, "_package");
 
-            if (hasBeenSet)
-            {
-                if (typeGen.CanBeNullable(getter: true))
-                {
-                    fg.AppendLine($"public {eType.TypeName(getter: true)}? {eType.Name} => _{typeGen.Name}Location.HasValue ? {getType} : default({eType.TypeName(getter: true)}?);");
-                }
-                else
-                {
-                    fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => {getType};");
-                }
-            }
-            else if (eType.HasBeenSetFallbackInt != null)
+            if (eType.HasBeenSetFallbackInt != null)
             {
                 fg.AppendLine($"public {eType.TypeName(getter: true)}? {eType.Name}");
                 using (new BraceWrapper(fg))
@@ -195,6 +184,17 @@ namespace Mutagen.Bethesda.Generation
                         fg.AppendLine($"if (((int)val) == {eType.HasBeenSetFallbackInt}) return null;");
                         fg.AppendLine("return val;");
                     }
+                }
+            }
+            else if (data.HasTrigger)
+            {
+                if (typeGen.CanBeNullable(getter: true))
+                {
+                    fg.AppendLine($"public {eType.TypeName(getter: true)}{(hasBeenSet ? "?" : null)} {eType.Name} => _{typeGen.Name}Location.HasValue ? {getType} : default({eType.TypeName(getter: true)}{(hasBeenSet ? "?" : null)});");
+                }
+                else
+                {
+                    fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => {getType};");
                 }
             }
             else

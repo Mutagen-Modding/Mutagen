@@ -40,10 +40,11 @@ namespace Mutagen.Bethesda.Skyrim
             NavMeshGenerationGround = 0x4000_0000,
         }
 
+        [Flags]
         public enum Flag
         {
-            NoDisplacement,
-            IgnoredBySandbox
+            NoDisplacement = 0x01,
+            IgnoredBySandbox = 0x02,
         }
     }
 

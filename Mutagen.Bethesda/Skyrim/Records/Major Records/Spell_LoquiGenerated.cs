@@ -99,26 +99,12 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IEquipTypeGetter> ISpellGetter.EquipmentType => this.EquipmentType;
         #endregion
         #region Description
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Description;
-        public String? Description
-        {
-            get => this._Description;
-            set => this._Description = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ISpellGetter.Description => this.Description;
+        public String Description { get; set; } = string.Empty;
         #endregion
         #region Data
+        public SpellData Data { get; set; } = new SpellData();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private SpellData? _Data;
-        public SpellData? Data
-        {
-            get => _Data;
-            set => _Data = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISpellDataGetter? ISpellGetter.Data => this.Data;
+        ISpellDataGetter ISpellGetter.Data => Data;
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1010,6 +996,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamed,
         IEffectRecord,
         IObjectBounded,
+        IObjectId,
         ILoquiObjectSetter<ISpellInternal>
     {
         new ObjectBounds ObjectBounds { get; set; }
@@ -1017,8 +1004,8 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new IFormLinkNullable<Static> MenuDisplayObject { get; }
         new IFormLinkNullable<EquipType> EquipmentType { get; }
-        new String? Description { get; set; }
-        new SpellData? Data { get; set; }
+        new String Description { get; set; }
+        new SpellData Data { get; set; }
         new ExtendedList<Effect> Effects { get; }
     }
 
@@ -1034,6 +1021,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamedGetter,
         IEffectRecordGetter,
         IObjectBoundedGetter,
+        IObjectIdGetter,
         ILoquiObject<ISpellGetter>,
         IXmlItem,
         ILinkContainer,
@@ -1045,8 +1033,8 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject { get; }
         IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType { get; }
-        String? Description { get; }
-        ISpellDataGetter? Data { get; }
+        String Description { get; }
+        ISpellDataGetter Data { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
 
     }
@@ -1638,8 +1626,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Keywords = null;
             item.MenuDisplayObject.FormKey = null;
             item.EquipmentType.FormKey = null;
-            item.Description = default;
-            item.Data = null;
+            item.Description = string.Empty;
+            item.Data.Clear();
             item.Effects.Clear();
             base.Clear(item);
         }
@@ -1940,11 +1928,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.MenuDisplayObject = object.Equals(item.MenuDisplayObject, rhs.MenuDisplayObject);
             ret.EquipmentType = object.Equals(item.EquipmentType, rhs.EquipmentType);
             ret.Description = string.Equals(item.Description, rhs.Description);
-            ret.Data = EqualsMaskHelper.EqualsHelper(
-                item.Data,
-                rhs.Data,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.Data = MaskItemExt.Factory(item.Data.GetEqualsMask(rhs.Data, include), include);
             ret.Effects = item.Effects.CollectionEqualsHelper(
                 rhs.Effects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -2038,15 +2022,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(EquipmentTypeItem, "EquipmentType");
             }
-            if ((printMask?.Description ?? true)
-                && item.Description.TryGet(out var DescriptionItem))
+            if (printMask?.Description ?? true)
             {
-                fg.AppendItem(DescriptionItem, "Description");
+                fg.AppendItem(item.Description, "Description");
             }
-            if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+            if (printMask?.Data?.Overall ?? true)
             {
-                DataItem?.ToString(fg, "Data");
+                item.Data?.ToString(fg, "Data");
             }
             if (printMask?.Effects?.Overall ?? true)
             {
@@ -2076,9 +2058,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
             if (checkMask.MenuDisplayObject.HasValue && checkMask.MenuDisplayObject.Value != (item.MenuDisplayObject.FormKey != null)) return false;
             if (checkMask.EquipmentType.HasValue && checkMask.EquipmentType.Value != (item.EquipmentType.FormKey != null)) return false;
-            if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
-            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
-            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -2093,9 +2072,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
             mask.MenuDisplayObject = (item.MenuDisplayObject.FormKey != null);
             mask.EquipmentType = (item.EquipmentType.FormKey != null);
-            mask.Description = (item.Description != null);
-            var itemData = item.Data;
-            mask.Data = new MaskItem<bool, SpellData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
+            mask.Description = true;
+            mask.Data = new MaskItem<bool, SpellData.Mask<bool>?>(true, item.Data?.GetHasBeenSetMask());
             var EffectsItem = item.Effects;
             mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect.Mask<bool>?>>?>(true, EffectsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             base.FillHasBeenSetMask(
@@ -2225,14 +2203,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(EquipmentTypeitem);
             }
-            if (item.Description.TryGet(out var Descriptionitem))
-            {
-                hash.Add(Descriptionitem);
-            }
-            if (item.Data.TryGet(out var Dataitem))
-            {
-                hash.Add(Dataitem);
-            }
+            hash.Add(item.Description);
+            hash.Add(item.Data);
             hash.Add(item.Effects);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -2404,15 +2376,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Spell_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Data) ?? true))
                     {
-                        item.Data = rhsData.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Spell_FieldIndex.Data));
-                    }
-                    else
-                    {
-                        item.Data = default;
+                        item.Data = rhs.Data.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Spell_FieldIndex.Data),
+                            errorMask: errorMask);
                     }
                 }
                 catch (Exception ex)
@@ -2677,8 +2645,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Spell_FieldIndex.EquipmentType,
                     errorMask: errorMask);
             }
-            if ((item.Description != null)
-                && (translationMask?.GetShouldTranslate((int)Spell_FieldIndex.Description) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Spell_FieldIndex.Description) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: node,
@@ -2687,19 +2654,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Spell_FieldIndex.Description,
                     errorMask: errorMask);
             }
-            if ((item.Data != null)
-                && (translationMask?.GetShouldTranslate((int)Spell_FieldIndex.Data) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Spell_FieldIndex.Data) ?? true))
             {
-                if (item.Data.TryGet(out var DataItem))
-                {
-                    ((SpellDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
-                        item: DataItem,
-                        node: node,
-                        name: nameof(item.Data),
-                        fieldIndex: (int)Spell_FieldIndex.Data,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Spell_FieldIndex.Data));
-                }
+                var DataItem = item.Data;
+                ((SpellDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                    item: DataItem,
+                    node: node,
+                    name: nameof(item.Data),
+                    fieldIndex: (int)Spell_FieldIndex.Data,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Spell_FieldIndex.Data));
             }
             if ((translationMask?.GetShouldTranslate((int)Spell_FieldIndex.Effects) ?? true))
             {
@@ -3134,18 +3098,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.EquipmentType,
                 header: recordTypeConverter.ConvertToCustom(Spell_Registration.ETYP_HEADER));
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(Spell_Registration.DESC_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Data.TryGet(out var DataItem))
-            {
-                ((SpellDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
-                    item: DataItem,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
-            }
+            var DataItem = item.Data;
+            ((SpellDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                item: DataItem,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IEffectGetter>.Instance.Write(
                 writer: writer,
                 items: item.Effects,
@@ -3313,12 +3275,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta)) : default(string?);
+        public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta)) : string.Empty;
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        public ISpellDataGetter? Data => _DataLocation.HasValue ? SpellDataBinaryOverlay.SpellDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
-        public bool Data_IsSet => _DataLocation.HasValue;
+        public ISpellDataGetter? _Data => _DataLocation.HasValue ? SpellDataBinaryOverlay.SpellDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ISpellDataGetter Data => _Data ?? new SpellData();
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = ListExt.Empty<EffectBinaryOverlay>();
         partial void CustomCtor(

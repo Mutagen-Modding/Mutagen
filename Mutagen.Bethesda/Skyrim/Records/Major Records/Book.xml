@@ -3,24 +3,24 @@
   <Object name="Book" objType="Record" recordType="BOOK" baseClass="SkyrimMajorRecord" GUID="75309913-652c-4e97-9cf4-6ccb493d3143" ID="154">
     <Interface>INamed</Interface>
     <Interface>IItem</Interface>
-    <Interface>IIcons</Interface>
+    <Interface>IHasIcons</Interface>
     <Interface>IModeled</Interface>
     <Interface>IObjectBounded</Interface>
+    <Interface>IObjectId</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
       <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
-      <String name="LargeIconFilename" recordType="ICON" />
-      <String name="SmallIconFilename" recordType="MICO" />
-      <String name="BookText" recordType="DESC" />
+      <RefDirect name="Icons" refName="Icons" />
+      <String name="BookText" recordType="DESC" hasBeenSet="False" />
       <RefDirect name="Destructible" refName="Destructible" />
       <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
       <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
         <FormLink refName="Keyword" />
       </List>
-      <RefDirect name="Data" refName="BookData" />
+      <RefDirect name="Data" refName="BookData" hasBeenSet="False" />
       <FormLink name="InventoryArt" refName="Static" recordType="INAM" />
       <String name="Description" recordType="CNAM" />
     </Fields>

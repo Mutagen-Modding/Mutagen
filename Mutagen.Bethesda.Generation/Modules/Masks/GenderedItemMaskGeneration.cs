@@ -32,8 +32,9 @@ namespace Mutagen.Bethesda.Generation
         public override void GenerateForField(FileGeneration fg, TypeGeneration field, string typeStr)
         {
             if (!field.IntegrateField) return;
+            GenderedType gendered = field as GenderedType;
             string maskStr;
-            if (field.HasBeenSet)
+            if (field.HasBeenSet || gendered.SubTypeGeneration is LoquiType)
             {
                 maskStr = $"MaskItem<{typeStr}, GenderedItem<{SubMaskString(field, typeStr)}>?>?";
             }
@@ -48,9 +49,9 @@ namespace Mutagen.Bethesda.Generation
         {
             if (!field.IntegrateField) return;
             GenderedType gendered = field as GenderedType;
-            if (field.HasBeenSet)
+            var isLoqui = gendered.SubTypeGeneration is LoquiType;
+            if (field.HasBeenSet || isLoqui)
             {
-                var isLoqui = gendered.SubTypeGeneration is LoquiType;
                 using (var args = new ArgsWrapper(fg,
                     $"if (!{nameof(GenderedItem)}.{(isLoqui ? nameof(GenderedItem.AllMask) : nameof(GenderedItem.All))}",
                     suffixLine: ") return false"))
@@ -69,9 +70,9 @@ namespace Mutagen.Bethesda.Generation
         {
             if (!field.IntegrateField) return;
             GenderedType gendered = field as GenderedType;
-            if (field.HasBeenSet)
+            var isLoqui = gendered.SubTypeGeneration is LoquiType;
+            if (field.HasBeenSet || isLoqui)
             {
-                var isLoqui = gendered.SubTypeGeneration is LoquiType;
                 using (var args = new ArgsWrapper(fg,
                     $"if ({nameof(GenderedItem)}.{(isLoqui ? nameof(GenderedItem.AnyMask) : nameof(GenderedItem.Any))}",
                     suffixLine: ") return true"))
@@ -90,14 +91,15 @@ namespace Mutagen.Bethesda.Generation
         {
             if (!field.IntegrateField) return;
             var gendered = field as GenderedType;
-            if (field.HasBeenSet)
+            var loqui = gendered.SubTypeGeneration as LoquiType;
+            if (field.HasBeenSet || loqui != null)
             {
                 using (var args = new ArgsWrapper(fg,
                     $"{retAccessor} = GenderedItem.TranslateHelper"))
                 {
                     args.Add($"{rhsAccessor}{(indexed ? ".Value" : null)}");
                     args.Add($"eval");
-                    if (gendered.SubTypeGeneration is LoquiType loqui)
+                    if (loqui != null)
                     {
                         args.Add($"(m, e) => m?.Translate(e)");
                     }
@@ -108,7 +110,7 @@ namespace Mutagen.Bethesda.Generation
                 using (var args = new ArgsWrapper(fg,
                     $"{retAccessor} = new GenderedItem<{SubMaskString(field, "R")}>"))
                 {
-                    if (gendered.SubTypeGeneration is LoquiType loqui)
+                    if (loqui != null)
                     {
                         args.Add($"{rhsAccessor}.Male.Translate(eval)");
                         args.Add($"{rhsAccessor}.Female.Translate(eval)");
@@ -125,7 +127,15 @@ namespace Mutagen.Bethesda.Generation
         public override void GenerateForCtor(FileGeneration fg, TypeGeneration field, string typeStr, string valueStr)
         {
             if (!field.IntegrateField) return;
-            fg.AppendLine($"this.{field.Name} = {(field.HasBeenSet ? $"new MaskItem<{MaskModule.GenItem}, GenderedItem<{SubMaskString(field, typeStr)}>?>({valueStr}, default)" : $"new GenderedItem<{SubMaskString(field, typeStr)}>({valueStr}, {valueStr})")};");
+            var gendered = field as GenderedType;
+            if (field.HasBeenSet || gendered.SubTypeGeneration is LoquiType)
+            {
+                fg.AppendLine($"this.{field.Name} = new MaskItem<{MaskModule.GenItem}, GenderedItem<{SubMaskString(field, typeStr)}>?>({valueStr}, default);");
+            }
+            else
+            {
+                fg.AppendLine($"this.{field.Name} = new GenderedItem<{SubMaskString(field, typeStr)}>({valueStr}, {valueStr});");
+            }
         }
 
         public override void GenerateMaskToString(FileGeneration fg, TypeGeneration field, Accessor accessor, bool topLevel, bool printMask)

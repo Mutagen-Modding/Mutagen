@@ -52,7 +52,10 @@ namespace Mutagen.Bethesda.Skyrim
         public UInt16 EndHour { get; set; } = default;
         #endregion
         #region Radius
-        public UInt32 Radius { get; set; } = default;
+        public UInt16 Radius { get; set; } = default;
+        #endregion
+        #region Unknown
+        public UInt16 Unknown { get; set; } = default;
         #endregion
         #region OnlyBuysStolenItems
         public Boolean OnlyBuysStolenItems { get; set; } = default;
@@ -60,8 +63,8 @@ namespace Mutagen.Bethesda.Skyrim
         #region NotSellBuy
         public Boolean NotSellBuy { get; set; } = default;
         #endregion
-        #region Unknown
-        public UInt16 Unknown { get; set; } = default;
+        #region Unknown2
+        public UInt16 Unknown2 { get; set; } = default;
         #endregion
 
         #region To String
@@ -236,25 +239,28 @@ namespace Mutagen.Bethesda.Skyrim
                 this.StartHour = initialValue;
                 this.EndHour = initialValue;
                 this.Radius = initialValue;
+                this.Unknown = initialValue;
                 this.OnlyBuysStolenItems = initialValue;
                 this.NotSellBuy = initialValue;
-                this.Unknown = initialValue;
+                this.Unknown2 = initialValue;
             }
 
             public Mask(
                 TItem StartHour,
                 TItem EndHour,
                 TItem Radius,
+                TItem Unknown,
                 TItem OnlyBuysStolenItems,
                 TItem NotSellBuy,
-                TItem Unknown)
+                TItem Unknown2)
             {
                 this.StartHour = StartHour;
                 this.EndHour = EndHour;
                 this.Radius = Radius;
+                this.Unknown = Unknown;
                 this.OnlyBuysStolenItems = OnlyBuysStolenItems;
                 this.NotSellBuy = NotSellBuy;
-                this.Unknown = Unknown;
+                this.Unknown2 = Unknown2;
             }
 
             #pragma warning disable CS8618
@@ -269,9 +275,10 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem StartHour;
             public TItem EndHour;
             public TItem Radius;
+            public TItem Unknown;
             public TItem OnlyBuysStolenItems;
             public TItem NotSellBuy;
-            public TItem Unknown;
+            public TItem Unknown2;
             #endregion
 
             #region Equals
@@ -287,9 +294,10 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.StartHour, rhs.StartHour)) return false;
                 if (!object.Equals(this.EndHour, rhs.EndHour)) return false;
                 if (!object.Equals(this.Radius, rhs.Radius)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.OnlyBuysStolenItems, rhs.OnlyBuysStolenItems)) return false;
                 if (!object.Equals(this.NotSellBuy, rhs.NotSellBuy)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -298,9 +306,10 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.StartHour);
                 hash.Add(this.EndHour);
                 hash.Add(this.Radius);
+                hash.Add(this.Unknown);
                 hash.Add(this.OnlyBuysStolenItems);
                 hash.Add(this.NotSellBuy);
-                hash.Add(this.Unknown);
+                hash.Add(this.Unknown2);
                 return hash.ToHashCode();
             }
 
@@ -312,9 +321,10 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.StartHour)) return false;
                 if (!eval(this.EndHour)) return false;
                 if (!eval(this.Radius)) return false;
+                if (!eval(this.Unknown)) return false;
                 if (!eval(this.OnlyBuysStolenItems)) return false;
                 if (!eval(this.NotSellBuy)) return false;
-                if (!eval(this.Unknown)) return false;
+                if (!eval(this.Unknown2)) return false;
                 return true;
             }
             #endregion
@@ -325,9 +335,10 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.StartHour)) return true;
                 if (eval(this.EndHour)) return true;
                 if (eval(this.Radius)) return true;
+                if (eval(this.Unknown)) return true;
                 if (eval(this.OnlyBuysStolenItems)) return true;
                 if (eval(this.NotSellBuy)) return true;
-                if (eval(this.Unknown)) return true;
+                if (eval(this.Unknown2)) return true;
                 return false;
             }
             #endregion
@@ -345,9 +356,10 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.StartHour = eval(this.StartHour);
                 obj.EndHour = eval(this.EndHour);
                 obj.Radius = eval(this.Radius);
+                obj.Unknown = eval(this.Unknown);
                 obj.OnlyBuysStolenItems = eval(this.OnlyBuysStolenItems);
                 obj.NotSellBuy = eval(this.NotSellBuy);
-                obj.Unknown = eval(this.Unknown);
+                obj.Unknown2 = eval(this.Unknown2);
             }
             #endregion
 
@@ -382,6 +394,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(Radius, "Radius");
                     }
+                    if (printMask?.Unknown ?? true)
+                    {
+                        fg.AppendItem(Unknown, "Unknown");
+                    }
                     if (printMask?.OnlyBuysStolenItems ?? true)
                     {
                         fg.AppendItem(OnlyBuysStolenItems, "OnlyBuysStolenItems");
@@ -390,9 +406,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(NotSellBuy, "NotSellBuy");
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.Unknown2 ?? true)
                     {
-                        fg.AppendItem(Unknown, "Unknown");
+                        fg.AppendItem(Unknown2, "Unknown2");
                     }
                 }
                 fg.AppendLine("]");
@@ -422,9 +438,10 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? StartHour;
             public Exception? EndHour;
             public Exception? Radius;
+            public Exception? Unknown;
             public Exception? OnlyBuysStolenItems;
             public Exception? NotSellBuy;
-            public Exception? Unknown;
+            public Exception? Unknown2;
             #endregion
 
             #region IErrorMask
@@ -439,12 +456,14 @@ namespace Mutagen.Bethesda.Skyrim
                         return EndHour;
                     case VendorValues_FieldIndex.Radius:
                         return Radius;
+                    case VendorValues_FieldIndex.Unknown:
+                        return Unknown;
                     case VendorValues_FieldIndex.OnlyBuysStolenItems:
                         return OnlyBuysStolenItems;
                     case VendorValues_FieldIndex.NotSellBuy:
                         return NotSellBuy;
-                    case VendorValues_FieldIndex.Unknown:
-                        return Unknown;
+                    case VendorValues_FieldIndex.Unknown2:
+                        return Unknown2;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -464,14 +483,17 @@ namespace Mutagen.Bethesda.Skyrim
                     case VendorValues_FieldIndex.Radius:
                         this.Radius = ex;
                         break;
+                    case VendorValues_FieldIndex.Unknown:
+                        this.Unknown = ex;
+                        break;
                     case VendorValues_FieldIndex.OnlyBuysStolenItems:
                         this.OnlyBuysStolenItems = ex;
                         break;
                     case VendorValues_FieldIndex.NotSellBuy:
                         this.NotSellBuy = ex;
                         break;
-                    case VendorValues_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case VendorValues_FieldIndex.Unknown2:
+                        this.Unknown2 = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -492,14 +514,17 @@ namespace Mutagen.Bethesda.Skyrim
                     case VendorValues_FieldIndex.Radius:
                         this.Radius = (Exception?)obj;
                         break;
+                    case VendorValues_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
+                        break;
                     case VendorValues_FieldIndex.OnlyBuysStolenItems:
                         this.OnlyBuysStolenItems = (Exception?)obj;
                         break;
                     case VendorValues_FieldIndex.NotSellBuy:
                         this.NotSellBuy = (Exception?)obj;
                         break;
-                    case VendorValues_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case VendorValues_FieldIndex.Unknown2:
+                        this.Unknown2 = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -512,9 +537,10 @@ namespace Mutagen.Bethesda.Skyrim
                 if (StartHour != null) return true;
                 if (EndHour != null) return true;
                 if (Radius != null) return true;
+                if (Unknown != null) return true;
                 if (OnlyBuysStolenItems != null) return true;
                 if (NotSellBuy != null) return true;
-                if (Unknown != null) return true;
+                if (Unknown2 != null) return true;
                 return false;
             }
             #endregion
@@ -552,9 +578,10 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(StartHour, "StartHour");
                 fg.AppendItem(EndHour, "EndHour");
                 fg.AppendItem(Radius, "Radius");
+                fg.AppendItem(Unknown, "Unknown");
                 fg.AppendItem(OnlyBuysStolenItems, "OnlyBuysStolenItems");
                 fg.AppendItem(NotSellBuy, "NotSellBuy");
-                fg.AppendItem(Unknown, "Unknown");
+                fg.AppendItem(Unknown2, "Unknown2");
             }
             #endregion
 
@@ -566,9 +593,10 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.StartHour = this.StartHour.Combine(rhs.StartHour);
                 ret.EndHour = this.EndHour.Combine(rhs.EndHour);
                 ret.Radius = this.Radius.Combine(rhs.Radius);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.OnlyBuysStolenItems = this.OnlyBuysStolenItems.Combine(rhs.OnlyBuysStolenItems);
                 ret.NotSellBuy = this.NotSellBuy.Combine(rhs.NotSellBuy);
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -593,9 +621,10 @@ namespace Mutagen.Bethesda.Skyrim
             public bool StartHour;
             public bool EndHour;
             public bool Radius;
+            public bool Unknown;
             public bool OnlyBuysStolenItems;
             public bool NotSellBuy;
-            public bool Unknown;
+            public bool Unknown2;
             #endregion
 
             #region Ctors
@@ -604,9 +633,10 @@ namespace Mutagen.Bethesda.Skyrim
                 this.StartHour = defaultOn;
                 this.EndHour = defaultOn;
                 this.Radius = defaultOn;
+                this.Unknown = defaultOn;
                 this.OnlyBuysStolenItems = defaultOn;
                 this.NotSellBuy = defaultOn;
-                this.Unknown = defaultOn;
+                this.Unknown2 = defaultOn;
             }
 
             #endregion
@@ -625,9 +655,10 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((StartHour, null));
                 ret.Add((EndHour, null));
                 ret.Add((Radius, null));
+                ret.Add((Unknown, null));
                 ret.Add((OnlyBuysStolenItems, null));
                 ret.Add((NotSellBuy, null));
-                ret.Add((Unknown, null));
+                ret.Add((Unknown2, null));
             }
         }
         #endregion
@@ -699,10 +730,11 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new UInt16 StartHour { get; set; }
         new UInt16 EndHour { get; set; }
-        new UInt32 Radius { get; set; }
+        new UInt16 Radius { get; set; }
+        new UInt16 Unknown { get; set; }
         new Boolean OnlyBuysStolenItems { get; set; }
         new Boolean NotSellBuy { get; set; }
-        new UInt16 Unknown { get; set; }
+        new UInt16 Unknown2 { get; set; }
     }
 
     public partial interface IVendorValuesGetter :
@@ -720,10 +752,11 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => VendorValues_Registration.Instance;
         UInt16 StartHour { get; }
         UInt16 EndHour { get; }
-        UInt32 Radius { get; }
+        UInt16 Radius { get; }
+        UInt16 Unknown { get; }
         Boolean OnlyBuysStolenItems { get; }
         Boolean NotSellBuy { get; }
-        UInt16 Unknown { get; }
+        UInt16 Unknown2 { get; }
 
     }
 
@@ -1044,9 +1077,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         StartHour = 0,
         EndHour = 1,
         Radius = 2,
-        OnlyBuysStolenItems = 3,
-        NotSellBuy = 4,
-        Unknown = 5,
+        Unknown = 3,
+        OnlyBuysStolenItems = 4,
+        NotSellBuy = 5,
+        Unknown2 = 6,
     }
     #endregion
 
@@ -1064,9 +1098,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "31dd7308-ffd1-4311-a69c-f6c0bed71382";
 
-        public const ushort AdditionalFieldCount = 6;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(VendorValues.Mask<>);
 
@@ -1102,12 +1136,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)VendorValues_FieldIndex.EndHour;
                 case "RADIUS":
                     return (ushort)VendorValues_FieldIndex.Radius;
+                case "UNKNOWN":
+                    return (ushort)VendorValues_FieldIndex.Unknown;
                 case "ONLYBUYSSTOLENITEMS":
                     return (ushort)VendorValues_FieldIndex.OnlyBuysStolenItems;
                 case "NOTSELLBUY":
                     return (ushort)VendorValues_FieldIndex.NotSellBuy;
-                case "UNKNOWN":
-                    return (ushort)VendorValues_FieldIndex.Unknown;
+                case "UNKNOWN2":
+                    return (ushort)VendorValues_FieldIndex.Unknown2;
                 default:
                     return null;
             }
@@ -1121,9 +1157,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case VendorValues_FieldIndex.StartHour:
                 case VendorValues_FieldIndex.EndHour:
                 case VendorValues_FieldIndex.Radius:
+                case VendorValues_FieldIndex.Unknown:
                 case VendorValues_FieldIndex.OnlyBuysStolenItems:
                 case VendorValues_FieldIndex.NotSellBuy:
-                case VendorValues_FieldIndex.Unknown:
+                case VendorValues_FieldIndex.Unknown2:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1138,9 +1175,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case VendorValues_FieldIndex.StartHour:
                 case VendorValues_FieldIndex.EndHour:
                 case VendorValues_FieldIndex.Radius:
+                case VendorValues_FieldIndex.Unknown:
                 case VendorValues_FieldIndex.OnlyBuysStolenItems:
                 case VendorValues_FieldIndex.NotSellBuy:
-                case VendorValues_FieldIndex.Unknown:
+                case VendorValues_FieldIndex.Unknown2:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1155,9 +1193,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case VendorValues_FieldIndex.StartHour:
                 case VendorValues_FieldIndex.EndHour:
                 case VendorValues_FieldIndex.Radius:
+                case VendorValues_FieldIndex.Unknown:
                 case VendorValues_FieldIndex.OnlyBuysStolenItems:
                 case VendorValues_FieldIndex.NotSellBuy:
-                case VendorValues_FieldIndex.Unknown:
+                case VendorValues_FieldIndex.Unknown2:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1175,12 +1214,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "EndHour";
                 case VendorValues_FieldIndex.Radius:
                     return "Radius";
+                case VendorValues_FieldIndex.Unknown:
+                    return "Unknown";
                 case VendorValues_FieldIndex.OnlyBuysStolenItems:
                     return "OnlyBuysStolenItems";
                 case VendorValues_FieldIndex.NotSellBuy:
                     return "NotSellBuy";
-                case VendorValues_FieldIndex.Unknown:
-                    return "Unknown";
+                case VendorValues_FieldIndex.Unknown2:
+                    return "Unknown2";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1194,9 +1235,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case VendorValues_FieldIndex.StartHour:
                 case VendorValues_FieldIndex.EndHour:
                 case VendorValues_FieldIndex.Radius:
+                case VendorValues_FieldIndex.Unknown:
                 case VendorValues_FieldIndex.OnlyBuysStolenItems:
                 case VendorValues_FieldIndex.NotSellBuy:
-                case VendorValues_FieldIndex.Unknown:
+                case VendorValues_FieldIndex.Unknown2:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1211,9 +1253,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case VendorValues_FieldIndex.StartHour:
                 case VendorValues_FieldIndex.EndHour:
                 case VendorValues_FieldIndex.Radius:
+                case VendorValues_FieldIndex.Unknown:
                 case VendorValues_FieldIndex.OnlyBuysStolenItems:
                 case VendorValues_FieldIndex.NotSellBuy:
-                case VendorValues_FieldIndex.Unknown:
+                case VendorValues_FieldIndex.Unknown2:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1230,12 +1273,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case VendorValues_FieldIndex.EndHour:
                     return typeof(UInt16);
                 case VendorValues_FieldIndex.Radius:
-                    return typeof(UInt32);
+                    return typeof(UInt16);
+                case VendorValues_FieldIndex.Unknown:
+                    return typeof(UInt16);
                 case VendorValues_FieldIndex.OnlyBuysStolenItems:
                     return typeof(Boolean);
                 case VendorValues_FieldIndex.NotSellBuy:
                     return typeof(Boolean);
-                case VendorValues_FieldIndex.Unknown:
+                case VendorValues_FieldIndex.Unknown2:
                     return typeof(UInt16);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1245,7 +1290,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(VendorValuesXmlWriteTranslation);
         public static readonly RecordType VENV_HEADER = new RecordType("VENV");
         public static readonly RecordType TriggeringRecordType = VENV_HEADER;
-        public const int NumStructFields = 6;
+        public const int NumStructFields = 7;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(VendorValuesBinaryWriteTranslation);
         #region Interface
@@ -1292,9 +1337,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.StartHour = default;
             item.EndHour = default;
             item.Radius = default;
+            item.Unknown = default;
             item.OnlyBuysStolenItems = default;
             item.NotSellBuy = default;
-            item.Unknown = default;
+            item.Unknown2 = default;
         }
         
         #region Xml Translation
@@ -1332,10 +1378,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             item.StartHour = frame.ReadUInt16();
             item.EndHour = frame.ReadUInt16();
-            item.Radius = frame.ReadUInt32();
+            item.Radius = frame.ReadUInt16();
+            item.Unknown = frame.ReadUInt16();
             item.OnlyBuysStolenItems = frame.ReadBoolean();
             item.NotSellBuy = frame.ReadBoolean();
-            item.Unknown = frame.ReadUInt16();
+            item.Unknown2 = frame.ReadUInt16();
         }
         
         public virtual void CopyInFromBinary(
@@ -1384,9 +1431,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.StartHour = item.StartHour == rhs.StartHour;
             ret.EndHour = item.EndHour == rhs.EndHour;
             ret.Radius = item.Radius == rhs.Radius;
+            ret.Unknown = item.Unknown == rhs.Unknown;
             ret.OnlyBuysStolenItems = item.OnlyBuysStolenItems == rhs.OnlyBuysStolenItems;
             ret.NotSellBuy = item.NotSellBuy == rhs.NotSellBuy;
-            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
         }
         
         public string ToString(
@@ -1445,6 +1493,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Radius, "Radius");
             }
+            if (printMask?.Unknown ?? true)
+            {
+                fg.AppendItem(item.Unknown, "Unknown");
+            }
             if (printMask?.OnlyBuysStolenItems ?? true)
             {
                 fg.AppendItem(item.OnlyBuysStolenItems, "OnlyBuysStolenItems");
@@ -1453,9 +1505,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.NotSellBuy, "NotSellBuy");
             }
-            if (printMask?.Unknown ?? true)
+            if (printMask?.Unknown2 ?? true)
             {
-                fg.AppendItem(item.Unknown, "Unknown");
+                fg.AppendItem(item.Unknown2, "Unknown2");
             }
         }
         
@@ -1473,9 +1525,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.StartHour = true;
             mask.EndHour = true;
             mask.Radius = true;
+            mask.Unknown = true;
             mask.OnlyBuysStolenItems = true;
             mask.NotSellBuy = true;
-            mask.Unknown = true;
+            mask.Unknown2 = true;
         }
         
         #region Equals and Hash
@@ -1488,9 +1541,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.StartHour != rhs.StartHour) return false;
             if (lhs.EndHour != rhs.EndHour) return false;
             if (lhs.Radius != rhs.Radius) return false;
+            if (lhs.Unknown != rhs.Unknown) return false;
             if (lhs.OnlyBuysStolenItems != rhs.OnlyBuysStolenItems) return false;
             if (lhs.NotSellBuy != rhs.NotSellBuy) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
+            if (lhs.Unknown2 != rhs.Unknown2) return false;
             return true;
         }
         
@@ -1500,9 +1554,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.StartHour);
             hash.Add(item.EndHour);
             hash.Add(item.Radius);
+            hash.Add(item.Unknown);
             hash.Add(item.OnlyBuysStolenItems);
             hash.Add(item.NotSellBuy);
-            hash.Add(item.Unknown);
+            hash.Add(item.Unknown2);
             return hash.ToHashCode();
         }
         
@@ -1546,6 +1601,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Radius = rhs.Radius;
             }
+            if ((copyMask?.GetShouldTranslate((int)VendorValues_FieldIndex.Unknown) ?? true))
+            {
+                item.Unknown = rhs.Unknown;
+            }
             if ((copyMask?.GetShouldTranslate((int)VendorValues_FieldIndex.OnlyBuysStolenItems) ?? true))
             {
                 item.OnlyBuysStolenItems = rhs.OnlyBuysStolenItems;
@@ -1554,9 +1613,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.NotSellBuy = rhs.NotSellBuy;
             }
-            if ((copyMask?.GetShouldTranslate((int)VendorValues_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)VendorValues_FieldIndex.Unknown2) ?? true))
             {
-                item.Unknown = rhs.Unknown;
+                item.Unknown2 = rhs.Unknown2;
             }
         }
         
@@ -1667,11 +1726,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)VendorValues_FieldIndex.Radius) ?? true))
             {
-                UInt32XmlTranslation.Instance.Write(
+                UInt16XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Radius),
                     item: item.Radius,
                     fieldIndex: (int)VendorValues_FieldIndex.Radius,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)VendorValues_FieldIndex.Unknown) ?? true))
+            {
+                UInt16XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown),
+                    item: item.Unknown,
+                    fieldIndex: (int)VendorValues_FieldIndex.Unknown,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)VendorValues_FieldIndex.OnlyBuysStolenItems) ?? true))
@@ -1692,13 +1760,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)VendorValues_FieldIndex.NotSellBuy,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)VendorValues_FieldIndex.Unknown) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)VendorValues_FieldIndex.Unknown2) ?? true))
             {
                 UInt16XmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Unknown),
-                    item: item.Unknown,
-                    fieldIndex: (int)VendorValues_FieldIndex.Unknown,
+                    name: nameof(item.Unknown2),
+                    item: item.Unknown2,
+                    fieldIndex: (int)VendorValues_FieldIndex.Unknown2,
                     errorMask: errorMask);
             }
         }
@@ -1847,7 +1915,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)VendorValues_FieldIndex.Radius);
                     try
                     {
-                        item.Radius = UInt32XmlTranslation.Instance.Parse(
+                        item.Radius = UInt16XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown":
+                    errorMask?.PushIndex((int)VendorValues_FieldIndex.Unknown);
+                    try
+                    {
+                        item.Unknown = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1897,11 +1983,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Unknown":
-                    errorMask?.PushIndex((int)VendorValues_FieldIndex.Unknown);
+                case "Unknown2":
+                    errorMask?.PushIndex((int)VendorValues_FieldIndex.Unknown2);
                     try
                     {
-                        item.Unknown = UInt16XmlTranslation.Instance.Parse(
+                        item.Unknown2 = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2093,9 +2179,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             writer.Write(item.StartHour);
             writer.Write(item.EndHour);
             writer.Write(item.Radius);
+            writer.Write(item.Unknown);
             writer.Write(item.OnlyBuysStolenItems);
             writer.Write(item.NotSellBuy);
-            writer.Write(item.Unknown);
+            writer.Write(item.Unknown2);
         }
 
         public void Write(
@@ -2214,10 +2301,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public UInt16 StartHour => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x0, 0x2));
         public UInt16 EndHour => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2, 0x2));
-        public UInt32 Radius => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
+        public UInt16 Radius => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x4, 0x2));
+        public UInt16 Unknown => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x6, 0x2));
         public Boolean OnlyBuysStolenItems => _data.Slice(0x8, 0x1)[0] == 1;
         public Boolean NotSellBuy => _data.Slice(0x9, 0x1)[0] == 1;
-        public UInt16 Unknown => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xA, 0x2));
+        public UInt16 Unknown2 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xA, 0x2));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

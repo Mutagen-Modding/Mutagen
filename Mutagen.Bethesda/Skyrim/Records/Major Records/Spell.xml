@@ -4,6 +4,7 @@
     <Interface>INamed</Interface>
     <Interface>IEffectRecord</Interface>
     <Interface>IObjectBounded</Interface>
+    <Interface>IObjectId</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
       <String name="Name" recordType="FULL" />
@@ -12,8 +13,8 @@
       </List>
       <FormLink name="MenuDisplayObject" refName="Static" recordType="MDOB" />
       <FormLink name="EquipmentType" refName="EquipType" recordType="ETYP" />
-      <String name="Description" recordType="DESC" />
-      <RefDirect name="Data" refName="SpellData" />
+      <String name="Description" recordType="DESC" hasBeenSet="False" />
+      <RefDirect name="Data" refName="SpellData" hasBeenSet="False" />
       <RefList name="Effects" refName="Effect" nullable="NotNull" />
     </Fields>
   </Object>

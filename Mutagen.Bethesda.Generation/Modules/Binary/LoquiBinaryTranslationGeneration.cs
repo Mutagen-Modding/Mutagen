@@ -468,6 +468,7 @@ namespace Mutagen.Bethesda.Generation
                         return null;
                     }
                 }
+                if (absSum == null) return null;
                 sum += absSum.Value;
             }
 

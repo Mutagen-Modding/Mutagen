@@ -93,15 +93,7 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? IMoveableStaticGetter.Destructible => this.Destructible;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MoveableStatic.Flag? _Flags;
-        public MoveableStatic.Flag? Flags
-        {
-            get => this._Flags;
-            set => this._Flags = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        MoveableStatic.Flag? IMoveableStaticGetter.Flags => this.Flags;
+        public MoveableStatic.Flag Flags { get; set; } = default;
         #endregion
         #region LoopingSound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -794,13 +786,14 @@ namespace Mutagen.Bethesda.Skyrim
         INamed,
         IModeled,
         IObjectBounded,
+        IObjectId,
         ILoquiObjectSetter<IMoveableStaticInternal>
     {
         new ObjectBounds ObjectBounds { get; set; }
         new String? Name { get; set; }
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
-        new MoveableStatic.Flag? Flags { get; set; }
+        new MoveableStatic.Flag Flags { get; set; }
         new IFormLinkNullable<SoundDescriptor> LoopingSound { get; }
         #region Mutagen
         new MoveableStatic.MajorFlag MajorFlags { get; set; }
@@ -820,6 +813,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamedGetter,
         IModeledGetter,
         IObjectBoundedGetter,
+        IObjectIdGetter,
         ILoquiObject<IMoveableStaticGetter>,
         IXmlItem,
         ILinkContainer,
@@ -830,7 +824,7 @@ namespace Mutagen.Bethesda.Skyrim
         String? Name { get; }
         IModelGetter? Model { get; }
         IDestructibleGetter? Destructible { get; }
-        MoveableStatic.Flag? Flags { get; }
+        MoveableStatic.Flag Flags { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> LoopingSound { get; }
 
         #region Mutagen
@@ -1714,10 +1708,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 DestructibleItem?.ToString(fg, "Destructible");
             }
-            if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+            if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(FlagsItem, "Flags");
+                fg.AppendItem(item.Flags, "Flags");
             }
             if ((printMask?.LoopingSound ?? true)
                 && item.LoopingSound.TryGet(out var LoopingSoundItem))
@@ -1735,7 +1728,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Destructible?.Overall.HasValue ?? false && checkMask.Destructible.Overall.Value != (item.Destructible != null)) return false;
             if (checkMask.Destructible?.Specific != null && (item.Destructible == null || !item.Destructible.HasBeenSet(checkMask.Destructible.Specific))) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
             if (checkMask.LoopingSound.HasValue && checkMask.LoopingSound.Value != (item.LoopingSound.FormKey != null)) return false;
             return base.HasBeenSet(
                 item: item,
@@ -1752,7 +1744,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             var itemDestructible = item.Destructible;
             mask.Destructible = new MaskItem<bool, Destructible.Mask<bool>?>(itemDestructible != null, itemDestructible?.GetHasBeenSetMask());
-            mask.Flags = (item.Flags != null);
+            mask.Flags = true;
             mask.LoopingSound = (item.LoopingSound.FormKey != null);
             base.FillHasBeenSetMask(
                 item: item,
@@ -1848,10 +1840,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Destructibleitem);
             }
-            if (item.Flags.TryGet(out var Flagsitem))
-            {
-                hash.Add(Flagsitem);
-            }
+            hash.Add(item.Flags);
             if (item.LoopingSound.TryGet(out var LoopingSounditem))
             {
                 hash.Add(LoopingSounditem);
@@ -2223,8 +2212,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         translationMask: translationMask?.GetSubCrystal((int)MoveableStatic_FieldIndex.Destructible));
                 }
             }
-            if ((item.Flags != null)
-                && (translationMask?.GetShouldTranslate((int)MoveableStatic_FieldIndex.Flags) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)MoveableStatic_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<MoveableStatic.Flag>.Instance.Write(
                     node: node,
@@ -2580,7 +2568,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<MoveableStatic.Flag>.Instance.WriteNullable(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<MoveableStatic.Flag>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1,
@@ -2726,7 +2714,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IDestructibleGetter? Destructible { get; private set; }
         #region Flags
         private int? _FlagsLocation;
-        public MoveableStatic.Flag? Flags => _FlagsLocation.HasValue ? (MoveableStatic.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(MoveableStatic.Flag?);
+        public MoveableStatic.Flag Flags => _FlagsLocation.HasValue ? (MoveableStatic.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(MoveableStatic.Flag);
         #endregion
         #region LoopingSound
         private int? _LoopingSoundLocation;

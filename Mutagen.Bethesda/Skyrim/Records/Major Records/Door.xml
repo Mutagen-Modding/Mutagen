@@ -4,6 +4,8 @@
     <Interface>INamed</Interface>
     <Interface>IModeled</Interface>
     <Interface>IObjectBounded</Interface>
+    <Interface>ILocationReferencable</Interface>
+    <Interface>IObjectId</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
@@ -13,7 +15,7 @@
       <FormLink name="OpenSound" refName="SoundDescriptor" recordType="SNAM" />
       <FormLink name="CloseSound" refName="SoundDescriptor" recordType="ANAM" />
       <FormLink name="LoopSound" refName="SoundDescriptor" recordType="BNAM" />
-      <Enum name="Flags" enumName="Door.Flag" byteLength="1" recordType="FNAM" />
+      <Enum name="Flags" enumName="Door.Flag" byteLength="1" recordType="FNAM" hasBeenSet="False" />
     </Fields>
   </Object>
 </Loqui>

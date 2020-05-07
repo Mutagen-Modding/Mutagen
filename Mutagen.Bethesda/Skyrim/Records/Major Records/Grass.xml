@@ -6,7 +6,7 @@
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
       <RefDirect name="Model" refName="Model" />
-      <RefDirect name="Data" refName="GrassData" />
+      <RefDirect name="Data" refName="GrassData" hasBeenSet="True" />
     </Fields>
   </Object>
   <Object name="GrassData" objType="Subrecord" recordType="DATA" GUID="825acb51-3e9d-4012-abc9-1a516dd04d49" ID="187">

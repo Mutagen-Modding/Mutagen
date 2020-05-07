@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         OneHanded = 6,
         TwoHanded = 7,
-        Marksman = 8,
+        Archery = 8,
         Block = 9,
         Smithing = 10,
         HeavyArmor = 11,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Skyrim
         Lockpicking = 14,
         Sneak = 15,
         Alchemy = 16,
-        Speechcraft = 17,
+        Speech = 17,
         Alteration = 18,
         Conjuration = 19,
         Destruction = 20,

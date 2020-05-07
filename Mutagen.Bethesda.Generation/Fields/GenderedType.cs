@@ -50,9 +50,8 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateForClass(FileGeneration fg)
         {
-            fg.AppendLine($"public GenderedItem<{SubTypeGeneration.TypeName(getter: false)}{(this.ItemHasBeenSet ? "?" : null)}>{(this.HasBeenSet ? "?" : null)} {this.Name} {{ get; set; }}{(this.HasBeenSet ? null : $" = new GenderedItem<{SubTypeGeneration.TypeName(getter: false)}>(default, default);")}");
+            fg.AppendLine($"public GenderedItem<{SubTypeGeneration.TypeName(getter: false)}{(this.ItemHasBeenSet ? "?" : null)}>{(this.HasBeenSet ? "?" : null)} {this.Name} {{ get; set; }}{(this.HasBeenSet ? null : $" = new GenderedItem<{SubTypeGeneration.TypeName(getter: false)}{(this.ItemHasBeenSet ? "?" : null)}>({this.SubTypeGeneration.GetDefault(getter: false)}, {this.SubTypeGeneration.GetDefault(getter: false)});")}");
             fg.AppendLine($"IGenderedItemGetter<{SubTypeGeneration.TypeName(getter: true)}{(this.ItemHasBeenSet ? "?" : null)}>{(this.HasBeenSet ? "?" : null)} {this.ObjectGen.Interface(getter: true, internalInterface: true)}.{this.Name} => this.{this.Name};");
-
         }
 
         public override string GenerateACopy(string rhsAccessor)
@@ -121,18 +120,9 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateForEqualsMask(FileGeneration fg, Accessor accessor, Accessor rhsAccessor, string retAccessor)
         {
-            string typeStr;
             LoquiType loqui = this.SubTypeGeneration as LoquiType;
-            if (loqui != null)
-            {
-                typeStr = $"GenderedItem<{loqui.GetMaskString("bool")}?>";
-            }
-            else
-            {
-                typeStr = $"GenderedItem<bool>";
-            }
 
-            if (this.HasBeenSet)
+            if (this.HasBeenSet || loqui != null)
             {
                 using (var args = new ArgsWrapper(fg,
                     $"ret.{this.Name} = {nameof(GenderedItem)}.{nameof(GenderedItem.EqualityMaskHelper)}"))
@@ -159,23 +149,11 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                if (loqui != null)
+                using (var args = new ArgsWrapper(fg,
+                    $"ret.{this.Name} = new GenderedItem<bool>"))
                 {
-                    using (var args = new ArgsWrapper(fg,
-                        $"ret.{this.Name} = new {typeStr}"))
-                    {
-                        args.Add($"male: {accessor.DirectAccess}.Male.{(loqui.TargetObjectGeneration == null ? nameof(IEqualsMask.GetEqualsIMask) : "GetEqualsMask")}({rhsAccessor.DirectAccess}.Male, include)");
-                        args.Add($"female: {accessor.DirectAccess}.Female.{(loqui.TargetObjectGeneration == null ? nameof(IEqualsMask.GetEqualsIMask) : "GetEqualsMask")}({rhsAccessor.DirectAccess}.Female, include)");
-                    }
-                }
-                else
-                {
-                    using (var args = new ArgsWrapper(fg,
-                        $"ret.{this.Name} = new {typeStr}"))
-                    {
-                        args.Add($"male: {this.SubTypeGeneration.GenerateEqualsSnippet($"{accessor}.Male", $"{rhsAccessor}.Male")}");
-                        args.Add($"female: {this.SubTypeGeneration.GenerateEqualsSnippet($"{accessor}.Female", $"{rhsAccessor}.Female")}");
-                    }
+                    args.Add($"male: {this.SubTypeGeneration.GenerateEqualsSnippet($"{accessor}.Male", $"{rhsAccessor}.Male")}");
+                    args.Add($"female: {this.SubTypeGeneration.GenerateEqualsSnippet($"{accessor}.Female", $"{rhsAccessor}.Female")}");
                 }
             }
         }
@@ -194,8 +172,8 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateForHasBeenSetMaskGetter(FileGeneration fg, Accessor accessor, string retAccessor)
         {
-            if (this.SubTypeGeneration is LoquiType loqui
-                && this.HasBeenSet)
+            bool isLoqui = this.SubTypeGeneration is LoquiType;
+            if (isLoqui)
             {
                 using (var args = new ArgsWrapper(fg,
                     $"{retAccessor} = GenderedItem.HasBeenSet{(this.ItemHasBeenSet ? "Mask" : null)}Helper"))
@@ -210,7 +188,7 @@ namespace Mutagen.Bethesda.Generation
             }
             else if (this.ItemHasBeenSet)
             {
-                throw new NotImplementedException();
+                fg.AppendLine($"{retAccessor} = new GenderedItem<bool>({accessor}.Male != null, {accessor}.Female != null);");
             }
             else
             {

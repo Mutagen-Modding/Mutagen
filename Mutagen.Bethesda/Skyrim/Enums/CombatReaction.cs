@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public enum Combat
+    public enum CombatReaction
     {
         Neutral,
         Enemy,

@@ -62,59 +62,14 @@ namespace Mutagen.Bethesda.Skyrim
         #region MaxTrainingLevel
         public Byte MaxTrainingLevel { get; set; } = default;
         #endregion
-        #region OneHandedWeight
-        public Byte OneHandedWeight { get; set; } = default;
+        #region SkillWeights
+        private readonly Dictionary<Skill, Byte> _SkillWeights = new Dictionary<Skill, Byte>();
+        public IDictionary<Skill, Byte> SkillWeights => _SkillWeights;
+        #region Interface Members
+        IDictionary<Skill, Byte> IClassData.SkillWeights => _SkillWeights;
+        IReadOnlyDictionary<Skill, Byte> IClassDataGetter.SkillWeights => _SkillWeights;
         #endregion
-        #region TwoHandedWeight
-        public Byte TwoHandedWeight { get; set; } = default;
-        #endregion
-        #region MarksmanWeight
-        public Byte MarksmanWeight { get; set; } = default;
-        #endregion
-        #region BlockWeight
-        public Byte BlockWeight { get; set; } = default;
-        #endregion
-        #region SmithingWeight
-        public Byte SmithingWeight { get; set; } = default;
-        #endregion
-        #region HeavyArmorWeight
-        public Byte HeavyArmorWeight { get; set; } = default;
-        #endregion
-        #region LightArmorWeight
-        public Byte LightArmorWeight { get; set; } = default;
-        #endregion
-        #region PickpocketWeight
-        public Byte PickpocketWeight { get; set; } = default;
-        #endregion
-        #region LockpickingWeight
-        public Byte LockpickingWeight { get; set; } = default;
-        #endregion
-        #region SneakWeight
-        public Byte SneakWeight { get; set; } = default;
-        #endregion
-        #region AlchemyWeight
-        public Byte AlchemyWeight { get; set; } = default;
-        #endregion
-        #region SpeechcraftWeight
-        public Byte SpeechcraftWeight { get; set; } = default;
-        #endregion
-        #region AlterationWeight
-        public Byte AlterationWeight { get; set; } = default;
-        #endregion
-        #region ConjurationWeight
-        public Byte ConjurationWeight { get; set; } = default;
-        #endregion
-        #region DestructionWeight
-        public Byte DestructionWeight { get; set; } = default;
-        #endregion
-        #region IllusionWeight
-        public Byte IllusionWeight { get; set; } = default;
-        #endregion
-        #region RestorationWeight
-        public Byte RestorationWeight { get; set; } = default;
-        #endregion
-        #region EnchantingWeight
-        public Byte EnchantingWeight { get; set; } = default;
+
         #endregion
         #region BleedoutDefault
         public Single BleedoutDefault { get; set; } = default;
@@ -122,14 +77,14 @@ namespace Mutagen.Bethesda.Skyrim
         #region VoicePoints
         public UInt32 VoicePoints { get; set; } = default;
         #endregion
-        #region HealthWeight
-        public Byte HealthWeight { get; set; } = default;
+        #region StatWeights
+        private readonly Dictionary<BasicStat, Byte> _StatWeights = new Dictionary<BasicStat, Byte>();
+        public IDictionary<BasicStat, Byte> StatWeights => _StatWeights;
+        #region Interface Members
+        IDictionary<BasicStat, Byte> IClassData.StatWeights => _StatWeights;
+        IReadOnlyDictionary<BasicStat, Byte> IClassDataGetter.StatWeights => _StatWeights;
         #endregion
-        #region MagickaWeight
-        public Byte MagickaWeight { get; set; } = default;
-        #endregion
-        #region StaminaWeight
-        public Byte StaminaWeight { get; set; } = default;
+
         #endregion
         #region Unknown2
         public Byte Unknown2 { get; set; } = default;
@@ -307,29 +262,10 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Unknown = initialValue;
                 this.Teaches = initialValue;
                 this.MaxTrainingLevel = initialValue;
-                this.OneHandedWeight = initialValue;
-                this.TwoHandedWeight = initialValue;
-                this.MarksmanWeight = initialValue;
-                this.BlockWeight = initialValue;
-                this.SmithingWeight = initialValue;
-                this.HeavyArmorWeight = initialValue;
-                this.LightArmorWeight = initialValue;
-                this.PickpocketWeight = initialValue;
-                this.LockpickingWeight = initialValue;
-                this.SneakWeight = initialValue;
-                this.AlchemyWeight = initialValue;
-                this.SpeechcraftWeight = initialValue;
-                this.AlterationWeight = initialValue;
-                this.ConjurationWeight = initialValue;
-                this.DestructionWeight = initialValue;
-                this.IllusionWeight = initialValue;
-                this.RestorationWeight = initialValue;
-                this.EnchantingWeight = initialValue;
+                this.SkillWeights = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(initialValue, null);
                 this.BleedoutDefault = initialValue;
                 this.VoicePoints = initialValue;
-                this.HealthWeight = initialValue;
-                this.MagickaWeight = initialValue;
-                this.StaminaWeight = initialValue;
+                this.StatWeights = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(initialValue, null);
                 this.Unknown2 = initialValue;
             }
 
@@ -337,57 +273,19 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Unknown,
                 TItem Teaches,
                 TItem MaxTrainingLevel,
-                TItem OneHandedWeight,
-                TItem TwoHandedWeight,
-                TItem MarksmanWeight,
-                TItem BlockWeight,
-                TItem SmithingWeight,
-                TItem HeavyArmorWeight,
-                TItem LightArmorWeight,
-                TItem PickpocketWeight,
-                TItem LockpickingWeight,
-                TItem SneakWeight,
-                TItem AlchemyWeight,
-                TItem SpeechcraftWeight,
-                TItem AlterationWeight,
-                TItem ConjurationWeight,
-                TItem DestructionWeight,
-                TItem IllusionWeight,
-                TItem RestorationWeight,
-                TItem EnchantingWeight,
+                TItem SkillWeights,
                 TItem BleedoutDefault,
                 TItem VoicePoints,
-                TItem HealthWeight,
-                TItem MagickaWeight,
-                TItem StaminaWeight,
+                TItem StatWeights,
                 TItem Unknown2)
             {
                 this.Unknown = Unknown;
                 this.Teaches = Teaches;
                 this.MaxTrainingLevel = MaxTrainingLevel;
-                this.OneHandedWeight = OneHandedWeight;
-                this.TwoHandedWeight = TwoHandedWeight;
-                this.MarksmanWeight = MarksmanWeight;
-                this.BlockWeight = BlockWeight;
-                this.SmithingWeight = SmithingWeight;
-                this.HeavyArmorWeight = HeavyArmorWeight;
-                this.LightArmorWeight = LightArmorWeight;
-                this.PickpocketWeight = PickpocketWeight;
-                this.LockpickingWeight = LockpickingWeight;
-                this.SneakWeight = SneakWeight;
-                this.AlchemyWeight = AlchemyWeight;
-                this.SpeechcraftWeight = SpeechcraftWeight;
-                this.AlterationWeight = AlterationWeight;
-                this.ConjurationWeight = ConjurationWeight;
-                this.DestructionWeight = DestructionWeight;
-                this.IllusionWeight = IllusionWeight;
-                this.RestorationWeight = RestorationWeight;
-                this.EnchantingWeight = EnchantingWeight;
+                this.SkillWeights = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(SkillWeights, null);
                 this.BleedoutDefault = BleedoutDefault;
                 this.VoicePoints = VoicePoints;
-                this.HealthWeight = HealthWeight;
-                this.MagickaWeight = MagickaWeight;
-                this.StaminaWeight = StaminaWeight;
+                this.StatWeights = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(StatWeights, null);
                 this.Unknown2 = Unknown2;
             }
 
@@ -403,29 +301,10 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Unknown;
             public TItem Teaches;
             public TItem MaxTrainingLevel;
-            public TItem OneHandedWeight;
-            public TItem TwoHandedWeight;
-            public TItem MarksmanWeight;
-            public TItem BlockWeight;
-            public TItem SmithingWeight;
-            public TItem HeavyArmorWeight;
-            public TItem LightArmorWeight;
-            public TItem PickpocketWeight;
-            public TItem LockpickingWeight;
-            public TItem SneakWeight;
-            public TItem AlchemyWeight;
-            public TItem SpeechcraftWeight;
-            public TItem AlterationWeight;
-            public TItem ConjurationWeight;
-            public TItem DestructionWeight;
-            public TItem IllusionWeight;
-            public TItem RestorationWeight;
-            public TItem EnchantingWeight;
+            public MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>? SkillWeights;
             public TItem BleedoutDefault;
             public TItem VoicePoints;
-            public TItem HealthWeight;
-            public TItem MagickaWeight;
-            public TItem StaminaWeight;
+            public MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>? StatWeights;
             public TItem Unknown2;
             #endregion
 
@@ -442,29 +321,10 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.Teaches, rhs.Teaches)) return false;
                 if (!object.Equals(this.MaxTrainingLevel, rhs.MaxTrainingLevel)) return false;
-                if (!object.Equals(this.OneHandedWeight, rhs.OneHandedWeight)) return false;
-                if (!object.Equals(this.TwoHandedWeight, rhs.TwoHandedWeight)) return false;
-                if (!object.Equals(this.MarksmanWeight, rhs.MarksmanWeight)) return false;
-                if (!object.Equals(this.BlockWeight, rhs.BlockWeight)) return false;
-                if (!object.Equals(this.SmithingWeight, rhs.SmithingWeight)) return false;
-                if (!object.Equals(this.HeavyArmorWeight, rhs.HeavyArmorWeight)) return false;
-                if (!object.Equals(this.LightArmorWeight, rhs.LightArmorWeight)) return false;
-                if (!object.Equals(this.PickpocketWeight, rhs.PickpocketWeight)) return false;
-                if (!object.Equals(this.LockpickingWeight, rhs.LockpickingWeight)) return false;
-                if (!object.Equals(this.SneakWeight, rhs.SneakWeight)) return false;
-                if (!object.Equals(this.AlchemyWeight, rhs.AlchemyWeight)) return false;
-                if (!object.Equals(this.SpeechcraftWeight, rhs.SpeechcraftWeight)) return false;
-                if (!object.Equals(this.AlterationWeight, rhs.AlterationWeight)) return false;
-                if (!object.Equals(this.ConjurationWeight, rhs.ConjurationWeight)) return false;
-                if (!object.Equals(this.DestructionWeight, rhs.DestructionWeight)) return false;
-                if (!object.Equals(this.IllusionWeight, rhs.IllusionWeight)) return false;
-                if (!object.Equals(this.RestorationWeight, rhs.RestorationWeight)) return false;
-                if (!object.Equals(this.EnchantingWeight, rhs.EnchantingWeight)) return false;
+                if (!object.Equals(this.SkillWeights, rhs.SkillWeights)) return false;
                 if (!object.Equals(this.BleedoutDefault, rhs.BleedoutDefault)) return false;
                 if (!object.Equals(this.VoicePoints, rhs.VoicePoints)) return false;
-                if (!object.Equals(this.HealthWeight, rhs.HealthWeight)) return false;
-                if (!object.Equals(this.MagickaWeight, rhs.MagickaWeight)) return false;
-                if (!object.Equals(this.StaminaWeight, rhs.StaminaWeight)) return false;
+                if (!object.Equals(this.StatWeights, rhs.StatWeights)) return false;
                 if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
                 return true;
             }
@@ -474,29 +334,10 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Unknown);
                 hash.Add(this.Teaches);
                 hash.Add(this.MaxTrainingLevel);
-                hash.Add(this.OneHandedWeight);
-                hash.Add(this.TwoHandedWeight);
-                hash.Add(this.MarksmanWeight);
-                hash.Add(this.BlockWeight);
-                hash.Add(this.SmithingWeight);
-                hash.Add(this.HeavyArmorWeight);
-                hash.Add(this.LightArmorWeight);
-                hash.Add(this.PickpocketWeight);
-                hash.Add(this.LockpickingWeight);
-                hash.Add(this.SneakWeight);
-                hash.Add(this.AlchemyWeight);
-                hash.Add(this.SpeechcraftWeight);
-                hash.Add(this.AlterationWeight);
-                hash.Add(this.ConjurationWeight);
-                hash.Add(this.DestructionWeight);
-                hash.Add(this.IllusionWeight);
-                hash.Add(this.RestorationWeight);
-                hash.Add(this.EnchantingWeight);
+                hash.Add(this.SkillWeights);
                 hash.Add(this.BleedoutDefault);
                 hash.Add(this.VoicePoints);
-                hash.Add(this.HealthWeight);
-                hash.Add(this.MagickaWeight);
-                hash.Add(this.StaminaWeight);
+                hash.Add(this.StatWeights);
                 hash.Add(this.Unknown2);
                 return hash.ToHashCode();
             }
@@ -509,29 +350,32 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.Unknown)) return false;
                 if (!eval(this.Teaches)) return false;
                 if (!eval(this.MaxTrainingLevel)) return false;
-                if (!eval(this.OneHandedWeight)) return false;
-                if (!eval(this.TwoHandedWeight)) return false;
-                if (!eval(this.MarksmanWeight)) return false;
-                if (!eval(this.BlockWeight)) return false;
-                if (!eval(this.SmithingWeight)) return false;
-                if (!eval(this.HeavyArmorWeight)) return false;
-                if (!eval(this.LightArmorWeight)) return false;
-                if (!eval(this.PickpocketWeight)) return false;
-                if (!eval(this.LockpickingWeight)) return false;
-                if (!eval(this.SneakWeight)) return false;
-                if (!eval(this.AlchemyWeight)) return false;
-                if (!eval(this.SpeechcraftWeight)) return false;
-                if (!eval(this.AlterationWeight)) return false;
-                if (!eval(this.ConjurationWeight)) return false;
-                if (!eval(this.DestructionWeight)) return false;
-                if (!eval(this.IllusionWeight)) return false;
-                if (!eval(this.RestorationWeight)) return false;
-                if (!eval(this.EnchantingWeight)) return false;
+                if (this.SkillWeights != null)
+                {
+                    if (!eval(this.SkillWeights.Overall)) return false;
+                    if (this.SkillWeights.Specific != null)
+                    {
+                        foreach (var item in this.SkillWeights.Specific)
+                        {
+                            if (!eval(item.Key)) return false;
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (!eval(this.BleedoutDefault)) return false;
                 if (!eval(this.VoicePoints)) return false;
-                if (!eval(this.HealthWeight)) return false;
-                if (!eval(this.MagickaWeight)) return false;
-                if (!eval(this.StaminaWeight)) return false;
+                if (this.StatWeights != null)
+                {
+                    if (!eval(this.StatWeights.Overall)) return false;
+                    if (this.StatWeights.Specific != null)
+                    {
+                        foreach (var item in this.StatWeights.Specific)
+                        {
+                            if (!eval(item.Key)) return false;
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (!eval(this.Unknown2)) return false;
                 return true;
             }
@@ -543,29 +387,32 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.Unknown)) return true;
                 if (eval(this.Teaches)) return true;
                 if (eval(this.MaxTrainingLevel)) return true;
-                if (eval(this.OneHandedWeight)) return true;
-                if (eval(this.TwoHandedWeight)) return true;
-                if (eval(this.MarksmanWeight)) return true;
-                if (eval(this.BlockWeight)) return true;
-                if (eval(this.SmithingWeight)) return true;
-                if (eval(this.HeavyArmorWeight)) return true;
-                if (eval(this.LightArmorWeight)) return true;
-                if (eval(this.PickpocketWeight)) return true;
-                if (eval(this.LockpickingWeight)) return true;
-                if (eval(this.SneakWeight)) return true;
-                if (eval(this.AlchemyWeight)) return true;
-                if (eval(this.SpeechcraftWeight)) return true;
-                if (eval(this.AlterationWeight)) return true;
-                if (eval(this.ConjurationWeight)) return true;
-                if (eval(this.DestructionWeight)) return true;
-                if (eval(this.IllusionWeight)) return true;
-                if (eval(this.RestorationWeight)) return true;
-                if (eval(this.EnchantingWeight)) return true;
+                if (this.SkillWeights != null)
+                {
+                    if (eval(this.SkillWeights.Overall)) return true;
+                    if (this.SkillWeights.Specific != null)
+                    {
+                        foreach (var item in this.SkillWeights.Specific)
+                        {
+                            if (!eval(item.Key)) return false;
+                            if (eval(item.Value)) return true;
+                        }
+                    }
+                }
                 if (eval(this.BleedoutDefault)) return true;
                 if (eval(this.VoicePoints)) return true;
-                if (eval(this.HealthWeight)) return true;
-                if (eval(this.MagickaWeight)) return true;
-                if (eval(this.StaminaWeight)) return true;
+                if (this.StatWeights != null)
+                {
+                    if (eval(this.StatWeights.Overall)) return true;
+                    if (this.StatWeights.Specific != null)
+                    {
+                        foreach (var item in this.StatWeights.Specific)
+                        {
+                            if (!eval(item.Key)) return false;
+                            if (eval(item.Value)) return true;
+                        }
+                    }
+                }
                 if (eval(this.Unknown2)) return true;
                 return false;
             }
@@ -584,29 +431,38 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Unknown = eval(this.Unknown);
                 obj.Teaches = eval(this.Teaches);
                 obj.MaxTrainingLevel = eval(this.MaxTrainingLevel);
-                obj.OneHandedWeight = eval(this.OneHandedWeight);
-                obj.TwoHandedWeight = eval(this.TwoHandedWeight);
-                obj.MarksmanWeight = eval(this.MarksmanWeight);
-                obj.BlockWeight = eval(this.BlockWeight);
-                obj.SmithingWeight = eval(this.SmithingWeight);
-                obj.HeavyArmorWeight = eval(this.HeavyArmorWeight);
-                obj.LightArmorWeight = eval(this.LightArmorWeight);
-                obj.PickpocketWeight = eval(this.PickpocketWeight);
-                obj.LockpickingWeight = eval(this.LockpickingWeight);
-                obj.SneakWeight = eval(this.SneakWeight);
-                obj.AlchemyWeight = eval(this.AlchemyWeight);
-                obj.SpeechcraftWeight = eval(this.SpeechcraftWeight);
-                obj.AlterationWeight = eval(this.AlterationWeight);
-                obj.ConjurationWeight = eval(this.ConjurationWeight);
-                obj.DestructionWeight = eval(this.DestructionWeight);
-                obj.IllusionWeight = eval(this.IllusionWeight);
-                obj.RestorationWeight = eval(this.RestorationWeight);
-                obj.EnchantingWeight = eval(this.EnchantingWeight);
+                if (SkillWeights != null)
+                {
+                    obj.SkillWeights = new MaskItem<R, IEnumerable<KeyValuePair<R, R>>?>(eval(this.SkillWeights.Overall), default);
+                    if (SkillWeights.Specific != null)
+                    {
+                        List<KeyValuePair<R, R>> l = new List<KeyValuePair<R, R>>();
+                        obj.SkillWeights.Specific = l;
+                        foreach (var item in SkillWeights.Specific)
+                        {
+                            R keyVal = eval(item.Key);
+                            R valVal = eval(item.Value);
+                            l.Add(new KeyValuePair<R, R>(keyVal, valVal));
+                        }
+                    }
+                }
                 obj.BleedoutDefault = eval(this.BleedoutDefault);
                 obj.VoicePoints = eval(this.VoicePoints);
-                obj.HealthWeight = eval(this.HealthWeight);
-                obj.MagickaWeight = eval(this.MagickaWeight);
-                obj.StaminaWeight = eval(this.StaminaWeight);
+                if (StatWeights != null)
+                {
+                    obj.StatWeights = new MaskItem<R, IEnumerable<KeyValuePair<R, R>>?>(eval(this.StatWeights.Overall), default);
+                    if (StatWeights.Specific != null)
+                    {
+                        List<KeyValuePair<R, R>> l = new List<KeyValuePair<R, R>>();
+                        obj.StatWeights.Specific = l;
+                        foreach (var item in StatWeights.Specific)
+                        {
+                            R keyVal = eval(item.Key);
+                            R valVal = eval(item.Value);
+                            l.Add(new KeyValuePair<R, R>(keyVal, valVal));
+                        }
+                    }
+                }
                 obj.Unknown2 = eval(this.Unknown2);
             }
             #endregion
@@ -642,77 +498,44 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(MaxTrainingLevel, "MaxTrainingLevel");
                     }
-                    if (printMask?.OneHandedWeight ?? true)
+                    if (printMask?.SkillWeights?.Overall ?? true)
                     {
-                        fg.AppendItem(OneHandedWeight, "OneHandedWeight");
-                    }
-                    if (printMask?.TwoHandedWeight ?? true)
-                    {
-                        fg.AppendItem(TwoHandedWeight, "TwoHandedWeight");
-                    }
-                    if (printMask?.MarksmanWeight ?? true)
-                    {
-                        fg.AppendItem(MarksmanWeight, "MarksmanWeight");
-                    }
-                    if (printMask?.BlockWeight ?? true)
-                    {
-                        fg.AppendItem(BlockWeight, "BlockWeight");
-                    }
-                    if (printMask?.SmithingWeight ?? true)
-                    {
-                        fg.AppendItem(SmithingWeight, "SmithingWeight");
-                    }
-                    if (printMask?.HeavyArmorWeight ?? true)
-                    {
-                        fg.AppendItem(HeavyArmorWeight, "HeavyArmorWeight");
-                    }
-                    if (printMask?.LightArmorWeight ?? true)
-                    {
-                        fg.AppendItem(LightArmorWeight, "LightArmorWeight");
-                    }
-                    if (printMask?.PickpocketWeight ?? true)
-                    {
-                        fg.AppendItem(PickpocketWeight, "PickpocketWeight");
-                    }
-                    if (printMask?.LockpickingWeight ?? true)
-                    {
-                        fg.AppendItem(LockpickingWeight, "LockpickingWeight");
-                    }
-                    if (printMask?.SneakWeight ?? true)
-                    {
-                        fg.AppendItem(SneakWeight, "SneakWeight");
-                    }
-                    if (printMask?.AlchemyWeight ?? true)
-                    {
-                        fg.AppendItem(AlchemyWeight, "AlchemyWeight");
-                    }
-                    if (printMask?.SpeechcraftWeight ?? true)
-                    {
-                        fg.AppendItem(SpeechcraftWeight, "SpeechcraftWeight");
-                    }
-                    if (printMask?.AlterationWeight ?? true)
-                    {
-                        fg.AppendItem(AlterationWeight, "AlterationWeight");
-                    }
-                    if (printMask?.ConjurationWeight ?? true)
-                    {
-                        fg.AppendItem(ConjurationWeight, "ConjurationWeight");
-                    }
-                    if (printMask?.DestructionWeight ?? true)
-                    {
-                        fg.AppendItem(DestructionWeight, "DestructionWeight");
-                    }
-                    if (printMask?.IllusionWeight ?? true)
-                    {
-                        fg.AppendItem(IllusionWeight, "IllusionWeight");
-                    }
-                    if (printMask?.RestorationWeight ?? true)
-                    {
-                        fg.AppendItem(RestorationWeight, "RestorationWeight");
-                    }
-                    if (printMask?.EnchantingWeight ?? true)
-                    {
-                        fg.AppendItem(EnchantingWeight, "EnchantingWeight");
+                        fg.AppendLine("SkillWeights =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (SkillWeights != null)
+                            {
+                                if (SkillWeights.Overall != null)
+                                {
+                                    fg.AppendLine(SkillWeights.Overall.ToString());
+                                }
+                                if (SkillWeights.Specific != null)
+                                {
+                                    foreach (var subItem in SkillWeights.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine("Key => [");
+                                            using (new DepthWrapper(fg))
+                                            {
+                                                fg.AppendItem(subItem.Key);
+                                            }
+                                            fg.AppendLine("]");
+                                            fg.AppendLine("Value => [");
+                                            using (new DepthWrapper(fg))
+                                            {
+                                                fg.AppendItem(subItem.Value);
+                                            }
+                                            fg.AppendLine("]");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
                     }
                     if (printMask?.BleedoutDefault ?? true)
                     {
@@ -722,17 +545,44 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(VoicePoints, "VoicePoints");
                     }
-                    if (printMask?.HealthWeight ?? true)
+                    if (printMask?.StatWeights?.Overall ?? true)
                     {
-                        fg.AppendItem(HealthWeight, "HealthWeight");
-                    }
-                    if (printMask?.MagickaWeight ?? true)
-                    {
-                        fg.AppendItem(MagickaWeight, "MagickaWeight");
-                    }
-                    if (printMask?.StaminaWeight ?? true)
-                    {
-                        fg.AppendItem(StaminaWeight, "StaminaWeight");
+                        fg.AppendLine("StatWeights =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (StatWeights != null)
+                            {
+                                if (StatWeights.Overall != null)
+                                {
+                                    fg.AppendLine(StatWeights.Overall.ToString());
+                                }
+                                if (StatWeights.Specific != null)
+                                {
+                                    foreach (var subItem in StatWeights.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine("Key => [");
+                                            using (new DepthWrapper(fg))
+                                            {
+                                                fg.AppendItem(subItem.Key);
+                                            }
+                                            fg.AppendLine("]");
+                                            fg.AppendLine("Value => [");
+                                            using (new DepthWrapper(fg))
+                                            {
+                                                fg.AppendItem(subItem.Value);
+                                            }
+                                            fg.AppendLine("]");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
@@ -766,29 +616,10 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Unknown;
             public Exception? Teaches;
             public Exception? MaxTrainingLevel;
-            public Exception? OneHandedWeight;
-            public Exception? TwoHandedWeight;
-            public Exception? MarksmanWeight;
-            public Exception? BlockWeight;
-            public Exception? SmithingWeight;
-            public Exception? HeavyArmorWeight;
-            public Exception? LightArmorWeight;
-            public Exception? PickpocketWeight;
-            public Exception? LockpickingWeight;
-            public Exception? SneakWeight;
-            public Exception? AlchemyWeight;
-            public Exception? SpeechcraftWeight;
-            public Exception? AlterationWeight;
-            public Exception? ConjurationWeight;
-            public Exception? DestructionWeight;
-            public Exception? IllusionWeight;
-            public Exception? RestorationWeight;
-            public Exception? EnchantingWeight;
+            public MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>? SkillWeights;
             public Exception? BleedoutDefault;
             public Exception? VoicePoints;
-            public Exception? HealthWeight;
-            public Exception? MagickaWeight;
-            public Exception? StaminaWeight;
+            public MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>? StatWeights;
             public Exception? Unknown2;
             #endregion
 
@@ -804,52 +635,14 @@ namespace Mutagen.Bethesda.Skyrim
                         return Teaches;
                     case ClassData_FieldIndex.MaxTrainingLevel:
                         return MaxTrainingLevel;
-                    case ClassData_FieldIndex.OneHandedWeight:
-                        return OneHandedWeight;
-                    case ClassData_FieldIndex.TwoHandedWeight:
-                        return TwoHandedWeight;
-                    case ClassData_FieldIndex.MarksmanWeight:
-                        return MarksmanWeight;
-                    case ClassData_FieldIndex.BlockWeight:
-                        return BlockWeight;
-                    case ClassData_FieldIndex.SmithingWeight:
-                        return SmithingWeight;
-                    case ClassData_FieldIndex.HeavyArmorWeight:
-                        return HeavyArmorWeight;
-                    case ClassData_FieldIndex.LightArmorWeight:
-                        return LightArmorWeight;
-                    case ClassData_FieldIndex.PickpocketWeight:
-                        return PickpocketWeight;
-                    case ClassData_FieldIndex.LockpickingWeight:
-                        return LockpickingWeight;
-                    case ClassData_FieldIndex.SneakWeight:
-                        return SneakWeight;
-                    case ClassData_FieldIndex.AlchemyWeight:
-                        return AlchemyWeight;
-                    case ClassData_FieldIndex.SpeechcraftWeight:
-                        return SpeechcraftWeight;
-                    case ClassData_FieldIndex.AlterationWeight:
-                        return AlterationWeight;
-                    case ClassData_FieldIndex.ConjurationWeight:
-                        return ConjurationWeight;
-                    case ClassData_FieldIndex.DestructionWeight:
-                        return DestructionWeight;
-                    case ClassData_FieldIndex.IllusionWeight:
-                        return IllusionWeight;
-                    case ClassData_FieldIndex.RestorationWeight:
-                        return RestorationWeight;
-                    case ClassData_FieldIndex.EnchantingWeight:
-                        return EnchantingWeight;
+                    case ClassData_FieldIndex.SkillWeights:
+                        return SkillWeights;
                     case ClassData_FieldIndex.BleedoutDefault:
                         return BleedoutDefault;
                     case ClassData_FieldIndex.VoicePoints:
                         return VoicePoints;
-                    case ClassData_FieldIndex.HealthWeight:
-                        return HealthWeight;
-                    case ClassData_FieldIndex.MagickaWeight:
-                        return MagickaWeight;
-                    case ClassData_FieldIndex.StaminaWeight:
-                        return StaminaWeight;
+                    case ClassData_FieldIndex.StatWeights:
+                        return StatWeights;
                     case ClassData_FieldIndex.Unknown2:
                         return Unknown2;
                     default:
@@ -871,59 +664,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case ClassData_FieldIndex.MaxTrainingLevel:
                         this.MaxTrainingLevel = ex;
                         break;
-                    case ClassData_FieldIndex.OneHandedWeight:
-                        this.OneHandedWeight = ex;
-                        break;
-                    case ClassData_FieldIndex.TwoHandedWeight:
-                        this.TwoHandedWeight = ex;
-                        break;
-                    case ClassData_FieldIndex.MarksmanWeight:
-                        this.MarksmanWeight = ex;
-                        break;
-                    case ClassData_FieldIndex.BlockWeight:
-                        this.BlockWeight = ex;
-                        break;
-                    case ClassData_FieldIndex.SmithingWeight:
-                        this.SmithingWeight = ex;
-                        break;
-                    case ClassData_FieldIndex.HeavyArmorWeight:
-                        this.HeavyArmorWeight = ex;
-                        break;
-                    case ClassData_FieldIndex.LightArmorWeight:
-                        this.LightArmorWeight = ex;
-                        break;
-                    case ClassData_FieldIndex.PickpocketWeight:
-                        this.PickpocketWeight = ex;
-                        break;
-                    case ClassData_FieldIndex.LockpickingWeight:
-                        this.LockpickingWeight = ex;
-                        break;
-                    case ClassData_FieldIndex.SneakWeight:
-                        this.SneakWeight = ex;
-                        break;
-                    case ClassData_FieldIndex.AlchemyWeight:
-                        this.AlchemyWeight = ex;
-                        break;
-                    case ClassData_FieldIndex.SpeechcraftWeight:
-                        this.SpeechcraftWeight = ex;
-                        break;
-                    case ClassData_FieldIndex.AlterationWeight:
-                        this.AlterationWeight = ex;
-                        break;
-                    case ClassData_FieldIndex.ConjurationWeight:
-                        this.ConjurationWeight = ex;
-                        break;
-                    case ClassData_FieldIndex.DestructionWeight:
-                        this.DestructionWeight = ex;
-                        break;
-                    case ClassData_FieldIndex.IllusionWeight:
-                        this.IllusionWeight = ex;
-                        break;
-                    case ClassData_FieldIndex.RestorationWeight:
-                        this.RestorationWeight = ex;
-                        break;
-                    case ClassData_FieldIndex.EnchantingWeight:
-                        this.EnchantingWeight = ex;
+                    case ClassData_FieldIndex.SkillWeights:
+                        this.SkillWeights = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ex, null);
                         break;
                     case ClassData_FieldIndex.BleedoutDefault:
                         this.BleedoutDefault = ex;
@@ -931,14 +673,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case ClassData_FieldIndex.VoicePoints:
                         this.VoicePoints = ex;
                         break;
-                    case ClassData_FieldIndex.HealthWeight:
-                        this.HealthWeight = ex;
-                        break;
-                    case ClassData_FieldIndex.MagickaWeight:
-                        this.MagickaWeight = ex;
-                        break;
-                    case ClassData_FieldIndex.StaminaWeight:
-                        this.StaminaWeight = ex;
+                    case ClassData_FieldIndex.StatWeights:
+                        this.StatWeights = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ex, null);
                         break;
                     case ClassData_FieldIndex.Unknown2:
                         this.Unknown2 = ex;
@@ -962,59 +698,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case ClassData_FieldIndex.MaxTrainingLevel:
                         this.MaxTrainingLevel = (Exception?)obj;
                         break;
-                    case ClassData_FieldIndex.OneHandedWeight:
-                        this.OneHandedWeight = (Exception?)obj;
-                        break;
-                    case ClassData_FieldIndex.TwoHandedWeight:
-                        this.TwoHandedWeight = (Exception?)obj;
-                        break;
-                    case ClassData_FieldIndex.MarksmanWeight:
-                        this.MarksmanWeight = (Exception?)obj;
-                        break;
-                    case ClassData_FieldIndex.BlockWeight:
-                        this.BlockWeight = (Exception?)obj;
-                        break;
-                    case ClassData_FieldIndex.SmithingWeight:
-                        this.SmithingWeight = (Exception?)obj;
-                        break;
-                    case ClassData_FieldIndex.HeavyArmorWeight:
-                        this.HeavyArmorWeight = (Exception?)obj;
-                        break;
-                    case ClassData_FieldIndex.LightArmorWeight:
-                        this.LightArmorWeight = (Exception?)obj;
-                        break;
-                    case ClassData_FieldIndex.PickpocketWeight:
-                        this.PickpocketWeight = (Exception?)obj;
-                        break;
-                    case ClassData_FieldIndex.LockpickingWeight:
-                        this.LockpickingWeight = (Exception?)obj;
-                        break;
-                    case ClassData_FieldIndex.SneakWeight:
-                        this.SneakWeight = (Exception?)obj;
-                        break;
-                    case ClassData_FieldIndex.AlchemyWeight:
-                        this.AlchemyWeight = (Exception?)obj;
-                        break;
-                    case ClassData_FieldIndex.SpeechcraftWeight:
-                        this.SpeechcraftWeight = (Exception?)obj;
-                        break;
-                    case ClassData_FieldIndex.AlterationWeight:
-                        this.AlterationWeight = (Exception?)obj;
-                        break;
-                    case ClassData_FieldIndex.ConjurationWeight:
-                        this.ConjurationWeight = (Exception?)obj;
-                        break;
-                    case ClassData_FieldIndex.DestructionWeight:
-                        this.DestructionWeight = (Exception?)obj;
-                        break;
-                    case ClassData_FieldIndex.IllusionWeight:
-                        this.IllusionWeight = (Exception?)obj;
-                        break;
-                    case ClassData_FieldIndex.RestorationWeight:
-                        this.RestorationWeight = (Exception?)obj;
-                        break;
-                    case ClassData_FieldIndex.EnchantingWeight:
-                        this.EnchantingWeight = (Exception?)obj;
+                    case ClassData_FieldIndex.SkillWeights:
+                        this.SkillWeights = (MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>)obj;
                         break;
                     case ClassData_FieldIndex.BleedoutDefault:
                         this.BleedoutDefault = (Exception?)obj;
@@ -1022,14 +707,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case ClassData_FieldIndex.VoicePoints:
                         this.VoicePoints = (Exception?)obj;
                         break;
-                    case ClassData_FieldIndex.HealthWeight:
-                        this.HealthWeight = (Exception?)obj;
-                        break;
-                    case ClassData_FieldIndex.MagickaWeight:
-                        this.MagickaWeight = (Exception?)obj;
-                        break;
-                    case ClassData_FieldIndex.StaminaWeight:
-                        this.StaminaWeight = (Exception?)obj;
+                    case ClassData_FieldIndex.StatWeights:
+                        this.StatWeights = (MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>)obj;
                         break;
                     case ClassData_FieldIndex.Unknown2:
                         this.Unknown2 = (Exception?)obj;
@@ -1045,29 +724,10 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Unknown != null) return true;
                 if (Teaches != null) return true;
                 if (MaxTrainingLevel != null) return true;
-                if (OneHandedWeight != null) return true;
-                if (TwoHandedWeight != null) return true;
-                if (MarksmanWeight != null) return true;
-                if (BlockWeight != null) return true;
-                if (SmithingWeight != null) return true;
-                if (HeavyArmorWeight != null) return true;
-                if (LightArmorWeight != null) return true;
-                if (PickpocketWeight != null) return true;
-                if (LockpickingWeight != null) return true;
-                if (SneakWeight != null) return true;
-                if (AlchemyWeight != null) return true;
-                if (SpeechcraftWeight != null) return true;
-                if (AlterationWeight != null) return true;
-                if (ConjurationWeight != null) return true;
-                if (DestructionWeight != null) return true;
-                if (IllusionWeight != null) return true;
-                if (RestorationWeight != null) return true;
-                if (EnchantingWeight != null) return true;
+                if (SkillWeights != null) return true;
                 if (BleedoutDefault != null) return true;
                 if (VoicePoints != null) return true;
-                if (HealthWeight != null) return true;
-                if (MagickaWeight != null) return true;
-                if (StaminaWeight != null) return true;
+                if (StatWeights != null) return true;
                 if (Unknown2 != null) return true;
                 return false;
             }
@@ -1106,29 +766,80 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Unknown, "Unknown");
                 fg.AppendItem(Teaches, "Teaches");
                 fg.AppendItem(MaxTrainingLevel, "MaxTrainingLevel");
-                fg.AppendItem(OneHandedWeight, "OneHandedWeight");
-                fg.AppendItem(TwoHandedWeight, "TwoHandedWeight");
-                fg.AppendItem(MarksmanWeight, "MarksmanWeight");
-                fg.AppendItem(BlockWeight, "BlockWeight");
-                fg.AppendItem(SmithingWeight, "SmithingWeight");
-                fg.AppendItem(HeavyArmorWeight, "HeavyArmorWeight");
-                fg.AppendItem(LightArmorWeight, "LightArmorWeight");
-                fg.AppendItem(PickpocketWeight, "PickpocketWeight");
-                fg.AppendItem(LockpickingWeight, "LockpickingWeight");
-                fg.AppendItem(SneakWeight, "SneakWeight");
-                fg.AppendItem(AlchemyWeight, "AlchemyWeight");
-                fg.AppendItem(SpeechcraftWeight, "SpeechcraftWeight");
-                fg.AppendItem(AlterationWeight, "AlterationWeight");
-                fg.AppendItem(ConjurationWeight, "ConjurationWeight");
-                fg.AppendItem(DestructionWeight, "DestructionWeight");
-                fg.AppendItem(IllusionWeight, "IllusionWeight");
-                fg.AppendItem(RestorationWeight, "RestorationWeight");
-                fg.AppendItem(EnchantingWeight, "EnchantingWeight");
+                fg.AppendLine("SkillWeights =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (SkillWeights != null)
+                    {
+                        if (SkillWeights.Overall != null)
+                        {
+                            fg.AppendLine(SkillWeights.Overall.ToString());
+                        }
+                        if (SkillWeights.Specific != null)
+                        {
+                            foreach (var subItem in SkillWeights.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine("Key => [");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem.Key);
+                                    }
+                                    fg.AppendLine("]");
+                                    fg.AppendLine("Value => [");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem.Value);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
                 fg.AppendItem(BleedoutDefault, "BleedoutDefault");
                 fg.AppendItem(VoicePoints, "VoicePoints");
-                fg.AppendItem(HealthWeight, "HealthWeight");
-                fg.AppendItem(MagickaWeight, "MagickaWeight");
-                fg.AppendItem(StaminaWeight, "StaminaWeight");
+                fg.AppendLine("StatWeights =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (StatWeights != null)
+                    {
+                        if (StatWeights.Overall != null)
+                        {
+                            fg.AppendLine(StatWeights.Overall.ToString());
+                        }
+                        if (StatWeights.Specific != null)
+                        {
+                            foreach (var subItem in StatWeights.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine("Key => [");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem.Key);
+                                    }
+                                    fg.AppendLine("]");
+                                    fg.AppendLine("Value => [");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem.Value);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
                 fg.AppendItem(Unknown2, "Unknown2");
             }
             #endregion
@@ -1141,29 +852,10 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.Teaches = this.Teaches.Combine(rhs.Teaches);
                 ret.MaxTrainingLevel = this.MaxTrainingLevel.Combine(rhs.MaxTrainingLevel);
-                ret.OneHandedWeight = this.OneHandedWeight.Combine(rhs.OneHandedWeight);
-                ret.TwoHandedWeight = this.TwoHandedWeight.Combine(rhs.TwoHandedWeight);
-                ret.MarksmanWeight = this.MarksmanWeight.Combine(rhs.MarksmanWeight);
-                ret.BlockWeight = this.BlockWeight.Combine(rhs.BlockWeight);
-                ret.SmithingWeight = this.SmithingWeight.Combine(rhs.SmithingWeight);
-                ret.HeavyArmorWeight = this.HeavyArmorWeight.Combine(rhs.HeavyArmorWeight);
-                ret.LightArmorWeight = this.LightArmorWeight.Combine(rhs.LightArmorWeight);
-                ret.PickpocketWeight = this.PickpocketWeight.Combine(rhs.PickpocketWeight);
-                ret.LockpickingWeight = this.LockpickingWeight.Combine(rhs.LockpickingWeight);
-                ret.SneakWeight = this.SneakWeight.Combine(rhs.SneakWeight);
-                ret.AlchemyWeight = this.AlchemyWeight.Combine(rhs.AlchemyWeight);
-                ret.SpeechcraftWeight = this.SpeechcraftWeight.Combine(rhs.SpeechcraftWeight);
-                ret.AlterationWeight = this.AlterationWeight.Combine(rhs.AlterationWeight);
-                ret.ConjurationWeight = this.ConjurationWeight.Combine(rhs.ConjurationWeight);
-                ret.DestructionWeight = this.DestructionWeight.Combine(rhs.DestructionWeight);
-                ret.IllusionWeight = this.IllusionWeight.Combine(rhs.IllusionWeight);
-                ret.RestorationWeight = this.RestorationWeight.Combine(rhs.RestorationWeight);
-                ret.EnchantingWeight = this.EnchantingWeight.Combine(rhs.EnchantingWeight);
+                ret.SkillWeights = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ExceptionExt.Combine(this.SkillWeights?.Overall, rhs.SkillWeights?.Overall), new List<KeyValuePair<Exception?, Exception?>>(ExceptionExt.Combine(this.SkillWeights?.Specific, rhs.SkillWeights?.Specific)));
                 ret.BleedoutDefault = this.BleedoutDefault.Combine(rhs.BleedoutDefault);
                 ret.VoicePoints = this.VoicePoints.Combine(rhs.VoicePoints);
-                ret.HealthWeight = this.HealthWeight.Combine(rhs.HealthWeight);
-                ret.MagickaWeight = this.MagickaWeight.Combine(rhs.MagickaWeight);
-                ret.StaminaWeight = this.StaminaWeight.Combine(rhs.StaminaWeight);
+                ret.StatWeights = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ExceptionExt.Combine(this.StatWeights?.Overall, rhs.StatWeights?.Overall), new List<KeyValuePair<Exception?, Exception?>>(ExceptionExt.Combine(this.StatWeights?.Specific, rhs.StatWeights?.Specific)));
                 ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
                 return ret;
             }
@@ -1189,29 +881,10 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Unknown;
             public bool Teaches;
             public bool MaxTrainingLevel;
-            public bool OneHandedWeight;
-            public bool TwoHandedWeight;
-            public bool MarksmanWeight;
-            public bool BlockWeight;
-            public bool SmithingWeight;
-            public bool HeavyArmorWeight;
-            public bool LightArmorWeight;
-            public bool PickpocketWeight;
-            public bool LockpickingWeight;
-            public bool SneakWeight;
-            public bool AlchemyWeight;
-            public bool SpeechcraftWeight;
-            public bool AlterationWeight;
-            public bool ConjurationWeight;
-            public bool DestructionWeight;
-            public bool IllusionWeight;
-            public bool RestorationWeight;
-            public bool EnchantingWeight;
+            public bool SkillWeights;
             public bool BleedoutDefault;
             public bool VoicePoints;
-            public bool HealthWeight;
-            public bool MagickaWeight;
-            public bool StaminaWeight;
+            public bool StatWeights;
             public bool Unknown2;
             #endregion
 
@@ -1221,29 +894,10 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Unknown = defaultOn;
                 this.Teaches = defaultOn;
                 this.MaxTrainingLevel = defaultOn;
-                this.OneHandedWeight = defaultOn;
-                this.TwoHandedWeight = defaultOn;
-                this.MarksmanWeight = defaultOn;
-                this.BlockWeight = defaultOn;
-                this.SmithingWeight = defaultOn;
-                this.HeavyArmorWeight = defaultOn;
-                this.LightArmorWeight = defaultOn;
-                this.PickpocketWeight = defaultOn;
-                this.LockpickingWeight = defaultOn;
-                this.SneakWeight = defaultOn;
-                this.AlchemyWeight = defaultOn;
-                this.SpeechcraftWeight = defaultOn;
-                this.AlterationWeight = defaultOn;
-                this.ConjurationWeight = defaultOn;
-                this.DestructionWeight = defaultOn;
-                this.IllusionWeight = defaultOn;
-                this.RestorationWeight = defaultOn;
-                this.EnchantingWeight = defaultOn;
+                this.SkillWeights = defaultOn;
                 this.BleedoutDefault = defaultOn;
                 this.VoicePoints = defaultOn;
-                this.HealthWeight = defaultOn;
-                this.MagickaWeight = defaultOn;
-                this.StaminaWeight = defaultOn;
+                this.StatWeights = defaultOn;
                 this.Unknown2 = defaultOn;
             }
 
@@ -1263,29 +917,10 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Unknown, null));
                 ret.Add((Teaches, null));
                 ret.Add((MaxTrainingLevel, null));
-                ret.Add((OneHandedWeight, null));
-                ret.Add((TwoHandedWeight, null));
-                ret.Add((MarksmanWeight, null));
-                ret.Add((BlockWeight, null));
-                ret.Add((SmithingWeight, null));
-                ret.Add((HeavyArmorWeight, null));
-                ret.Add((LightArmorWeight, null));
-                ret.Add((PickpocketWeight, null));
-                ret.Add((LockpickingWeight, null));
-                ret.Add((SneakWeight, null));
-                ret.Add((AlchemyWeight, null));
-                ret.Add((SpeechcraftWeight, null));
-                ret.Add((AlterationWeight, null));
-                ret.Add((ConjurationWeight, null));
-                ret.Add((DestructionWeight, null));
-                ret.Add((IllusionWeight, null));
-                ret.Add((RestorationWeight, null));
-                ret.Add((EnchantingWeight, null));
+                ret.Add((SkillWeights, null));
                 ret.Add((BleedoutDefault, null));
                 ret.Add((VoicePoints, null));
-                ret.Add((HealthWeight, null));
-                ret.Add((MagickaWeight, null));
-                ret.Add((StaminaWeight, null));
+                ret.Add((StatWeights, null));
                 ret.Add((Unknown2, null));
             }
         }
@@ -1359,29 +994,10 @@ namespace Mutagen.Bethesda.Skyrim
         new Int32 Unknown { get; set; }
         new Skill? Teaches { get; set; }
         new Byte MaxTrainingLevel { get; set; }
-        new Byte OneHandedWeight { get; set; }
-        new Byte TwoHandedWeight { get; set; }
-        new Byte MarksmanWeight { get; set; }
-        new Byte BlockWeight { get; set; }
-        new Byte SmithingWeight { get; set; }
-        new Byte HeavyArmorWeight { get; set; }
-        new Byte LightArmorWeight { get; set; }
-        new Byte PickpocketWeight { get; set; }
-        new Byte LockpickingWeight { get; set; }
-        new Byte SneakWeight { get; set; }
-        new Byte AlchemyWeight { get; set; }
-        new Byte SpeechcraftWeight { get; set; }
-        new Byte AlterationWeight { get; set; }
-        new Byte ConjurationWeight { get; set; }
-        new Byte DestructionWeight { get; set; }
-        new Byte IllusionWeight { get; set; }
-        new Byte RestorationWeight { get; set; }
-        new Byte EnchantingWeight { get; set; }
+        new IDictionary<Skill, Byte> SkillWeights { get; }
         new Single BleedoutDefault { get; set; }
         new UInt32 VoicePoints { get; set; }
-        new Byte HealthWeight { get; set; }
-        new Byte MagickaWeight { get; set; }
-        new Byte StaminaWeight { get; set; }
+        new IDictionary<BasicStat, Byte> StatWeights { get; }
         new Byte Unknown2 { get; set; }
     }
 
@@ -1401,29 +1017,10 @@ namespace Mutagen.Bethesda.Skyrim
         Int32 Unknown { get; }
         Skill? Teaches { get; }
         Byte MaxTrainingLevel { get; }
-        Byte OneHandedWeight { get; }
-        Byte TwoHandedWeight { get; }
-        Byte MarksmanWeight { get; }
-        Byte BlockWeight { get; }
-        Byte SmithingWeight { get; }
-        Byte HeavyArmorWeight { get; }
-        Byte LightArmorWeight { get; }
-        Byte PickpocketWeight { get; }
-        Byte LockpickingWeight { get; }
-        Byte SneakWeight { get; }
-        Byte AlchemyWeight { get; }
-        Byte SpeechcraftWeight { get; }
-        Byte AlterationWeight { get; }
-        Byte ConjurationWeight { get; }
-        Byte DestructionWeight { get; }
-        Byte IllusionWeight { get; }
-        Byte RestorationWeight { get; }
-        Byte EnchantingWeight { get; }
+        IReadOnlyDictionary<Skill, Byte> SkillWeights { get; }
         Single BleedoutDefault { get; }
         UInt32 VoicePoints { get; }
-        Byte HealthWeight { get; }
-        Byte MagickaWeight { get; }
-        Byte StaminaWeight { get; }
+        IReadOnlyDictionary<BasicStat, Byte> StatWeights { get; }
         Byte Unknown2 { get; }
 
     }
@@ -1745,30 +1342,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Unknown = 0,
         Teaches = 1,
         MaxTrainingLevel = 2,
-        OneHandedWeight = 3,
-        TwoHandedWeight = 4,
-        MarksmanWeight = 5,
-        BlockWeight = 6,
-        SmithingWeight = 7,
-        HeavyArmorWeight = 8,
-        LightArmorWeight = 9,
-        PickpocketWeight = 10,
-        LockpickingWeight = 11,
-        SneakWeight = 12,
-        AlchemyWeight = 13,
-        SpeechcraftWeight = 14,
-        AlterationWeight = 15,
-        ConjurationWeight = 16,
-        DestructionWeight = 17,
-        IllusionWeight = 18,
-        RestorationWeight = 19,
-        EnchantingWeight = 20,
-        BleedoutDefault = 21,
-        VoicePoints = 22,
-        HealthWeight = 23,
-        MagickaWeight = 24,
-        StaminaWeight = 25,
-        Unknown2 = 26,
+        SkillWeights = 3,
+        BleedoutDefault = 4,
+        VoicePoints = 5,
+        StatWeights = 6,
+        Unknown2 = 7,
     }
     #endregion
 
@@ -1786,9 +1364,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "34be387d-c309-4620-be5f-49b0e7037fc4";
 
-        public const ushort AdditionalFieldCount = 27;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 27;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(ClassData.Mask<>);
 
@@ -1824,52 +1402,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)ClassData_FieldIndex.Teaches;
                 case "MAXTRAININGLEVEL":
                     return (ushort)ClassData_FieldIndex.MaxTrainingLevel;
-                case "ONEHANDEDWEIGHT":
-                    return (ushort)ClassData_FieldIndex.OneHandedWeight;
-                case "TWOHANDEDWEIGHT":
-                    return (ushort)ClassData_FieldIndex.TwoHandedWeight;
-                case "MARKSMANWEIGHT":
-                    return (ushort)ClassData_FieldIndex.MarksmanWeight;
-                case "BLOCKWEIGHT":
-                    return (ushort)ClassData_FieldIndex.BlockWeight;
-                case "SMITHINGWEIGHT":
-                    return (ushort)ClassData_FieldIndex.SmithingWeight;
-                case "HEAVYARMORWEIGHT":
-                    return (ushort)ClassData_FieldIndex.HeavyArmorWeight;
-                case "LIGHTARMORWEIGHT":
-                    return (ushort)ClassData_FieldIndex.LightArmorWeight;
-                case "PICKPOCKETWEIGHT":
-                    return (ushort)ClassData_FieldIndex.PickpocketWeight;
-                case "LOCKPICKINGWEIGHT":
-                    return (ushort)ClassData_FieldIndex.LockpickingWeight;
-                case "SNEAKWEIGHT":
-                    return (ushort)ClassData_FieldIndex.SneakWeight;
-                case "ALCHEMYWEIGHT":
-                    return (ushort)ClassData_FieldIndex.AlchemyWeight;
-                case "SPEECHCRAFTWEIGHT":
-                    return (ushort)ClassData_FieldIndex.SpeechcraftWeight;
-                case "ALTERATIONWEIGHT":
-                    return (ushort)ClassData_FieldIndex.AlterationWeight;
-                case "CONJURATIONWEIGHT":
-                    return (ushort)ClassData_FieldIndex.ConjurationWeight;
-                case "DESTRUCTIONWEIGHT":
-                    return (ushort)ClassData_FieldIndex.DestructionWeight;
-                case "ILLUSIONWEIGHT":
-                    return (ushort)ClassData_FieldIndex.IllusionWeight;
-                case "RESTORATIONWEIGHT":
-                    return (ushort)ClassData_FieldIndex.RestorationWeight;
-                case "ENCHANTINGWEIGHT":
-                    return (ushort)ClassData_FieldIndex.EnchantingWeight;
+                case "SKILLWEIGHTS":
+                    return (ushort)ClassData_FieldIndex.SkillWeights;
                 case "BLEEDOUTDEFAULT":
                     return (ushort)ClassData_FieldIndex.BleedoutDefault;
                 case "VOICEPOINTS":
                     return (ushort)ClassData_FieldIndex.VoicePoints;
-                case "HEALTHWEIGHT":
-                    return (ushort)ClassData_FieldIndex.HealthWeight;
-                case "MAGICKAWEIGHT":
-                    return (ushort)ClassData_FieldIndex.MagickaWeight;
-                case "STAMINAWEIGHT":
-                    return (ushort)ClassData_FieldIndex.StaminaWeight;
+                case "STATWEIGHTS":
+                    return (ushort)ClassData_FieldIndex.StatWeights;
                 case "UNKNOWN2":
                     return (ushort)ClassData_FieldIndex.Unknown2;
                 default:
@@ -1885,29 +1425,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ClassData_FieldIndex.Unknown:
                 case ClassData_FieldIndex.Teaches:
                 case ClassData_FieldIndex.MaxTrainingLevel:
-                case ClassData_FieldIndex.OneHandedWeight:
-                case ClassData_FieldIndex.TwoHandedWeight:
-                case ClassData_FieldIndex.MarksmanWeight:
-                case ClassData_FieldIndex.BlockWeight:
-                case ClassData_FieldIndex.SmithingWeight:
-                case ClassData_FieldIndex.HeavyArmorWeight:
-                case ClassData_FieldIndex.LightArmorWeight:
-                case ClassData_FieldIndex.PickpocketWeight:
-                case ClassData_FieldIndex.LockpickingWeight:
-                case ClassData_FieldIndex.SneakWeight:
-                case ClassData_FieldIndex.AlchemyWeight:
-                case ClassData_FieldIndex.SpeechcraftWeight:
-                case ClassData_FieldIndex.AlterationWeight:
-                case ClassData_FieldIndex.ConjurationWeight:
-                case ClassData_FieldIndex.DestructionWeight:
-                case ClassData_FieldIndex.IllusionWeight:
-                case ClassData_FieldIndex.RestorationWeight:
-                case ClassData_FieldIndex.EnchantingWeight:
+                case ClassData_FieldIndex.SkillWeights:
                 case ClassData_FieldIndex.BleedoutDefault:
                 case ClassData_FieldIndex.VoicePoints:
-                case ClassData_FieldIndex.HealthWeight:
-                case ClassData_FieldIndex.MagickaWeight:
-                case ClassData_FieldIndex.StaminaWeight:
+                case ClassData_FieldIndex.StatWeights:
                 case ClassData_FieldIndex.Unknown2:
                     return false;
                 default:
@@ -1923,29 +1444,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ClassData_FieldIndex.Unknown:
                 case ClassData_FieldIndex.Teaches:
                 case ClassData_FieldIndex.MaxTrainingLevel:
-                case ClassData_FieldIndex.OneHandedWeight:
-                case ClassData_FieldIndex.TwoHandedWeight:
-                case ClassData_FieldIndex.MarksmanWeight:
-                case ClassData_FieldIndex.BlockWeight:
-                case ClassData_FieldIndex.SmithingWeight:
-                case ClassData_FieldIndex.HeavyArmorWeight:
-                case ClassData_FieldIndex.LightArmorWeight:
-                case ClassData_FieldIndex.PickpocketWeight:
-                case ClassData_FieldIndex.LockpickingWeight:
-                case ClassData_FieldIndex.SneakWeight:
-                case ClassData_FieldIndex.AlchemyWeight:
-                case ClassData_FieldIndex.SpeechcraftWeight:
-                case ClassData_FieldIndex.AlterationWeight:
-                case ClassData_FieldIndex.ConjurationWeight:
-                case ClassData_FieldIndex.DestructionWeight:
-                case ClassData_FieldIndex.IllusionWeight:
-                case ClassData_FieldIndex.RestorationWeight:
-                case ClassData_FieldIndex.EnchantingWeight:
+                case ClassData_FieldIndex.SkillWeights:
                 case ClassData_FieldIndex.BleedoutDefault:
                 case ClassData_FieldIndex.VoicePoints:
-                case ClassData_FieldIndex.HealthWeight:
-                case ClassData_FieldIndex.MagickaWeight:
-                case ClassData_FieldIndex.StaminaWeight:
+                case ClassData_FieldIndex.StatWeights:
                 case ClassData_FieldIndex.Unknown2:
                     return false;
                 default:
@@ -1961,29 +1463,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ClassData_FieldIndex.Unknown:
                 case ClassData_FieldIndex.Teaches:
                 case ClassData_FieldIndex.MaxTrainingLevel:
-                case ClassData_FieldIndex.OneHandedWeight:
-                case ClassData_FieldIndex.TwoHandedWeight:
-                case ClassData_FieldIndex.MarksmanWeight:
-                case ClassData_FieldIndex.BlockWeight:
-                case ClassData_FieldIndex.SmithingWeight:
-                case ClassData_FieldIndex.HeavyArmorWeight:
-                case ClassData_FieldIndex.LightArmorWeight:
-                case ClassData_FieldIndex.PickpocketWeight:
-                case ClassData_FieldIndex.LockpickingWeight:
-                case ClassData_FieldIndex.SneakWeight:
-                case ClassData_FieldIndex.AlchemyWeight:
-                case ClassData_FieldIndex.SpeechcraftWeight:
-                case ClassData_FieldIndex.AlterationWeight:
-                case ClassData_FieldIndex.ConjurationWeight:
-                case ClassData_FieldIndex.DestructionWeight:
-                case ClassData_FieldIndex.IllusionWeight:
-                case ClassData_FieldIndex.RestorationWeight:
-                case ClassData_FieldIndex.EnchantingWeight:
+                case ClassData_FieldIndex.SkillWeights:
                 case ClassData_FieldIndex.BleedoutDefault:
                 case ClassData_FieldIndex.VoicePoints:
-                case ClassData_FieldIndex.HealthWeight:
-                case ClassData_FieldIndex.MagickaWeight:
-                case ClassData_FieldIndex.StaminaWeight:
+                case ClassData_FieldIndex.StatWeights:
                 case ClassData_FieldIndex.Unknown2:
                     return false;
                 default:
@@ -2002,52 +1485,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Teaches";
                 case ClassData_FieldIndex.MaxTrainingLevel:
                     return "MaxTrainingLevel";
-                case ClassData_FieldIndex.OneHandedWeight:
-                    return "OneHandedWeight";
-                case ClassData_FieldIndex.TwoHandedWeight:
-                    return "TwoHandedWeight";
-                case ClassData_FieldIndex.MarksmanWeight:
-                    return "MarksmanWeight";
-                case ClassData_FieldIndex.BlockWeight:
-                    return "BlockWeight";
-                case ClassData_FieldIndex.SmithingWeight:
-                    return "SmithingWeight";
-                case ClassData_FieldIndex.HeavyArmorWeight:
-                    return "HeavyArmorWeight";
-                case ClassData_FieldIndex.LightArmorWeight:
-                    return "LightArmorWeight";
-                case ClassData_FieldIndex.PickpocketWeight:
-                    return "PickpocketWeight";
-                case ClassData_FieldIndex.LockpickingWeight:
-                    return "LockpickingWeight";
-                case ClassData_FieldIndex.SneakWeight:
-                    return "SneakWeight";
-                case ClassData_FieldIndex.AlchemyWeight:
-                    return "AlchemyWeight";
-                case ClassData_FieldIndex.SpeechcraftWeight:
-                    return "SpeechcraftWeight";
-                case ClassData_FieldIndex.AlterationWeight:
-                    return "AlterationWeight";
-                case ClassData_FieldIndex.ConjurationWeight:
-                    return "ConjurationWeight";
-                case ClassData_FieldIndex.DestructionWeight:
-                    return "DestructionWeight";
-                case ClassData_FieldIndex.IllusionWeight:
-                    return "IllusionWeight";
-                case ClassData_FieldIndex.RestorationWeight:
-                    return "RestorationWeight";
-                case ClassData_FieldIndex.EnchantingWeight:
-                    return "EnchantingWeight";
+                case ClassData_FieldIndex.SkillWeights:
+                    return "SkillWeights";
                 case ClassData_FieldIndex.BleedoutDefault:
                     return "BleedoutDefault";
                 case ClassData_FieldIndex.VoicePoints:
                     return "VoicePoints";
-                case ClassData_FieldIndex.HealthWeight:
-                    return "HealthWeight";
-                case ClassData_FieldIndex.MagickaWeight:
-                    return "MagickaWeight";
-                case ClassData_FieldIndex.StaminaWeight:
-                    return "StaminaWeight";
+                case ClassData_FieldIndex.StatWeights:
+                    return "StatWeights";
                 case ClassData_FieldIndex.Unknown2:
                     return "Unknown2";
                 default:
@@ -2063,29 +1508,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ClassData_FieldIndex.Unknown:
                 case ClassData_FieldIndex.Teaches:
                 case ClassData_FieldIndex.MaxTrainingLevel:
-                case ClassData_FieldIndex.OneHandedWeight:
-                case ClassData_FieldIndex.TwoHandedWeight:
-                case ClassData_FieldIndex.MarksmanWeight:
-                case ClassData_FieldIndex.BlockWeight:
-                case ClassData_FieldIndex.SmithingWeight:
-                case ClassData_FieldIndex.HeavyArmorWeight:
-                case ClassData_FieldIndex.LightArmorWeight:
-                case ClassData_FieldIndex.PickpocketWeight:
-                case ClassData_FieldIndex.LockpickingWeight:
-                case ClassData_FieldIndex.SneakWeight:
-                case ClassData_FieldIndex.AlchemyWeight:
-                case ClassData_FieldIndex.SpeechcraftWeight:
-                case ClassData_FieldIndex.AlterationWeight:
-                case ClassData_FieldIndex.ConjurationWeight:
-                case ClassData_FieldIndex.DestructionWeight:
-                case ClassData_FieldIndex.IllusionWeight:
-                case ClassData_FieldIndex.RestorationWeight:
-                case ClassData_FieldIndex.EnchantingWeight:
+                case ClassData_FieldIndex.SkillWeights:
                 case ClassData_FieldIndex.BleedoutDefault:
                 case ClassData_FieldIndex.VoicePoints:
-                case ClassData_FieldIndex.HealthWeight:
-                case ClassData_FieldIndex.MagickaWeight:
-                case ClassData_FieldIndex.StaminaWeight:
+                case ClassData_FieldIndex.StatWeights:
                 case ClassData_FieldIndex.Unknown2:
                     return false;
                 default:
@@ -2101,29 +1527,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ClassData_FieldIndex.Unknown:
                 case ClassData_FieldIndex.Teaches:
                 case ClassData_FieldIndex.MaxTrainingLevel:
-                case ClassData_FieldIndex.OneHandedWeight:
-                case ClassData_FieldIndex.TwoHandedWeight:
-                case ClassData_FieldIndex.MarksmanWeight:
-                case ClassData_FieldIndex.BlockWeight:
-                case ClassData_FieldIndex.SmithingWeight:
-                case ClassData_FieldIndex.HeavyArmorWeight:
-                case ClassData_FieldIndex.LightArmorWeight:
-                case ClassData_FieldIndex.PickpocketWeight:
-                case ClassData_FieldIndex.LockpickingWeight:
-                case ClassData_FieldIndex.SneakWeight:
-                case ClassData_FieldIndex.AlchemyWeight:
-                case ClassData_FieldIndex.SpeechcraftWeight:
-                case ClassData_FieldIndex.AlterationWeight:
-                case ClassData_FieldIndex.ConjurationWeight:
-                case ClassData_FieldIndex.DestructionWeight:
-                case ClassData_FieldIndex.IllusionWeight:
-                case ClassData_FieldIndex.RestorationWeight:
-                case ClassData_FieldIndex.EnchantingWeight:
+                case ClassData_FieldIndex.SkillWeights:
                 case ClassData_FieldIndex.BleedoutDefault:
                 case ClassData_FieldIndex.VoicePoints:
-                case ClassData_FieldIndex.HealthWeight:
-                case ClassData_FieldIndex.MagickaWeight:
-                case ClassData_FieldIndex.StaminaWeight:
+                case ClassData_FieldIndex.StatWeights:
                 case ClassData_FieldIndex.Unknown2:
                     return false;
                 default:
@@ -2142,52 +1549,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Skill);
                 case ClassData_FieldIndex.MaxTrainingLevel:
                     return typeof(Byte);
-                case ClassData_FieldIndex.OneHandedWeight:
-                    return typeof(Byte);
-                case ClassData_FieldIndex.TwoHandedWeight:
-                    return typeof(Byte);
-                case ClassData_FieldIndex.MarksmanWeight:
-                    return typeof(Byte);
-                case ClassData_FieldIndex.BlockWeight:
-                    return typeof(Byte);
-                case ClassData_FieldIndex.SmithingWeight:
-                    return typeof(Byte);
-                case ClassData_FieldIndex.HeavyArmorWeight:
-                    return typeof(Byte);
-                case ClassData_FieldIndex.LightArmorWeight:
-                    return typeof(Byte);
-                case ClassData_FieldIndex.PickpocketWeight:
-                    return typeof(Byte);
-                case ClassData_FieldIndex.LockpickingWeight:
-                    return typeof(Byte);
-                case ClassData_FieldIndex.SneakWeight:
-                    return typeof(Byte);
-                case ClassData_FieldIndex.AlchemyWeight:
-                    return typeof(Byte);
-                case ClassData_FieldIndex.SpeechcraftWeight:
-                    return typeof(Byte);
-                case ClassData_FieldIndex.AlterationWeight:
-                    return typeof(Byte);
-                case ClassData_FieldIndex.ConjurationWeight:
-                    return typeof(Byte);
-                case ClassData_FieldIndex.DestructionWeight:
-                    return typeof(Byte);
-                case ClassData_FieldIndex.IllusionWeight:
-                    return typeof(Byte);
-                case ClassData_FieldIndex.RestorationWeight:
-                    return typeof(Byte);
-                case ClassData_FieldIndex.EnchantingWeight:
-                    return typeof(Byte);
+                case ClassData_FieldIndex.SkillWeights:
+                    return typeof(Dictionary<Skill, Byte>);
                 case ClassData_FieldIndex.BleedoutDefault:
                     return typeof(Single);
                 case ClassData_FieldIndex.VoicePoints:
                     return typeof(UInt32);
-                case ClassData_FieldIndex.HealthWeight:
-                    return typeof(Byte);
-                case ClassData_FieldIndex.MagickaWeight:
-                    return typeof(Byte);
-                case ClassData_FieldIndex.StaminaWeight:
-                    return typeof(Byte);
+                case ClassData_FieldIndex.StatWeights:
+                    return typeof(Dictionary<BasicStat, Byte>);
                 case ClassData_FieldIndex.Unknown2:
                     return typeof(Byte);
                 default:
@@ -2198,7 +1567,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(ClassDataXmlWriteTranslation);
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = DATA_HEADER;
-        public const int NumStructFields = 27;
+        public const int NumStructFields = 8;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(ClassDataBinaryWriteTranslation);
         #region Interface
@@ -2245,29 +1614,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown = default;
             item.Teaches = default;
             item.MaxTrainingLevel = default;
-            item.OneHandedWeight = default;
-            item.TwoHandedWeight = default;
-            item.MarksmanWeight = default;
-            item.BlockWeight = default;
-            item.SmithingWeight = default;
-            item.HeavyArmorWeight = default;
-            item.LightArmorWeight = default;
-            item.PickpocketWeight = default;
-            item.LockpickingWeight = default;
-            item.SneakWeight = default;
-            item.AlchemyWeight = default;
-            item.SpeechcraftWeight = default;
-            item.AlterationWeight = default;
-            item.ConjurationWeight = default;
-            item.DestructionWeight = default;
-            item.IllusionWeight = default;
-            item.RestorationWeight = default;
-            item.EnchantingWeight = default;
+            item.SkillWeights.Clear();
             item.BleedoutDefault = default;
             item.VoicePoints = default;
-            item.HealthWeight = default;
-            item.MagickaWeight = default;
-            item.StaminaWeight = default;
+            item.StatWeights.Clear();
             item.Unknown2 = default;
         }
         
@@ -2308,29 +1658,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (frame.Complete) return;
             item.Teaches = EnumBinaryTranslation<Skill>.Instance.Parse(frame: frame.SpawnWithLength(1));
             item.MaxTrainingLevel = frame.ReadUInt8();
-            item.OneHandedWeight = frame.ReadUInt8();
-            item.TwoHandedWeight = frame.ReadUInt8();
-            item.MarksmanWeight = frame.ReadUInt8();
-            item.BlockWeight = frame.ReadUInt8();
-            item.SmithingWeight = frame.ReadUInt8();
-            item.HeavyArmorWeight = frame.ReadUInt8();
-            item.LightArmorWeight = frame.ReadUInt8();
-            item.PickpocketWeight = frame.ReadUInt8();
-            item.LockpickingWeight = frame.ReadUInt8();
-            item.SneakWeight = frame.ReadUInt8();
-            item.AlchemyWeight = frame.ReadUInt8();
-            item.SpeechcraftWeight = frame.ReadUInt8();
-            item.AlterationWeight = frame.ReadUInt8();
-            item.ConjurationWeight = frame.ReadUInt8();
-            item.DestructionWeight = frame.ReadUInt8();
-            item.IllusionWeight = frame.ReadUInt8();
-            item.RestorationWeight = frame.ReadUInt8();
-            item.EnchantingWeight = frame.ReadUInt8();
+            Mutagen.Bethesda.Binary.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
+                frame: frame,
+                item: item.SkillWeights,
+                transl: ByteBinaryTranslation.Instance.Parse);
             item.BleedoutDefault = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.VoicePoints = frame.ReadUInt32();
-            item.HealthWeight = frame.ReadUInt8();
-            item.MagickaWeight = frame.ReadUInt8();
-            item.StaminaWeight = frame.ReadUInt8();
+            Mutagen.Bethesda.Binary.DictBinaryTranslation<Byte>.Instance.Parse<BasicStat>(
+                frame: frame,
+                item: item.StatWeights,
+                transl: ByteBinaryTranslation.Instance.Parse);
             item.Unknown2 = frame.ReadUInt8();
         }
         
@@ -2380,29 +1717,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Teaches = item.Teaches == rhs.Teaches;
             ret.MaxTrainingLevel = item.MaxTrainingLevel == rhs.MaxTrainingLevel;
-            ret.OneHandedWeight = item.OneHandedWeight == rhs.OneHandedWeight;
-            ret.TwoHandedWeight = item.TwoHandedWeight == rhs.TwoHandedWeight;
-            ret.MarksmanWeight = item.MarksmanWeight == rhs.MarksmanWeight;
-            ret.BlockWeight = item.BlockWeight == rhs.BlockWeight;
-            ret.SmithingWeight = item.SmithingWeight == rhs.SmithingWeight;
-            ret.HeavyArmorWeight = item.HeavyArmorWeight == rhs.HeavyArmorWeight;
-            ret.LightArmorWeight = item.LightArmorWeight == rhs.LightArmorWeight;
-            ret.PickpocketWeight = item.PickpocketWeight == rhs.PickpocketWeight;
-            ret.LockpickingWeight = item.LockpickingWeight == rhs.LockpickingWeight;
-            ret.SneakWeight = item.SneakWeight == rhs.SneakWeight;
-            ret.AlchemyWeight = item.AlchemyWeight == rhs.AlchemyWeight;
-            ret.SpeechcraftWeight = item.SpeechcraftWeight == rhs.SpeechcraftWeight;
-            ret.AlterationWeight = item.AlterationWeight == rhs.AlterationWeight;
-            ret.ConjurationWeight = item.ConjurationWeight == rhs.ConjurationWeight;
-            ret.DestructionWeight = item.DestructionWeight == rhs.DestructionWeight;
-            ret.IllusionWeight = item.IllusionWeight == rhs.IllusionWeight;
-            ret.RestorationWeight = item.RestorationWeight == rhs.RestorationWeight;
-            ret.EnchantingWeight = item.EnchantingWeight == rhs.EnchantingWeight;
+            {
+                var specific = item.SkillWeights.SelectAgainst<KeyValuePair<Skill, Byte>, KeyValuePair<bool, bool>>(rhs.SkillWeights, ((l, r) => new KeyValuePair<bool, bool>(object.Equals(l.Key, r.Key), object.Equals(l.Value, r.Value))), out var countEqual);
+                ret.SkillWeights = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(countEqual && specific.All((b) => b.Key && b.Value), specific);
+            }
             ret.BleedoutDefault = item.BleedoutDefault.EqualsWithin(rhs.BleedoutDefault);
             ret.VoicePoints = item.VoicePoints == rhs.VoicePoints;
-            ret.HealthWeight = item.HealthWeight == rhs.HealthWeight;
-            ret.MagickaWeight = item.MagickaWeight == rhs.MagickaWeight;
-            ret.StaminaWeight = item.StaminaWeight == rhs.StaminaWeight;
+            {
+                var specific = item.StatWeights.SelectAgainst<KeyValuePair<BasicStat, Byte>, KeyValuePair<bool, bool>>(rhs.StatWeights, ((l, r) => new KeyValuePair<bool, bool>(object.Equals(l.Key, r.Key), object.Equals(l.Value, r.Value))), out var countEqual);
+                ret.StatWeights = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(countEqual && specific.All((b) => b.Key && b.Value), specific);
+            }
             ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
         }
         
@@ -2463,77 +1787,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.MaxTrainingLevel, "MaxTrainingLevel");
             }
-            if (printMask?.OneHandedWeight ?? true)
+            if (printMask?.SkillWeights?.Overall ?? true)
             {
-                fg.AppendItem(item.OneHandedWeight, "OneHandedWeight");
-            }
-            if (printMask?.TwoHandedWeight ?? true)
-            {
-                fg.AppendItem(item.TwoHandedWeight, "TwoHandedWeight");
-            }
-            if (printMask?.MarksmanWeight ?? true)
-            {
-                fg.AppendItem(item.MarksmanWeight, "MarksmanWeight");
-            }
-            if (printMask?.BlockWeight ?? true)
-            {
-                fg.AppendItem(item.BlockWeight, "BlockWeight");
-            }
-            if (printMask?.SmithingWeight ?? true)
-            {
-                fg.AppendItem(item.SmithingWeight, "SmithingWeight");
-            }
-            if (printMask?.HeavyArmorWeight ?? true)
-            {
-                fg.AppendItem(item.HeavyArmorWeight, "HeavyArmorWeight");
-            }
-            if (printMask?.LightArmorWeight ?? true)
-            {
-                fg.AppendItem(item.LightArmorWeight, "LightArmorWeight");
-            }
-            if (printMask?.PickpocketWeight ?? true)
-            {
-                fg.AppendItem(item.PickpocketWeight, "PickpocketWeight");
-            }
-            if (printMask?.LockpickingWeight ?? true)
-            {
-                fg.AppendItem(item.LockpickingWeight, "LockpickingWeight");
-            }
-            if (printMask?.SneakWeight ?? true)
-            {
-                fg.AppendItem(item.SneakWeight, "SneakWeight");
-            }
-            if (printMask?.AlchemyWeight ?? true)
-            {
-                fg.AppendItem(item.AlchemyWeight, "AlchemyWeight");
-            }
-            if (printMask?.SpeechcraftWeight ?? true)
-            {
-                fg.AppendItem(item.SpeechcraftWeight, "SpeechcraftWeight");
-            }
-            if (printMask?.AlterationWeight ?? true)
-            {
-                fg.AppendItem(item.AlterationWeight, "AlterationWeight");
-            }
-            if (printMask?.ConjurationWeight ?? true)
-            {
-                fg.AppendItem(item.ConjurationWeight, "ConjurationWeight");
-            }
-            if (printMask?.DestructionWeight ?? true)
-            {
-                fg.AppendItem(item.DestructionWeight, "DestructionWeight");
-            }
-            if (printMask?.IllusionWeight ?? true)
-            {
-                fg.AppendItem(item.IllusionWeight, "IllusionWeight");
-            }
-            if (printMask?.RestorationWeight ?? true)
-            {
-                fg.AppendItem(item.RestorationWeight, "RestorationWeight");
-            }
-            if (printMask?.EnchantingWeight ?? true)
-            {
-                fg.AppendItem(item.EnchantingWeight, "EnchantingWeight");
+                fg.AppendLine("SkillWeights =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.SkillWeights)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem.Key);
+                            fg.AppendItem(subItem.Value);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
             }
             if (printMask?.BleedoutDefault ?? true)
             {
@@ -2543,17 +1814,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.VoicePoints, "VoicePoints");
             }
-            if (printMask?.HealthWeight ?? true)
+            if (printMask?.StatWeights?.Overall ?? true)
             {
-                fg.AppendItem(item.HealthWeight, "HealthWeight");
-            }
-            if (printMask?.MagickaWeight ?? true)
-            {
-                fg.AppendItem(item.MagickaWeight, "MagickaWeight");
-            }
-            if (printMask?.StaminaWeight ?? true)
-            {
-                fg.AppendItem(item.StaminaWeight, "StaminaWeight");
+                fg.AppendLine("StatWeights =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.StatWeights)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem.Key);
+                            fg.AppendItem(subItem.Value);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
             }
             if (printMask?.Unknown2 ?? true)
             {
@@ -2566,6 +1844,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClassData.Mask<bool?> checkMask)
         {
             if (checkMask.Teaches.HasValue && checkMask.Teaches.Value != (item.Teaches != null)) return false;
+            if (checkMask.SkillWeights?.Overall.HasValue ?? false) return false;
+            if (checkMask.StatWeights?.Overall.HasValue ?? false) return false;
             return true;
         }
         
@@ -2576,29 +1856,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Unknown = true;
             mask.Teaches = (item.Teaches != null);
             mask.MaxTrainingLevel = true;
-            mask.OneHandedWeight = true;
-            mask.TwoHandedWeight = true;
-            mask.MarksmanWeight = true;
-            mask.BlockWeight = true;
-            mask.SmithingWeight = true;
-            mask.HeavyArmorWeight = true;
-            mask.LightArmorWeight = true;
-            mask.PickpocketWeight = true;
-            mask.LockpickingWeight = true;
-            mask.SneakWeight = true;
-            mask.AlchemyWeight = true;
-            mask.SpeechcraftWeight = true;
-            mask.AlterationWeight = true;
-            mask.ConjurationWeight = true;
-            mask.DestructionWeight = true;
-            mask.IllusionWeight = true;
-            mask.RestorationWeight = true;
-            mask.EnchantingWeight = true;
+            mask.SkillWeights = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(item.SkillWeights != null, null);
             mask.BleedoutDefault = true;
             mask.VoicePoints = true;
-            mask.HealthWeight = true;
-            mask.MagickaWeight = true;
-            mask.StaminaWeight = true;
+            mask.StatWeights = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(item.StatWeights != null, null);
             mask.Unknown2 = true;
         }
         
@@ -2612,29 +1873,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.Unknown != rhs.Unknown) return false;
             if (lhs.Teaches != rhs.Teaches) return false;
             if (lhs.MaxTrainingLevel != rhs.MaxTrainingLevel) return false;
-            if (lhs.OneHandedWeight != rhs.OneHandedWeight) return false;
-            if (lhs.TwoHandedWeight != rhs.TwoHandedWeight) return false;
-            if (lhs.MarksmanWeight != rhs.MarksmanWeight) return false;
-            if (lhs.BlockWeight != rhs.BlockWeight) return false;
-            if (lhs.SmithingWeight != rhs.SmithingWeight) return false;
-            if (lhs.HeavyArmorWeight != rhs.HeavyArmorWeight) return false;
-            if (lhs.LightArmorWeight != rhs.LightArmorWeight) return false;
-            if (lhs.PickpocketWeight != rhs.PickpocketWeight) return false;
-            if (lhs.LockpickingWeight != rhs.LockpickingWeight) return false;
-            if (lhs.SneakWeight != rhs.SneakWeight) return false;
-            if (lhs.AlchemyWeight != rhs.AlchemyWeight) return false;
-            if (lhs.SpeechcraftWeight != rhs.SpeechcraftWeight) return false;
-            if (lhs.AlterationWeight != rhs.AlterationWeight) return false;
-            if (lhs.ConjurationWeight != rhs.ConjurationWeight) return false;
-            if (lhs.DestructionWeight != rhs.DestructionWeight) return false;
-            if (lhs.IllusionWeight != rhs.IllusionWeight) return false;
-            if (lhs.RestorationWeight != rhs.RestorationWeight) return false;
-            if (lhs.EnchantingWeight != rhs.EnchantingWeight) return false;
+            if (!lhs.SkillWeights.SequenceEqual(rhs.SkillWeights)) return false;
             if (!lhs.BleedoutDefault.EqualsWithin(rhs.BleedoutDefault)) return false;
             if (lhs.VoicePoints != rhs.VoicePoints) return false;
-            if (lhs.HealthWeight != rhs.HealthWeight) return false;
-            if (lhs.MagickaWeight != rhs.MagickaWeight) return false;
-            if (lhs.StaminaWeight != rhs.StaminaWeight) return false;
+            if (!lhs.StatWeights.SequenceEqual(rhs.StatWeights)) return false;
             if (lhs.Unknown2 != rhs.Unknown2) return false;
             return true;
         }
@@ -2648,29 +1890,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 hash.Add(Teachesitem);
             }
             hash.Add(item.MaxTrainingLevel);
-            hash.Add(item.OneHandedWeight);
-            hash.Add(item.TwoHandedWeight);
-            hash.Add(item.MarksmanWeight);
-            hash.Add(item.BlockWeight);
-            hash.Add(item.SmithingWeight);
-            hash.Add(item.HeavyArmorWeight);
-            hash.Add(item.LightArmorWeight);
-            hash.Add(item.PickpocketWeight);
-            hash.Add(item.LockpickingWeight);
-            hash.Add(item.SneakWeight);
-            hash.Add(item.AlchemyWeight);
-            hash.Add(item.SpeechcraftWeight);
-            hash.Add(item.AlterationWeight);
-            hash.Add(item.ConjurationWeight);
-            hash.Add(item.DestructionWeight);
-            hash.Add(item.IllusionWeight);
-            hash.Add(item.RestorationWeight);
-            hash.Add(item.EnchantingWeight);
+            hash.Add(item.SkillWeights);
             hash.Add(item.BleedoutDefault);
             hash.Add(item.VoicePoints);
-            hash.Add(item.HealthWeight);
-            hash.Add(item.MagickaWeight);
-            hash.Add(item.StaminaWeight);
+            hash.Add(item.StatWeights);
             hash.Add(item.Unknown2);
             return hash.ToHashCode();
         }
@@ -2715,77 +1938,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.MaxTrainingLevel = rhs.MaxTrainingLevel;
             }
-            if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.OneHandedWeight) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.SkillWeights) ?? true))
             {
-                item.OneHandedWeight = rhs.OneHandedWeight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.TwoHandedWeight) ?? true))
-            {
-                item.TwoHandedWeight = rhs.TwoHandedWeight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.MarksmanWeight) ?? true))
-            {
-                item.MarksmanWeight = rhs.MarksmanWeight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.BlockWeight) ?? true))
-            {
-                item.BlockWeight = rhs.BlockWeight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.SmithingWeight) ?? true))
-            {
-                item.SmithingWeight = rhs.SmithingWeight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.HeavyArmorWeight) ?? true))
-            {
-                item.HeavyArmorWeight = rhs.HeavyArmorWeight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.LightArmorWeight) ?? true))
-            {
-                item.LightArmorWeight = rhs.LightArmorWeight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.PickpocketWeight) ?? true))
-            {
-                item.PickpocketWeight = rhs.PickpocketWeight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.LockpickingWeight) ?? true))
-            {
-                item.LockpickingWeight = rhs.LockpickingWeight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.SneakWeight) ?? true))
-            {
-                item.SneakWeight = rhs.SneakWeight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.AlchemyWeight) ?? true))
-            {
-                item.AlchemyWeight = rhs.AlchemyWeight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.SpeechcraftWeight) ?? true))
-            {
-                item.SpeechcraftWeight = rhs.SpeechcraftWeight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.AlterationWeight) ?? true))
-            {
-                item.AlterationWeight = rhs.AlterationWeight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.ConjurationWeight) ?? true))
-            {
-                item.ConjurationWeight = rhs.ConjurationWeight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.DestructionWeight) ?? true))
-            {
-                item.DestructionWeight = rhs.DestructionWeight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.IllusionWeight) ?? true))
-            {
-                item.IllusionWeight = rhs.IllusionWeight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.RestorationWeight) ?? true))
-            {
-                item.RestorationWeight = rhs.RestorationWeight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.EnchantingWeight) ?? true))
-            {
-                item.EnchantingWeight = rhs.EnchantingWeight;
+                errorMask?.PushIndex((int)ClassData_FieldIndex.SkillWeights);
+                try
+                {
+                    item.SkillWeights.SetTo(rhs.SkillWeights);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.BleedoutDefault) ?? true))
             {
@@ -2795,17 +1963,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.VoicePoints = rhs.VoicePoints;
             }
-            if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.HealthWeight) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.StatWeights) ?? true))
             {
-                item.HealthWeight = rhs.HealthWeight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.MagickaWeight) ?? true))
-            {
-                item.MagickaWeight = rhs.MagickaWeight;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.StaminaWeight) ?? true))
-            {
-                item.StaminaWeight = rhs.StaminaWeight;
+                errorMask?.PushIndex((int)ClassData_FieldIndex.StatWeights);
+                try
+                {
+                    item.StatWeights.SetTo(rhs.StatWeights);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)ClassData_FieldIndex.Unknown2) ?? true))
             {
@@ -2928,167 +2101,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)ClassData_FieldIndex.MaxTrainingLevel,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.OneHandedWeight) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.SkillWeights) ?? true))
             {
-                ByteXmlTranslation.Instance.Write(
+                DictXmlTranslation<Skill, Byte>.Instance.Write(
                     node: node,
-                    name: nameof(item.OneHandedWeight),
-                    item: item.OneHandedWeight,
-                    fieldIndex: (int)ClassData_FieldIndex.OneHandedWeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.TwoHandedWeight) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.TwoHandedWeight),
-                    item: item.TwoHandedWeight,
-                    fieldIndex: (int)ClassData_FieldIndex.TwoHandedWeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.MarksmanWeight) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MarksmanWeight),
-                    item: item.MarksmanWeight,
-                    fieldIndex: (int)ClassData_FieldIndex.MarksmanWeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.BlockWeight) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.BlockWeight),
-                    item: item.BlockWeight,
-                    fieldIndex: (int)ClassData_FieldIndex.BlockWeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.SmithingWeight) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SmithingWeight),
-                    item: item.SmithingWeight,
-                    fieldIndex: (int)ClassData_FieldIndex.SmithingWeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.HeavyArmorWeight) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.HeavyArmorWeight),
-                    item: item.HeavyArmorWeight,
-                    fieldIndex: (int)ClassData_FieldIndex.HeavyArmorWeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.LightArmorWeight) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LightArmorWeight),
-                    item: item.LightArmorWeight,
-                    fieldIndex: (int)ClassData_FieldIndex.LightArmorWeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.PickpocketWeight) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.PickpocketWeight),
-                    item: item.PickpocketWeight,
-                    fieldIndex: (int)ClassData_FieldIndex.PickpocketWeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.LockpickingWeight) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LockpickingWeight),
-                    item: item.LockpickingWeight,
-                    fieldIndex: (int)ClassData_FieldIndex.LockpickingWeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.SneakWeight) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SneakWeight),
-                    item: item.SneakWeight,
-                    fieldIndex: (int)ClassData_FieldIndex.SneakWeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.AlchemyWeight) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AlchemyWeight),
-                    item: item.AlchemyWeight,
-                    fieldIndex: (int)ClassData_FieldIndex.AlchemyWeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.SpeechcraftWeight) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SpeechcraftWeight),
-                    item: item.SpeechcraftWeight,
-                    fieldIndex: (int)ClassData_FieldIndex.SpeechcraftWeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.AlterationWeight) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.AlterationWeight),
-                    item: item.AlterationWeight,
-                    fieldIndex: (int)ClassData_FieldIndex.AlterationWeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.ConjurationWeight) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ConjurationWeight),
-                    item: item.ConjurationWeight,
-                    fieldIndex: (int)ClassData_FieldIndex.ConjurationWeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.DestructionWeight) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.DestructionWeight),
-                    item: item.DestructionWeight,
-                    fieldIndex: (int)ClassData_FieldIndex.DestructionWeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.IllusionWeight) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.IllusionWeight),
-                    item: item.IllusionWeight,
-                    fieldIndex: (int)ClassData_FieldIndex.IllusionWeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.RestorationWeight) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.RestorationWeight),
-                    item: item.RestorationWeight,
-                    fieldIndex: (int)ClassData_FieldIndex.RestorationWeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.EnchantingWeight) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.EnchantingWeight),
-                    item: item.EnchantingWeight,
-                    fieldIndex: (int)ClassData_FieldIndex.EnchantingWeight,
-                    errorMask: errorMask);
+                    name: nameof(item.SkillWeights),
+                    items: item.SkillWeights,
+                    fieldIndex: (int)ClassData_FieldIndex.SkillWeights,
+                    errorMask: errorMask,
+                    translationMask: translationMask,
+                    keyTransl: (XElement subNode, Skill subItem, ErrorMaskBuilder? dictSubMask, TranslationCrystal? dictSubTranslMask) =>
+                    {
+                        EnumXmlTranslation<Skill>.Instance.Write(
+                            node: subNode,
+                            name: "Key",
+                            item: subItem,
+                            errorMask: dictSubMask);
+                    },
+                    valTransl: (XElement subNode, Byte subItem, ErrorMaskBuilder? dictSubMask, TranslationCrystal? dictSubTranslMask) =>
+                    {
+                        ByteXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: "Value",
+                            item: subItem,
+                            errorMask: dictSubMask);
+                    });
             }
             if ((translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.BleedoutDefault) ?? true))
             {
@@ -3108,32 +2145,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)ClassData_FieldIndex.VoicePoints,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.HealthWeight) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.StatWeights) ?? true))
             {
-                ByteXmlTranslation.Instance.Write(
+                DictXmlTranslation<BasicStat, Byte>.Instance.Write(
                     node: node,
-                    name: nameof(item.HealthWeight),
-                    item: item.HealthWeight,
-                    fieldIndex: (int)ClassData_FieldIndex.HealthWeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.MagickaWeight) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MagickaWeight),
-                    item: item.MagickaWeight,
-                    fieldIndex: (int)ClassData_FieldIndex.MagickaWeight,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.StaminaWeight) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.StaminaWeight),
-                    item: item.StaminaWeight,
-                    fieldIndex: (int)ClassData_FieldIndex.StaminaWeight,
-                    errorMask: errorMask);
+                    name: nameof(item.StatWeights),
+                    items: item.StatWeights,
+                    fieldIndex: (int)ClassData_FieldIndex.StatWeights,
+                    errorMask: errorMask,
+                    translationMask: translationMask,
+                    keyTransl: (XElement subNode, BasicStat subItem, ErrorMaskBuilder? dictSubMask, TranslationCrystal? dictSubTranslMask) =>
+                    {
+                        EnumXmlTranslation<BasicStat>.Instance.Write(
+                            node: subNode,
+                            name: "Key",
+                            item: subItem,
+                            errorMask: dictSubMask);
+                    },
+                    valTransl: (XElement subNode, Byte subItem, ErrorMaskBuilder? dictSubMask, TranslationCrystal? dictSubTranslMask) =>
+                    {
+                        ByteXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: "Value",
+                            item: subItem,
+                            errorMask: dictSubMask);
+                    });
             }
             if ((translationMask?.GetShouldTranslate((int)ClassData_FieldIndex.Unknown2) ?? true))
             {
@@ -3304,329 +2340,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "OneHandedWeight":
-                    errorMask?.PushIndex((int)ClassData_FieldIndex.OneHandedWeight);
-                    try
-                    {
-                        item.OneHandedWeight = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "TwoHandedWeight":
-                    errorMask?.PushIndex((int)ClassData_FieldIndex.TwoHandedWeight);
-                    try
-                    {
-                        item.TwoHandedWeight = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MarksmanWeight":
-                    errorMask?.PushIndex((int)ClassData_FieldIndex.MarksmanWeight);
-                    try
-                    {
-                        item.MarksmanWeight = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "BlockWeight":
-                    errorMask?.PushIndex((int)ClassData_FieldIndex.BlockWeight);
-                    try
-                    {
-                        item.BlockWeight = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SmithingWeight":
-                    errorMask?.PushIndex((int)ClassData_FieldIndex.SmithingWeight);
-                    try
-                    {
-                        item.SmithingWeight = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "HeavyArmorWeight":
-                    errorMask?.PushIndex((int)ClassData_FieldIndex.HeavyArmorWeight);
-                    try
-                    {
-                        item.HeavyArmorWeight = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LightArmorWeight":
-                    errorMask?.PushIndex((int)ClassData_FieldIndex.LightArmorWeight);
-                    try
-                    {
-                        item.LightArmorWeight = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "PickpocketWeight":
-                    errorMask?.PushIndex((int)ClassData_FieldIndex.PickpocketWeight);
-                    try
-                    {
-                        item.PickpocketWeight = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "LockpickingWeight":
-                    errorMask?.PushIndex((int)ClassData_FieldIndex.LockpickingWeight);
-                    try
-                    {
-                        item.LockpickingWeight = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SneakWeight":
-                    errorMask?.PushIndex((int)ClassData_FieldIndex.SneakWeight);
-                    try
-                    {
-                        item.SneakWeight = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AlchemyWeight":
-                    errorMask?.PushIndex((int)ClassData_FieldIndex.AlchemyWeight);
-                    try
-                    {
-                        item.AlchemyWeight = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SpeechcraftWeight":
-                    errorMask?.PushIndex((int)ClassData_FieldIndex.SpeechcraftWeight);
-                    try
-                    {
-                        item.SpeechcraftWeight = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "AlterationWeight":
-                    errorMask?.PushIndex((int)ClassData_FieldIndex.AlterationWeight);
-                    try
-                    {
-                        item.AlterationWeight = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ConjurationWeight":
-                    errorMask?.PushIndex((int)ClassData_FieldIndex.ConjurationWeight);
-                    try
-                    {
-                        item.ConjurationWeight = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DestructionWeight":
-                    errorMask?.PushIndex((int)ClassData_FieldIndex.DestructionWeight);
-                    try
-                    {
-                        item.DestructionWeight = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "IllusionWeight":
-                    errorMask?.PushIndex((int)ClassData_FieldIndex.IllusionWeight);
-                    try
-                    {
-                        item.IllusionWeight = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RestorationWeight":
-                    errorMask?.PushIndex((int)ClassData_FieldIndex.RestorationWeight);
-                    try
-                    {
-                        item.RestorationWeight = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "EnchantingWeight":
-                    errorMask?.PushIndex((int)ClassData_FieldIndex.EnchantingWeight);
-                    try
-                    {
-                        item.EnchantingWeight = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
+                case "SkillWeights":
+                    DictXmlTranslation<Skill, Byte>.Instance.ParseInto(
+                        node: node,
+                        item: item.SkillWeights,
+                        fieldIndex: (int)ClassData_FieldIndex.SkillWeights,
+                        errorMask: errorMask,
+                        translationMask: translationMask,
+                        keyTransl: EnumXmlTranslation<Skill>.Instance.Parse,
+                        valTransl: ByteXmlTranslation.Instance.Parse);
                     break;
                 case "BleedoutDefault":
                     errorMask?.PushIndex((int)ClassData_FieldIndex.BleedoutDefault);
@@ -3664,59 +2386,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "HealthWeight":
-                    errorMask?.PushIndex((int)ClassData_FieldIndex.HealthWeight);
-                    try
-                    {
-                        item.HealthWeight = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MagickaWeight":
-                    errorMask?.PushIndex((int)ClassData_FieldIndex.MagickaWeight);
-                    try
-                    {
-                        item.MagickaWeight = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "StaminaWeight":
-                    errorMask?.PushIndex((int)ClassData_FieldIndex.StaminaWeight);
-                    try
-                    {
-                        item.StaminaWeight = ByteXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
+                case "StatWeights":
+                    DictXmlTranslation<BasicStat, Byte>.Instance.ParseInto(
+                        node: node,
+                        item: item.StatWeights,
+                        fieldIndex: (int)ClassData_FieldIndex.StatWeights,
+                        errorMask: errorMask,
+                        translationMask: translationMask,
+                        keyTransl: EnumXmlTranslation<BasicStat>.Instance.Parse,
+                        valTransl: ByteXmlTranslation.Instance.Parse);
                     break;
                 case "Unknown2":
                     errorMask?.PushIndex((int)ClassData_FieldIndex.Unknown2);
@@ -3917,31 +2595,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 ((int?)item.Teaches) ?? -1,
                 length: 1);
             writer.Write(item.MaxTrainingLevel);
-            writer.Write(item.OneHandedWeight);
-            writer.Write(item.TwoHandedWeight);
-            writer.Write(item.MarksmanWeight);
-            writer.Write(item.BlockWeight);
-            writer.Write(item.SmithingWeight);
-            writer.Write(item.HeavyArmorWeight);
-            writer.Write(item.LightArmorWeight);
-            writer.Write(item.PickpocketWeight);
-            writer.Write(item.LockpickingWeight);
-            writer.Write(item.SneakWeight);
-            writer.Write(item.AlchemyWeight);
-            writer.Write(item.SpeechcraftWeight);
-            writer.Write(item.AlterationWeight);
-            writer.Write(item.ConjurationWeight);
-            writer.Write(item.DestructionWeight);
-            writer.Write(item.IllusionWeight);
-            writer.Write(item.RestorationWeight);
-            writer.Write(item.EnchantingWeight);
+            Mutagen.Bethesda.Binary.DictBinaryTranslation<Byte>.Instance.Write(
+                writer: writer,
+                items: item.SkillWeights,
+                transl: ByteBinaryTranslation.Instance.Write);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BleedoutDefault);
             writer.Write(item.VoicePoints);
-            writer.Write(item.HealthWeight);
-            writer.Write(item.MagickaWeight);
-            writer.Write(item.StaminaWeight);
+            Mutagen.Bethesda.Binary.DictBinaryTranslation<Byte>.Instance.Write(
+                writer: writer,
+                items: item.StatWeights,
+                transl: ByteBinaryTranslation.Instance.Write);
             writer.Write(item.Unknown2);
         }
 
@@ -4072,29 +2737,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #endregion
         public Byte MaxTrainingLevel => _data.Span[0x5];
-        public Byte OneHandedWeight => _data.Span[0x6];
-        public Byte TwoHandedWeight => _data.Span[0x7];
-        public Byte MarksmanWeight => _data.Span[0x8];
-        public Byte BlockWeight => _data.Span[0x9];
-        public Byte SmithingWeight => _data.Span[0xA];
-        public Byte HeavyArmorWeight => _data.Span[0xB];
-        public Byte LightArmorWeight => _data.Span[0xC];
-        public Byte PickpocketWeight => _data.Span[0xD];
-        public Byte LockpickingWeight => _data.Span[0xE];
-        public Byte SneakWeight => _data.Span[0xF];
-        public Byte AlchemyWeight => _data.Span[0x10];
-        public Byte SpeechcraftWeight => _data.Span[0x11];
-        public Byte AlterationWeight => _data.Span[0x12];
-        public Byte ConjurationWeight => _data.Span[0x13];
-        public Byte DestructionWeight => _data.Span[0x14];
-        public Byte IllusionWeight => _data.Span[0x15];
-        public Byte RestorationWeight => _data.Span[0x16];
-        public Byte EnchantingWeight => _data.Span[0x17];
+        #region SkillWeights
+        public IReadOnlyDictionary<Skill, Byte> SkillWeights => DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
+            new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(0x6), _package.Meta, _package.MasterReferences)),
+            new Dictionary<Skill, Byte>(),
+            ByteBinaryTranslation.Instance.Parse);
+        #endregion
         public Single BleedoutDefault => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
         public UInt32 VoicePoints => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x1C, 0x4));
-        public Byte HealthWeight => _data.Span[0x20];
-        public Byte MagickaWeight => _data.Span[0x21];
-        public Byte StaminaWeight => _data.Span[0x22];
+        #region StatWeights
+        public IReadOnlyDictionary<BasicStat, Byte> StatWeights => DictBinaryTranslation<Byte>.Instance.Parse<BasicStat>(
+            new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(0x20), _package.Meta, _package.MasterReferences)),
+            new Dictionary<BasicStat, Byte>(),
+            ByteBinaryTranslation.Instance.Parse);
+        #endregion
         public Byte Unknown2 => _data.Span[0x23];
         partial void CustomCtor(
             IBinaryReadStream stream,

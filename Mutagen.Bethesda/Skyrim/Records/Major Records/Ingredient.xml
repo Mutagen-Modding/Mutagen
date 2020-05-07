@@ -4,7 +4,7 @@
     <Interface>INamed</Interface>
     <Interface>IItem</Interface>
     <Interface>IHarvestTarget</Interface>
-    <Interface>IIcons</Interface>
+    <Interface>IHasIcons</Interface>
     <Interface>IModeled</Interface>
     <Interface>IObjectBounded</Interface>
     <Fields>
@@ -15,14 +15,13 @@
         <FormLink refName="Keyword" />
       </List>
       <RefDirect name="Model" refName="Model" />
-      <RefDirect name="WeightValue" refName="WeightValue" recordType="DATA" />
-      <RefDirect name="Data" refName="IngredientData" />
-      <String name="LargeIconFilename" recordType="ICON" />
-      <String name="SmallIconFilename" recordType="MICO" />
+      <RefDirect name="Icons" refName="Icons" />
       <RefDirect name="Destructible" refName="Destructible" />
       <FormLink name="EquipType" recordType="ETYP" refName="EquipType" />
       <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
       <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
+      <RefDirect name="WeightValue" refName="WeightValue" recordType="DATA" hasBeenSet="False" />
+      <RefDirect name="Data" refName="IngredientData" hasBeenSet="False" />
       <RefList name="Effects" refName="Effect" nullable="NotNull" />
     </Fields>
   </Object>

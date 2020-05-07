@@ -3,7 +3,7 @@
   <Object name="AlchemicalApparatus" recordType="APPA" baseClass="SkyrimMajorRecord" objType="Record" GUID="5ca84371-e6e9-4890-a8c8-930cc1633a36" ID="161">
     <Interface>INamed</Interface>
     <Interface>IItem</Interface>
-    <Interface>IIcons</Interface>
+    <Interface>IHasIcons</Interface>
     <Interface>IModeled</Interface>
     <Interface>IObjectBounded</Interface>
     <Fields>
@@ -11,9 +11,10 @@
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
       <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
-      <String name="LargeIconFilename" recordType="ICON" />
-      <String name="SmallIconFilename" recordType="MICO" />
+      <RefDirect name="Icons" refName="Icons" />
       <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
+      <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
       <Enum name="Quality" enumName="AlchemicalApparatus.QualityLevel" byteLength="4" recordType="QUAL" />
       <String name="Description" recordType="DESC" />
       <RefDirect name="WeightValue" refName="WeightValue" recordType="DATA" />

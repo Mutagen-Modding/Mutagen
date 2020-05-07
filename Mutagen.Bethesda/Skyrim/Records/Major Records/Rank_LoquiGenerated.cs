@@ -45,16 +45,16 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
-        #region RankID
+        #region RankNumber
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt32? _RankID;
-        public UInt32? RankID
+        private UInt32? _RankNumber;
+        public UInt32? RankNumber
         {
-            get => this._RankID;
-            set => this._RankID = value;
+            get => this._RankNumber;
+            set => this._RankNumber = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt32? IRankGetter.RankID => this.RankID;
+        UInt32? IRankGetter.RankNumber => this.RankNumber;
         #endregion
         #region MaleRankTitle
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -77,6 +77,17 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IRankGetter.FemaleRankTitle => this.FemaleRankTitle;
+        #endregion
+        #region Insignia
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String? _Insignia;
+        public String? Insignia
+        {
+            get => this._Insignia;
+            set => this._Insignia = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IRankGetter.Insignia => this.Insignia;
         #endregion
 
         #region To String
@@ -248,19 +259,22 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.RankID = initialValue;
+                this.RankNumber = initialValue;
                 this.MaleRankTitle = initialValue;
                 this.FemaleRankTitle = initialValue;
+                this.Insignia = initialValue;
             }
 
             public Mask(
-                TItem RankID,
+                TItem RankNumber,
                 TItem MaleRankTitle,
-                TItem FemaleRankTitle)
+                TItem FemaleRankTitle,
+                TItem Insignia)
             {
-                this.RankID = RankID;
+                this.RankNumber = RankNumber;
                 this.MaleRankTitle = MaleRankTitle;
                 this.FemaleRankTitle = FemaleRankTitle;
+                this.Insignia = Insignia;
             }
 
             #pragma warning disable CS8618
@@ -272,9 +286,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem RankID;
+            public TItem RankNumber;
             public TItem MaleRankTitle;
             public TItem FemaleRankTitle;
+            public TItem Insignia;
             #endregion
 
             #region Equals
@@ -287,17 +302,19 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.RankID, rhs.RankID)) return false;
+                if (!object.Equals(this.RankNumber, rhs.RankNumber)) return false;
                 if (!object.Equals(this.MaleRankTitle, rhs.MaleRankTitle)) return false;
                 if (!object.Equals(this.FemaleRankTitle, rhs.FemaleRankTitle)) return false;
+                if (!object.Equals(this.Insignia, rhs.Insignia)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.RankID);
+                hash.Add(this.RankNumber);
                 hash.Add(this.MaleRankTitle);
                 hash.Add(this.FemaleRankTitle);
+                hash.Add(this.Insignia);
                 return hash.ToHashCode();
             }
 
@@ -306,9 +323,10 @@ namespace Mutagen.Bethesda.Skyrim
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.RankID)) return false;
+                if (!eval(this.RankNumber)) return false;
                 if (!eval(this.MaleRankTitle)) return false;
                 if (!eval(this.FemaleRankTitle)) return false;
+                if (!eval(this.Insignia)) return false;
                 return true;
             }
             #endregion
@@ -316,9 +334,10 @@ namespace Mutagen.Bethesda.Skyrim
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.RankID)) return true;
+                if (eval(this.RankNumber)) return true;
                 if (eval(this.MaleRankTitle)) return true;
                 if (eval(this.FemaleRankTitle)) return true;
+                if (eval(this.Insignia)) return true;
                 return false;
             }
             #endregion
@@ -333,9 +352,10 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.RankID = eval(this.RankID);
+                obj.RankNumber = eval(this.RankNumber);
                 obj.MaleRankTitle = eval(this.MaleRankTitle);
                 obj.FemaleRankTitle = eval(this.FemaleRankTitle);
+                obj.Insignia = eval(this.Insignia);
             }
             #endregion
 
@@ -358,9 +378,9 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.RankID ?? true)
+                    if (printMask?.RankNumber ?? true)
                     {
-                        fg.AppendItem(RankID, "RankID");
+                        fg.AppendItem(RankNumber, "RankNumber");
                     }
                     if (printMask?.MaleRankTitle ?? true)
                     {
@@ -369,6 +389,10 @@ namespace Mutagen.Bethesda.Skyrim
                     if (printMask?.FemaleRankTitle ?? true)
                     {
                         fg.AppendItem(FemaleRankTitle, "FemaleRankTitle");
+                    }
+                    if (printMask?.Insignia ?? true)
+                    {
+                        fg.AppendItem(Insignia, "Insignia");
                     }
                 }
                 fg.AppendLine("]");
@@ -395,9 +419,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
-            public Exception? RankID;
+            public Exception? RankNumber;
             public Exception? MaleRankTitle;
             public Exception? FemaleRankTitle;
+            public Exception? Insignia;
             #endregion
 
             #region IErrorMask
@@ -406,12 +431,14 @@ namespace Mutagen.Bethesda.Skyrim
                 Rank_FieldIndex enu = (Rank_FieldIndex)index;
                 switch (enu)
                 {
-                    case Rank_FieldIndex.RankID:
-                        return RankID;
+                    case Rank_FieldIndex.RankNumber:
+                        return RankNumber;
                     case Rank_FieldIndex.MaleRankTitle:
                         return MaleRankTitle;
                     case Rank_FieldIndex.FemaleRankTitle:
                         return FemaleRankTitle;
+                    case Rank_FieldIndex.Insignia:
+                        return Insignia;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -422,14 +449,17 @@ namespace Mutagen.Bethesda.Skyrim
                 Rank_FieldIndex enu = (Rank_FieldIndex)index;
                 switch (enu)
                 {
-                    case Rank_FieldIndex.RankID:
-                        this.RankID = ex;
+                    case Rank_FieldIndex.RankNumber:
+                        this.RankNumber = ex;
                         break;
                     case Rank_FieldIndex.MaleRankTitle:
                         this.MaleRankTitle = ex;
                         break;
                     case Rank_FieldIndex.FemaleRankTitle:
                         this.FemaleRankTitle = ex;
+                        break;
+                    case Rank_FieldIndex.Insignia:
+                        this.Insignia = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -441,14 +471,17 @@ namespace Mutagen.Bethesda.Skyrim
                 Rank_FieldIndex enu = (Rank_FieldIndex)index;
                 switch (enu)
                 {
-                    case Rank_FieldIndex.RankID:
-                        this.RankID = (Exception?)obj;
+                    case Rank_FieldIndex.RankNumber:
+                        this.RankNumber = (Exception?)obj;
                         break;
                     case Rank_FieldIndex.MaleRankTitle:
                         this.MaleRankTitle = (Exception?)obj;
                         break;
                     case Rank_FieldIndex.FemaleRankTitle:
                         this.FemaleRankTitle = (Exception?)obj;
+                        break;
+                    case Rank_FieldIndex.Insignia:
+                        this.Insignia = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -458,9 +491,10 @@ namespace Mutagen.Bethesda.Skyrim
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (RankID != null) return true;
+                if (RankNumber != null) return true;
                 if (MaleRankTitle != null) return true;
                 if (FemaleRankTitle != null) return true;
+                if (Insignia != null) return true;
                 return false;
             }
             #endregion
@@ -495,9 +529,10 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendItem(RankID, "RankID");
+                fg.AppendItem(RankNumber, "RankNumber");
                 fg.AppendItem(MaleRankTitle, "MaleRankTitle");
                 fg.AppendItem(FemaleRankTitle, "FemaleRankTitle");
+                fg.AppendItem(Insignia, "Insignia");
             }
             #endregion
 
@@ -506,9 +541,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.RankID = this.RankID.Combine(rhs.RankID);
+                ret.RankNumber = this.RankNumber.Combine(rhs.RankNumber);
                 ret.MaleRankTitle = this.MaleRankTitle.Combine(rhs.MaleRankTitle);
                 ret.FemaleRankTitle = this.FemaleRankTitle.Combine(rhs.FemaleRankTitle);
+                ret.Insignia = this.Insignia.Combine(rhs.Insignia);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -530,17 +566,19 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public bool RankID;
+            public bool RankNumber;
             public bool MaleRankTitle;
             public bool FemaleRankTitle;
+            public bool Insignia;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.RankID = defaultOn;
+                this.RankNumber = defaultOn;
                 this.MaleRankTitle = defaultOn;
                 this.FemaleRankTitle = defaultOn;
+                this.Insignia = defaultOn;
             }
 
             #endregion
@@ -556,9 +594,10 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((RankID, null));
+                ret.Add((RankNumber, null));
                 ret.Add((MaleRankTitle, null));
                 ret.Add((FemaleRankTitle, null));
+                ret.Add((Insignia, null));
             }
         }
         #endregion
@@ -624,9 +663,10 @@ namespace Mutagen.Bethesda.Skyrim
         IRankGetter,
         ILoquiObjectSetter<IRank>
     {
-        new UInt32? RankID { get; set; }
+        new UInt32? RankNumber { get; set; }
         new String? MaleRankTitle { get; set; }
         new String? FemaleRankTitle { get; set; }
+        new String? Insignia { get; set; }
     }
 
     public partial interface IRankGetter :
@@ -642,9 +682,10 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => Rank_Registration.Instance;
-        UInt32? RankID { get; }
+        UInt32? RankNumber { get; }
         String? MaleRankTitle { get; }
         String? FemaleRankTitle { get; }
+        String? Insignia { get; }
 
     }
 
@@ -962,9 +1003,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Field Index
     public enum Rank_FieldIndex
     {
-        RankID = 0,
+        RankNumber = 0,
         MaleRankTitle = 1,
         FemaleRankTitle = 2,
+        Insignia = 3,
     }
     #endregion
 
@@ -982,9 +1024,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "168a7e1e-9304-4604-b927-7b61cfa16730";
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(Rank.Mask<>);
 
@@ -1014,12 +1056,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "RANKID":
-                    return (ushort)Rank_FieldIndex.RankID;
+                case "RANKNUMBER":
+                    return (ushort)Rank_FieldIndex.RankNumber;
                 case "MALERANKTITLE":
                     return (ushort)Rank_FieldIndex.MaleRankTitle;
                 case "FEMALERANKTITLE":
                     return (ushort)Rank_FieldIndex.FemaleRankTitle;
+                case "INSIGNIA":
+                    return (ushort)Rank_FieldIndex.Insignia;
                 default:
                     return null;
             }
@@ -1030,9 +1074,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Rank_FieldIndex enu = (Rank_FieldIndex)index;
             switch (enu)
             {
-                case Rank_FieldIndex.RankID:
+                case Rank_FieldIndex.RankNumber:
                 case Rank_FieldIndex.MaleRankTitle:
                 case Rank_FieldIndex.FemaleRankTitle:
+                case Rank_FieldIndex.Insignia:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1044,9 +1089,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Rank_FieldIndex enu = (Rank_FieldIndex)index;
             switch (enu)
             {
-                case Rank_FieldIndex.RankID:
+                case Rank_FieldIndex.RankNumber:
                 case Rank_FieldIndex.MaleRankTitle:
                 case Rank_FieldIndex.FemaleRankTitle:
+                case Rank_FieldIndex.Insignia:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1058,9 +1104,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Rank_FieldIndex enu = (Rank_FieldIndex)index;
             switch (enu)
             {
-                case Rank_FieldIndex.RankID:
+                case Rank_FieldIndex.RankNumber:
                 case Rank_FieldIndex.MaleRankTitle:
                 case Rank_FieldIndex.FemaleRankTitle:
+                case Rank_FieldIndex.Insignia:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1072,12 +1119,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Rank_FieldIndex enu = (Rank_FieldIndex)index;
             switch (enu)
             {
-                case Rank_FieldIndex.RankID:
-                    return "RankID";
+                case Rank_FieldIndex.RankNumber:
+                    return "RankNumber";
                 case Rank_FieldIndex.MaleRankTitle:
                     return "MaleRankTitle";
                 case Rank_FieldIndex.FemaleRankTitle:
                     return "FemaleRankTitle";
+                case Rank_FieldIndex.Insignia:
+                    return "Insignia";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1088,9 +1137,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Rank_FieldIndex enu = (Rank_FieldIndex)index;
             switch (enu)
             {
-                case Rank_FieldIndex.RankID:
+                case Rank_FieldIndex.RankNumber:
                 case Rank_FieldIndex.MaleRankTitle:
                 case Rank_FieldIndex.FemaleRankTitle:
+                case Rank_FieldIndex.Insignia:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1102,9 +1152,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Rank_FieldIndex enu = (Rank_FieldIndex)index;
             switch (enu)
             {
-                case Rank_FieldIndex.RankID:
+                case Rank_FieldIndex.RankNumber:
                 case Rank_FieldIndex.MaleRankTitle:
                 case Rank_FieldIndex.FemaleRankTitle:
+                case Rank_FieldIndex.Insignia:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1116,11 +1167,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Rank_FieldIndex enu = (Rank_FieldIndex)index;
             switch (enu)
             {
-                case Rank_FieldIndex.RankID:
+                case Rank_FieldIndex.RankNumber:
                     return typeof(UInt32);
                 case Rank_FieldIndex.MaleRankTitle:
                     return typeof(String);
                 case Rank_FieldIndex.FemaleRankTitle:
+                    return typeof(String);
+                case Rank_FieldIndex.Insignia:
                     return typeof(String);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1131,6 +1184,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType RNAM_HEADER = new RecordType("RNAM");
         public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
         public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
+        public static readonly RecordType INAM_HEADER = new RecordType("INAM");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1140,12 +1194,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         RNAM_HEADER,
                         MNAM_HEADER,
-                        FNAM_HEADER
+                        FNAM_HEADER,
+                        INAM_HEADER
                     })
             );
         });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 3;
+        public const int NumTypedFields = 4;
         public static readonly Type BinaryWriteTranslation = typeof(RankBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1188,9 +1243,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IRank item)
         {
             ClearPartial();
-            item.RankID = default;
+            item.RankNumber = default;
             item.MaleRankTitle = default;
             item.FemaleRankTitle = default;
+            item.Insignia = default;
         }
         
         #region Xml Translation
@@ -1241,10 +1297,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x4D414E52: // RNAM
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.RankID) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.RankNumber) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.RankID = frame.ReadUInt32();
-                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.RankID);
+                    item.RankNumber = frame.ReadUInt32();
+                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.RankNumber);
                 }
                 case 0x4D414E4D: // MNAM
                 {
@@ -1263,6 +1319,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.FemaleRankTitle);
+                }
+                case 0x4D414E49: // INAM
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Insignia) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.Insignia = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.Insignia);
                 }
                 default:
                     return TryGet<int?>.Failure;
@@ -1310,9 +1375,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.RankID = item.RankID == rhs.RankID;
+            ret.RankNumber = item.RankNumber == rhs.RankNumber;
             ret.MaleRankTitle = string.Equals(item.MaleRankTitle, rhs.MaleRankTitle);
             ret.FemaleRankTitle = string.Equals(item.FemaleRankTitle, rhs.FemaleRankTitle);
+            ret.Insignia = string.Equals(item.Insignia, rhs.Insignia);
         }
         
         public string ToString(
@@ -1359,10 +1425,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             Rank.Mask<bool>? printMask = null)
         {
-            if ((printMask?.RankID ?? true)
-                && item.RankID.TryGet(out var RankIDItem))
+            if ((printMask?.RankNumber ?? true)
+                && item.RankNumber.TryGet(out var RankNumberItem))
             {
-                fg.AppendItem(RankIDItem, "RankID");
+                fg.AppendItem(RankNumberItem, "RankNumber");
             }
             if ((printMask?.MaleRankTitle ?? true)
                 && item.MaleRankTitle.TryGet(out var MaleRankTitleItem))
@@ -1374,15 +1440,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(FemaleRankTitleItem, "FemaleRankTitle");
             }
+            if ((printMask?.Insignia ?? true)
+                && item.Insignia.TryGet(out var InsigniaItem))
+            {
+                fg.AppendItem(InsigniaItem, "Insignia");
+            }
         }
         
         public bool HasBeenSet(
             IRankGetter item,
             Rank.Mask<bool?> checkMask)
         {
-            if (checkMask.RankID.HasValue && checkMask.RankID.Value != (item.RankID != null)) return false;
+            if (checkMask.RankNumber.HasValue && checkMask.RankNumber.Value != (item.RankNumber != null)) return false;
             if (checkMask.MaleRankTitle.HasValue && checkMask.MaleRankTitle.Value != (item.MaleRankTitle != null)) return false;
             if (checkMask.FemaleRankTitle.HasValue && checkMask.FemaleRankTitle.Value != (item.FemaleRankTitle != null)) return false;
+            if (checkMask.Insignia.HasValue && checkMask.Insignia.Value != (item.Insignia != null)) return false;
             return true;
         }
         
@@ -1390,9 +1462,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRankGetter item,
             Rank.Mask<bool> mask)
         {
-            mask.RankID = (item.RankID != null);
+            mask.RankNumber = (item.RankNumber != null);
             mask.MaleRankTitle = (item.MaleRankTitle != null);
             mask.FemaleRankTitle = (item.FemaleRankTitle != null);
+            mask.Insignia = (item.Insignia != null);
         }
         
         #region Equals and Hash
@@ -1402,18 +1475,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.RankID != rhs.RankID) return false;
+            if (lhs.RankNumber != rhs.RankNumber) return false;
             if (!string.Equals(lhs.MaleRankTitle, rhs.MaleRankTitle)) return false;
             if (!string.Equals(lhs.FemaleRankTitle, rhs.FemaleRankTitle)) return false;
+            if (!string.Equals(lhs.Insignia, rhs.Insignia)) return false;
             return true;
         }
         
         public virtual int GetHashCode(IRankGetter item)
         {
             var hash = new HashCode();
-            if (item.RankID.TryGet(out var RankIDitem))
+            if (item.RankNumber.TryGet(out var RankNumberitem))
             {
-                hash.Add(RankIDitem);
+                hash.Add(RankNumberitem);
             }
             if (item.MaleRankTitle.TryGet(out var MaleRankTitleitem))
             {
@@ -1422,6 +1496,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (item.FemaleRankTitle.TryGet(out var FemaleRankTitleitem))
             {
                 hash.Add(FemaleRankTitleitem);
+            }
+            if (item.Insignia.TryGet(out var Insigniaitem))
+            {
+                hash.Add(Insigniaitem);
             }
             return hash.ToHashCode();
         }
@@ -1454,9 +1532,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)Rank_FieldIndex.RankID) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Rank_FieldIndex.RankNumber) ?? true))
             {
-                item.RankID = rhs.RankID;
+                item.RankNumber = rhs.RankNumber;
             }
             if ((copyMask?.GetShouldTranslate((int)Rank_FieldIndex.MaleRankTitle) ?? true))
             {
@@ -1465,6 +1543,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((copyMask?.GetShouldTranslate((int)Rank_FieldIndex.FemaleRankTitle) ?? true))
             {
                 item.FemaleRankTitle = rhs.FemaleRankTitle;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Rank_FieldIndex.Insignia) ?? true))
+            {
+                item.Insignia = rhs.Insignia;
             }
         }
         
@@ -1555,14 +1637,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((item.RankID != null)
-                && (translationMask?.GetShouldTranslate((int)Rank_FieldIndex.RankID) ?? true))
+            if ((item.RankNumber != null)
+                && (translationMask?.GetShouldTranslate((int)Rank_FieldIndex.RankNumber) ?? true))
             {
                 UInt32XmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.RankID),
-                    item: item.RankID.Value,
-                    fieldIndex: (int)Rank_FieldIndex.RankID,
+                    name: nameof(item.RankNumber),
+                    item: item.RankNumber.Value,
+                    fieldIndex: (int)Rank_FieldIndex.RankNumber,
                     errorMask: errorMask);
             }
             if ((item.MaleRankTitle != null)
@@ -1583,6 +1665,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     name: nameof(item.FemaleRankTitle),
                     item: item.FemaleRankTitle,
                     fieldIndex: (int)Rank_FieldIndex.FemaleRankTitle,
+                    errorMask: errorMask);
+            }
+            if ((item.Insignia != null)
+                && (translationMask?.GetShouldTranslate((int)Rank_FieldIndex.Insignia) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Insignia),
+                    item: item.Insignia,
+                    fieldIndex: (int)Rank_FieldIndex.Insignia,
                     errorMask: errorMask);
             }
         }
@@ -1691,11 +1783,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
-                case "RankID":
-                    errorMask?.PushIndex((int)Rank_FieldIndex.RankID);
+                case "RankNumber":
+                    errorMask?.PushIndex((int)Rank_FieldIndex.RankNumber);
                     try
                     {
-                        item.RankID = UInt32XmlTranslation.Instance.Parse(
+                        item.RankNumber = UInt32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1732,6 +1824,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         item.FemaleRankTitle = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Insignia":
+                    errorMask?.PushIndex((int)Rank_FieldIndex.Insignia);
+                    try
+                    {
+                        item.Insignia = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1923,7 +2033,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.RankID,
+                item: item.RankNumber,
                 header: recordTypeConverter.ConvertToCustom(Rank_Registration.RNAM_HEADER));
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -1934,6 +2044,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.FemaleRankTitle,
                 header: recordTypeConverter.ConvertToCustom(Rank_Registration.FNAM_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Insignia,
+                header: recordTypeConverter.ConvertToCustom(Rank_Registration.INAM_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
         }
 
@@ -2046,9 +2161,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        #region RankID
-        private int? _RankIDLocation;
-        public UInt32? RankID => _RankIDLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RankIDLocation.Value, _package.Meta)) : default(UInt32?);
+        #region RankNumber
+        private int? _RankNumberLocation;
+        public UInt32? RankNumber => _RankNumberLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _RankNumberLocation.Value, _package.Meta)) : default(UInt32?);
         #endregion
         #region MaleRankTitle
         private int? _MaleRankTitleLocation;
@@ -2057,6 +2172,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region FemaleRankTitle
         private int? _FemaleRankTitleLocation;
         public String? FemaleRankTitle => _FemaleRankTitleLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FemaleRankTitleLocation.Value, _package.Meta)) : default(string?);
+        #endregion
+        #region Insignia
+        private int? _InsigniaLocation;
+        public String? Insignia => _InsigniaLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _InsigniaLocation.Value, _package.Meta)) : default(string?);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
@@ -2118,9 +2237,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case 0x4D414E52: // RNAM
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.RankID) return TryGet<int?>.Failure;
-                    _RankIDLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.RankID);
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.RankNumber) return TryGet<int?>.Failure;
+                    _RankNumberLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.RankNumber);
                 }
                 case 0x4D414E4D: // MNAM
                 {
@@ -2133,6 +2252,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.FemaleRankTitle) return TryGet<int?>.Failure;
                     _FemaleRankTitleLocation = (ushort)(stream.Position - offset);
                     return TryGet<int?>.Succeed((int)Rank_FieldIndex.FemaleRankTitle);
+                }
+                case 0x4D414E49: // INAM
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Insignia) return TryGet<int?>.Failure;
+                    _InsigniaLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.Insignia);
                 }
                 default:
                     return TryGet<int?>.Failure;

@@ -45,18 +45,18 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
-        #region Faction
+        #region Target
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<Faction> _Faction = new FormLink<Faction>();
-        public IFormLink<Faction> Faction => this._Faction;
+        protected IFormLink<IRelatable> _Target = new FormLink<IRelatable>();
+        public IFormLink<IRelatable> Target => this._Target;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IFactionGetter> IRelationGetter.Faction => this.Faction;
+        IFormLinkGetter<IRelatableGetter> IRelationGetter.Target => this.Target;
         #endregion
         #region Modifier
         public Int32 Modifier { get; set; } = default;
         #endregion
-        #region GroupCombatReaction
-        public Combat GroupCombatReaction { get; set; } = default;
+        #region Reaction
+        public CombatReaction Reaction { get; set; } = default;
         #endregion
 
         #region To String
@@ -228,19 +228,19 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Faction = initialValue;
+                this.Target = initialValue;
                 this.Modifier = initialValue;
-                this.GroupCombatReaction = initialValue;
+                this.Reaction = initialValue;
             }
 
             public Mask(
-                TItem Faction,
+                TItem Target,
                 TItem Modifier,
-                TItem GroupCombatReaction)
+                TItem Reaction)
             {
-                this.Faction = Faction;
+                this.Target = Target;
                 this.Modifier = Modifier;
-                this.GroupCombatReaction = GroupCombatReaction;
+                this.Reaction = Reaction;
             }
 
             #pragma warning disable CS8618
@@ -252,9 +252,9 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem Faction;
+            public TItem Target;
             public TItem Modifier;
-            public TItem GroupCombatReaction;
+            public TItem Reaction;
             #endregion
 
             #region Equals
@@ -267,17 +267,17 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Faction, rhs.Faction)) return false;
+                if (!object.Equals(this.Target, rhs.Target)) return false;
                 if (!object.Equals(this.Modifier, rhs.Modifier)) return false;
-                if (!object.Equals(this.GroupCombatReaction, rhs.GroupCombatReaction)) return false;
+                if (!object.Equals(this.Reaction, rhs.Reaction)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Faction);
+                hash.Add(this.Target);
                 hash.Add(this.Modifier);
-                hash.Add(this.GroupCombatReaction);
+                hash.Add(this.Reaction);
                 return hash.ToHashCode();
             }
 
@@ -286,9 +286,9 @@ namespace Mutagen.Bethesda.Skyrim
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Faction)) return false;
+                if (!eval(this.Target)) return false;
                 if (!eval(this.Modifier)) return false;
-                if (!eval(this.GroupCombatReaction)) return false;
+                if (!eval(this.Reaction)) return false;
                 return true;
             }
             #endregion
@@ -296,9 +296,9 @@ namespace Mutagen.Bethesda.Skyrim
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Faction)) return true;
+                if (eval(this.Target)) return true;
                 if (eval(this.Modifier)) return true;
-                if (eval(this.GroupCombatReaction)) return true;
+                if (eval(this.Reaction)) return true;
                 return false;
             }
             #endregion
@@ -313,9 +313,9 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Faction = eval(this.Faction);
+                obj.Target = eval(this.Target);
                 obj.Modifier = eval(this.Modifier);
-                obj.GroupCombatReaction = eval(this.GroupCombatReaction);
+                obj.Reaction = eval(this.Reaction);
             }
             #endregion
 
@@ -338,17 +338,17 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Faction ?? true)
+                    if (printMask?.Target ?? true)
                     {
-                        fg.AppendItem(Faction, "Faction");
+                        fg.AppendItem(Target, "Target");
                     }
                     if (printMask?.Modifier ?? true)
                     {
                         fg.AppendItem(Modifier, "Modifier");
                     }
-                    if (printMask?.GroupCombatReaction ?? true)
+                    if (printMask?.Reaction ?? true)
                     {
-                        fg.AppendItem(GroupCombatReaction, "GroupCombatReaction");
+                        fg.AppendItem(Reaction, "Reaction");
                     }
                 }
                 fg.AppendLine("]");
@@ -375,9 +375,9 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
-            public Exception? Faction;
+            public Exception? Target;
             public Exception? Modifier;
-            public Exception? GroupCombatReaction;
+            public Exception? Reaction;
             #endregion
 
             #region IErrorMask
@@ -386,12 +386,12 @@ namespace Mutagen.Bethesda.Skyrim
                 Relation_FieldIndex enu = (Relation_FieldIndex)index;
                 switch (enu)
                 {
-                    case Relation_FieldIndex.Faction:
-                        return Faction;
+                    case Relation_FieldIndex.Target:
+                        return Target;
                     case Relation_FieldIndex.Modifier:
                         return Modifier;
-                    case Relation_FieldIndex.GroupCombatReaction:
-                        return GroupCombatReaction;
+                    case Relation_FieldIndex.Reaction:
+                        return Reaction;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -402,14 +402,14 @@ namespace Mutagen.Bethesda.Skyrim
                 Relation_FieldIndex enu = (Relation_FieldIndex)index;
                 switch (enu)
                 {
-                    case Relation_FieldIndex.Faction:
-                        this.Faction = ex;
+                    case Relation_FieldIndex.Target:
+                        this.Target = ex;
                         break;
                     case Relation_FieldIndex.Modifier:
                         this.Modifier = ex;
                         break;
-                    case Relation_FieldIndex.GroupCombatReaction:
-                        this.GroupCombatReaction = ex;
+                    case Relation_FieldIndex.Reaction:
+                        this.Reaction = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -421,14 +421,14 @@ namespace Mutagen.Bethesda.Skyrim
                 Relation_FieldIndex enu = (Relation_FieldIndex)index;
                 switch (enu)
                 {
-                    case Relation_FieldIndex.Faction:
-                        this.Faction = (Exception?)obj;
+                    case Relation_FieldIndex.Target:
+                        this.Target = (Exception?)obj;
                         break;
                     case Relation_FieldIndex.Modifier:
                         this.Modifier = (Exception?)obj;
                         break;
-                    case Relation_FieldIndex.GroupCombatReaction:
-                        this.GroupCombatReaction = (Exception?)obj;
+                    case Relation_FieldIndex.Reaction:
+                        this.Reaction = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -438,9 +438,9 @@ namespace Mutagen.Bethesda.Skyrim
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Faction != null) return true;
+                if (Target != null) return true;
                 if (Modifier != null) return true;
-                if (GroupCombatReaction != null) return true;
+                if (Reaction != null) return true;
                 return false;
             }
             #endregion
@@ -475,9 +475,9 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendItem(Faction, "Faction");
+                fg.AppendItem(Target, "Target");
                 fg.AppendItem(Modifier, "Modifier");
-                fg.AppendItem(GroupCombatReaction, "GroupCombatReaction");
+                fg.AppendItem(Reaction, "Reaction");
             }
             #endregion
 
@@ -486,9 +486,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Faction = this.Faction.Combine(rhs.Faction);
+                ret.Target = this.Target.Combine(rhs.Target);
                 ret.Modifier = this.Modifier.Combine(rhs.Modifier);
-                ret.GroupCombatReaction = this.GroupCombatReaction.Combine(rhs.GroupCombatReaction);
+                ret.Reaction = this.Reaction.Combine(rhs.Reaction);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -510,17 +510,17 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public bool Faction;
+            public bool Target;
             public bool Modifier;
-            public bool GroupCombatReaction;
+            public bool Reaction;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.Faction = defaultOn;
+                this.Target = defaultOn;
                 this.Modifier = defaultOn;
-                this.GroupCombatReaction = defaultOn;
+                this.Reaction = defaultOn;
             }
 
             #endregion
@@ -536,9 +536,9 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Faction, null));
+                ret.Add((Target, null));
                 ret.Add((Modifier, null));
-                ret.Add((GroupCombatReaction, null));
+                ret.Add((Reaction, null));
             }
         }
         #endregion
@@ -610,9 +610,9 @@ namespace Mutagen.Bethesda.Skyrim
         IRelationGetter,
         ILoquiObjectSetter<IRelation>
     {
-        new IFormLink<Faction> Faction { get; }
+        new IFormLink<IRelatable> Target { get; }
         new Int32 Modifier { get; set; }
-        new Combat GroupCombatReaction { get; set; }
+        new CombatReaction Reaction { get; set; }
     }
 
     public partial interface IRelationGetter :
@@ -629,9 +629,9 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => Relation_Registration.Instance;
-        IFormLinkGetter<IFactionGetter> Faction { get; }
+        IFormLinkGetter<IRelatableGetter> Target { get; }
         Int32 Modifier { get; }
-        Combat GroupCombatReaction { get; }
+        CombatReaction Reaction { get; }
 
     }
 
@@ -949,9 +949,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Field Index
     public enum Relation_FieldIndex
     {
-        Faction = 0,
+        Target = 0,
         Modifier = 1,
-        GroupCombatReaction = 2,
+        Reaction = 2,
     }
     #endregion
 
@@ -1001,12 +1001,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "FACTION":
-                    return (ushort)Relation_FieldIndex.Faction;
+                case "TARGET":
+                    return (ushort)Relation_FieldIndex.Target;
                 case "MODIFIER":
                     return (ushort)Relation_FieldIndex.Modifier;
-                case "GROUPCOMBATREACTION":
-                    return (ushort)Relation_FieldIndex.GroupCombatReaction;
+                case "REACTION":
+                    return (ushort)Relation_FieldIndex.Reaction;
                 default:
                     return null;
             }
@@ -1017,9 +1017,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Relation_FieldIndex enu = (Relation_FieldIndex)index;
             switch (enu)
             {
-                case Relation_FieldIndex.Faction:
+                case Relation_FieldIndex.Target:
                 case Relation_FieldIndex.Modifier:
-                case Relation_FieldIndex.GroupCombatReaction:
+                case Relation_FieldIndex.Reaction:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1031,9 +1031,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Relation_FieldIndex enu = (Relation_FieldIndex)index;
             switch (enu)
             {
-                case Relation_FieldIndex.Faction:
+                case Relation_FieldIndex.Target:
                 case Relation_FieldIndex.Modifier:
-                case Relation_FieldIndex.GroupCombatReaction:
+                case Relation_FieldIndex.Reaction:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1045,9 +1045,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Relation_FieldIndex enu = (Relation_FieldIndex)index;
             switch (enu)
             {
-                case Relation_FieldIndex.Faction:
+                case Relation_FieldIndex.Target:
                 case Relation_FieldIndex.Modifier:
-                case Relation_FieldIndex.GroupCombatReaction:
+                case Relation_FieldIndex.Reaction:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1059,12 +1059,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Relation_FieldIndex enu = (Relation_FieldIndex)index;
             switch (enu)
             {
-                case Relation_FieldIndex.Faction:
-                    return "Faction";
+                case Relation_FieldIndex.Target:
+                    return "Target";
                 case Relation_FieldIndex.Modifier:
                     return "Modifier";
-                case Relation_FieldIndex.GroupCombatReaction:
-                    return "GroupCombatReaction";
+                case Relation_FieldIndex.Reaction:
+                    return "Reaction";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1075,9 +1075,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Relation_FieldIndex enu = (Relation_FieldIndex)index;
             switch (enu)
             {
-                case Relation_FieldIndex.Faction:
+                case Relation_FieldIndex.Target:
                 case Relation_FieldIndex.Modifier:
-                case Relation_FieldIndex.GroupCombatReaction:
+                case Relation_FieldIndex.Reaction:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1089,9 +1089,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Relation_FieldIndex enu = (Relation_FieldIndex)index;
             switch (enu)
             {
-                case Relation_FieldIndex.Faction:
+                case Relation_FieldIndex.Target:
                 case Relation_FieldIndex.Modifier:
-                case Relation_FieldIndex.GroupCombatReaction:
+                case Relation_FieldIndex.Reaction:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1103,12 +1103,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Relation_FieldIndex enu = (Relation_FieldIndex)index;
             switch (enu)
             {
-                case Relation_FieldIndex.Faction:
-                    return typeof(IFormLink<Faction>);
+                case Relation_FieldIndex.Target:
+                    return typeof(IFormLink<IRelatable>);
                 case Relation_FieldIndex.Modifier:
                     return typeof(Int32);
-                case Relation_FieldIndex.GroupCombatReaction:
-                    return typeof(Combat);
+                case Relation_FieldIndex.Reaction:
+                    return typeof(CombatReaction);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1161,9 +1161,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IRelation item)
         {
             ClearPartial();
-            item.Faction.FormKey = FormKey.Null;
+            item.Target.FormKey = FormKey.Null;
             item.Modifier = default;
-            item.GroupCombatReaction = default;
+            item.Reaction = default;
         }
         
         #region Xml Translation
@@ -1199,11 +1199,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRelation item,
             MutagenFrame frame)
         {
-            item.Faction.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Target.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
             item.Modifier = frame.ReadInt32();
-            item.GroupCombatReaction = EnumBinaryTranslation<Combat>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Reaction = EnumBinaryTranslation<CombatReaction>.Instance.Parse(frame: frame.SpawnWithLength(4));
         }
         
         public virtual void CopyInFromBinary(
@@ -1249,9 +1249,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Faction = object.Equals(item.Faction, rhs.Faction);
+            ret.Target = object.Equals(item.Target, rhs.Target);
             ret.Modifier = item.Modifier == rhs.Modifier;
-            ret.GroupCombatReaction = item.GroupCombatReaction == rhs.GroupCombatReaction;
+            ret.Reaction = item.Reaction == rhs.Reaction;
         }
         
         public string ToString(
@@ -1298,17 +1298,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             Relation.Mask<bool>? printMask = null)
         {
-            if (printMask?.Faction ?? true)
+            if (printMask?.Target ?? true)
             {
-                fg.AppendItem(item.Faction, "Faction");
+                fg.AppendItem(item.Target, "Target");
             }
             if (printMask?.Modifier ?? true)
             {
                 fg.AppendItem(item.Modifier, "Modifier");
             }
-            if (printMask?.GroupCombatReaction ?? true)
+            if (printMask?.Reaction ?? true)
             {
-                fg.AppendItem(item.GroupCombatReaction, "GroupCombatReaction");
+                fg.AppendItem(item.Reaction, "Reaction");
             }
         }
         
@@ -1323,9 +1323,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRelationGetter item,
             Relation.Mask<bool> mask)
         {
-            mask.Faction = true;
+            mask.Target = true;
             mask.Modifier = true;
-            mask.GroupCombatReaction = true;
+            mask.Reaction = true;
         }
         
         #region Equals and Hash
@@ -1335,18 +1335,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Faction.Equals(rhs.Faction)) return false;
+            if (!lhs.Target.Equals(rhs.Target)) return false;
             if (lhs.Modifier != rhs.Modifier) return false;
-            if (lhs.GroupCombatReaction != rhs.GroupCombatReaction) return false;
+            if (lhs.Reaction != rhs.Reaction) return false;
             return true;
         }
         
         public virtual int GetHashCode(IRelationGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Faction);
+            hash.Add(item.Target);
             hash.Add(item.Modifier);
-            hash.Add(item.GroupCombatReaction);
+            hash.Add(item.Reaction);
             return hash.ToHashCode();
         }
         
@@ -1361,7 +1361,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<ILinkGetter> GetLinks(IRelationGetter obj)
         {
-            yield return obj.Faction;
+            yield return obj.Target;
             yield break;
         }
         
@@ -1379,17 +1379,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)Relation_FieldIndex.Faction) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Relation_FieldIndex.Target) ?? true))
             {
-                item.Faction.FormKey = rhs.Faction.FormKey;
+                item.Target.FormKey = rhs.Target.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Relation_FieldIndex.Modifier) ?? true))
             {
                 item.Modifier = rhs.Modifier;
             }
-            if ((copyMask?.GetShouldTranslate((int)Relation_FieldIndex.GroupCombatReaction) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Relation_FieldIndex.Reaction) ?? true))
             {
-                item.GroupCombatReaction = rhs.GroupCombatReaction;
+                item.Reaction = rhs.Reaction;
             }
         }
         
@@ -1480,13 +1480,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)Relation_FieldIndex.Faction) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Relation_FieldIndex.Target) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Faction),
-                    item: item.Faction.FormKey,
-                    fieldIndex: (int)Relation_FieldIndex.Faction,
+                    name: nameof(item.Target),
+                    item: item.Target.FormKey,
+                    fieldIndex: (int)Relation_FieldIndex.Target,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)Relation_FieldIndex.Modifier) ?? true))
@@ -1498,13 +1498,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Relation_FieldIndex.Modifier,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)Relation_FieldIndex.GroupCombatReaction) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Relation_FieldIndex.Reaction) ?? true))
             {
-                EnumXmlTranslation<Combat>.Instance.Write(
+                EnumXmlTranslation<CombatReaction>.Instance.Write(
                     node: node,
-                    name: nameof(item.GroupCombatReaction),
-                    item: item.GroupCombatReaction,
-                    fieldIndex: (int)Relation_FieldIndex.GroupCombatReaction,
+                    name: nameof(item.Reaction),
+                    item: item.Reaction,
+                    fieldIndex: (int)Relation_FieldIndex.Reaction,
                     errorMask: errorMask);
             }
         }
@@ -1613,11 +1613,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
-                case "Faction":
-                    errorMask?.PushIndex((int)Relation_FieldIndex.Faction);
+                case "Target":
+                    errorMask?.PushIndex((int)Relation_FieldIndex.Target);
                     try
                     {
-                        item.Faction.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Target.FormKey = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1649,11 +1649,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "GroupCombatReaction":
-                    errorMask?.PushIndex((int)Relation_FieldIndex.GroupCombatReaction);
+                case "Reaction":
+                    errorMask?.PushIndex((int)Relation_FieldIndex.Reaction);
                     try
                     {
-                        item.GroupCombatReaction = EnumXmlTranslation<Combat>.Instance.Parse(
+                        item.Reaction = EnumXmlTranslation<CombatReaction>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1844,11 +1844,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Faction);
+                item: item.Target);
             writer.Write(item.Modifier);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Combat>.Instance.Write(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<CombatReaction>.Instance.Write(
                 writer,
-                item.GroupCombatReaction,
+                item.Reaction,
                 length: 4);
         }
 
@@ -1967,9 +1967,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IFormLinkGetter<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IRelatableGetter> Target => new FormLink<IRelatableGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Int32 Modifier => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
-        public Combat GroupCombatReaction => (Combat)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
+        public CombatReaction Reaction => (CombatReaction)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,

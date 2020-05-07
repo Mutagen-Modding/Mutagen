@@ -103,49 +103,24 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ILightGetter.Name => this.Name;
         #endregion
-        #region LargeIconFilename
+        #region Icons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _LargeIconFilename;
-        public String? LargeIconFilename
+        private Icons? _Icons;
+        public Icons? Icons
         {
-            get => this._LargeIconFilename;
-            set => this._LargeIconFilename = value;
+            get => _Icons;
+            set => _Icons = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ILightGetter.LargeIconFilename => this.LargeIconFilename;
-        #endregion
-        #region SmallIconFilename
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _SmallIconFilename;
-        public String? SmallIconFilename
-        {
-            get => this._SmallIconFilename;
-            set => this._SmallIconFilename = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ILightGetter.SmallIconFilename => this.SmallIconFilename;
+        IIconsGetter? ILightGetter.Icons => this.Icons;
         #endregion
         #region Data
+        public LightData Data { get; set; } = new LightData();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private LightData? _Data;
-        public LightData? Data
-        {
-            get => _Data;
-            set => _Data = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILightDataGetter? ILightGetter.Data => this.Data;
+        ILightDataGetter ILightGetter.Data => Data;
         #endregion
         #region FadeValue
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single? _FadeValue;
-        public Single? FadeValue
-        {
-            get => this._FadeValue;
-            set => this._FadeValue = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? ILightGetter.FadeValue => this.FadeValue;
+        public Single FadeValue { get; set; } = default;
         #endregion
         #region Sound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -329,8 +304,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
                 this.Name = initialValue;
-                this.LargeIconFilename = initialValue;
-                this.SmallIconFilename = initialValue;
+                this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(initialValue, new Icons.Mask<TItem>(initialValue));
                 this.Data = new MaskItem<TItem, LightData.Mask<TItem>?>(initialValue, new LightData.Mask<TItem>(initialValue));
                 this.FadeValue = initialValue;
                 this.Sound = initialValue;
@@ -348,8 +322,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Model,
                 TItem Destructible,
                 TItem Name,
-                TItem LargeIconFilename,
-                TItem SmallIconFilename,
+                TItem Icons,
                 TItem Data,
                 TItem FadeValue,
                 TItem Sound)
@@ -366,8 +339,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
                 this.Name = Name;
-                this.LargeIconFilename = LargeIconFilename;
-                this.SmallIconFilename = SmallIconFilename;
+                this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(Icons, new Icons.Mask<TItem>(Icons));
                 this.Data = new MaskItem<TItem, LightData.Mask<TItem>?>(Data, new LightData.Mask<TItem>(Data));
                 this.FadeValue = FadeValue;
                 this.Sound = Sound;
@@ -387,8 +359,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
             public TItem Name;
-            public TItem LargeIconFilename;
-            public TItem SmallIconFilename;
+            public MaskItem<TItem, Icons.Mask<TItem>?>? Icons { get; set; }
             public MaskItem<TItem, LightData.Mask<TItem>?>? Data { get; set; }
             public TItem FadeValue;
             public TItem Sound;
@@ -410,8 +381,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Model, rhs.Model)) return false;
                 if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
-                if (!object.Equals(this.LargeIconFilename, rhs.LargeIconFilename)) return false;
-                if (!object.Equals(this.SmallIconFilename, rhs.SmallIconFilename)) return false;
+                if (!object.Equals(this.Icons, rhs.Icons)) return false;
                 if (!object.Equals(this.Data, rhs.Data)) return false;
                 if (!object.Equals(this.FadeValue, rhs.FadeValue)) return false;
                 if (!object.Equals(this.Sound, rhs.Sound)) return false;
@@ -425,8 +395,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Model);
                 hash.Add(this.Destructible);
                 hash.Add(this.Name);
-                hash.Add(this.LargeIconFilename);
-                hash.Add(this.SmallIconFilename);
+                hash.Add(this.Icons);
                 hash.Add(this.Data);
                 hash.Add(this.FadeValue);
                 hash.Add(this.Sound);
@@ -461,8 +430,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (this.Destructible.Specific != null && !this.Destructible.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Name)) return false;
-                if (!eval(this.LargeIconFilename)) return false;
-                if (!eval(this.SmallIconFilename)) return false;
+                if (Icons != null)
+                {
+                    if (!eval(this.Icons.Overall)) return false;
+                    if (this.Icons.Specific != null && !this.Icons.Specific.All(eval)) return false;
+                }
                 if (Data != null)
                 {
                     if (!eval(this.Data.Overall)) return false;
@@ -499,8 +471,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (this.Destructible.Specific != null && this.Destructible.Specific.Any(eval)) return true;
                 }
                 if (eval(this.Name)) return true;
-                if (eval(this.LargeIconFilename)) return true;
-                if (eval(this.SmallIconFilename)) return true;
+                if (Icons != null)
+                {
+                    if (eval(this.Icons.Overall)) return true;
+                    if (this.Icons.Specific != null && this.Icons.Specific.Any(eval)) return true;
+                }
                 if (Data != null)
                 {
                     if (eval(this.Data.Overall)) return true;
@@ -528,8 +503,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
                 obj.Name = eval(this.Name);
-                obj.LargeIconFilename = eval(this.LargeIconFilename);
-                obj.SmallIconFilename = eval(this.SmallIconFilename);
+                obj.Icons = this.Icons == null ? null : new MaskItem<R, Icons.Mask<R>?>(eval(this.Icons.Overall), this.Icons.Specific?.Translate(eval));
                 obj.Data = this.Data == null ? null : new MaskItem<R, LightData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
                 obj.FadeValue = eval(this.FadeValue);
                 obj.Sound = eval(this.Sound);
@@ -575,13 +549,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(Name, "Name");
                     }
-                    if (printMask?.LargeIconFilename ?? true)
+                    if (printMask?.Icons?.Overall ?? true)
                     {
-                        fg.AppendItem(LargeIconFilename, "LargeIconFilename");
-                    }
-                    if (printMask?.SmallIconFilename ?? true)
-                    {
-                        fg.AppendItem(SmallIconFilename, "SmallIconFilename");
+                        Icons?.ToString(fg);
                     }
                     if (printMask?.Data?.Overall ?? true)
                     {
@@ -612,8 +582,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
             public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
             public Exception? Name;
-            public Exception? LargeIconFilename;
-            public Exception? SmallIconFilename;
+            public MaskItem<Exception?, Icons.ErrorMask?>? Icons;
             public MaskItem<Exception?, LightData.ErrorMask?>? Data;
             public Exception? FadeValue;
             public Exception? Sound;
@@ -635,10 +604,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Destructible;
                     case Light_FieldIndex.Name:
                         return Name;
-                    case Light_FieldIndex.LargeIconFilename:
-                        return LargeIconFilename;
-                    case Light_FieldIndex.SmallIconFilename:
-                        return SmallIconFilename;
+                    case Light_FieldIndex.Icons:
+                        return Icons;
                     case Light_FieldIndex.Data:
                         return Data;
                     case Light_FieldIndex.FadeValue:
@@ -670,11 +637,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Light_FieldIndex.Name:
                         this.Name = ex;
                         break;
-                    case Light_FieldIndex.LargeIconFilename:
-                        this.LargeIconFilename = ex;
-                        break;
-                    case Light_FieldIndex.SmallIconFilename:
-                        this.SmallIconFilename = ex;
+                    case Light_FieldIndex.Icons:
+                        this.Icons = new MaskItem<Exception?, Icons.ErrorMask?>(ex, null);
                         break;
                     case Light_FieldIndex.Data:
                         this.Data = new MaskItem<Exception?, LightData.ErrorMask?>(ex, null);
@@ -711,11 +675,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Light_FieldIndex.Name:
                         this.Name = (Exception?)obj;
                         break;
-                    case Light_FieldIndex.LargeIconFilename:
-                        this.LargeIconFilename = (Exception?)obj;
-                        break;
-                    case Light_FieldIndex.SmallIconFilename:
-                        this.SmallIconFilename = (Exception?)obj;
+                    case Light_FieldIndex.Icons:
+                        this.Icons = (MaskItem<Exception?, Icons.ErrorMask?>?)obj;
                         break;
                     case Light_FieldIndex.Data:
                         this.Data = (MaskItem<Exception?, LightData.ErrorMask?>?)obj;
@@ -740,8 +701,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Model != null) return true;
                 if (Destructible != null) return true;
                 if (Name != null) return true;
-                if (LargeIconFilename != null) return true;
-                if (SmallIconFilename != null) return true;
+                if (Icons != null) return true;
                 if (Data != null) return true;
                 if (FadeValue != null) return true;
                 if (Sound != null) return true;
@@ -785,8 +745,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Model?.ToString(fg);
                 Destructible?.ToString(fg);
                 fg.AppendItem(Name, "Name");
-                fg.AppendItem(LargeIconFilename, "LargeIconFilename");
-                fg.AppendItem(SmallIconFilename, "SmallIconFilename");
+                Icons?.ToString(fg);
                 Data?.ToString(fg);
                 fg.AppendItem(FadeValue, "FadeValue");
                 fg.AppendItem(Sound, "Sound");
@@ -803,8 +762,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.LargeIconFilename = this.LargeIconFilename.Combine(rhs.LargeIconFilename);
-                ret.SmallIconFilename = this.SmallIconFilename.Combine(rhs.SmallIconFilename);
+                ret.Icons = this.Icons.Combine(rhs.Icons, (l, r) => l.Combine(r));
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 ret.FadeValue = this.FadeValue.Combine(rhs.FadeValue);
                 ret.Sound = this.Sound.Combine(rhs.Sound);
@@ -835,8 +793,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Model.TranslationMask?> Model;
             public MaskItem<bool, Destructible.TranslationMask?> Destructible;
             public bool Name;
-            public bool LargeIconFilename;
-            public bool SmallIconFilename;
+            public MaskItem<bool, Icons.TranslationMask?> Icons;
             public MaskItem<bool, LightData.TranslationMask?> Data;
             public bool FadeValue;
             public bool Sound;
@@ -851,8 +808,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.Destructible = new MaskItem<bool, Destructible.TranslationMask?>(defaultOn, null);
                 this.Name = defaultOn;
-                this.LargeIconFilename = defaultOn;
-                this.SmallIconFilename = defaultOn;
+                this.Icons = new MaskItem<bool, Icons.TranslationMask?>(defaultOn, null);
                 this.Data = new MaskItem<bool, LightData.TranslationMask?>(defaultOn, null);
                 this.FadeValue = defaultOn;
                 this.Sound = defaultOn;
@@ -868,8 +824,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
                 ret.Add((Destructible?.Overall ?? true, Destructible?.Specific?.GetCrystal()));
                 ret.Add((Name, null));
-                ret.Add((LargeIconFilename, null));
-                ret.Add((SmallIconFilename, null));
+                ret.Add((Icons?.Overall ?? true, Icons?.Specific?.GetCrystal()));
                 ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
                 ret.Add((FadeValue, null));
                 ret.Add((Sound, null));
@@ -965,9 +920,10 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         INamed,
         IItem,
-        IIcons,
+        IHasIcons,
         IModeled,
         IObjectBounded,
+        IObjectId,
         ILoquiObjectSetter<ILightInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -975,10 +931,9 @@ namespace Mutagen.Bethesda.Skyrim
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
         new String? Name { get; set; }
-        new String? LargeIconFilename { get; set; }
-        new String? SmallIconFilename { get; set; }
-        new LightData? Data { get; set; }
-        new Single? FadeValue { get; set; }
+        new Icons? Icons { get; set; }
+        new LightData Data { get; set; }
+        new Single FadeValue { get; set; }
         new IFormLinkNullable<SoundDescriptor> Sound { get; }
         #region Mutagen
         new Light.MajorFlag MajorFlags { get; set; }
@@ -997,9 +952,10 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         INamedGetter,
         IItemGetter,
-        IIconsGetter,
+        IHasIconsGetter,
         IModeledGetter,
         IObjectBoundedGetter,
+        IObjectIdGetter,
         ILoquiObject<ILightGetter>,
         IXmlItem,
         ILinkContainer,
@@ -1011,10 +967,9 @@ namespace Mutagen.Bethesda.Skyrim
         IModelGetter? Model { get; }
         IDestructibleGetter? Destructible { get; }
         String? Name { get; }
-        String? LargeIconFilename { get; }
-        String? SmallIconFilename { get; }
-        ILightDataGetter? Data { get; }
-        Single? FadeValue { get; }
+        IIconsGetter? Icons { get; }
+        ILightDataGetter Data { get; }
+        Single FadeValue { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> Sound { get; }
 
         #region Mutagen
@@ -1325,11 +1280,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Model = 8,
         Destructible = 9,
         Name = 10,
-        LargeIconFilename = 11,
-        SmallIconFilename = 12,
-        Data = 13,
-        FadeValue = 14,
-        Sound = 15,
+        Icons = 11,
+        Data = 12,
+        FadeValue = 13,
+        Sound = 14,
     }
     #endregion
 
@@ -1347,9 +1301,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "749a2492-52b8-4580-ac1c-b645cabfd20b";
 
-        public const ushort AdditionalFieldCount = 10;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 16;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(Light.Mask<>);
 
@@ -1389,10 +1343,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Light_FieldIndex.Destructible;
                 case "NAME":
                     return (ushort)Light_FieldIndex.Name;
-                case "LARGEICONFILENAME":
-                    return (ushort)Light_FieldIndex.LargeIconFilename;
-                case "SMALLICONFILENAME":
-                    return (ushort)Light_FieldIndex.SmallIconFilename;
+                case "ICONS":
+                    return (ushort)Light_FieldIndex.Icons;
                 case "DATA":
                     return (ushort)Light_FieldIndex.Data;
                 case "FADEVALUE":
@@ -1414,8 +1366,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Light_FieldIndex.Model:
                 case Light_FieldIndex.Destructible:
                 case Light_FieldIndex.Name:
-                case Light_FieldIndex.LargeIconFilename:
-                case Light_FieldIndex.SmallIconFilename:
+                case Light_FieldIndex.Icons:
                 case Light_FieldIndex.Data:
                 case Light_FieldIndex.FadeValue:
                 case Light_FieldIndex.Sound:
@@ -1434,11 +1385,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Light_FieldIndex.ObjectBounds:
                 case Light_FieldIndex.Model:
                 case Light_FieldIndex.Destructible:
+                case Light_FieldIndex.Icons:
                 case Light_FieldIndex.Data:
                     return true;
                 case Light_FieldIndex.Name:
-                case Light_FieldIndex.LargeIconFilename:
-                case Light_FieldIndex.SmallIconFilename:
                 case Light_FieldIndex.FadeValue:
                 case Light_FieldIndex.Sound:
                     return false;
@@ -1457,8 +1407,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Light_FieldIndex.Model:
                 case Light_FieldIndex.Destructible:
                 case Light_FieldIndex.Name:
-                case Light_FieldIndex.LargeIconFilename:
-                case Light_FieldIndex.SmallIconFilename:
+                case Light_FieldIndex.Icons:
                 case Light_FieldIndex.Data:
                 case Light_FieldIndex.FadeValue:
                 case Light_FieldIndex.Sound:
@@ -1483,10 +1432,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Destructible";
                 case Light_FieldIndex.Name:
                     return "Name";
-                case Light_FieldIndex.LargeIconFilename:
-                    return "LargeIconFilename";
-                case Light_FieldIndex.SmallIconFilename:
-                    return "SmallIconFilename";
+                case Light_FieldIndex.Icons:
+                    return "Icons";
                 case Light_FieldIndex.Data:
                     return "Data";
                 case Light_FieldIndex.FadeValue:
@@ -1508,8 +1455,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Light_FieldIndex.Model:
                 case Light_FieldIndex.Destructible:
                 case Light_FieldIndex.Name:
-                case Light_FieldIndex.LargeIconFilename:
-                case Light_FieldIndex.SmallIconFilename:
+                case Light_FieldIndex.Icons:
                 case Light_FieldIndex.Data:
                 case Light_FieldIndex.FadeValue:
                 case Light_FieldIndex.Sound:
@@ -1529,8 +1475,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Light_FieldIndex.Model:
                 case Light_FieldIndex.Destructible:
                 case Light_FieldIndex.Name:
-                case Light_FieldIndex.LargeIconFilename:
-                case Light_FieldIndex.SmallIconFilename:
+                case Light_FieldIndex.Icons:
                 case Light_FieldIndex.Data:
                 case Light_FieldIndex.FadeValue:
                 case Light_FieldIndex.Sound:
@@ -1555,10 +1500,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Destructible);
                 case Light_FieldIndex.Name:
                     return typeof(String);
-                case Light_FieldIndex.LargeIconFilename:
-                    return typeof(String);
-                case Light_FieldIndex.SmallIconFilename:
-                    return typeof(String);
+                case Light_FieldIndex.Icons:
+                    return typeof(Icons);
                 case Light_FieldIndex.Data:
                     return typeof(LightData);
                 case Light_FieldIndex.FadeValue:
@@ -1580,13 +1523,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType DMDL_HEADER = new RecordType("DMDL");
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
-        public static readonly RecordType MICO_HEADER = new RecordType("MICO");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
         public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
         public static readonly RecordType TriggeringRecordType = LIGH_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 10;
+        public const int NumTypedFields = 9;
         public static readonly Type BinaryWriteTranslation = typeof(LightBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1634,9 +1576,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Model = null;
             item.Destructible = null;
             item.Name = default;
-            item.LargeIconFilename = default;
-            item.SmallIconFilename = default;
-            item.Data = null;
+            item.Icons = null;
+            item.Data.Clear();
             item.FadeValue = default;
             item.Sound.FormKey = null;
             base.Clear(item);
@@ -1789,19 +1730,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4E4F4349: // ICON
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.LargeIconFilename = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Light_FieldIndex.LargeIconFilename);
-                }
-                case 0x4F43494D: // MICO
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.SmallIconFilename = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Light_FieldIndex.SmallIconFilename);
+                    item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)Light_FieldIndex.Icons);
                 }
                 case 0x41544144: // DATA
                 {
@@ -1913,13 +1845,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Name = string.Equals(item.Name, rhs.Name);
-            ret.LargeIconFilename = string.Equals(item.LargeIconFilename, rhs.LargeIconFilename);
-            ret.SmallIconFilename = string.Equals(item.SmallIconFilename, rhs.SmallIconFilename);
-            ret.Data = EqualsMaskHelper.EqualsHelper(
-                item.Data,
-                rhs.Data,
+            ret.Icons = EqualsMaskHelper.EqualsHelper(
+                item.Icons,
+                rhs.Icons,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
+            ret.Data = MaskItemExt.Factory(item.Data.GetEqualsMask(rhs.Data, include), include);
             ret.FadeValue = item.FadeValue.EqualsWithin(rhs.FadeValue);
             ret.Sound = object.Equals(item.Sound, rhs.Sound);
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1997,25 +1928,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(NameItem, "Name");
             }
-            if ((printMask?.LargeIconFilename ?? true)
-                && item.LargeIconFilename.TryGet(out var LargeIconFilenameItem))
+            if ((printMask?.Icons?.Overall ?? true)
+                && item.Icons.TryGet(out var IconsItem))
             {
-                fg.AppendItem(LargeIconFilenameItem, "LargeIconFilename");
+                IconsItem?.ToString(fg, "Icons");
             }
-            if ((printMask?.SmallIconFilename ?? true)
-                && item.SmallIconFilename.TryGet(out var SmallIconFilenameItem))
+            if (printMask?.Data?.Overall ?? true)
             {
-                fg.AppendItem(SmallIconFilenameItem, "SmallIconFilename");
+                item.Data?.ToString(fg, "Data");
             }
-            if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+            if (printMask?.FadeValue ?? true)
             {
-                DataItem?.ToString(fg, "Data");
-            }
-            if ((printMask?.FadeValue ?? true)
-                && item.FadeValue.TryGet(out var FadeValueItem))
-            {
-                fg.AppendItem(FadeValueItem, "FadeValue");
+                fg.AppendItem(item.FadeValue, "FadeValue");
             }
             if ((printMask?.Sound ?? true)
                 && item.Sound.TryGet(out var SoundItem))
@@ -2035,11 +1959,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.Destructible?.Overall.HasValue ?? false && checkMask.Destructible.Overall.Value != (item.Destructible != null)) return false;
             if (checkMask.Destructible?.Specific != null && (item.Destructible == null || !item.Destructible.HasBeenSet(checkMask.Destructible.Specific))) return false;
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.LargeIconFilename.HasValue && checkMask.LargeIconFilename.Value != (item.LargeIconFilename != null)) return false;
-            if (checkMask.SmallIconFilename.HasValue && checkMask.SmallIconFilename.Value != (item.SmallIconFilename != null)) return false;
-            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
-            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
-            if (checkMask.FadeValue.HasValue && checkMask.FadeValue.Value != (item.FadeValue != null)) return false;
+            if (checkMask.Icons?.Overall.HasValue ?? false && checkMask.Icons.Overall.Value != (item.Icons != null)) return false;
+            if (checkMask.Icons?.Specific != null && (item.Icons == null || !item.Icons.HasBeenSet(checkMask.Icons.Specific))) return false;
             if (checkMask.Sound.HasValue && checkMask.Sound.Value != (item.Sound.FormKey != null)) return false;
             return base.HasBeenSet(
                 item: item,
@@ -2058,11 +1979,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var itemDestructible = item.Destructible;
             mask.Destructible = new MaskItem<bool, Destructible.Mask<bool>?>(itemDestructible != null, itemDestructible?.GetHasBeenSetMask());
             mask.Name = (item.Name != null);
-            mask.LargeIconFilename = (item.LargeIconFilename != null);
-            mask.SmallIconFilename = (item.SmallIconFilename != null);
-            var itemData = item.Data;
-            mask.Data = new MaskItem<bool, LightData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
-            mask.FadeValue = (item.FadeValue != null);
+            var itemIcons = item.Icons;
+            mask.Icons = new MaskItem<bool, Icons.Mask<bool>?>(itemIcons != null, itemIcons?.GetHasBeenSetMask());
+            mask.Data = new MaskItem<bool, LightData.Mask<bool>?>(true, item.Data?.GetHasBeenSetMask());
+            mask.FadeValue = true;
             mask.Sound = (item.Sound.FormKey != null);
             base.FillHasBeenSetMask(
                 item: item,
@@ -2120,8 +2040,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!string.Equals(lhs.LargeIconFilename, rhs.LargeIconFilename)) return false;
-            if (!string.Equals(lhs.SmallIconFilename, rhs.SmallIconFilename)) return false;
+            if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
             if (!object.Equals(lhs.Data, rhs.Data)) return false;
             if (!lhs.FadeValue.EqualsWithin(rhs.FadeValue)) return false;
             if (!lhs.Sound.Equals(rhs.Sound)) return false;
@@ -2166,22 +2085,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Nameitem);
             }
-            if (item.LargeIconFilename.TryGet(out var LargeIconFilenameitem))
+            if (item.Icons.TryGet(out var Iconsitem))
             {
-                hash.Add(LargeIconFilenameitem);
+                hash.Add(Iconsitem);
             }
-            if (item.SmallIconFilename.TryGet(out var SmallIconFilenameitem))
-            {
-                hash.Add(SmallIconFilenameitem);
-            }
-            if (item.Data.TryGet(out var Dataitem))
-            {
-                hash.Add(Dataitem);
-            }
-            if (item.FadeValue.TryGet(out var FadeValueitem))
-            {
-                hash.Add(FadeValueitem);
-            }
+            hash.Add(item.Data);
+            hash.Add(item.FadeValue);
             if (item.Sound.TryGet(out var Sounditem))
             {
                 hash.Add(Sounditem);
@@ -2387,28 +2296,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Name = rhs.Name;
             }
-            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.LargeIconFilename) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Icons) ?? true))
             {
-                item.LargeIconFilename = rhs.LargeIconFilename;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.SmallIconFilename) ?? true))
-            {
-                item.SmallIconFilename = rhs.SmallIconFilename;
+                errorMask?.PushIndex((int)Light_FieldIndex.Icons);
+                try
+                {
+                    if(rhs.Icons.TryGet(out var rhsIcons))
+                    {
+                        item.Icons = rhsIcons.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Light_FieldIndex.Icons));
+                    }
+                    else
+                    {
+                        item.Icons = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Data) ?? true))
             {
                 errorMask?.PushIndex((int)Light_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Data) ?? true))
                     {
-                        item.Data = rhsData.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Light_FieldIndex.Data));
-                    }
-                    else
-                    {
-                        item.Data = default;
+                        item.Data = rhs.Data.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Light_FieldIndex.Data),
+                            errorMask: errorMask);
                     }
                 }
                 catch (Exception ex)
@@ -2634,47 +2557,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Light_FieldIndex.Name,
                     errorMask: errorMask);
             }
-            if ((item.LargeIconFilename != null)
-                && (translationMask?.GetShouldTranslate((int)Light_FieldIndex.LargeIconFilename) ?? true))
+            if ((item.Icons != null)
+                && (translationMask?.GetShouldTranslate((int)Light_FieldIndex.Icons) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LargeIconFilename),
-                    item: item.LargeIconFilename,
-                    fieldIndex: (int)Light_FieldIndex.LargeIconFilename,
-                    errorMask: errorMask);
-            }
-            if ((item.SmallIconFilename != null)
-                && (translationMask?.GetShouldTranslate((int)Light_FieldIndex.SmallIconFilename) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SmallIconFilename),
-                    item: item.SmallIconFilename,
-                    fieldIndex: (int)Light_FieldIndex.SmallIconFilename,
-                    errorMask: errorMask);
-            }
-            if ((item.Data != null)
-                && (translationMask?.GetShouldTranslate((int)Light_FieldIndex.Data) ?? true))
-            {
-                if (item.Data.TryGet(out var DataItem))
+                if (item.Icons.TryGet(out var IconsItem))
                 {
-                    ((LightDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
-                        item: DataItem,
+                    ((IconsXmlWriteTranslation)((IXmlItem)IconsItem).XmlWriteTranslator).Write(
+                        item: IconsItem,
                         node: node,
-                        name: nameof(item.Data),
-                        fieldIndex: (int)Light_FieldIndex.Data,
+                        name: nameof(item.Icons),
+                        fieldIndex: (int)Light_FieldIndex.Icons,
                         errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Light_FieldIndex.Data));
+                        translationMask: translationMask?.GetSubCrystal((int)Light_FieldIndex.Icons));
                 }
             }
-            if ((item.FadeValue != null)
-                && (translationMask?.GetShouldTranslate((int)Light_FieldIndex.FadeValue) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Data) ?? true))
+            {
+                var DataItem = item.Data;
+                ((LightDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                    item: DataItem,
+                    node: node,
+                    name: nameof(item.Data),
+                    fieldIndex: (int)Light_FieldIndex.Data,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Light_FieldIndex.Data));
+            }
+            if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.FadeValue) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.FadeValue),
-                    item: item.FadeValue.Value,
+                    item: item.FadeValue,
                     fieldIndex: (int)Light_FieldIndex.FadeValue,
                     errorMask: errorMask);
             }
@@ -2889,31 +2802,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "LargeIconFilename":
-                    errorMask?.PushIndex((int)Light_FieldIndex.LargeIconFilename);
+                case "Icons":
+                    errorMask?.PushIndex((int)Light_FieldIndex.Icons);
                     try
                     {
-                        item.LargeIconFilename = StringXmlTranslation.Instance.Parse(
+                        item.Icons = LoquiXmlTranslation<Icons>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SmallIconFilename":
-                    errorMask?.PushIndex((int)Light_FieldIndex.SmallIconFilename);
-                    try
-                    {
-                        item.SmallIconFilename = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Light_FieldIndex.Icons));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3106,24 +3002,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(Light_Registration.FULL_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.LargeIconFilename,
-                header: recordTypeConverter.ConvertToCustom(Light_Registration.ICON_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.SmallIconFilename,
-                header: recordTypeConverter.ConvertToCustom(Light_Registration.MICO_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
-            if (item.Data.TryGet(out var DataItem))
+            if (item.Icons.TryGet(out var IconsItem))
             {
-                ((LightDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
-                    item: DataItem,
+                ((IconsBinaryWriteTranslation)((IBinaryItem)IconsItem).BinaryWriteTranslator).Write(
+                    item: IconsItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+            var DataItem = item.Data;
+            ((LightDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                item: DataItem,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FadeValue,
                 header: recordTypeConverter.ConvertToCustom(Light_Registration.FNAM_HEADER));
@@ -3271,22 +3162,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
         #endregion
-        #region LargeIconFilename
-        private int? _LargeIconFilenameLocation;
-        public String? LargeIconFilename => _LargeIconFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _LargeIconFilenameLocation.Value, _package.Meta)) : default(string?);
-        #endregion
-        #region SmallIconFilename
-        private int? _SmallIconFilenameLocation;
-        public String? SmallIconFilename => _SmallIconFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SmallIconFilenameLocation.Value, _package.Meta)) : default(string?);
-        #endregion
+        public IIconsGetter? Icons { get; private set; }
         #region Data
         private RangeInt32? _DataLocation;
-        public ILightDataGetter? Data => _DataLocation.HasValue ? LightDataBinaryOverlay.LightDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
-        public bool Data_IsSet => _DataLocation.HasValue;
+        public ILightDataGetter? _Data => _DataLocation.HasValue ? LightDataBinaryOverlay.LightDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ILightDataGetter Data => _Data ?? new LightData();
         #endregion
         #region FadeValue
         private int? _FadeValueLocation;
-        public Single? FadeValue => _FadeValueLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _FadeValueLocation.Value, _package.Meta)) : default(Single?);
+        public Single FadeValue => _FadeValueLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _FadeValueLocation.Value, _package.Meta)) : default;
         #endregion
         #region Sound
         private int? _SoundLocation;
@@ -3389,13 +3273,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4E4F4349: // ICON
                 {
-                    _LargeIconFilenameLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Light_FieldIndex.LargeIconFilename);
-                }
-                case 0x4F43494D: // MICO
-                {
-                    _SmallIconFilenameLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Light_FieldIndex.SmallIconFilename);
+                    this.Icons = IconsBinaryOverlay.IconsFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)Light_FieldIndex.Icons);
                 }
                 case 0x41544144: // DATA
                 {

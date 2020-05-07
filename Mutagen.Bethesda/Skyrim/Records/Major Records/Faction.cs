@@ -24,19 +24,19 @@ namespace Mutagen.Bethesda.Skyrim
         [Flags]
         public enum FactionFlag
         {
-            HiddenFromPC = 0x00001,
-            SpecialCombat = 0x00002,
-            TrackCrime = 0x00040,
-            IgnoreMurder = 0x00080,
-            IgnoreAssault = 0x00100,
-            IgnoreStealing = 0x00200,
-            IgnoreTrespass = 0x00400,
-            DoNotReportCrimesAgainstMembers = 0x00800,
-            CrimeGoldUseDefaults = 0x01000,
-            IgnorePickpocket = 0x02000,
-            Vendor = 0x04000,
-            CanBeOwner = 0x08000,
-            IgnoreWerewolf = 0x10000,
+            HiddenFromPC = 0x0_0001,
+            SpecialCombat = 0x0_0002,
+            TrackCrime = 0x0_0040,
+            IgnoreMurder = 0x0_0080,
+            IgnoreAssault = 0x0_0100,
+            IgnoreStealing = 0x0_0200,
+            IgnoreTrespass = 0x0_0400,
+            DoNotReportCrimesAgainstMembers = 0x0_0800,
+            CrimeGoldUseDefaults = 0x0_1000,
+            IgnorePickpocket = 0x0_2000,
+            Vendor = 0x0_4000,
+            CanBeOwner = 0x0_8000,
+            IgnoreWerewolf = 0x1_0000,
         }
     }
 

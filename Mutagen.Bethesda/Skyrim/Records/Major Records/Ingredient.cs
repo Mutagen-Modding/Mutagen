@@ -20,6 +20,8 @@ namespace Mutagen.Bethesda.Skyrim
         IModelGetter? IModeledGetter.Model => this.Model;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IIconsGetter? IHasIconsGetter.Icons => this.Icons;
         #endregion
     }
 

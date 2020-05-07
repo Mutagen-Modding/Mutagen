@@ -3,10 +3,11 @@
   <Object name="Static" recordType="STAT" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true" GUID="89036057-4570-493d-a5f7-4c5718f67a06" ID="105">
     <Interface>IModeled</Interface>
     <Interface>IObjectBounded</Interface>
+    <Interface>IObjectId</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
       <RefDirect name="Model" refName="Model" />
-      <RefDirect name="DirectionMaterial" refName="DirectionMaterial" />
+      <RefDirect name="DirectionMaterial" refName="DirectionMaterial" hasBeenSet="False" />
       <RefDirect name="Lod" refName="Lod" />
     </Fields>
   </Object>

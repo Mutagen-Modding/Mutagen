@@ -1053,6 +1053,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType ARTO_HEADER = new RecordType("ARTO");
         public static readonly RecordType BPTD_HEADER = new RecordType("BPTD");
         public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
+        public static readonly RecordType CELL_HEADER = new RecordType("CELL");
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
         public static readonly RecordType CLFM_HEADER = new RecordType("CLFM");
         public static readonly RecordType CSTY_HEADER = new RecordType("CSTY");
@@ -1074,6 +1075,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
         public static readonly RecordType HAZD_HEADER = new RecordType("HAZD");
         public static readonly RecordType HDPT_HEADER = new RecordType("HDPT");
+        public static readonly RecordType IDLM_HEADER = new RecordType("IDLM");
         public static readonly RecordType IMAD_HEADER = new RecordType("IMAD");
         public static readonly RecordType IPDS_HEADER = new RecordType("IPDS");
         public static readonly RecordType ALCH_HEADER = new RecordType("ALCH");
@@ -1094,6 +1096,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType OTFT_HEADER = new RecordType("OTFT");
         public static readonly RecordType PACK_HEADER = new RecordType("PACK");
         public static readonly RecordType PERK_HEADER = new RecordType("PERK");
+        public static readonly RecordType ACHR_HEADER = new RecordType("ACHR");
         public static readonly RecordType REFR_HEADER = new RecordType("REFR");
         public static readonly RecordType PROJ_HEADER = new RecordType("PROJ");
         public static readonly RecordType RACE_HEADER = new RecordType("RACE");
@@ -1131,6 +1134,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         ARTO_HEADER,
                         BPTD_HEADER,
                         BOOK_HEADER,
+                        CELL_HEADER,
                         CLAS_HEADER,
                         CLFM_HEADER,
                         CSTY_HEADER,
@@ -1152,6 +1156,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         HAIR_HEADER,
                         HAZD_HEADER,
                         HDPT_HEADER,
+                        IDLM_HEADER,
                         IMAD_HEADER,
                         IPDS_HEADER,
                         ALCH_HEADER,
@@ -1172,6 +1177,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         OTFT_HEADER,
                         PACK_HEADER,
                         PERK_HEADER,
+                        ACHR_HEADER,
                         REFR_HEADER,
                         PROJ_HEADER,
                         RACE_HEADER,

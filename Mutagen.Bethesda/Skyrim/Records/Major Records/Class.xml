@@ -4,9 +4,9 @@
     <Interface>INamedRequired</Interface>
     <Fields>
       <String name="Name" recordType="FULL" hasBeenSet="False" />
-      <String name="Description" recordType="DESC" />
+      <String name="Description" recordType="DESC" hasBeenSet="False" />
       <String name="Icon" recordType="ICON" />
-      <RefDirect name="Data" refName="ClassData" />
+      <RefDirect name="Data" refName="ClassData" hasBeenSet="False" />
     </Fields>
   </Object>
   <Object name="ClassData" objType="Subrecord" recordType="DATA" GUID="34be387d-c309-4620-be5f-49b0e7037fc4" ID="133">
@@ -14,29 +14,24 @@
       <Int32 name="Unknown" />
       <Enum name="Teaches" byteLength="1" enumName="Skill" hasBeenSet="True" hasBeenSetBinaryFallback="-1" />
       <UInt8 name="MaxTrainingLevel" />
-      <UInt8 name="OneHandedWeight" />
-      <UInt8 name="TwoHandedWeight" />
-      <UInt8 name="MarksmanWeight" />
-      <UInt8 name="BlockWeight" />
-      <UInt8 name="SmithingWeight" />
-      <UInt8 name="HeavyArmorWeight" />
-      <UInt8 name="LightArmorWeight" />
-      <UInt8 name="PickpocketWeight" />
-      <UInt8 name="LockpickingWeight" />
-      <UInt8 name="SneakWeight" />
-      <UInt8 name="AlchemyWeight" />
-      <UInt8 name="SpeechcraftWeight" />
-      <UInt8 name="AlterationWeight" />
-      <UInt8 name="ConjurationWeight" />
-      <UInt8 name="DestructionWeight" />
-      <UInt8 name="IllusionWeight" />
-      <UInt8 name="RestorationWeight" />
-      <UInt8 name="EnchantingWeight" />
+      <Dict name="SkillWeights" numEnumKeys="18" >
+        <Key>
+          <Enum enumName="Skill" />
+        </Key>
+        <Value>
+          <UInt8 />
+        </Value>
+      </Dict>
       <Float name="BleedoutDefault" />
       <UInt32 name="VoicePoints" />
-      <UInt8 name="HealthWeight" />
-      <UInt8 name="MagickaWeight" />
-      <UInt8 name="StaminaWeight" />
+      <Dict name="StatWeights" numEnumKeys="3" >
+        <Key>
+          <Enum enumName="BasicStat" />
+        </Key>
+        <Value>
+          <UInt8 />
+        </Value>
+      </Dict>
       <UInt8 name="Unknown2" />
     </Fields>
   </Object>

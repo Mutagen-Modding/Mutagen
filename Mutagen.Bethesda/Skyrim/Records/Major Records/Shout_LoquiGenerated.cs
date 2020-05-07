@@ -517,6 +517,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IShout :
         IShoutGetter,
         IASpell,
+        IObjectId,
         ILoquiObjectSetter<IShoutInternal>
     {
     }
@@ -530,6 +531,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IShoutGetter :
         IASpellGetter,
+        IObjectIdGetter,
         ILoquiObject<IShoutGetter>,
         IXmlItem,
         IBinaryItem

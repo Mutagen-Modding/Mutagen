@@ -228,5 +228,11 @@ namespace Mutagen.Bethesda.Generation
         {
             return $"new {this.DirectTypeName(getter: false, internalInterface: true)}({accessor}.{FormIDTypeString})";
         }
+
+        public override string GetDefault(bool getter)
+        {
+            if (this.HasBeenSet) return "default";
+            return $"new FormLink<{LoquiType.TypeName(getter, internalInterface: true)}>(FormKey.Null)";
+        }
     }
 }

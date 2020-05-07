@@ -4,14 +4,15 @@
     <Interface>INamed</Interface>
     <Interface>IModeled</Interface>
     <Interface>IObjectBounded</Interface>
+    <Interface>IObjectId</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
       <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
       <RefList name="Items" counterRecType="COCT" refName="ContainerEntry" />
-      <RefDirect name="Data" refName="ContainerData" />
       <RefDirect name="Destructible" refName="Destructible" />
+      <RefDirect name="Data" refName="ContainerData" hasBeenSet="False" />
       <FormLink name="OpenSound" refName="SoundDescriptor" recordType="SNAM" />
       <FormLink name="CloseSound" refName="SoundDescriptor" recordType="QNAM" />
     </Fields>

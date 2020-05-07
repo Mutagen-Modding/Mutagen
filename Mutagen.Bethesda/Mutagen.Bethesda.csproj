@@ -57,17 +57,22 @@
     </Compile>
     <Compile Include="Skyrim\Enums\Agression.cs" />
     <Compile Include="Skyrim\Enums\Assistance.cs" />
+    <Compile Include="Skyrim\Enums\BasicStat.cs" />
     <Compile Include="Skyrim\Enums\Confidence.cs" />
     <Compile Include="Skyrim\Enums\Mood.cs" />
+    <Compile Include="Skyrim\Enums\ObjectType.cs" />
     <Compile Include="Skyrim\Enums\Responsibility.cs" />
     <Compile Include="Skyrim\Enums\WeaponAnimationType.cs" />
     <Compile Include="Skyrim\Interfaces\IHarvestable.cs" />
+    <Compile Include="Skyrim\Interfaces\IHasIcons.cs" />
+    <Compile Include="Skyrim\Interfaces\ILocationReferencable.cs" />
     <Compile Include="Skyrim\Interfaces\IModeled.cs" />
-    <Compile Include="Skyrim\Interfaces\IIcons.cs" />
     <Compile Include="Skyrim\Interfaces\IItem.cs" />
     <Compile Include="Skyrim\Interfaces\IEffectRecord.cs" />
     <Compile Include="Skyrim\Interfaces\IObjectBounded.cs" />
     <Compile Include="Skyrim\Interfaces\IHarvestTarget.cs" />
+    <Compile Include="Skyrim\Interfaces\IObjectId.cs" />
+    <Compile Include="Skyrim\Interfaces\IRelatable.cs" />
     <Compile Include="Skyrim\Records\Common Subrecords\DestructionStageData.cs">
       <DependentUpon>Destructible.xml</DependentUpon>
     </Compile>
@@ -79,6 +84,9 @@
     </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\ExtraData.cs">
       <DependentUpon>ExtraData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\Location.cs">
+      <DependentUpon>Location.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\AcousticSpace.cs">
       <DependentUpon>AcousticSpace.xml</DependentUpon>
@@ -900,10 +908,9 @@
     <Compile Include="Skyrim\Enums\ActorValueExtended.cs" />
     <Compile Include="Skyrim\Enums\ArmorType.cs" />
     <Compile Include="Skyrim\Enums\BipedObject.cs" />
-    <Compile Include="Skyrim\Enums\Combat.cs" />
+    <Compile Include="Skyrim\Enums\CombatReaction.cs" />
     <Compile Include="Skyrim\Enums\EquipType.cs" />
     <Compile Include="Skyrim\Enums\Skill.cs" />
-    <Compile Include="Skyrim\Enums\VendorLocation.cs" />
     <Compile Include="Skyrim\Records\Common Subrecords\AlternateTexture_LoquiGenerated.cs">
       <DependentUpon>Model.xml</DependentUpon>
     </Compile>
@@ -1210,9 +1217,6 @@
     <Compile Include="Skyrim\Records\Major Records\TintPreset_LoquiGenerated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\VendorLocation_LoquiGenerated.cs">
-      <DependentUpon>Faction.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Major Records\VendorValues_LoquiGenerated.cs">
       <DependentUpon>Faction.xml</DependentUpon>
     </Compile>
@@ -1393,11 +1397,8 @@
     <Compile Include="Skyrim\Records\Major Records\Grass_LoquiGenerated.cs">
       <DependentUpon>Grass.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\LandTexture_LoquiGenerated.cs">
-      <DependentUpon>LandTexture.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Major Records\HavokData_LoquiGenerated.cs">
-      <DependentUpon>LandTexture.xml</DependentUpon>
+      <DependentUpon>LandscapeTexture.xml</DependentUpon>
     </Compile>
     <Compile Include="Oblivion\Records\Major Records\ClothingFlags_LoquiGenerated.cs">
       <DependentUpon>AClothing.xml</DependentUpon>
@@ -1824,6 +1825,48 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\ANpcSpawn_LoquiGenerated.cs">
       <DependentUpon>ANpcSpawn.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\PlacedNpc_LoquiGenerated.cs">
+      <DependentUpon>PlacedNpc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Cell_LoquiGenerated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\IdleMarker_LoquiGenerated.cs">
+      <DependentUpon>IdleMarker.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\Location_LoquiGenerated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ALocationTarget_LoquiGenerated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\LocationCell_LoquiGenerated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\LocationObjectId_LoquiGenerated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\LocationObjectType_LoquiGenerated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\LocationKeyword_LoquiGenerated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\LocationFallback_LoquiGenerated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\LocationReference_LoquiGenerated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\LandscapeTexture_LoquiGenerated.cs">
+      <DependentUpon>LandscapeTexture.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\Icons_LoquiGenerated.cs">
+      <DependentUpon>Icons.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\MountData_LoquiGenerated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

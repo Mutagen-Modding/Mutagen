@@ -57,27 +57,16 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IArmorModelGetter.Model => this.Model;
         #endregion
-        #region LargeIconFilename
+        #region Icons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _LargeIconFilename;
-        public String? LargeIconFilename
+        private Icons? _Icons;
+        public Icons? Icons
         {
-            get => this._LargeIconFilename;
-            set => this._LargeIconFilename = value;
+            get => _Icons;
+            set => _Icons = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IArmorModelGetter.LargeIconFilename => this.LargeIconFilename;
-        #endregion
-        #region SmallIconFilename
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _SmallIconFilename;
-        public String? SmallIconFilename
-        {
-            get => this._SmallIconFilename;
-            set => this._SmallIconFilename = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IArmorModelGetter.SmallIconFilename => this.SmallIconFilename;
+        IIconsGetter? IArmorModelGetter.Icons => this.Icons;
         #endregion
 
         #region To String
@@ -250,18 +239,15 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             {
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.LargeIconFilename = initialValue;
-                this.SmallIconFilename = initialValue;
+                this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(initialValue, new Icons.Mask<TItem>(initialValue));
             }
 
             public Mask(
                 TItem Model,
-                TItem LargeIconFilename,
-                TItem SmallIconFilename)
+                TItem Icons)
             {
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.LargeIconFilename = LargeIconFilename;
-                this.SmallIconFilename = SmallIconFilename;
+                this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(Icons, new Icons.Mask<TItem>(Icons));
             }
 
             #pragma warning disable CS8618
@@ -274,8 +260,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             #region Members
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
-            public TItem LargeIconFilename;
-            public TItem SmallIconFilename;
+            public MaskItem<TItem, Icons.Mask<TItem>?>? Icons { get; set; }
             #endregion
 
             #region Equals
@@ -289,16 +274,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
-                if (!object.Equals(this.LargeIconFilename, rhs.LargeIconFilename)) return false;
-                if (!object.Equals(this.SmallIconFilename, rhs.SmallIconFilename)) return false;
+                if (!object.Equals(this.Icons, rhs.Icons)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Model);
-                hash.Add(this.LargeIconFilename);
-                hash.Add(this.SmallIconFilename);
+                hash.Add(this.Icons);
                 return hash.ToHashCode();
             }
 
@@ -312,8 +295,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Model.Overall)) return false;
                     if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
-                if (!eval(this.LargeIconFilename)) return false;
-                if (!eval(this.SmallIconFilename)) return false;
+                if (Icons != null)
+                {
+                    if (!eval(this.Icons.Overall)) return false;
+                    if (this.Icons.Specific != null && !this.Icons.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -326,8 +312,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Model.Overall)) return true;
                     if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
                 }
-                if (eval(this.LargeIconFilename)) return true;
-                if (eval(this.SmallIconFilename)) return true;
+                if (Icons != null)
+                {
+                    if (eval(this.Icons.Overall)) return true;
+                    if (this.Icons.Specific != null && this.Icons.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -343,8 +332,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-                obj.LargeIconFilename = eval(this.LargeIconFilename);
-                obj.SmallIconFilename = eval(this.SmallIconFilename);
+                obj.Icons = this.Icons == null ? null : new MaskItem<R, Icons.Mask<R>?>(eval(this.Icons.Overall), this.Icons.Specific?.Translate(eval));
             }
             #endregion
 
@@ -371,13 +359,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Model?.ToString(fg);
                     }
-                    if (printMask?.LargeIconFilename ?? true)
+                    if (printMask?.Icons?.Overall ?? true)
                     {
-                        fg.AppendItem(LargeIconFilename, "LargeIconFilename");
-                    }
-                    if (printMask?.SmallIconFilename ?? true)
-                    {
-                        fg.AppendItem(SmallIconFilename, "SmallIconFilename");
+                        Icons?.ToString(fg);
                     }
                 }
                 fg.AppendLine("]");
@@ -405,8 +389,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
-            public Exception? LargeIconFilename;
-            public Exception? SmallIconFilename;
+            public MaskItem<Exception?, Icons.ErrorMask?>? Icons;
             #endregion
 
             #region IErrorMask
@@ -417,10 +400,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     case ArmorModel_FieldIndex.Model:
                         return Model;
-                    case ArmorModel_FieldIndex.LargeIconFilename:
-                        return LargeIconFilename;
-                    case ArmorModel_FieldIndex.SmallIconFilename:
-                        return SmallIconFilename;
+                    case ArmorModel_FieldIndex.Icons:
+                        return Icons;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -434,11 +415,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case ArmorModel_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
-                    case ArmorModel_FieldIndex.LargeIconFilename:
-                        this.LargeIconFilename = ex;
-                        break;
-                    case ArmorModel_FieldIndex.SmallIconFilename:
-                        this.SmallIconFilename = ex;
+                    case ArmorModel_FieldIndex.Icons:
+                        this.Icons = new MaskItem<Exception?, Icons.ErrorMask?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -453,11 +431,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case ArmorModel_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
-                    case ArmorModel_FieldIndex.LargeIconFilename:
-                        this.LargeIconFilename = (Exception?)obj;
-                        break;
-                    case ArmorModel_FieldIndex.SmallIconFilename:
-                        this.SmallIconFilename = (Exception?)obj;
+                    case ArmorModel_FieldIndex.Icons:
+                        this.Icons = (MaskItem<Exception?, Icons.ErrorMask?>?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -468,8 +443,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (Overall != null) return true;
                 if (Model != null) return true;
-                if (LargeIconFilename != null) return true;
-                if (SmallIconFilename != null) return true;
+                if (Icons != null) return true;
                 return false;
             }
             #endregion
@@ -505,8 +479,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 Model?.ToString(fg);
-                fg.AppendItem(LargeIconFilename, "LargeIconFilename");
-                fg.AppendItem(SmallIconFilename, "SmallIconFilename");
+                Icons?.ToString(fg);
             }
             #endregion
 
@@ -516,8 +489,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.LargeIconFilename = this.LargeIconFilename.Combine(rhs.LargeIconFilename);
-                ret.SmallIconFilename = this.SmallIconFilename.Combine(rhs.SmallIconFilename);
+                ret.Icons = this.Icons.Combine(rhs.Icons, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -540,16 +512,14 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             private TranslationCrystal? _crystal;
             public MaskItem<bool, Model.TranslationMask?> Model;
-            public bool LargeIconFilename;
-            public bool SmallIconFilename;
+            public MaskItem<bool, Icons.TranslationMask?> Icons;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
                 this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
-                this.LargeIconFilename = defaultOn;
-                this.SmallIconFilename = defaultOn;
+                this.Icons = new MaskItem<bool, Icons.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -566,8 +536,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-                ret.Add((LargeIconFilename, null));
-                ret.Add((SmallIconFilename, null));
+                ret.Add((Icons?.Overall ?? true, Icons?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -636,18 +605,17 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IArmorModel :
         IArmorModelGetter,
-        IIcons,
+        IHasIcons,
         IModeled,
         ILoquiObjectSetter<IArmorModel>
     {
         new Model? Model { get; set; }
-        new String? LargeIconFilename { get; set; }
-        new String? SmallIconFilename { get; set; }
+        new Icons? Icons { get; set; }
     }
 
     public partial interface IArmorModelGetter :
         ILoquiObject,
-        IIconsGetter,
+        IHasIconsGetter,
         IModeledGetter,
         ILoquiObject<IArmorModelGetter>,
         IXmlItem,
@@ -662,8 +630,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ArmorModel_Registration.Instance;
         IModelGetter? Model { get; }
-        String? LargeIconFilename { get; }
-        String? SmallIconFilename { get; }
+        IIconsGetter? Icons { get; }
 
     }
 
@@ -982,8 +949,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public enum ArmorModel_FieldIndex
     {
         Model = 0,
-        LargeIconFilename = 1,
-        SmallIconFilename = 2,
+        Icons = 1,
     }
     #endregion
 
@@ -1001,9 +967,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "39a3a83f-68bd-473a-aa14-10efdb07031b";
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 2;
 
         public static readonly Type MaskType = typeof(ArmorModel.Mask<>);
 
@@ -1035,10 +1001,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case "MODEL":
                     return (ushort)ArmorModel_FieldIndex.Model;
-                case "LARGEICONFILENAME":
-                    return (ushort)ArmorModel_FieldIndex.LargeIconFilename;
-                case "SMALLICONFILENAME":
-                    return (ushort)ArmorModel_FieldIndex.SmallIconFilename;
+                case "ICONS":
+                    return (ushort)ArmorModel_FieldIndex.Icons;
                 default:
                     return null;
             }
@@ -1050,8 +1014,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case ArmorModel_FieldIndex.Model:
-                case ArmorModel_FieldIndex.LargeIconFilename:
-                case ArmorModel_FieldIndex.SmallIconFilename:
+                case ArmorModel_FieldIndex.Icons:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1064,10 +1027,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case ArmorModel_FieldIndex.Model:
+                case ArmorModel_FieldIndex.Icons:
                     return true;
-                case ArmorModel_FieldIndex.LargeIconFilename:
-                case ArmorModel_FieldIndex.SmallIconFilename:
-                    return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1079,8 +1040,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case ArmorModel_FieldIndex.Model:
-                case ArmorModel_FieldIndex.LargeIconFilename:
-                case ArmorModel_FieldIndex.SmallIconFilename:
+                case ArmorModel_FieldIndex.Icons:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1094,10 +1054,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case ArmorModel_FieldIndex.Model:
                     return "Model";
-                case ArmorModel_FieldIndex.LargeIconFilename:
-                    return "LargeIconFilename";
-                case ArmorModel_FieldIndex.SmallIconFilename:
-                    return "SmallIconFilename";
+                case ArmorModel_FieldIndex.Icons:
+                    return "Icons";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1109,8 +1067,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case ArmorModel_FieldIndex.Model:
-                case ArmorModel_FieldIndex.LargeIconFilename:
-                case ArmorModel_FieldIndex.SmallIconFilename:
+                case ArmorModel_FieldIndex.Icons:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1123,8 +1080,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case ArmorModel_FieldIndex.Model:
-                case ArmorModel_FieldIndex.LargeIconFilename:
-                case ArmorModel_FieldIndex.SmallIconFilename:
+                case ArmorModel_FieldIndex.Icons:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1138,10 +1094,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case ArmorModel_FieldIndex.Model:
                     return typeof(Model);
-                case ArmorModel_FieldIndex.LargeIconFilename:
-                    return typeof(String);
-                case ArmorModel_FieldIndex.SmallIconFilename:
-                    return typeof(String);
+                case ArmorModel_FieldIndex.Icons:
+                    return typeof(Icons);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1150,7 +1104,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(ArmorModelXmlWriteTranslation);
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
-        public static readonly RecordType MICO_HEADER = new RecordType("MICO");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1159,13 +1112,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     new RecordType[]
                     {
                         MODL_HEADER,
-                        ICON_HEADER,
-                        MICO_HEADER
+                        ICON_HEADER
                     })
             );
         });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 3;
+        public const int NumTypedFields = 2;
         public static readonly Type BinaryWriteTranslation = typeof(ArmorModelBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1209,8 +1161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Model = null;
-            item.LargeIconFilename = default;
-            item.SmallIconFilename = default;
+            item.Icons = null;
         }
         
         #region Xml Translation
@@ -1269,21 +1220,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4E4F4349: // ICON
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ArmorModel_FieldIndex.LargeIconFilename) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.LargeIconFilename = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)ArmorModel_FieldIndex.LargeIconFilename);
-                }
-                case 0x4F43494D: // MICO
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ArmorModel_FieldIndex.SmallIconFilename) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.SmallIconFilename = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)ArmorModel_FieldIndex.SmallIconFilename);
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ArmorModel_FieldIndex.Icons) return TryGet<int?>.Failure;
+                    item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)ArmorModel_FieldIndex.Icons);
                 }
                 default:
                     return TryGet<int?>.Failure;
@@ -1336,8 +1277,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.LargeIconFilename = string.Equals(item.LargeIconFilename, rhs.LargeIconFilename);
-            ret.SmallIconFilename = string.Equals(item.SmallIconFilename, rhs.SmallIconFilename);
+            ret.Icons = EqualsMaskHelper.EqualsHelper(
+                item.Icons,
+                rhs.Icons,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
         }
         
         public string ToString(
@@ -1389,15 +1333,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ModelItem?.ToString(fg, "Model");
             }
-            if ((printMask?.LargeIconFilename ?? true)
-                && item.LargeIconFilename.TryGet(out var LargeIconFilenameItem))
+            if ((printMask?.Icons?.Overall ?? true)
+                && item.Icons.TryGet(out var IconsItem))
             {
-                fg.AppendItem(LargeIconFilenameItem, "LargeIconFilename");
-            }
-            if ((printMask?.SmallIconFilename ?? true)
-                && item.SmallIconFilename.TryGet(out var SmallIconFilenameItem))
-            {
-                fg.AppendItem(SmallIconFilenameItem, "SmallIconFilename");
+                IconsItem?.ToString(fg, "Icons");
             }
         }
         
@@ -1407,8 +1346,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.LargeIconFilename.HasValue && checkMask.LargeIconFilename.Value != (item.LargeIconFilename != null)) return false;
-            if (checkMask.SmallIconFilename.HasValue && checkMask.SmallIconFilename.Value != (item.SmallIconFilename != null)) return false;
+            if (checkMask.Icons?.Overall.HasValue ?? false && checkMask.Icons.Overall.Value != (item.Icons != null)) return false;
+            if (checkMask.Icons?.Specific != null && (item.Icons == null || !item.Icons.HasBeenSet(checkMask.Icons.Specific))) return false;
             return true;
         }
         
@@ -1418,8 +1357,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var itemModel = item.Model;
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            mask.LargeIconFilename = (item.LargeIconFilename != null);
-            mask.SmallIconFilename = (item.SmallIconFilename != null);
+            var itemIcons = item.Icons;
+            mask.Icons = new MaskItem<bool, Icons.Mask<bool>?>(itemIcons != null, itemIcons?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -1430,8 +1369,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!string.Equals(lhs.LargeIconFilename, rhs.LargeIconFilename)) return false;
-            if (!string.Equals(lhs.SmallIconFilename, rhs.SmallIconFilename)) return false;
+            if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
             return true;
         }
         
@@ -1442,13 +1380,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Modelitem);
             }
-            if (item.LargeIconFilename.TryGet(out var LargeIconFilenameitem))
+            if (item.Icons.TryGet(out var Iconsitem))
             {
-                hash.Add(LargeIconFilenameitem);
-            }
-            if (item.SmallIconFilename.TryGet(out var SmallIconFilenameitem))
-            {
-                hash.Add(SmallIconFilenameitem);
+                hash.Add(Iconsitem);
             }
             return hash.ToHashCode();
         }
@@ -1514,13 +1448,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)ArmorModel_FieldIndex.LargeIconFilename) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ArmorModel_FieldIndex.Icons) ?? true))
             {
-                item.LargeIconFilename = rhs.LargeIconFilename;
-            }
-            if ((copyMask?.GetShouldTranslate((int)ArmorModel_FieldIndex.SmallIconFilename) ?? true))
-            {
-                item.SmallIconFilename = rhs.SmallIconFilename;
+                errorMask?.PushIndex((int)ArmorModel_FieldIndex.Icons);
+                try
+                {
+                    if(rhs.Icons.TryGet(out var rhsIcons))
+                    {
+                        item.Icons = rhsIcons.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)ArmorModel_FieldIndex.Icons));
+                    }
+                    else
+                    {
+                        item.Icons = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
         }
         
@@ -1625,25 +1577,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         translationMask: translationMask?.GetSubCrystal((int)ArmorModel_FieldIndex.Model));
                 }
             }
-            if ((item.LargeIconFilename != null)
-                && (translationMask?.GetShouldTranslate((int)ArmorModel_FieldIndex.LargeIconFilename) ?? true))
+            if ((item.Icons != null)
+                && (translationMask?.GetShouldTranslate((int)ArmorModel_FieldIndex.Icons) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LargeIconFilename),
-                    item: item.LargeIconFilename,
-                    fieldIndex: (int)ArmorModel_FieldIndex.LargeIconFilename,
-                    errorMask: errorMask);
-            }
-            if ((item.SmallIconFilename != null)
-                && (translationMask?.GetShouldTranslate((int)ArmorModel_FieldIndex.SmallIconFilename) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SmallIconFilename),
-                    item: item.SmallIconFilename,
-                    fieldIndex: (int)ArmorModel_FieldIndex.SmallIconFilename,
-                    errorMask: errorMask);
+                if (item.Icons.TryGet(out var IconsItem))
+                {
+                    ((IconsXmlWriteTranslation)((IXmlItem)IconsItem).XmlWriteTranslator).Write(
+                        item: IconsItem,
+                        node: node,
+                        name: nameof(item.Icons),
+                        fieldIndex: (int)ArmorModel_FieldIndex.Icons,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)ArmorModel_FieldIndex.Icons));
+                }
             }
         }
 
@@ -1770,31 +1716,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "LargeIconFilename":
-                    errorMask?.PushIndex((int)ArmorModel_FieldIndex.LargeIconFilename);
+                case "Icons":
+                    errorMask?.PushIndex((int)ArmorModel_FieldIndex.Icons);
                     try
                     {
-                        item.LargeIconFilename = StringXmlTranslation.Instance.Parse(
+                        item.Icons = LoquiXmlTranslation<Icons>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SmallIconFilename":
-                    errorMask?.PushIndex((int)ArmorModel_FieldIndex.SmallIconFilename);
-                    try
-                    {
-                        item.SmallIconFilename = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)ArmorModel_FieldIndex.Icons));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1989,16 +1918,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.LargeIconFilename,
-                header: recordTypeConverter.ConvertToCustom(ArmorModel_Registration.ICON_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.SmallIconFilename,
-                header: recordTypeConverter.ConvertToCustom(ArmorModel_Registration.MICO_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
+            if (item.Icons.TryGet(out var IconsItem))
+            {
+                ((IconsBinaryWriteTranslation)((IBinaryItem)IconsItem).BinaryWriteTranslator).Write(
+                    item: IconsItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
         }
 
         public void Write(
@@ -2112,14 +2038,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public IModelGetter? Model { get; private set; }
-        #region LargeIconFilename
-        private int? _LargeIconFilenameLocation;
-        public String? LargeIconFilename => _LargeIconFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _LargeIconFilenameLocation.Value, _package.Meta)) : default(string?);
-        #endregion
-        #region SmallIconFilename
-        private int? _SmallIconFilenameLocation;
-        public String? SmallIconFilename => _SmallIconFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SmallIconFilenameLocation.Value, _package.Meta)) : default(string?);
-        #endregion
+        public IIconsGetter? Icons { get; private set; }
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -2189,15 +2108,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4E4F4349: // ICON
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ArmorModel_FieldIndex.LargeIconFilename) return TryGet<int?>.Failure;
-                    _LargeIconFilenameLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ArmorModel_FieldIndex.LargeIconFilename);
-                }
-                case 0x4F43494D: // MICO
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ArmorModel_FieldIndex.SmallIconFilename) return TryGet<int?>.Failure;
-                    _SmallIconFilenameLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ArmorModel_FieldIndex.SmallIconFilename);
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ArmorModel_FieldIndex.Icons) return TryGet<int?>.Failure;
+                    this.Icons = IconsBinaryOverlay.IconsFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)ArmorModel_FieldIndex.Icons);
                 }
                 default:
                     return TryGet<int?>.Failure;

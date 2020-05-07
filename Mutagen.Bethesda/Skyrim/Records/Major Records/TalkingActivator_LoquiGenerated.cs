@@ -119,14 +119,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown;
-        public Byte[]? Unknown
+        private Int32? _Unknown;
+        public Int32? Unknown
         {
             get => this._Unknown;
             set => this._Unknown = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ITalkingActivatorGetter.Unknown => this.Unknown;
+        Int32? ITalkingActivatorGetter.Unknown => this.Unknown;
         #endregion
         #region LoopingSound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -137,14 +137,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Unknown2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown2;
-        public Byte[]? Unknown2
+        private Int16? _Unknown2;
+        public Int16? Unknown2
         {
             get => this._Unknown2;
             set => this._Unknown2 = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ITalkingActivatorGetter.Unknown2 => this.Unknown2;
+        Int16? ITalkingActivatorGetter.Unknown2 => this.Unknown2;
         #endregion
         #region VoiceType
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1038,9 +1038,9 @@ namespace Mutagen.Bethesda.Skyrim
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
-        new Byte[]? Unknown { get; set; }
+        new Int32? Unknown { get; set; }
         new IFormLinkNullable<SoundMarker> LoopingSound { get; }
-        new Byte[]? Unknown2 { get; set; }
+        new Int16? Unknown2 { get; set; }
         new IFormLinkNullable<VoiceType> VoiceType { get; }
         #region Mutagen
         new TalkingActivator.MajorFlag MajorFlags { get; set; }
@@ -1072,9 +1072,9 @@ namespace Mutagen.Bethesda.Skyrim
         IModelGetter? Model { get; }
         IDestructibleGetter? Destructible { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown { get; }
+        Int32? Unknown { get; }
         IFormLinkNullableGetter<ISoundMarkerGetter> LoopingSound { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown2 { get; }
+        Int16? Unknown2 { get; }
         IFormLinkNullableGetter<IVoiceTypeGetter> VoiceType { get; }
 
         #region Mutagen
@@ -1619,11 +1619,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case TalkingActivator_FieldIndex.Keywords:
                     return typeof(ExtendedList<IFormLink<Keyword>>);
                 case TalkingActivator_FieldIndex.Unknown:
-                    return typeof(Byte[]);
+                    return typeof(Int32);
                 case TalkingActivator_FieldIndex.LoopingSound:
                     return typeof(IFormLinkNullable<SoundMarker>);
                 case TalkingActivator_FieldIndex.Unknown2:
-                    return typeof(Byte[]);
+                    return typeof(Int16);
                 case TalkingActivator_FieldIndex.VoiceType:
                     return typeof(IFormLinkNullable<VoiceType>);
                 default:
@@ -1865,7 +1865,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E50: // PNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Unknown = frame.ReadInt32();
                     return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.Unknown);
                 }
                 case 0x52444E53: // SNDR
@@ -1879,7 +1879,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E46: // FNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.Unknown2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Unknown2 = frame.ReadInt16();
                     return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.Unknown2);
                 }
                 case 0x4D414E56: // VNAM
@@ -1985,9 +1985,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.Unknown = MemorySliceExt.Equal(item.Unknown, rhs.Unknown);
+            ret.Unknown = item.Unknown == rhs.Unknown;
             ret.LoopingSound = object.Equals(item.LoopingSound, rhs.LoopingSound);
-            ret.Unknown2 = MemorySliceExt.Equal(item.Unknown2, rhs.Unknown2);
+            ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
             ret.VoiceType = object.Equals(item.VoiceType, rhs.VoiceType);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -2086,7 +2086,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((printMask?.Unknown ?? true)
                 && item.Unknown.TryGet(out var UnknownItem))
             {
-                fg.AppendLine($"Unknown => {SpanExt.ToHexString(UnknownItem)}");
+                fg.AppendItem(UnknownItem, "Unknown");
             }
             if ((printMask?.LoopingSound ?? true)
                 && item.LoopingSound.TryGet(out var LoopingSoundItem))
@@ -2096,7 +2096,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((printMask?.Unknown2 ?? true)
                 && item.Unknown2.TryGet(out var Unknown2Item))
             {
-                fg.AppendLine($"Unknown2 => {SpanExt.ToHexString(Unknown2Item)}");
+                fg.AppendItem(Unknown2Item, "Unknown2");
             }
             if ((printMask?.VoiceType ?? true)
                 && item.VoiceType.TryGet(out var VoiceTypeItem))
@@ -2200,9 +2200,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
             if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown, rhs.Unknown)) return false;
+            if (lhs.Unknown != rhs.Unknown) return false;
             if (!lhs.LoopingSound.Equals(rhs.LoopingSound)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown2, rhs.Unknown2)) return false;
+            if (lhs.Unknown2 != rhs.Unknown2) return false;
             if (!lhs.VoiceType.Equals(rhs.VoiceType)) return false;
             return true;
         }
@@ -2246,17 +2246,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 hash.Add(Destructibleitem);
             }
             hash.Add(item.Keywords);
-            if (item.Unknown.TryGet(out var UnknownItem))
+            if (item.Unknown.TryGet(out var Unknownitem))
             {
-                hash.Add(UnknownItem);
+                hash.Add(Unknownitem);
             }
             if (item.LoopingSound.TryGet(out var LoopingSounditem))
             {
                 hash.Add(LoopingSounditem);
             }
-            if (item.Unknown2.TryGet(out var Unknown2Item))
+            if (item.Unknown2.TryGet(out var Unknown2item))
             {
-                hash.Add(Unknown2Item);
+                hash.Add(Unknown2item);
             }
             if (item.VoiceType.TryGet(out var VoiceTypeitem))
             {
@@ -2500,14 +2500,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.Unknown) ?? true))
             {
-                if(rhs.Unknown.TryGet(out var Unknownrhs))
-                {
-                    item.Unknown = Unknownrhs.ToArray();
-                }
-                else
-                {
-                    item.Unknown = default;
-                }
+                item.Unknown = rhs.Unknown;
             }
             if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.LoopingSound) ?? true))
             {
@@ -2515,14 +2508,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.Unknown2) ?? true))
             {
-                if(rhs.Unknown2.TryGet(out var Unknown2rhs))
-                {
-                    item.Unknown2 = Unknown2rhs.ToArray();
-                }
-                else
-                {
-                    item.Unknown2 = default;
-                }
+                item.Unknown2 = rhs.Unknown2;
             }
             if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.VoiceType) ?? true))
             {
@@ -2755,7 +2741,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Unknown != null)
                 && (translationMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.Unknown) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
+                Int32XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Unknown),
                     item: item.Unknown.Value,
@@ -2775,7 +2761,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((item.Unknown2 != null)
                 && (translationMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.Unknown2) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
+                Int16XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Unknown2),
                     item: item.Unknown2.Value,
@@ -3025,7 +3011,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)TalkingActivator_FieldIndex.Unknown);
                     try
                     {
-                        item.Unknown = ByteArrayXmlTranslation.Instance.Parse(
+                        item.Unknown = Int32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3061,7 +3047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)TalkingActivator_FieldIndex.Unknown2);
                     try
                     {
-                        item.Unknown2 = ByteArrayXmlTranslation.Instance.Parse(
+                        item.Unknown2 = Int16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3231,7 +3217,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         item: subItem);
                 });
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Unknown,
                 header: recordTypeConverter.ConvertToCustom(TalkingActivator_Registration.PNAM_HEADER));
@@ -3239,7 +3225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.LoopingSound,
                 header: recordTypeConverter.ConvertToCustom(TalkingActivator_Registration.SNDR_HEADER));
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Unknown2,
                 header: recordTypeConverter.ConvertToCustom(TalkingActivator_Registration.FNAM_HEADER));
@@ -3390,7 +3376,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         #region Unknown
         private int? _UnknownLocation;
-        public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _UnknownLocation.Value, _package.Meta).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public Int32? Unknown => _UnknownLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownLocation.Value, _package.Meta)) : default(Int32?);
         #endregion
         #region LoopingSound
         private int? _LoopingSoundLocation;
@@ -3399,7 +3385,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Unknown2
         private int? _Unknown2Location;
-        public ReadOnlyMemorySlice<Byte>? Unknown2 => _Unknown2Location.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _Unknown2Location.Value, _package.Meta).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public Int16? Unknown2 => _Unknown2Location.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _Unknown2Location.Value, _package.Meta)) : default(Int16?);
         #endregion
         #region VoiceType
         private int? _VoiceTypeLocation;

@@ -71,15 +71,9 @@ namespace Mutagen.Bethesda.Skyrim
         IModelGetter? IStaticGetter.Model => this.Model;
         #endregion
         #region DirectionMaterial
+        public DirectionMaterial DirectionMaterial { get; set; } = new DirectionMaterial();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private DirectionMaterial? _DirectionMaterial;
-        public DirectionMaterial? DirectionMaterial
-        {
-            get => _DirectionMaterial;
-            set => _DirectionMaterial = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IDirectionMaterialGetter? IStaticGetter.DirectionMaterial => this.DirectionMaterial;
+        IDirectionMaterialGetter IStaticGetter.DirectionMaterial => DirectionMaterial;
         #endregion
         #region Lod
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -727,11 +721,12 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         IModeled,
         IObjectBounded,
+        IObjectId,
         ILoquiObjectSetter<IStaticInternal>
     {
         new ObjectBounds ObjectBounds { get; set; }
         new Model? Model { get; set; }
-        new DirectionMaterial? DirectionMaterial { get; set; }
+        new DirectionMaterial DirectionMaterial { get; set; }
         new Lod? Lod { get; set; }
         #region Mutagen
         new Static.MajorFlag MajorFlags { get; set; }
@@ -750,6 +745,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IModeledGetter,
         IObjectBoundedGetter,
+        IObjectIdGetter,
         ILoquiObject<IStaticGetter>,
         IXmlItem,
         ILinkContainer,
@@ -758,7 +754,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => Static_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
         IModelGetter? Model { get; }
-        IDirectionMaterialGetter? DirectionMaterial { get; }
+        IDirectionMaterialGetter DirectionMaterial { get; }
         ILodGetter? Lod { get; }
 
         #region Mutagen
@@ -1294,7 +1290,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.ObjectBounds = new ObjectBounds();
             item.Model = null;
-            item.DirectionMaterial = null;
+            item.DirectionMaterial.Clear();
             item.Lod = null;
             base.Clear(item);
         }
@@ -1512,11 +1508,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.DirectionMaterial = EqualsMaskHelper.EqualsHelper(
-                item.DirectionMaterial,
-                rhs.DirectionMaterial,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.DirectionMaterial = MaskItemExt.Factory(item.DirectionMaterial.GetEqualsMask(rhs.DirectionMaterial, include), include);
             ret.Lod = EqualsMaskHelper.EqualsHelper(
                 item.Lod,
                 rhs.Lod,
@@ -1582,10 +1574,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ModelItem?.ToString(fg, "Model");
             }
-            if ((printMask?.DirectionMaterial?.Overall ?? true)
-                && item.DirectionMaterial.TryGet(out var DirectionMaterialItem))
+            if (printMask?.DirectionMaterial?.Overall ?? true)
             {
-                DirectionMaterialItem?.ToString(fg, "DirectionMaterial");
+                item.DirectionMaterial?.ToString(fg, "DirectionMaterial");
             }
             if ((printMask?.Lod?.Overall ?? true)
                 && item.Lod.TryGet(out var LodItem))
@@ -1600,8 +1591,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.DirectionMaterial?.Overall.HasValue ?? false && checkMask.DirectionMaterial.Overall.Value != (item.DirectionMaterial != null)) return false;
-            if (checkMask.DirectionMaterial?.Specific != null && (item.DirectionMaterial == null || !item.DirectionMaterial.HasBeenSet(checkMask.DirectionMaterial.Specific))) return false;
             if (checkMask.Lod?.Overall.HasValue ?? false && checkMask.Lod.Overall.Value != (item.Lod != null)) return false;
             if (checkMask.Lod?.Specific != null && (item.Lod == null || !item.Lod.HasBeenSet(checkMask.Lod.Specific))) return false;
             return base.HasBeenSet(
@@ -1616,8 +1605,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
             var itemModel = item.Model;
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            var itemDirectionMaterial = item.DirectionMaterial;
-            mask.DirectionMaterial = new MaskItem<bool, DirectionMaterial.Mask<bool>?>(itemDirectionMaterial != null, itemDirectionMaterial?.GetHasBeenSetMask());
+            mask.DirectionMaterial = new MaskItem<bool, DirectionMaterial.Mask<bool>?>(true, item.DirectionMaterial?.GetHasBeenSetMask());
             var itemLod = item.Lod;
             mask.Lod = new MaskItem<bool, Lod.Mask<bool>?>(itemLod != null, itemLod?.GetHasBeenSetMask());
             base.FillHasBeenSetMask(
@@ -1704,10 +1692,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Modelitem);
             }
-            if (item.DirectionMaterial.TryGet(out var DirectionMaterialitem))
-            {
-                hash.Add(DirectionMaterialitem);
-            }
+            hash.Add(item.DirectionMaterial);
             if (item.Lod.TryGet(out var Loditem))
             {
                 hash.Add(Loditem);
@@ -1854,15 +1839,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Static_FieldIndex.DirectionMaterial);
                 try
                 {
-                    if(rhs.DirectionMaterial.TryGet(out var rhsDirectionMaterial))
+                    if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.DirectionMaterial) ?? true))
                     {
-                        item.DirectionMaterial = rhsDirectionMaterial.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Static_FieldIndex.DirectionMaterial));
-                    }
-                    else
-                    {
-                        item.DirectionMaterial = default;
+                        item.DirectionMaterial = rhs.DirectionMaterial.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Static_FieldIndex.DirectionMaterial),
+                            errorMask: errorMask);
                     }
                 }
                 catch (Exception ex)
@@ -2068,19 +2049,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         translationMask: translationMask?.GetSubCrystal((int)Static_FieldIndex.Model));
                 }
             }
-            if ((item.DirectionMaterial != null)
-                && (translationMask?.GetShouldTranslate((int)Static_FieldIndex.DirectionMaterial) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Static_FieldIndex.DirectionMaterial) ?? true))
             {
-                if (item.DirectionMaterial.TryGet(out var DirectionMaterialItem))
-                {
-                    ((DirectionMaterialXmlWriteTranslation)((IXmlItem)DirectionMaterialItem).XmlWriteTranslator).Write(
-                        item: DirectionMaterialItem,
-                        node: node,
-                        name: nameof(item.DirectionMaterial),
-                        fieldIndex: (int)Static_FieldIndex.DirectionMaterial,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Static_FieldIndex.DirectionMaterial));
-                }
+                var DirectionMaterialItem = item.DirectionMaterial;
+                ((DirectionMaterialXmlWriteTranslation)((IXmlItem)DirectionMaterialItem).XmlWriteTranslator).Write(
+                    item: DirectionMaterialItem,
+                    node: node,
+                    name: nameof(item.DirectionMaterial),
+                    fieldIndex: (int)Static_FieldIndex.DirectionMaterial,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Static_FieldIndex.DirectionMaterial));
             }
             if ((item.Lod != null)
                 && (translationMask?.GetShouldTranslate((int)Static_FieldIndex.Lod) ?? true))
@@ -2386,13 +2364,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (item.DirectionMaterial.TryGet(out var DirectionMaterialItem))
-            {
-                ((DirectionMaterialBinaryWriteTranslation)((IBinaryItem)DirectionMaterialItem).BinaryWriteTranslator).Write(
-                    item: DirectionMaterialItem,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
-            }
+            var DirectionMaterialItem = item.DirectionMaterial;
+            ((DirectionMaterialBinaryWriteTranslation)((IBinaryItem)DirectionMaterialItem).BinaryWriteTranslator).Write(
+                item: DirectionMaterialItem,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
             if (item.Lod.TryGet(out var LodItem))
             {
                 ((LodBinaryWriteTranslation)((IBinaryItem)LodItem).BinaryWriteTranslator).Write(
@@ -2532,8 +2508,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IModelGetter? Model { get; private set; }
         #region DirectionMaterial
         private RangeInt32? _DirectionMaterialLocation;
-        public IDirectionMaterialGetter? DirectionMaterial => _DirectionMaterialLocation.HasValue ? DirectionMaterialBinaryOverlay.DirectionMaterialFactory(new BinaryMemoryReadStream(_data.Slice(_DirectionMaterialLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
-        public bool DirectionMaterial_IsSet => _DirectionMaterialLocation.HasValue;
+        public IDirectionMaterialGetter? _DirectionMaterial => _DirectionMaterialLocation.HasValue ? DirectionMaterialBinaryOverlay.DirectionMaterialFactory(new BinaryMemoryReadStream(_data.Slice(_DirectionMaterialLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IDirectionMaterialGetter DirectionMaterial => _DirectionMaterial ?? new DirectionMaterial();
         #endregion
         #region Lod
         private RangeInt32? _LodLocation;

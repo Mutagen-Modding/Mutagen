@@ -92,15 +92,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Data
+        public MagicEffectData Data { get; set; } = new MagicEffectData();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MagicEffectData? _Data;
-        public MagicEffectData? Data
-        {
-            get => _Data;
-            set => _Data = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IMagicEffectDataGetter? IMagicEffectGetter.Data => this.Data;
+        IMagicEffectDataGetter IMagicEffectGetter.Data => Data;
         #endregion
         #region CounterEffects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1212,7 +1206,7 @@ namespace Mutagen.Bethesda.Skyrim
         new String? Name { get; set; }
         new IFormLinkNullable<Static> MenuDisplayObject { get; }
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
-        new MagicEffectData? Data { get; set; }
+        new MagicEffectData Data { get; set; }
         new ExtendedList<IFormLink<MagicEffect>>? CounterEffects { get; set; }
         new ExtendedList<MagicEffectSound>? Sounds { get; set; }
         new String? MagicItemDescription { get; set; }
@@ -1239,7 +1233,7 @@ namespace Mutagen.Bethesda.Skyrim
         String? Name { get; }
         IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
-        IMagicEffectDataGetter? Data { get; }
+        IMagicEffectDataGetter Data { get; }
         IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>>? CounterEffects { get; }
         IReadOnlyList<IMagicEffectSoundGetter>? Sounds { get; }
         String? MagicItemDescription { get; }
@@ -1844,7 +1838,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Name = default;
             item.MenuDisplayObject.FormKey = null;
             item.Keywords = null;
-            item.Data = null;
+            item.Data.Clear();
             item.CounterEffects = null;
             item.Sounds = null;
             item.MagicItemDescription = default;
@@ -2128,11 +2122,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.Data = EqualsMaskHelper.EqualsHelper(
-                item.Data,
-                rhs.Data,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.Data = MaskItemExt.Factory(item.Data.GetEqualsMask(rhs.Data, include), include);
             ret.CounterEffects = item.CounterEffects.CollectionEqualsHelper(
                 rhs.CounterEffects,
                 (l, r) => object.Equals(l, r),
@@ -2231,10 +2221,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+            if (printMask?.Data?.Overall ?? true)
             {
-                DataItem?.ToString(fg, "Data");
+                item.Data?.ToString(fg, "Data");
             }
             if ((printMask?.CounterEffects?.Overall ?? true)
                 && item.CounterEffects.TryGet(out var CounterEffectsItem))
@@ -2308,8 +2297,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.MenuDisplayObject.HasValue && checkMask.MenuDisplayObject.Value != (item.MenuDisplayObject.FormKey != null)) return false;
             if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
-            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
-            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
             if (checkMask.CounterEffects?.Overall.HasValue ?? false && checkMask.CounterEffects!.Overall.Value != (item.CounterEffects != null)) return false;
             if (checkMask.Sounds?.Overall.HasValue ?? false && checkMask.Sounds!.Overall.Value != (item.Sounds != null)) return false;
             if (checkMask.MagicItemDescription.HasValue && checkMask.MagicItemDescription.Value != (item.MagicItemDescription != null)) return false;
@@ -2327,8 +2314,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Name = (item.Name != null);
             mask.MenuDisplayObject = (item.MenuDisplayObject.FormKey != null);
             mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
-            var itemData = item.Data;
-            mask.Data = new MaskItem<bool, MagicEffectData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
+            mask.Data = new MaskItem<bool, MagicEffectData.Mask<bool>?>(true, item.Data?.GetHasBeenSetMask());
             mask.CounterEffects = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.CounterEffects != null), default);
             if (item.Sounds.TryGet(out var SoundsItem))
             {
@@ -2434,10 +2420,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 hash.Add(MenuDisplayObjectitem);
             }
             hash.Add(item.Keywords);
-            if (item.Data.TryGet(out var Dataitem))
-            {
-                hash.Add(Dataitem);
-            }
+            hash.Add(item.Data);
             hash.Add(item.CounterEffects);
             hash.Add(item.Sounds);
             if (item.MagicItemDescription.TryGet(out var MagicItemDescriptionitem))
@@ -2627,15 +2610,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)MagicEffect_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Data) ?? true))
                     {
-                        item.Data = rhsData.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Data));
-                    }
-                    else
-                    {
-                        item.Data = default;
+                        item.Data = rhs.Data.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Data),
+                            errorMask: errorMask);
                     }
                 }
                 catch (Exception ex)
@@ -2930,19 +2909,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: listSubMask);
                     });
             }
-            if ((item.Data != null)
-                && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Data) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Data) ?? true))
             {
-                if (item.Data.TryGet(out var DataItem))
-                {
-                    ((MagicEffectDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
-                        item: DataItem,
-                        node: node,
-                        name: nameof(item.Data),
-                        fieldIndex: (int)MagicEffect_FieldIndex.Data,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Data));
-                }
+                var DataItem = item.Data;
+                ((MagicEffectDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                    item: DataItem,
+                    node: node,
+                    name: nameof(item.Data),
+                    fieldIndex: (int)MagicEffect_FieldIndex.Data,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Data));
             }
             if ((item.CounterEffects != null)
                 && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffects) ?? true))
@@ -3463,13 +3439,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         item: subItem);
                 });
-            if (item.Data.TryGet(out var DataItem))
-            {
-                ((MagicEffectDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
-                    item: DataItem,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
-            }
+            var DataItem = item.Data;
+            ((MagicEffectDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                item: DataItem,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IMagicEffectGetter>>.Instance.Write(
                 writer: writer,
                 items: item.CounterEffects,
@@ -3653,8 +3627,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         #region Data
         private RangeInt32? _DataLocation;
-        public IMagicEffectDataGetter? Data => _DataLocation.HasValue ? MagicEffectDataBinaryOverlay.MagicEffectDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
-        public bool Data_IsSet => _DataLocation.HasValue;
+        public IMagicEffectDataGetter? _Data => _DataLocation.HasValue ? MagicEffectDataBinaryOverlay.MagicEffectDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IMagicEffectDataGetter Data => _Data ?? new MagicEffectData();
         #endregion
         public IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>>? CounterEffects { get; private set; }
         public IReadOnlyList<IMagicEffectSoundGetter>? Sounds { get; private set; }

@@ -46,6 +46,9 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region Versioning
+        public RaceData.VersioningBreaks Versioning { get; set; } = default;
+        #endregion
         #region SkillBoost0
         public SkillBoost SkillBoost0 { get; set; } = new SkillBoost();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -95,14 +98,14 @@ namespace Mutagen.Bethesda.Skyrim
         #region Flags
         public RaceData.Flag Flags { get; set; } = default;
         #endregion
-        #region StartingHealth
-        public Single StartingHealth { get; set; } = default;
+        #region Starting
+        private readonly Dictionary<BasicStat, Single> _Starting = new Dictionary<BasicStat, Single>();
+        public IDictionary<BasicStat, Single> Starting => _Starting;
+        #region Interface Members
+        IDictionary<BasicStat, Single> IRaceData.Starting => _Starting;
+        IReadOnlyDictionary<BasicStat, Single> IRaceDataGetter.Starting => _Starting;
         #endregion
-        #region StartingMagicka
-        public Single StartingMagicka { get; set; } = default;
-        #endregion
-        #region StartingStamina
-        public Single StartingStamina { get; set; } = default;
+
         #endregion
         #region BaseCarryWeight
         public Single BaseCarryWeight { get; set; } = default;
@@ -134,14 +137,14 @@ namespace Mutagen.Bethesda.Skyrim
         public readonly static BipedObject _ShieldBipedObject_Default = BipedObject.None;
         public BipedObject ShieldBipedObject { get; set; } = default;
         #endregion
-        #region HealthRegen
-        public Single HealthRegen { get; set; } = default;
+        #region Regen
+        private readonly Dictionary<BasicStat, Single> _Regen = new Dictionary<BasicStat, Single>();
+        public IDictionary<BasicStat, Single> Regen => _Regen;
+        #region Interface Members
+        IDictionary<BasicStat, Single> IRaceData.Regen => _Regen;
+        IReadOnlyDictionary<BasicStat, Single> IRaceDataGetter.Regen => _Regen;
         #endregion
-        #region MagickaRegen
-        public Single MagickaRegen { get; set; } = default;
-        #endregion
-        #region StaminaRegen
-        public Single StaminaRegen { get; set; } = default;
+
         #endregion
         #region UnarmedDamage
         public Single UnarmedDamage { get; set; } = default;
@@ -164,6 +167,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region AngularTolerance
         public Single AngularTolerance { get; set; } = default;
+        #endregion
+        #region MountData
+        public MountData MountData { get; set; } = new MountData();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IMountDataGetter IRaceDataGetter.MountData => MountData;
         #endregion
 
         #region To String
@@ -335,6 +343,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Versioning = initialValue;
                 this.SkillBoost0 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
                 this.SkillBoost1 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
                 this.SkillBoost2 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
@@ -346,9 +355,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Height = new GenderedItem<TItem>(initialValue, initialValue);
                 this.Weight = new GenderedItem<TItem>(initialValue, initialValue);
                 this.Flags = initialValue;
-                this.StartingHealth = initialValue;
-                this.StartingMagicka = initialValue;
-                this.StartingStamina = initialValue;
+                this.Starting = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(initialValue, null);
                 this.BaseCarryWeight = initialValue;
                 this.BaseMass = initialValue;
                 this.AccelerationRate = initialValue;
@@ -358,9 +365,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.HairBipedObject = initialValue;
                 this.InjuredHealthPercent = initialValue;
                 this.ShieldBipedObject = initialValue;
-                this.HealthRegen = initialValue;
-                this.MagickaRegen = initialValue;
-                this.StaminaRegen = initialValue;
+                this.Regen = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(initialValue, null);
                 this.UnarmedDamage = initialValue;
                 this.UnarmedReach = initialValue;
                 this.BodyBipedObject = initialValue;
@@ -368,9 +373,11 @@ namespace Mutagen.Bethesda.Skyrim
                 this.FlightRadius = initialValue;
                 this.AngularAccelerationRate = initialValue;
                 this.AngularTolerance = initialValue;
+                this.MountData = new MaskItem<TItem, MountData.Mask<TItem>?>(initialValue, new MountData.Mask<TItem>(initialValue));
             }
 
             public Mask(
+                TItem Versioning,
                 TItem SkillBoost0,
                 TItem SkillBoost1,
                 TItem SkillBoost2,
@@ -382,9 +389,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Height,
                 TItem Weight,
                 TItem Flags,
-                TItem StartingHealth,
-                TItem StartingMagicka,
-                TItem StartingStamina,
+                TItem Starting,
                 TItem BaseCarryWeight,
                 TItem BaseMass,
                 TItem AccelerationRate,
@@ -394,17 +399,17 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem HairBipedObject,
                 TItem InjuredHealthPercent,
                 TItem ShieldBipedObject,
-                TItem HealthRegen,
-                TItem MagickaRegen,
-                TItem StaminaRegen,
+                TItem Regen,
                 TItem UnarmedDamage,
                 TItem UnarmedReach,
                 TItem BodyBipedObject,
                 TItem AimAngleTolerance,
                 TItem FlightRadius,
                 TItem AngularAccelerationRate,
-                TItem AngularTolerance)
+                TItem AngularTolerance,
+                TItem MountData)
             {
+                this.Versioning = Versioning;
                 this.SkillBoost0 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost0, new SkillBoost.Mask<TItem>(SkillBoost0));
                 this.SkillBoost1 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost1, new SkillBoost.Mask<TItem>(SkillBoost1));
                 this.SkillBoost2 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost2, new SkillBoost.Mask<TItem>(SkillBoost2));
@@ -416,9 +421,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Height = new GenderedItem<TItem>(Height, Height);
                 this.Weight = new GenderedItem<TItem>(Weight, Weight);
                 this.Flags = Flags;
-                this.StartingHealth = StartingHealth;
-                this.StartingMagicka = StartingMagicka;
-                this.StartingStamina = StartingStamina;
+                this.Starting = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(Starting, null);
                 this.BaseCarryWeight = BaseCarryWeight;
                 this.BaseMass = BaseMass;
                 this.AccelerationRate = AccelerationRate;
@@ -428,9 +431,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.HairBipedObject = HairBipedObject;
                 this.InjuredHealthPercent = InjuredHealthPercent;
                 this.ShieldBipedObject = ShieldBipedObject;
-                this.HealthRegen = HealthRegen;
-                this.MagickaRegen = MagickaRegen;
-                this.StaminaRegen = StaminaRegen;
+                this.Regen = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(Regen, null);
                 this.UnarmedDamage = UnarmedDamage;
                 this.UnarmedReach = UnarmedReach;
                 this.BodyBipedObject = BodyBipedObject;
@@ -438,6 +439,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.FlightRadius = FlightRadius;
                 this.AngularAccelerationRate = AngularAccelerationRate;
                 this.AngularTolerance = AngularTolerance;
+                this.MountData = new MaskItem<TItem, MountData.Mask<TItem>?>(MountData, new MountData.Mask<TItem>(MountData));
             }
 
             #pragma warning disable CS8618
@@ -449,6 +451,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
+            public TItem Versioning;
             public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost0 { get; set; }
             public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost1 { get; set; }
             public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost2 { get; set; }
@@ -460,9 +463,7 @@ namespace Mutagen.Bethesda.Skyrim
             public GenderedItem<TItem> Height;
             public GenderedItem<TItem> Weight;
             public TItem Flags;
-            public TItem StartingHealth;
-            public TItem StartingMagicka;
-            public TItem StartingStamina;
+            public MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>? Starting;
             public TItem BaseCarryWeight;
             public TItem BaseMass;
             public TItem AccelerationRate;
@@ -472,9 +473,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem HairBipedObject;
             public TItem InjuredHealthPercent;
             public TItem ShieldBipedObject;
-            public TItem HealthRegen;
-            public TItem MagickaRegen;
-            public TItem StaminaRegen;
+            public MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>? Regen;
             public TItem UnarmedDamage;
             public TItem UnarmedReach;
             public TItem BodyBipedObject;
@@ -482,6 +481,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem FlightRadius;
             public TItem AngularAccelerationRate;
             public TItem AngularTolerance;
+            public MaskItem<TItem, MountData.Mask<TItem>?>? MountData { get; set; }
             #endregion
 
             #region Equals
@@ -494,6 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem> rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.SkillBoost0, rhs.SkillBoost0)) return false;
                 if (!object.Equals(this.SkillBoost1, rhs.SkillBoost1)) return false;
                 if (!object.Equals(this.SkillBoost2, rhs.SkillBoost2)) return false;
@@ -505,9 +506,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Height, rhs.Height)) return false;
                 if (!object.Equals(this.Weight, rhs.Weight)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.StartingHealth, rhs.StartingHealth)) return false;
-                if (!object.Equals(this.StartingMagicka, rhs.StartingMagicka)) return false;
-                if (!object.Equals(this.StartingStamina, rhs.StartingStamina)) return false;
+                if (!object.Equals(this.Starting, rhs.Starting)) return false;
                 if (!object.Equals(this.BaseCarryWeight, rhs.BaseCarryWeight)) return false;
                 if (!object.Equals(this.BaseMass, rhs.BaseMass)) return false;
                 if (!object.Equals(this.AccelerationRate, rhs.AccelerationRate)) return false;
@@ -517,9 +516,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.HairBipedObject, rhs.HairBipedObject)) return false;
                 if (!object.Equals(this.InjuredHealthPercent, rhs.InjuredHealthPercent)) return false;
                 if (!object.Equals(this.ShieldBipedObject, rhs.ShieldBipedObject)) return false;
-                if (!object.Equals(this.HealthRegen, rhs.HealthRegen)) return false;
-                if (!object.Equals(this.MagickaRegen, rhs.MagickaRegen)) return false;
-                if (!object.Equals(this.StaminaRegen, rhs.StaminaRegen)) return false;
+                if (!object.Equals(this.Regen, rhs.Regen)) return false;
                 if (!object.Equals(this.UnarmedDamage, rhs.UnarmedDamage)) return false;
                 if (!object.Equals(this.UnarmedReach, rhs.UnarmedReach)) return false;
                 if (!object.Equals(this.BodyBipedObject, rhs.BodyBipedObject)) return false;
@@ -527,11 +524,13 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.FlightRadius, rhs.FlightRadius)) return false;
                 if (!object.Equals(this.AngularAccelerationRate, rhs.AngularAccelerationRate)) return false;
                 if (!object.Equals(this.AngularTolerance, rhs.AngularTolerance)) return false;
+                if (!object.Equals(this.MountData, rhs.MountData)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Versioning);
                 hash.Add(this.SkillBoost0);
                 hash.Add(this.SkillBoost1);
                 hash.Add(this.SkillBoost2);
@@ -543,9 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Height);
                 hash.Add(this.Weight);
                 hash.Add(this.Flags);
-                hash.Add(this.StartingHealth);
-                hash.Add(this.StartingMagicka);
-                hash.Add(this.StartingStamina);
+                hash.Add(this.Starting);
                 hash.Add(this.BaseCarryWeight);
                 hash.Add(this.BaseMass);
                 hash.Add(this.AccelerationRate);
@@ -555,9 +552,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.HairBipedObject);
                 hash.Add(this.InjuredHealthPercent);
                 hash.Add(this.ShieldBipedObject);
-                hash.Add(this.HealthRegen);
-                hash.Add(this.MagickaRegen);
-                hash.Add(this.StaminaRegen);
+                hash.Add(this.Regen);
                 hash.Add(this.UnarmedDamage);
                 hash.Add(this.UnarmedReach);
                 hash.Add(this.BodyBipedObject);
@@ -565,6 +560,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.FlightRadius);
                 hash.Add(this.AngularAccelerationRate);
                 hash.Add(this.AngularTolerance);
+                hash.Add(this.MountData);
                 return hash.ToHashCode();
             }
 
@@ -573,6 +569,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Versioning)) return false;
                 if (SkillBoost0 != null)
                 {
                     if (!eval(this.SkillBoost0.Overall)) return false;
@@ -612,9 +609,18 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.Height.Male) || !eval(this.Height.Female)) return false;
                 if (!eval(this.Weight.Male) || !eval(this.Weight.Female)) return false;
                 if (!eval(this.Flags)) return false;
-                if (!eval(this.StartingHealth)) return false;
-                if (!eval(this.StartingMagicka)) return false;
-                if (!eval(this.StartingStamina)) return false;
+                if (this.Starting != null)
+                {
+                    if (!eval(this.Starting.Overall)) return false;
+                    if (this.Starting.Specific != null)
+                    {
+                        foreach (var item in this.Starting.Specific)
+                        {
+                            if (!eval(item.Key)) return false;
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (!eval(this.BaseCarryWeight)) return false;
                 if (!eval(this.BaseMass)) return false;
                 if (!eval(this.AccelerationRate)) return false;
@@ -624,9 +630,18 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.HairBipedObject)) return false;
                 if (!eval(this.InjuredHealthPercent)) return false;
                 if (!eval(this.ShieldBipedObject)) return false;
-                if (!eval(this.HealthRegen)) return false;
-                if (!eval(this.MagickaRegen)) return false;
-                if (!eval(this.StaminaRegen)) return false;
+                if (this.Regen != null)
+                {
+                    if (!eval(this.Regen.Overall)) return false;
+                    if (this.Regen.Specific != null)
+                    {
+                        foreach (var item in this.Regen.Specific)
+                        {
+                            if (!eval(item.Key)) return false;
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (!eval(this.UnarmedDamage)) return false;
                 if (!eval(this.UnarmedReach)) return false;
                 if (!eval(this.BodyBipedObject)) return false;
@@ -634,6 +649,11 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.FlightRadius)) return false;
                 if (!eval(this.AngularAccelerationRate)) return false;
                 if (!eval(this.AngularTolerance)) return false;
+                if (MountData != null)
+                {
+                    if (!eval(this.MountData.Overall)) return false;
+                    if (this.MountData.Specific != null && !this.MountData.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -641,6 +661,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Versioning)) return true;
                 if (SkillBoost0 != null)
                 {
                     if (eval(this.SkillBoost0.Overall)) return true;
@@ -680,9 +701,18 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.Height.Male) || eval(this.Height.Female)) return true;
                 if (eval(this.Weight.Male) || eval(this.Weight.Female)) return true;
                 if (eval(this.Flags)) return true;
-                if (eval(this.StartingHealth)) return true;
-                if (eval(this.StartingMagicka)) return true;
-                if (eval(this.StartingStamina)) return true;
+                if (this.Starting != null)
+                {
+                    if (eval(this.Starting.Overall)) return true;
+                    if (this.Starting.Specific != null)
+                    {
+                        foreach (var item in this.Starting.Specific)
+                        {
+                            if (!eval(item.Key)) return false;
+                            if (eval(item.Value)) return true;
+                        }
+                    }
+                }
                 if (eval(this.BaseCarryWeight)) return true;
                 if (eval(this.BaseMass)) return true;
                 if (eval(this.AccelerationRate)) return true;
@@ -692,9 +722,18 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.HairBipedObject)) return true;
                 if (eval(this.InjuredHealthPercent)) return true;
                 if (eval(this.ShieldBipedObject)) return true;
-                if (eval(this.HealthRegen)) return true;
-                if (eval(this.MagickaRegen)) return true;
-                if (eval(this.StaminaRegen)) return true;
+                if (this.Regen != null)
+                {
+                    if (eval(this.Regen.Overall)) return true;
+                    if (this.Regen.Specific != null)
+                    {
+                        foreach (var item in this.Regen.Specific)
+                        {
+                            if (!eval(item.Key)) return false;
+                            if (eval(item.Value)) return true;
+                        }
+                    }
+                }
                 if (eval(this.UnarmedDamage)) return true;
                 if (eval(this.UnarmedReach)) return true;
                 if (eval(this.BodyBipedObject)) return true;
@@ -702,6 +741,11 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.FlightRadius)) return true;
                 if (eval(this.AngularAccelerationRate)) return true;
                 if (eval(this.AngularTolerance)) return true;
+                if (MountData != null)
+                {
+                    if (eval(this.MountData.Overall)) return true;
+                    if (this.MountData.Specific != null && this.MountData.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -716,6 +760,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Versioning = eval(this.Versioning);
                 obj.SkillBoost0 = this.SkillBoost0 == null ? null : new MaskItem<R, SkillBoost.Mask<R>?>(eval(this.SkillBoost0.Overall), this.SkillBoost0.Specific?.Translate(eval));
                 obj.SkillBoost1 = this.SkillBoost1 == null ? null : new MaskItem<R, SkillBoost.Mask<R>?>(eval(this.SkillBoost1.Overall), this.SkillBoost1.Specific?.Translate(eval));
                 obj.SkillBoost2 = this.SkillBoost2 == null ? null : new MaskItem<R, SkillBoost.Mask<R>?>(eval(this.SkillBoost2.Overall), this.SkillBoost2.Specific?.Translate(eval));
@@ -731,9 +776,21 @@ namespace Mutagen.Bethesda.Skyrim
                     eval(this.Weight.Male),
                     eval(this.Weight.Female));
                 obj.Flags = eval(this.Flags);
-                obj.StartingHealth = eval(this.StartingHealth);
-                obj.StartingMagicka = eval(this.StartingMagicka);
-                obj.StartingStamina = eval(this.StartingStamina);
+                if (Starting != null)
+                {
+                    obj.Starting = new MaskItem<R, IEnumerable<KeyValuePair<R, R>>?>(eval(this.Starting.Overall), default);
+                    if (Starting.Specific != null)
+                    {
+                        List<KeyValuePair<R, R>> l = new List<KeyValuePair<R, R>>();
+                        obj.Starting.Specific = l;
+                        foreach (var item in Starting.Specific)
+                        {
+                            R keyVal = eval(item.Key);
+                            R valVal = eval(item.Value);
+                            l.Add(new KeyValuePair<R, R>(keyVal, valVal));
+                        }
+                    }
+                }
                 obj.BaseCarryWeight = eval(this.BaseCarryWeight);
                 obj.BaseMass = eval(this.BaseMass);
                 obj.AccelerationRate = eval(this.AccelerationRate);
@@ -743,9 +800,21 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.HairBipedObject = eval(this.HairBipedObject);
                 obj.InjuredHealthPercent = eval(this.InjuredHealthPercent);
                 obj.ShieldBipedObject = eval(this.ShieldBipedObject);
-                obj.HealthRegen = eval(this.HealthRegen);
-                obj.MagickaRegen = eval(this.MagickaRegen);
-                obj.StaminaRegen = eval(this.StaminaRegen);
+                if (Regen != null)
+                {
+                    obj.Regen = new MaskItem<R, IEnumerable<KeyValuePair<R, R>>?>(eval(this.Regen.Overall), default);
+                    if (Regen.Specific != null)
+                    {
+                        List<KeyValuePair<R, R>> l = new List<KeyValuePair<R, R>>();
+                        obj.Regen.Specific = l;
+                        foreach (var item in Regen.Specific)
+                        {
+                            R keyVal = eval(item.Key);
+                            R valVal = eval(item.Value);
+                            l.Add(new KeyValuePair<R, R>(keyVal, valVal));
+                        }
+                    }
+                }
                 obj.UnarmedDamage = eval(this.UnarmedDamage);
                 obj.UnarmedReach = eval(this.UnarmedReach);
                 obj.BodyBipedObject = eval(this.BodyBipedObject);
@@ -753,6 +822,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.FlightRadius = eval(this.FlightRadius);
                 obj.AngularAccelerationRate = eval(this.AngularAccelerationRate);
                 obj.AngularTolerance = eval(this.AngularTolerance);
+                obj.MountData = this.MountData == null ? null : new MaskItem<R, MountData.Mask<R>?>(eval(this.MountData.Overall), this.MountData.Specific?.Translate(eval));
             }
             #endregion
 
@@ -775,6 +845,10 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Versioning ?? true)
+                    {
+                        fg.AppendItem(Versioning, "Versioning");
+                    }
                     if (printMask?.SkillBoost0?.Overall ?? true)
                     {
                         SkillBoost0?.ToString(fg);
@@ -819,17 +893,44 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(Flags, "Flags");
                     }
-                    if (printMask?.StartingHealth ?? true)
+                    if (printMask?.Starting?.Overall ?? true)
                     {
-                        fg.AppendItem(StartingHealth, "StartingHealth");
-                    }
-                    if (printMask?.StartingMagicka ?? true)
-                    {
-                        fg.AppendItem(StartingMagicka, "StartingMagicka");
-                    }
-                    if (printMask?.StartingStamina ?? true)
-                    {
-                        fg.AppendItem(StartingStamina, "StartingStamina");
+                        fg.AppendLine("Starting =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Starting != null)
+                            {
+                                if (Starting.Overall != null)
+                                {
+                                    fg.AppendLine(Starting.Overall.ToString());
+                                }
+                                if (Starting.Specific != null)
+                                {
+                                    foreach (var subItem in Starting.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine("Key => [");
+                                            using (new DepthWrapper(fg))
+                                            {
+                                                fg.AppendItem(subItem.Key);
+                                            }
+                                            fg.AppendLine("]");
+                                            fg.AppendLine("Value => [");
+                                            using (new DepthWrapper(fg))
+                                            {
+                                                fg.AppendItem(subItem.Value);
+                                            }
+                                            fg.AppendLine("]");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
                     }
                     if (printMask?.BaseCarryWeight ?? true)
                     {
@@ -867,17 +968,44 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(ShieldBipedObject, "ShieldBipedObject");
                     }
-                    if (printMask?.HealthRegen ?? true)
+                    if (printMask?.Regen?.Overall ?? true)
                     {
-                        fg.AppendItem(HealthRegen, "HealthRegen");
-                    }
-                    if (printMask?.MagickaRegen ?? true)
-                    {
-                        fg.AppendItem(MagickaRegen, "MagickaRegen");
-                    }
-                    if (printMask?.StaminaRegen ?? true)
-                    {
-                        fg.AppendItem(StaminaRegen, "StaminaRegen");
+                        fg.AppendLine("Regen =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Regen != null)
+                            {
+                                if (Regen.Overall != null)
+                                {
+                                    fg.AppendLine(Regen.Overall.ToString());
+                                }
+                                if (Regen.Specific != null)
+                                {
+                                    foreach (var subItem in Regen.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine("Key => [");
+                                            using (new DepthWrapper(fg))
+                                            {
+                                                fg.AppendItem(subItem.Key);
+                                            }
+                                            fg.AppendLine("]");
+                                            fg.AppendLine("Value => [");
+                                            using (new DepthWrapper(fg))
+                                            {
+                                                fg.AppendItem(subItem.Value);
+                                            }
+                                            fg.AppendLine("]");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
                     }
                     if (printMask?.UnarmedDamage ?? true)
                     {
@@ -907,6 +1035,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(AngularTolerance, "AngularTolerance");
                     }
+                    if (printMask?.MountData?.Overall ?? true)
+                    {
+                        MountData?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -932,6 +1064,7 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
+            public Exception? Versioning;
             public MaskItem<Exception?, SkillBoost.ErrorMask?>? SkillBoost0;
             public MaskItem<Exception?, SkillBoost.ErrorMask?>? SkillBoost1;
             public MaskItem<Exception?, SkillBoost.ErrorMask?>? SkillBoost2;
@@ -943,9 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, GenderedItem<Exception?>?>? Height;
             public MaskItem<Exception?, GenderedItem<Exception?>?>? Weight;
             public Exception? Flags;
-            public Exception? StartingHealth;
-            public Exception? StartingMagicka;
-            public Exception? StartingStamina;
+            public MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>? Starting;
             public Exception? BaseCarryWeight;
             public Exception? BaseMass;
             public Exception? AccelerationRate;
@@ -955,9 +1086,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? HairBipedObject;
             public Exception? InjuredHealthPercent;
             public Exception? ShieldBipedObject;
-            public Exception? HealthRegen;
-            public Exception? MagickaRegen;
-            public Exception? StaminaRegen;
+            public MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>? Regen;
             public Exception? UnarmedDamage;
             public Exception? UnarmedReach;
             public Exception? BodyBipedObject;
@@ -965,6 +1094,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? FlightRadius;
             public Exception? AngularAccelerationRate;
             public Exception? AngularTolerance;
+            public MaskItem<Exception?, MountData.ErrorMask?>? MountData;
             #endregion
 
             #region IErrorMask
@@ -973,6 +1103,8 @@ namespace Mutagen.Bethesda.Skyrim
                 RaceData_FieldIndex enu = (RaceData_FieldIndex)index;
                 switch (enu)
                 {
+                    case RaceData_FieldIndex.Versioning:
+                        return Versioning;
                     case RaceData_FieldIndex.SkillBoost0:
                         return SkillBoost0;
                     case RaceData_FieldIndex.SkillBoost1:
@@ -995,12 +1127,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Weight;
                     case RaceData_FieldIndex.Flags:
                         return Flags;
-                    case RaceData_FieldIndex.StartingHealth:
-                        return StartingHealth;
-                    case RaceData_FieldIndex.StartingMagicka:
-                        return StartingMagicka;
-                    case RaceData_FieldIndex.StartingStamina:
-                        return StartingStamina;
+                    case RaceData_FieldIndex.Starting:
+                        return Starting;
                     case RaceData_FieldIndex.BaseCarryWeight:
                         return BaseCarryWeight;
                     case RaceData_FieldIndex.BaseMass:
@@ -1019,12 +1147,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return InjuredHealthPercent;
                     case RaceData_FieldIndex.ShieldBipedObject:
                         return ShieldBipedObject;
-                    case RaceData_FieldIndex.HealthRegen:
-                        return HealthRegen;
-                    case RaceData_FieldIndex.MagickaRegen:
-                        return MagickaRegen;
-                    case RaceData_FieldIndex.StaminaRegen:
-                        return StaminaRegen;
+                    case RaceData_FieldIndex.Regen:
+                        return Regen;
                     case RaceData_FieldIndex.UnarmedDamage:
                         return UnarmedDamage;
                     case RaceData_FieldIndex.UnarmedReach:
@@ -1039,6 +1163,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return AngularAccelerationRate;
                     case RaceData_FieldIndex.AngularTolerance:
                         return AngularTolerance;
+                    case RaceData_FieldIndex.MountData:
+                        return MountData;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1049,6 +1175,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RaceData_FieldIndex enu = (RaceData_FieldIndex)index;
                 switch (enu)
                 {
+                    case RaceData_FieldIndex.Versioning:
+                        this.Versioning = ex;
+                        break;
                     case RaceData_FieldIndex.SkillBoost0:
                         this.SkillBoost0 = new MaskItem<Exception?, SkillBoost.ErrorMask?>(ex, null);
                         break;
@@ -1082,14 +1211,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case RaceData_FieldIndex.Flags:
                         this.Flags = ex;
                         break;
-                    case RaceData_FieldIndex.StartingHealth:
-                        this.StartingHealth = ex;
-                        break;
-                    case RaceData_FieldIndex.StartingMagicka:
-                        this.StartingMagicka = ex;
-                        break;
-                    case RaceData_FieldIndex.StartingStamina:
-                        this.StartingStamina = ex;
+                    case RaceData_FieldIndex.Starting:
+                        this.Starting = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ex, null);
                         break;
                     case RaceData_FieldIndex.BaseCarryWeight:
                         this.BaseCarryWeight = ex;
@@ -1118,14 +1241,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case RaceData_FieldIndex.ShieldBipedObject:
                         this.ShieldBipedObject = ex;
                         break;
-                    case RaceData_FieldIndex.HealthRegen:
-                        this.HealthRegen = ex;
-                        break;
-                    case RaceData_FieldIndex.MagickaRegen:
-                        this.MagickaRegen = ex;
-                        break;
-                    case RaceData_FieldIndex.StaminaRegen:
-                        this.StaminaRegen = ex;
+                    case RaceData_FieldIndex.Regen:
+                        this.Regen = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ex, null);
                         break;
                     case RaceData_FieldIndex.UnarmedDamage:
                         this.UnarmedDamage = ex;
@@ -1148,6 +1265,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case RaceData_FieldIndex.AngularTolerance:
                         this.AngularTolerance = ex;
                         break;
+                    case RaceData_FieldIndex.MountData:
+                        this.MountData = new MaskItem<Exception?, MountData.ErrorMask?>(ex, null);
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1158,6 +1278,9 @@ namespace Mutagen.Bethesda.Skyrim
                 RaceData_FieldIndex enu = (RaceData_FieldIndex)index;
                 switch (enu)
                 {
+                    case RaceData_FieldIndex.Versioning:
+                        this.Versioning = (Exception?)obj;
+                        break;
                     case RaceData_FieldIndex.SkillBoost0:
                         this.SkillBoost0 = (MaskItem<Exception?, SkillBoost.ErrorMask?>?)obj;
                         break;
@@ -1191,14 +1314,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case RaceData_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
-                    case RaceData_FieldIndex.StartingHealth:
-                        this.StartingHealth = (Exception?)obj;
-                        break;
-                    case RaceData_FieldIndex.StartingMagicka:
-                        this.StartingMagicka = (Exception?)obj;
-                        break;
-                    case RaceData_FieldIndex.StartingStamina:
-                        this.StartingStamina = (Exception?)obj;
+                    case RaceData_FieldIndex.Starting:
+                        this.Starting = (MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>)obj;
                         break;
                     case RaceData_FieldIndex.BaseCarryWeight:
                         this.BaseCarryWeight = (Exception?)obj;
@@ -1227,14 +1344,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case RaceData_FieldIndex.ShieldBipedObject:
                         this.ShieldBipedObject = (Exception?)obj;
                         break;
-                    case RaceData_FieldIndex.HealthRegen:
-                        this.HealthRegen = (Exception?)obj;
-                        break;
-                    case RaceData_FieldIndex.MagickaRegen:
-                        this.MagickaRegen = (Exception?)obj;
-                        break;
-                    case RaceData_FieldIndex.StaminaRegen:
-                        this.StaminaRegen = (Exception?)obj;
+                    case RaceData_FieldIndex.Regen:
+                        this.Regen = (MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>)obj;
                         break;
                     case RaceData_FieldIndex.UnarmedDamage:
                         this.UnarmedDamage = (Exception?)obj;
@@ -1257,6 +1368,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case RaceData_FieldIndex.AngularTolerance:
                         this.AngularTolerance = (Exception?)obj;
                         break;
+                    case RaceData_FieldIndex.MountData:
+                        this.MountData = (MaskItem<Exception?, MountData.ErrorMask?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1265,6 +1379,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Versioning != null) return true;
                 if (SkillBoost0 != null) return true;
                 if (SkillBoost1 != null) return true;
                 if (SkillBoost2 != null) return true;
@@ -1276,9 +1391,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Height != null) return true;
                 if (Weight != null) return true;
                 if (Flags != null) return true;
-                if (StartingHealth != null) return true;
-                if (StartingMagicka != null) return true;
-                if (StartingStamina != null) return true;
+                if (Starting != null) return true;
                 if (BaseCarryWeight != null) return true;
                 if (BaseMass != null) return true;
                 if (AccelerationRate != null) return true;
@@ -1288,9 +1401,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (HairBipedObject != null) return true;
                 if (InjuredHealthPercent != null) return true;
                 if (ShieldBipedObject != null) return true;
-                if (HealthRegen != null) return true;
-                if (MagickaRegen != null) return true;
-                if (StaminaRegen != null) return true;
+                if (Regen != null) return true;
                 if (UnarmedDamage != null) return true;
                 if (UnarmedReach != null) return true;
                 if (BodyBipedObject != null) return true;
@@ -1298,6 +1409,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (FlightRadius != null) return true;
                 if (AngularAccelerationRate != null) return true;
                 if (AngularTolerance != null) return true;
+                if (MountData != null) return true;
                 return false;
             }
             #endregion
@@ -1332,6 +1444,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
+                fg.AppendItem(Versioning, "Versioning");
                 SkillBoost0?.ToString(fg);
                 SkillBoost1?.ToString(fg);
                 SkillBoost2?.ToString(fg);
@@ -1343,9 +1456,42 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine($"Height => {Height}");
                 fg.AppendLine($"Weight => {Weight}");
                 fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(StartingHealth, "StartingHealth");
-                fg.AppendItem(StartingMagicka, "StartingMagicka");
-                fg.AppendItem(StartingStamina, "StartingStamina");
+                fg.AppendLine("Starting =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Starting != null)
+                    {
+                        if (Starting.Overall != null)
+                        {
+                            fg.AppendLine(Starting.Overall.ToString());
+                        }
+                        if (Starting.Specific != null)
+                        {
+                            foreach (var subItem in Starting.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine("Key => [");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem.Key);
+                                    }
+                                    fg.AppendLine("]");
+                                    fg.AppendLine("Value => [");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem.Value);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
                 fg.AppendItem(BaseCarryWeight, "BaseCarryWeight");
                 fg.AppendItem(BaseMass, "BaseMass");
                 fg.AppendItem(AccelerationRate, "AccelerationRate");
@@ -1355,9 +1501,42 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(HairBipedObject, "HairBipedObject");
                 fg.AppendItem(InjuredHealthPercent, "InjuredHealthPercent");
                 fg.AppendItem(ShieldBipedObject, "ShieldBipedObject");
-                fg.AppendItem(HealthRegen, "HealthRegen");
-                fg.AppendItem(MagickaRegen, "MagickaRegen");
-                fg.AppendItem(StaminaRegen, "StaminaRegen");
+                fg.AppendLine("Regen =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Regen != null)
+                    {
+                        if (Regen.Overall != null)
+                        {
+                            fg.AppendLine(Regen.Overall.ToString());
+                        }
+                        if (Regen.Specific != null)
+                        {
+                            foreach (var subItem in Regen.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine("Key => [");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem.Key);
+                                    }
+                                    fg.AppendLine("]");
+                                    fg.AppendLine("Value => [");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem.Value);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
                 fg.AppendItem(UnarmedDamage, "UnarmedDamage");
                 fg.AppendItem(UnarmedReach, "UnarmedReach");
                 fg.AppendItem(BodyBipedObject, "BodyBipedObject");
@@ -1365,6 +1544,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(FlightRadius, "FlightRadius");
                 fg.AppendItem(AngularAccelerationRate, "AngularAccelerationRate");
                 fg.AppendItem(AngularTolerance, "AngularTolerance");
+                MountData?.ToString(fg);
             }
             #endregion
 
@@ -1373,6 +1553,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.SkillBoost0 = this.SkillBoost0.Combine(rhs.SkillBoost0, (l, r) => l.Combine(r));
                 ret.SkillBoost1 = this.SkillBoost1.Combine(rhs.SkillBoost1, (l, r) => l.Combine(r));
                 ret.SkillBoost2 = this.SkillBoost2.Combine(rhs.SkillBoost2, (l, r) => l.Combine(r));
@@ -1384,9 +1565,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Height = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Height?.Overall, rhs.Height?.Overall), GenderedItem.Combine(this.Height?.Specific, rhs.Height?.Specific));
                 ret.Weight = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Weight?.Overall, rhs.Weight?.Overall), GenderedItem.Combine(this.Weight?.Specific, rhs.Weight?.Specific));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.StartingHealth = this.StartingHealth.Combine(rhs.StartingHealth);
-                ret.StartingMagicka = this.StartingMagicka.Combine(rhs.StartingMagicka);
-                ret.StartingStamina = this.StartingStamina.Combine(rhs.StartingStamina);
+                ret.Starting = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ExceptionExt.Combine(this.Starting?.Overall, rhs.Starting?.Overall), new List<KeyValuePair<Exception?, Exception?>>(ExceptionExt.Combine(this.Starting?.Specific, rhs.Starting?.Specific)));
                 ret.BaseCarryWeight = this.BaseCarryWeight.Combine(rhs.BaseCarryWeight);
                 ret.BaseMass = this.BaseMass.Combine(rhs.BaseMass);
                 ret.AccelerationRate = this.AccelerationRate.Combine(rhs.AccelerationRate);
@@ -1396,9 +1575,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.HairBipedObject = this.HairBipedObject.Combine(rhs.HairBipedObject);
                 ret.InjuredHealthPercent = this.InjuredHealthPercent.Combine(rhs.InjuredHealthPercent);
                 ret.ShieldBipedObject = this.ShieldBipedObject.Combine(rhs.ShieldBipedObject);
-                ret.HealthRegen = this.HealthRegen.Combine(rhs.HealthRegen);
-                ret.MagickaRegen = this.MagickaRegen.Combine(rhs.MagickaRegen);
-                ret.StaminaRegen = this.StaminaRegen.Combine(rhs.StaminaRegen);
+                ret.Regen = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ExceptionExt.Combine(this.Regen?.Overall, rhs.Regen?.Overall), new List<KeyValuePair<Exception?, Exception?>>(ExceptionExt.Combine(this.Regen?.Specific, rhs.Regen?.Specific)));
                 ret.UnarmedDamage = this.UnarmedDamage.Combine(rhs.UnarmedDamage);
                 ret.UnarmedReach = this.UnarmedReach.Combine(rhs.UnarmedReach);
                 ret.BodyBipedObject = this.BodyBipedObject.Combine(rhs.BodyBipedObject);
@@ -1406,6 +1583,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.FlightRadius = this.FlightRadius.Combine(rhs.FlightRadius);
                 ret.AngularAccelerationRate = this.AngularAccelerationRate.Combine(rhs.AngularAccelerationRate);
                 ret.AngularTolerance = this.AngularTolerance.Combine(rhs.AngularTolerance);
+                ret.MountData = this.MountData.Combine(rhs.MountData, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1427,6 +1605,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public bool Versioning;
             public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost0;
             public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost1;
             public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost2;
@@ -1438,9 +1617,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, GenderedItem<bool>?> Height;
             public MaskItem<bool, GenderedItem<bool>?> Weight;
             public bool Flags;
-            public bool StartingHealth;
-            public bool StartingMagicka;
-            public bool StartingStamina;
+            public bool Starting;
             public bool BaseCarryWeight;
             public bool BaseMass;
             public bool AccelerationRate;
@@ -1450,9 +1627,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool HairBipedObject;
             public bool InjuredHealthPercent;
             public bool ShieldBipedObject;
-            public bool HealthRegen;
-            public bool MagickaRegen;
-            public bool StaminaRegen;
+            public bool Regen;
             public bool UnarmedDamage;
             public bool UnarmedReach;
             public bool BodyBipedObject;
@@ -1460,11 +1635,13 @@ namespace Mutagen.Bethesda.Skyrim
             public bool FlightRadius;
             public bool AngularAccelerationRate;
             public bool AngularTolerance;
+            public MaskItem<bool, MountData.TranslationMask?> MountData;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.Versioning = defaultOn;
                 this.SkillBoost0 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
                 this.SkillBoost1 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
                 this.SkillBoost2 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
@@ -1476,9 +1653,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Height = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
                 this.Weight = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
                 this.Flags = defaultOn;
-                this.StartingHealth = defaultOn;
-                this.StartingMagicka = defaultOn;
-                this.StartingStamina = defaultOn;
+                this.Starting = defaultOn;
                 this.BaseCarryWeight = defaultOn;
                 this.BaseMass = defaultOn;
                 this.AccelerationRate = defaultOn;
@@ -1488,9 +1663,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.HairBipedObject = defaultOn;
                 this.InjuredHealthPercent = defaultOn;
                 this.ShieldBipedObject = defaultOn;
-                this.HealthRegen = defaultOn;
-                this.MagickaRegen = defaultOn;
-                this.StaminaRegen = defaultOn;
+                this.Regen = defaultOn;
                 this.UnarmedDamage = defaultOn;
                 this.UnarmedReach = defaultOn;
                 this.BodyBipedObject = defaultOn;
@@ -1498,6 +1671,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.FlightRadius = defaultOn;
                 this.AngularAccelerationRate = defaultOn;
                 this.AngularTolerance = defaultOn;
+                this.MountData = new MaskItem<bool, MountData.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -1513,6 +1687,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Versioning, null));
                 ret.Add((SkillBoost0?.Overall ?? true, SkillBoost0?.Specific?.GetCrystal()));
                 ret.Add((SkillBoost1?.Overall ?? true, SkillBoost1?.Specific?.GetCrystal()));
                 ret.Add((SkillBoost2?.Overall ?? true, SkillBoost2?.Specific?.GetCrystal()));
@@ -1524,9 +1699,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Height?.Overall ?? true, null));
                 ret.Add((Weight?.Overall ?? true, null));
                 ret.Add((Flags, null));
-                ret.Add((StartingHealth, null));
-                ret.Add((StartingMagicka, null));
-                ret.Add((StartingStamina, null));
+                ret.Add((Starting, null));
                 ret.Add((BaseCarryWeight, null));
                 ret.Add((BaseMass, null));
                 ret.Add((AccelerationRate, null));
@@ -1536,9 +1709,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((HairBipedObject, null));
                 ret.Add((InjuredHealthPercent, null));
                 ret.Add((ShieldBipedObject, null));
-                ret.Add((HealthRegen, null));
-                ret.Add((MagickaRegen, null));
-                ret.Add((StaminaRegen, null));
+                ret.Add((Regen, null));
                 ret.Add((UnarmedDamage, null));
                 ret.Add((UnarmedReach, null));
                 ret.Add((BodyBipedObject, null));
@@ -1546,12 +1717,18 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((FlightRadius, null));
                 ret.Add((AngularAccelerationRate, null));
                 ret.Add((AngularTolerance, null));
+                ret.Add((MountData?.Overall ?? true, MountData?.Specific?.GetCrystal()));
             }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = RaceData_Registration.TriggeringRecordType;
+        [Flags]
+        public enum VersioningBreaks
+        {
+            Break0 = 1
+        }
         #endregion
 
         #region Binary Translation
@@ -1615,6 +1792,7 @@ namespace Mutagen.Bethesda.Skyrim
         IRaceDataGetter,
         ILoquiObjectSetter<IRaceData>
     {
+        new RaceData.VersioningBreaks Versioning { get; set; }
         new SkillBoost SkillBoost0 { get; set; }
         new SkillBoost SkillBoost1 { get; set; }
         new SkillBoost SkillBoost2 { get; set; }
@@ -1626,9 +1804,7 @@ namespace Mutagen.Bethesda.Skyrim
         new GenderedItem<Single> Height { get; set; }
         new GenderedItem<Single> Weight { get; set; }
         new RaceData.Flag Flags { get; set; }
-        new Single StartingHealth { get; set; }
-        new Single StartingMagicka { get; set; }
-        new Single StartingStamina { get; set; }
+        new IDictionary<BasicStat, Single> Starting { get; }
         new Single BaseCarryWeight { get; set; }
         new Single BaseMass { get; set; }
         new Single AccelerationRate { get; set; }
@@ -1638,9 +1814,7 @@ namespace Mutagen.Bethesda.Skyrim
         new BipedObject HairBipedObject { get; set; }
         new Single InjuredHealthPercent { get; set; }
         new BipedObject ShieldBipedObject { get; set; }
-        new Single HealthRegen { get; set; }
-        new Single MagickaRegen { get; set; }
-        new Single StaminaRegen { get; set; }
+        new IDictionary<BasicStat, Single> Regen { get; }
         new Single UnarmedDamage { get; set; }
         new Single UnarmedReach { get; set; }
         new BipedObject BodyBipedObject { get; set; }
@@ -1648,6 +1822,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single FlightRadius { get; set; }
         new Single AngularAccelerationRate { get; set; }
         new Single AngularTolerance { get; set; }
+        new MountData MountData { get; set; }
     }
 
     public partial interface IRaceDataGetter :
@@ -1663,6 +1838,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => RaceData_Registration.Instance;
+        RaceData.VersioningBreaks Versioning { get; }
         ISkillBoostGetter SkillBoost0 { get; }
         ISkillBoostGetter SkillBoost1 { get; }
         ISkillBoostGetter SkillBoost2 { get; }
@@ -1674,9 +1850,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGenderedItemGetter<Single> Height { get; }
         IGenderedItemGetter<Single> Weight { get; }
         RaceData.Flag Flags { get; }
-        Single StartingHealth { get; }
-        Single StartingMagicka { get; }
-        Single StartingStamina { get; }
+        IReadOnlyDictionary<BasicStat, Single> Starting { get; }
         Single BaseCarryWeight { get; }
         Single BaseMass { get; }
         Single AccelerationRate { get; }
@@ -1686,9 +1860,7 @@ namespace Mutagen.Bethesda.Skyrim
         BipedObject HairBipedObject { get; }
         Single InjuredHealthPercent { get; }
         BipedObject ShieldBipedObject { get; }
-        Single HealthRegen { get; }
-        Single MagickaRegen { get; }
-        Single StaminaRegen { get; }
+        IReadOnlyDictionary<BasicStat, Single> Regen { get; }
         Single UnarmedDamage { get; }
         Single UnarmedReach { get; }
         BipedObject BodyBipedObject { get; }
@@ -1696,6 +1868,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single FlightRadius { get; }
         Single AngularAccelerationRate { get; }
         Single AngularTolerance { get; }
+        IMountDataGetter MountData { get; }
 
     }
 
@@ -2013,39 +2186,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Field Index
     public enum RaceData_FieldIndex
     {
-        SkillBoost0 = 0,
-        SkillBoost1 = 1,
-        SkillBoost2 = 2,
-        SkillBoost3 = 3,
-        SkillBoost4 = 4,
-        SkillBoost5 = 5,
-        SkillBoost6 = 6,
-        Unknown = 7,
-        Height = 8,
-        Weight = 9,
-        Flags = 10,
-        StartingHealth = 11,
-        StartingMagicka = 12,
-        StartingStamina = 13,
-        BaseCarryWeight = 14,
-        BaseMass = 15,
-        AccelerationRate = 16,
-        DecelerationRate = 17,
-        Size = 18,
-        HeadBipedObject = 19,
-        HairBipedObject = 20,
-        InjuredHealthPercent = 21,
-        ShieldBipedObject = 22,
-        HealthRegen = 23,
-        MagickaRegen = 24,
-        StaminaRegen = 25,
-        UnarmedDamage = 26,
-        UnarmedReach = 27,
-        BodyBipedObject = 28,
-        AimAngleTolerance = 29,
-        FlightRadius = 30,
-        AngularAccelerationRate = 31,
-        AngularTolerance = 32,
+        Versioning = 0,
+        SkillBoost0 = 1,
+        SkillBoost1 = 2,
+        SkillBoost2 = 3,
+        SkillBoost3 = 4,
+        SkillBoost4 = 5,
+        SkillBoost5 = 6,
+        SkillBoost6 = 7,
+        Unknown = 8,
+        Height = 9,
+        Weight = 10,
+        Flags = 11,
+        Starting = 12,
+        BaseCarryWeight = 13,
+        BaseMass = 14,
+        AccelerationRate = 15,
+        DecelerationRate = 16,
+        Size = 17,
+        HeadBipedObject = 18,
+        HairBipedObject = 19,
+        InjuredHealthPercent = 20,
+        ShieldBipedObject = 21,
+        Regen = 22,
+        UnarmedDamage = 23,
+        UnarmedReach = 24,
+        BodyBipedObject = 25,
+        AimAngleTolerance = 26,
+        FlightRadius = 27,
+        AngularAccelerationRate = 28,
+        AngularTolerance = 29,
+        MountData = 30,
     }
     #endregion
 
@@ -2063,9 +2234,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "b455e069-05b6-4f16-b587-b7f1530d620b";
 
-        public const ushort AdditionalFieldCount = 33;
+        public const ushort AdditionalFieldCount = 31;
 
-        public const ushort FieldCount = 33;
+        public const ushort FieldCount = 31;
 
         public static readonly Type MaskType = typeof(RaceData.Mask<>);
 
@@ -2095,6 +2266,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "VERSIONING":
+                    return (ushort)RaceData_FieldIndex.Versioning;
                 case "SKILLBOOST0":
                     return (ushort)RaceData_FieldIndex.SkillBoost0;
                 case "SKILLBOOST1":
@@ -2117,12 +2290,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)RaceData_FieldIndex.Weight;
                 case "FLAGS":
                     return (ushort)RaceData_FieldIndex.Flags;
-                case "STARTINGHEALTH":
-                    return (ushort)RaceData_FieldIndex.StartingHealth;
-                case "STARTINGMAGICKA":
-                    return (ushort)RaceData_FieldIndex.StartingMagicka;
-                case "STARTINGSTAMINA":
-                    return (ushort)RaceData_FieldIndex.StartingStamina;
+                case "STARTING":
+                    return (ushort)RaceData_FieldIndex.Starting;
                 case "BASECARRYWEIGHT":
                     return (ushort)RaceData_FieldIndex.BaseCarryWeight;
                 case "BASEMASS":
@@ -2141,12 +2310,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)RaceData_FieldIndex.InjuredHealthPercent;
                 case "SHIELDBIPEDOBJECT":
                     return (ushort)RaceData_FieldIndex.ShieldBipedObject;
-                case "HEALTHREGEN":
-                    return (ushort)RaceData_FieldIndex.HealthRegen;
-                case "MAGICKAREGEN":
-                    return (ushort)RaceData_FieldIndex.MagickaRegen;
-                case "STAMINAREGEN":
-                    return (ushort)RaceData_FieldIndex.StaminaRegen;
+                case "REGEN":
+                    return (ushort)RaceData_FieldIndex.Regen;
                 case "UNARMEDDAMAGE":
                     return (ushort)RaceData_FieldIndex.UnarmedDamage;
                 case "UNARMEDREACH":
@@ -2161,6 +2326,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)RaceData_FieldIndex.AngularAccelerationRate;
                 case "ANGULARTOLERANCE":
                     return (ushort)RaceData_FieldIndex.AngularTolerance;
+                case "MOUNTDATA":
+                    return (ushort)RaceData_FieldIndex.MountData;
                 default:
                     return null;
             }
@@ -2171,6 +2338,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RaceData_FieldIndex enu = (RaceData_FieldIndex)index;
             switch (enu)
             {
+                case RaceData_FieldIndex.Versioning:
                 case RaceData_FieldIndex.SkillBoost0:
                 case RaceData_FieldIndex.SkillBoost1:
                 case RaceData_FieldIndex.SkillBoost2:
@@ -2182,9 +2350,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RaceData_FieldIndex.Height:
                 case RaceData_FieldIndex.Weight:
                 case RaceData_FieldIndex.Flags:
-                case RaceData_FieldIndex.StartingHealth:
-                case RaceData_FieldIndex.StartingMagicka:
-                case RaceData_FieldIndex.StartingStamina:
+                case RaceData_FieldIndex.Starting:
                 case RaceData_FieldIndex.BaseCarryWeight:
                 case RaceData_FieldIndex.BaseMass:
                 case RaceData_FieldIndex.AccelerationRate:
@@ -2194,9 +2360,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RaceData_FieldIndex.HairBipedObject:
                 case RaceData_FieldIndex.InjuredHealthPercent:
                 case RaceData_FieldIndex.ShieldBipedObject:
-                case RaceData_FieldIndex.HealthRegen:
-                case RaceData_FieldIndex.MagickaRegen:
-                case RaceData_FieldIndex.StaminaRegen:
+                case RaceData_FieldIndex.Regen:
                 case RaceData_FieldIndex.UnarmedDamage:
                 case RaceData_FieldIndex.UnarmedReach:
                 case RaceData_FieldIndex.BodyBipedObject:
@@ -2204,6 +2368,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RaceData_FieldIndex.FlightRadius:
                 case RaceData_FieldIndex.AngularAccelerationRate:
                 case RaceData_FieldIndex.AngularTolerance:
+                case RaceData_FieldIndex.MountData:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2222,14 +2387,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RaceData_FieldIndex.SkillBoost4:
                 case RaceData_FieldIndex.SkillBoost5:
                 case RaceData_FieldIndex.SkillBoost6:
+                case RaceData_FieldIndex.MountData:
                     return true;
+                case RaceData_FieldIndex.Versioning:
                 case RaceData_FieldIndex.Unknown:
                 case RaceData_FieldIndex.Height:
                 case RaceData_FieldIndex.Weight:
                 case RaceData_FieldIndex.Flags:
-                case RaceData_FieldIndex.StartingHealth:
-                case RaceData_FieldIndex.StartingMagicka:
-                case RaceData_FieldIndex.StartingStamina:
+                case RaceData_FieldIndex.Starting:
                 case RaceData_FieldIndex.BaseCarryWeight:
                 case RaceData_FieldIndex.BaseMass:
                 case RaceData_FieldIndex.AccelerationRate:
@@ -2239,9 +2404,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RaceData_FieldIndex.HairBipedObject:
                 case RaceData_FieldIndex.InjuredHealthPercent:
                 case RaceData_FieldIndex.ShieldBipedObject:
-                case RaceData_FieldIndex.HealthRegen:
-                case RaceData_FieldIndex.MagickaRegen:
-                case RaceData_FieldIndex.StaminaRegen:
+                case RaceData_FieldIndex.Regen:
                 case RaceData_FieldIndex.UnarmedDamage:
                 case RaceData_FieldIndex.UnarmedReach:
                 case RaceData_FieldIndex.BodyBipedObject:
@@ -2260,6 +2423,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RaceData_FieldIndex enu = (RaceData_FieldIndex)index;
             switch (enu)
             {
+                case RaceData_FieldIndex.Versioning:
                 case RaceData_FieldIndex.SkillBoost0:
                 case RaceData_FieldIndex.SkillBoost1:
                 case RaceData_FieldIndex.SkillBoost2:
@@ -2271,9 +2435,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RaceData_FieldIndex.Height:
                 case RaceData_FieldIndex.Weight:
                 case RaceData_FieldIndex.Flags:
-                case RaceData_FieldIndex.StartingHealth:
-                case RaceData_FieldIndex.StartingMagicka:
-                case RaceData_FieldIndex.StartingStamina:
+                case RaceData_FieldIndex.Starting:
                 case RaceData_FieldIndex.BaseCarryWeight:
                 case RaceData_FieldIndex.BaseMass:
                 case RaceData_FieldIndex.AccelerationRate:
@@ -2283,9 +2445,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RaceData_FieldIndex.HairBipedObject:
                 case RaceData_FieldIndex.InjuredHealthPercent:
                 case RaceData_FieldIndex.ShieldBipedObject:
-                case RaceData_FieldIndex.HealthRegen:
-                case RaceData_FieldIndex.MagickaRegen:
-                case RaceData_FieldIndex.StaminaRegen:
+                case RaceData_FieldIndex.Regen:
                 case RaceData_FieldIndex.UnarmedDamage:
                 case RaceData_FieldIndex.UnarmedReach:
                 case RaceData_FieldIndex.BodyBipedObject:
@@ -2293,6 +2453,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RaceData_FieldIndex.FlightRadius:
                 case RaceData_FieldIndex.AngularAccelerationRate:
                 case RaceData_FieldIndex.AngularTolerance:
+                case RaceData_FieldIndex.MountData:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2304,6 +2465,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RaceData_FieldIndex enu = (RaceData_FieldIndex)index;
             switch (enu)
             {
+                case RaceData_FieldIndex.Versioning:
+                    return "Versioning";
                 case RaceData_FieldIndex.SkillBoost0:
                     return "SkillBoost0";
                 case RaceData_FieldIndex.SkillBoost1:
@@ -2326,12 +2489,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Weight";
                 case RaceData_FieldIndex.Flags:
                     return "Flags";
-                case RaceData_FieldIndex.StartingHealth:
-                    return "StartingHealth";
-                case RaceData_FieldIndex.StartingMagicka:
-                    return "StartingMagicka";
-                case RaceData_FieldIndex.StartingStamina:
-                    return "StartingStamina";
+                case RaceData_FieldIndex.Starting:
+                    return "Starting";
                 case RaceData_FieldIndex.BaseCarryWeight:
                     return "BaseCarryWeight";
                 case RaceData_FieldIndex.BaseMass:
@@ -2350,12 +2509,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "InjuredHealthPercent";
                 case RaceData_FieldIndex.ShieldBipedObject:
                     return "ShieldBipedObject";
-                case RaceData_FieldIndex.HealthRegen:
-                    return "HealthRegen";
-                case RaceData_FieldIndex.MagickaRegen:
-                    return "MagickaRegen";
-                case RaceData_FieldIndex.StaminaRegen:
-                    return "StaminaRegen";
+                case RaceData_FieldIndex.Regen:
+                    return "Regen";
                 case RaceData_FieldIndex.UnarmedDamage:
                     return "UnarmedDamage";
                 case RaceData_FieldIndex.UnarmedReach:
@@ -2370,6 +2525,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "AngularAccelerationRate";
                 case RaceData_FieldIndex.AngularTolerance:
                     return "AngularTolerance";
+                case RaceData_FieldIndex.MountData:
+                    return "MountData";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2380,6 +2537,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RaceData_FieldIndex enu = (RaceData_FieldIndex)index;
             switch (enu)
             {
+                case RaceData_FieldIndex.Versioning:
                 case RaceData_FieldIndex.SkillBoost0:
                 case RaceData_FieldIndex.SkillBoost1:
                 case RaceData_FieldIndex.SkillBoost2:
@@ -2391,9 +2549,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RaceData_FieldIndex.Height:
                 case RaceData_FieldIndex.Weight:
                 case RaceData_FieldIndex.Flags:
-                case RaceData_FieldIndex.StartingHealth:
-                case RaceData_FieldIndex.StartingMagicka:
-                case RaceData_FieldIndex.StartingStamina:
+                case RaceData_FieldIndex.Starting:
                 case RaceData_FieldIndex.BaseCarryWeight:
                 case RaceData_FieldIndex.BaseMass:
                 case RaceData_FieldIndex.AccelerationRate:
@@ -2403,9 +2559,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RaceData_FieldIndex.HairBipedObject:
                 case RaceData_FieldIndex.InjuredHealthPercent:
                 case RaceData_FieldIndex.ShieldBipedObject:
-                case RaceData_FieldIndex.HealthRegen:
-                case RaceData_FieldIndex.MagickaRegen:
-                case RaceData_FieldIndex.StaminaRegen:
+                case RaceData_FieldIndex.Regen:
                 case RaceData_FieldIndex.UnarmedDamage:
                 case RaceData_FieldIndex.UnarmedReach:
                 case RaceData_FieldIndex.BodyBipedObject:
@@ -2413,6 +2567,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RaceData_FieldIndex.FlightRadius:
                 case RaceData_FieldIndex.AngularAccelerationRate:
                 case RaceData_FieldIndex.AngularTolerance:
+                case RaceData_FieldIndex.MountData:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2424,6 +2579,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RaceData_FieldIndex enu = (RaceData_FieldIndex)index;
             switch (enu)
             {
+                case RaceData_FieldIndex.Versioning:
                 case RaceData_FieldIndex.SkillBoost0:
                 case RaceData_FieldIndex.SkillBoost1:
                 case RaceData_FieldIndex.SkillBoost2:
@@ -2435,9 +2591,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RaceData_FieldIndex.Height:
                 case RaceData_FieldIndex.Weight:
                 case RaceData_FieldIndex.Flags:
-                case RaceData_FieldIndex.StartingHealth:
-                case RaceData_FieldIndex.StartingMagicka:
-                case RaceData_FieldIndex.StartingStamina:
+                case RaceData_FieldIndex.Starting:
                 case RaceData_FieldIndex.BaseCarryWeight:
                 case RaceData_FieldIndex.BaseMass:
                 case RaceData_FieldIndex.AccelerationRate:
@@ -2447,9 +2601,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RaceData_FieldIndex.HairBipedObject:
                 case RaceData_FieldIndex.InjuredHealthPercent:
                 case RaceData_FieldIndex.ShieldBipedObject:
-                case RaceData_FieldIndex.HealthRegen:
-                case RaceData_FieldIndex.MagickaRegen:
-                case RaceData_FieldIndex.StaminaRegen:
+                case RaceData_FieldIndex.Regen:
                 case RaceData_FieldIndex.UnarmedDamage:
                 case RaceData_FieldIndex.UnarmedReach:
                 case RaceData_FieldIndex.BodyBipedObject:
@@ -2457,6 +2609,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RaceData_FieldIndex.FlightRadius:
                 case RaceData_FieldIndex.AngularAccelerationRate:
                 case RaceData_FieldIndex.AngularTolerance:
+                case RaceData_FieldIndex.MountData:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2468,6 +2621,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RaceData_FieldIndex enu = (RaceData_FieldIndex)index;
             switch (enu)
             {
+                case RaceData_FieldIndex.Versioning:
+                    return typeof(RaceData.VersioningBreaks);
                 case RaceData_FieldIndex.SkillBoost0:
                     return typeof(SkillBoost);
                 case RaceData_FieldIndex.SkillBoost1:
@@ -2490,12 +2645,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(GenderedItem<Single>);
                 case RaceData_FieldIndex.Flags:
                     return typeof(RaceData.Flag);
-                case RaceData_FieldIndex.StartingHealth:
-                    return typeof(Single);
-                case RaceData_FieldIndex.StartingMagicka:
-                    return typeof(Single);
-                case RaceData_FieldIndex.StartingStamina:
-                    return typeof(Single);
+                case RaceData_FieldIndex.Starting:
+                    return typeof(Dictionary<BasicStat, Single>);
                 case RaceData_FieldIndex.BaseCarryWeight:
                     return typeof(Single);
                 case RaceData_FieldIndex.BaseMass:
@@ -2514,12 +2665,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Single);
                 case RaceData_FieldIndex.ShieldBipedObject:
                     return typeof(BipedObject);
-                case RaceData_FieldIndex.HealthRegen:
-                    return typeof(Single);
-                case RaceData_FieldIndex.MagickaRegen:
-                    return typeof(Single);
-                case RaceData_FieldIndex.StaminaRegen:
-                    return typeof(Single);
+                case RaceData_FieldIndex.Regen:
+                    return typeof(Dictionary<BasicStat, Single>);
                 case RaceData_FieldIndex.UnarmedDamage:
                     return typeof(Single);
                 case RaceData_FieldIndex.UnarmedReach:
@@ -2534,6 +2681,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Single);
                 case RaceData_FieldIndex.AngularTolerance:
                     return typeof(Single);
+                case RaceData_FieldIndex.MountData:
+                    return typeof(MountData);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2542,7 +2691,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(RaceDataXmlWriteTranslation);
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = DATA_HEADER;
-        public const int NumStructFields = 33;
+        public const int NumStructFields = 30;
         public const int NumTypedFields = 0;
         public static readonly Type BinaryWriteTranslation = typeof(RaceDataBinaryWriteTranslation);
         #region Interface
@@ -2586,6 +2735,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IRaceData item)
         {
             ClearPartial();
+            item.Versioning = default;
             item.SkillBoost0.Clear();
             item.SkillBoost1.Clear();
             item.SkillBoost2.Clear();
@@ -2599,9 +2749,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Weight.Male = default;
             item.Weight.Female = default;
             item.Flags = default;
-            item.StartingHealth = default;
-            item.StartingMagicka = default;
-            item.StartingStamina = default;
+            item.Starting.Clear();
             item.BaseCarryWeight = default;
             item.BaseMass = default;
             item.AccelerationRate = default;
@@ -2611,9 +2759,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.HairBipedObject = RaceData._HairBipedObject_Default;
             item.InjuredHealthPercent = default;
             item.ShieldBipedObject = RaceData._ShieldBipedObject_Default;
-            item.HealthRegen = default;
-            item.MagickaRegen = default;
-            item.StaminaRegen = default;
+            item.Regen.Clear();
             item.UnarmedDamage = default;
             item.UnarmedReach = default;
             item.BodyBipedObject = RaceData._BodyBipedObject_Default;
@@ -2621,6 +2767,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.FlightRadius = default;
             item.AngularAccelerationRate = default;
             item.AngularTolerance = default;
+            item.MountData.Clear();
         }
         
         #region Xml Translation
@@ -2671,9 +2818,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame,
                 transl: FloatBinaryTranslation.Instance.Parse);
             item.Flags = EnumBinaryTranslation<RaceData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.StartingHealth = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.StartingMagicka = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.StartingStamina = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            Mutagen.Bethesda.Binary.DictBinaryTranslation<Single>.Instance.Parse<BasicStat>(
+                frame: frame,
+                item: item.Starting,
+                transl: FloatBinaryTranslation.Instance.Parse);
             item.BaseCarryWeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.BaseMass = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.AccelerationRate = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
@@ -2683,9 +2831,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.HairBipedObject = EnumBinaryTranslation<BipedObject>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.InjuredHealthPercent = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.ShieldBipedObject = EnumBinaryTranslation<BipedObject>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.HealthRegen = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.MagickaRegen = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.StaminaRegen = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            Mutagen.Bethesda.Binary.DictBinaryTranslation<Single>.Instance.Parse<BasicStat>(
+                frame: frame,
+                item: item.Regen,
+                transl: FloatBinaryTranslation.Instance.Parse);
             item.UnarmedDamage = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.UnarmedReach = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.BodyBipedObject = EnumBinaryTranslation<BipedObject>.Instance.Parse(frame: frame.SpawnWithLength(4));
@@ -2696,9 +2845,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RaceDataBinaryCreateTranslation.FillBinaryFlags2CustomPublic(
                 frame: frame,
                 item: item);
-            RaceDataBinaryCreateTranslation.FillBinaryMountDataCustomPublic(
-                frame: frame,
-                item: item);
+            if (frame.Complete)
+            {
+                item.Versioning |= RaceData.VersioningBreaks.Break0;
+                return;
+            }
+            item.MountData = Mutagen.Bethesda.Skyrim.MountData.CreateFromBinary(frame: frame);
         }
         
         public virtual void CopyInFromBinary(
@@ -2744,6 +2896,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.SkillBoost0 = MaskItemExt.Factory(item.SkillBoost0.GetEqualsMask(rhs.SkillBoost0, include), include);
             ret.SkillBoost1 = MaskItemExt.Factory(item.SkillBoost1.GetEqualsMask(rhs.SkillBoost1, include), include);
             ret.SkillBoost2 = MaskItemExt.Factory(item.SkillBoost2.GetEqualsMask(rhs.SkillBoost2, include), include);
@@ -2759,9 +2912,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 male: item.Weight.Male.EqualsWithin(rhs.Weight.Male),
                 female: item.Weight.Female.EqualsWithin(rhs.Weight.Female));
             ret.Flags = item.Flags == rhs.Flags;
-            ret.StartingHealth = item.StartingHealth.EqualsWithin(rhs.StartingHealth);
-            ret.StartingMagicka = item.StartingMagicka.EqualsWithin(rhs.StartingMagicka);
-            ret.StartingStamina = item.StartingStamina.EqualsWithin(rhs.StartingStamina);
+            {
+                var specific = item.Starting.SelectAgainst<KeyValuePair<BasicStat, Single>, KeyValuePair<bool, bool>>(rhs.Starting, ((l, r) => new KeyValuePair<bool, bool>(object.Equals(l.Key, r.Key), object.Equals(l.Value, r.Value))), out var countEqual);
+                ret.Starting = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(countEqual && specific.All((b) => b.Key && b.Value), specific);
+            }
             ret.BaseCarryWeight = item.BaseCarryWeight.EqualsWithin(rhs.BaseCarryWeight);
             ret.BaseMass = item.BaseMass.EqualsWithin(rhs.BaseMass);
             ret.AccelerationRate = item.AccelerationRate.EqualsWithin(rhs.AccelerationRate);
@@ -2771,9 +2925,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.HairBipedObject = item.HairBipedObject == rhs.HairBipedObject;
             ret.InjuredHealthPercent = item.InjuredHealthPercent.EqualsWithin(rhs.InjuredHealthPercent);
             ret.ShieldBipedObject = item.ShieldBipedObject == rhs.ShieldBipedObject;
-            ret.HealthRegen = item.HealthRegen.EqualsWithin(rhs.HealthRegen);
-            ret.MagickaRegen = item.MagickaRegen.EqualsWithin(rhs.MagickaRegen);
-            ret.StaminaRegen = item.StaminaRegen.EqualsWithin(rhs.StaminaRegen);
+            {
+                var specific = item.Regen.SelectAgainst<KeyValuePair<BasicStat, Single>, KeyValuePair<bool, bool>>(rhs.Regen, ((l, r) => new KeyValuePair<bool, bool>(object.Equals(l.Key, r.Key), object.Equals(l.Value, r.Value))), out var countEqual);
+                ret.Regen = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(countEqual && specific.All((b) => b.Key && b.Value), specific);
+            }
             ret.UnarmedDamage = item.UnarmedDamage.EqualsWithin(rhs.UnarmedDamage);
             ret.UnarmedReach = item.UnarmedReach.EqualsWithin(rhs.UnarmedReach);
             ret.BodyBipedObject = item.BodyBipedObject == rhs.BodyBipedObject;
@@ -2781,6 +2936,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.FlightRadius = item.FlightRadius.EqualsWithin(rhs.FlightRadius);
             ret.AngularAccelerationRate = item.AngularAccelerationRate.EqualsWithin(rhs.AngularAccelerationRate);
             ret.AngularTolerance = item.AngularTolerance.EqualsWithin(rhs.AngularTolerance);
+            ret.MountData = MaskItemExt.Factory(item.MountData.GetEqualsMask(rhs.MountData, include), include);
         }
         
         public string ToString(
@@ -2827,6 +2983,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             RaceData.Mask<bool>? printMask = null)
         {
+            if (printMask?.Versioning ?? true)
+            {
+                fg.AppendItem(item.Versioning, "Versioning");
+            }
             if (printMask?.SkillBoost0?.Overall ?? true)
             {
                 item.SkillBoost0?.ToString(fg, "SkillBoost0");
@@ -2871,17 +3031,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Flags, "Flags");
             }
-            if (printMask?.StartingHealth ?? true)
+            if (printMask?.Starting?.Overall ?? true)
             {
-                fg.AppendItem(item.StartingHealth, "StartingHealth");
-            }
-            if (printMask?.StartingMagicka ?? true)
-            {
-                fg.AppendItem(item.StartingMagicka, "StartingMagicka");
-            }
-            if (printMask?.StartingStamina ?? true)
-            {
-                fg.AppendItem(item.StartingStamina, "StartingStamina");
+                fg.AppendLine("Starting =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Starting)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem.Key);
+                            fg.AppendItem(subItem.Value);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
             }
             if (printMask?.BaseCarryWeight ?? true)
             {
@@ -2919,17 +3086,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.ShieldBipedObject, "ShieldBipedObject");
             }
-            if (printMask?.HealthRegen ?? true)
+            if (printMask?.Regen?.Overall ?? true)
             {
-                fg.AppendItem(item.HealthRegen, "HealthRegen");
-            }
-            if (printMask?.MagickaRegen ?? true)
-            {
-                fg.AppendItem(item.MagickaRegen, "MagickaRegen");
-            }
-            if (printMask?.StaminaRegen ?? true)
-            {
-                fg.AppendItem(item.StaminaRegen, "StaminaRegen");
+                fg.AppendLine("Regen =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Regen)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem.Key);
+                            fg.AppendItem(subItem.Value);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
             }
             if (printMask?.UnarmedDamage ?? true)
             {
@@ -2959,12 +3133,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.AngularTolerance, "AngularTolerance");
             }
+            if (printMask?.MountData?.Overall ?? true)
+            {
+                item.MountData?.ToString(fg, "MountData");
+            }
         }
         
         public bool HasBeenSet(
             IRaceDataGetter item,
             RaceData.Mask<bool?> checkMask)
         {
+            if (checkMask.Starting?.Overall.HasValue ?? false) return false;
+            if (checkMask.Regen?.Overall.HasValue ?? false) return false;
             return true;
         }
         
@@ -2972,6 +3152,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRaceDataGetter item,
             RaceData.Mask<bool> mask)
         {
+            mask.Versioning = true;
             mask.SkillBoost0 = new MaskItem<bool, SkillBoost.Mask<bool>?>(true, item.SkillBoost0?.GetHasBeenSetMask());
             mask.SkillBoost1 = new MaskItem<bool, SkillBoost.Mask<bool>?>(true, item.SkillBoost1?.GetHasBeenSetMask());
             mask.SkillBoost2 = new MaskItem<bool, SkillBoost.Mask<bool>?>(true, item.SkillBoost2?.GetHasBeenSetMask());
@@ -2983,9 +3164,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Height = new GenderedItem<bool>(true, true);
             mask.Weight = new GenderedItem<bool>(true, true);
             mask.Flags = true;
-            mask.StartingHealth = true;
-            mask.StartingMagicka = true;
-            mask.StartingStamina = true;
+            mask.Starting = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(item.Starting != null, null);
             mask.BaseCarryWeight = true;
             mask.BaseMass = true;
             mask.AccelerationRate = true;
@@ -2995,9 +3174,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.HairBipedObject = true;
             mask.InjuredHealthPercent = true;
             mask.ShieldBipedObject = true;
-            mask.HealthRegen = true;
-            mask.MagickaRegen = true;
-            mask.StaminaRegen = true;
+            mask.Regen = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(item.Regen != null, null);
             mask.UnarmedDamage = true;
             mask.UnarmedReach = true;
             mask.BodyBipedObject = true;
@@ -3005,6 +3182,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.FlightRadius = true;
             mask.AngularAccelerationRate = true;
             mask.AngularTolerance = true;
+            mask.MountData = new MaskItem<bool, MountData.Mask<bool>?>(true, item.MountData?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -3014,6 +3192,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
+            if (lhs.Versioning != rhs.Versioning) return false;
             if (!object.Equals(lhs.SkillBoost0, rhs.SkillBoost0)) return false;
             if (!object.Equals(lhs.SkillBoost1, rhs.SkillBoost1)) return false;
             if (!object.Equals(lhs.SkillBoost2, rhs.SkillBoost2)) return false;
@@ -3025,9 +3204,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!Equals(lhs.Height, rhs.Height)) return false;
             if (!Equals(lhs.Weight, rhs.Weight)) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.StartingHealth.EqualsWithin(rhs.StartingHealth)) return false;
-            if (!lhs.StartingMagicka.EqualsWithin(rhs.StartingMagicka)) return false;
-            if (!lhs.StartingStamina.EqualsWithin(rhs.StartingStamina)) return false;
+            if (!lhs.Starting.SequenceEqual(rhs.Starting)) return false;
             if (!lhs.BaseCarryWeight.EqualsWithin(rhs.BaseCarryWeight)) return false;
             if (!lhs.BaseMass.EqualsWithin(rhs.BaseMass)) return false;
             if (!lhs.AccelerationRate.EqualsWithin(rhs.AccelerationRate)) return false;
@@ -3037,9 +3214,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.HairBipedObject != rhs.HairBipedObject) return false;
             if (!lhs.InjuredHealthPercent.EqualsWithin(rhs.InjuredHealthPercent)) return false;
             if (lhs.ShieldBipedObject != rhs.ShieldBipedObject) return false;
-            if (!lhs.HealthRegen.EqualsWithin(rhs.HealthRegen)) return false;
-            if (!lhs.MagickaRegen.EqualsWithin(rhs.MagickaRegen)) return false;
-            if (!lhs.StaminaRegen.EqualsWithin(rhs.StaminaRegen)) return false;
+            if (!lhs.Regen.SequenceEqual(rhs.Regen)) return false;
             if (!lhs.UnarmedDamage.EqualsWithin(rhs.UnarmedDamage)) return false;
             if (!lhs.UnarmedReach.EqualsWithin(rhs.UnarmedReach)) return false;
             if (lhs.BodyBipedObject != rhs.BodyBipedObject) return false;
@@ -3047,12 +3222,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.FlightRadius.EqualsWithin(rhs.FlightRadius)) return false;
             if (!lhs.AngularAccelerationRate.EqualsWithin(rhs.AngularAccelerationRate)) return false;
             if (!lhs.AngularTolerance.EqualsWithin(rhs.AngularTolerance)) return false;
+            if (!object.Equals(lhs.MountData, rhs.MountData)) return false;
             return true;
         }
         
         public virtual int GetHashCode(IRaceDataGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Versioning);
             hash.Add(item.SkillBoost0);
             hash.Add(item.SkillBoost1);
             hash.Add(item.SkillBoost2);
@@ -3064,9 +3241,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(HashCode.Combine(item.Height.Male, item.Height.Female));
             hash.Add(HashCode.Combine(item.Weight.Male, item.Weight.Female));
             hash.Add(item.Flags);
-            hash.Add(item.StartingHealth);
-            hash.Add(item.StartingMagicka);
-            hash.Add(item.StartingStamina);
+            hash.Add(item.Starting);
             hash.Add(item.BaseCarryWeight);
             hash.Add(item.BaseMass);
             hash.Add(item.AccelerationRate);
@@ -3076,9 +3251,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.HairBipedObject);
             hash.Add(item.InjuredHealthPercent);
             hash.Add(item.ShieldBipedObject);
-            hash.Add(item.HealthRegen);
-            hash.Add(item.MagickaRegen);
-            hash.Add(item.StaminaRegen);
+            hash.Add(item.Regen);
             hash.Add(item.UnarmedDamage);
             hash.Add(item.UnarmedReach);
             hash.Add(item.BodyBipedObject);
@@ -3086,6 +3259,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.FlightRadius);
             hash.Add(item.AngularAccelerationRate);
             hash.Add(item.AngularTolerance);
+            hash.Add(item.MountData);
             return hash.ToHashCode();
         }
         
@@ -3117,6 +3291,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
+            if ((copyMask?.GetShouldTranslate((int)RaceData_FieldIndex.Versioning) ?? true))
+            {
+                item.Versioning = rhs.Versioning;
+            }
             if ((copyMask?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost0) ?? true))
             {
                 errorMask?.PushIndex((int)RaceData_FieldIndex.SkillBoost0);
@@ -3285,17 +3463,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Flags = rhs.Flags;
             }
-            if ((copyMask?.GetShouldTranslate((int)RaceData_FieldIndex.StartingHealth) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)RaceData_FieldIndex.Starting) ?? true))
             {
-                item.StartingHealth = rhs.StartingHealth;
-            }
-            if ((copyMask?.GetShouldTranslate((int)RaceData_FieldIndex.StartingMagicka) ?? true))
-            {
-                item.StartingMagicka = rhs.StartingMagicka;
-            }
-            if ((copyMask?.GetShouldTranslate((int)RaceData_FieldIndex.StartingStamina) ?? true))
-            {
-                item.StartingStamina = rhs.StartingStamina;
+                errorMask?.PushIndex((int)RaceData_FieldIndex.Starting);
+                try
+                {
+                    item.Starting.SetTo(rhs.Starting);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)RaceData_FieldIndex.BaseCarryWeight) ?? true))
             {
@@ -3333,17 +3516,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.ShieldBipedObject = rhs.ShieldBipedObject;
             }
-            if ((copyMask?.GetShouldTranslate((int)RaceData_FieldIndex.HealthRegen) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)RaceData_FieldIndex.Regen) ?? true))
             {
-                item.HealthRegen = rhs.HealthRegen;
-            }
-            if ((copyMask?.GetShouldTranslate((int)RaceData_FieldIndex.MagickaRegen) ?? true))
-            {
-                item.MagickaRegen = rhs.MagickaRegen;
-            }
-            if ((copyMask?.GetShouldTranslate((int)RaceData_FieldIndex.StaminaRegen) ?? true))
-            {
-                item.StaminaRegen = rhs.StaminaRegen;
+                errorMask?.PushIndex((int)RaceData_FieldIndex.Regen);
+                try
+                {
+                    item.Regen.SetTo(rhs.Regen);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)RaceData_FieldIndex.UnarmedDamage) ?? true))
             {
@@ -3372,6 +3560,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((copyMask?.GetShouldTranslate((int)RaceData_FieldIndex.AngularTolerance) ?? true))
             {
                 item.AngularTolerance = rhs.AngularTolerance;
+            }
+            if (rhs.Versioning.HasFlag(RaceData.VersioningBreaks.Break0)) return;
+            if ((copyMask?.GetShouldTranslate((int)RaceData_FieldIndex.MountData) ?? true))
+            {
+                errorMask?.PushIndex((int)RaceData_FieldIndex.MountData);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)RaceData_FieldIndex.MountData) ?? true))
+                    {
+                        item.MountData = rhs.MountData.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)RaceData_FieldIndex.MountData),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
         }
         
@@ -3462,6 +3673,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
+            if ((translationMask?.GetShouldTranslate((int)RaceData_FieldIndex.Versioning) ?? true))
+            {
+                EnumXmlTranslation<RaceData.VersioningBreaks>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Versioning),
+                    item: item.Versioning,
+                    fieldIndex: (int)RaceData_FieldIndex.Versioning,
+                    errorMask: errorMask);
+            }
             if ((translationMask?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost0) ?? true))
             {
                 var SkillBoost0Item = item.SkillBoost0;
@@ -3591,32 +3811,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)RaceData_FieldIndex.Flags,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)RaceData_FieldIndex.StartingHealth) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)RaceData_FieldIndex.Starting) ?? true))
             {
-                FloatXmlTranslation.Instance.Write(
+                DictXmlTranslation<BasicStat, Single>.Instance.Write(
                     node: node,
-                    name: nameof(item.StartingHealth),
-                    item: item.StartingHealth,
-                    fieldIndex: (int)RaceData_FieldIndex.StartingHealth,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RaceData_FieldIndex.StartingMagicka) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.StartingMagicka),
-                    item: item.StartingMagicka,
-                    fieldIndex: (int)RaceData_FieldIndex.StartingMagicka,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RaceData_FieldIndex.StartingStamina) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.StartingStamina),
-                    item: item.StartingStamina,
-                    fieldIndex: (int)RaceData_FieldIndex.StartingStamina,
-                    errorMask: errorMask);
+                    name: nameof(item.Starting),
+                    items: item.Starting,
+                    fieldIndex: (int)RaceData_FieldIndex.Starting,
+                    errorMask: errorMask,
+                    translationMask: translationMask,
+                    keyTransl: (XElement subNode, BasicStat subItem, ErrorMaskBuilder? dictSubMask, TranslationCrystal? dictSubTranslMask) =>
+                    {
+                        EnumXmlTranslation<BasicStat>.Instance.Write(
+                            node: subNode,
+                            name: "Key",
+                            item: subItem,
+                            errorMask: dictSubMask);
+                    },
+                    valTransl: (XElement subNode, Single subItem, ErrorMaskBuilder? dictSubMask, TranslationCrystal? dictSubTranslMask) =>
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: "Value",
+                            item: subItem,
+                            errorMask: dictSubMask);
+                    });
             }
             if ((translationMask?.GetShouldTranslate((int)RaceData_FieldIndex.BaseCarryWeight) ?? true))
             {
@@ -3699,32 +3918,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)RaceData_FieldIndex.ShieldBipedObject,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)RaceData_FieldIndex.HealthRegen) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)RaceData_FieldIndex.Regen) ?? true))
             {
-                FloatXmlTranslation.Instance.Write(
+                DictXmlTranslation<BasicStat, Single>.Instance.Write(
                     node: node,
-                    name: nameof(item.HealthRegen),
-                    item: item.HealthRegen,
-                    fieldIndex: (int)RaceData_FieldIndex.HealthRegen,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RaceData_FieldIndex.MagickaRegen) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MagickaRegen),
-                    item: item.MagickaRegen,
-                    fieldIndex: (int)RaceData_FieldIndex.MagickaRegen,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)RaceData_FieldIndex.StaminaRegen) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.StaminaRegen),
-                    item: item.StaminaRegen,
-                    fieldIndex: (int)RaceData_FieldIndex.StaminaRegen,
-                    errorMask: errorMask);
+                    name: nameof(item.Regen),
+                    items: item.Regen,
+                    fieldIndex: (int)RaceData_FieldIndex.Regen,
+                    errorMask: errorMask,
+                    translationMask: translationMask,
+                    keyTransl: (XElement subNode, BasicStat subItem, ErrorMaskBuilder? dictSubMask, TranslationCrystal? dictSubTranslMask) =>
+                    {
+                        EnumXmlTranslation<BasicStat>.Instance.Write(
+                            node: subNode,
+                            name: "Key",
+                            item: subItem,
+                            errorMask: dictSubMask);
+                    },
+                    valTransl: (XElement subNode, Single subItem, ErrorMaskBuilder? dictSubMask, TranslationCrystal? dictSubTranslMask) =>
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: "Value",
+                            item: subItem,
+                            errorMask: dictSubMask);
+                    });
             }
             if ((translationMask?.GetShouldTranslate((int)RaceData_FieldIndex.UnarmedDamage) ?? true))
             {
@@ -3788,6 +4006,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item: item.AngularTolerance,
                     fieldIndex: (int)RaceData_FieldIndex.AngularTolerance,
                     errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)RaceData_FieldIndex.MountData) ?? true))
+            {
+                var MountDataItem = item.MountData;
+                ((MountDataXmlWriteTranslation)((IXmlItem)MountDataItem).XmlWriteTranslator).Write(
+                    item: MountDataItem,
+                    node: node,
+                    name: nameof(item.MountData),
+                    fieldIndex: (int)RaceData_FieldIndex.MountData,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)RaceData_FieldIndex.MountData));
             }
         }
 
@@ -3895,6 +4124,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "Versioning":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.Versioning);
+                    try
+                    {
+                        item.Versioning = EnumXmlTranslation<RaceData.VersioningBreaks>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "SkillBoost0":
                     errorMask?.PushIndex((int)RaceData_FieldIndex.SkillBoost0);
                     try
@@ -4108,59 +4355,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "StartingHealth":
-                    errorMask?.PushIndex((int)RaceData_FieldIndex.StartingHealth);
-                    try
-                    {
-                        item.StartingHealth = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "StartingMagicka":
-                    errorMask?.PushIndex((int)RaceData_FieldIndex.StartingMagicka);
-                    try
-                    {
-                        item.StartingMagicka = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "StartingStamina":
-                    errorMask?.PushIndex((int)RaceData_FieldIndex.StartingStamina);
-                    try
-                    {
-                        item.StartingStamina = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
+                case "Starting":
+                    DictXmlTranslation<BasicStat, Single>.Instance.ParseInto(
+                        node: node,
+                        item: item.Starting,
+                        fieldIndex: (int)RaceData_FieldIndex.Starting,
+                        errorMask: errorMask,
+                        translationMask: translationMask,
+                        keyTransl: EnumXmlTranslation<BasicStat>.Instance.Parse,
+                        valTransl: FloatXmlTranslation.Instance.Parse);
                     break;
                 case "BaseCarryWeight":
                     errorMask?.PushIndex((int)RaceData_FieldIndex.BaseCarryWeight);
@@ -4324,59 +4527,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "HealthRegen":
-                    errorMask?.PushIndex((int)RaceData_FieldIndex.HealthRegen);
-                    try
-                    {
-                        item.HealthRegen = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "MagickaRegen":
-                    errorMask?.PushIndex((int)RaceData_FieldIndex.MagickaRegen);
-                    try
-                    {
-                        item.MagickaRegen = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "StaminaRegen":
-                    errorMask?.PushIndex((int)RaceData_FieldIndex.StaminaRegen);
-                    try
-                    {
-                        item.StaminaRegen = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
+                case "Regen":
+                    DictXmlTranslation<BasicStat, Single>.Instance.ParseInto(
+                        node: node,
+                        item: item.Regen,
+                        fieldIndex: (int)RaceData_FieldIndex.Regen,
+                        errorMask: errorMask,
+                        translationMask: translationMask,
+                        keyTransl: EnumXmlTranslation<BasicStat>.Instance.Parse,
+                        valTransl: FloatXmlTranslation.Instance.Parse);
                     break;
                 case "UnarmedDamage":
                     errorMask?.PushIndex((int)RaceData_FieldIndex.UnarmedDamage);
@@ -4493,6 +4652,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item.AngularTolerance = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MountData":
+                    errorMask?.PushIndex((int)RaceData_FieldIndex.MountData);
+                    try
+                    {
+                        item.MountData = LoquiXmlTranslation<MountData>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)RaceData_FieldIndex.MountData));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4688,19 +4866,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryMountDataCustom(
-            MutagenWriter writer,
-            IRaceDataGetter item);
-
-        public static void WriteBinaryMountData(
-            MutagenWriter writer,
-            IRaceDataGetter item)
-        {
-            WriteBinaryMountDataCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IRaceDataGetter item,
             MutagenWriter writer)
@@ -4746,15 +4911,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer,
                 item.Flags,
                 length: 4);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.DictBinaryTranslation<Single>.Instance.Write(
                 writer: writer,
-                item: item.StartingHealth);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.StartingMagicka);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.StartingStamina);
+                items: item.Starting,
+                transl: FloatBinaryTranslation.Instance.Write);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BaseCarryWeight);
@@ -4786,15 +4946,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer,
                 item.ShieldBipedObject,
                 length: 4);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.DictBinaryTranslation<Single>.Instance.Write(
                 writer: writer,
-                item: item.HealthRegen);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.MagickaRegen);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.StaminaRegen);
+                items: item.Regen,
+                transl: FloatBinaryTranslation.Instance.Write);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.UnarmedDamage);
@@ -4820,9 +4975,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RaceDataBinaryWriteTranslation.WriteBinaryFlags2(
                 writer: writer,
                 item: item);
-            RaceDataBinaryWriteTranslation.WriteBinaryMountData(
-                writer: writer,
-                item: item);
+            if (!item.Versioning.HasFlag(RaceData.VersioningBreaks.Break0))
+            {
+                var MountDataItem = item.MountData;
+                ((MountDataBinaryWriteTranslation)((IBinaryItem)MountDataItem).BinaryWriteTranslator).Write(
+                    item: MountDataItem,
+                    writer: writer);
+            }
         }
 
         public void Write(
@@ -4867,19 +5026,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRaceData item)
         {
             FillBinaryFlags2Custom(
-                frame: frame,
-                item: item);
-        }
-
-        static partial void FillBinaryMountDataCustom(
-            MutagenFrame frame,
-            IRaceData item);
-
-        public static void FillBinaryMountDataCustomPublic(
-            MutagenFrame frame,
-            IRaceData item)
-        {
-            FillBinaryMountDataCustom(
                 frame: frame,
                 item: item);
         }
@@ -4965,6 +5111,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public RaceData.VersioningBreaks Versioning { get; private set; }
         public ISkillBoostGetter SkillBoost0 => SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(0x0)), _package, default(RecordTypeConverter));
         public ISkillBoostGetter SkillBoost1 => SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(0x2)), _package, default(RecordTypeConverter));
         public ISkillBoostGetter SkillBoost2 => SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(0x4)), _package, default(RecordTypeConverter));
@@ -4998,9 +5145,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         #endregion
         public RaceData.Flag Flags => GetFlagsCustom(location: 0x20);
-        public Single StartingHealth => SpanExt.GetFloat(_data.Slice(0x24, 0x4));
-        public Single StartingMagicka => SpanExt.GetFloat(_data.Slice(0x28, 0x4));
-        public Single StartingStamina => SpanExt.GetFloat(_data.Slice(0x2C, 0x4));
+        #region Starting
+        public IReadOnlyDictionary<BasicStat, Single> Starting => DictBinaryTranslation<Single>.Instance.Parse<BasicStat>(
+            new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(0x24), _package.Meta, _package.MasterReferences)),
+            new Dictionary<BasicStat, Single>(),
+            FloatBinaryTranslation.Instance.Parse);
+        #endregion
         public Single BaseCarryWeight => SpanExt.GetFloat(_data.Slice(0x30, 0x4));
         public Single BaseMass => SpanExt.GetFloat(_data.Slice(0x34, 0x4));
         public Single AccelerationRate => SpanExt.GetFloat(_data.Slice(0x38, 0x4));
@@ -5010,9 +5160,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public BipedObject HairBipedObject => (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x48, 0x4));
         public Single InjuredHealthPercent => SpanExt.GetFloat(_data.Slice(0x4C, 0x4));
         public BipedObject ShieldBipedObject => (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x50, 0x4));
-        public Single HealthRegen => SpanExt.GetFloat(_data.Slice(0x54, 0x4));
-        public Single MagickaRegen => SpanExt.GetFloat(_data.Slice(0x58, 0x4));
-        public Single StaminaRegen => SpanExt.GetFloat(_data.Slice(0x5C, 0x4));
+        #region Regen
+        public IReadOnlyDictionary<BasicStat, Single> Regen => DictBinaryTranslation<Single>.Instance.Parse<BasicStat>(
+            new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(0x54), _package.Meta, _package.MasterReferences)),
+            new Dictionary<BasicStat, Single>(),
+            FloatBinaryTranslation.Instance.Parse);
+        #endregion
         public Single UnarmedDamage => SpanExt.GetFloat(_data.Slice(0x60, 0x4));
         public Single UnarmedReach => SpanExt.GetFloat(_data.Slice(0x64, 0x4));
         public BipedObject BodyBipedObject => (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x68, 0x4));
@@ -5025,12 +5178,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BinaryMemoryReadStream stream,
             int offset);
         #endregion
-        #region MountData
-        partial void MountDataCustomParse(
-            BinaryMemoryReadStream stream,
-            int offset);
-        #endregion
-        private int Flags2EndingPos;
+        public IMountDataGetter MountData => MountDataBinaryOverlay.MountDataFactory(new BinaryMemoryReadStream(_data.Slice(0x80)), _package, default(RecordTypeConverter));
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -5055,7 +5203,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.Subrecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
-            stream.Position += 0x7C + package.Meta.SubConstants.HeaderLength;
+            if (ret._data.Length <= 0x80)
+            {
+                ret.Versioning |= RaceData.VersioningBreaks.Break0;
+            }
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,

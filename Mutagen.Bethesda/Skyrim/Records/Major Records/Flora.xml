@@ -14,7 +14,7 @@
         <FormLink refName="Keyword" />
       </List>
       <ByteArray name="Unknown" recordType="PNAM" />
-      <String name="ActivateText" recordType="RNAM" />
+      <String name="ActivateTextOverride" recordType="RNAM" />
       <ByteArray name="Unknown2" recordType="FNAM" />
       <FormLink name="Ingredient" objType="Record" recordType="PFIG">
         <Interface>IHarvestTarget</Interface>

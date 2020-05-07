@@ -241,22 +241,24 @@ namespace Mutagen.Bethesda.Generation
 
             var gendered = typeGen as GenderedType;
             this.Module.TryGetTypeGeneration(gendered.SubTypeGeneration.GetType(), out var subBin);
+            var typeName = $"{gendered.SubTypeGeneration.TypeName(getter: true)}{(gendered.SubTypeGeneration.HasBeenSet ? "?" : null)}";
 
-            if (typeGen.HasBeenSet
+            if (data.HasTrigger
                 && !gendered.ItemHasBeenSet)
             {
                 var subLen = (await subBin.ExpectedLength(objGen, gendered.SubTypeGeneration)).Value;
-                if (typeGen.HasBeenSet)
+                if (data.HasTrigger)
                 {
                     fg.AppendLine($"private int? _{typeGen.Name}Location;");
                 }
-                fg.AppendLine($"public IGenderedItemGetter<{gendered.SubTypeGeneration.TypeName(getter: true)}>? {typeGen.Name}");
+                fg.AppendLine($"public IGenderedItemGetter<{gendered.SubTypeGeneration.TypeName(getter: true)}>{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name}");
                 using (new BraceWrapper(fg))
                 {
                     fg.AppendLine("get");
                     using (new BraceWrapper(fg))
                     {
-                        fg.AppendLine($"if (!_{typeGen.Name}Location.HasValue) return {typeGen.GetDefault()};");
+                        var subTypeDefault = gendered.SubTypeGeneration.GetDefault(getter: true);
+                        fg.AppendLine($"if (!_{typeGen.Name}Location.HasValue) return {(typeGen.HasBeenSet ? "default" : $"new GenderedItem<{typeName}>({subTypeDefault}, {subTypeDefault})")};");
                         fg.AppendLine($"var data = HeaderTranslation.ExtractSubrecordMemory(_data, _{typeGen.Name}Location.Value, _package.Meta);");
                         using (var args = new ArgsWrapper(fg,
                             $"return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true)}>"))
@@ -267,11 +269,11 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
             }
-            else if (!typeGen.HasBeenSet
+            else if (!data.HasTrigger
                 && !gendered.ItemHasBeenSet)
             {
                 var subLen = (await subBin.ExpectedLength(objGen, gendered.SubTypeGeneration)).Value;
-                if (typeGen.HasBeenSet)
+                if (data.HasTrigger)
                 {
                     throw new NotImplementedException();
                     //fg.AppendLine($"public {typeGen.TypeName(getter: true)}? {typeGen.Name} => {dataAccessor}.Length >= {(currentPosition + this.ExpectedLength(objGen, typeGen).Value)} ? {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice({currentPosition}, {this.ExpectedLength(objGen, typeGen).Value})", "_package")} : {typeGen.GetDefault()};");
@@ -284,9 +286,9 @@ namespace Mutagen.Bethesda.Generation
                         fg.AppendLine("get");
                         using (new BraceWrapper(fg))
                         {
-                            if (typeGen.HasBeenSet)
+                            if (data.HasTrigger)
                             {
-                                fg.AppendLine($"if (!_{typeGen.Name}Location.HasValue) return {typeGen.GetDefault()};");
+                                fg.AppendLine($"if (!_{typeGen.Name}Location.HasValue) return {typeGen.GetDefault(getter: true)};");
                             }
                             fg.AppendLine($"var data = {dataAccessor}.Span.Slice({passedLengthAccessor}, {subLen * 2});");
                             using (var args = new ArgsWrapper(fg,
@@ -301,11 +303,11 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                if (typeGen.HasBeenSet)
+                if (data.HasTrigger)
                 {
                     fg.AppendLine($"private IGenderedItemGetter<{gendered.SubTypeGeneration.TypeName(getter: true)}{(gendered.SubTypeGeneration.HasBeenSet ? "?" : null)}>? _{typeGen.Name}Overlay;");
                 }
-                fg.AppendLine($"public IGenderedItemGetter<{gendered.SubTypeGeneration.TypeName(getter: true)}{(gendered.SubTypeGeneration.HasBeenSet ? "?" : null)}>? {typeGen.Name} => _{typeGen.Name}Overlay;");
+                fg.AppendLine($"public IGenderedItemGetter<{typeName}>{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => _{typeGen.Name}Overlay{(typeGen.HasBeenSet ? null : $" ?? new GenderedItem<{typeName}>(default, default)")};");
             }
         }
 

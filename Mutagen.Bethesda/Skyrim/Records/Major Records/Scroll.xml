@@ -5,6 +5,7 @@
     <Interface>IItem</Interface>
     <Interface>IModeled</Interface>
     <Interface>IObjectBounded</Interface>
+    <Interface>IObjectId</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
       <String name="Name" recordType="FULL" />
@@ -18,8 +19,8 @@
       <RefDirect name="Destructible" refName="Destructible" />
       <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
       <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
-      <RefDirect name="Data" refName="ScrollData" />
-      <RefDirect name="SpellData" refName="SpellData" />
+      <RefDirect name="Data" refName="ScrollData" hasBeenSet="False" />
+      <RefDirect name="SpellData" refName="SpellData" hasBeenSet="False" />
       <RefList name="Effects" refName="Effect" nullable="NotNull" />
     </Fields>
   </Object>

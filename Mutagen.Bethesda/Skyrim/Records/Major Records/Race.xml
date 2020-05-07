@@ -2,21 +2,22 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Race" recordType="RACE" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true" GUID="54b1dfac-1494-41b6-b6d3-653bc47987eb" ID="49">
     <Interface>INamed</Interface>
+    <Interface>IRelatable</Interface>
     <Fields>
       <String name="Name" recordType="FULL" />
-      <String name="Description" recordType="DESC" />
-      <List name="ActorEffect" counterRecType="SPCT" >
+      <String name="Description" recordType="DESC" hasBeenSet="False" />
+      <List name="ActorEffect" counterRecType="SPCT">
         <FormLink refName="ASpell" recordType="SPLO" />
       </List>
       <FormLink name="Skin" refName="Armor" recordType="WNAM" />
       <RefDirect name="BodyTemplate" refName="BodyTemplate" />
-      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
-      <RefDirect name="Data" refName="RaceData" />
+      <RefDirect name="Data" refName="RaceData" hasBeenSet="False" />
       <Gendered name="SkeletalModel" maleMarker="MNAM" femaleMarker="FNAM">
         <Fields>
-          <RefDirect refName="SimpleModel" recordType="ANAM" >
+          <RefDirect refName="SimpleModel" recordType="ANAM">
             <RecordTypeOverrides>
               <Mapping From="MODL" To="ANAM" />
             </RecordTypeOverrides>
@@ -27,7 +28,7 @@
       <List name="MovementTypeNames">
         <String recordType="MTNM" binaryType="Plain" />
       </List>
-      <Gendered name="Voices" recordType="VTCK">
+      <Gendered name="Voices" recordType="VTCK" hasBeenSet="False" >
         <Fields>
           <FormLink refName="VoiceType" />
         </Fields>
@@ -42,12 +43,13 @@
           <FormLink refName="ColorRecord" />
         </Fields>
       </Gendered>
+      <!-- ToDo: Need to remove and turn into derivative field -->
       <UInt16 name="NumberOfTintsInList" recordType="TINL" />
-      <Float name="FacegenMainClamp" recordType="PNAM" />
-      <Float name="FacegenFaceClamp" recordType="UNAM" />
+      <Float name="FacegenMainClamp" recordType="PNAM" hasBeenSet="False" />
+      <Float name="FacegenFaceClamp" recordType="UNAM" hasBeenSet="False" />
       <FormLink name="AttackRace" recordType="ATKR" refName="Race" />
       <RefList name="Attacks" refName="Attack" />
-      <Gendered name="BodyData" markerType="NAM1" maleMarker="MNAM" femaleMarker="FNAM">
+      <Gendered name="BodyData" markerType="NAM1" maleMarker="MNAM" femaleMarker="FNAM" hasBeenSet="False" >
         <Fields>
           <RefDirect refName="BodyData" />
         </Fields>
@@ -60,7 +62,7 @@
       </List>
       <FormLink name="BodyPartData" refName="BodyPartData" recordType="GNAM" />
       <CustomLogic name="ExtraNAM2" />
-      <Gendered name="BehaviorGraph" markerType="NAM3" maleMarker="MNAM" femaleMarker="FNAM">
+      <Gendered name="BehaviorGraph" markerType="NAM3" maleMarker="MNAM" femaleMarker="FNAM" hasBeenSet="False" >
         <Fields>
           <RefDirect refName="Model" />
         </Fields>
@@ -116,20 +118,25 @@
       <RefDirect name="SkillBoost5" refName="SkillBoost" />
       <RefDirect name="SkillBoost6" refName="SkillBoost" />
       <Int16 name="Unknown" />
-      <Gendered name="Height" >
+      <Gendered name="Height">
         <Fields>
           <Float />
         </Fields>
       </Gendered>
-      <Gendered name="Weight" >
+      <Gendered name="Weight">
         <Fields>
           <Float />
         </Fields>
       </Gendered>
       <Enum name="Flags" enumName="RaceData.Flag" byteLength="4" binaryOverlay="Custom" />
-      <Float name="StartingHealth" />
-      <Float name="StartingMagicka" />
-      <Float name="StartingStamina" />
+      <Dict name="Starting" numEnumKeys="3">
+        <Key>
+          <Enum enumName="BasicStat" />
+        </Key>
+        <Value>
+          <Float />
+        </Value>
+      </Dict>
       <Float name="BaseCarryWeight" />
       <Float name="BaseMass" />
       <Float name="AccelerationRate" />
@@ -139,9 +146,14 @@
       <Enum name="HairBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
       <Float name="InjuredHealthPercent" />
       <Enum name="ShieldBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
-      <Float name="HealthRegen" />
-      <Float name="MagickaRegen" />
-      <Float name="StaminaRegen" />
+      <Dict name="Regen" numEnumKeys="3">
+        <Key>
+          <Enum enumName="BasicStat" />
+        </Key>
+        <Value>
+          <Float />
+        </Value>
+      </Dict>
       <Float name="UnarmedDamage" />
       <Float name="UnarmedReach" />
       <Enum name="BodyBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
@@ -149,8 +161,9 @@
       <Float name="FlightRadius" />
       <Float name="AngularAccelerationRate" />
       <Float name="AngularTolerance" />
-      <CustomLogic name="Flags2" />
-      <CustomLogic name="MountData" />
+      <CustomLogic name="Flags2" byteLength="4" />
+      <Break />
+      <RefDirect name="MountData" refName="MountData" />
     </Fields>
   </Object>
   <Object name="SkillBoost" objType="Subrecord" GUID="8397e320-5ee6-4314-b35a-b69c871fa3ec" ID="53">
@@ -310,6 +323,13 @@
       <FormLink name="Color" refName="ColorRecord" recordType="TINC" />
       <Float name="DefaultValue" recordType="TINV" />
       <UInt16 name="Index" recordType="TIRS" />
+    </Fields>
+  </Object>
+  <Object name="MountData" objType="Subrecord" GUID="ad650ea7-f5c5-4e2d-8a01-55a11e11488b" ID="235">
+    <Fields>
+      <P3Float name="MountOffset" />
+      <P3Float name="DismountOffset" />
+      <P3Float name="MountCameraOffset" />
     </Fields>
   </Object>
 </Loqui>

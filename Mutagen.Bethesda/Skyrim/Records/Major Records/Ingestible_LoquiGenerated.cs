@@ -519,6 +519,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         IItem,
         IHarvestTarget,
+        IObjectId,
         ILoquiObjectSetter<IIngestibleInternal>
     {
     }
@@ -534,6 +535,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IItemGetter,
         IHarvestTargetGetter,
+        IObjectIdGetter,
         ILoquiObject<IIngestibleGetter>,
         IXmlItem,
         IBinaryItem

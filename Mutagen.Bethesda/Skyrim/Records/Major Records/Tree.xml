@@ -15,7 +15,7 @@
       <FormLink name="HarvestSound" recordType="SNAM" refName="SoundDescriptor" />
       <RefDirect name="Production" refName="SeasonalIngredientProduction" />
       <String name="Name" recordType="FULL" />
-      <RefDirect name="Data" refName="TreeData" />
+      <RefDirect name="Data" refName="TreeData" hasBeenSet="True" />
     </Fields>
   </Object>
   <Object name="TreeData" objType="Subrecord" recordType="CNAM" GUID="f0e0de65-6492-449f-b9b5-56a5dfda9d46" ID="190">

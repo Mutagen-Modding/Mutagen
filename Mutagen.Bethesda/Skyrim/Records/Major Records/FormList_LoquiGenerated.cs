@@ -517,6 +517,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IFormList :
         IFormListGetter,
         ISkyrimMajorRecord,
+        IObjectId,
         ILoquiObjectSetter<IFormListInternal>
     {
     }
@@ -530,6 +531,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IFormListGetter :
         ISkyrimMajorRecordGetter,
+        IObjectIdGetter,
         ILoquiObject<IFormListGetter>,
         IXmlItem,
         IBinaryItem

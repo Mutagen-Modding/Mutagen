@@ -9,7 +9,7 @@
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
         <FormLink refName="Keyword" />
       </List>
-      <RefDirect name="Data" refName="MagicEffectData" />
+      <RefDirect name="Data" refName="MagicEffectData" hasBeenSet="False" />
       <List name="CounterEffects">
         <FormLink refName="MagicEffect" recordType="ESCE" />
       </List>

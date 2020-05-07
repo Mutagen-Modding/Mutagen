@@ -71,15 +71,9 @@ namespace Mutagen.Bethesda.Skyrim
         String? IObjectEffectGetter.Name => this.Name;
         #endregion
         #region Data
+        public ObjectEffectData Data { get; set; } = new ObjectEffectData();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ObjectEffectData? _Data;
-        public ObjectEffectData? Data
-        {
-            get => _Data;
-            set => _Data = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectEffectDataGetter? IObjectEffectGetter.Data => this.Data;
+        IObjectEffectDataGetter IObjectEffectGetter.Data => Data;
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -790,7 +784,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new ObjectBounds ObjectBounds { get; set; }
         new String? Name { get; set; }
-        new ObjectEffectData? Data { get; set; }
+        new ObjectEffectData Data { get; set; }
         new ExtendedList<Effect> Effects { get; }
     }
 
@@ -814,7 +808,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => ObjectEffect_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
         String? Name { get; }
-        IObjectEffectDataGetter? Data { get; }
+        IObjectEffectDataGetter Data { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
 
     }
@@ -1350,7 +1344,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.ObjectBounds = new ObjectBounds();
             item.Name = default;
-            item.Data = null;
+            item.Data.Clear();
             item.Effects.Clear();
             base.Clear(item);
         }
@@ -1578,11 +1572,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (rhs == null) return;
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.Name = string.Equals(item.Name, rhs.Name);
-            ret.Data = EqualsMaskHelper.EqualsHelper(
-                item.Data,
-                rhs.Data,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.Data = MaskItemExt.Factory(item.Data.GetEqualsMask(rhs.Data, include), include);
             ret.Effects = item.Effects.CollectionEqualsHelper(
                 rhs.Effects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1647,10 +1637,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(NameItem, "Name");
             }
-            if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+            if (printMask?.Data?.Overall ?? true)
             {
-                DataItem?.ToString(fg, "Data");
+                item.Data?.ToString(fg, "Data");
             }
             if (printMask?.Effects?.Overall ?? true)
             {
@@ -1677,8 +1666,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ObjectEffect.Mask<bool?> checkMask)
         {
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
-            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1690,8 +1677,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
             mask.Name = (item.Name != null);
-            var itemData = item.Data;
-            mask.Data = new MaskItem<bool, ObjectEffectData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
+            mask.Data = new MaskItem<bool, ObjectEffectData.Mask<bool>?>(true, item.Data?.GetHasBeenSetMask());
             var EffectsItem = item.Effects;
             mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect.Mask<bool>?>>?>(true, EffectsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             base.FillHasBeenSetMask(
@@ -1778,10 +1764,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Nameitem);
             }
-            if (item.Data.TryGet(out var Dataitem))
-            {
-                hash.Add(Dataitem);
-            }
+            hash.Add(item.Data);
             hash.Add(item.Effects);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1900,15 +1883,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)ObjectEffect_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Data) ?? true))
                     {
-                        item.Data = rhsData.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)ObjectEffect_FieldIndex.Data));
-                    }
-                    else
-                    {
-                        item.Data = default;
+                        item.Data = rhs.Data.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)ObjectEffect_FieldIndex.Data),
+                            errorMask: errorMask);
                     }
                 }
                 catch (Exception ex)
@@ -2108,19 +2087,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)ObjectEffect_FieldIndex.Name,
                     errorMask: errorMask);
             }
-            if ((item.Data != null)
-                && (translationMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Data) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Data) ?? true))
             {
-                if (item.Data.TryGet(out var DataItem))
-                {
-                    ((ObjectEffectDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
-                        item: DataItem,
-                        node: node,
-                        name: nameof(item.Data),
-                        fieldIndex: (int)ObjectEffect_FieldIndex.Data,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)ObjectEffect_FieldIndex.Data));
-                }
+                var DataItem = item.Data;
+                ((ObjectEffectDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                    item: DataItem,
+                    node: node,
+                    name: nameof(item.Data),
+                    fieldIndex: (int)ObjectEffect_FieldIndex.Data,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ObjectEffect_FieldIndex.Data));
             }
             if ((translationMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Effects) ?? true))
             {
@@ -2438,13 +2414,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(ObjectEffect_Registration.FULL_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Data.TryGet(out var DataItem))
-            {
-                ((ObjectEffectDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
-                    item: DataItem,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
-            }
+            var DataItem = item.Data;
+            ((ObjectEffectDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                item: DataItem,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IEffectGetter>.Instance.Write(
                 writer: writer,
                 items: item.Effects,
@@ -2590,8 +2564,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        public IObjectEffectDataGetter? Data => _DataLocation.HasValue ? ObjectEffectDataBinaryOverlay.ObjectEffectDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
-        public bool Data_IsSet => _DataLocation.HasValue;
+        public IObjectEffectDataGetter? _Data => _DataLocation.HasValue ? ObjectEffectDataBinaryOverlay.ObjectEffectDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IObjectEffectDataGetter Data => _Data ?? new ObjectEffectData();
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = ListExt.Empty<EffectBinaryOverlay>();
         partial void CustomCtor(

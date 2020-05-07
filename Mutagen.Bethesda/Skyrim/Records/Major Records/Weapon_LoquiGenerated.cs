@@ -92,27 +92,16 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IWeaponGetter.Model => this.Model;
         #endregion
-        #region LargeIconFilename
+        #region Icons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _LargeIconFilename;
-        public String? LargeIconFilename
+        private Icons? _Icons;
+        public Icons? Icons
         {
-            get => this._LargeIconFilename;
-            set => this._LargeIconFilename = value;
+            get => _Icons;
+            set => _Icons = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IWeaponGetter.LargeIconFilename => this.LargeIconFilename;
-        #endregion
-        #region SmallIconFilename
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _SmallIconFilename;
-        public String? SmallIconFilename
-        {
-            get => this._SmallIconFilename;
-            set => this._SmallIconFilename = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IWeaponGetter.SmallIconFilename => this.SmallIconFilename;
+        IIconsGetter? IWeaponGetter.Icons => this.Icons;
         #endregion
         #region ObjectEffect
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -513,8 +502,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.Name = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.LargeIconFilename = initialValue;
-                this.SmallIconFilename = initialValue;
+                this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(initialValue, new Icons.Mask<TItem>(initialValue));
                 this.ObjectEffect = initialValue;
                 this.EnchantmentAmount = initialValue;
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
@@ -554,8 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem ObjectBounds,
                 TItem Name,
                 TItem Model,
-                TItem LargeIconFilename,
-                TItem SmallIconFilename,
+                TItem Icons,
                 TItem ObjectEffect,
                 TItem EnchantmentAmount,
                 TItem Destructible,
@@ -594,8 +581,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Name = Name;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.LargeIconFilename = LargeIconFilename;
-                this.SmallIconFilename = SmallIconFilename;
+                this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(Icons, new Icons.Mask<TItem>(Icons));
                 this.ObjectEffect = ObjectEffect;
                 this.EnchantmentAmount = EnchantmentAmount;
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
@@ -637,8 +623,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem Name;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
-            public TItem LargeIconFilename;
-            public TItem SmallIconFilename;
+            public MaskItem<TItem, Icons.Mask<TItem>?>? Icons { get; set; }
             public TItem ObjectEffect;
             public TItem EnchantmentAmount;
             public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
@@ -682,8 +667,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
-                if (!object.Equals(this.LargeIconFilename, rhs.LargeIconFilename)) return false;
-                if (!object.Equals(this.SmallIconFilename, rhs.SmallIconFilename)) return false;
+                if (!object.Equals(this.Icons, rhs.Icons)) return false;
                 if (!object.Equals(this.ObjectEffect, rhs.ObjectEffect)) return false;
                 if (!object.Equals(this.EnchantmentAmount, rhs.EnchantmentAmount)) return false;
                 if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
@@ -719,8 +703,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.Name);
                 hash.Add(this.Model);
-                hash.Add(this.LargeIconFilename);
-                hash.Add(this.SmallIconFilename);
+                hash.Add(this.Icons);
                 hash.Add(this.ObjectEffect);
                 hash.Add(this.EnchantmentAmount);
                 hash.Add(this.Destructible);
@@ -773,8 +756,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Model.Overall)) return false;
                     if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
-                if (!eval(this.LargeIconFilename)) return false;
-                if (!eval(this.SmallIconFilename)) return false;
+                if (Icons != null)
+                {
+                    if (!eval(this.Icons.Overall)) return false;
+                    if (this.Icons.Specific != null && !this.Icons.Specific.All(eval)) return false;
+                }
                 if (!eval(this.ObjectEffect)) return false;
                 if (!eval(this.EnchantmentAmount)) return false;
                 if (Destructible != null)
@@ -855,8 +841,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Model.Overall)) return true;
                     if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
                 }
-                if (eval(this.LargeIconFilename)) return true;
-                if (eval(this.SmallIconFilename)) return true;
+                if (Icons != null)
+                {
+                    if (eval(this.Icons.Overall)) return true;
+                    if (this.Icons.Specific != null && this.Icons.Specific.Any(eval)) return true;
+                }
                 if (eval(this.ObjectEffect)) return true;
                 if (eval(this.EnchantmentAmount)) return true;
                 if (Destructible != null)
@@ -932,8 +921,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.Name = eval(this.Name);
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-                obj.LargeIconFilename = eval(this.LargeIconFilename);
-                obj.SmallIconFilename = eval(this.SmallIconFilename);
+                obj.Icons = this.Icons == null ? null : new MaskItem<R, Icons.Mask<R>?>(eval(this.Icons.Overall), this.Icons.Specific?.Translate(eval));
                 obj.ObjectEffect = eval(this.ObjectEffect);
                 obj.EnchantmentAmount = eval(this.EnchantmentAmount);
                 obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
@@ -1011,13 +999,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Model?.ToString(fg);
                     }
-                    if (printMask?.LargeIconFilename ?? true)
+                    if (printMask?.Icons?.Overall ?? true)
                     {
-                        fg.AppendItem(LargeIconFilename, "LargeIconFilename");
-                    }
-                    if (printMask?.SmallIconFilename ?? true)
-                    {
-                        fg.AppendItem(SmallIconFilename, "SmallIconFilename");
+                        Icons?.ToString(fg);
                     }
                     if (printMask?.ObjectEffect ?? true)
                     {
@@ -1158,8 +1142,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? Name;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
-            public Exception? LargeIconFilename;
-            public Exception? SmallIconFilename;
+            public MaskItem<Exception?, Icons.ErrorMask?>? Icons;
             public Exception? ObjectEffect;
             public Exception? EnchantmentAmount;
             public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
@@ -1202,10 +1185,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Name;
                     case Weapon_FieldIndex.Model:
                         return Model;
-                    case Weapon_FieldIndex.LargeIconFilename:
-                        return LargeIconFilename;
-                    case Weapon_FieldIndex.SmallIconFilename:
-                        return SmallIconFilename;
+                    case Weapon_FieldIndex.Icons:
+                        return Icons;
                     case Weapon_FieldIndex.ObjectEffect:
                         return ObjectEffect;
                     case Weapon_FieldIndex.EnchantmentAmount:
@@ -1280,11 +1261,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Weapon_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
-                    case Weapon_FieldIndex.LargeIconFilename:
-                        this.LargeIconFilename = ex;
-                        break;
-                    case Weapon_FieldIndex.SmallIconFilename:
-                        this.SmallIconFilename = ex;
+                    case Weapon_FieldIndex.Icons:
+                        this.Icons = new MaskItem<Exception?, Icons.ErrorMask?>(ex, null);
                         break;
                     case Weapon_FieldIndex.ObjectEffect:
                         this.ObjectEffect = ex;
@@ -1387,11 +1365,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Weapon_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
-                    case Weapon_FieldIndex.LargeIconFilename:
-                        this.LargeIconFilename = (Exception?)obj;
-                        break;
-                    case Weapon_FieldIndex.SmallIconFilename:
-                        this.SmallIconFilename = (Exception?)obj;
+                    case Weapon_FieldIndex.Icons:
+                        this.Icons = (MaskItem<Exception?, Icons.ErrorMask?>?)obj;
                         break;
                     case Weapon_FieldIndex.ObjectEffect:
                         this.ObjectEffect = (Exception?)obj;
@@ -1484,8 +1459,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (ObjectBounds != null) return true;
                 if (Name != null) return true;
                 if (Model != null) return true;
-                if (LargeIconFilename != null) return true;
-                if (SmallIconFilename != null) return true;
+                if (Icons != null) return true;
                 if (ObjectEffect != null) return true;
                 if (EnchantmentAmount != null) return true;
                 if (Destructible != null) return true;
@@ -1551,8 +1525,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ObjectBounds?.ToString(fg);
                 fg.AppendItem(Name, "Name");
                 Model?.ToString(fg);
-                fg.AppendItem(LargeIconFilename, "LargeIconFilename");
-                fg.AppendItem(SmallIconFilename, "SmallIconFilename");
+                Icons?.ToString(fg);
                 fg.AppendItem(ObjectEffect, "ObjectEffect");
                 fg.AppendItem(EnchantmentAmount, "EnchantmentAmount");
                 Destructible?.ToString(fg);
@@ -1612,8 +1585,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.LargeIconFilename = this.LargeIconFilename.Combine(rhs.LargeIconFilename);
-                ret.SmallIconFilename = this.SmallIconFilename.Combine(rhs.SmallIconFilename);
+                ret.Icons = this.Icons.Combine(rhs.Icons, (l, r) => l.Combine(r));
                 ret.ObjectEffect = this.ObjectEffect.Combine(rhs.ObjectEffect);
                 ret.EnchantmentAmount = this.EnchantmentAmount.Combine(rhs.EnchantmentAmount);
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
@@ -1666,8 +1638,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
             public bool Name;
             public MaskItem<bool, Model.TranslationMask?> Model;
-            public bool LargeIconFilename;
-            public bool SmallIconFilename;
+            public MaskItem<bool, Icons.TranslationMask?> Icons;
             public bool ObjectEffect;
             public bool EnchantmentAmount;
             public MaskItem<bool, Destructible.TranslationMask?> Destructible;
@@ -1704,8 +1675,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
                 this.Name = defaultOn;
                 this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
-                this.LargeIconFilename = defaultOn;
-                this.SmallIconFilename = defaultOn;
+                this.Icons = new MaskItem<bool, Icons.TranslationMask?>(defaultOn, null);
                 this.ObjectEffect = defaultOn;
                 this.EnchantmentAmount = defaultOn;
                 this.Destructible = new MaskItem<bool, Destructible.TranslationMask?>(defaultOn, null);
@@ -1743,8 +1713,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
                 ret.Add((Name, null));
                 ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-                ret.Add((LargeIconFilename, null));
-                ret.Add((SmallIconFilename, null));
+                ret.Add((Icons?.Overall ?? true, Icons?.Specific?.GetCrystal()));
                 ret.Add((ObjectEffect, null));
                 ret.Add((EnchantmentAmount, null));
                 ret.Add((Destructible?.Overall ?? true, Destructible?.Specific?.GetCrystal()));
@@ -1863,17 +1832,17 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         INamed,
         IItem,
-        IIcons,
+        IHasIcons,
         IModeled,
         IObjectBounded,
+        IObjectId,
         ILoquiObjectSetter<IWeaponInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
         new String? Name { get; set; }
         new Model? Model { get; set; }
-        new String? LargeIconFilename { get; set; }
-        new String? SmallIconFilename { get; set; }
+        new Icons? Icons { get; set; }
         new IFormLinkNullable<IEffectRecord> ObjectEffect { get; }
         new UInt16? EnchantmentAmount { get; set; }
         new Destructible? Destructible { get; set; }
@@ -1917,9 +1886,10 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         INamedGetter,
         IItemGetter,
-        IIconsGetter,
+        IHasIconsGetter,
         IModeledGetter,
         IObjectBoundedGetter,
+        IObjectIdGetter,
         ILoquiObject<IWeaponGetter>,
         IXmlItem,
         ILinkContainer,
@@ -1930,8 +1900,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter ObjectBounds { get; }
         String? Name { get; }
         IModelGetter? Model { get; }
-        String? LargeIconFilename { get; }
-        String? SmallIconFilename { get; }
+        IIconsGetter? Icons { get; }
         IFormLinkNullableGetter<IEffectRecordGetter> ObjectEffect { get; }
         UInt16? EnchantmentAmount { get; }
         IDestructibleGetter? Destructible { get; }
@@ -2266,34 +2235,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         ObjectBounds = 7,
         Name = 8,
         Model = 9,
-        LargeIconFilename = 10,
-        SmallIconFilename = 11,
-        ObjectEffect = 12,
-        EnchantmentAmount = 13,
-        Destructible = 14,
-        EquipmentType = 15,
-        BlockBashImpact = 16,
-        AlternateBlockMaterial = 17,
-        PickUpSound = 18,
-        PutDownSound = 19,
-        Keywords = 20,
-        Description = 21,
-        ScopeModel = 22,
-        Unused = 23,
-        ImpactDataSet = 24,
-        FirstPersonModel = 25,
-        AttackSound = 26,
-        AttackSound2D = 27,
-        AttackLoopSound = 28,
-        AttackFailSound = 29,
-        IdleSound = 30,
-        EquipSound = 31,
-        UnequipSound = 32,
-        BasicStats = 33,
-        Data = 34,
-        Critical = 35,
-        DetectionSoundLevel = 36,
-        Template = 37,
+        Icons = 10,
+        ObjectEffect = 11,
+        EnchantmentAmount = 12,
+        Destructible = 13,
+        EquipmentType = 14,
+        BlockBashImpact = 15,
+        AlternateBlockMaterial = 16,
+        PickUpSound = 17,
+        PutDownSound = 18,
+        Keywords = 19,
+        Description = 20,
+        ScopeModel = 21,
+        Unused = 22,
+        ImpactDataSet = 23,
+        FirstPersonModel = 24,
+        AttackSound = 25,
+        AttackSound2D = 26,
+        AttackLoopSound = 27,
+        AttackFailSound = 28,
+        IdleSound = 29,
+        EquipSound = 30,
+        UnequipSound = 31,
+        BasicStats = 32,
+        Data = 33,
+        Critical = 34,
+        DetectionSoundLevel = 35,
+        Template = 36,
     }
     #endregion
 
@@ -2311,9 +2279,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "93888344-5257-4e1e-a99c-450b6e0d06bf";
 
-        public const ushort AdditionalFieldCount = 32;
+        public const ushort AdditionalFieldCount = 31;
 
-        public const ushort FieldCount = 38;
+        public const ushort FieldCount = 37;
 
         public static readonly Type MaskType = typeof(Weapon.Mask<>);
 
@@ -2351,10 +2319,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Weapon_FieldIndex.Name;
                 case "MODEL":
                     return (ushort)Weapon_FieldIndex.Model;
-                case "LARGEICONFILENAME":
-                    return (ushort)Weapon_FieldIndex.LargeIconFilename;
-                case "SMALLICONFILENAME":
-                    return (ushort)Weapon_FieldIndex.SmallIconFilename;
+                case "ICONS":
+                    return (ushort)Weapon_FieldIndex.Icons;
                 case "OBJECTEFFECT":
                     return (ushort)Weapon_FieldIndex.ObjectEffect;
                 case "ENCHANTMENTAMOUNT":
@@ -2423,8 +2389,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weapon_FieldIndex.ObjectBounds:
                 case Weapon_FieldIndex.Name:
                 case Weapon_FieldIndex.Model:
-                case Weapon_FieldIndex.LargeIconFilename:
-                case Weapon_FieldIndex.SmallIconFilename:
+                case Weapon_FieldIndex.Icons:
                 case Weapon_FieldIndex.ObjectEffect:
                 case Weapon_FieldIndex.EnchantmentAmount:
                 case Weapon_FieldIndex.Destructible:
@@ -2464,6 +2429,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weapon_FieldIndex.VirtualMachineAdapter:
                 case Weapon_FieldIndex.ObjectBounds:
                 case Weapon_FieldIndex.Model:
+                case Weapon_FieldIndex.Icons:
                 case Weapon_FieldIndex.Destructible:
                 case Weapon_FieldIndex.ScopeModel:
                 case Weapon_FieldIndex.BasicStats:
@@ -2471,8 +2437,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weapon_FieldIndex.Critical:
                     return true;
                 case Weapon_FieldIndex.Name:
-                case Weapon_FieldIndex.LargeIconFilename:
-                case Weapon_FieldIndex.SmallIconFilename:
                 case Weapon_FieldIndex.ObjectEffect:
                 case Weapon_FieldIndex.EnchantmentAmount:
                 case Weapon_FieldIndex.EquipmentType:
@@ -2509,8 +2473,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weapon_FieldIndex.ObjectBounds:
                 case Weapon_FieldIndex.Name:
                 case Weapon_FieldIndex.Model:
-                case Weapon_FieldIndex.LargeIconFilename:
-                case Weapon_FieldIndex.SmallIconFilename:
+                case Weapon_FieldIndex.Icons:
                 case Weapon_FieldIndex.ObjectEffect:
                 case Weapon_FieldIndex.EnchantmentAmount:
                 case Weapon_FieldIndex.Destructible:
@@ -2556,10 +2519,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Name";
                 case Weapon_FieldIndex.Model:
                     return "Model";
-                case Weapon_FieldIndex.LargeIconFilename:
-                    return "LargeIconFilename";
-                case Weapon_FieldIndex.SmallIconFilename:
-                    return "SmallIconFilename";
+                case Weapon_FieldIndex.Icons:
+                    return "Icons";
                 case Weapon_FieldIndex.ObjectEffect:
                     return "ObjectEffect";
                 case Weapon_FieldIndex.EnchantmentAmount:
@@ -2626,8 +2587,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weapon_FieldIndex.ObjectBounds:
                 case Weapon_FieldIndex.Name:
                 case Weapon_FieldIndex.Model:
-                case Weapon_FieldIndex.LargeIconFilename:
-                case Weapon_FieldIndex.SmallIconFilename:
+                case Weapon_FieldIndex.Icons:
                 case Weapon_FieldIndex.ObjectEffect:
                 case Weapon_FieldIndex.EnchantmentAmount:
                 case Weapon_FieldIndex.Destructible:
@@ -2669,8 +2629,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weapon_FieldIndex.ObjectBounds:
                 case Weapon_FieldIndex.Name:
                 case Weapon_FieldIndex.Model:
-                case Weapon_FieldIndex.LargeIconFilename:
-                case Weapon_FieldIndex.SmallIconFilename:
+                case Weapon_FieldIndex.Icons:
                 case Weapon_FieldIndex.ObjectEffect:
                 case Weapon_FieldIndex.EnchantmentAmount:
                 case Weapon_FieldIndex.Destructible:
@@ -2716,10 +2675,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(String);
                 case Weapon_FieldIndex.Model:
                     return typeof(Model);
-                case Weapon_FieldIndex.LargeIconFilename:
-                    return typeof(String);
-                case Weapon_FieldIndex.SmallIconFilename:
-                    return typeof(String);
+                case Weapon_FieldIndex.Icons:
+                    return typeof(Icons);
                 case Weapon_FieldIndex.ObjectEffect:
                     return typeof(IFormLinkNullable<IEffectRecord>);
                 case Weapon_FieldIndex.EnchantmentAmount:
@@ -2784,7 +2741,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
-        public static readonly RecordType MICO_HEADER = new RecordType("MICO");
         public static readonly RecordType EITM_HEADER = new RecordType("EITM");
         public static readonly RecordType EAMT_HEADER = new RecordType("EAMT");
         public static readonly RecordType DEST_HEADER = new RecordType("DEST");
@@ -2826,7 +2782,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new RecordType("MODS"),
                 new RecordType("MO3S")));
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 32;
+        public const int NumTypedFields = 31;
         public static readonly Type BinaryWriteTranslation = typeof(WeaponBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -2873,8 +2829,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ObjectBounds = new ObjectBounds();
             item.Name = default;
             item.Model = null;
-            item.LargeIconFilename = default;
-            item.SmallIconFilename = default;
+            item.Icons = null;
             item.ObjectEffect.FormKey = null;
             item.EnchantmentAmount = default;
             item.Destructible = null;
@@ -3042,19 +2997,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4E4F4349: // ICON
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.LargeIconFilename = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.LargeIconFilename);
-                }
-                case 0x4F43494D: // MICO
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.SmallIconFilename = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.SmallIconFilename);
+                    item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Icons);
                 }
                 case 0x4D544945: // EITM
                 {
@@ -3340,8 +3286,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.LargeIconFilename = string.Equals(item.LargeIconFilename, rhs.LargeIconFilename);
-            ret.SmallIconFilename = string.Equals(item.SmallIconFilename, rhs.SmallIconFilename);
+            ret.Icons = EqualsMaskHelper.EqualsHelper(
+                item.Icons,
+                rhs.Icons,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.ObjectEffect = object.Equals(item.ObjectEffect, rhs.ObjectEffect);
             ret.EnchantmentAmount = item.EnchantmentAmount == rhs.EnchantmentAmount;
             ret.Destructible = EqualsMaskHelper.EqualsHelper(
@@ -3461,15 +3410,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ModelItem?.ToString(fg, "Model");
             }
-            if ((printMask?.LargeIconFilename ?? true)
-                && item.LargeIconFilename.TryGet(out var LargeIconFilenameItem))
+            if ((printMask?.Icons?.Overall ?? true)
+                && item.Icons.TryGet(out var IconsItem))
             {
-                fg.AppendItem(LargeIconFilenameItem, "LargeIconFilename");
-            }
-            if ((printMask?.SmallIconFilename ?? true)
-                && item.SmallIconFilename.TryGet(out var SmallIconFilenameItem))
-            {
-                fg.AppendItem(SmallIconFilenameItem, "SmallIconFilename");
+                IconsItem?.ToString(fg, "Icons");
             }
             if ((printMask?.ObjectEffect ?? true)
                 && item.ObjectEffect.TryGet(out var ObjectEffectItem))
@@ -3626,8 +3570,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.LargeIconFilename.HasValue && checkMask.LargeIconFilename.Value != (item.LargeIconFilename != null)) return false;
-            if (checkMask.SmallIconFilename.HasValue && checkMask.SmallIconFilename.Value != (item.SmallIconFilename != null)) return false;
+            if (checkMask.Icons?.Overall.HasValue ?? false && checkMask.Icons.Overall.Value != (item.Icons != null)) return false;
+            if (checkMask.Icons?.Specific != null && (item.Icons == null || !item.Icons.HasBeenSet(checkMask.Icons.Specific))) return false;
             if (checkMask.ObjectEffect.HasValue && checkMask.ObjectEffect.Value != (item.ObjectEffect.FormKey != null)) return false;
             if (checkMask.EnchantmentAmount.HasValue && checkMask.EnchantmentAmount.Value != (item.EnchantmentAmount != null)) return false;
             if (checkMask.Destructible?.Overall.HasValue ?? false && checkMask.Destructible.Overall.Value != (item.Destructible != null)) return false;
@@ -3674,8 +3618,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Name = (item.Name != null);
             var itemModel = item.Model;
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            mask.LargeIconFilename = (item.LargeIconFilename != null);
-            mask.SmallIconFilename = (item.SmallIconFilename != null);
+            var itemIcons = item.Icons;
+            mask.Icons = new MaskItem<bool, Icons.Mask<bool>?>(itemIcons != null, itemIcons?.GetHasBeenSetMask());
             mask.ObjectEffect = (item.ObjectEffect.FormKey != null);
             mask.EnchantmentAmount = (item.EnchantmentAmount != null);
             var itemDestructible = item.Destructible;
@@ -3762,8 +3706,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!string.Equals(lhs.LargeIconFilename, rhs.LargeIconFilename)) return false;
-            if (!string.Equals(lhs.SmallIconFilename, rhs.SmallIconFilename)) return false;
+            if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
             if (!lhs.ObjectEffect.Equals(rhs.ObjectEffect)) return false;
             if (lhs.EnchantmentAmount != rhs.EnchantmentAmount) return false;
             if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
@@ -3827,13 +3770,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Modelitem);
             }
-            if (item.LargeIconFilename.TryGet(out var LargeIconFilenameitem))
+            if (item.Icons.TryGet(out var Iconsitem))
             {
-                hash.Add(LargeIconFilenameitem);
-            }
-            if (item.SmallIconFilename.TryGet(out var SmallIconFilenameitem))
-            {
-                hash.Add(SmallIconFilenameitem);
+                hash.Add(Iconsitem);
             }
             if (item.ObjectEffect.TryGet(out var ObjectEffectitem))
             {
@@ -4147,13 +4086,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.LargeIconFilename) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Icons) ?? true))
             {
-                item.LargeIconFilename = rhs.LargeIconFilename;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.SmallIconFilename) ?? true))
-            {
-                item.SmallIconFilename = rhs.SmallIconFilename;
+                errorMask?.PushIndex((int)Weapon_FieldIndex.Icons);
+                try
+                {
+                    if(rhs.Icons.TryGet(out var rhsIcons))
+                    {
+                        item.Icons = rhsIcons.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Weapon_FieldIndex.Icons));
+                    }
+                    else
+                    {
+                        item.Icons = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.ObjectEffect) ?? true))
             {
@@ -4590,25 +4547,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         translationMask: translationMask?.GetSubCrystal((int)Weapon_FieldIndex.Model));
                 }
             }
-            if ((item.LargeIconFilename != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.LargeIconFilename) ?? true))
+            if ((item.Icons != null)
+                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.Icons) ?? true))
             {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.LargeIconFilename),
-                    item: item.LargeIconFilename,
-                    fieldIndex: (int)Weapon_FieldIndex.LargeIconFilename,
-                    errorMask: errorMask);
-            }
-            if ((item.SmallIconFilename != null)
-                && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.SmallIconFilename) ?? true))
-            {
-                StringXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.SmallIconFilename),
-                    item: item.SmallIconFilename,
-                    fieldIndex: (int)Weapon_FieldIndex.SmallIconFilename,
-                    errorMask: errorMask);
+                if (item.Icons.TryGet(out var IconsItem))
+                {
+                    ((IconsXmlWriteTranslation)((IXmlItem)IconsItem).XmlWriteTranslator).Write(
+                        item: IconsItem,
+                        node: node,
+                        name: nameof(item.Icons),
+                        fieldIndex: (int)Weapon_FieldIndex.Icons,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Weapon_FieldIndex.Icons));
+                }
             }
             if ((item.ObjectEffect.FormKey != null)
                 && (translationMask?.GetShouldTranslate((int)Weapon_FieldIndex.ObjectEffect) ?? true))
@@ -5081,31 +5032,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "LargeIconFilename":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.LargeIconFilename);
+                case "Icons":
+                    errorMask?.PushIndex((int)Weapon_FieldIndex.Icons);
                     try
                     {
-                        item.LargeIconFilename = StringXmlTranslation.Instance.Parse(
+                        item.Icons = LoquiXmlTranslation<Icons>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "SmallIconFilename":
-                    errorMask?.PushIndex((int)Weapon_FieldIndex.SmallIconFilename);
-                    try
-                    {
-                        item.SmallIconFilename = StringXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Weapon_FieldIndex.Icons));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -5719,16 +5653,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.LargeIconFilename,
-                header: recordTypeConverter.ConvertToCustom(Weapon_Registration.ICON_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.SmallIconFilename,
-                header: recordTypeConverter.ConvertToCustom(Weapon_Registration.MICO_HEADER),
-                binaryType: StringBinaryType.NullTerminate);
+            if (item.Icons.TryGet(out var IconsItem))
+            {
+                ((IconsBinaryWriteTranslation)((IBinaryItem)IconsItem).BinaryWriteTranslator).Write(
+                    item: IconsItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ObjectEffect,
@@ -5997,14 +5928,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
         #endregion
         public IModelGetter? Model { get; private set; }
-        #region LargeIconFilename
-        private int? _LargeIconFilenameLocation;
-        public String? LargeIconFilename => _LargeIconFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _LargeIconFilenameLocation.Value, _package.Meta)) : default(string?);
-        #endregion
-        #region SmallIconFilename
-        private int? _SmallIconFilenameLocation;
-        public String? SmallIconFilename => _SmallIconFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SmallIconFilenameLocation.Value, _package.Meta)) : default(string?);
-        #endregion
+        public IIconsGetter? Icons { get; private set; }
         #region ObjectEffect
         private int? _ObjectEffectLocation;
         public bool ObjectEffect_IsSet => _ObjectEffectLocation.HasValue;
@@ -6205,13 +6129,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4E4F4349: // ICON
                 {
-                    _LargeIconFilenameLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.LargeIconFilename);
-                }
-                case 0x4F43494D: // MICO
-                {
-                    _SmallIconFilenameLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.SmallIconFilename);
+                    this.Icons = IconsBinaryOverlay.IconsFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Icons);
                 }
                 case 0x4D544945: // EITM
                 {

@@ -29,20 +29,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
     }
 
-    public partial interface IArmor
-    {
-        new public decimal? ArmorRating
-        {
-            get => ((IArmorGetter)this).ArmorRating;
-            set => this.ArmorRatingRaw = value == null ? default(int?) : checked((int)Math.Round(value.Value * 100));
-        }
-    }
-
-    public partial interface IArmorGetter
-    {
-        public decimal? ArmorRating => this.ArmorRatingRaw.HasValue ? this.ArmorRatingRaw.Value / 100m : default(decimal?);
-    }
-
     namespace Internals
     {
         public partial class ArmorBinaryOverlay

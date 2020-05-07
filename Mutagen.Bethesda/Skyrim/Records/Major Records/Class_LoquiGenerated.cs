@@ -52,15 +52,7 @@ namespace Mutagen.Bethesda.Skyrim
         public String Name { get; set; } = string.Empty;
         #endregion
         #region Description
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Description;
-        public String? Description
-        {
-            get => this._Description;
-            set => this._Description = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IClassGetter.Description => this.Description;
+        public String Description { get; set; } = string.Empty;
         #endregion
         #region Icon
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -74,15 +66,9 @@ namespace Mutagen.Bethesda.Skyrim
         String? IClassGetter.Icon => this.Icon;
         #endregion
         #region Data
+        public ClassData Data { get; set; } = new ClassData();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ClassData? _Data;
-        public ClassData? Data
-        {
-            get => _Data;
-            set => _Data = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IClassDataGetter? IClassGetter.Data => this.Data;
+        IClassDataGetter IClassGetter.Data => Data;
         #endregion
 
         #region To String
@@ -690,9 +676,9 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IClassInternal>
     {
         new String Name { get; set; }
-        new String? Description { get; set; }
+        new String Description { get; set; }
         new String? Icon { get; set; }
-        new ClassData? Data { get; set; }
+        new ClassData Data { get; set; }
     }
 
     public partial interface IClassInternal :
@@ -711,9 +697,9 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static ILoquiRegistration Registration => Class_Registration.Instance;
         String Name { get; }
-        String? Description { get; }
+        String Description { get; }
         String? Icon { get; }
-        IClassDataGetter? Data { get; }
+        IClassDataGetter Data { get; }
 
     }
 
@@ -1244,9 +1230,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Name = string.Empty;
-            item.Description = default;
+            item.Description = string.Empty;
             item.Icon = default;
-            item.Data = null;
+            item.Data.Clear();
             base.Clear(item);
         }
         
@@ -1467,11 +1453,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Description = string.Equals(item.Description, rhs.Description);
             ret.Icon = string.Equals(item.Icon, rhs.Icon);
-            ret.Data = EqualsMaskHelper.EqualsHelper(
-                item.Data,
-                rhs.Data,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.Data = MaskItemExt.Factory(item.Data.GetEqualsMask(rhs.Data, include), include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1527,20 +1509,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Name, "Name");
             }
-            if ((printMask?.Description ?? true)
-                && item.Description.TryGet(out var DescriptionItem))
+            if (printMask?.Description ?? true)
             {
-                fg.AppendItem(DescriptionItem, "Description");
+                fg.AppendItem(item.Description, "Description");
             }
             if ((printMask?.Icon ?? true)
                 && item.Icon.TryGet(out var IconItem))
             {
                 fg.AppendItem(IconItem, "Icon");
             }
-            if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+            if (printMask?.Data?.Overall ?? true)
             {
-                DataItem?.ToString(fg, "Data");
+                item.Data?.ToString(fg, "Data");
             }
         }
         
@@ -1548,10 +1528,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IClassGetter item,
             Class.Mask<bool?> checkMask)
         {
-            if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
-            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
-            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1562,10 +1539,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Class.Mask<bool> mask)
         {
             mask.Name = true;
-            mask.Description = (item.Description != null);
+            mask.Description = true;
             mask.Icon = (item.Icon != null);
-            var itemData = item.Data;
-            mask.Data = new MaskItem<bool, ClassData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
+            mask.Data = new MaskItem<bool, ClassData.Mask<bool>?>(true, item.Data?.GetHasBeenSetMask());
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1646,18 +1622,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Name);
-            if (item.Description.TryGet(out var Descriptionitem))
-            {
-                hash.Add(Descriptionitem);
-            }
+            hash.Add(item.Description);
             if (item.Icon.TryGet(out var Iconitem))
             {
                 hash.Add(Iconitem);
             }
-            if (item.Data.TryGet(out var Dataitem))
-            {
-                hash.Add(Dataitem);
-            }
+            hash.Add(item.Data);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1750,15 +1720,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Class_FieldIndex.Data);
                 try
                 {
-                    if(rhs.Data.TryGet(out var rhsData))
+                    if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Data) ?? true))
                     {
-                        item.Data = rhsData.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Class_FieldIndex.Data));
-                    }
-                    else
-                    {
-                        item.Data = default;
+                        item.Data = rhs.Data.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Class_FieldIndex.Data),
+                            errorMask: errorMask);
                     }
                 }
                 catch (Exception ex)
@@ -1922,8 +1888,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Class_FieldIndex.Name,
                     errorMask: errorMask);
             }
-            if ((item.Description != null)
-                && (translationMask?.GetShouldTranslate((int)Class_FieldIndex.Description) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.Description) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: node,
@@ -1942,19 +1907,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Class_FieldIndex.Icon,
                     errorMask: errorMask);
             }
-            if ((item.Data != null)
-                && (translationMask?.GetShouldTranslate((int)Class_FieldIndex.Data) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.Data) ?? true))
             {
-                if (item.Data.TryGet(out var DataItem))
-                {
-                    ((ClassDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
-                        item: DataItem,
-                        node: node,
-                        name: nameof(item.Data),
-                        fieldIndex: (int)Class_FieldIndex.Data,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Class_FieldIndex.Data));
-                }
+                var DataItem = item.Data;
+                ((ClassDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
+                    item: DataItem,
+                    node: node,
+                    name: nameof(item.Data),
+                    fieldIndex: (int)Class_FieldIndex.Data,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Class_FieldIndex.Data));
             }
         }
 
@@ -2236,7 +2198,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(Class_Registration.FULL_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(Class_Registration.DESC_HEADER),
@@ -2246,13 +2208,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.Icon,
                 header: recordTypeConverter.ConvertToCustom(Class_Registration.ICON_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Data.TryGet(out var DataItem))
-            {
-                ((ClassDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
-                    item: DataItem,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
-            }
+            var DataItem = item.Data;
+            ((ClassDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                item: DataItem,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
         }
 
         public void Write(
@@ -2381,7 +2341,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta)) : default(string?);
+        public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta)) : string.Empty;
         #endregion
         #region Icon
         private int? _IconLocation;
@@ -2389,8 +2349,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        public IClassDataGetter? Data => _DataLocation.HasValue ? ClassDataBinaryOverlay.ClassDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
-        public bool Data_IsSet => _DataLocation.HasValue;
+        public IClassDataGetter? _Data => _DataLocation.HasValue ? ClassDataBinaryOverlay.ClassDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IClassDataGetter Data => _Data ?? new ClassData();
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

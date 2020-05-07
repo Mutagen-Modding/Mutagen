@@ -3,19 +3,19 @@
   <Object name="Light" recordType="LIGH" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true" GUID="749a2492-52b8-4580-ac1c-b645cabfd20b" ID="107">
     <Interface>INamed</Interface>
     <Interface>IItem</Interface>
-    <Interface>IIcons</Interface>
+    <Interface>IHasIcons</Interface>
     <Interface>IModeled</Interface>
     <Interface>IObjectBounded</Interface>
+    <Interface>IObjectId</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
       <RefDirect name="Model" refName="Model" />
       <RefDirect name="Destructible" refName="Destructible" />
       <String name="Name" recordType="FULL" />
-      <String name="LargeIconFilename" recordType="ICON" />
-      <String name="SmallIconFilename" recordType="MICO" />
-      <RefDirect name="Data" refName="LightData" />
-      <Float name="FadeValue" recordType="FNAM" />
+      <RefDirect name="Icons" refName="Icons" />
+      <RefDirect name="Data" refName="LightData" hasBeenSet="False" />
+      <Float name="FadeValue" recordType="FNAM" hasBeenSet="False" />
       <FormLink name="Sound" refName="SoundDescriptor" recordType="SNAM" />
     </Fields>
   </Object>

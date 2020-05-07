@@ -120,16 +120,16 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte>? IFloraGetter.Unknown => this.Unknown;
         #endregion
-        #region ActivateText
+        #region ActivateTextOverride
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _ActivateText;
-        public String? ActivateText
+        private String? _ActivateTextOverride;
+        public String? ActivateTextOverride
         {
-            get => this._ActivateText;
-            set => this._ActivateText = value;
+            get => this._ActivateTextOverride;
+            set => this._ActivateTextOverride = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IFloraGetter.ActivateText => this.ActivateText;
+        String? IFloraGetter.ActivateTextOverride => this.ActivateTextOverride;
         #endregion
         #region Unknown2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -344,7 +344,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Unknown = initialValue;
-                this.ActivateText = initialValue;
+                this.ActivateTextOverride = initialValue;
                 this.Unknown2 = initialValue;
                 this.Ingredient = initialValue;
                 this.HarvestSound = initialValue;
@@ -365,7 +365,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Destructible,
                 TItem Keywords,
                 TItem Unknown,
-                TItem ActivateText,
+                TItem ActivateTextOverride,
                 TItem Unknown2,
                 TItem Ingredient,
                 TItem HarvestSound,
@@ -385,7 +385,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Unknown = Unknown;
-                this.ActivateText = ActivateText;
+                this.ActivateTextOverride = ActivateTextOverride;
                 this.Unknown2 = Unknown2;
                 this.Ingredient = Ingredient;
                 this.HarvestSound = HarvestSound;
@@ -408,7 +408,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
             public TItem Unknown;
-            public TItem ActivateText;
+            public TItem ActivateTextOverride;
             public TItem Unknown2;
             public TItem Ingredient;
             public TItem HarvestSound;
@@ -433,7 +433,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-                if (!object.Equals(this.ActivateText, rhs.ActivateText)) return false;
+                if (!object.Equals(this.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
                 if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
                 if (!object.Equals(this.Ingredient, rhs.Ingredient)) return false;
                 if (!object.Equals(this.HarvestSound, rhs.HarvestSound)) return false;
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Destructible);
                 hash.Add(this.Keywords);
                 hash.Add(this.Unknown);
-                hash.Add(this.ActivateText);
+                hash.Add(this.ActivateTextOverride);
                 hash.Add(this.Unknown2);
                 hash.Add(this.Ingredient);
                 hash.Add(this.HarvestSound);
@@ -498,7 +498,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 if (!eval(this.Unknown)) return false;
-                if (!eval(this.ActivateText)) return false;
+                if (!eval(this.ActivateTextOverride)) return false;
                 if (!eval(this.Unknown2)) return false;
                 if (!eval(this.Ingredient)) return false;
                 if (!eval(this.HarvestSound)) return false;
@@ -548,7 +548,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 if (eval(this.Unknown)) return true;
-                if (eval(this.ActivateText)) return true;
+                if (eval(this.ActivateTextOverride)) return true;
                 if (eval(this.Unknown2)) return true;
                 if (eval(this.Ingredient)) return true;
                 if (eval(this.HarvestSound)) return true;
@@ -592,7 +592,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 obj.Unknown = eval(this.Unknown);
-                obj.ActivateText = eval(this.ActivateText);
+                obj.ActivateTextOverride = eval(this.ActivateTextOverride);
                 obj.Unknown2 = eval(this.Unknown2);
                 obj.Ingredient = eval(this.Ingredient);
                 obj.HarvestSound = eval(this.HarvestSound);
@@ -666,9 +666,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(Unknown, "Unknown");
                     }
-                    if (printMask?.ActivateText ?? true)
+                    if (printMask?.ActivateTextOverride ?? true)
                     {
-                        fg.AppendItem(ActivateText, "ActivateText");
+                        fg.AppendItem(ActivateTextOverride, "ActivateTextOverride");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
@@ -705,7 +705,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
             public Exception? Unknown;
-            public Exception? ActivateText;
+            public Exception? ActivateTextOverride;
             public Exception? Unknown2;
             public Exception? Ingredient;
             public Exception? HarvestSound;
@@ -732,8 +732,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Keywords;
                     case Flora_FieldIndex.Unknown:
                         return Unknown;
-                    case Flora_FieldIndex.ActivateText:
-                        return ActivateText;
+                    case Flora_FieldIndex.ActivateTextOverride:
+                        return ActivateTextOverride;
                     case Flora_FieldIndex.Unknown2:
                         return Unknown2;
                     case Flora_FieldIndex.Ingredient:
@@ -773,8 +773,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Flora_FieldIndex.Unknown:
                         this.Unknown = ex;
                         break;
-                    case Flora_FieldIndex.ActivateText:
-                        this.ActivateText = ex;
+                    case Flora_FieldIndex.ActivateTextOverride:
+                        this.ActivateTextOverride = ex;
                         break;
                     case Flora_FieldIndex.Unknown2:
                         this.Unknown2 = ex;
@@ -820,8 +820,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Flora_FieldIndex.Unknown:
                         this.Unknown = (Exception?)obj;
                         break;
-                    case Flora_FieldIndex.ActivateText:
-                        this.ActivateText = (Exception?)obj;
+                    case Flora_FieldIndex.ActivateTextOverride:
+                        this.ActivateTextOverride = (Exception?)obj;
                         break;
                     case Flora_FieldIndex.Unknown2:
                         this.Unknown2 = (Exception?)obj;
@@ -851,7 +851,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Destructible != null) return true;
                 if (Keywords != null) return true;
                 if (Unknown != null) return true;
-                if (ActivateText != null) return true;
+                if (ActivateTextOverride != null) return true;
                 if (Unknown2 != null) return true;
                 if (Ingredient != null) return true;
                 if (HarvestSound != null) return true;
@@ -919,7 +919,7 @@ namespace Mutagen.Bethesda.Skyrim
                     fg.AppendLine("]");
                 }
                 fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(ActivateText, "ActivateText");
+                fg.AppendItem(ActivateTextOverride, "ActivateTextOverride");
                 fg.AppendItem(Unknown2, "Unknown2");
                 fg.AppendItem(Ingredient, "Ingredient");
                 fg.AppendItem(HarvestSound, "HarvestSound");
@@ -939,7 +939,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.ActivateText = this.ActivateText.Combine(rhs.ActivateText);
+                ret.ActivateTextOverride = this.ActivateTextOverride.Combine(rhs.ActivateTextOverride);
                 ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
                 ret.Ingredient = this.Ingredient.Combine(rhs.Ingredient);
                 ret.HarvestSound = this.HarvestSound.Combine(rhs.HarvestSound);
@@ -973,7 +973,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Destructible.TranslationMask?> Destructible;
             public bool Keywords;
             public bool Unknown;
-            public bool ActivateText;
+            public bool ActivateTextOverride;
             public bool Unknown2;
             public bool Ingredient;
             public bool HarvestSound;
@@ -991,7 +991,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Destructible = new MaskItem<bool, Destructible.TranslationMask?>(defaultOn, null);
                 this.Keywords = defaultOn;
                 this.Unknown = defaultOn;
-                this.ActivateText = defaultOn;
+                this.ActivateTextOverride = defaultOn;
                 this.Unknown2 = defaultOn;
                 this.Ingredient = defaultOn;
                 this.HarvestSound = defaultOn;
@@ -1010,7 +1010,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Destructible?.Overall ?? true, Destructible?.Specific?.GetCrystal()));
                 ret.Add((Keywords, null));
                 ret.Add((Unknown, null));
-                ret.Add((ActivateText, null));
+                ret.Add((ActivateTextOverride, null));
                 ret.Add((Unknown2, null));
                 ret.Add((Ingredient, null));
                 ret.Add((HarvestSound, null));
@@ -1112,7 +1112,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Destructible? Destructible { get; set; }
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new Byte[]? Unknown { get; set; }
-        new String? ActivateText { get; set; }
+        new String? ActivateTextOverride { get; set; }
         new Byte[]? Unknown2 { get; set; }
         new IFormLinkNullable<IHarvestTarget> Ingredient { get; }
         new IFormLinkNullable<SoundDescriptor> HarvestSound { get; }
@@ -1144,7 +1144,7 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? Destructible { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         ReadOnlyMemorySlice<Byte>? Unknown { get; }
-        String? ActivateText { get; }
+        String? ActivateTextOverride { get; }
         ReadOnlyMemorySlice<Byte>? Unknown2 { get; }
         IFormLinkNullableGetter<IHarvestTargetGetter> Ingredient { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> HarvestSound { get; }
@@ -1456,7 +1456,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Destructible = 10,
         Keywords = 11,
         Unknown = 12,
-        ActivateText = 13,
+        ActivateTextOverride = 13,
         Unknown2 = 14,
         Ingredient = 15,
         HarvestSound = 16,
@@ -1524,8 +1524,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Flora_FieldIndex.Keywords;
                 case "UNKNOWN":
                     return (ushort)Flora_FieldIndex.Unknown;
-                case "ACTIVATETEXT":
-                    return (ushort)Flora_FieldIndex.ActivateText;
+                case "ACTIVATETEXTOVERRIDE":
+                    return (ushort)Flora_FieldIndex.ActivateTextOverride;
                 case "UNKNOWN2":
                     return (ushort)Flora_FieldIndex.Unknown2;
                 case "INGREDIENT":
@@ -1552,7 +1552,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Flora_FieldIndex.Model:
                 case Flora_FieldIndex.Destructible:
                 case Flora_FieldIndex.Unknown:
-                case Flora_FieldIndex.ActivateText:
+                case Flora_FieldIndex.ActivateTextOverride:
                 case Flora_FieldIndex.Unknown2:
                 case Flora_FieldIndex.Ingredient:
                 case Flora_FieldIndex.HarvestSound:
@@ -1577,7 +1577,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Flora_FieldIndex.Name:
                 case Flora_FieldIndex.Keywords:
                 case Flora_FieldIndex.Unknown:
-                case Flora_FieldIndex.ActivateText:
+                case Flora_FieldIndex.ActivateTextOverride:
                 case Flora_FieldIndex.Unknown2:
                 case Flora_FieldIndex.Ingredient:
                 case Flora_FieldIndex.HarvestSound:
@@ -1599,7 +1599,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Flora_FieldIndex.Destructible:
                 case Flora_FieldIndex.Keywords:
                 case Flora_FieldIndex.Unknown:
-                case Flora_FieldIndex.ActivateText:
+                case Flora_FieldIndex.ActivateTextOverride:
                 case Flora_FieldIndex.Unknown2:
                 case Flora_FieldIndex.Ingredient:
                 case Flora_FieldIndex.HarvestSound:
@@ -1629,8 +1629,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Keywords";
                 case Flora_FieldIndex.Unknown:
                     return "Unknown";
-                case Flora_FieldIndex.ActivateText:
-                    return "ActivateText";
+                case Flora_FieldIndex.ActivateTextOverride:
+                    return "ActivateTextOverride";
                 case Flora_FieldIndex.Unknown2:
                     return "Unknown2";
                 case Flora_FieldIndex.Ingredient:
@@ -1656,7 +1656,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Flora_FieldIndex.Destructible:
                 case Flora_FieldIndex.Keywords:
                 case Flora_FieldIndex.Unknown:
-                case Flora_FieldIndex.ActivateText:
+                case Flora_FieldIndex.ActivateTextOverride:
                 case Flora_FieldIndex.Unknown2:
                 case Flora_FieldIndex.Ingredient:
                 case Flora_FieldIndex.HarvestSound:
@@ -1679,7 +1679,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Flora_FieldIndex.Destructible:
                 case Flora_FieldIndex.Keywords:
                 case Flora_FieldIndex.Unknown:
-                case Flora_FieldIndex.ActivateText:
+                case Flora_FieldIndex.ActivateTextOverride:
                 case Flora_FieldIndex.Unknown2:
                 case Flora_FieldIndex.Ingredient:
                 case Flora_FieldIndex.HarvestSound:
@@ -1709,7 +1709,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(ExtendedList<IFormLink<Keyword>>);
                 case Flora_FieldIndex.Unknown:
                     return typeof(Byte[]);
-                case Flora_FieldIndex.ActivateText:
+                case Flora_FieldIndex.ActivateTextOverride:
                     return typeof(String);
                 case Flora_FieldIndex.Unknown2:
                     return typeof(Byte[]);
@@ -1793,7 +1793,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Destructible = null;
             item.Keywords = null;
             item.Unknown = default;
-            item.ActivateText = default;
+            item.ActivateTextOverride = default;
             item.Unknown2 = default;
             item.Ingredient.FormKey = null;
             item.HarvestSound.FormKey = null;
@@ -1968,10 +1968,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E52: // RNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.ActivateText = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.ActivateTextOverride = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Flora_FieldIndex.ActivateText);
+                    return TryGet<int?>.Succeed((int)Flora_FieldIndex.ActivateTextOverride);
                 }
                 case 0x4D414E46: // FNAM
                 {
@@ -2096,7 +2096,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (l, r) => object.Equals(l, r),
                 include);
             ret.Unknown = MemorySliceExt.Equal(item.Unknown, rhs.Unknown);
-            ret.ActivateText = string.Equals(item.ActivateText, rhs.ActivateText);
+            ret.ActivateTextOverride = string.Equals(item.ActivateTextOverride, rhs.ActivateTextOverride);
             ret.Unknown2 = MemorySliceExt.Equal(item.Unknown2, rhs.Unknown2);
             ret.Ingredient = object.Equals(item.Ingredient, rhs.Ingredient);
             ret.HarvestSound = object.Equals(item.HarvestSound, rhs.HarvestSound);
@@ -2203,10 +2203,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendLine($"Unknown => {SpanExt.ToHexString(UnknownItem)}");
             }
-            if ((printMask?.ActivateText ?? true)
-                && item.ActivateText.TryGet(out var ActivateTextItem))
+            if ((printMask?.ActivateTextOverride ?? true)
+                && item.ActivateTextOverride.TryGet(out var ActivateTextOverrideItem))
             {
-                fg.AppendItem(ActivateTextItem, "ActivateText");
+                fg.AppendItem(ActivateTextOverrideItem, "ActivateTextOverride");
             }
             if ((printMask?.Unknown2 ?? true)
                 && item.Unknown2.TryGet(out var Unknown2Item))
@@ -2242,7 +2242,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.Destructible?.Specific != null && (item.Destructible == null || !item.Destructible.HasBeenSet(checkMask.Destructible.Specific))) return false;
             if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
             if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != (item.Unknown != null)) return false;
-            if (checkMask.ActivateText.HasValue && checkMask.ActivateText.Value != (item.ActivateText != null)) return false;
+            if (checkMask.ActivateTextOverride.HasValue && checkMask.ActivateTextOverride.Value != (item.ActivateTextOverride != null)) return false;
             if (checkMask.Unknown2.HasValue && checkMask.Unknown2.Value != (item.Unknown2 != null)) return false;
             if (checkMask.Ingredient.HasValue && checkMask.Ingredient.Value != (item.Ingredient.FormKey != null)) return false;
             if (checkMask.HarvestSound.HasValue && checkMask.HarvestSound.Value != (item.HarvestSound.FormKey != null)) return false;
@@ -2267,7 +2267,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Destructible = new MaskItem<bool, Destructible.Mask<bool>?>(itemDestructible != null, itemDestructible?.GetHasBeenSetMask());
             mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
             mask.Unknown = (item.Unknown != null);
-            mask.ActivateText = (item.ActivateText != null);
+            mask.ActivateTextOverride = (item.ActivateTextOverride != null);
             mask.Unknown2 = (item.Unknown2 != null);
             mask.Ingredient = (item.Ingredient.FormKey != null);
             mask.HarvestSound = (item.HarvestSound.FormKey != null);
@@ -2331,7 +2331,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
             if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
             if (!MemorySliceExt.Equal(lhs.Unknown, rhs.Unknown)) return false;
-            if (!string.Equals(lhs.ActivateText, rhs.ActivateText)) return false;
+            if (!string.Equals(lhs.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
             if (!MemorySliceExt.Equal(lhs.Unknown2, rhs.Unknown2)) return false;
             if (!lhs.Ingredient.Equals(rhs.Ingredient)) return false;
             if (!lhs.HarvestSound.Equals(rhs.HarvestSound)) return false;
@@ -2379,9 +2379,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(UnknownItem);
             }
-            if (item.ActivateText.TryGet(out var ActivateTextitem))
+            if (item.ActivateTextOverride.TryGet(out var ActivateTextOverrideitem))
             {
-                hash.Add(ActivateTextitem);
+                hash.Add(ActivateTextOverrideitem);
             }
             if (item.Unknown2.TryGet(out var Unknown2Item))
             {
@@ -2646,9 +2646,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Unknown = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.ActivateText) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.ActivateTextOverride) ?? true))
             {
-                item.ActivateText = rhs.ActivateText;
+                item.ActivateTextOverride = rhs.ActivateTextOverride;
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Unknown2) ?? true))
             {
@@ -2928,14 +2928,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Flora_FieldIndex.Unknown,
                     errorMask: errorMask);
             }
-            if ((item.ActivateText != null)
-                && (translationMask?.GetShouldTranslate((int)Flora_FieldIndex.ActivateText) ?? true))
+            if ((item.ActivateTextOverride != null)
+                && (translationMask?.GetShouldTranslate((int)Flora_FieldIndex.ActivateTextOverride) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.ActivateText),
-                    item: item.ActivateText,
-                    fieldIndex: (int)Flora_FieldIndex.ActivateText,
+                    name: nameof(item.ActivateTextOverride),
+                    item: item.ActivateTextOverride,
+                    fieldIndex: (int)Flora_FieldIndex.ActivateTextOverride,
                     errorMask: errorMask);
             }
             if ((item.Unknown2 != null)
@@ -3229,11 +3229,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "ActivateText":
-                    errorMask?.PushIndex((int)Flora_FieldIndex.ActivateText);
+                case "ActivateTextOverride":
+                    errorMask?.PushIndex((int)Flora_FieldIndex.ActivateTextOverride);
                     try
                     {
-                        item.ActivateText = StringXmlTranslation.Instance.Parse(
+                        item.ActivateTextOverride = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3464,7 +3464,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(Flora_Registration.PNAM_HEADER));
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.ActivateText,
+                item: item.ActivateTextOverride,
                 header: recordTypeConverter.ConvertToCustom(Flora_Registration.RNAM_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
@@ -3630,9 +3630,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _UnknownLocation;
         public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _UnknownLocation.Value, _package.Meta).ToArray() : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        #region ActivateText
-        private int? _ActivateTextLocation;
-        public String? ActivateText => _ActivateTextLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ActivateTextLocation.Value, _package.Meta)) : default(string?);
+        #region ActivateTextOverride
+        private int? _ActivateTextOverrideLocation;
+        public String? ActivateTextOverride => _ActivateTextOverrideLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ActivateTextOverrideLocation.Value, _package.Meta)) : default(string?);
         #endregion
         #region Unknown2
         private int? _Unknown2Location;
@@ -3768,8 +3768,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E52: // RNAM
                 {
-                    _ActivateTextLocation = (ushort)(stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Flora_FieldIndex.ActivateText);
+                    _ActivateTextOverrideLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Flora_FieldIndex.ActivateTextOverride);
                 }
                 case 0x4D414E46: // FNAM
                 {

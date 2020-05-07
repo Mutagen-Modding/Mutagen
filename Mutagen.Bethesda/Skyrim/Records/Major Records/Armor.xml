@@ -4,6 +4,7 @@
     <Interface>INamed</Interface>
     <Interface>IItem</Interface>
     <Interface>IObjectBounded</Interface>
+    <Interface>IObjectId</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
@@ -45,18 +46,17 @@
       <List name="Armature">
         <FormLink recordType="MODL" refName="ArmorAddon" />
       </List>
-      <RefDirect name="WeightValue" refName="WeightValue" recordType="DATA" />
-      <Int32 name="ArmorRatingRaw" recordType="DNAM" />
+      <RefDirect name="WeightValue" refName="WeightValue" recordType="DATA" hasBeenSet="False" />
+      <Float name="ArmorRating" recordType="DNAM" binaryType="Integer" integerType="UInt" integerDivisor="100" hasBeenSet="False" />
       <FormLink name="TemplateArmor" recordType="TNAM" refName="Armor" />
     </Fields>
   </Object>
   <Object name="ArmorModel" objType="Subrecord" GUID="39a3a83f-68bd-473a-aa14-10efdb07031b" ID="151">
-    <Interface>IIcons</Interface>
+    <Interface>IHasIcons</Interface>
     <Interface>IModeled</Interface>
     <Fields>
       <RefDirect name="Model" refName="Model" />
-      <String name="LargeIconFilename" recordType="ICON" />
-      <String name="SmallIconFilename" recordType="MICO" />
+      <RefDirect name="Icons" refName="Icons" />
     </Fields>
   </Object>
 </Loqui>

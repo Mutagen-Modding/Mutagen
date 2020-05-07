@@ -18,7 +18,7 @@
       <Group name="SoundMarkers" refName="SoundMarker" />
       <Group name="AcousticSpaces" refName="AcousticSpace" />
       <Group name="MagicEffects" refName="MagicEffect" />
-      <Group name="LandTextures" refName="LandTexture" />
+      <Group name="LandscapeTextures" refName="LandscapeTexture" />
       <Group name="ObjectEffects" refName="ObjectEffect" />
       <Group name="Spells" refName="Spell" />
       <Group name="Scrolls" refName="Scroll" />

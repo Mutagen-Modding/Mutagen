@@ -125,15 +125,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ISoundDescriptorGetter> IDoorGetter.LoopSound => this.LoopSound;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Door.Flag? _Flags;
-        public Door.Flag? Flags
-        {
-            get => this._Flags;
-            set => this._Flags = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Door.Flag? IDoorGetter.Flags => this.Flags;
+        public Door.Flag Flags { get; set; } = default;
         #endregion
 
         #region To String
@@ -911,6 +903,8 @@ namespace Mutagen.Bethesda.Skyrim
         INamed,
         IModeled,
         IObjectBounded,
+        ILocationReferencable,
+        IObjectId,
         ILoquiObjectSetter<IDoorInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -921,7 +915,7 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLinkNullable<SoundDescriptor> OpenSound { get; }
         new IFormLinkNullable<SoundDescriptor> CloseSound { get; }
         new IFormLinkNullable<SoundDescriptor> LoopSound { get; }
-        new Door.Flag? Flags { get; set; }
+        new Door.Flag Flags { get; set; }
         #region Mutagen
         new Door.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -940,6 +934,8 @@ namespace Mutagen.Bethesda.Skyrim
         INamedGetter,
         IModeledGetter,
         IObjectBoundedGetter,
+        ILocationReferencableGetter,
+        IObjectIdGetter,
         ILoquiObject<IDoorGetter>,
         IXmlItem,
         ILinkContainer,
@@ -954,7 +950,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ISoundDescriptorGetter> OpenSound { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> CloseSound { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> LoopSound { get; }
-        Door.Flag? Flags { get; }
+        Door.Flag Flags { get; }
 
         #region Mutagen
         Door.MajorFlag MajorFlags { get; }
@@ -1927,10 +1923,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(LoopSoundItem, "LoopSound");
             }
-            if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+            if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(FlagsItem, "Flags");
+                fg.AppendItem(item.Flags, "Flags");
             }
         }
         
@@ -1948,7 +1943,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.OpenSound.HasValue && checkMask.OpenSound.Value != (item.OpenSound.FormKey != null)) return false;
             if (checkMask.CloseSound.HasValue && checkMask.CloseSound.Value != (item.CloseSound.FormKey != null)) return false;
             if (checkMask.LoopSound.HasValue && checkMask.LoopSound.Value != (item.LoopSound.FormKey != null)) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1969,7 +1963,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.OpenSound = (item.OpenSound.FormKey != null);
             mask.CloseSound = (item.CloseSound.FormKey != null);
             mask.LoopSound = (item.LoopSound.FormKey != null);
-            mask.Flags = (item.Flags != null);
+            mask.Flags = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -2083,10 +2077,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(LoopSounditem);
             }
-            if (item.Flags.TryGet(out var Flagsitem))
-            {
-                hash.Add(Flagsitem);
-            }
+            hash.Add(item.Flags);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2541,8 +2532,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Door_FieldIndex.LoopSound,
                     errorMask: errorMask);
             }
-            if ((item.Flags != null)
-                && (translationMask?.GetShouldTranslate((int)Door_FieldIndex.Flags) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Door_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<Door.Flag>.Instance.Write(
                     node: node,
@@ -2962,7 +2952,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.LoopSound,
                 header: recordTypeConverter.ConvertToCustom(Door_Registration.BNAM_HEADER));
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Door.Flag>.Instance.WriteNullable(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Door.Flag>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1,
@@ -3124,7 +3114,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Door.Flag? Flags => _FlagsLocation.HasValue ? (Door.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(Door.Flag?);
+        public Door.Flag Flags => _FlagsLocation.HasValue ? (Door.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(Door.Flag);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

@@ -72,15 +72,9 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter INpcGetter.ObjectBounds => _ObjectBounds;
         #endregion
         #region Configuration
+        public NpcConfiguration Configuration { get; set; } = new NpcConfiguration();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private NpcConfiguration? _Configuration;
-        public NpcConfiguration? Configuration
-        {
-            get => _Configuration;
-            set => _Configuration = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INpcConfigurationGetter? INpcGetter.Configuration => this.Configuration;
+        INpcConfigurationGetter INpcGetter.Configuration => Configuration;
         #endregion
         #region Factions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -119,10 +113,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Race
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<Race> _Race = new FormLinkNullable<Race>();
-        public IFormLinkNullable<Race> Race => this._Race;
+        protected IFormLink<Race> _Race = new FormLink<Race>();
+        public IFormLink<Race> Race => this._Race;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IRaceGetter> INpcGetter.Race => this.Race;
+        IFormLinkGetter<IRaceGetter> INpcGetter.Race => this.Race;
         #endregion
         #region ActorEffect
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -241,15 +235,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region AIData
+        public AIData AIData { get; set; } = new AIData();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private AIData? _AIData;
-        public AIData? AIData
-        {
-            get => _AIData;
-            set => _AIData = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAIDataGetter? INpcGetter.AIData => this.AIData;
+        IAIDataGetter INpcGetter.AIData => AIData;
         #endregion
         #region Packages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -281,10 +269,10 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Class
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<Class> _Class = new FormLinkNullable<Class>();
-        public IFormLinkNullable<Class> Class => this._Class;
+        protected IFormLink<Class> _Class = new FormLink<Class>();
+        public IFormLink<Class> Class => this._Class;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IClassGetter> INpcGetter.Class => this.Class;
+        IFormLinkGetter<IClassGetter> INpcGetter.Class => this.Class;
         #endregion
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -355,48 +343,17 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IFormListGetter> INpcGetter.GiftFilter => this.GiftFilter;
         #endregion
         #region Unknown
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected Byte[]? _Unknown;
-        public Byte[]? Unknown
-        {
-            get => this._Unknown;
-            set => this._Unknown = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? INpcGetter.Unknown => this.Unknown;
+        public readonly static UInt16 _Unknown_Default = 0xFF00;
+        public UInt16 Unknown { get; set; } = default;
         #endregion
         #region Height
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single? _Height;
-        public Single? Height
-        {
-            get => this._Height;
-            set => this._Height = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? INpcGetter.Height => this.Height;
+        public Single Height { get; set; } = default;
         #endregion
         #region Weight
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single? _Weight;
-        public Single? Weight
-        {
-            get => this._Weight;
-            set => this._Weight = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? INpcGetter.Weight => this.Weight;
+        public Single Weight { get; set; } = default;
         #endregion
         #region SoundLevel
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private SoundLevel? _SoundLevel;
-        public SoundLevel? SoundLevel
-        {
-            get => this._SoundLevel;
-            set => this._SoundLevel = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        SoundLevel? INpcGetter.SoundLevel => this.SoundLevel;
+        public SoundLevel SoundLevel { get; set; } = default;
         #endregion
         #region Sound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2986,16 +2943,17 @@ namespace Mutagen.Bethesda.Skyrim
         IANpcSpawn,
         IObjectBounded,
         INamed,
+        IObjectId,
         ILoquiObjectSetter<INpcInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
-        new NpcConfiguration? Configuration { get; set; }
+        new NpcConfiguration Configuration { get; set; }
         new ExtendedList<RankPlacement> Factions { get; }
         new IFormLinkNullable<LeveledItem> DeathItem { get; }
         new IFormLinkNullable<VoiceType> Voice { get; }
         new IFormLinkNullable<ANpcSpawn> Template { get; }
-        new IFormLinkNullable<Race> Race { get; }
+        new IFormLink<Race> Race { get; }
         new ExtendedList<IFormLink<ASpell>>? ActorEffect { get; set; }
         new Destructible? Destructible { get; set; }
         new IFormLinkNullable<Armor> WornArmor { get; }
@@ -3008,10 +2966,10 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLinkNullable<FormList> CombatOverridePackageList { get; }
         new ExtendedList<PerkPlacement>? Perks { get; set; }
         new ExtendedList<ContainerEntry>? Items { get; set; }
-        new AIData? AIData { get; set; }
+        new AIData AIData { get; set; }
         new ExtendedList<IFormLink<Package>>? Packages { get; set; }
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
-        new IFormLinkNullable<Class> Class { get; }
+        new IFormLink<Class> Class { get; }
         new String? Name { get; set; }
         new String? ShortName { get; set; }
         new PlayerSkills? PlayerSkills { get; set; }
@@ -3019,10 +2977,10 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLinkNullable<ColorRecord> HairColor { get; }
         new IFormLinkNullable<CombatStyle> CombatStyle { get; }
         new IFormLinkNullable<FormList> GiftFilter { get; }
-        new Byte[]? Unknown { get; set; }
-        new Single? Height { get; set; }
-        new Single? Weight { get; set; }
-        new SoundLevel? SoundLevel { get; set; }
+        new UInt16 Unknown { get; set; }
+        new Single Height { get; set; }
+        new Single Weight { get; set; }
+        new SoundLevel SoundLevel { get; set; }
         new ANpcSoundDefinition? Sound { get; set; }
         new IFormLinkNullable<Outfit> DefaultOutfit { get; }
         new IFormLinkNullable<Outfit> SleepingOutfit { get; }
@@ -3050,6 +3008,7 @@ namespace Mutagen.Bethesda.Skyrim
         IANpcSpawnGetter,
         IObjectBoundedGetter,
         INamedGetter,
+        IObjectIdGetter,
         ILoquiObject<INpcGetter>,
         IXmlItem,
         ILinkContainer,
@@ -3058,12 +3017,12 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => Npc_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         IObjectBoundsGetter ObjectBounds { get; }
-        INpcConfigurationGetter? Configuration { get; }
+        INpcConfigurationGetter Configuration { get; }
         IReadOnlyList<IRankPlacementGetter> Factions { get; }
         IFormLinkNullableGetter<ILeveledItemGetter> DeathItem { get; }
         IFormLinkNullableGetter<IVoiceTypeGetter> Voice { get; }
         IFormLinkNullableGetter<IANpcSpawnGetter> Template { get; }
-        IFormLinkNullableGetter<IRaceGetter> Race { get; }
+        IFormLinkGetter<IRaceGetter> Race { get; }
         IReadOnlyList<IFormLinkGetter<IASpellGetter>>? ActorEffect { get; }
         IDestructibleGetter? Destructible { get; }
         IFormLinkNullableGetter<IArmorGetter> WornArmor { get; }
@@ -3076,10 +3035,10 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IFormListGetter> CombatOverridePackageList { get; }
         IReadOnlyList<IPerkPlacementGetter>? Perks { get; }
         IReadOnlyList<IContainerEntryGetter>? Items { get; }
-        IAIDataGetter? AIData { get; }
+        IAIDataGetter AIData { get; }
         IReadOnlyList<IFormLinkGetter<IPackageGetter>>? Packages { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
-        IFormLinkNullableGetter<IClassGetter> Class { get; }
+        IFormLinkGetter<IClassGetter> Class { get; }
         String? Name { get; }
         String? ShortName { get; }
         IPlayerSkillsGetter? PlayerSkills { get; }
@@ -3087,10 +3046,10 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IColorRecordGetter> HairColor { get; }
         IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle { get; }
         IFormLinkNullableGetter<IFormListGetter> GiftFilter { get; }
-        ReadOnlyMemorySlice<Byte>? Unknown { get; }
-        Single? Height { get; }
-        Single? Weight { get; }
-        SoundLevel? SoundLevel { get; }
+        UInt16 Unknown { get; }
+        Single Height { get; }
+        Single Weight { get; }
+        SoundLevel SoundLevel { get; }
         IANpcSoundDefinitionGetter? Sound { get; }
         IFormLinkNullableGetter<IOutfitGetter> DefaultOutfit { get; }
         IFormLinkNullableGetter<IOutfitGetter> SleepingOutfit { get; }
@@ -3996,7 +3955,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Npc_FieldIndex.Template:
                     return typeof(IFormLinkNullable<ANpcSpawn>);
                 case Npc_FieldIndex.Race:
-                    return typeof(IFormLinkNullable<Race>);
+                    return typeof(IFormLink<Race>);
                 case Npc_FieldIndex.ActorEffect:
                     return typeof(ExtendedList<IFormLink<ASpell>>);
                 case Npc_FieldIndex.Destructible:
@@ -4028,7 +3987,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Npc_FieldIndex.Keywords:
                     return typeof(ExtendedList<IFormLink<Keyword>>);
                 case Npc_FieldIndex.Class:
-                    return typeof(IFormLinkNullable<Class>);
+                    return typeof(IFormLink<Class>);
                 case Npc_FieldIndex.Name:
                     return typeof(String);
                 case Npc_FieldIndex.ShortName:
@@ -4044,7 +4003,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Npc_FieldIndex.GiftFilter:
                     return typeof(IFormLinkNullable<FormList>);
                 case Npc_FieldIndex.Unknown:
-                    return typeof(Byte[]);
+                    return typeof(UInt16);
                 case Npc_FieldIndex.Height:
                     return typeof(Single);
                 case Npc_FieldIndex.Weight:
@@ -4111,8 +4070,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType SHRT_HEADER = new RecordType("SHRT");
-        public static readonly RecordType DNAM_HEADER = new RecordType("DNAM");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
+        public static readonly RecordType DNAM_HEADER = new RecordType("DNAM");
         public static readonly RecordType PNAM_HEADER = new RecordType("PNAM");
         public static readonly RecordType HCLF_HEADER = new RecordType("HCLF");
         public static readonly RecordType ZNAM_HEADER = new RecordType("ZNAM");
@@ -4184,12 +4143,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.VirtualMachineAdapter = null;
             item.ObjectBounds = new ObjectBounds();
-            item.Configuration = null;
+            item.Configuration.Clear();
             item.Factions.Clear();
             item.DeathItem.FormKey = null;
             item.Voice.FormKey = null;
             item.Template.FormKey = null;
-            item.Race.FormKey = null;
+            item.Race.FormKey = FormKey.Null;
             item.ActorEffect = null;
             item.Destructible = null;
             item.WornArmor.FormKey = null;
@@ -4202,10 +4161,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.CombatOverridePackageList.FormKey = null;
             item.Perks = null;
             item.Items = null;
-            item.AIData = null;
+            item.AIData.Clear();
             item.Packages = null;
             item.Keywords = null;
-            item.Class.FormKey = null;
+            item.Class.FormKey = FormKey.Null;
             item.Name = default;
             item.ShortName = default;
             item.PlayerSkills = null;
@@ -4213,7 +4172,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.HairColor.FormKey = null;
             item.CombatStyle.FormKey = null;
             item.GiftFilter.FormKey = null;
-            item.Unknown = default;
+            item.Unknown = Npc._Unknown_Default;
             item.Height = default;
             item.Weight = default;
             item.SoundLevel = default;
@@ -4610,10 +4569,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength + contentLength;
-                    var nextRec = frame.MetaData.GetSubrecord(frame);
-                    if (nextRec.RecordType != Npc_Registration.DNAM_HEADER) throw new ArgumentException("Marker was read but not followed by expected subrecord.");
-                    contentLength = nextRec.RecordLength;
+                    NpcBinaryCreateTranslation.FillBinaryDataMarkerCustomPublic(
+                        frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return TryGet<int?>.Succeed(null);
+                }
+                case 0x4D414E44: // DNAM
+                {
                     item.PlayerSkills = Mutagen.Bethesda.Skyrim.PlayerSkills.CreateFromBinary(frame: frame);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.PlayerSkills);
                 }
@@ -4655,7 +4617,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x354D414E: // NAM5
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Unknown = frame.ReadUInt16();
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Unknown);
                 }
                 case 0x364D414E: // NAM6
@@ -4858,11 +4820,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
-            ret.Configuration = EqualsMaskHelper.EqualsHelper(
-                item.Configuration,
-                rhs.Configuration,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.Configuration = MaskItemExt.Factory(item.Configuration.GetEqualsMask(rhs.Configuration, include), include);
             ret.Factions = item.Factions.CollectionEqualsHelper(
                 rhs.Factions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -4899,11 +4857,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Items,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.AIData = EqualsMaskHelper.EqualsHelper(
-                item.AIData,
-                rhs.AIData,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.AIData = MaskItemExt.Factory(item.AIData.GetEqualsMask(rhs.AIData, include), include);
             ret.Packages = item.Packages.CollectionEqualsHelper(
                 rhs.Packages,
                 (l, r) => object.Equals(l, r),
@@ -4927,7 +4881,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.HairColor = object.Equals(item.HairColor, rhs.HairColor);
             ret.CombatStyle = object.Equals(item.CombatStyle, rhs.CombatStyle);
             ret.GiftFilter = object.Equals(item.GiftFilter, rhs.GiftFilter);
-            ret.Unknown = MemorySliceExt.Equal(item.Unknown, rhs.Unknown);
+            ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Height = item.Height.EqualsWithin(rhs.Height);
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.SoundLevel = item.SoundLevel == rhs.SoundLevel;
@@ -5016,10 +4970,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.ObjectBounds?.ToString(fg, "ObjectBounds");
             }
-            if ((printMask?.Configuration?.Overall ?? true)
-                && item.Configuration.TryGet(out var ConfigurationItem))
+            if (printMask?.Configuration?.Overall ?? true)
             {
-                ConfigurationItem?.ToString(fg, "Configuration");
+                item.Configuration?.ToString(fg, "Configuration");
             }
             if (printMask?.Factions?.Overall ?? true)
             {
@@ -5054,10 +5007,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(TemplateItem, "Template");
             }
-            if ((printMask?.Race ?? true)
-                && item.Race.TryGet(out var RaceItem))
+            if (printMask?.Race ?? true)
             {
-                fg.AppendItem(RaceItem, "Race");
+                fg.AppendItem(item.Race, "Race");
             }
             if ((printMask?.ActorEffect?.Overall ?? true)
                 && item.ActorEffect.TryGet(out var ActorEffectItem))
@@ -5174,10 +5126,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.AIData?.Overall ?? true)
-                && item.AIData.TryGet(out var AIDataItem))
+            if (printMask?.AIData?.Overall ?? true)
             {
-                AIDataItem?.ToString(fg, "AIData");
+                item.AIData?.ToString(fg, "AIData");
             }
             if ((printMask?.Packages?.Overall ?? true)
                 && item.Packages.TryGet(out var PackagesItem))
@@ -5217,10 +5168,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.Class ?? true)
-                && item.Class.TryGet(out var ClassItem))
+            if (printMask?.Class ?? true)
             {
-                fg.AppendItem(ClassItem, "Class");
+                fg.AppendItem(item.Class, "Class");
             }
             if ((printMask?.Name ?? true)
                 && item.Name.TryGet(out var NameItem))
@@ -5271,25 +5221,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(GiftFilterItem, "GiftFilter");
             }
-            if ((printMask?.Unknown ?? true)
-                && item.Unknown.TryGet(out var UnknownItem))
+            if (printMask?.Unknown ?? true)
             {
-                fg.AppendLine($"Unknown => {SpanExt.ToHexString(UnknownItem)}");
+                fg.AppendItem(item.Unknown, "Unknown");
             }
-            if ((printMask?.Height ?? true)
-                && item.Height.TryGet(out var HeightItem))
+            if (printMask?.Height ?? true)
             {
-                fg.AppendItem(HeightItem, "Height");
+                fg.AppendItem(item.Height, "Height");
             }
-            if ((printMask?.Weight ?? true)
-                && item.Weight.TryGet(out var WeightItem))
+            if (printMask?.Weight ?? true)
             {
-                fg.AppendItem(WeightItem, "Weight");
+                fg.AppendItem(item.Weight, "Weight");
             }
-            if ((printMask?.SoundLevel ?? true)
-                && item.SoundLevel.TryGet(out var SoundLevelItem))
+            if (printMask?.SoundLevel ?? true)
             {
-                fg.AppendItem(SoundLevelItem, "SoundLevel");
+                fg.AppendItem(item.SoundLevel, "SoundLevel");
             }
             if ((printMask?.Sound?.Overall ?? true)
                 && item.Sound.TryGet(out var SoundItem))
@@ -5362,12 +5308,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (checkMask.VirtualMachineAdapter?.Overall.HasValue ?? false && checkMask.VirtualMachineAdapter.Overall.Value != (item.VirtualMachineAdapter != null)) return false;
             if (checkMask.VirtualMachineAdapter?.Specific != null && (item.VirtualMachineAdapter == null || !item.VirtualMachineAdapter.HasBeenSet(checkMask.VirtualMachineAdapter.Specific))) return false;
-            if (checkMask.Configuration?.Overall.HasValue ?? false && checkMask.Configuration.Overall.Value != (item.Configuration != null)) return false;
-            if (checkMask.Configuration?.Specific != null && (item.Configuration == null || !item.Configuration.HasBeenSet(checkMask.Configuration.Specific))) return false;
             if (checkMask.DeathItem.HasValue && checkMask.DeathItem.Value != (item.DeathItem.FormKey != null)) return false;
             if (checkMask.Voice.HasValue && checkMask.Voice.Value != (item.Voice.FormKey != null)) return false;
             if (checkMask.Template.HasValue && checkMask.Template.Value != (item.Template.FormKey != null)) return false;
-            if (checkMask.Race.HasValue && checkMask.Race.Value != (item.Race.FormKey != null)) return false;
             if (checkMask.ActorEffect?.Overall.HasValue ?? false && checkMask.ActorEffect!.Overall.Value != (item.ActorEffect != null)) return false;
             if (checkMask.Destructible?.Overall.HasValue ?? false && checkMask.Destructible.Overall.Value != (item.Destructible != null)) return false;
             if (checkMask.Destructible?.Specific != null && (item.Destructible == null || !item.Destructible.HasBeenSet(checkMask.Destructible.Specific))) return false;
@@ -5380,11 +5323,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.CombatOverridePackageList.HasValue && checkMask.CombatOverridePackageList.Value != (item.CombatOverridePackageList.FormKey != null)) return false;
             if (checkMask.Perks?.Overall.HasValue ?? false && checkMask.Perks!.Overall.Value != (item.Perks != null)) return false;
             if (checkMask.Items?.Overall.HasValue ?? false && checkMask.Items!.Overall.Value != (item.Items != null)) return false;
-            if (checkMask.AIData?.Overall.HasValue ?? false && checkMask.AIData.Overall.Value != (item.AIData != null)) return false;
-            if (checkMask.AIData?.Specific != null && (item.AIData == null || !item.AIData.HasBeenSet(checkMask.AIData.Specific))) return false;
             if (checkMask.Packages?.Overall.HasValue ?? false && checkMask.Packages!.Overall.Value != (item.Packages != null)) return false;
             if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
-            if (checkMask.Class.HasValue && checkMask.Class.Value != (item.Class.FormKey != null)) return false;
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.ShortName.HasValue && checkMask.ShortName.Value != (item.ShortName != null)) return false;
             if (checkMask.PlayerSkills?.Overall.HasValue ?? false && checkMask.PlayerSkills.Overall.Value != (item.PlayerSkills != null)) return false;
@@ -5393,10 +5333,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.HairColor.HasValue && checkMask.HairColor.Value != (item.HairColor.FormKey != null)) return false;
             if (checkMask.CombatStyle.HasValue && checkMask.CombatStyle.Value != (item.CombatStyle.FormKey != null)) return false;
             if (checkMask.GiftFilter.HasValue && checkMask.GiftFilter.Value != (item.GiftFilter.FormKey != null)) return false;
-            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != (item.Unknown != null)) return false;
-            if (checkMask.Height.HasValue && checkMask.Height.Value != (item.Height != null)) return false;
-            if (checkMask.Weight.HasValue && checkMask.Weight.Value != (item.Weight != null)) return false;
-            if (checkMask.SoundLevel.HasValue && checkMask.SoundLevel.Value != (item.SoundLevel != null)) return false;
             if (checkMask.Sound?.Overall.HasValue ?? false && checkMask.Sound.Overall.Value != (item.Sound != null)) return false;
             if (checkMask.Sound?.Specific != null && (item.Sound == null || !item.Sound.HasBeenSet(checkMask.Sound.Specific))) return false;
             if (checkMask.DefaultOutfit.HasValue && checkMask.DefaultOutfit.Value != (item.DefaultOutfit.FormKey != null)) return false;
@@ -5421,14 +5357,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var itemVirtualMachineAdapter = item.VirtualMachineAdapter;
             mask.VirtualMachineAdapter = new MaskItem<bool, VirtualMachineAdapter.Mask<bool>?>(itemVirtualMachineAdapter != null, itemVirtualMachineAdapter?.GetHasBeenSetMask());
             mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
-            var itemConfiguration = item.Configuration;
-            mask.Configuration = new MaskItem<bool, NpcConfiguration.Mask<bool>?>(itemConfiguration != null, itemConfiguration?.GetHasBeenSetMask());
+            mask.Configuration = new MaskItem<bool, NpcConfiguration.Mask<bool>?>(true, item.Configuration?.GetHasBeenSetMask());
             var FactionsItem = item.Factions;
             mask.Factions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, RankPlacement.Mask<bool>?>>?>(true, FactionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, RankPlacement.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.DeathItem = (item.DeathItem.FormKey != null);
             mask.Voice = (item.Voice.FormKey != null);
             mask.Template = (item.Template.FormKey != null);
-            mask.Race = (item.Race.FormKey != null);
+            mask.Race = true;
             mask.ActorEffect = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.ActorEffect != null), default);
             var itemDestructible = item.Destructible;
             mask.Destructible = new MaskItem<bool, Destructible.Mask<bool>?>(itemDestructible != null, itemDestructible?.GetHasBeenSetMask());
@@ -5449,11 +5384,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 mask.Items = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ContainerEntry.Mask<bool>?>>?>(true, ItemsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ContainerEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             }
-            var itemAIData = item.AIData;
-            mask.AIData = new MaskItem<bool, AIData.Mask<bool>?>(itemAIData != null, itemAIData?.GetHasBeenSetMask());
+            mask.AIData = new MaskItem<bool, AIData.Mask<bool>?>(true, item.AIData?.GetHasBeenSetMask());
             mask.Packages = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Packages != null), default);
             mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
-            mask.Class = (item.Class.FormKey != null);
+            mask.Class = true;
             mask.Name = (item.Name != null);
             mask.ShortName = (item.ShortName != null);
             var itemPlayerSkills = item.PlayerSkills;
@@ -5462,10 +5396,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.HairColor = (item.HairColor.FormKey != null);
             mask.CombatStyle = (item.CombatStyle.FormKey != null);
             mask.GiftFilter = (item.GiftFilter.FormKey != null);
-            mask.Unknown = (item.Unknown != null);
-            mask.Height = (item.Height != null);
-            mask.Weight = (item.Weight != null);
-            mask.SoundLevel = (item.SoundLevel != null);
+            mask.Unknown = true;
+            mask.Height = true;
+            mask.Weight = true;
+            mask.SoundLevel = true;
             var itemSound = item.Sound;
             mask.Sound = new MaskItem<bool, ANpcSoundDefinition.Mask<bool>?>(itemSound != null, itemSound?.GetHasBeenSetMask());
             mask.DefaultOutfit = (item.DefaultOutfit.FormKey != null);
@@ -5583,7 +5517,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.HairColor.Equals(rhs.HairColor)) return false;
             if (!lhs.CombatStyle.Equals(rhs.CombatStyle)) return false;
             if (!lhs.GiftFilter.Equals(rhs.GiftFilter)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unknown, rhs.Unknown)) return false;
+            if (lhs.Unknown != rhs.Unknown) return false;
             if (!lhs.Height.EqualsWithin(rhs.Height)) return false;
             if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             if (lhs.SoundLevel != rhs.SoundLevel) return false;
@@ -5635,10 +5569,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 hash.Add(VirtualMachineAdapteritem);
             }
             hash.Add(item.ObjectBounds);
-            if (item.Configuration.TryGet(out var Configurationitem))
-            {
-                hash.Add(Configurationitem);
-            }
+            hash.Add(item.Configuration);
             hash.Add(item.Factions);
             if (item.DeathItem.TryGet(out var DeathItemitem))
             {
@@ -5652,10 +5583,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Templateitem);
             }
-            if (item.Race.TryGet(out var Raceitem))
-            {
-                hash.Add(Raceitem);
-            }
+            hash.Add(item.Race);
             hash.Add(item.ActorEffect);
             if (item.Destructible.TryGet(out var Destructibleitem))
             {
@@ -5692,16 +5620,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             hash.Add(item.Perks);
             hash.Add(item.Items);
-            if (item.AIData.TryGet(out var AIDataitem))
-            {
-                hash.Add(AIDataitem);
-            }
+            hash.Add(item.AIData);
             hash.Add(item.Packages);
             hash.Add(item.Keywords);
-            if (item.Class.TryGet(out var Classitem))
-            {
-                hash.Add(Classitem);
-            }
+            hash.Add(item.Class);
             if (item.Name.TryGet(out var Nameitem))
             {
                 hash.Add(Nameitem);
@@ -5727,22 +5649,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(GiftFilteritem);
             }
-            if (item.Unknown.TryGet(out var UnknownItem))
-            {
-                hash.Add(UnknownItem);
-            }
-            if (item.Height.TryGet(out var Heightitem))
-            {
-                hash.Add(Heightitem);
-            }
-            if (item.Weight.TryGet(out var Weightitem))
-            {
-                hash.Add(Weightitem);
-            }
-            if (item.SoundLevel.TryGet(out var SoundLevelitem))
-            {
-                hash.Add(SoundLevelitem);
-            }
+            hash.Add(item.Unknown);
+            hash.Add(item.Height);
+            hash.Add(item.Weight);
+            hash.Add(item.SoundLevel);
             if (item.Sound.TryGet(out var Sounditem))
             {
                 hash.Add(Sounditem);
@@ -6005,15 +5915,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Npc_FieldIndex.Configuration);
                 try
                 {
-                    if(rhs.Configuration.TryGet(out var rhsConfiguration))
+                    if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Configuration) ?? true))
                     {
-                        item.Configuration = rhsConfiguration.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Npc_FieldIndex.Configuration));
-                    }
-                    else
-                    {
-                        item.Configuration = default;
+                        item.Configuration = rhs.Configuration.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Npc_FieldIndex.Configuration),
+                            errorMask: errorMask);
                     }
                 }
                 catch (Exception ex)
@@ -6240,15 +6146,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)Npc_FieldIndex.AIData);
                 try
                 {
-                    if(rhs.AIData.TryGet(out var rhsAIData))
+                    if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.AIData) ?? true))
                     {
-                        item.AIData = rhsAIData.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Npc_FieldIndex.AIData));
-                    }
-                    else
-                    {
-                        item.AIData = default;
+                        item.AIData = rhs.AIData.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Npc_FieldIndex.AIData),
+                            errorMask: errorMask);
                     }
                 }
                 catch (Exception ex)
@@ -6394,14 +6296,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Unknown) ?? true))
             {
-                if(rhs.Unknown.TryGet(out var Unknownrhs))
-                {
-                    item.Unknown = Unknownrhs.ToArray();
-                }
-                else
-                {
-                    item.Unknown = default;
-                }
+                item.Unknown = rhs.Unknown;
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Height) ?? true))
             {
@@ -6734,19 +6629,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.ObjectBounds));
             }
-            if ((item.Configuration != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Configuration) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Configuration) ?? true))
             {
-                if (item.Configuration.TryGet(out var ConfigurationItem))
-                {
-                    ((NpcConfigurationXmlWriteTranslation)((IXmlItem)ConfigurationItem).XmlWriteTranslator).Write(
-                        item: ConfigurationItem,
-                        node: node,
-                        name: nameof(item.Configuration),
-                        fieldIndex: (int)Npc_FieldIndex.Configuration,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.Configuration));
-                }
+                var ConfigurationItem = item.Configuration;
+                ((NpcConfigurationXmlWriteTranslation)((IXmlItem)ConfigurationItem).XmlWriteTranslator).Write(
+                    item: ConfigurationItem,
+                    node: node,
+                    name: nameof(item.Configuration),
+                    fieldIndex: (int)Npc_FieldIndex.Configuration,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.Configuration));
             }
             if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Factions) ?? true))
             {
@@ -6800,13 +6692,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Npc_FieldIndex.Template,
                     errorMask: errorMask);
             }
-            if ((item.Race.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Race) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Race) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Race),
-                    item: item.Race.FormKey.Value,
+                    item: item.Race.FormKey,
                     fieldIndex: (int)Npc_FieldIndex.Race,
                     errorMask: errorMask);
             }
@@ -6981,19 +6872,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         }
                     });
             }
-            if ((item.AIData != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.AIData) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.AIData) ?? true))
             {
-                if (item.AIData.TryGet(out var AIDataItem))
-                {
-                    ((AIDataXmlWriteTranslation)((IXmlItem)AIDataItem).XmlWriteTranslator).Write(
-                        item: AIDataItem,
-                        node: node,
-                        name: nameof(item.AIData),
-                        fieldIndex: (int)Npc_FieldIndex.AIData,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.AIData));
-                }
+                var AIDataItem = item.AIData;
+                ((AIDataXmlWriteTranslation)((IXmlItem)AIDataItem).XmlWriteTranslator).Write(
+                    item: AIDataItem,
+                    node: node,
+                    name: nameof(item.AIData),
+                    fieldIndex: (int)Npc_FieldIndex.AIData,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Npc_FieldIndex.AIData));
             }
             if ((item.Packages != null)
                 && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Packages) ?? true))
@@ -7033,13 +6921,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: listSubMask);
                     });
             }
-            if ((item.Class.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Class) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Class) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Class),
-                    item: item.Class.FormKey.Value,
+                    item: item.Class.FormKey,
                     fieldIndex: (int)Npc_FieldIndex.Class,
                     errorMask: errorMask);
             }
@@ -7126,38 +7013,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Npc_FieldIndex.GiftFilter,
                     errorMask: errorMask);
             }
-            if ((item.Unknown != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Unknown) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Unknown) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
+                UInt16XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Unknown),
-                    item: item.Unknown.Value,
+                    item: item.Unknown,
                     fieldIndex: (int)Npc_FieldIndex.Unknown,
                     errorMask: errorMask);
             }
-            if ((item.Height != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Height) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Height) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Height),
-                    item: item.Height.Value,
+                    item: item.Height,
                     fieldIndex: (int)Npc_FieldIndex.Height,
                     errorMask: errorMask);
             }
-            if ((item.Weight != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Weight) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.Weight) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Weight),
-                    item: item.Weight.Value,
+                    item: item.Weight,
                     fieldIndex: (int)Npc_FieldIndex.Weight,
                     errorMask: errorMask);
             }
-            if ((item.SoundLevel != null)
-                && (translationMask?.GetShouldTranslate((int)Npc_FieldIndex.SoundLevel) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Npc_FieldIndex.SoundLevel) ?? true))
             {
                 EnumXmlTranslation<SoundLevel>.Instance.Write(
                     node: node,
@@ -8060,7 +7943,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Npc_FieldIndex.Unknown);
                     try
                     {
-                        item.Unknown = ByteArrayXmlTranslation.Instance.Parse(
+                        item.Unknown = UInt16XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -8407,6 +8290,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static NpcBinaryWriteTranslation Instance = new NpcBinaryWriteTranslation();
 
+        static partial void WriteBinaryDataMarkerCustom(
+            MutagenWriter writer,
+            INpcGetter item);
+
+        public static void WriteBinaryDataMarker(
+            MutagenWriter writer,
+            INpcGetter item)
+        {
+            WriteBinaryDataMarkerCustom(
+                writer: writer,
+                item: item);
+        }
+
         public static void WriteRecordTypes(
             INpcGetter item,
             MutagenWriter writer,
@@ -8428,13 +8324,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: ObjectBoundsItem,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.Configuration.TryGet(out var ConfigurationItem))
-            {
-                ((NpcConfigurationBinaryWriteTranslation)((IBinaryItem)ConfigurationItem).BinaryWriteTranslator).Write(
-                    item: ConfigurationItem,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
-            }
+            var ConfigurationItem = item.Configuration;
+            ((NpcConfigurationBinaryWriteTranslation)((IBinaryItem)ConfigurationItem).BinaryWriteTranslator).Write(
+                item: ConfigurationItem,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IRankPlacementGetter>.Instance.Write(
                 writer: writer,
                 items: item.Factions,
@@ -8460,7 +8354,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Template,
                 header: recordTypeConverter.ConvertToCustom(Npc_Registration.TPLT_HEADER));
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Race,
                 header: recordTypeConverter.ConvertToCustom(Npc_Registration.RNAM_HEADER));
@@ -8555,13 +8449,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             recordTypeConverter: conv);
                     }
                 });
-            if (item.AIData.TryGet(out var AIDataItem))
-            {
-                ((AIDataBinaryWriteTranslation)((IBinaryItem)AIDataItem).BinaryWriteTranslator).Write(
-                    item: AIDataItem,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
-            }
+            var AIDataItem = item.AIData;
+            ((AIDataBinaryWriteTranslation)((IBinaryItem)AIDataItem).BinaryWriteTranslator).Write(
+                item: AIDataItem,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IPackageGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Packages,
@@ -8584,7 +8476,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         item: subItem);
                 });
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Class,
                 header: recordTypeConverter.ConvertToCustom(Npc_Registration.CNAM_HEADER));
@@ -8598,9 +8490,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.ShortName,
                 header: recordTypeConverter.ConvertToCustom(Npc_Registration.SHRT_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
+            NpcBinaryWriteTranslation.WriteBinaryDataMarker(
+                writer: writer,
+                item: item);
             if (item.PlayerSkills.TryGet(out var PlayerSkillsItem))
             {
-                using (HeaderExport.ExportHeader(writer, Npc_Registration.DATA_HEADER, Mutagen.Bethesda.Binary.ObjectType.Subrecord)) { }
                 ((PlayerSkillsBinaryWriteTranslation)((IBinaryItem)PlayerSkillsItem).BinaryWriteTranslator).Write(
                     item: PlayerSkillsItem,
                     writer: writer,
@@ -8628,19 +8522,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.GiftFilter,
                 header: recordTypeConverter.ConvertToCustom(Npc_Registration.GNAM_HEADER));
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Unknown,
                 header: recordTypeConverter.ConvertToCustom(Npc_Registration.NAM5_HEADER));
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Height,
                 header: recordTypeConverter.ConvertToCustom(Npc_Registration.NAM6_HEADER));
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Weight,
                 header: recordTypeConverter.ConvertToCustom(Npc_Registration.NAM7_HEADER));
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoundLevel>.Instance.WriteNullable(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoundLevel>.Instance.Write(
                 writer,
                 item.SoundLevel,
                 length: 4,
@@ -8776,6 +8670,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static NpcBinaryCreateTranslation Instance = new NpcBinaryCreateTranslation();
 
+        static partial void FillBinaryDataMarkerCustom(
+            MutagenFrame frame,
+            INpcInternal item);
+
+        public static void FillBinaryDataMarkerCustomPublic(
+            MutagenFrame frame,
+            INpcInternal item)
+        {
+            FillBinaryDataMarkerCustom(
+                frame: frame,
+                item: item);
+        }
+
     }
 
 }
@@ -8851,8 +8758,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Configuration
         private RangeInt32? _ConfigurationLocation;
-        public INpcConfigurationGetter? Configuration => _ConfigurationLocation.HasValue ? NpcConfigurationBinaryOverlay.NpcConfigurationFactory(new BinaryMemoryReadStream(_data.Slice(_ConfigurationLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
-        public bool Configuration_IsSet => _ConfigurationLocation.HasValue;
+        public INpcConfigurationGetter? _Configuration => _ConfigurationLocation.HasValue ? NpcConfigurationBinaryOverlay.NpcConfigurationFactory(new BinaryMemoryReadStream(_data.Slice(_ConfigurationLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public INpcConfigurationGetter Configuration => _Configuration ?? new NpcConfiguration();
         #endregion
         public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = ListExt.Empty<RankPlacementBinaryOverlay>();
         #region DeathItem
@@ -8873,7 +8780,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Race
         private int? _RaceLocation;
         public bool Race_IsSet => _RaceLocation.HasValue;
-        public IFormLinkNullableGetter<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _RaceLocation.Value, _package.Meta)))) : FormLinkNullable<IRaceGetter>.Empty;
+        public IFormLinkGetter<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLink<IRaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _RaceLocation.Value, _package.Meta)))) : FormLink<IRaceGetter>.Empty;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IASpellGetter>>? ActorEffect { get; private set; }
         public IDestructibleGetter? Destructible { get; private set; }
@@ -8917,15 +8824,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IContainerEntryGetter>? Items { get; private set; }
         #region AIData
         private RangeInt32? _AIDataLocation;
-        public IAIDataGetter? AIData => _AIDataLocation.HasValue ? AIDataBinaryOverlay.AIDataFactory(new BinaryMemoryReadStream(_data.Slice(_AIDataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
-        public bool AIData_IsSet => _AIDataLocation.HasValue;
+        public IAIDataGetter? _AIData => _AIDataLocation.HasValue ? AIDataBinaryOverlay.AIDataFactory(new BinaryMemoryReadStream(_data.Slice(_AIDataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IAIDataGetter AIData => _AIData ?? new AIData();
         #endregion
         public IReadOnlyList<IFormLinkGetter<IPackageGetter>>? Packages { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         #region Class
         private int? _ClassLocation;
         public bool Class_IsSet => _ClassLocation.HasValue;
-        public IFormLinkNullableGetter<IClassGetter> Class => _ClassLocation.HasValue ? new FormLinkNullable<IClassGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ClassLocation.Value, _package.Meta)))) : FormLinkNullable<IClassGetter>.Empty;
+        public IFormLinkGetter<IClassGetter> Class => _ClassLocation.HasValue ? new FormLink<IClassGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ClassLocation.Value, _package.Meta)))) : FormLink<IClassGetter>.Empty;
         #endregion
         #region Name
         private int? _NameLocation;
@@ -8934,6 +8841,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ShortName
         private int? _ShortNameLocation;
         public String? ShortName => _ShortNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ShortNameLocation.Value, _package.Meta)) : default(string?);
+        #endregion
+        #region DataMarker
+        partial void DataMarkerCustomParse(
+            BinaryMemoryReadStream stream,
+            int offset);
         #endregion
         #region PlayerSkills
         private RangeInt32? _PlayerSkillsLocation;
@@ -8958,19 +8870,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Unknown
         private int? _UnknownLocation;
-        public ReadOnlyMemorySlice<Byte>? Unknown => _UnknownLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _UnknownLocation.Value, _package.Meta).ToArray() : default(ReadOnlyMemorySlice<byte>?);
+        public UInt16 Unknown => _UnknownLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UnknownLocation.Value, _package.Meta)) : default;
         #endregion
         #region Height
         private int? _HeightLocation;
-        public Single? Height => _HeightLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _HeightLocation.Value, _package.Meta)) : default(Single?);
+        public Single Height => _HeightLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _HeightLocation.Value, _package.Meta)) : default;
         #endregion
         #region Weight
         private int? _WeightLocation;
-        public Single? Weight => _WeightLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _WeightLocation.Value, _package.Meta)) : default(Single?);
+        public Single Weight => _WeightLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _WeightLocation.Value, _package.Meta)) : default;
         #endregion
         #region SoundLevel
         private int? _SoundLevelLocation;
-        public SoundLevel? SoundLevel => _SoundLevelLocation.HasValue ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLevelLocation!.Value, _package.Meta)) : default(SoundLevel?);
+        public SoundLevel SoundLevel => _SoundLevelLocation.HasValue ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLevelLocation!.Value, _package.Meta)) : default(SoundLevel);
         #endregion
         public IANpcSoundDefinitionGetter? Sound { get; private set; }
         #region DefaultOutfit
@@ -9275,7 +9187,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    stream.Position += _package.Meta.SubConstants.HeaderLength; // Skip marker
+                    DataMarkerCustomParse(
+                        stream,
+                        offset);
+                    return TryGet<int?>.Succeed(null);
+                }
+                case 0x4D414E44: // DNAM
+                {
                     _PlayerSkillsLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.PlayerSkills);
                 }

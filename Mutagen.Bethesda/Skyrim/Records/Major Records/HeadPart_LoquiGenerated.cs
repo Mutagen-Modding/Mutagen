@@ -71,15 +71,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModelGetter? IHeadPartGetter.Model => this.Model;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private HeadPart.Flag? _Flags;
-        public HeadPart.Flag? Flags
-        {
-            get => this._Flags;
-            set => this._Flags = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        HeadPart.Flag? IHeadPartGetter.Flags => this.Flags;
+        public HeadPart.Flag Flags { get; set; } = default;
         #endregion
         #region Type
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -126,6 +118,13 @@ namespace Mutagen.Bethesda.Skyrim
         public IFormLinkNullable<TextureSet> TextureSet => this._TextureSet;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ITextureSetGetter> IHeadPartGetter.TextureSet => this.TextureSet;
+        #endregion
+        #region Color
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IFormLinkNullable<ColorRecord> _Color = new FormLinkNullable<ColorRecord>();
+        public IFormLinkNullable<ColorRecord> Color => this._Color;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IColorRecordGetter> IHeadPartGetter.Color => this.Color;
         #endregion
         #region ValidRaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -311,6 +310,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ExtraParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Parts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Part.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Part.Mask<TItem>?>>());
                 this.TextureSet = initialValue;
+                this.Color = initialValue;
                 this.ValidRaces = initialValue;
             }
 
@@ -328,6 +328,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem ExtraParts,
                 TItem Parts,
                 TItem TextureSet,
+                TItem Color,
                 TItem ValidRaces)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -344,6 +345,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ExtraParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ExtraParts, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Parts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Part.Mask<TItem>?>>?>(Parts, Enumerable.Empty<MaskItemIndexed<TItem, Part.Mask<TItem>?>>());
                 this.TextureSet = TextureSet;
+                this.Color = Color;
                 this.ValidRaces = ValidRaces;
             }
 
@@ -363,6 +365,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ExtraParts;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Part.Mask<TItem>?>>?>? Parts;
             public TItem TextureSet;
+            public TItem Color;
             public TItem ValidRaces;
             #endregion
 
@@ -384,6 +387,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.ExtraParts, rhs.ExtraParts)) return false;
                 if (!object.Equals(this.Parts, rhs.Parts)) return false;
                 if (!object.Equals(this.TextureSet, rhs.TextureSet)) return false;
+                if (!object.Equals(this.Color, rhs.Color)) return false;
                 if (!object.Equals(this.ValidRaces, rhs.ValidRaces)) return false;
                 return true;
             }
@@ -397,6 +401,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.ExtraParts);
                 hash.Add(this.Parts);
                 hash.Add(this.TextureSet);
+                hash.Add(this.Color);
                 hash.Add(this.ValidRaces);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -440,6 +445,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 if (!eval(this.TextureSet)) return false;
+                if (!eval(this.Color)) return false;
                 if (!eval(this.ValidRaces)) return false;
                 return true;
             }
@@ -481,6 +487,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 if (eval(this.TextureSet)) return true;
+                if (eval(this.Color)) return true;
                 if (eval(this.ValidRaces)) return true;
                 return false;
             }
@@ -531,6 +538,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 obj.TextureSet = eval(this.TextureSet);
+                obj.Color = eval(this.Color);
                 obj.ValidRaces = eval(this.ValidRaces);
             }
             #endregion
@@ -620,6 +628,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(TextureSet, "TextureSet");
                     }
+                    if (printMask?.Color ?? true)
+                    {
+                        fg.AppendItem(Color, "Color");
+                    }
                     if (printMask?.ValidRaces ?? true)
                     {
                         fg.AppendItem(ValidRaces, "ValidRaces");
@@ -643,6 +655,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ExtraParts;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Part.ErrorMask?>>?>? Parts;
             public Exception? TextureSet;
+            public Exception? Color;
             public Exception? ValidRaces;
             #endregion
 
@@ -666,6 +679,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Parts;
                     case HeadPart_FieldIndex.TextureSet:
                         return TextureSet;
+                    case HeadPart_FieldIndex.Color:
+                        return Color;
                     case HeadPart_FieldIndex.ValidRaces:
                         return ValidRaces;
                     default:
@@ -698,6 +713,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case HeadPart_FieldIndex.TextureSet:
                         this.TextureSet = ex;
+                        break;
+                    case HeadPart_FieldIndex.Color:
+                        this.Color = ex;
                         break;
                     case HeadPart_FieldIndex.ValidRaces:
                         this.ValidRaces = ex;
@@ -734,6 +752,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case HeadPart_FieldIndex.TextureSet:
                         this.TextureSet = (Exception?)obj;
                         break;
+                    case HeadPart_FieldIndex.Color:
+                        this.Color = (Exception?)obj;
+                        break;
                     case HeadPart_FieldIndex.ValidRaces:
                         this.ValidRaces = (Exception?)obj;
                         break;
@@ -753,6 +774,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (ExtraParts != null) return true;
                 if (Parts != null) return true;
                 if (TextureSet != null) return true;
+                if (Color != null) return true;
                 if (ValidRaces != null) return true;
                 return false;
             }
@@ -838,6 +860,7 @@ namespace Mutagen.Bethesda.Skyrim
                     fg.AppendLine("]");
                 }
                 fg.AppendItem(TextureSet, "TextureSet");
+                fg.AppendItem(Color, "Color");
                 fg.AppendItem(ValidRaces, "ValidRaces");
             }
             #endregion
@@ -854,6 +877,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.ExtraParts = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.ExtraParts?.Overall, rhs.ExtraParts?.Overall), ExceptionExt.Combine(this.ExtraParts?.Specific, rhs.ExtraParts?.Specific));
                 ret.Parts = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Part.ErrorMask?>>?>(ExceptionExt.Combine(this.Parts?.Overall, rhs.Parts?.Overall), ExceptionExt.Combine(this.Parts?.Specific, rhs.Parts?.Specific));
                 ret.TextureSet = this.TextureSet.Combine(rhs.TextureSet);
+                ret.Color = this.Color.Combine(rhs.Color);
                 ret.ValidRaces = this.ValidRaces.Combine(rhs.ValidRaces);
                 return ret;
             }
@@ -884,6 +908,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool ExtraParts;
             public MaskItem<bool, Part.TranslationMask?> Parts;
             public bool TextureSet;
+            public bool Color;
             public bool ValidRaces;
             #endregion
 
@@ -898,6 +923,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ExtraParts = defaultOn;
                 this.Parts = new MaskItem<bool, Part.TranslationMask?>(defaultOn, null);
                 this.TextureSet = defaultOn;
+                this.Color = defaultOn;
                 this.ValidRaces = defaultOn;
             }
 
@@ -913,6 +939,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ExtraParts, null));
                 ret.Add((Parts?.Overall ?? true, Parts?.Specific?.GetCrystal()));
                 ret.Add((TextureSet, null));
+                ret.Add((Color, null));
                 ret.Add((ValidRaces, null));
             }
         }
@@ -1010,11 +1037,12 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
-        new HeadPart.Flag? Flags { get; set; }
+        new HeadPart.Flag Flags { get; set; }
         new HeadPart.TypeEnum? Type { get; set; }
         new ExtendedList<IFormLink<HeadPart>>? ExtraParts { get; set; }
         new ExtendedList<Part> Parts { get; }
         new IFormLinkNullable<TextureSet> TextureSet { get; }
+        new IFormLinkNullable<ColorRecord> Color { get; }
         new IFormLinkNullable<FormList> ValidRaces { get; }
         #region Mutagen
         new HeadPart.MajorFlag MajorFlags { get; set; }
@@ -1041,11 +1069,12 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => HeadPart_Registration.Instance;
         String? Name { get; }
         IModelGetter? Model { get; }
-        HeadPart.Flag? Flags { get; }
+        HeadPart.Flag Flags { get; }
         HeadPart.TypeEnum? Type { get; }
         IReadOnlyList<IFormLinkGetter<IHeadPartGetter>>? ExtraParts { get; }
         IReadOnlyList<IPartGetter> Parts { get; }
         IFormLinkNullableGetter<ITextureSetGetter> TextureSet { get; }
+        IFormLinkNullableGetter<IColorRecordGetter> Color { get; }
         IFormLinkNullableGetter<IFormListGetter> ValidRaces { get; }
 
         #region Mutagen
@@ -1358,7 +1387,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         ExtraParts = 10,
         Parts = 11,
         TextureSet = 12,
-        ValidRaces = 13,
+        Color = 13,
+        ValidRaces = 14,
     }
     #endregion
 
@@ -1376,9 +1406,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "857a29e8-2860-48f1-b007-30df75c1667c";
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(HeadPart.Mask<>);
 
@@ -1422,6 +1452,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)HeadPart_FieldIndex.Parts;
                 case "TEXTURESET":
                     return (ushort)HeadPart_FieldIndex.TextureSet;
+                case "COLOR":
+                    return (ushort)HeadPart_FieldIndex.Color;
                 case "VALIDRACES":
                     return (ushort)HeadPart_FieldIndex.ValidRaces;
                 default:
@@ -1442,6 +1474,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case HeadPart_FieldIndex.Flags:
                 case HeadPart_FieldIndex.Type:
                 case HeadPart_FieldIndex.TextureSet:
+                case HeadPart_FieldIndex.Color:
                 case HeadPart_FieldIndex.ValidRaces:
                     return false;
                 default:
@@ -1462,6 +1495,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case HeadPart_FieldIndex.Type:
                 case HeadPart_FieldIndex.ExtraParts:
                 case HeadPart_FieldIndex.TextureSet:
+                case HeadPart_FieldIndex.Color:
                 case HeadPart_FieldIndex.ValidRaces:
                     return false;
                 default:
@@ -1481,6 +1515,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case HeadPart_FieldIndex.ExtraParts:
                 case HeadPart_FieldIndex.Parts:
                 case HeadPart_FieldIndex.TextureSet:
+                case HeadPart_FieldIndex.Color:
                 case HeadPart_FieldIndex.ValidRaces:
                     return false;
                 default:
@@ -1507,6 +1542,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Parts";
                 case HeadPart_FieldIndex.TextureSet:
                     return "TextureSet";
+                case HeadPart_FieldIndex.Color:
+                    return "Color";
                 case HeadPart_FieldIndex.ValidRaces:
                     return "ValidRaces";
                 default:
@@ -1526,6 +1563,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case HeadPart_FieldIndex.ExtraParts:
                 case HeadPart_FieldIndex.Parts:
                 case HeadPart_FieldIndex.TextureSet:
+                case HeadPart_FieldIndex.Color:
                 case HeadPart_FieldIndex.ValidRaces:
                     return false;
                 default:
@@ -1545,6 +1583,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case HeadPart_FieldIndex.ExtraParts:
                 case HeadPart_FieldIndex.Parts:
                 case HeadPart_FieldIndex.TextureSet:
+                case HeadPart_FieldIndex.Color:
                 case HeadPart_FieldIndex.ValidRaces:
                     return false;
                 default:
@@ -1571,6 +1610,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(ExtendedList<Part>);
                 case HeadPart_FieldIndex.TextureSet:
                     return typeof(IFormLinkNullable<TextureSet>);
+                case HeadPart_FieldIndex.Color:
+                    return typeof(IFormLinkNullable<ColorRecord>);
                 case HeadPart_FieldIndex.ValidRaces:
                     return typeof(IFormLinkNullable<FormList>);
                 default:
@@ -1588,10 +1629,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType NAM0_HEADER = new RecordType("NAM0");
         public static readonly RecordType NAM1_HEADER = new RecordType("NAM1");
         public static readonly RecordType TNAM_HEADER = new RecordType("TNAM");
+        public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
         public static readonly RecordType RNAM_HEADER = new RecordType("RNAM");
         public static readonly RecordType TriggeringRecordType = HDPT_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 8;
+        public const int NumTypedFields = 9;
         public static readonly Type BinaryWriteTranslation = typeof(HeadPartBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1641,6 +1683,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ExtraParts = null;
             item.Parts.Clear();
             item.TextureSet.FormKey = null;
+            item.Color.FormKey = null;
             item.ValidRaces.FormKey = null;
             base.Clear(item);
         }
@@ -1819,6 +1862,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.TextureSet);
                 }
+                case 0x4D414E43: // CNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.Color.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Color);
+                }
                 case 0x4D414E52: // RNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
@@ -1918,6 +1969,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.TextureSet = object.Equals(item.TextureSet, rhs.TextureSet);
+            ret.Color = object.Equals(item.Color, rhs.Color);
             ret.ValidRaces = object.Equals(item.ValidRaces, rhs.ValidRaces);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1980,10 +2032,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ModelItem?.ToString(fg, "Model");
             }
-            if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+            if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(FlagsItem, "Flags");
+                fg.AppendItem(item.Flags, "Flags");
             }
             if ((printMask?.Type ?? true)
                 && item.Type.TryGet(out var TypeItem))
@@ -2032,6 +2083,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(TextureSetItem, "TextureSet");
             }
+            if ((printMask?.Color ?? true)
+                && item.Color.TryGet(out var ColorItem))
+            {
+                fg.AppendItem(ColorItem, "Color");
+            }
             if ((printMask?.ValidRaces ?? true)
                 && item.ValidRaces.TryGet(out var ValidRacesItem))
             {
@@ -2046,10 +2102,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
             if (checkMask.Type.HasValue && checkMask.Type.Value != (item.Type != null)) return false;
             if (checkMask.ExtraParts?.Overall.HasValue ?? false && checkMask.ExtraParts!.Overall.Value != (item.ExtraParts != null)) return false;
             if (checkMask.TextureSet.HasValue && checkMask.TextureSet.Value != (item.TextureSet.FormKey != null)) return false;
+            if (checkMask.Color.HasValue && checkMask.Color.Value != (item.Color.FormKey != null)) return false;
             if (checkMask.ValidRaces.HasValue && checkMask.ValidRaces.Value != (item.ValidRaces.FormKey != null)) return false;
             return base.HasBeenSet(
                 item: item,
@@ -2063,12 +2119,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Name = (item.Name != null);
             var itemModel = item.Model;
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            mask.Flags = (item.Flags != null);
+            mask.Flags = true;
             mask.Type = (item.Type != null);
             mask.ExtraParts = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.ExtraParts != null), default);
             var PartsItem = item.Parts;
             mask.Parts = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Part.Mask<bool>?>>?>(true, PartsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Part.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             mask.TextureSet = (item.TextureSet.FormKey != null);
+            mask.Color = (item.Color.FormKey != null);
             mask.ValidRaces = (item.ValidRaces.FormKey != null);
             base.FillHasBeenSetMask(
                 item: item,
@@ -2128,6 +2185,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.ExtraParts.SequenceEqual(rhs.ExtraParts)) return false;
             if (!lhs.Parts.SequenceEqual(rhs.Parts)) return false;
             if (!lhs.TextureSet.Equals(rhs.TextureSet)) return false;
+            if (!lhs.Color.Equals(rhs.Color)) return false;
             if (!lhs.ValidRaces.Equals(rhs.ValidRaces)) return false;
             return true;
         }
@@ -2161,10 +2219,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Modelitem);
             }
-            if (item.Flags.TryGet(out var Flagsitem))
-            {
-                hash.Add(Flagsitem);
-            }
+            hash.Add(item.Flags);
             if (item.Type.TryGet(out var Typeitem))
             {
                 hash.Add(Typeitem);
@@ -2174,6 +2229,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (item.TextureSet.TryGet(out var TextureSetitem))
             {
                 hash.Add(TextureSetitem);
+            }
+            if (item.Color.TryGet(out var Coloritem))
+            {
+                hash.Add(Coloritem);
             }
             if (item.ValidRaces.TryGet(out var ValidRacesitem))
             {
@@ -2223,6 +2282,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
             }
             yield return obj.TextureSet;
+            yield return obj.Color;
             yield return obj.ValidRaces;
             yield break;
         }
@@ -2362,6 +2422,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((copyMask?.GetShouldTranslate((int)HeadPart_FieldIndex.TextureSet) ?? true))
             {
                 item.TextureSet.FormKey = rhs.TextureSet.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Color) ?? true))
+            {
+                item.Color.FormKey = rhs.Color.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)HeadPart_FieldIndex.ValidRaces) ?? true))
             {
@@ -2533,8 +2597,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         translationMask: translationMask?.GetSubCrystal((int)HeadPart_FieldIndex.Model));
                 }
             }
-            if ((item.Flags != null)
-                && (translationMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Flags) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<HeadPart.Flag>.Instance.Write(
                     node: node,
@@ -2602,6 +2665,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     name: nameof(item.TextureSet),
                     item: item.TextureSet.FormKey.Value,
                     fieldIndex: (int)HeadPart_FieldIndex.TextureSet,
+                    errorMask: errorMask);
+            }
+            if ((item.Color.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Color) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Color),
+                    item: item.Color.FormKey.Value,
+                    fieldIndex: (int)HeadPart_FieldIndex.Color,
                     errorMask: errorMask);
             }
             if ((item.ValidRaces.FormKey != null)
@@ -2868,6 +2941,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "Color":
+                    errorMask?.PushIndex((int)HeadPart_FieldIndex.Color);
+                    try
+                    {
+                        item.Color.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "ValidRaces":
                     errorMask?.PushIndex((int)HeadPart_FieldIndex.ValidRaces);
                     try
@@ -2993,7 +3084,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<HeadPart.Flag>.Instance.WriteNullable(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<HeadPart.Flag>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1,
@@ -3030,6 +3121,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.TextureSet,
                 header: recordTypeConverter.ConvertToCustom(HeadPart_Registration.TNAM_HEADER));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Color,
+                header: recordTypeConverter.ConvertToCustom(HeadPart_Registration.CNAM_HEADER));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ValidRaces,
@@ -3165,7 +3260,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IModelGetter? Model { get; private set; }
         #region Flags
         private int? _FlagsLocation;
-        public HeadPart.Flag? Flags => _FlagsLocation.HasValue ? (HeadPart.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(HeadPart.Flag?);
+        public HeadPart.Flag Flags => _FlagsLocation.HasValue ? (HeadPart.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(HeadPart.Flag);
         #endregion
         #region Type
         private int? _TypeLocation;
@@ -3177,6 +3272,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _TextureSetLocation;
         public bool TextureSet_IsSet => _TextureSetLocation.HasValue;
         public IFormLinkNullableGetter<ITextureSetGetter> TextureSet => _TextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TextureSetLocation.Value, _package.Meta)))) : FormLinkNullable<ITextureSetGetter>.Empty;
+        #endregion
+        #region Color
+        private int? _ColorLocation;
+        public bool Color_IsSet => _ColorLocation.HasValue;
+        public IFormLinkNullableGetter<IColorRecordGetter> Color => _ColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ColorLocation.Value, _package.Meta)))) : FormLinkNullable<IColorRecordGetter>.Empty;
         #endregion
         #region ValidRaces
         private int? _ValidRacesLocation;
@@ -3296,6 +3396,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _TextureSetLocation = (ushort)(stream.Position - offset);
                     return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.TextureSet);
+                }
+                case 0x4D414E43: // CNAM
+                {
+                    _ColorLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Color);
                 }
                 case 0x4D414E52: // RNAM
                 {

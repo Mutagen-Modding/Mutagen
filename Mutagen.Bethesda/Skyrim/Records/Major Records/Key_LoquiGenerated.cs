@@ -518,6 +518,7 @@ namespace Mutagen.Bethesda.Skyrim
         IKeyGetter,
         ISkyrimMajorRecord,
         IItem,
+        IObjectId,
         ILoquiObjectSetter<IKeyInternal>
     {
     }
@@ -532,6 +533,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IKeyGetter :
         ISkyrimMajorRecordGetter,
         IItemGetter,
+        IObjectIdGetter,
         ILoquiObject<IKeyGetter>,
         IXmlItem,
         IBinaryItem

@@ -5,13 +5,13 @@
     <Interface>IItem</Interface>
     <Interface>IObjectBounded</Interface>
     <Interface>IModeled</Interface>
-    <Interface>IIcons</Interface>
+    <Interface>IHasIcons</Interface>
+    <Interface>IObjectId</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
       <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
-      <String name="LargeIconFilename" recordType="ICON" />
-      <String name="SmallIconFilename" recordType="MICO" />
+      <RefDirect name="Icons" refName="Icons" />
       <RefDirect name="Destructible" refName="Destructible" />
       <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
       <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
@@ -19,7 +19,7 @@
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
         <FormLink refName="Keyword" />
       </List>
-      <RefDirect name="Data" refName="AmmunitionData" />
+      <RefDirect name="Data" refName="AmmunitionData" hasBeenSet="False" />
       <String name="ShortName" recordType="ONAM" />
     </Fields>
   </Object>

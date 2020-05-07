@@ -7,7 +7,7 @@
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
       <String name="Name" recordType="FULL" />
-      <RefDirect name="Data" refName="ObjectEffectData" />
+      <RefDirect name="Data" refName="ObjectEffectData" hasBeenSet="False" />
       <RefList name="Effects" refName="Effect" nullable="NotNull" />
     </Fields>
   </Object>

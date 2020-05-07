@@ -3,15 +3,16 @@
   <Object name="Npc" recordType="NPC_" objType="Record" majorFlag="true" baseClass="ANpcSpawn" GUID="63c41e9b-1707-48b0-906a-573f3c678370" ID="75">
     <Interface>IObjectBounded</Interface>
     <Interface>INamed</Interface>
+    <Interface>IObjectId</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
-      <RefDirect name="Configuration" refName="NpcConfiguration" />
+      <RefDirect name="Configuration" refName="NpcConfiguration" hasBeenSet="False" />
       <RefList name="Factions" refName="RankPlacement" />
       <FormLink name="DeathItem" refName="LeveledItem" recordType="INAM" />
       <FormLink name="Voice" refName="VoiceType" recordType="VTCK" />
       <FormLink name="Template" recordType="TPLT" refName="ANpcSpawn" />
-      <FormLink name="Race" refName="Race" recordType="RNAM" />
+      <FormLink name="Race" refName="Race" recordType="RNAM" hasBeenSet="False" />
       <List name="ActorEffect" counterRecType="SPCT" >
         <FormLink refName="ASpell" recordType="SPLO" />
       </List>
@@ -26,27 +27,28 @@
       <FormLink name="CombatOverridePackageList" refName="FormList" recordType="ECOR" />
       <RefList name="Perks" counterRecType="PRKZ" refName="PerkPlacement" />
       <RefList name="Items" counterRecType="COCT" refName="ContainerEntry" />
-      <RefDirect name="AIData" refName="AIData" />
+      <RefDirect name="AIData" refName="AIData" hasBeenSet="False" />
       <List name="Packages">
         <FormLink refName="Package" recordType="PKID" />
       </List>
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
         <FormLink refName="Keyword" />
       </List>
-      <FormLink name="Class" refName="Class" recordType="CNAM" />
+      <FormLink name="Class" refName="Class" recordType="CNAM" hasBeenSet="False" />
       <String name="Name" recordType="FULL" />
       <String name="ShortName" recordType="SHRT" />
-      <RefDirect name="PlayerSkills" markerType="DATA" refName="PlayerSkills" />
+      <CustomLogic name="DataMarker" recordType="DATA" />
+      <RefDirect name="PlayerSkills" refName="PlayerSkills" />
       <List name="HeadParts">
         <FormLink refName="HeadPart" recordType="PNAM" />
       </List>
       <FormLink name="HairColor" refName="ColorRecord" recordType="HCLF" />
       <FormLink name="CombatStyle" refName="CombatStyle" recordType="ZNAM" />
       <FormLink name="GiftFilter" refName="FormList" recordType="GNAM" />
-      <ByteArray name="Unknown" recordType="NAM5" />
-      <Float name="Height" recordType="NAM6" />
-      <Float name="Weight" recordType="NAM7" />
-      <Enum name="SoundLevel" enumName="SoundLevel" recordType="NAM8" byteLength="4" />
+      <UInt16 name="Unknown" recordType="NAM5" hasBeenSet="False" default="0xFF00" />
+      <Float name="Height" recordType="NAM6" hasBeenSet="False" />
+      <Float name="Weight" recordType="NAM7" hasBeenSet="False" />
+      <Enum name="SoundLevel" enumName="SoundLevel" recordType="NAM8" byteLength="4" hasBeenSet="False" />
       <RefDirect name="Sound" refName="ANpcSoundDefinition" />
       <FormLink name="DefaultOutfit" refName="Outfit" recordType="DOFT" />
       <FormLink name="SleepingOutfit" refName="Outfit" recordType="SOFT" />

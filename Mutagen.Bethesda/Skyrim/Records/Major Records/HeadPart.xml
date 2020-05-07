@@ -6,13 +6,14 @@
     <Fields>
       <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
-      <Enum name="Flags" enumName="HeadPart.Flag" byteLength="1" recordType="DATA" />
+      <Enum name="Flags" enumName="HeadPart.Flag" byteLength="1" recordType="DATA" hasBeenSet="False" />
       <Enum name="Type" enumName="HeadPart.TypeEnum" byteLength="4" recordType="PNAM" />
       <List name="ExtraParts">
         <FormLink refName="HeadPart" recordType="HNAM" />
       </List>
       <RefList name="Parts" refName="Part" />
       <FormLink name="TextureSet" refName="TextureSet" recordType="TNAM" />
+      <FormLink name="Color" refName="ColorRecord" recordType="CNAM" />
       <FormLink name="ValidRaces" recordType="RNAM" refName="FormList" />
     </Fields>
   </Object>

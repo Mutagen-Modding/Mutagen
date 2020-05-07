@@ -52,26 +52,10 @@ namespace Mutagen.Bethesda.Skyrim
         public String Name { get; set; } = string.Empty;
         #endregion
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private String? _Icon;
-        public String? Icon
-        {
-            get => this._Icon;
-            set => this._Icon = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IEyesGetter.Icon => this.Icon;
+        public String Icon { get; set; } = string.Empty;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Eyes.Flag? _Flags;
-        public Eyes.Flag? Flags
-        {
-            get => this._Flags;
-            set => this._Flags = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Eyes.Flag? IEyesGetter.Flags => this.Flags;
+        public Eyes.Flag Flags { get; set; } = default;
         #endregion
 
         #region To String
@@ -648,8 +632,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IEyesInternal>
     {
         new String Name { get; set; }
-        new String? Icon { get; set; }
-        new Eyes.Flag? Flags { get; set; }
+        new String Icon { get; set; }
+        new Eyes.Flag Flags { get; set; }
         #region Mutagen
         new Eyes.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -672,8 +656,8 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static ILoquiRegistration Registration => Eyes_Registration.Instance;
         String Name { get; }
-        String? Icon { get; }
-        Eyes.Flag? Flags { get; }
+        String Icon { get; }
+        Eyes.Flag Flags { get; }
 
         #region Mutagen
         Eyes.MajorFlag MajorFlags { get; }
@@ -1194,7 +1178,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Name = string.Empty;
-            item.Icon = default;
+            item.Icon = string.Empty;
             item.Flags = default;
             base.Clear(item);
         }
@@ -1464,15 +1448,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Name, "Name");
             }
-            if ((printMask?.Icon ?? true)
-                && item.Icon.TryGet(out var IconItem))
+            if (printMask?.Icon ?? true)
             {
-                fg.AppendItem(IconItem, "Icon");
+                fg.AppendItem(item.Icon, "Icon");
             }
-            if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+            if (printMask?.Flags ?? true)
             {
-                fg.AppendItem(FlagsItem, "Flags");
+                fg.AppendItem(item.Flags, "Flags");
             }
         }
         
@@ -1480,8 +1462,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IEyesGetter item,
             Eyes.Mask<bool?> checkMask)
         {
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1492,8 +1472,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Eyes.Mask<bool> mask)
         {
             mask.Name = true;
-            mask.Icon = (item.Icon != null);
-            mask.Flags = (item.Flags != null);
+            mask.Icon = true;
+            mask.Flags = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1573,14 +1553,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Name);
-            if (item.Icon.TryGet(out var Iconitem))
-            {
-                hash.Add(Iconitem);
-            }
-            if (item.Flags.TryGet(out var Flagsitem))
-            {
-                hash.Add(Flagsitem);
-            }
+            hash.Add(item.Icon);
+            hash.Add(item.Flags);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1819,8 +1793,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Eyes_FieldIndex.Name,
                     errorMask: errorMask);
             }
-            if ((item.Icon != null)
-                && (translationMask?.GetShouldTranslate((int)Eyes_FieldIndex.Icon) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Eyes_FieldIndex.Icon) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: node,
@@ -1829,8 +1802,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Eyes_FieldIndex.Icon,
                     errorMask: errorMask);
             }
-            if ((item.Flags != null)
-                && (translationMask?.GetShouldTranslate((int)Eyes_FieldIndex.Flags) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Eyes_FieldIndex.Flags) ?? true))
             {
                 EnumXmlTranslation<Eyes.Flag>.Instance.Write(
                     node: node,
@@ -2100,12 +2072,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(Eyes_Registration.FULL_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Icon,
                 header: recordTypeConverter.ConvertToCustom(Eyes_Registration.ICON_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Eyes.Flag>.Instance.WriteNullable(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Eyes.Flag>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1,
@@ -2239,11 +2211,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Icon
         private int? _IconLocation;
-        public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _IconLocation.Value, _package.Meta)) : default(string?);
+        public String Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _IconLocation.Value, _package.Meta)) : string.Empty;
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public Eyes.Flag? Flags => _FlagsLocation.HasValue ? (Eyes.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(Eyes.Flag?);
+        public Eyes.Flag Flags => _FlagsLocation.HasValue ? (Eyes.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(Eyes.Flag);
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

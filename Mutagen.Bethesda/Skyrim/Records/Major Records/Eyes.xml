@@ -4,8 +4,8 @@
     <Interface>INamedRequired</Interface>
     <Fields>
       <String name="Name" recordType="FULL" hasBeenSet="False" />
-      <String name="Icon" recordType="ICON" />
-      <Enum name="Flags" recordType="DATA" enumName="Eyes.Flag" byteLength="1" />
+      <String name="Icon" recordType="ICON" hasBeenSet="False" />
+      <Enum name="Flags" recordType="DATA" enumName="Eyes.Flag" byteLength="1" hasBeenSet="False" />
     </Fields>
   </Object>
 </Loqui>
