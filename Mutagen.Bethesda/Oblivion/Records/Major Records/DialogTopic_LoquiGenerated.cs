@@ -794,7 +794,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public new static readonly RecordType GrupRecordType = DialogTopic_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public override IEnumerable<ILinkGetter> Links => DialogTopicCommon.Instance.GetLinks(this);
+        protected override IEnumerable<FormKey> LinkFormKeys => DialogTopicCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => DialogTopicCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogTopicCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogTopicCommon.Instance.RemapLinks(this, mapping);
         public DialogTopic(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -904,7 +908,7 @@ namespace Mutagen.Bethesda.Oblivion
         IMajorRecordGetterEnumerable,
         ILoquiObject<IDialogTopicGetter>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => DialogTopic_Registration.Instance;
@@ -1973,26 +1977,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IDialogTopicGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IDialogTopicGetter obj)
         {
-            foreach (var item in base.GetLinks(obj))
+            foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            if (obj.Quests != null)
+            if (obj.Quests.TryGet(out var QuestsItem))
             {
-                foreach (var item in obj.Quests)
+                foreach (var item in QuestsItem.Select(f => f.FormKey))
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.Items.SelectMany(f => f.Links))
+            foreach (var item in obj.Items.SelectMany(f => f.LinkFormKeys))
             {
                 yield return item;
             }
             yield break;
         }
         
+        public void RemapLinks(IDialogTopicGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         partial void PostDuplicate(DialogTopic obj, DialogTopic rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
@@ -2824,7 +2829,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogTopicGetter)rhs, include);
 
-        public override IEnumerable<ILinkGetter> Links => DialogTopicCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => DialogTopicCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => DialogTopicCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogTopicCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogTopicCommon.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

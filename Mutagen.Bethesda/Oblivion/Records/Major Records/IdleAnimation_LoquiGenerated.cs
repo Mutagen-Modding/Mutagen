@@ -771,7 +771,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public new static readonly RecordType GrupRecordType = IdleAnimation_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public override IEnumerable<ILinkGetter> Links => IdleAnimationCommon.Instance.GetLinks(this);
+        protected override IEnumerable<FormKey> LinkFormKeys => IdleAnimationCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => IdleAnimationCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleAnimationCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleAnimationCommon.Instance.RemapLinks(this, mapping);
         public IdleAnimation(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -868,7 +872,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         ILoquiObject<IIdleAnimationGetter>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => IdleAnimation_Registration.Instance;
@@ -1886,15 +1890,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IIdleAnimationGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IIdleAnimationGetter obj)
         {
-            foreach (var item in base.GetLinks(obj))
+            foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            if (obj.RelatedIdleAnimations != null)
+            if (obj.RelatedIdleAnimations.TryGet(out var RelatedIdleAnimationsItem))
             {
-                foreach (var item in obj.RelatedIdleAnimations)
+                foreach (var item in RelatedIdleAnimationsItem.Select(f => f.FormKey))
                 {
                     yield return item;
                 }
@@ -1902,6 +1906,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
+        public void RemapLinks(IIdleAnimationGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         partial void PostDuplicate(IdleAnimation obj, IdleAnimation rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
@@ -2658,7 +2663,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IIdleAnimationGetter)rhs, include);
 
-        public override IEnumerable<ILinkGetter> Links => IdleAnimationCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => IdleAnimationCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => IdleAnimationCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleAnimationCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleAnimationCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => IdleAnimationXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

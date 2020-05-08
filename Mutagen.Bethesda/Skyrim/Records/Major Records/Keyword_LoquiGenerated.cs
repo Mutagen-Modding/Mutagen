@@ -1451,15 +1451,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IKeywordGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IKeywordGetter obj)
         {
-            foreach (var item in base.GetLinks(obj))
+            foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
             yield break;
         }
         
+        public void RemapLinks(IKeywordGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         partial void PostDuplicate(Keyword obj, Keyword rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)

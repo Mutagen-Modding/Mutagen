@@ -577,7 +577,11 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public new static readonly RecordType GrupRecordType = AmmunitionData_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<ILinkGetter> Links => AmmunitionDataCommon.Instance.GetLinks(this);
+        protected IEnumerable<FormKey> LinkFormKeys => AmmunitionDataCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => AmmunitionDataCommon.Instance.GetLinkFormKeys(this);
+        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AmmunitionDataCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AmmunitionDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -653,7 +657,7 @@ namespace Mutagen.Bethesda.Skyrim
         IWeightValueGetter,
         ILoquiObject<IAmmunitionDataGetter>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1416,12 +1420,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IAmmunitionDataGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IAmmunitionDataGetter obj)
         {
-            yield return obj.Projectile;
+            yield return obj.Projectile.FormKey;
             yield break;
         }
         
+        public void RemapLinks(IAmmunitionDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -2040,7 +2045,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAmmunitionDataGetter)rhs, include);
 
-        public IEnumerable<ILinkGetter> Links => AmmunitionDataCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IEnumerable<FormKey> LinkFormKeys => AmmunitionDataCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => AmmunitionDataCommon.Instance.GetLinkFormKeys(this);
+        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AmmunitionDataCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AmmunitionDataCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => AmmunitionDataXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

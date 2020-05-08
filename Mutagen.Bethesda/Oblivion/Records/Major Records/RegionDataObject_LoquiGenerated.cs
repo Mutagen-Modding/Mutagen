@@ -987,7 +987,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<ILinkGetter> Links => RegionDataObjectCommon.Instance.GetLinks(this);
+        protected IEnumerable<FormKey> LinkFormKeys => RegionDataObjectCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RegionDataObjectCommon.Instance.GetLinkFormKeys(this);
+        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionDataObjectCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionDataObjectCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -1074,7 +1078,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject,
         ILoquiObject<IRegionDataObjectGetter>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -2131,12 +2135,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IRegionDataObjectGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IRegionDataObjectGetter obj)
         {
-            yield return obj.Object;
+            yield return obj.Object.FormKey;
             yield break;
         }
         
+        public void RemapLinks(IRegionDataObjectGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -3166,7 +3171,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataObjectGetter)rhs, include);
 
-        public IEnumerable<ILinkGetter> Links => RegionDataObjectCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IEnumerable<FormKey> LinkFormKeys => RegionDataObjectCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RegionDataObjectCommon.Instance.GetLinkFormKeys(this);
+        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionDataObjectCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionDataObjectCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => RegionDataObjectXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

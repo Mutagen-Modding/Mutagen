@@ -1545,15 +1545,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(ICombatStyleGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(ICombatStyleGetter obj)
         {
-            foreach (var item in base.GetLinks(obj))
+            foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
             yield break;
         }
         
+        public void RemapLinks(ICombatStyleGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         partial void PostDuplicate(CombatStyle obj, CombatStyle rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)

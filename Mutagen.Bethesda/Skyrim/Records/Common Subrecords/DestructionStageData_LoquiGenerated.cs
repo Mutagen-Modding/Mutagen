@@ -705,7 +705,11 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public new static readonly RecordType GrupRecordType = DestructionStageData_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<ILinkGetter> Links => DestructionStageDataCommon.Instance.GetLinks(this);
+        protected IEnumerable<FormKey> LinkFormKeys => DestructionStageDataCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => DestructionStageDataCommon.Instance.GetLinkFormKeys(this);
+        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DestructionStageDataCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DestructionStageDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -783,7 +787,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject,
         ILoquiObject<IDestructionStageDataGetter>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1640,13 +1644,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IDestructionStageDataGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IDestructionStageDataGetter obj)
         {
-            yield return obj.Explosion;
-            yield return obj.Debris;
+            yield return obj.Explosion.FormKey;
+            yield return obj.Debris.FormKey;
             yield break;
         }
         
+        public void RemapLinks(IDestructionStageDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -2379,7 +2384,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDestructionStageDataGetter)rhs, include);
 
-        public IEnumerable<ILinkGetter> Links => DestructionStageDataCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IEnumerable<FormKey> LinkFormKeys => DestructionStageDataCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => DestructionStageDataCommon.Instance.GetLinkFormKeys(this);
+        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DestructionStageDataCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DestructionStageDataCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => DestructionStageDataXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

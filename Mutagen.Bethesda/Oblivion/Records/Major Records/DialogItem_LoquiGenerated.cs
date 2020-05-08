@@ -1193,7 +1193,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public new static readonly RecordType GrupRecordType = DialogItem_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public override IEnumerable<ILinkGetter> Links => DialogItemCommon.Instance.GetLinks(this);
+        protected override IEnumerable<FormKey> LinkFormKeys => DialogItemCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => DialogItemCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogItemCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogItemCommon.Instance.RemapLinks(this, mapping);
         public DialogItem(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1296,7 +1300,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         ILoquiObject<IDialogItemGetter>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => DialogItem_Registration.Instance;
@@ -2569,38 +2573,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IDialogItemGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IDialogItemGetter obj)
         {
-            foreach (var item in base.GetLinks(obj))
+            foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            yield return obj.Quest;
-            yield return obj.PreviousTopic;
-            if (obj.Topics != null)
+            if (obj.Quest.FormKey.TryGet(out var QuestKey))
             {
-                foreach (var item in obj.Topics)
+                yield return QuestKey;
+            }
+            if (obj.PreviousTopic.FormKey.TryGet(out var PreviousTopicKey))
+            {
+                yield return PreviousTopicKey;
+            }
+            if (obj.Topics.TryGet(out var TopicsItem))
+            {
+                foreach (var item in TopicsItem.Select(f => f.FormKey))
                 {
                     yield return item;
                 }
             }
-            if (obj.Choices != null)
+            if (obj.Choices.TryGet(out var ChoicesItem))
             {
-                foreach (var item in obj.Choices)
+                foreach (var item in ChoicesItem.Select(f => f.FormKey))
                 {
                     yield return item;
                 }
             }
-            if (obj.LinkFrom != null)
+            if (obj.LinkFrom.TryGet(out var LinkFromItem))
             {
-                foreach (var item in obj.LinkFrom)
+                foreach (var item in LinkFromItem.Select(f => f.FormKey))
                 {
                     yield return item;
                 }
             }
-            if (obj.Script is ILinkContainer ScriptlinkCont)
+            if (obj.Script is ILinkedFormKeyContainer ScriptlinkCont)
             {
-                foreach (var item in ScriptlinkCont.Links)
+                foreach (var item in ScriptlinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
@@ -2608,6 +2618,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
+        public void RemapLinks(IDialogItemGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         partial void PostDuplicate(DialogItem obj, DialogItem rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
@@ -3690,7 +3701,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogItemGetter)rhs, include);
 
-        public override IEnumerable<ILinkGetter> Links => DialogItemCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => DialogItemCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => DialogItemCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogItemCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogItemCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => DialogItemXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

@@ -772,7 +772,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Book_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public override IEnumerable<ILinkGetter> Links => BookCommon.Instance.GetLinks(this);
+        protected override IEnumerable<FormKey> LinkFormKeys => BookCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => BookCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BookCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BookCommon.Instance.RemapLinks(this, mapping);
         public Book(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -875,7 +879,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         ILoquiObject<IBookGetter>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => Book_Registration.Instance;
@@ -2061,17 +2065,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IBookGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IBookGetter obj)
         {
-            foreach (var item in base.GetLinks(obj))
+            foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            yield return obj.Script;
-            yield return obj.Enchantment;
+            if (obj.Script.FormKey.TryGet(out var ScriptKey))
+            {
+                yield return ScriptKey;
+            }
+            if (obj.Enchantment.FormKey.TryGet(out var EnchantmentKey))
+            {
+                yield return EnchantmentKey;
+            }
             yield break;
         }
         
+        public void RemapLinks(IBookGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         partial void PostDuplicate(Book obj, Book rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
@@ -2957,7 +2968,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IBookGetter)rhs, include);
 
-        public override IEnumerable<ILinkGetter> Links => BookCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => BookCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => BookCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BookCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BookCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => BookXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

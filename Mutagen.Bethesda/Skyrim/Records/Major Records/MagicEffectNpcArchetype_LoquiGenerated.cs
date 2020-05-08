@@ -1193,11 +1193,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IMagicEffectNpcArchetypeGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IMagicEffectNpcArchetypeGetter obj)
         {
             yield break;
         }
         
+        public void RemapLinks(IMagicEffectNpcArchetypeGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

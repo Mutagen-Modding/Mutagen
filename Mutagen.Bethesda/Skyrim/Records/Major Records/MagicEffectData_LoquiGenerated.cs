@@ -1670,7 +1670,11 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public new static readonly RecordType GrupRecordType = MagicEffectData_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<ILinkGetter> Links => MagicEffectDataCommon.Instance.GetLinks(this);
+        protected IEnumerable<FormKey> LinkFormKeys => MagicEffectDataCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MagicEffectDataCommon.Instance.GetLinkFormKeys(this);
+        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectDataCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -1777,7 +1781,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject,
         ILoquiObject<IMagicEffectDataGetter>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -3333,26 +3337,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IMagicEffectDataGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IMagicEffectDataGetter obj)
         {
-            yield return obj.CastingLight;
-            yield return obj.HitShader;
-            yield return obj.EnchantShader;
-            yield return obj.Projectile;
-            yield return obj.Explosion;
-            yield return obj.CastingArt;
-            yield return obj.HitEffectArt;
-            yield return obj.ImpactData;
-            yield return obj.DualCastArt;
-            yield return obj.EnchantArt;
-            yield return obj.Unknown2;
-            yield return obj.Unknown3;
-            yield return obj.EquipAbility;
-            yield return obj.ImageSpaceModifier;
-            yield return obj.PerkToApply;
+            yield return obj.CastingLight.FormKey;
+            yield return obj.HitShader.FormKey;
+            yield return obj.EnchantShader.FormKey;
+            yield return obj.Projectile.FormKey;
+            yield return obj.Explosion.FormKey;
+            yield return obj.CastingArt.FormKey;
+            yield return obj.HitEffectArt.FormKey;
+            yield return obj.ImpactData.FormKey;
+            yield return obj.DualCastArt.FormKey;
+            yield return obj.EnchantArt.FormKey;
+            yield return obj.Unknown2.FormKey;
+            yield return obj.Unknown3.FormKey;
+            yield return obj.EquipAbility.FormKey;
+            yield return obj.ImageSpaceModifier.FormKey;
+            yield return obj.PerkToApply.FormKey;
             yield break;
         }
         
+        public void RemapLinks(IMagicEffectDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -5155,7 +5160,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMagicEffectDataGetter)rhs, include);
 
-        public IEnumerable<ILinkGetter> Links => MagicEffectDataCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IEnumerable<FormKey> LinkFormKeys => MagicEffectDataCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MagicEffectDataCommon.Instance.GetLinkFormKeys(this);
+        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectDataCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectDataCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => MagicEffectDataXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

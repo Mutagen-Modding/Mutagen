@@ -2528,11 +2528,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IFaceFxPhonemesGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IFaceFxPhonemesGetter obj)
         {
             yield break;
         }
         
+        public void RemapLinks(IFaceFxPhonemesGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

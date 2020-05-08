@@ -919,7 +919,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Region_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public override IEnumerable<ILinkGetter> Links => RegionCommon.Instance.GetLinks(this);
+        protected override IEnumerable<FormKey> LinkFormKeys => RegionCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RegionCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionCommon.Instance.RemapLinks(this, mapping);
         public Region(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1021,7 +1025,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordGetter,
         ILoquiObject<IRegionGetter>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => Region_Registration.Instance;
@@ -2190,37 +2194,40 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IRegionGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IRegionGetter obj)
         {
-            foreach (var item in base.GetLinks(obj))
+            foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            yield return obj.Worldspace;
-            if (obj.Objects != null)
+            if (obj.Worldspace.FormKey.TryGet(out var WorldspaceKey))
             {
-                foreach (var item in obj.Objects.Links)
+                yield return WorldspaceKey;
+            }
+            if (obj.Objects.TryGet(out var ObjectsItems))
+            {
+                foreach (var item in ObjectsItems.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Weather != null)
+            if (obj.Weather.TryGet(out var WeatherItems))
             {
-                foreach (var item in obj.Weather.Links)
+                foreach (var item in WeatherItems.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Grasses != null)
+            if (obj.Grasses.TryGet(out var GrassesItems))
             {
-                foreach (var item in obj.Grasses.Links)
+                foreach (var item in GrassesItems.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Sounds != null)
+            if (obj.Sounds.TryGet(out var SoundsItems))
             {
-                foreach (var item in obj.Sounds.Links)
+                foreach (var item in SoundsItems.LinkFormKeys)
                 {
                     yield return item;
                 }
@@ -2228,6 +2235,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
+        public void RemapLinks(IRegionGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         partial void PostDuplicate(Region obj, Region rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
@@ -3230,7 +3238,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionGetter)rhs, include);
 
-        public override IEnumerable<ILinkGetter> Links => RegionCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => RegionCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RegionCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => RegionXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

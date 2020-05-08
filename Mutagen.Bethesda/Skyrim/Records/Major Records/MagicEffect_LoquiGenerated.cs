@@ -1121,7 +1121,11 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public new static readonly RecordType GrupRecordType = MagicEffect_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public override IEnumerable<ILinkGetter> Links => MagicEffectCommon.Instance.GetLinks(this);
+        protected override IEnumerable<FormKey> LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectCommon.Instance.RemapLinks(this, mapping);
         public MagicEffect(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1225,7 +1229,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamedGetter,
         ILoquiObject<IMagicEffectGetter>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => MagicEffect_Registration.Instance;
@@ -2451,56 +2455,60 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IMagicEffectGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IMagicEffectGetter obj)
         {
-            foreach (var item in base.GetLinks(obj))
+            foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkContainer VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainer VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.Links)
+                foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            yield return obj.MenuDisplayObject;
-            if (obj.Keywords != null)
+            if (obj.MenuDisplayObject.FormKey.TryGet(out var MenuDisplayObjectKey))
             {
-                foreach (var item in obj.Keywords)
+                yield return MenuDisplayObjectKey;
+            }
+            if (obj.Keywords.TryGet(out var KeywordsItem))
+            {
+                foreach (var item in KeywordsItem.Select(f => f.FormKey))
                 {
                     yield return item;
                 }
             }
-            if (obj.Data != null)
+            if (obj.Data.TryGet(out var DataItems))
             {
-                foreach (var item in obj.Data.Links)
+                foreach (var item in DataItems.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.CounterEffects != null)
+            if (obj.CounterEffects.TryGet(out var CounterEffectsItem))
             {
-                foreach (var item in obj.CounterEffects)
+                foreach (var item in CounterEffectsItem.Select(f => f.FormKey))
                 {
                     yield return item;
                 }
             }
-            if (obj.Sounds != null)
+            if (obj.Sounds.TryGet(out var SoundsItem))
             {
-                foreach (var item in obj.Sounds.SelectMany(f => f.Links))
+                foreach (var item in SoundsItem.SelectMany(f => f.LinkFormKeys))
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkContainer>()
-                .SelectMany((f) => f.Links))
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainer> ()
+                .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
             }
             yield break;
         }
         
+        public void RemapLinks(IMagicEffectGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         partial void PostDuplicate(MagicEffect obj, MagicEffect rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
@@ -3582,7 +3590,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMagicEffectGetter)rhs, include);
 
-        public override IEnumerable<ILinkGetter> Links => MagicEffectCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MagicEffectCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MagicEffectCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => MagicEffectXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

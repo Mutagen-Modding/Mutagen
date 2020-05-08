@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// An interface that Mod objects implement to hook into the common getter systems
     /// </summary>
-    public interface IModGetter : IMajorRecordGetterEnumerable, ILinkContainer
+    public interface IModGetter : IMajorRecordGetterEnumerable, ILinkedFormKeyContainer
     {
         /// <summary>
         /// The associated game type

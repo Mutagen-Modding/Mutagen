@@ -1350,11 +1350,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(ISigilStoneDataGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(ISigilStoneDataGetter obj)
         {
             yield break;
         }
         
+        public void RemapLinks(ISigilStoneDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

@@ -543,7 +543,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<ILinkGetter> Links => DestructionStageCommon.Instance.GetLinks(this);
+        protected IEnumerable<FormKey> LinkFormKeys => DestructionStageCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => DestructionStageCommon.Instance.GetLinkFormKeys(this);
+        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DestructionStageCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DestructionStageCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -617,7 +621,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter,
         ILoquiObject<IDestructionStageGetter>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1408,18 +1412,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IDestructionStageGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IDestructionStageGetter obj)
         {
-            if (obj.Data != null)
+            if (obj.Data.TryGet(out var DataItems))
             {
-                foreach (var item in obj.Data.Links)
+                foreach (var item in DataItems.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Model != null)
+            if (obj.Model.TryGet(out var ModelItems))
             {
-                foreach (var item in obj.Model.Links)
+                foreach (var item in ModelItems.LinkFormKeys)
                 {
                     yield return item;
                 }
@@ -1427,6 +1431,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
+        public void RemapLinks(IDestructionStageGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -2025,7 +2030,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDestructionStageGetter)rhs, include);
 
-        public IEnumerable<ILinkGetter> Links => DestructionStageCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IEnumerable<FormKey> LinkFormKeys => DestructionStageCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => DestructionStageCommon.Instance.GetLinkFormKeys(this);
+        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DestructionStageCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DestructionStageCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => DestructionStageXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

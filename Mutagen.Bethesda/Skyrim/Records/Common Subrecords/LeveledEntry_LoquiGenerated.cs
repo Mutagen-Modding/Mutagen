@@ -245,7 +245,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<ILinkGetter> Links => LeveledEntryCommon<T>.Instance.GetLinks(this);
+        protected IEnumerable<FormKey> LinkFormKeys => LeveledEntryCommon<T>.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LeveledEntryCommon<T>.Instance.GetLinkFormKeys(this);
+        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledEntryCommon<T>.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledEntryCommon<T>.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -318,7 +322,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject,
         ILoquiObject<ILeveledEntryGetter<T>>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
         where T : class, ISkyrimMajorRecordGetter
     {
@@ -1155,18 +1159,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(ILeveledEntryGetter<T> obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(ILeveledEntryGetter<T> obj)
         {
-            if (obj.Data != null)
+            if (obj.Data.TryGet(out var DataItems))
             {
-                foreach (var item in obj.Data.Links)
+                foreach (var item in DataItems.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.ExtraData is ILinkContainer ExtraDatalinkCont)
+            if (obj.ExtraData is ILinkedFormKeyContainer ExtraDatalinkCont)
             {
-                foreach (var item in ExtraDatalinkCont.Links)
+                foreach (var item in ExtraDatalinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
@@ -1174,6 +1178,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
+        public void RemapLinks(ILeveledEntryGetter<T> obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1803,7 +1808,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledEntryGetter<T>)rhs, include);
 
-        public IEnumerable<ILinkGetter> Links => LeveledEntryCommon<T>.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IEnumerable<FormKey> LinkFormKeys => LeveledEntryCommon<T>.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LeveledEntryCommon<T>.Instance.GetLinkFormKeys(this);
+        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledEntryCommon<T>.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledEntryCommon<T>.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => LeveledEntryXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

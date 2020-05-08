@@ -1148,7 +1148,11 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Furniture_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public override IEnumerable<ILinkGetter> Links => FurnitureCommon.Instance.GetLinks(this);
+        protected override IEnumerable<FormKey> LinkFormKeys => FurnitureCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => FurnitureCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FurnitureCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FurnitureCommon.Instance.RemapLinks(this, mapping);
         public Furniture(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1271,7 +1275,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectIdGetter,
         ILoquiObject<IFurnitureGetter>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => Furniture_Registration.Instance;
@@ -2638,45 +2642,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IFurnitureGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IFurnitureGetter obj)
         {
-            foreach (var item in base.GetLinks(obj))
+            foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkContainer VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainer VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.Links)
+                foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Model != null)
+            if (obj.Model.TryGet(out var ModelItems))
             {
-                foreach (var item in obj.Model.Links)
+                foreach (var item in ModelItems.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Destructible != null)
+            if (obj.Destructible.TryGet(out var DestructibleItems))
             {
-                foreach (var item in obj.Destructible.Links)
+                foreach (var item in DestructibleItems.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Keywords != null)
+            if (obj.Keywords.TryGet(out var KeywordsItem))
             {
-                foreach (var item in obj.Keywords)
+                foreach (var item in KeywordsItem.Select(f => f.FormKey))
                 {
                     yield return item;
                 }
             }
-            yield return obj.InteractionKeyword;
-            yield return obj.AssociatedSpell;
-            if (obj.Markers != null)
+            if (obj.InteractionKeyword.FormKey.TryGet(out var InteractionKeywordKey))
             {
-                foreach (var item in obj.Markers.SelectMany(f => f.Links))
+                yield return InteractionKeywordKey;
+            }
+            if (obj.AssociatedSpell.FormKey.TryGet(out var AssociatedSpellKey))
+            {
+                yield return AssociatedSpellKey;
+            }
+            if (obj.Markers.TryGet(out var MarkersItem))
+            {
+                foreach (var item in MarkersItem.SelectMany(f => f.LinkFormKeys))
                 {
                     yield return item;
                 }
@@ -2684,6 +2694,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
+        public void RemapLinks(IFurnitureGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         partial void PostDuplicate(Furniture obj, Furniture rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
@@ -3991,7 +4002,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFurnitureGetter)rhs, include);
 
-        public override IEnumerable<ILinkGetter> Links => FurnitureCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => FurnitureCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => FurnitureCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FurnitureCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FurnitureCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => FurnitureXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

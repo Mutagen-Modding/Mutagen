@@ -280,14 +280,9 @@ namespace Mutagen.Bethesda
                     break;
                 case BinaryWriteParameters.MastersListSyncOption.Iterate:
                     modKeys.Add(
-                        mod.Links.SelectWhere(l =>
-                        {
-                            if (l.TryGetModKey(out var modKey))
-                            {
-                                return TryGet<ModKey>.Succeed(modKey);
-                            }
-                            return TryGet<ModKey>.Failure;
-                        })
+                        // All FormKeys of links
+                        mod.LinkFormKeys.Select(f => f.ModKey)
+                        // All FormKeys of records themselves
                         .And(mod.EnumerateMajorRecords().Select(m => m.FormKey.ModKey)));
                     break;
                 default:

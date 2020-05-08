@@ -817,7 +817,11 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Door_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public override IEnumerable<ILinkGetter> Links => DoorCommon.Instance.GetLinks(this);
+        protected override IEnumerable<FormKey> LinkFormKeys => DoorCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => DoorCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DoorCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DoorCommon.Instance.RemapLinks(this, mapping);
         public Door(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -938,7 +942,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectIdGetter,
         ILoquiObject<IDoorGetter>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => Door_Registration.Instance;
@@ -2101,39 +2105,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IDoorGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IDoorGetter obj)
         {
-            foreach (var item in base.GetLinks(obj))
+            foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkContainer VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainer VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.Links)
+                foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Model != null)
+            if (obj.Model.TryGet(out var ModelItems))
             {
-                foreach (var item in obj.Model.Links)
+                foreach (var item in ModelItems.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Destructible != null)
+            if (obj.Destructible.TryGet(out var DestructibleItems))
             {
-                foreach (var item in obj.Destructible.Links)
+                foreach (var item in DestructibleItems.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            yield return obj.OpenSound;
-            yield return obj.CloseSound;
-            yield return obj.LoopSound;
+            if (obj.OpenSound.FormKey.TryGet(out var OpenSoundKey))
+            {
+                yield return OpenSoundKey;
+            }
+            if (obj.CloseSound.FormKey.TryGet(out var CloseSoundKey))
+            {
+                yield return CloseSoundKey;
+            }
+            if (obj.LoopSound.FormKey.TryGet(out var LoopSoundKey))
+            {
+                yield return LoopSoundKey;
+            }
             yield break;
         }
         
+        public void RemapLinks(IDoorGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         partial void PostDuplicate(Door obj, Door rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
@@ -3052,7 +3066,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDoorGetter)rhs, include);
 
-        public override IEnumerable<ILinkGetter> Links => DoorCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => DoorCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => DoorCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DoorCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DoorCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => DoorXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

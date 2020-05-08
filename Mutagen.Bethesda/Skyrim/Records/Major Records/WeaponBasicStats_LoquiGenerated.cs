@@ -1352,11 +1352,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IWeaponBasicStatsGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IWeaponBasicStatsGetter obj)
         {
             yield break;
         }
         
+        public void RemapLinks(IWeaponBasicStatsGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

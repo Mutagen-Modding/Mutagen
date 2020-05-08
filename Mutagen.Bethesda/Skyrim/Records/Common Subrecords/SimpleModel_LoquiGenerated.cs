@@ -519,7 +519,11 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public new static readonly RecordType GrupRecordType = SimpleModel_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public virtual IEnumerable<ILinkGetter> Links => SimpleModelCommon.Instance.GetLinks(this);
+        protected virtual IEnumerable<FormKey> LinkFormKeys => SimpleModelCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => SimpleModelCommon.Instance.GetLinkFormKeys(this);
+        protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SimpleModelCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SimpleModelCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -591,7 +595,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject,
         ILoquiObject<ISimpleModelGetter>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -1339,11 +1343,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(ISimpleModelGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(ISimpleModelGetter obj)
         {
             yield break;
         }
         
+        public void RemapLinks(ISimpleModelGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1888,7 +1893,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISimpleModelGetter)rhs, include);
 
-        public virtual IEnumerable<ILinkGetter> Links => SimpleModelCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected virtual IEnumerable<FormKey> LinkFormKeys => SimpleModelCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => SimpleModelCommon.Instance.GetLinkFormKeys(this);
+        protected virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SimpleModelCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SimpleModelCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object XmlWriteTranslator => SimpleModelXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

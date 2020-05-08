@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// An interface that Major Record objects implement to hook into the common systems
     /// </summary>
-    public interface IMajorRecordCommon : IMajorRecordCommonGetter, ILinkContainer
+    public interface IMajorRecordCommon : IMajorRecordCommonGetter, ILinkedFormKeyContainer
     {
         /// <summary>
         /// Marker of whether the content is compressed

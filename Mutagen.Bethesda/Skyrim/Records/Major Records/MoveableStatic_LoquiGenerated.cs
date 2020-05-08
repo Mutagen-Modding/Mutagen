@@ -700,7 +700,11 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public new static readonly RecordType GrupRecordType = MoveableStatic_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public override IEnumerable<ILinkGetter> Links => MoveableStaticCommon.Instance.GetLinks(this);
+        protected override IEnumerable<FormKey> LinkFormKeys => MoveableStaticCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MoveableStaticCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MoveableStaticCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MoveableStaticCommon.Instance.RemapLinks(this, mapping);
         public MoveableStatic(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -816,7 +820,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectIdGetter,
         ILoquiObject<IMoveableStaticGetter>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => MoveableStatic_Registration.Instance;
@@ -1868,30 +1872,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IMoveableStaticGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IMoveableStaticGetter obj)
         {
-            foreach (var item in base.GetLinks(obj))
+            foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            if (obj.Model != null)
+            if (obj.Model.TryGet(out var ModelItems))
             {
-                foreach (var item in obj.Model.Links)
+                foreach (var item in ModelItems.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Destructible != null)
+            if (obj.Destructible.TryGet(out var DestructibleItems))
             {
-                foreach (var item in obj.Destructible.Links)
+                foreach (var item in DestructibleItems.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            yield return obj.LoopingSound;
+            if (obj.LoopingSound.FormKey.TryGet(out var LoopingSoundKey))
+            {
+                yield return LoopingSoundKey;
+            }
             yield break;
         }
         
+        public void RemapLinks(IMoveableStaticGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         partial void PostDuplicate(MoveableStatic obj, MoveableStatic rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
@@ -2672,7 +2680,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMoveableStaticGetter)rhs, include);
 
-        public override IEnumerable<ILinkGetter> Links => MoveableStaticCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => MoveableStaticCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MoveableStaticCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MoveableStaticCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MoveableStaticCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => MoveableStaticXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

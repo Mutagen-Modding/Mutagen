@@ -1906,7 +1906,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Creature_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public override IEnumerable<ILinkGetter> Links => CreatureCommon.Instance.GetLinks(this);
+        protected override IEnumerable<FormKey> LinkFormKeys => CreatureCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => CreatureCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreatureCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreatureCommon.Instance.RemapLinks(this, mapping);
         public Creature(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -2024,7 +2028,7 @@ namespace Mutagen.Bethesda.Oblivion
         INamedGetter,
         ILoquiObject<ICreatureGetter>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => Creature_Registration.Instance;
@@ -3956,45 +3960,58 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(ICreatureGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(ICreatureGetter obj)
         {
-            foreach (var item in base.GetLinks(obj))
+            foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            foreach (var item in obj.Items.SelectMany(f => f.Links))
+            foreach (var item in obj.Items.SelectMany(f => f.LinkFormKeys))
             {
                 yield return item;
             }
-            if (obj.Spells != null)
+            if (obj.Spells.TryGet(out var SpellsItem))
             {
-                foreach (var item in obj.Spells)
+                foreach (var item in SpellsItem.Select(f => f.FormKey))
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.Factions.SelectMany(f => f.Links))
+            foreach (var item in obj.Factions.SelectMany(f => f.LinkFormKeys))
             {
                 yield return item;
             }
-            yield return obj.DeathItem;
-            yield return obj.Script;
-            if (obj.AIPackages != null)
+            if (obj.DeathItem.FormKey.TryGet(out var DeathItemKey))
             {
-                foreach (var item in obj.AIPackages)
+                yield return DeathItemKey;
+            }
+            if (obj.Script.FormKey.TryGet(out var ScriptKey))
+            {
+                yield return ScriptKey;
+            }
+            if (obj.AIPackages.TryGet(out var AIPackagesItem))
+            {
+                foreach (var item in AIPackagesItem.Select(f => f.FormKey))
                 {
                     yield return item;
                 }
             }
-            yield return obj.CombatStyle;
-            yield return obj.InheritsSoundFrom;
-            foreach (var item in obj.Sounds.SelectMany(f => f.Links))
+            if (obj.CombatStyle.FormKey.TryGet(out var CombatStyleKey))
+            {
+                yield return CombatStyleKey;
+            }
+            if (obj.InheritsSoundFrom.FormKey.TryGet(out var InheritsSoundFromKey))
+            {
+                yield return InheritsSoundFromKey;
+            }
+            foreach (var item in obj.Sounds.SelectMany(f => f.LinkFormKeys))
             {
                 yield return item;
             }
             yield break;
         }
         
+        public void RemapLinks(ICreatureGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         partial void PostDuplicate(Creature obj, Creature rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
@@ -5872,7 +5889,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICreatureGetter)rhs, include);
 
-        public override IEnumerable<ILinkGetter> Links => CreatureCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => CreatureCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => CreatureCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreatureCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreatureCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => CreatureXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

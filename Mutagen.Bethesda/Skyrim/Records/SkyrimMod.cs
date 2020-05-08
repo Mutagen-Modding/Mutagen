@@ -45,14 +45,7 @@ namespace Mutagen.Bethesda.Skyrim
                         modKeys.Add(modHeader.MasterReferences.Select(m => m.Master));
                         break;
                     case BinaryWriteParameters.MastersListSyncOption.Iterate:
-                        modKeys.Add(mod.Links.SelectWhere(l =>
-                        {
-                            if (l.TryGetModKey(out var modKey))
-                            {
-                                return TryGet<ModKey>.Succeed(modKey);
-                            }
-                            return TryGet<ModKey>.Failure;
-                        }));
+                        modKeys.Add(mod.LinkFormKeys.Select(i => i.ModKey));
                         break;
                     default:
                         throw new NotImplementedException();

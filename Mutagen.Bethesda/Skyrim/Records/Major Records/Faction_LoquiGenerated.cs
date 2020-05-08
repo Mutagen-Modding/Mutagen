@@ -1299,7 +1299,11 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Faction_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public override IEnumerable<ILinkGetter> Links => FactionCommon.Instance.GetLinks(this);
+        protected override IEnumerable<FormKey> LinkFormKeys => FactionCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => FactionCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionCommon.Instance.RemapLinks(this, mapping);
         public Faction(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1414,7 +1418,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectIdGetter,
         ILoquiObject<IFactionGetter>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => Faction_Registration.Instance;
@@ -2892,35 +2896,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IFactionGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IFactionGetter obj)
         {
-            foreach (var item in base.GetLinks(obj))
+            foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            foreach (var item in obj.Relations.SelectMany(f => f.Links))
+            foreach (var item in obj.Relations.SelectMany(f => f.LinkFormKeys))
             {
                 yield return item;
             }
-            yield return obj.ExteriorJailMarker;
-            yield return obj.FollowerWaitMarker;
-            yield return obj.StolenGoodsContainer;
-            yield return obj.PlayerInventoryContainer;
-            yield return obj.SharedCrimeFactionList;
-            yield return obj.JailOutfit;
-            yield return obj.VendorBuySellList;
-            yield return obj.MerchantContainer;
-            if (obj.VendorLocation is ILinkContainer VendorLocationlinkCont)
+            if (obj.ExteriorJailMarker.FormKey.TryGet(out var ExteriorJailMarkerKey))
             {
-                foreach (var item in VendorLocationlinkCont.Links)
+                yield return ExteriorJailMarkerKey;
+            }
+            if (obj.FollowerWaitMarker.FormKey.TryGet(out var FollowerWaitMarkerKey))
+            {
+                yield return FollowerWaitMarkerKey;
+            }
+            if (obj.StolenGoodsContainer.FormKey.TryGet(out var StolenGoodsContainerKey))
+            {
+                yield return StolenGoodsContainerKey;
+            }
+            if (obj.PlayerInventoryContainer.FormKey.TryGet(out var PlayerInventoryContainerKey))
+            {
+                yield return PlayerInventoryContainerKey;
+            }
+            if (obj.SharedCrimeFactionList.FormKey.TryGet(out var SharedCrimeFactionListKey))
+            {
+                yield return SharedCrimeFactionListKey;
+            }
+            if (obj.JailOutfit.FormKey.TryGet(out var JailOutfitKey))
+            {
+                yield return JailOutfitKey;
+            }
+            if (obj.VendorBuySellList.FormKey.TryGet(out var VendorBuySellListKey))
+            {
+                yield return VendorBuySellListKey;
+            }
+            if (obj.MerchantContainer.FormKey.TryGet(out var MerchantContainerKey))
+            {
+                yield return MerchantContainerKey;
+            }
+            if (obj.VendorLocation is ILinkedFormKeyContainer VendorLocationlinkCont)
+            {
+                foreach (var item in VendorLocationlinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Conditions != null)
+            if (obj.Conditions.TryGet(out var ConditionsItem))
             {
-                foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkContainer>()
-                    .SelectMany((f) => f.Links))
+                foreach (var item in ConditionsItem.WhereCastable<IConditionGetter, ILinkedFormKeyContainer> ()
+                    .SelectMany((f) => f.LinkFormKeys))
                 {
                     yield return item;
                 }
@@ -2928,6 +2956,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
+        public void RemapLinks(IFactionGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         partial void PostDuplicate(Faction obj, Faction rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
@@ -4258,7 +4287,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFactionGetter)rhs, include);
 
-        public override IEnumerable<ILinkGetter> Links => FactionCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => FactionCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => FactionCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FactionCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => FactionXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

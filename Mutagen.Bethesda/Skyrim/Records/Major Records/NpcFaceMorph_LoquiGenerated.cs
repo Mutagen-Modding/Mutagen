@@ -2230,11 +2230,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(INpcFaceMorphGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(INpcFaceMorphGetter obj)
         {
             yield break;
         }
         
+        public void RemapLinks(INpcFaceMorphGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

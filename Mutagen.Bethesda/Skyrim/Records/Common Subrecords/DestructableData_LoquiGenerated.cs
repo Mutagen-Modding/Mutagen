@@ -1405,11 +1405,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IDestructableDataGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IDestructableDataGetter obj)
         {
             yield break;
         }
         
+        public void RemapLinks(IDestructableDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

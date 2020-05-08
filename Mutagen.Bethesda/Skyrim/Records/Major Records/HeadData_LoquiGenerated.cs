@@ -1229,7 +1229,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<ILinkGetter> Links => HeadDataCommon.Instance.GetLinks(this);
+        protected IEnumerable<FormKey> LinkFormKeys => HeadDataCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => HeadDataCommon.Instance.GetLinkFormKeys(this);
+        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadDataCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadDataCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -1311,7 +1315,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter,
         ILoquiObject<IHeadDataGetter>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
@@ -2506,50 +2510,60 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IHeadDataGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IHeadDataGetter obj)
         {
-            foreach (var item in obj.HeadParts.SelectMany(f => f.Links))
+            foreach (var item in obj.HeadParts.SelectMany(f => f.LinkFormKeys))
             {
                 yield return item;
             }
-            if (obj.RacePresets != null)
+            if (obj.RacePresets.TryGet(out var RacePresetsItem))
             {
-                foreach (var item in obj.RacePresets)
+                foreach (var item in RacePresetsItem.Select(f => f.FormKey))
                 {
                     yield return item;
                 }
             }
-            if (obj.AvailableHairColors != null)
+            if (obj.AvailableHairColors.TryGet(out var AvailableHairColorsItem))
             {
-                foreach (var item in obj.AvailableHairColors)
+                foreach (var item in AvailableHairColorsItem.Select(f => f.FormKey))
                 {
                     yield return item;
                 }
             }
-            if (obj.FaceDetails != null)
+            if (obj.FaceDetails.TryGet(out var FaceDetailsItem))
             {
-                foreach (var item in obj.FaceDetails)
+                foreach (var item in FaceDetailsItem.Select(f => f.FormKey))
                 {
                     yield return item;
                 }
             }
-            yield return obj.DefaultFaceTexture;
-            foreach (var item in obj.TintMasks.SelectMany(f => f.Links))
+            if (obj.DefaultFaceTexture.FormKey.TryGet(out var DefaultFaceTextureKey))
+            {
+                yield return DefaultFaceTextureKey;
+            }
+            foreach (var item in obj.TintMasks.SelectMany(f => f.LinkFormKeys))
             {
                 yield return item;
             }
-            if (obj.Model != null)
+            if (obj.Model.TryGet(out var ModelItems))
             {
-                foreach (var item in obj.Model.Links)
+                foreach (var item in ModelItems.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            yield return obj.MorphRace;
-            yield return obj.ArmorRace;
+            if (obj.MorphRace.FormKey.TryGet(out var MorphRaceKey))
+            {
+                yield return MorphRaceKey;
+            }
+            if (obj.ArmorRace.FormKey.TryGet(out var ArmorRaceKey))
+            {
+                yield return ArmorRaceKey;
+            }
             yield break;
         }
         
+        public void RemapLinks(IHeadDataGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -3681,7 +3695,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IHeadDataGetter)rhs, include);
 
-        public IEnumerable<ILinkGetter> Links => HeadDataCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IEnumerable<FormKey> LinkFormKeys => HeadDataCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => HeadDataCommon.Instance.GetLinkFormKeys(this);
+        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadDataCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadDataCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => HeadDataXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

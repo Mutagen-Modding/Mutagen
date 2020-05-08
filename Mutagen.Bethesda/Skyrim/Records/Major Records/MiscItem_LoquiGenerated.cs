@@ -954,7 +954,11 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public new static readonly RecordType GrupRecordType = MiscItem_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public override IEnumerable<ILinkGetter> Links => MiscItemCommon.Instance.GetLinks(this);
+        protected override IEnumerable<FormKey> LinkFormKeys => MiscItemCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MiscItemCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MiscItemCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MiscItemCommon.Instance.RemapLinks(this, mapping);
         public MiscItem(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1080,7 +1084,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectIdGetter,
         ILoquiObject<IMiscItemGetter>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => MiscItem_Registration.Instance;
@@ -2305,38 +2309,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IMiscItemGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IMiscItemGetter obj)
         {
-            foreach (var item in base.GetLinks(obj))
+            foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            if (obj.VirtualMachineAdapter is ILinkContainer VirtualMachineAdapterlinkCont)
+            if (obj.VirtualMachineAdapter is ILinkedFormKeyContainer VirtualMachineAdapterlinkCont)
             {
-                foreach (var item in VirtualMachineAdapterlinkCont.Links)
+                foreach (var item in VirtualMachineAdapterlinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Model != null)
+            if (obj.Model.TryGet(out var ModelItems))
             {
-                foreach (var item in obj.Model.Links)
+                foreach (var item in ModelItems.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Destructible != null)
+            if (obj.Destructible.TryGet(out var DestructibleItems))
             {
-                foreach (var item in obj.Destructible.Links)
+                foreach (var item in DestructibleItems.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            yield return obj.PickUpSound;
-            yield return obj.PutDownSound;
-            if (obj.Keywords != null)
+            if (obj.PickUpSound.FormKey.TryGet(out var PickUpSoundKey))
             {
-                foreach (var item in obj.Keywords)
+                yield return PickUpSoundKey;
+            }
+            if (obj.PutDownSound.FormKey.TryGet(out var PutDownSoundKey))
+            {
+                yield return PutDownSoundKey;
+            }
+            if (obj.Keywords.TryGet(out var KeywordsItem))
+            {
+                foreach (var item in KeywordsItem.Select(f => f.FormKey))
                 {
                     yield return item;
                 }
@@ -2344,6 +2354,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
+        public void RemapLinks(IMiscItemGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         partial void PostDuplicate(MiscItem obj, MiscItem rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
@@ -3402,7 +3413,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMiscItemGetter)rhs, include);
 
-        public override IEnumerable<ILinkGetter> Links => MiscItemCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => MiscItemCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MiscItemCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MiscItemCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MiscItemCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => MiscItemXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

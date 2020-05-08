@@ -242,7 +242,11 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public new static readonly RecordType GrupRecordType = LeveledEntryData_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<ILinkGetter> Links => LeveledEntryDataCommon<T>.Instance.GetLinks(this);
+        protected IEnumerable<FormKey> LinkFormKeys => LeveledEntryDataCommon<T>.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LeveledEntryDataCommon<T>.Instance.GetLinkFormKeys(this);
+        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledEntryDataCommon<T>.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledEntryDataCommon<T>.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -318,7 +322,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject,
         ILoquiObject<ILeveledEntryDataGetter<T>>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
         where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
     {
@@ -1168,12 +1172,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(ILeveledEntryDataGetter<T> obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(ILeveledEntryDataGetter<T> obj)
         {
-            yield return obj.Reference;
+            yield return obj.Reference.FormKey;
             yield break;
         }
         
+        public void RemapLinks(ILeveledEntryDataGetter<T> obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1837,7 +1842,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledEntryDataGetter<T>)rhs, include);
 
-        public IEnumerable<ILinkGetter> Links => LeveledEntryDataCommon<T>.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected IEnumerable<FormKey> LinkFormKeys => LeveledEntryDataCommon<T>.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LeveledEntryDataCommon<T>.Instance.GetLinkFormKeys(this);
+        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledEntryDataCommon<T>.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledEntryDataCommon<T>.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => LeveledEntryDataXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

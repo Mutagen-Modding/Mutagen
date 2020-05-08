@@ -1333,11 +1333,12 @@ namespace Mutagen.Bethesda.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IMasterReferenceGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IMasterReferenceGetter obj)
         {
             yield break;
         }
         
+        public void RemapLinks(IMasterReferenceGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

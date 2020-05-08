@@ -117,25 +117,14 @@ namespace Mutagen.Bethesda.Generation
                         }
                     }
                 }
-                fg.AppendLine($"Dictionary<FormKey, {nameof(IMajorRecordCommon)}> router = new Dictionary<FormKey, {nameof(IMajorRecordCommon)}>();");
+                fg.AppendLine($"var router = new Dictionary<FormKey, {nameof(IMajorRecordCommon)}>();");
                 fg.AppendLine($"router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, {nameof(IMajorRecordCommon)}>(dup.OriginalFormKey, dup.Record)));");
+                fg.AppendLine($"var mapping = new Dictionary<FormKey, FormKey>();");
                 fg.AppendLine($"var package = this.CreateLinkCache();");
                 fg.AppendLine("foreach (var rec in router.Values)");
                 using (new BraceWrapper(fg))
                 {
-                    fg.AppendLine($"foreach (var link in rec.Links.WhereCastable<ILinkGetter, IFormLink>())");
-                    using (new BraceWrapper(fg))
-                    {
-                        fg.AppendLine($"if (link.TryResolveFormKey(package, out var formKey)");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendLine($"&& router.TryGetValue(formKey, out var duppedRecord))");
-                        }
-                        using (new BraceWrapper(fg))
-                        {
-                            fg.AppendLine($"link.FormKey = duppedRecord.FormKey;");
-                        }
-                    }
+                    fg.AppendLine($"rec.RemapLinks(mapping);");
                 }
                 fg.AppendLine($"return router;");
             }

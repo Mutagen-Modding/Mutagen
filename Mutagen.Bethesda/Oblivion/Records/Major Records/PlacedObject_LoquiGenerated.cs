@@ -1404,7 +1404,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public new static readonly RecordType GrupRecordType = PlacedObject_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public override IEnumerable<ILinkGetter> Links => PlacedObjectCommon.Instance.GetLinks(this);
+        protected override IEnumerable<FormKey> LinkFormKeys => PlacedObjectCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PlacedObjectCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectCommon.Instance.RemapLinks(this, mapping);
         public PlacedObject(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1523,7 +1527,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPlacedGetter,
         ILoquiObject<IPlacedObjectGetter>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => PlacedObject_Registration.Instance;
@@ -3211,42 +3215,61 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IPlacedObjectGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IPlacedObjectGetter obj)
         {
-            foreach (var item in base.GetLinks(obj))
+            foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            yield return obj.Base;
-            if (obj.TeleportDestination != null)
+            if (obj.Base.FormKey.TryGet(out var BaseKey))
             {
-                foreach (var item in obj.TeleportDestination.Links)
+                yield return BaseKey;
+            }
+            if (obj.TeleportDestination.TryGet(out var TeleportDestinationItems))
+            {
+                foreach (var item in TeleportDestinationItems.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Lock != null)
+            if (obj.Lock.TryGet(out var LockItems))
             {
-                foreach (var item in obj.Lock.Links)
+                foreach (var item in LockItems.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            yield return obj.Owner;
-            yield return obj.GlobalVariable;
-            if (obj.EnableParent != null)
+            if (obj.Owner.FormKey.TryGet(out var OwnerKey))
             {
-                foreach (var item in obj.EnableParent.Links)
+                yield return OwnerKey;
+            }
+            if (obj.GlobalVariable.FormKey.TryGet(out var GlobalVariableKey))
+            {
+                yield return GlobalVariableKey;
+            }
+            if (obj.EnableParent.TryGet(out var EnableParentItems))
+            {
+                foreach (var item in EnableParentItems.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            yield return obj.Target;
-            yield return obj.Unknown;
-            yield return obj.ContainedSoul;
+            if (obj.Target.FormKey.TryGet(out var TargetKey))
+            {
+                yield return TargetKey;
+            }
+            if (obj.Unknown.FormKey.TryGet(out var UnknownKey))
+            {
+                yield return UnknownKey;
+            }
+            if (obj.ContainedSoul.FormKey.TryGet(out var ContainedSoulKey))
+            {
+                yield return ContainedSoulKey;
+            }
             yield break;
         }
         
+        public void RemapLinks(IPlacedObjectGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         partial void PostDuplicate(PlacedObject obj, PlacedObject rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
@@ -4823,7 +4846,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlacedObjectGetter)rhs, include);
 
-        public override IEnumerable<ILinkGetter> Links => PlacedObjectCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => PlacedObjectCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PlacedObjectCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => PlacedObjectXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

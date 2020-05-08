@@ -606,7 +606,11 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public new static readonly RecordType GrupRecordType = AcousticSpace_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public override IEnumerable<ILinkGetter> Links => AcousticSpaceCommon.Instance.GetLinks(this);
+        protected override IEnumerable<FormKey> LinkFormKeys => AcousticSpaceCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => AcousticSpaceCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AcousticSpaceCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AcousticSpaceCommon.Instance.RemapLinks(this, mapping);
         public AcousticSpace(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -705,7 +709,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedGetter,
         ILoquiObject<IAcousticSpaceGetter>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => AcousticSpace_Registration.Instance;
@@ -1674,18 +1678,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IAcousticSpaceGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IAcousticSpaceGetter obj)
         {
-            foreach (var item in base.GetLinks(obj))
+            foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            yield return obj.AmbientSound;
-            yield return obj.UseSoundFromRegion;
-            yield return obj.EnvironmentType;
+            if (obj.AmbientSound.FormKey.TryGet(out var AmbientSoundKey))
+            {
+                yield return AmbientSoundKey;
+            }
+            if (obj.UseSoundFromRegion.FormKey.TryGet(out var UseSoundFromRegionKey))
+            {
+                yield return UseSoundFromRegionKey;
+            }
+            if (obj.EnvironmentType.FormKey.TryGet(out var EnvironmentTypeKey))
+            {
+                yield return EnvironmentTypeKey;
+            }
             yield break;
         }
         
+        public void RemapLinks(IAcousticSpaceGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         partial void PostDuplicate(AcousticSpace obj, AcousticSpace rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
@@ -2333,7 +2347,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAcousticSpaceGetter)rhs, include);
 
-        public override IEnumerable<ILinkGetter> Links => AcousticSpaceCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => AcousticSpaceCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => AcousticSpaceCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AcousticSpaceCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AcousticSpaceCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => AcousticSpaceXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

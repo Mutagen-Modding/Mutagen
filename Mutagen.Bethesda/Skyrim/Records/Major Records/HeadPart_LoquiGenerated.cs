@@ -948,7 +948,11 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public new static readonly RecordType GrupRecordType = HeadPart_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public override IEnumerable<ILinkGetter> Links => HeadPartCommon.Instance.GetLinks(this);
+        protected override IEnumerable<FormKey> LinkFormKeys => HeadPartCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => HeadPartCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadPartCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadPartCommon.Instance.RemapLinks(this, mapping);
         public HeadPart(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1063,7 +1067,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter,
         ILoquiObject<IHeadPartGetter>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => HeadPart_Registration.Instance;
@@ -2261,32 +2265,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IHeadPartGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IHeadPartGetter obj)
         {
-            foreach (var item in base.GetLinks(obj))
+            foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            if (obj.Model != null)
+            if (obj.Model.TryGet(out var ModelItems))
             {
-                foreach (var item in obj.Model.Links)
+                foreach (var item in ModelItems.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.ExtraParts != null)
+            if (obj.ExtraParts.TryGet(out var ExtraPartsItem))
             {
-                foreach (var item in obj.ExtraParts)
+                foreach (var item in ExtraPartsItem.Select(f => f.FormKey))
                 {
                     yield return item;
                 }
             }
-            yield return obj.TextureSet;
-            yield return obj.Color;
-            yield return obj.ValidRaces;
+            if (obj.TextureSet.FormKey.TryGet(out var TextureSetKey))
+            {
+                yield return TextureSetKey;
+            }
+            if (obj.Color.FormKey.TryGet(out var ColorKey))
+            {
+                yield return ColorKey;
+            }
+            if (obj.ValidRaces.FormKey.TryGet(out var ValidRacesKey))
+            {
+                yield return ValidRacesKey;
+            }
             yield break;
         }
         
+        public void RemapLinks(IHeadPartGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         partial void PostDuplicate(HeadPart obj, HeadPart rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
@@ -3224,7 +3238,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IHeadPartGetter)rhs, include);
 
-        public override IEnumerable<ILinkGetter> Links => HeadPartCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => HeadPartCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => HeadPartCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadPartCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadPartCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => HeadPartXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

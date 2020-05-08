@@ -560,7 +560,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public new static readonly RecordType GrupRecordType = RegionDataWeather_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public override IEnumerable<ILinkGetter> Links => RegionDataWeatherCommon.Instance.GetLinks(this);
+        protected override IEnumerable<FormKey> LinkFormKeys => RegionDataWeatherCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RegionDataWeatherCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionDataWeatherCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionDataWeatherCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -630,7 +634,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRegionDataGetter,
         ILoquiObject<IRegionDataWeatherGetter>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => RegionDataWeather_Registration.Instance;
@@ -1418,15 +1422,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IRegionDataWeatherGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IRegionDataWeatherGetter obj)
         {
-            foreach (var item in base.GetLinks(obj))
+            foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            if (obj.Weathers != null)
+            if (obj.Weathers.TryGet(out var WeathersItem))
             {
-                foreach (var item in obj.Weathers.SelectMany(f => f.Links))
+                foreach (var item in WeathersItem.SelectMany(f => f.LinkFormKeys))
                 {
                     yield return item;
                 }
@@ -1434,6 +1438,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
+        public void RemapLinks(IRegionDataWeatherGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
@@ -1912,7 +1917,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRegionDataWeatherGetter)rhs, include);
 
-        public override IEnumerable<ILinkGetter> Links => RegionDataWeatherCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => RegionDataWeatherCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RegionDataWeatherCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionDataWeatherCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionDataWeatherCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => RegionDataWeatherXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

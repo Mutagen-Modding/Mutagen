@@ -1397,11 +1397,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IWeatherTypeGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IWeatherTypeGetter obj)
         {
             yield break;
         }
         
+        public void RemapLinks(IWeatherTypeGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }

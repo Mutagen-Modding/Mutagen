@@ -48,12 +48,7 @@ namespace Mutagen.Bethesda
             }
             var linkCache = loadOrder.CreateLinkCache();
             outMod.MasterReferences.SetTo(
-                outMod.Links
-                    .Select(l =>
-                    {
-                        if (l.TryResolveFormKey(linkCache, out var form)) return form;
-                        return FormKey.Null;
-                    })
+                outMod.LinkFormKeys
                     .Where(fk => !fk.IsNull)
                     .Select(s => s.ModKey)
                     .Where(modKey => modKey != outModKey)

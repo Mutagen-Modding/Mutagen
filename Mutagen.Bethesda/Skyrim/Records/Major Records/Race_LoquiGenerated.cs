@@ -2669,7 +2669,11 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Race_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public override IEnumerable<ILinkGetter> Links => RaceCommon.Instance.GetLinks(this);
+        protected override IEnumerable<FormKey> LinkFormKeys => RaceCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RaceCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceCommon.Instance.RemapLinks(this, mapping);
         public Race(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -2823,7 +2827,7 @@ namespace Mutagen.Bethesda.Skyrim
         IRelatableGetter,
         ILoquiObject<IRaceGetter>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => Race_Registration.Instance;
@@ -5305,73 +5309,119 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IRaceGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IRaceGetter obj)
         {
-            foreach (var item in base.GetLinks(obj))
+            foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            if (obj.ActorEffect != null)
+            if (obj.ActorEffect.TryGet(out var ActorEffectItem))
             {
-                foreach (var item in obj.ActorEffect)
+                foreach (var item in ActorEffectItem.Select(f => f.FormKey))
                 {
                     yield return item;
                 }
             }
-            yield return obj.Skin;
-            if (obj.Keywords != null)
+            if (obj.Skin.FormKey.TryGet(out var SkinKey))
             {
-                foreach (var item in obj.Keywords)
+                yield return SkinKey;
+            }
+            if (obj.Keywords.TryGet(out var KeywordsItem))
+            {
+                foreach (var item in KeywordsItem.Select(f => f.FormKey))
                 {
                     yield return item;
                 }
             }
-            yield return obj.AttackRace;
-            foreach (var item in obj.Attacks.SelectMany(f => f.Links))
+            if (obj.AttackRace.FormKey.TryGet(out var AttackRaceKey))
+            {
+                yield return AttackRaceKey;
+            }
+            foreach (var item in obj.Attacks.SelectMany(f => f.LinkFormKeys))
             {
                 yield return item;
             }
-            if (obj.Hairs != null)
+            if (obj.Hairs.TryGet(out var HairsItem))
             {
-                foreach (var item in obj.Hairs)
+                foreach (var item in HairsItem.Select(f => f.FormKey))
                 {
                     yield return item;
                 }
             }
-            if (obj.Eyes != null)
+            if (obj.Eyes.TryGet(out var EyesItem))
             {
-                foreach (var item in obj.Eyes)
+                foreach (var item in EyesItem.Select(f => f.FormKey))
                 {
                     yield return item;
                 }
             }
-            yield return obj.BodyPartData;
-            yield return obj.MaterialType;
-            yield return obj.ImpactDataSet;
-            yield return obj.DecapitationFX;
-            yield return obj.OpenLootSound;
-            yield return obj.CloseLootSound;
-            foreach (var item in obj.MovementTypes.SelectMany(f => f.Links))
+            if (obj.BodyPartData.FormKey.TryGet(out var BodyPartDataKey))
+            {
+                yield return BodyPartDataKey;
+            }
+            if (obj.MaterialType.FormKey.TryGet(out var MaterialTypeKey))
+            {
+                yield return MaterialTypeKey;
+            }
+            if (obj.ImpactDataSet.FormKey.TryGet(out var ImpactDataSetKey))
+            {
+                yield return ImpactDataSetKey;
+            }
+            if (obj.DecapitationFX.FormKey.TryGet(out var DecapitationFXKey))
+            {
+                yield return DecapitationFXKey;
+            }
+            if (obj.OpenLootSound.FormKey.TryGet(out var OpenLootSoundKey))
+            {
+                yield return OpenLootSoundKey;
+            }
+            if (obj.CloseLootSound.FormKey.TryGet(out var CloseLootSoundKey))
+            {
+                yield return CloseLootSoundKey;
+            }
+            foreach (var item in obj.MovementTypes.SelectMany(f => f.LinkFormKeys))
             {
                 yield return item;
             }
-            if (obj.EquipmentSlots != null)
+            if (obj.EquipmentSlots.TryGet(out var EquipmentSlotsItem))
             {
-                foreach (var item in obj.EquipmentSlots)
+                foreach (var item in EquipmentSlotsItem.Select(f => f.FormKey))
                 {
                     yield return item;
                 }
             }
-            yield return obj.UnarmedEquipSlot;
-            yield return obj.BaseMovementDefaultWalk;
-            yield return obj.BaseMovementDefaultRun;
-            yield return obj.BaseMovementDefaultSwim;
-            yield return obj.BaseMovementDefaultFly;
-            yield return obj.BaseMovementDefaultSneak;
-            yield return obj.BaseMovementDefaultSprint;
+            if (obj.UnarmedEquipSlot.FormKey.TryGet(out var UnarmedEquipSlotKey))
+            {
+                yield return UnarmedEquipSlotKey;
+            }
+            if (obj.BaseMovementDefaultWalk.FormKey.TryGet(out var BaseMovementDefaultWalkKey))
+            {
+                yield return BaseMovementDefaultWalkKey;
+            }
+            if (obj.BaseMovementDefaultRun.FormKey.TryGet(out var BaseMovementDefaultRunKey))
+            {
+                yield return BaseMovementDefaultRunKey;
+            }
+            if (obj.BaseMovementDefaultSwim.FormKey.TryGet(out var BaseMovementDefaultSwimKey))
+            {
+                yield return BaseMovementDefaultSwimKey;
+            }
+            if (obj.BaseMovementDefaultFly.FormKey.TryGet(out var BaseMovementDefaultFlyKey))
+            {
+                yield return BaseMovementDefaultFlyKey;
+            }
+            if (obj.BaseMovementDefaultSneak.FormKey.TryGet(out var BaseMovementDefaultSneakKey))
+            {
+                yield return BaseMovementDefaultSneakKey;
+            }
+            if (obj.BaseMovementDefaultSprint.FormKey.TryGet(out var BaseMovementDefaultSprintKey))
+            {
+                yield return BaseMovementDefaultSprintKey;
+            }
             yield break;
         }
         
+        public void RemapLinks(IRaceGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         partial void PostDuplicate(Race obj, Race rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
@@ -8127,7 +8177,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRaceGetter)rhs, include);
 
-        public override IEnumerable<ILinkGetter> Links => RaceCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => RaceCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RaceCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => RaceXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

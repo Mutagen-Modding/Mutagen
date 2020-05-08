@@ -1820,7 +1820,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Npc_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public override IEnumerable<ILinkGetter> Links => NpcCommon.Instance.GetLinks(this);
+        protected override IEnumerable<FormKey> LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcCommon.Instance.RemapLinks(this, mapping);
         public Npc(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1940,7 +1944,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOwnerGetter,
         ILoquiObject<INpcGetter>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => Npc_Registration.Instance;
@@ -3840,50 +3844,69 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(INpcGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(INpcGetter obj)
         {
-            foreach (var item in base.GetLinks(obj))
+            foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            foreach (var item in obj.Factions.SelectMany(f => f.Links))
+            foreach (var item in obj.Factions.SelectMany(f => f.LinkFormKeys))
             {
                 yield return item;
             }
-            yield return obj.DeathItem;
-            yield return obj.Race;
-            if (obj.Spells != null)
+            if (obj.DeathItem.FormKey.TryGet(out var DeathItemKey))
             {
-                foreach (var item in obj.Spells)
+                yield return DeathItemKey;
+            }
+            if (obj.Race.FormKey.TryGet(out var RaceKey))
+            {
+                yield return RaceKey;
+            }
+            if (obj.Spells.TryGet(out var SpellsItem))
+            {
+                foreach (var item in SpellsItem.Select(f => f.FormKey))
                 {
                     yield return item;
                 }
             }
-            yield return obj.Script;
-            foreach (var item in obj.Items.SelectMany(f => f.Links))
+            if (obj.Script.FormKey.TryGet(out var ScriptKey))
+            {
+                yield return ScriptKey;
+            }
+            foreach (var item in obj.Items.SelectMany(f => f.LinkFormKeys))
             {
                 yield return item;
             }
-            if (obj.AIPackages != null)
+            if (obj.AIPackages.TryGet(out var AIPackagesItem))
             {
-                foreach (var item in obj.AIPackages)
+                foreach (var item in AIPackagesItem.Select(f => f.FormKey))
                 {
                     yield return item;
                 }
             }
-            yield return obj.Class;
-            yield return obj.Hair;
-            if (obj.Eyes != null)
+            if (obj.Class.FormKey.TryGet(out var ClassKey))
             {
-                foreach (var item in obj.Eyes)
+                yield return ClassKey;
+            }
+            if (obj.Hair.FormKey.TryGet(out var HairKey))
+            {
+                yield return HairKey;
+            }
+            if (obj.Eyes.TryGet(out var EyesItem))
+            {
+                foreach (var item in EyesItem.Select(f => f.FormKey))
                 {
                     yield return item;
                 }
             }
-            yield return obj.CombatStyle;
+            if (obj.CombatStyle.FormKey.TryGet(out var CombatStyleKey))
+            {
+                yield return CombatStyleKey;
+            }
             yield break;
         }
         
+        public void RemapLinks(INpcGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         partial void PostDuplicate(Npc obj, Npc rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
@@ -5735,7 +5758,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((INpcGetter)rhs, include);
 
-        public override IEnumerable<ILinkGetter> Links => NpcCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => NpcCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => NpcXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

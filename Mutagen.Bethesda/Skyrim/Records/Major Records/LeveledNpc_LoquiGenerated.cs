@@ -763,7 +763,11 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public new static readonly RecordType GrupRecordType = LeveledNpc_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public override IEnumerable<ILinkGetter> Links => LeveledNpcCommon.Instance.GetLinks(this);
+        protected override IEnumerable<FormKey> LinkFormKeys => LeveledNpcCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LeveledNpcCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledNpcCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledNpcCommon.Instance.RemapLinks(this, mapping);
         public LeveledNpc(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -862,7 +866,7 @@ namespace Mutagen.Bethesda.Skyrim
         IANpcSpawnGetter,
         ILoquiObject<ILeveledNpcGetter>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => LeveledNpc_Registration.Instance;
@@ -1989,24 +1993,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(ILeveledNpcGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(ILeveledNpcGetter obj)
         {
-            foreach (var item in base.GetLinks(obj))
+            foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            yield return obj.Global;
-            if (obj.Entries != null)
+            if (obj.Global.FormKey.TryGet(out var GlobalKey))
             {
-                foreach (var item in obj.Entries.WhereCastable<ILeveledEntryGetter<IANpcSpawnGetter>, ILinkContainer>()
-                    .SelectMany((f) => f.Links))
+                yield return GlobalKey;
+            }
+            if (obj.Entries.TryGet(out var EntriesItem))
+            {
+                foreach (var item in EntriesItem.WhereCastable<ILeveledEntryGetter<IANpcSpawnGetter>, ILinkedFormKeyContainer> ()
+                    .SelectMany((f) => f.LinkFormKeys))
                 {
                     yield return item;
                 }
             }
-            if (obj.Model != null)
+            if (obj.Model.TryGet(out var ModelItems))
             {
-                foreach (var item in obj.Model.Links)
+                foreach (var item in ModelItems.LinkFormKeys)
                 {
                     yield return item;
                 }
@@ -2014,6 +2021,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
+        public void RemapLinks(ILeveledNpcGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         partial void PostDuplicate(LeveledNpc obj, LeveledNpc rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
@@ -2875,7 +2883,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledNpcGetter)rhs, include);
 
-        public override IEnumerable<ILinkGetter> Links => LeveledNpcCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => LeveledNpcCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LeveledNpcCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledNpcCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledNpcCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => LeveledNpcXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

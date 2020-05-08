@@ -1128,7 +1128,11 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Scroll_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public override IEnumerable<ILinkGetter> Links => ScrollCommon.Instance.GetLinks(this);
+        protected override IEnumerable<FormKey> LinkFormKeys => ScrollCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ScrollCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScrollCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScrollCommon.Instance.RemapLinks(this, mapping);
         public Scroll(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1244,7 +1248,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectIdGetter,
         ILoquiObject<IScrollGetter>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => Scroll_Registration.Instance;
@@ -2581,51 +2585,64 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IScrollGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IScrollGetter obj)
         {
-            foreach (var item in base.GetLinks(obj))
+            foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            if (obj.Keywords != null)
+            if (obj.Keywords.TryGet(out var KeywordsItem))
             {
-                foreach (var item in obj.Keywords)
+                foreach (var item in KeywordsItem.Select(f => f.FormKey))
                 {
                     yield return item;
                 }
             }
-            yield return obj.MenuDisplayObject;
-            yield return obj.EquipmentType;
-            if (obj.Model != null)
+            if (obj.MenuDisplayObject.FormKey.TryGet(out var MenuDisplayObjectKey))
             {
-                foreach (var item in obj.Model.Links)
+                yield return MenuDisplayObjectKey;
+            }
+            if (obj.EquipmentType.FormKey.TryGet(out var EquipmentTypeKey))
+            {
+                yield return EquipmentTypeKey;
+            }
+            if (obj.Model.TryGet(out var ModelItems))
+            {
+                foreach (var item in ModelItems.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            if (obj.Destructible != null)
+            if (obj.Destructible.TryGet(out var DestructibleItems))
             {
-                foreach (var item in obj.Destructible.Links)
+                foreach (var item in DestructibleItems.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            yield return obj.PickUpSound;
-            yield return obj.PutDownSound;
-            if (obj.SpellData != null)
+            if (obj.PickUpSound.FormKey.TryGet(out var PickUpSoundKey))
             {
-                foreach (var item in obj.SpellData.Links)
+                yield return PickUpSoundKey;
+            }
+            if (obj.PutDownSound.FormKey.TryGet(out var PutDownSoundKey))
+            {
+                yield return PutDownSoundKey;
+            }
+            if (obj.SpellData.TryGet(out var SpellDataItems))
+            {
+                foreach (var item in SpellDataItems.LinkFormKeys)
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.Effects.SelectMany(f => f.Links))
+            foreach (var item in obj.Effects.SelectMany(f => f.LinkFormKeys))
             {
                 yield return item;
             }
             yield break;
         }
         
+        public void RemapLinks(IScrollGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         partial void PostDuplicate(Scroll obj, Scroll rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
@@ -3798,7 +3815,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScrollGetter)rhs, include);
 
-        public override IEnumerable<ILinkGetter> Links => ScrollCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => ScrollCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ScrollCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScrollCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScrollCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => ScrollXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

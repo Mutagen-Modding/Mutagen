@@ -768,7 +768,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public new static readonly RecordType GrupRecordType = PlacedCreature_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public override IEnumerable<ILinkGetter> Links => PlacedCreatureCommon.Instance.GetLinks(this);
+        protected override IEnumerable<FormKey> LinkFormKeys => PlacedCreatureCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PlacedCreatureCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedCreatureCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedCreatureCommon.Instance.RemapLinks(this, mapping);
         public PlacedCreature(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -871,7 +875,7 @@ namespace Mutagen.Bethesda.Oblivion
         IPlacedGetter,
         ILoquiObject<IPlacedCreatureGetter>,
         IXmlItem,
-        ILinkContainer,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => PlacedCreature_Registration.Instance;
@@ -1990,18 +1994,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<ILinkGetter> GetLinks(IPlacedCreatureGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IPlacedCreatureGetter obj)
         {
-            foreach (var item in base.GetLinks(obj))
+            foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            yield return obj.Base;
-            yield return obj.Owner;
-            yield return obj.GlobalVariable;
-            if (obj.EnableParent != null)
+            if (obj.Base.FormKey.TryGet(out var BaseKey))
             {
-                foreach (var item in obj.EnableParent.Links)
+                yield return BaseKey;
+            }
+            if (obj.Owner.FormKey.TryGet(out var OwnerKey))
+            {
+                yield return OwnerKey;
+            }
+            if (obj.GlobalVariable.FormKey.TryGet(out var GlobalVariableKey))
+            {
+                yield return GlobalVariableKey;
+            }
+            if (obj.EnableParent.TryGet(out var EnableParentItems))
+            {
+                foreach (var item in EnableParentItems.LinkFormKeys)
                 {
                     yield return item;
                 }
@@ -2009,6 +2022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             yield break;
         }
         
+        public void RemapLinks(IPlacedCreatureGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         partial void PostDuplicate(PlacedCreature obj, PlacedCreature rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
@@ -2849,7 +2863,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IPlacedCreatureGetter)rhs, include);
 
-        public override IEnumerable<ILinkGetter> Links => PlacedCreatureCommon.Instance.GetLinks(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => PlacedCreatureCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => PlacedCreatureCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedCreatureCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedCreatureCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => PlacedCreatureXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

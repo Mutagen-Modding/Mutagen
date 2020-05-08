@@ -1467,7 +1467,7 @@ namespace Mutagen.Bethesda.Generation
                 if (obj.GetObjectType() == ObjectType.Mod
                     || (await LinkModule.HasLinks(obj, includeBaseClass: false) != LinkModule.LinkCase.No))
                 {
-                    fg.AppendLine($"public{await obj.FunctionOverride(async (o) => (await LinkModule.HasLinks(o, includeBaseClass: false)) != LinkModule.LinkCase.No)}IEnumerable<{nameof(ILinkGetter)}> Links => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.GetLinks(this);");
+                    await LinkModule.GenerateInterfaceImplementation(obj, fg);
                 }
 
                 if (await MajorRecordEnumerationModule.HasMajorRecordsInTree(obj, includeBaseClass: false) != MajorRecordEnumerationModule.Case.No)
