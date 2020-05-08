@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
             var objData = obj.GetObjectData();
             await objData.WiringComplete.Task
                 .TimeoutButContinue(
-                    TimeoutMS,
+                    Utility.TimeoutMS,
                     () => System.Console.WriteLine($"{this.Name} {obj.Name} wiring taking a long time."));
             Dictionary<string, TypeGeneration> triggerMapping = new Dictionary<string, TypeGeneration>();
             Dictionary<RecordType, TypeGeneration> triggerRecMapping = new Dictionary<RecordType, TypeGeneration>();

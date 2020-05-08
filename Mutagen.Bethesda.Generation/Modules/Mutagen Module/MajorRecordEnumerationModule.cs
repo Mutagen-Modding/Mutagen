@@ -651,7 +651,7 @@ namespace Mutagen.Bethesda.Generation
                                     {
                                         if (loqui.TargetObjectGeneration != null)
                                         {
-                                            fg.AppendLine($"case \"{loqui.TargetObjectGeneration}\":");
+                                            fg.AppendLine($"case \"{loqui.TargetObjectGeneration.ObjectName}\":");
                                         }
                                         fg.AppendLine($"case \"{loqui.Interface(getter: true)}\":");
                                         fg.AppendLine($"case \"{loqui.Interface(getter: false)}\":");
@@ -666,7 +666,7 @@ namespace Mutagen.Bethesda.Generation
                                     }
                                     break;
                                 case ObjectGeneration targetObj:
-                                    fg.AppendLine($"case \"{targetObj}\":");
+                                    fg.AppendLine($"case \"{targetObj.ObjectName}\":");
                                     fg.AppendLine($"case \"{targetObj.Interface(getter: true)}\":");
                                     fg.AppendLine($"case \"{targetObj.Interface(getter: false)}\":");
                                     if (targetObj.HasInternalGetInterface)
