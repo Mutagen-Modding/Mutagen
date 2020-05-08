@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Generation
             throw new NotImplementedException();
         }
 
-        public override string TypeName(bool getter)
+        public override string TypeName(bool getter, bool needsCovariance = false)
         {
             throw new NotImplementedException();
         }

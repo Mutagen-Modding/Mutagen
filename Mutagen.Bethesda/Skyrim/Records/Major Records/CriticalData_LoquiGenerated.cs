@@ -69,9 +69,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte> ICriticalDataGetter.Unused3 => this.Unused3;
         #endregion
         #region Effect
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<Spell> _Effect = new FormLink<Spell>();
-        public IFormLink<Spell> Effect => this._Effect;
+        public FormLink<Spell> Effect { get; set; } = new FormLink<Spell>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISpellGetter> ICriticalDataGetter.Effect => this.Effect;
         #endregion
@@ -720,7 +718,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single PercentMult { get; set; }
         new CriticalData.Flag Flags { get; set; }
         new Byte[] Unused3 { get; set; }
-        new IFormLink<Spell> Effect { get; }
+        new FormLink<Spell> Effect { get; set; }
     }
 
     public partial interface ICriticalDataGetter :
@@ -1255,7 +1253,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case CriticalData_FieldIndex.Unused3:
                     return typeof(Byte[]);
                 case CriticalData_FieldIndex.Effect:
-                    return typeof(IFormLink<Spell>);
+                    return typeof(FormLink<Spell>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1313,7 +1311,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.PercentMult = default;
             item.Flags = default;
             item.Unused3 = new byte[3];
-            item.Effect.FormKey = FormKey.Null;
+            item.Effect = new FormLink<Spell>(FormKey.Null);
         }
         
         #region Xml Translation
@@ -1354,7 +1352,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.PercentMult = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.Flags = EnumBinaryTranslation<CriticalData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
             item.Unused3 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
-            item.Effect.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Effect = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
         }
@@ -1579,7 +1577,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)CriticalData_FieldIndex.Effect) ?? true))
             {
-                item.Effect.FormKey = rhs.Effect.FormKey;
+                item.Effect = rhs.Effect.FormKey;
             }
         }
         
@@ -1925,7 +1923,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)CriticalData_FieldIndex.Effect);
                     try
                     {
-                        item.Effect.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Effect = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

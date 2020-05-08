@@ -85,16 +85,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Script
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<Script> _Script = new FormLinkNullable<Script>();
-        public IFormLinkNullable<Script> Script => this._Script;
+        public FormLinkNullable<Script> Script { get; set; } = new FormLinkNullable<Script>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IScriptGetter> ILeveledCreatureGetter.Script => this.Script;
         #endregion
         #region Template
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<ANpc> _Template = new FormLinkNullable<ANpc>();
-        public IFormLinkNullable<ANpc> Template => this._Template;
+        public FormLinkNullable<ANpc> Template { get; set; } = new FormLinkNullable<ANpc>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IANpcGetter> ILeveledCreatureGetter.Template => this.Template;
         #endregion
@@ -805,8 +801,8 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte? ChanceNone { get; set; }
         new LeveledFlag? Flags { get; set; }
         new ExtendedList<LeveledEntry<ANpcSpawn>> Entries { get; }
-        new IFormLinkNullable<Script> Script { get; }
-        new IFormLinkNullable<ANpc> Template { get; }
+        new FormLinkNullable<Script> Script { get; set; }
+        new FormLinkNullable<ANpc> Template { get; set; }
     }
 
     public partial interface ILeveledCreatureInternal :
@@ -1311,9 +1307,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledCreature_FieldIndex.Entries:
                     return typeof(ExtendedList<LeveledEntry<ANpcSpawn>>);
                 case LeveledCreature_FieldIndex.Script:
-                    return typeof(IFormLinkNullable<Script>);
+                    return typeof(FormLinkNullable<Script>);
                 case LeveledCreature_FieldIndex.Template:
-                    return typeof(IFormLinkNullable<ANpc>);
+                    return typeof(FormLinkNullable<ANpc>);
                 default:
                     return ANpcSpawn_Registration.GetNthType(index);
             }
@@ -1374,8 +1370,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ChanceNone = default;
             item.Flags = default;
             item.Entries.Clear();
-            item.Script.FormKey = null;
-            item.Template.FormKey = null;
+            item.Script = null;
+            item.Template = null;
             base.Clear(item);
         }
         
@@ -1539,7 +1535,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x49524353: // SCRI
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.Script.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Script = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Script);
@@ -1547,7 +1543,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E54: // TNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.Template.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Template = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Template);
@@ -2009,11 +2005,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Script) ?? true))
             {
-                item.Script.FormKey = rhs.Script.FormKey;
+                item.Script = rhs.Script.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Template) ?? true))
             {
-                item.Template.FormKey = rhs.Template.FormKey;
+                item.Template = rhs.Template.FormKey;
             }
         }
         
@@ -2435,7 +2431,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)LeveledCreature_FieldIndex.Script);
                     try
                     {
-                        item.Script.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Script = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2453,7 +2449,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)LeveledCreature_FieldIndex.Template);
                     try
                     {
-                        item.Template.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Template = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2743,12 +2739,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Script
         private int? _ScriptLocation;
         public bool Script_IsSet => _ScriptLocation.HasValue;
-        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormLinkNullable<IScriptGetter>.Empty;
+        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormLinkNullable<IScriptGetter>.Null;
         #endregion
         #region Template
         private int? _TemplateLocation;
         public bool Template_IsSet => _TemplateLocation.HasValue;
-        public IFormLinkNullableGetter<IANpcGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<IANpcGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TemplateLocation.Value, _package.Meta)))) : FormLinkNullable<IANpcGetter>.Empty;
+        public IFormLinkNullableGetter<IANpcGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<IANpcGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TemplateLocation.Value, _package.Meta)))) : FormLinkNullable<IANpcGetter>.Null;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

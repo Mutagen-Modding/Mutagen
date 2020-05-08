@@ -46,9 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Faction
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<Faction> _Faction = new FormLink<Faction>();
-        public IFormLink<Faction> Faction => this._Faction;
+        public FormLink<Faction> Faction { get; set; } = new FormLink<Faction>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IFactionGetter> IRelationGetter.Faction => this.Faction;
         #endregion
@@ -583,7 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRelationGetter,
         ILoquiObjectSetter<IRelation>
     {
-        new IFormLink<Faction> Faction { get; }
+        new FormLink<Faction> Faction { get; set; }
         new Int32 Modifier { get; set; }
     }
 
@@ -1065,7 +1063,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Relation_FieldIndex.Faction:
-                    return typeof(IFormLink<Faction>);
+                    return typeof(FormLink<Faction>);
                 case Relation_FieldIndex.Modifier:
                     return typeof(Int32);
                 default:
@@ -1120,7 +1118,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRelation item)
         {
             ClearPartial();
-            item.Faction.FormKey = FormKey.Null;
+            item.Faction = new FormLink<Faction>(FormKey.Null);
             item.Modifier = default;
         }
         
@@ -1157,7 +1155,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRelation item,
             MutagenFrame frame)
         {
-            item.Faction.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Faction = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
             item.Modifier = frame.ReadInt32();
@@ -1331,7 +1329,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)Relation_FieldIndex.Faction) ?? true))
             {
-                item.Faction.FormKey = rhs.Faction.FormKey;
+                item.Faction = rhs.Faction.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Relation_FieldIndex.Modifier) ?? true))
             {
@@ -1554,7 +1552,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)Relation_FieldIndex.Faction);
                     try
                     {
-                        item.Faction.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Faction = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

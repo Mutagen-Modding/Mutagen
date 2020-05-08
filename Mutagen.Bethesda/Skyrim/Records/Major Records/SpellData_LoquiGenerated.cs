@@ -70,9 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Range { get; set; } = default;
         #endregion
         #region HalfCostPerk
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<Perk> _HalfCostPerk = new FormLink<Perk>();
-        public IFormLink<Perk> HalfCostPerk => this._HalfCostPerk;
+        public FormLink<Perk> HalfCostPerk { get; set; } = new FormLink<Perk>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPerkGetter> ISpellDataGetter.HalfCostPerk => this.HalfCostPerk;
         #endregion
@@ -808,7 +806,7 @@ namespace Mutagen.Bethesda.Skyrim
         new TargetType TargetType { get; set; }
         new Single CastDuration { get; set; }
         new Single Range { get; set; }
-        new IFormLink<Perk> HalfCostPerk { get; }
+        new FormLink<Perk> HalfCostPerk { get; set; }
     }
 
     public partial interface ISpellDataGetter :
@@ -1382,7 +1380,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SpellData_FieldIndex.Range:
                     return typeof(Single);
                 case SpellData_FieldIndex.HalfCostPerk:
-                    return typeof(IFormLink<Perk>);
+                    return typeof(FormLink<Perk>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1443,7 +1441,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.TargetType = default;
             item.CastDuration = default;
             item.Range = default;
-            item.HalfCostPerk.FormKey = FormKey.Null;
+            item.HalfCostPerk = new FormLink<Perk>(FormKey.Null);
         }
         
         #region Xml Translation
@@ -1487,7 +1485,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.TargetType = EnumBinaryTranslation<TargetType>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.CastDuration = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.Range = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.HalfCostPerk.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.HalfCostPerk = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
         }
@@ -1748,7 +1746,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SpellData_FieldIndex.HalfCostPerk) ?? true))
             {
-                item.HalfCostPerk.FormKey = rhs.HalfCostPerk.FormKey;
+                item.HalfCostPerk = rhs.HalfCostPerk.FormKey;
             }
         }
         
@@ -2174,7 +2172,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)SpellData_FieldIndex.HalfCostPerk);
                     try
                     {
-                        item.HalfCostPerk.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.HalfCostPerk = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

@@ -46,9 +46,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Color
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<ColorRecord> _Color = new FormLinkNullable<ColorRecord>();
-        public IFormLinkNullable<ColorRecord> Color => this._Color;
+        public FormLinkNullable<ColorRecord> Color { get; set; } = new FormLinkNullable<ColorRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IColorRecordGetter> ITintPresetGetter.Color => this.Color;
         #endregion
@@ -629,7 +627,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITintPresetGetter,
         ILoquiObjectSetter<ITintPreset>
     {
-        new IFormLinkNullable<ColorRecord> Color { get; }
+        new FormLinkNullable<ColorRecord> Color { get; set; }
         new Single? DefaultValue { get; set; }
         new UInt16? Index { get; set; }
     }
@@ -1123,7 +1121,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case TintPreset_FieldIndex.Color:
-                    return typeof(IFormLinkNullable<ColorRecord>);
+                    return typeof(FormLinkNullable<ColorRecord>);
                 case TintPreset_FieldIndex.DefaultValue:
                     return typeof(Single);
                 case TintPreset_FieldIndex.Index:
@@ -1194,7 +1192,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ITintPreset item)
         {
             ClearPartial();
-            item.Color.FormKey = null;
+            item.Color = null;
             item.DefaultValue = default;
             item.Index = default;
         }
@@ -1249,7 +1247,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintPreset_FieldIndex.Color) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.Color.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Color = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)TintPreset_FieldIndex.Color);
@@ -1465,7 +1463,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)TintPreset_FieldIndex.Color) ?? true))
             {
-                item.Color.FormKey = rhs.Color.FormKey;
+                item.Color = rhs.Color.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)TintPreset_FieldIndex.DefaultValue) ?? true))
             {
@@ -1704,7 +1702,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)TintPreset_FieldIndex.Color);
                     try
                     {
-                        item.Color.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Color = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2062,7 +2060,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Color
         private int? _ColorLocation;
         public bool Color_IsSet => _ColorLocation.HasValue;
-        public IFormLinkNullableGetter<IColorRecordGetter> Color => _ColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ColorLocation.Value, _package.Meta)))) : FormLinkNullable<IColorRecordGetter>.Empty;
+        public IFormLinkNullableGetter<IColorRecordGetter> Color => _ColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ColorLocation.Value, _package.Meta)))) : FormLinkNullable<IColorRecordGetter>.Null;
         #endregion
         #region DefaultValue
         private int? _DefaultValueLocation;

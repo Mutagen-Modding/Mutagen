@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.UnitTests
             var otherNpc = new Npc(new FormKey(other, 0x123456));
             mod.Potions.RecordCache.Set(new Potion(new FormKey(obliv, 0x123456)));
             mod.Npcs.RecordCache.Set(otherNpc);
-            otherNpc.Race.FormKey = new FormKey(knights, 0x123456);
+            otherNpc.Race = new FormKey(knights, 0x123456);
             var modPath = Path.Combine(folder.Dir.Path, obliv.ToString());
             mod.WriteToBinary(modPath,
                 new BinaryWriteParameters()
@@ -179,7 +179,7 @@ namespace Mutagen.Bethesda.UnitTests
             var obliv = ModKey.Factory("Oblivion.esm");
             var mod = new OblivionMod(obliv);
             var npc = mod.Npcs.AddNew();
-            npc.Race.FormKey = FormKey.Null;
+            npc.Race = FormKey.Null;
             var modPath = Path.Combine(folder.Dir.Path, obliv.ToString());
             mod.WriteToBinary(modPath,
                 new BinaryWriteParameters()

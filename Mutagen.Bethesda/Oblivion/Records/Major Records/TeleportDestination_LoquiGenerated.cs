@@ -46,9 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Destination
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<IPlaced> _Destination = new FormLink<IPlaced>();
-        public IFormLink<IPlaced> Destination => this._Destination;
+        public FormLink<IPlaced> Destination { get; set; } = new FormLink<IPlaced>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPlacedGetter> ITeleportDestinationGetter.Destination => this.Destination;
         #endregion
@@ -614,7 +612,7 @@ namespace Mutagen.Bethesda.Oblivion
         ITeleportDestinationGetter,
         ILoquiObjectSetter<ITeleportDestination>
     {
-        new IFormLink<IPlaced> Destination { get; }
+        new FormLink<IPlaced> Destination { get; set; }
         new P3Float Position { get; set; }
         new P3Float Rotation { get; set; }
     }
@@ -1108,7 +1106,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case TeleportDestination_FieldIndex.Destination:
-                    return typeof(IFormLink<IPlaced>);
+                    return typeof(FormLink<IPlaced>);
                 case TeleportDestination_FieldIndex.Position:
                     return typeof(P3Float);
                 case TeleportDestination_FieldIndex.Rotation:
@@ -1165,7 +1163,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(ITeleportDestination item)
         {
             ClearPartial();
-            item.Destination.FormKey = FormKey.Null;
+            item.Destination = new FormLink<IPlaced>(FormKey.Null);
             item.Position = default;
             item.Rotation = default;
         }
@@ -1203,7 +1201,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ITeleportDestination item,
             MutagenFrame frame)
         {
-            item.Destination.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Destination = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
             item.Position = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
@@ -1386,7 +1384,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Destination) ?? true))
             {
-                item.Destination.FormKey = rhs.Destination.FormKey;
+                item.Destination = rhs.Destination.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Position) ?? true))
             {
@@ -1622,7 +1620,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)TeleportDestination_FieldIndex.Destination);
                     try
                     {
-                        item.Destination.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Destination = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

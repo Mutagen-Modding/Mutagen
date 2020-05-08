@@ -72,9 +72,7 @@ namespace Mutagen.Bethesda.Oblivion
         Color? IRegionGetter.MapColor => this.MapColor;
         #endregion
         #region Worldspace
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<Worldspace> _Worldspace = new FormLinkNullable<Worldspace>();
-        public IFormLinkNullable<Worldspace> Worldspace => this._Worldspace;
+        public FormLinkNullable<Worldspace> Worldspace { get; set; } = new FormLinkNullable<Worldspace>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWorldspaceGetter> IRegionGetter.Worldspace => this.Worldspace;
         #endregion
@@ -1005,7 +1003,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new String? Icon { get; set; }
         new Color? MapColor { get; set; }
-        new IFormLinkNullable<Worldspace> Worldspace { get; }
+        new FormLinkNullable<Worldspace> Worldspace { get; set; }
         new ExtendedList<RegionArea> Areas { get; }
         new RegionDataObjects? Objects { get; set; }
         new RegionDataWeather? Weather { get; set; }
@@ -1558,7 +1556,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Region_FieldIndex.MapColor:
                     return typeof(Color);
                 case Region_FieldIndex.Worldspace:
-                    return typeof(IFormLinkNullable<Worldspace>);
+                    return typeof(FormLinkNullable<Worldspace>);
                 case Region_FieldIndex.Areas:
                     return typeof(ExtendedList<RegionArea>);
                 case Region_FieldIndex.Objects:
@@ -1631,7 +1629,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Icon = default;
             item.MapColor = default;
-            item.Worldspace.FormKey = null;
+            item.Worldspace = null;
             item.Areas.Clear();
             item.Objects = null;
             item.Weather = null;
@@ -1769,7 +1767,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E57: // WNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.Worldspace.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Worldspace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.Worldspace);
@@ -2289,7 +2287,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Worldspace) ?? true))
             {
-                item.Worldspace.FormKey = rhs.Worldspace.FormKey;
+                item.Worldspace = rhs.Worldspace.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Areas) ?? true))
             {
@@ -2856,7 +2854,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)Region_FieldIndex.Worldspace);
                     try
                     {
-                        item.Worldspace.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Worldspace = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3285,7 +3283,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Worldspace
         private int? _WorldspaceLocation;
         public bool Worldspace_IsSet => _WorldspaceLocation.HasValue;
-        public IFormLinkNullableGetter<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLinkNullable<IWorldspaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _WorldspaceLocation.Value, _package.Meta)))) : FormLinkNullable<IWorldspaceGetter>.Empty;
+        public IFormLinkNullableGetter<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLinkNullable<IWorldspaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _WorldspaceLocation.Value, _package.Meta)))) : FormLinkNullable<IWorldspaceGetter>.Null;
         #endregion
         public IReadOnlyList<IRegionAreaGetter> Areas { get; private set; } = ListExt.Empty<RegionAreaBinaryOverlay>();
         #region RegionAreaLogic

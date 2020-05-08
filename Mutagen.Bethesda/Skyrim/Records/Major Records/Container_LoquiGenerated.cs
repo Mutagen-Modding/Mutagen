@@ -123,16 +123,12 @@ namespace Mutagen.Bethesda.Skyrim
         IContainerDataGetter IContainerGetter.Data => Data;
         #endregion
         #region OpenSound
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<SoundDescriptor> _OpenSound = new FormLinkNullable<SoundDescriptor>();
-        public IFormLinkNullable<SoundDescriptor> OpenSound => this._OpenSound;
+        public FormLinkNullable<SoundDescriptor> OpenSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IContainerGetter.OpenSound => this.OpenSound;
         #endregion
         #region CloseSound
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<SoundDescriptor> _CloseSound = new FormLinkNullable<SoundDescriptor>();
-        public IFormLinkNullable<SoundDescriptor> CloseSound => this._CloseSound;
+        public FormLinkNullable<SoundDescriptor> CloseSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IContainerGetter.CloseSound => this.CloseSound;
         #endregion
@@ -1010,8 +1006,8 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<ContainerEntry>? Items { get; set; }
         new Destructible? Destructible { get; set; }
         new ContainerData Data { get; set; }
-        new IFormLinkNullable<SoundDescriptor> OpenSound { get; }
-        new IFormLinkNullable<SoundDescriptor> CloseSound { get; }
+        new FormLinkNullable<SoundDescriptor> OpenSound { get; set; }
+        new FormLinkNullable<SoundDescriptor> CloseSound { get; set; }
         #region Mutagen
         new Container.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1581,9 +1577,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Container_FieldIndex.Data:
                     return typeof(ContainerData);
                 case Container_FieldIndex.OpenSound:
-                    return typeof(IFormLinkNullable<SoundDescriptor>);
+                    return typeof(FormLinkNullable<SoundDescriptor>);
                 case Container_FieldIndex.CloseSound:
-                    return typeof(IFormLinkNullable<SoundDescriptor>);
+                    return typeof(FormLinkNullable<SoundDescriptor>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1655,8 +1651,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Items = null;
             item.Destructible = null;
             item.Data.Clear();
-            item.OpenSound.FormKey = null;
-            item.CloseSound.FormKey = null;
+            item.OpenSound = null;
+            item.CloseSound = null;
             base.Clear(item);
         }
         
@@ -1832,7 +1828,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E53: // SNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.OpenSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.OpenSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Container_FieldIndex.OpenSound);
@@ -1840,7 +1836,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E51: // QNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.CloseSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.CloseSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Container_FieldIndex.CloseSound);
@@ -2475,11 +2471,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.OpenSound) ?? true))
             {
-                item.OpenSound.FormKey = rhs.OpenSound.FormKey;
+                item.OpenSound = rhs.OpenSound.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.CloseSound) ?? true))
             {
-                item.CloseSound.FormKey = rhs.CloseSound.FormKey;
+                item.CloseSound = rhs.CloseSound.FormKey;
             }
         }
         
@@ -2992,7 +2988,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Container_FieldIndex.OpenSound);
                     try
                     {
-                        item.OpenSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.OpenSound = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3010,7 +3006,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Container_FieldIndex.CloseSound);
                     try
                     {
-                        item.CloseSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.CloseSound = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3332,12 +3328,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region OpenSound
         private int? _OpenSoundLocation;
         public bool OpenSound_IsSet => _OpenSoundLocation.HasValue;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> OpenSound => _OpenSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _OpenSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Empty;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> OpenSound => _OpenSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _OpenSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region CloseSound
         private int? _CloseSoundLocation;
         public bool CloseSound_IsSet => _CloseSoundLocation.HasValue;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> CloseSound => _CloseSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _CloseSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Empty;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> CloseSound => _CloseSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _CloseSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

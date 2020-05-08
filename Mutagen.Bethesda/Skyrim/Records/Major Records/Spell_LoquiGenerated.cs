@@ -85,16 +85,12 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region MenuDisplayObject
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<Static> _MenuDisplayObject = new FormLinkNullable<Static>();
-        public IFormLinkNullable<Static> MenuDisplayObject => this._MenuDisplayObject;
+        public FormLinkNullable<Static> MenuDisplayObject { get; set; } = new FormLinkNullable<Static>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IStaticGetter> ISpellGetter.MenuDisplayObject => this.MenuDisplayObject;
         #endregion
         #region EquipmentType
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<EquipType> _EquipmentType = new FormLinkNullable<EquipType>();
-        public IFormLinkNullable<EquipType> EquipmentType => this._EquipmentType;
+        public FormLinkNullable<EquipType> EquipmentType { get; set; } = new FormLinkNullable<EquipType>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEquipTypeGetter> ISpellGetter.EquipmentType => this.EquipmentType;
         #endregion
@@ -1006,8 +1002,8 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new String? Name { get; set; }
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
-        new IFormLinkNullable<Static> MenuDisplayObject { get; }
-        new IFormLinkNullable<EquipType> EquipmentType { get; }
+        new FormLinkNullable<Static> MenuDisplayObject { get; set; }
+        new FormLinkNullable<EquipType> EquipmentType { get; set; }
         new String Description { get; set; }
         new SpellData Data { get; set; }
         new ExtendedList<Effect> Effects { get; }
@@ -1553,9 +1549,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Spell_FieldIndex.Keywords:
                     return typeof(ExtendedList<IFormLink<Keyword>>);
                 case Spell_FieldIndex.MenuDisplayObject:
-                    return typeof(IFormLinkNullable<Static>);
+                    return typeof(FormLinkNullable<Static>);
                 case Spell_FieldIndex.EquipmentType:
-                    return typeof(IFormLinkNullable<EquipType>);
+                    return typeof(FormLinkNullable<EquipType>);
                 case Spell_FieldIndex.Description:
                     return typeof(String);
                 case Spell_FieldIndex.Data:
@@ -1628,8 +1624,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ObjectBounds = new ObjectBounds();
             item.Name = default;
             item.Keywords = null;
-            item.MenuDisplayObject.FormKey = null;
-            item.EquipmentType.FormKey = null;
+            item.MenuDisplayObject = null;
+            item.EquipmentType = null;
             item.Description = string.Empty;
             item.Data.Clear();
             item.Effects.Clear();
@@ -1794,7 +1790,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x424F444D: // MDOB
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.MenuDisplayObject.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.MenuDisplayObject = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Spell_FieldIndex.MenuDisplayObject);
@@ -1802,7 +1798,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x50595445: // ETYP
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.EquipmentType.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.EquipmentType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Spell_FieldIndex.EquipmentType);
@@ -2372,11 +2368,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.MenuDisplayObject) ?? true))
             {
-                item.MenuDisplayObject.FormKey = rhs.MenuDisplayObject.FormKey;
+                item.MenuDisplayObject = rhs.MenuDisplayObject.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.EquipmentType) ?? true))
             {
-                item.EquipmentType.FormKey = rhs.EquipmentType.FormKey;
+                item.EquipmentType = rhs.EquipmentType.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Spell_FieldIndex.Description) ?? true))
             {
@@ -2887,7 +2883,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Spell_FieldIndex.MenuDisplayObject);
                     try
                     {
-                        item.MenuDisplayObject.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.MenuDisplayObject = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2905,7 +2901,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Spell_FieldIndex.EquipmentType);
                     try
                     {
-                        item.EquipmentType.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.EquipmentType = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3282,12 +3278,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region MenuDisplayObject
         private int? _MenuDisplayObjectLocation;
         public bool MenuDisplayObject_IsSet => _MenuDisplayObjectLocation.HasValue;
-        public IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject => _MenuDisplayObjectLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MenuDisplayObjectLocation.Value, _package.Meta)))) : FormLinkNullable<IStaticGetter>.Empty;
+        public IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject => _MenuDisplayObjectLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MenuDisplayObjectLocation.Value, _package.Meta)))) : FormLinkNullable<IStaticGetter>.Null;
         #endregion
         #region EquipmentType
         private int? _EquipmentTypeLocation;
         public bool EquipmentType_IsSet => _EquipmentTypeLocation.HasValue;
-        public IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType => _EquipmentTypeLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EquipmentTypeLocation.Value, _package.Meta)))) : FormLinkNullable<IEquipTypeGetter>.Empty;
+        public IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType => _EquipmentTypeLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EquipmentTypeLocation.Value, _package.Meta)))) : FormLinkNullable<IEquipTypeGetter>.Null;
         #endregion
         #region Description
         private int? _DescriptionLocation;

@@ -77,44 +77,32 @@ namespace Mutagen.Bethesda.Skyrim
         public Faction.FactionFlag Flags { get; set; } = default;
         #endregion
         #region ExteriorJailMarker
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<PlacedObject> _ExteriorJailMarker = new FormLinkNullable<PlacedObject>();
-        public IFormLinkNullable<PlacedObject> ExteriorJailMarker => this._ExteriorJailMarker;
+        public FormLinkNullable<PlacedObject> ExteriorJailMarker { get; set; } = new FormLinkNullable<PlacedObject>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.ExteriorJailMarker => this.ExteriorJailMarker;
         #endregion
         #region FollowerWaitMarker
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<PlacedObject> _FollowerWaitMarker = new FormLinkNullable<PlacedObject>();
-        public IFormLinkNullable<PlacedObject> FollowerWaitMarker => this._FollowerWaitMarker;
+        public FormLinkNullable<PlacedObject> FollowerWaitMarker { get; set; } = new FormLinkNullable<PlacedObject>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.FollowerWaitMarker => this.FollowerWaitMarker;
         #endregion
         #region StolenGoodsContainer
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<PlacedObject> _StolenGoodsContainer = new FormLinkNullable<PlacedObject>();
-        public IFormLinkNullable<PlacedObject> StolenGoodsContainer => this._StolenGoodsContainer;
+        public FormLinkNullable<PlacedObject> StolenGoodsContainer { get; set; } = new FormLinkNullable<PlacedObject>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.StolenGoodsContainer => this.StolenGoodsContainer;
         #endregion
         #region PlayerInventoryContainer
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<PlacedObject> _PlayerInventoryContainer = new FormLinkNullable<PlacedObject>();
-        public IFormLinkNullable<PlacedObject> PlayerInventoryContainer => this._PlayerInventoryContainer;
+        public FormLinkNullable<PlacedObject> PlayerInventoryContainer { get; set; } = new FormLinkNullable<PlacedObject>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.PlayerInventoryContainer => this.PlayerInventoryContainer;
         #endregion
         #region SharedCrimeFactionList
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<FormList> _SharedCrimeFactionList = new FormLinkNullable<FormList>();
-        public IFormLinkNullable<FormList> SharedCrimeFactionList => this._SharedCrimeFactionList;
+        public FormLinkNullable<FormList> SharedCrimeFactionList { get; set; } = new FormLinkNullable<FormList>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> IFactionGetter.SharedCrimeFactionList => this.SharedCrimeFactionList;
         #endregion
         #region JailOutfit
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<Outfit> _JailOutfit = new FormLinkNullable<Outfit>();
-        public IFormLinkNullable<Outfit> JailOutfit => this._JailOutfit;
+        public FormLinkNullable<Outfit> JailOutfit { get; set; } = new FormLinkNullable<Outfit>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IOutfitGetter> IFactionGetter.JailOutfit => this.JailOutfit;
         #endregion
@@ -144,16 +132,12 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region VendorBuySellList
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<FormList> _VendorBuySellList = new FormLinkNullable<FormList>();
-        public IFormLinkNullable<FormList> VendorBuySellList => this._VendorBuySellList;
+        public FormLinkNullable<FormList> VendorBuySellList { get; set; } = new FormLinkNullable<FormList>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> IFactionGetter.VendorBuySellList => this.VendorBuySellList;
         #endregion
         #region MerchantContainer
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<PlacedObject> _MerchantContainer = new FormLinkNullable<PlacedObject>();
-        public IFormLinkNullable<PlacedObject> MerchantContainer => this._MerchantContainer;
+        public FormLinkNullable<PlacedObject> MerchantContainer { get; set; } = new FormLinkNullable<PlacedObject>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.MerchantContainer => this.MerchantContainer;
         #endregion
@@ -1389,16 +1373,16 @@ namespace Mutagen.Bethesda.Skyrim
         new String? Name { get; set; }
         new ExtendedList<Relation> Relations { get; }
         new Faction.FactionFlag Flags { get; set; }
-        new IFormLinkNullable<PlacedObject> ExteriorJailMarker { get; }
-        new IFormLinkNullable<PlacedObject> FollowerWaitMarker { get; }
-        new IFormLinkNullable<PlacedObject> StolenGoodsContainer { get; }
-        new IFormLinkNullable<PlacedObject> PlayerInventoryContainer { get; }
-        new IFormLinkNullable<FormList> SharedCrimeFactionList { get; }
-        new IFormLinkNullable<Outfit> JailOutfit { get; }
+        new FormLinkNullable<PlacedObject> ExteriorJailMarker { get; set; }
+        new FormLinkNullable<PlacedObject> FollowerWaitMarker { get; set; }
+        new FormLinkNullable<PlacedObject> StolenGoodsContainer { get; set; }
+        new FormLinkNullable<PlacedObject> PlayerInventoryContainer { get; set; }
+        new FormLinkNullable<FormList> SharedCrimeFactionList { get; set; }
+        new FormLinkNullable<Outfit> JailOutfit { get; set; }
         new CrimeValues? CrimeValues { get; set; }
         new ExtendedList<Rank> Ranks { get; }
-        new IFormLinkNullable<FormList> VendorBuySellList { get; }
-        new IFormLinkNullable<PlacedObject> MerchantContainer { get; }
+        new FormLinkNullable<FormList> VendorBuySellList { get; set; }
+        new FormLinkNullable<PlacedObject> MerchantContainer { get; set; }
         new VendorValues? VendorValues { get; set; }
         new Location? VendorLocation { get; set; }
         new ExtendedList<Condition>? Conditions { get; set; }
@@ -2031,25 +2015,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Faction_FieldIndex.Flags:
                     return typeof(Faction.FactionFlag);
                 case Faction_FieldIndex.ExteriorJailMarker:
-                    return typeof(IFormLinkNullable<PlacedObject>);
+                    return typeof(FormLinkNullable<PlacedObject>);
                 case Faction_FieldIndex.FollowerWaitMarker:
-                    return typeof(IFormLinkNullable<PlacedObject>);
+                    return typeof(FormLinkNullable<PlacedObject>);
                 case Faction_FieldIndex.StolenGoodsContainer:
-                    return typeof(IFormLinkNullable<PlacedObject>);
+                    return typeof(FormLinkNullable<PlacedObject>);
                 case Faction_FieldIndex.PlayerInventoryContainer:
-                    return typeof(IFormLinkNullable<PlacedObject>);
+                    return typeof(FormLinkNullable<PlacedObject>);
                 case Faction_FieldIndex.SharedCrimeFactionList:
-                    return typeof(IFormLinkNullable<FormList>);
+                    return typeof(FormLinkNullable<FormList>);
                 case Faction_FieldIndex.JailOutfit:
-                    return typeof(IFormLinkNullable<Outfit>);
+                    return typeof(FormLinkNullable<Outfit>);
                 case Faction_FieldIndex.CrimeValues:
                     return typeof(CrimeValues);
                 case Faction_FieldIndex.Ranks:
                     return typeof(ExtendedList<Rank>);
                 case Faction_FieldIndex.VendorBuySellList:
-                    return typeof(IFormLinkNullable<FormList>);
+                    return typeof(FormLinkNullable<FormList>);
                 case Faction_FieldIndex.MerchantContainer:
-                    return typeof(IFormLinkNullable<PlacedObject>);
+                    return typeof(FormLinkNullable<PlacedObject>);
                 case Faction_FieldIndex.VendorValues:
                     return typeof(VendorValues);
                 case Faction_FieldIndex.VendorLocation:
@@ -2131,16 +2115,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Name = default;
             item.Relations.Clear();
             item.Flags = default;
-            item.ExteriorJailMarker.FormKey = null;
-            item.FollowerWaitMarker.FormKey = null;
-            item.StolenGoodsContainer.FormKey = null;
-            item.PlayerInventoryContainer.FormKey = null;
-            item.SharedCrimeFactionList.FormKey = null;
-            item.JailOutfit.FormKey = null;
+            item.ExteriorJailMarker = null;
+            item.FollowerWaitMarker = null;
+            item.StolenGoodsContainer = null;
+            item.PlayerInventoryContainer = null;
+            item.SharedCrimeFactionList = null;
+            item.JailOutfit = null;
             item.CrimeValues = null;
             item.Ranks.Clear();
-            item.VendorBuySellList.FormKey = null;
-            item.MerchantContainer.FormKey = null;
+            item.VendorBuySellList = null;
+            item.MerchantContainer = null;
             item.VendorValues = null;
             item.VendorLocation = null;
             item.Conditions = null;
@@ -2291,7 +2275,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4C49414A: // JAIL
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.ExteriorJailMarker.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.ExteriorJailMarker = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.ExteriorJailMarker);
@@ -2299,7 +2283,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x54494157: // WAIT
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.FollowerWaitMarker.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.FollowerWaitMarker = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.FollowerWaitMarker);
@@ -2307,7 +2291,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4C4F5453: // STOL
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.StolenGoodsContainer.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.StolenGoodsContainer = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.StolenGoodsContainer);
@@ -2315,7 +2299,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4E434C50: // PLCN
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.PlayerInventoryContainer.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.PlayerInventoryContainer = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.PlayerInventoryContainer);
@@ -2323,7 +2307,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x52475243: // CRGR
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.SharedCrimeFactionList.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.SharedCrimeFactionList = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.SharedCrimeFactionList);
@@ -2331,7 +2315,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x54554F4A: // JOUT
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.JailOutfit.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.JailOutfit = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.JailOutfit);
@@ -2363,7 +2347,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x444E4556: // VEND
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.VendorBuySellList.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.VendorBuySellList = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorBuySellList);
@@ -2371,7 +2355,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x434E4556: // VENC
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.MerchantContainer.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.MerchantContainer = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.MerchantContainer);
@@ -3034,27 +3018,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.ExteriorJailMarker) ?? true))
             {
-                item.ExteriorJailMarker.FormKey = rhs.ExteriorJailMarker.FormKey;
+                item.ExteriorJailMarker = rhs.ExteriorJailMarker.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.FollowerWaitMarker) ?? true))
             {
-                item.FollowerWaitMarker.FormKey = rhs.FollowerWaitMarker.FormKey;
+                item.FollowerWaitMarker = rhs.FollowerWaitMarker.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.StolenGoodsContainer) ?? true))
             {
-                item.StolenGoodsContainer.FormKey = rhs.StolenGoodsContainer.FormKey;
+                item.StolenGoodsContainer = rhs.StolenGoodsContainer.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.PlayerInventoryContainer) ?? true))
             {
-                item.PlayerInventoryContainer.FormKey = rhs.PlayerInventoryContainer.FormKey;
+                item.PlayerInventoryContainer = rhs.PlayerInventoryContainer.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.SharedCrimeFactionList) ?? true))
             {
-                item.SharedCrimeFactionList.FormKey = rhs.SharedCrimeFactionList.FormKey;
+                item.SharedCrimeFactionList = rhs.SharedCrimeFactionList.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.JailOutfit) ?? true))
             {
-                item.JailOutfit.FormKey = rhs.JailOutfit.FormKey;
+                item.JailOutfit = rhs.JailOutfit.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.CrimeValues) ?? true))
             {
@@ -3108,11 +3092,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorBuySellList) ?? true))
             {
-                item.VendorBuySellList.FormKey = rhs.VendorBuySellList.FormKey;
+                item.VendorBuySellList = rhs.VendorBuySellList.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.MerchantContainer) ?? true))
             {
-                item.MerchantContainer.FormKey = rhs.MerchantContainer.FormKey;
+                item.MerchantContainer = rhs.MerchantContainer.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorValues) ?? true))
             {
@@ -3723,7 +3707,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Faction_FieldIndex.ExteriorJailMarker);
                     try
                     {
-                        item.ExteriorJailMarker.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.ExteriorJailMarker = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3741,7 +3725,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Faction_FieldIndex.FollowerWaitMarker);
                     try
                     {
-                        item.FollowerWaitMarker.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.FollowerWaitMarker = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3759,7 +3743,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Faction_FieldIndex.StolenGoodsContainer);
                     try
                     {
-                        item.StolenGoodsContainer.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.StolenGoodsContainer = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3777,7 +3761,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Faction_FieldIndex.PlayerInventoryContainer);
                     try
                     {
-                        item.PlayerInventoryContainer.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.PlayerInventoryContainer = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3795,7 +3779,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Faction_FieldIndex.SharedCrimeFactionList);
                     try
                     {
-                        item.SharedCrimeFactionList.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.SharedCrimeFactionList = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3813,7 +3797,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Faction_FieldIndex.JailOutfit);
                     try
                     {
-                        item.JailOutfit.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.JailOutfit = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3878,7 +3862,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Faction_FieldIndex.VendorBuySellList);
                     try
                     {
-                        item.VendorBuySellList.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.VendorBuySellList = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3896,7 +3880,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Faction_FieldIndex.MerchantContainer);
                     try
                     {
-                        item.MerchantContainer.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.MerchantContainer = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -4332,32 +4316,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ExteriorJailMarker
         private int? _ExteriorJailMarkerLocation;
         public bool ExteriorJailMarker_IsSet => _ExteriorJailMarkerLocation.HasValue;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> ExteriorJailMarker => _ExteriorJailMarkerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ExteriorJailMarkerLocation.Value, _package.Meta)))) : FormLinkNullable<IPlacedObjectGetter>.Empty;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> ExteriorJailMarker => _ExteriorJailMarkerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ExteriorJailMarkerLocation.Value, _package.Meta)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region FollowerWaitMarker
         private int? _FollowerWaitMarkerLocation;
         public bool FollowerWaitMarker_IsSet => _FollowerWaitMarkerLocation.HasValue;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> FollowerWaitMarker => _FollowerWaitMarkerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FollowerWaitMarkerLocation.Value, _package.Meta)))) : FormLinkNullable<IPlacedObjectGetter>.Empty;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> FollowerWaitMarker => _FollowerWaitMarkerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FollowerWaitMarkerLocation.Value, _package.Meta)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region StolenGoodsContainer
         private int? _StolenGoodsContainerLocation;
         public bool StolenGoodsContainer_IsSet => _StolenGoodsContainerLocation.HasValue;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> StolenGoodsContainer => _StolenGoodsContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _StolenGoodsContainerLocation.Value, _package.Meta)))) : FormLinkNullable<IPlacedObjectGetter>.Empty;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> StolenGoodsContainer => _StolenGoodsContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _StolenGoodsContainerLocation.Value, _package.Meta)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region PlayerInventoryContainer
         private int? _PlayerInventoryContainerLocation;
         public bool PlayerInventoryContainer_IsSet => _PlayerInventoryContainerLocation.HasValue;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> PlayerInventoryContainer => _PlayerInventoryContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PlayerInventoryContainerLocation.Value, _package.Meta)))) : FormLinkNullable<IPlacedObjectGetter>.Empty;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> PlayerInventoryContainer => _PlayerInventoryContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PlayerInventoryContainerLocation.Value, _package.Meta)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region SharedCrimeFactionList
         private int? _SharedCrimeFactionListLocation;
         public bool SharedCrimeFactionList_IsSet => _SharedCrimeFactionListLocation.HasValue;
-        public IFormLinkNullableGetter<IFormListGetter> SharedCrimeFactionList => _SharedCrimeFactionListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SharedCrimeFactionListLocation.Value, _package.Meta)))) : FormLinkNullable<IFormListGetter>.Empty;
+        public IFormLinkNullableGetter<IFormListGetter> SharedCrimeFactionList => _SharedCrimeFactionListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SharedCrimeFactionListLocation.Value, _package.Meta)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region JailOutfit
         private int? _JailOutfitLocation;
         public bool JailOutfit_IsSet => _JailOutfitLocation.HasValue;
-        public IFormLinkNullableGetter<IOutfitGetter> JailOutfit => _JailOutfitLocation.HasValue ? new FormLinkNullable<IOutfitGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _JailOutfitLocation.Value, _package.Meta)))) : FormLinkNullable<IOutfitGetter>.Empty;
+        public IFormLinkNullableGetter<IOutfitGetter> JailOutfit => _JailOutfitLocation.HasValue ? new FormLinkNullable<IOutfitGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _JailOutfitLocation.Value, _package.Meta)))) : FormLinkNullable<IOutfitGetter>.Null;
         #endregion
         #region CrimeValues
         private RangeInt32? _CrimeValuesLocation;
@@ -4368,12 +4352,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region VendorBuySellList
         private int? _VendorBuySellListLocation;
         public bool VendorBuySellList_IsSet => _VendorBuySellListLocation.HasValue;
-        public IFormLinkNullableGetter<IFormListGetter> VendorBuySellList => _VendorBuySellListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VendorBuySellListLocation.Value, _package.Meta)))) : FormLinkNullable<IFormListGetter>.Empty;
+        public IFormLinkNullableGetter<IFormListGetter> VendorBuySellList => _VendorBuySellListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VendorBuySellListLocation.Value, _package.Meta)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region MerchantContainer
         private int? _MerchantContainerLocation;
         public bool MerchantContainer_IsSet => _MerchantContainerLocation.HasValue;
-        public IFormLinkNullableGetter<IPlacedObjectGetter> MerchantContainer => _MerchantContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MerchantContainerLocation.Value, _package.Meta)))) : FormLinkNullable<IPlacedObjectGetter>.Empty;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> MerchantContainer => _MerchantContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MerchantContainerLocation.Value, _package.Meta)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region VendorValues
         private RangeInt32? _VendorValuesLocation;

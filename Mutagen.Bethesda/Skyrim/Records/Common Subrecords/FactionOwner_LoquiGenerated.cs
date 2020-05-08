@@ -48,9 +48,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Faction
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<Faction> _Faction = new FormLink<Faction>();
-        public IFormLink<Faction> Faction => this._Faction;
+        public FormLink<Faction> Faction { get; set; } = new FormLink<Faction>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IFactionGetter> IFactionOwnerGetter.Faction => this.Faction;
         #endregion
@@ -573,7 +571,7 @@ namespace Mutagen.Bethesda.Skyrim
         IOwnerTarget,
         ILoquiObjectSetter<IFactionOwner>
     {
-        new IFormLink<Faction> Faction { get; }
+        new FormLink<Faction> Faction { get; set; }
         new Int32 RequiredRank { get; set; }
     }
 
@@ -1026,7 +1024,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case FactionOwner_FieldIndex.Faction:
-                    return typeof(IFormLink<Faction>);
+                    return typeof(FormLink<Faction>);
                 case FactionOwner_FieldIndex.RequiredRank:
                     return typeof(Int32);
                 default:
@@ -1079,7 +1077,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IFactionOwner item)
         {
             ClearPartial();
-            item.Faction.FormKey = FormKey.Null;
+            item.Faction = new FormLink<Faction>(FormKey.Null);
             item.RequiredRank = default;
             base.Clear(item);
         }
@@ -1135,7 +1133,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFactionOwner item,
             MutagenFrame frame)
         {
-            item.Faction.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Faction = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
             item.RequiredRank = frame.ReadInt32();
@@ -1361,7 +1359,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)FactionOwner_FieldIndex.Faction) ?? true))
             {
-                item.Faction.FormKey = rhs.Faction.FormKey;
+                item.Faction = rhs.Faction.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)FactionOwner_FieldIndex.RequiredRank) ?? true))
             {
@@ -1585,7 +1583,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)FactionOwner_FieldIndex.Faction);
                     try
                     {
-                        item.Faction.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Faction = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

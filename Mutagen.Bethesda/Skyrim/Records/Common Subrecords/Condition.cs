@@ -307,8 +307,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.ParameterOneNumber = frame.ReadInt32();
                 item.ParameterTwoNumber = frame.ReadInt32();
-                item.ParameterOneRecord.FormKey = FormKey.Factory(frame.MasterReferences!, (uint)item.ParameterOneNumber);
-                item.ParameterTwoRecord.FormKey = FormKey.Factory(frame.MasterReferences!, (uint)item.ParameterTwoNumber);
+                item.ParameterOneRecord = FormKey.Factory(frame.MasterReferences!, (uint)item.ParameterOneNumber);
+                item.ParameterTwoRecord = FormKey.Factory(frame.MasterReferences!, (uint)item.ParameterTwoNumber);
                 item.Unknown3 = frame.ReadInt32();
                 item.Unknown4 = frame.ReadInt32();
                 item.Unknown5 = frame.ReadInt32();

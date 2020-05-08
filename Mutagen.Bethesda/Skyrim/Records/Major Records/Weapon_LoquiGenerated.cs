@@ -104,9 +104,7 @@ namespace Mutagen.Bethesda.Skyrim
         IIconsGetter? IWeaponGetter.Icons => this.Icons;
         #endregion
         #region ObjectEffect
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<IEffectRecord> _ObjectEffect = new FormLinkNullable<IEffectRecord>();
-        public IFormLinkNullable<IEffectRecord> ObjectEffect => this._ObjectEffect;
+        public FormLinkNullable<IEffectRecord> ObjectEffect { get; set; } = new FormLinkNullable<IEffectRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEffectRecordGetter> IWeaponGetter.ObjectEffect => this.ObjectEffect;
         #endregion
@@ -133,37 +131,27 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? IWeaponGetter.Destructible => this.Destructible;
         #endregion
         #region EquipmentType
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<EquipType> _EquipmentType = new FormLinkNullable<EquipType>();
-        public IFormLinkNullable<EquipType> EquipmentType => this._EquipmentType;
+        public FormLinkNullable<EquipType> EquipmentType { get; set; } = new FormLinkNullable<EquipType>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEquipTypeGetter> IWeaponGetter.EquipmentType => this.EquipmentType;
         #endregion
         #region BlockBashImpact
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<ImpactDataSet> _BlockBashImpact = new FormLinkNullable<ImpactDataSet>();
-        public IFormLinkNullable<ImpactDataSet> BlockBashImpact => this._BlockBashImpact;
+        public FormLinkNullable<ImpactDataSet> BlockBashImpact { get; set; } = new FormLinkNullable<ImpactDataSet>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IImpactDataSetGetter> IWeaponGetter.BlockBashImpact => this.BlockBashImpact;
         #endregion
         #region AlternateBlockMaterial
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<MaterialType> _AlternateBlockMaterial = new FormLinkNullable<MaterialType>();
-        public IFormLinkNullable<MaterialType> AlternateBlockMaterial => this._AlternateBlockMaterial;
+        public FormLinkNullable<MaterialType> AlternateBlockMaterial { get; set; } = new FormLinkNullable<MaterialType>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMaterialTypeGetter> IWeaponGetter.AlternateBlockMaterial => this.AlternateBlockMaterial;
         #endregion
         #region PickUpSound
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<SoundDescriptor> _PickUpSound = new FormLinkNullable<SoundDescriptor>();
-        public IFormLinkNullable<SoundDescriptor> PickUpSound => this._PickUpSound;
+        public FormLinkNullable<SoundDescriptor> PickUpSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWeaponGetter.PickUpSound => this.PickUpSound;
         #endregion
         #region PutDownSound
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<SoundDescriptor> _PutDownSound = new FormLinkNullable<SoundDescriptor>();
-        public IFormLinkNullable<SoundDescriptor> PutDownSound => this._PutDownSound;
+        public FormLinkNullable<SoundDescriptor> PutDownSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWeaponGetter.PutDownSound => this.PutDownSound;
         #endregion
@@ -215,65 +203,47 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IWeaponGetter.Unused => this.Unused;
         #endregion
         #region ImpactDataSet
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<ImpactDataSet> _ImpactDataSet = new FormLinkNullable<ImpactDataSet>();
-        public IFormLinkNullable<ImpactDataSet> ImpactDataSet => this._ImpactDataSet;
+        public FormLinkNullable<ImpactDataSet> ImpactDataSet { get; set; } = new FormLinkNullable<ImpactDataSet>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IImpactDataSetGetter> IWeaponGetter.ImpactDataSet => this.ImpactDataSet;
         #endregion
         #region FirstPersonModel
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<Static> _FirstPersonModel = new FormLinkNullable<Static>();
-        public IFormLinkNullable<Static> FirstPersonModel => this._FirstPersonModel;
+        public FormLinkNullable<Static> FirstPersonModel { get; set; } = new FormLinkNullable<Static>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IStaticGetter> IWeaponGetter.FirstPersonModel => this.FirstPersonModel;
         #endregion
         #region AttackSound
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<SoundDescriptor> _AttackSound = new FormLinkNullable<SoundDescriptor>();
-        public IFormLinkNullable<SoundDescriptor> AttackSound => this._AttackSound;
+        public FormLinkNullable<SoundDescriptor> AttackSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWeaponGetter.AttackSound => this.AttackSound;
         #endregion
         #region AttackSound2D
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<SoundDescriptor> _AttackSound2D = new FormLinkNullable<SoundDescriptor>();
-        public IFormLinkNullable<SoundDescriptor> AttackSound2D => this._AttackSound2D;
+        public FormLinkNullable<SoundDescriptor> AttackSound2D { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWeaponGetter.AttackSound2D => this.AttackSound2D;
         #endregion
         #region AttackLoopSound
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<SoundDescriptor> _AttackLoopSound = new FormLinkNullable<SoundDescriptor>();
-        public IFormLinkNullable<SoundDescriptor> AttackLoopSound => this._AttackLoopSound;
+        public FormLinkNullable<SoundDescriptor> AttackLoopSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWeaponGetter.AttackLoopSound => this.AttackLoopSound;
         #endregion
         #region AttackFailSound
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<SoundDescriptor> _AttackFailSound = new FormLinkNullable<SoundDescriptor>();
-        public IFormLinkNullable<SoundDescriptor> AttackFailSound => this._AttackFailSound;
+        public FormLinkNullable<SoundDescriptor> AttackFailSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWeaponGetter.AttackFailSound => this.AttackFailSound;
         #endregion
         #region IdleSound
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<SoundDescriptor> _IdleSound = new FormLinkNullable<SoundDescriptor>();
-        public IFormLinkNullable<SoundDescriptor> IdleSound => this._IdleSound;
+        public FormLinkNullable<SoundDescriptor> IdleSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWeaponGetter.IdleSound => this.IdleSound;
         #endregion
         #region EquipSound
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<SoundDescriptor> _EquipSound = new FormLinkNullable<SoundDescriptor>();
-        public IFormLinkNullable<SoundDescriptor> EquipSound => this._EquipSound;
+        public FormLinkNullable<SoundDescriptor> EquipSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWeaponGetter.EquipSound => this.EquipSound;
         #endregion
         #region UnequipSound
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<SoundDescriptor> _UnequipSound = new FormLinkNullable<SoundDescriptor>();
-        public IFormLinkNullable<SoundDescriptor> UnequipSound => this._UnequipSound;
+        public FormLinkNullable<SoundDescriptor> UnequipSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IWeaponGetter.UnequipSound => this.UnequipSound;
         #endregion
@@ -322,9 +292,7 @@ namespace Mutagen.Bethesda.Skyrim
         SoundLevel? IWeaponGetter.DetectionSoundLevel => this.DetectionSoundLevel;
         #endregion
         #region Template
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<Weapon> _Template = new FormLinkNullable<Weapon>();
-        public IFormLinkNullable<Weapon> Template => this._Template;
+        public FormLinkNullable<Weapon> Template { get; set; } = new FormLinkNullable<Weapon>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IWeaponGetter> IWeaponGetter.Template => this.Template;
         #endregion
@@ -1847,32 +1815,32 @@ namespace Mutagen.Bethesda.Skyrim
         new String? Name { get; set; }
         new Model? Model { get; set; }
         new Icons? Icons { get; set; }
-        new IFormLinkNullable<IEffectRecord> ObjectEffect { get; }
+        new FormLinkNullable<IEffectRecord> ObjectEffect { get; set; }
         new UInt16? EnchantmentAmount { get; set; }
         new Destructible? Destructible { get; set; }
-        new IFormLinkNullable<EquipType> EquipmentType { get; }
-        new IFormLinkNullable<ImpactDataSet> BlockBashImpact { get; }
-        new IFormLinkNullable<MaterialType> AlternateBlockMaterial { get; }
-        new IFormLinkNullable<SoundDescriptor> PickUpSound { get; }
-        new IFormLinkNullable<SoundDescriptor> PutDownSound { get; }
+        new FormLinkNullable<EquipType> EquipmentType { get; set; }
+        new FormLinkNullable<ImpactDataSet> BlockBashImpact { get; set; }
+        new FormLinkNullable<MaterialType> AlternateBlockMaterial { get; set; }
+        new FormLinkNullable<SoundDescriptor> PickUpSound { get; set; }
+        new FormLinkNullable<SoundDescriptor> PutDownSound { get; set; }
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new String? Description { get; set; }
         new Model? ScopeModel { get; set; }
         new Byte[]? Unused { get; set; }
-        new IFormLinkNullable<ImpactDataSet> ImpactDataSet { get; }
-        new IFormLinkNullable<Static> FirstPersonModel { get; }
-        new IFormLinkNullable<SoundDescriptor> AttackSound { get; }
-        new IFormLinkNullable<SoundDescriptor> AttackSound2D { get; }
-        new IFormLinkNullable<SoundDescriptor> AttackLoopSound { get; }
-        new IFormLinkNullable<SoundDescriptor> AttackFailSound { get; }
-        new IFormLinkNullable<SoundDescriptor> IdleSound { get; }
-        new IFormLinkNullable<SoundDescriptor> EquipSound { get; }
-        new IFormLinkNullable<SoundDescriptor> UnequipSound { get; }
+        new FormLinkNullable<ImpactDataSet> ImpactDataSet { get; set; }
+        new FormLinkNullable<Static> FirstPersonModel { get; set; }
+        new FormLinkNullable<SoundDescriptor> AttackSound { get; set; }
+        new FormLinkNullable<SoundDescriptor> AttackSound2D { get; set; }
+        new FormLinkNullable<SoundDescriptor> AttackLoopSound { get; set; }
+        new FormLinkNullable<SoundDescriptor> AttackFailSound { get; set; }
+        new FormLinkNullable<SoundDescriptor> IdleSound { get; set; }
+        new FormLinkNullable<SoundDescriptor> EquipSound { get; set; }
+        new FormLinkNullable<SoundDescriptor> UnequipSound { get; set; }
         new WeaponBasicStats? BasicStats { get; set; }
         new WeaponData? Data { get; set; }
         new CriticalData? Critical { get; set; }
         new SoundLevel? DetectionSoundLevel { get; set; }
-        new IFormLinkNullable<Weapon> Template { get; }
+        new FormLinkNullable<Weapon> Template { get; set; }
         #region Mutagen
         new Weapon.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -2682,21 +2650,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weapon_FieldIndex.Icons:
                     return typeof(Icons);
                 case Weapon_FieldIndex.ObjectEffect:
-                    return typeof(IFormLinkNullable<IEffectRecord>);
+                    return typeof(FormLinkNullable<IEffectRecord>);
                 case Weapon_FieldIndex.EnchantmentAmount:
                     return typeof(UInt16);
                 case Weapon_FieldIndex.Destructible:
                     return typeof(Destructible);
                 case Weapon_FieldIndex.EquipmentType:
-                    return typeof(IFormLinkNullable<EquipType>);
+                    return typeof(FormLinkNullable<EquipType>);
                 case Weapon_FieldIndex.BlockBashImpact:
-                    return typeof(IFormLinkNullable<ImpactDataSet>);
+                    return typeof(FormLinkNullable<ImpactDataSet>);
                 case Weapon_FieldIndex.AlternateBlockMaterial:
-                    return typeof(IFormLinkNullable<MaterialType>);
+                    return typeof(FormLinkNullable<MaterialType>);
                 case Weapon_FieldIndex.PickUpSound:
-                    return typeof(IFormLinkNullable<SoundDescriptor>);
+                    return typeof(FormLinkNullable<SoundDescriptor>);
                 case Weapon_FieldIndex.PutDownSound:
-                    return typeof(IFormLinkNullable<SoundDescriptor>);
+                    return typeof(FormLinkNullable<SoundDescriptor>);
                 case Weapon_FieldIndex.Keywords:
                     return typeof(ExtendedList<IFormLink<Keyword>>);
                 case Weapon_FieldIndex.Description:
@@ -2706,23 +2674,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weapon_FieldIndex.Unused:
                     return typeof(Byte[]);
                 case Weapon_FieldIndex.ImpactDataSet:
-                    return typeof(IFormLinkNullable<ImpactDataSet>);
+                    return typeof(FormLinkNullable<ImpactDataSet>);
                 case Weapon_FieldIndex.FirstPersonModel:
-                    return typeof(IFormLinkNullable<Static>);
+                    return typeof(FormLinkNullable<Static>);
                 case Weapon_FieldIndex.AttackSound:
-                    return typeof(IFormLinkNullable<SoundDescriptor>);
+                    return typeof(FormLinkNullable<SoundDescriptor>);
                 case Weapon_FieldIndex.AttackSound2D:
-                    return typeof(IFormLinkNullable<SoundDescriptor>);
+                    return typeof(FormLinkNullable<SoundDescriptor>);
                 case Weapon_FieldIndex.AttackLoopSound:
-                    return typeof(IFormLinkNullable<SoundDescriptor>);
+                    return typeof(FormLinkNullable<SoundDescriptor>);
                 case Weapon_FieldIndex.AttackFailSound:
-                    return typeof(IFormLinkNullable<SoundDescriptor>);
+                    return typeof(FormLinkNullable<SoundDescriptor>);
                 case Weapon_FieldIndex.IdleSound:
-                    return typeof(IFormLinkNullable<SoundDescriptor>);
+                    return typeof(FormLinkNullable<SoundDescriptor>);
                 case Weapon_FieldIndex.EquipSound:
-                    return typeof(IFormLinkNullable<SoundDescriptor>);
+                    return typeof(FormLinkNullable<SoundDescriptor>);
                 case Weapon_FieldIndex.UnequipSound:
-                    return typeof(IFormLinkNullable<SoundDescriptor>);
+                    return typeof(FormLinkNullable<SoundDescriptor>);
                 case Weapon_FieldIndex.BasicStats:
                     return typeof(WeaponBasicStats);
                 case Weapon_FieldIndex.Data:
@@ -2732,7 +2700,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weapon_FieldIndex.DetectionSoundLevel:
                     return typeof(SoundLevel);
                 case Weapon_FieldIndex.Template:
-                    return typeof(IFormLinkNullable<Weapon>);
+                    return typeof(FormLinkNullable<Weapon>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -2834,32 +2802,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Name = default;
             item.Model = null;
             item.Icons = null;
-            item.ObjectEffect.FormKey = null;
+            item.ObjectEffect = null;
             item.EnchantmentAmount = default;
             item.Destructible = null;
-            item.EquipmentType.FormKey = null;
-            item.BlockBashImpact.FormKey = null;
-            item.AlternateBlockMaterial.FormKey = null;
-            item.PickUpSound.FormKey = null;
-            item.PutDownSound.FormKey = null;
+            item.EquipmentType = null;
+            item.BlockBashImpact = null;
+            item.AlternateBlockMaterial = null;
+            item.PickUpSound = null;
+            item.PutDownSound = null;
             item.Keywords = null;
             item.Description = default;
             item.ScopeModel = null;
             item.Unused = default;
-            item.ImpactDataSet.FormKey = null;
-            item.FirstPersonModel.FormKey = null;
-            item.AttackSound.FormKey = null;
-            item.AttackSound2D.FormKey = null;
-            item.AttackLoopSound.FormKey = null;
-            item.AttackFailSound.FormKey = null;
-            item.IdleSound.FormKey = null;
-            item.EquipSound.FormKey = null;
-            item.UnequipSound.FormKey = null;
+            item.ImpactDataSet = null;
+            item.FirstPersonModel = null;
+            item.AttackSound = null;
+            item.AttackSound2D = null;
+            item.AttackLoopSound = null;
+            item.AttackFailSound = null;
+            item.IdleSound = null;
+            item.EquipSound = null;
+            item.UnequipSound = null;
             item.BasicStats = null;
             item.Data = null;
             item.Critical = null;
             item.DetectionSoundLevel = default;
-            item.Template.FormKey = null;
+            item.Template = null;
             base.Clear(item);
         }
         
@@ -3009,7 +2977,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D544945: // EITM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.ObjectEffect.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.ObjectEffect = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.ObjectEffect);
@@ -3032,7 +3000,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x50595445: // ETYP
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.EquipmentType.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.EquipmentType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.EquipmentType);
@@ -3040,7 +3008,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x53444942: // BIDS
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.BlockBashImpact.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.BlockBashImpact = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.BlockBashImpact);
@@ -3048,7 +3016,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x544D4142: // BAMT
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.AlternateBlockMaterial.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.AlternateBlockMaterial = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AlternateBlockMaterial);
@@ -3056,7 +3024,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E59: // YNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.PickUpSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.PickUpSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.PickUpSound);
@@ -3064,7 +3032,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E5A: // ZNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.PutDownSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.PutDownSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.PutDownSound);
@@ -3106,7 +3074,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E49: // INAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.ImpactDataSet.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.ImpactDataSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.ImpactDataSet);
@@ -3114,7 +3082,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E57: // WNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.FirstPersonModel.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.FirstPersonModel = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.FirstPersonModel);
@@ -3122,7 +3090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E53: // SNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.AttackSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.AttackSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackSound);
@@ -3130,7 +3098,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E58: // XNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.AttackSound2D.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.AttackSound2D = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackSound2D);
@@ -3138,7 +3106,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x374D414E: // NAM7
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.AttackLoopSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.AttackLoopSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackLoopSound);
@@ -3146,7 +3114,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E54: // TNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.AttackFailSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.AttackFailSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackFailSound);
@@ -3154,7 +3122,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E55: // UNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.IdleSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.IdleSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.IdleSound);
@@ -3162,7 +3130,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x394D414E: // NAM9
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.EquipSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.EquipSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.EquipSound);
@@ -3170,7 +3138,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x384D414E: // NAM8
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.UnequipSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.UnequipSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.UnequipSound);
@@ -3199,7 +3167,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E43: // CNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.Template.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Template = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Template);
@@ -4167,7 +4135,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.ObjectEffect) ?? true))
             {
-                item.ObjectEffect.FormKey = rhs.ObjectEffect.FormKey;
+                item.ObjectEffect = rhs.ObjectEffect.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.EnchantmentAmount) ?? true))
             {
@@ -4201,23 +4169,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.EquipmentType) ?? true))
             {
-                item.EquipmentType.FormKey = rhs.EquipmentType.FormKey;
+                item.EquipmentType = rhs.EquipmentType.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.BlockBashImpact) ?? true))
             {
-                item.BlockBashImpact.FormKey = rhs.BlockBashImpact.FormKey;
+                item.BlockBashImpact = rhs.BlockBashImpact.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.AlternateBlockMaterial) ?? true))
             {
-                item.AlternateBlockMaterial.FormKey = rhs.AlternateBlockMaterial.FormKey;
+                item.AlternateBlockMaterial = rhs.AlternateBlockMaterial.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.PickUpSound) ?? true))
             {
-                item.PickUpSound.FormKey = rhs.PickUpSound.FormKey;
+                item.PickUpSound = rhs.PickUpSound.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.PutDownSound) ?? true))
             {
-                item.PutDownSound.FormKey = rhs.PutDownSound.FormKey;
+                item.PutDownSound = rhs.PutDownSound.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Keywords) ?? true))
             {
@@ -4289,39 +4257,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.ImpactDataSet) ?? true))
             {
-                item.ImpactDataSet.FormKey = rhs.ImpactDataSet.FormKey;
+                item.ImpactDataSet = rhs.ImpactDataSet.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.FirstPersonModel) ?? true))
             {
-                item.FirstPersonModel.FormKey = rhs.FirstPersonModel.FormKey;
+                item.FirstPersonModel = rhs.FirstPersonModel.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.AttackSound) ?? true))
             {
-                item.AttackSound.FormKey = rhs.AttackSound.FormKey;
+                item.AttackSound = rhs.AttackSound.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.AttackSound2D) ?? true))
             {
-                item.AttackSound2D.FormKey = rhs.AttackSound2D.FormKey;
+                item.AttackSound2D = rhs.AttackSound2D.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.AttackLoopSound) ?? true))
             {
-                item.AttackLoopSound.FormKey = rhs.AttackLoopSound.FormKey;
+                item.AttackLoopSound = rhs.AttackLoopSound.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.AttackFailSound) ?? true))
             {
-                item.AttackFailSound.FormKey = rhs.AttackFailSound.FormKey;
+                item.AttackFailSound = rhs.AttackFailSound.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.IdleSound) ?? true))
             {
-                item.IdleSound.FormKey = rhs.IdleSound.FormKey;
+                item.IdleSound = rhs.IdleSound.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.EquipSound) ?? true))
             {
-                item.EquipSound.FormKey = rhs.EquipSound.FormKey;
+                item.EquipSound = rhs.EquipSound.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.UnequipSound) ?? true))
             {
-                item.UnequipSound.FormKey = rhs.UnequipSound.FormKey;
+                item.UnequipSound = rhs.UnequipSound.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.BasicStats) ?? true))
             {
@@ -4407,7 +4375,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weapon_FieldIndex.Template) ?? true))
             {
-                item.Template.FormKey = rhs.Template.FormKey;
+                item.Template = rhs.Template.FormKey;
             }
         }
         
@@ -5108,7 +5076,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Weapon_FieldIndex.ObjectEffect);
                     try
                     {
-                        item.ObjectEffect.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.ObjectEffect = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5163,7 +5131,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Weapon_FieldIndex.EquipmentType);
                     try
                     {
-                        item.EquipmentType.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.EquipmentType = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5181,7 +5149,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Weapon_FieldIndex.BlockBashImpact);
                     try
                     {
-                        item.BlockBashImpact.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.BlockBashImpact = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5199,7 +5167,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Weapon_FieldIndex.AlternateBlockMaterial);
                     try
                     {
-                        item.AlternateBlockMaterial.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.AlternateBlockMaterial = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5217,7 +5185,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Weapon_FieldIndex.PickUpSound);
                     try
                     {
-                        item.PickUpSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.PickUpSound = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5235,7 +5203,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Weapon_FieldIndex.PutDownSound);
                     try
                     {
-                        item.PutDownSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.PutDownSound = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5336,7 +5304,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Weapon_FieldIndex.ImpactDataSet);
                     try
                     {
-                        item.ImpactDataSet.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.ImpactDataSet = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5354,7 +5322,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Weapon_FieldIndex.FirstPersonModel);
                     try
                     {
-                        item.FirstPersonModel.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.FirstPersonModel = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5372,7 +5340,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Weapon_FieldIndex.AttackSound);
                     try
                     {
-                        item.AttackSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.AttackSound = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5390,7 +5358,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Weapon_FieldIndex.AttackSound2D);
                     try
                     {
-                        item.AttackSound2D.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.AttackSound2D = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5408,7 +5376,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Weapon_FieldIndex.AttackLoopSound);
                     try
                     {
-                        item.AttackLoopSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.AttackLoopSound = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5426,7 +5394,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Weapon_FieldIndex.AttackFailSound);
                     try
                     {
-                        item.AttackFailSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.AttackFailSound = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5444,7 +5412,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Weapon_FieldIndex.IdleSound);
                     try
                     {
-                        item.IdleSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.IdleSound = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5462,7 +5430,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Weapon_FieldIndex.EquipSound);
                     try
                     {
-                        item.EquipSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.EquipSound = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5480,7 +5448,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Weapon_FieldIndex.UnequipSound);
                     try
                     {
-                        item.UnequipSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.UnequipSound = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5573,7 +5541,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Weapon_FieldIndex.Template);
                     try
                     {
-                        item.Template.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Template = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5990,7 +5958,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ObjectEffect
         private int? _ObjectEffectLocation;
         public bool ObjectEffect_IsSet => _ObjectEffectLocation.HasValue;
-        public IFormLinkNullableGetter<IEffectRecordGetter> ObjectEffect => _ObjectEffectLocation.HasValue ? new FormLinkNullable<IEffectRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ObjectEffectLocation.Value, _package.Meta)))) : FormLinkNullable<IEffectRecordGetter>.Empty;
+        public IFormLinkNullableGetter<IEffectRecordGetter> ObjectEffect => _ObjectEffectLocation.HasValue ? new FormLinkNullable<IEffectRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ObjectEffectLocation.Value, _package.Meta)))) : FormLinkNullable<IEffectRecordGetter>.Null;
         #endregion
         #region EnchantmentAmount
         private int? _EnchantmentAmountLocation;
@@ -6000,27 +5968,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region EquipmentType
         private int? _EquipmentTypeLocation;
         public bool EquipmentType_IsSet => _EquipmentTypeLocation.HasValue;
-        public IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType => _EquipmentTypeLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EquipmentTypeLocation.Value, _package.Meta)))) : FormLinkNullable<IEquipTypeGetter>.Empty;
+        public IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType => _EquipmentTypeLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EquipmentTypeLocation.Value, _package.Meta)))) : FormLinkNullable<IEquipTypeGetter>.Null;
         #endregion
         #region BlockBashImpact
         private int? _BlockBashImpactLocation;
         public bool BlockBashImpact_IsSet => _BlockBashImpactLocation.HasValue;
-        public IFormLinkNullableGetter<IImpactDataSetGetter> BlockBashImpact => _BlockBashImpactLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _BlockBashImpactLocation.Value, _package.Meta)))) : FormLinkNullable<IImpactDataSetGetter>.Empty;
+        public IFormLinkNullableGetter<IImpactDataSetGetter> BlockBashImpact => _BlockBashImpactLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _BlockBashImpactLocation.Value, _package.Meta)))) : FormLinkNullable<IImpactDataSetGetter>.Null;
         #endregion
         #region AlternateBlockMaterial
         private int? _AlternateBlockMaterialLocation;
         public bool AlternateBlockMaterial_IsSet => _AlternateBlockMaterialLocation.HasValue;
-        public IFormLinkNullableGetter<IMaterialTypeGetter> AlternateBlockMaterial => _AlternateBlockMaterialLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _AlternateBlockMaterialLocation.Value, _package.Meta)))) : FormLinkNullable<IMaterialTypeGetter>.Empty;
+        public IFormLinkNullableGetter<IMaterialTypeGetter> AlternateBlockMaterial => _AlternateBlockMaterialLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _AlternateBlockMaterialLocation.Value, _package.Meta)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
         #endregion
         #region PickUpSound
         private int? _PickUpSoundLocation;
         public bool PickUpSound_IsSet => _PickUpSoundLocation.HasValue;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PickUpSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Empty;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PickUpSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region PutDownSound
         private int? _PutDownSoundLocation;
         public bool PutDownSound_IsSet => _PutDownSoundLocation.HasValue;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PutDownSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Empty;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PutDownSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         #region Description
@@ -6035,47 +6003,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ImpactDataSet
         private int? _ImpactDataSetLocation;
         public bool ImpactDataSet_IsSet => _ImpactDataSetLocation.HasValue;
-        public IFormLinkNullableGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSetLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ImpactDataSetLocation.Value, _package.Meta)))) : FormLinkNullable<IImpactDataSetGetter>.Empty;
+        public IFormLinkNullableGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSetLocation.HasValue ? new FormLinkNullable<IImpactDataSetGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ImpactDataSetLocation.Value, _package.Meta)))) : FormLinkNullable<IImpactDataSetGetter>.Null;
         #endregion
         #region FirstPersonModel
         private int? _FirstPersonModelLocation;
         public bool FirstPersonModel_IsSet => _FirstPersonModelLocation.HasValue;
-        public IFormLinkNullableGetter<IStaticGetter> FirstPersonModel => _FirstPersonModelLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FirstPersonModelLocation.Value, _package.Meta)))) : FormLinkNullable<IStaticGetter>.Empty;
+        public IFormLinkNullableGetter<IStaticGetter> FirstPersonModel => _FirstPersonModelLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FirstPersonModelLocation.Value, _package.Meta)))) : FormLinkNullable<IStaticGetter>.Null;
         #endregion
         #region AttackSound
         private int? _AttackSoundLocation;
         public bool AttackSound_IsSet => _AttackSoundLocation.HasValue;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> AttackSound => _AttackSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _AttackSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Empty;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> AttackSound => _AttackSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _AttackSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region AttackSound2D
         private int? _AttackSound2DLocation;
         public bool AttackSound2D_IsSet => _AttackSound2DLocation.HasValue;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> AttackSound2D => _AttackSound2DLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _AttackSound2DLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Empty;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> AttackSound2D => _AttackSound2DLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _AttackSound2DLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region AttackLoopSound
         private int? _AttackLoopSoundLocation;
         public bool AttackLoopSound_IsSet => _AttackLoopSoundLocation.HasValue;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> AttackLoopSound => _AttackLoopSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _AttackLoopSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Empty;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> AttackLoopSound => _AttackLoopSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _AttackLoopSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region AttackFailSound
         private int? _AttackFailSoundLocation;
         public bool AttackFailSound_IsSet => _AttackFailSoundLocation.HasValue;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> AttackFailSound => _AttackFailSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _AttackFailSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Empty;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> AttackFailSound => _AttackFailSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _AttackFailSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region IdleSound
         private int? _IdleSoundLocation;
         public bool IdleSound_IsSet => _IdleSoundLocation.HasValue;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> IdleSound => _IdleSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IdleSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Empty;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> IdleSound => _IdleSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IdleSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region EquipSound
         private int? _EquipSoundLocation;
         public bool EquipSound_IsSet => _EquipSoundLocation.HasValue;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> EquipSound => _EquipSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EquipSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Empty;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> EquipSound => _EquipSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EquipSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region UnequipSound
         private int? _UnequipSoundLocation;
         public bool UnequipSound_IsSet => _UnequipSoundLocation.HasValue;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> UnequipSound => _UnequipSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _UnequipSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Empty;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> UnequipSound => _UnequipSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _UnequipSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region BasicStats
         private RangeInt32? _BasicStatsLocation;
@@ -6099,7 +6067,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Template
         private int? _TemplateLocation;
         public bool Template_IsSet => _TemplateLocation.HasValue;
-        public IFormLinkNullableGetter<IWeaponGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<IWeaponGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TemplateLocation.Value, _package.Meta)))) : FormLinkNullable<IWeaponGetter>.Empty;
+        public IFormLinkNullableGetter<IWeaponGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<IWeaponGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TemplateLocation.Value, _package.Meta)))) : FormLinkNullable<IWeaponGetter>.Null;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

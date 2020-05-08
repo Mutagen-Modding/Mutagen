@@ -49,9 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
         public MagicEffect.SoundType Type { get; set; } = default;
         #endregion
         #region Sound
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<SoundDescriptor> _Sound = new FormLink<SoundDescriptor>();
-        public IFormLink<SoundDescriptor> Sound => this._Sound;
+        public FormLink<SoundDescriptor> Sound { get; set; } = new FormLink<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundDescriptorGetter> IMagicEffectSoundGetter.Sound => this.Sound;
         #endregion
@@ -583,7 +581,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IMagicEffectSound>
     {
         new MagicEffect.SoundType Type { get; set; }
-        new IFormLink<SoundDescriptor> Sound { get; }
+        new FormLink<SoundDescriptor> Sound { get; set; }
     }
 
     public partial interface IMagicEffectSoundGetter :
@@ -1066,7 +1064,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MagicEffectSound_FieldIndex.Type:
                     return typeof(MagicEffect.SoundType);
                 case MagicEffectSound_FieldIndex.Sound:
-                    return typeof(IFormLink<SoundDescriptor>);
+                    return typeof(FormLink<SoundDescriptor>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1118,7 +1116,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Type = default;
-            item.Sound.FormKey = FormKey.Null;
+            item.Sound = new FormLink<SoundDescriptor>(FormKey.Null);
         }
         
         #region Xml Translation
@@ -1155,7 +1153,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.Type = EnumBinaryTranslation<MagicEffect.SoundType>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Sound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Sound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
         }
@@ -1329,7 +1327,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectSound_FieldIndex.Sound) ?? true))
             {
-                item.Sound.FormKey = rhs.Sound.FormKey;
+                item.Sound = rhs.Sound.FormKey;
             }
         }
         
@@ -1566,7 +1564,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)MagicEffectSound_FieldIndex.Sound);
                     try
                     {
-                        item.Sound.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Sound = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

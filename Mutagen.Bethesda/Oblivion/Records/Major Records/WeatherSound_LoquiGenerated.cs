@@ -46,9 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Sound
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<Sound> _Sound = new FormLink<Sound>();
-        public IFormLink<Sound> Sound => this._Sound;
+        public FormLink<Sound> Sound { get; set; } = new FormLink<Sound>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundGetter> IWeatherSoundGetter.Sound => this.Sound;
         #endregion
@@ -583,7 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
         IWeatherSoundGetter,
         ILoquiObjectSetter<IWeatherSound>
     {
-        new IFormLink<Sound> Sound { get; }
+        new FormLink<Sound> Sound { get; set; }
         new WeatherSound.SoundType Type { get; set; }
     }
 
@@ -1065,7 +1063,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case WeatherSound_FieldIndex.Sound:
-                    return typeof(IFormLink<Sound>);
+                    return typeof(FormLink<Sound>);
                 case WeatherSound_FieldIndex.Type:
                     return typeof(WeatherSound.SoundType);
                 default:
@@ -1120,7 +1118,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IWeatherSound item)
         {
             ClearPartial();
-            item.Sound.FormKey = FormKey.Null;
+            item.Sound = new FormLink<Sound>(FormKey.Null);
             item.Type = default;
         }
         
@@ -1157,7 +1155,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeatherSound item,
             MutagenFrame frame)
         {
-            item.Sound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Sound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
             item.Type = EnumBinaryTranslation<WeatherSound.SoundType>.Instance.Parse(frame: frame.SpawnWithLength(4));
@@ -1331,7 +1329,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)WeatherSound_FieldIndex.Sound) ?? true))
             {
-                item.Sound.FormKey = rhs.Sound.FormKey;
+                item.Sound = rhs.Sound.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)WeatherSound_FieldIndex.Type) ?? true))
             {
@@ -1554,7 +1552,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)WeatherSound_FieldIndex.Sound);
                     try
                     {
-                        item.Sound.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Sound = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

@@ -129,9 +129,7 @@ namespace Mutagen.Bethesda.Skyrim
         Int32? ITalkingActivatorGetter.Unknown => this.Unknown;
         #endregion
         #region LoopingSound
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<SoundMarker> _LoopingSound = new FormLinkNullable<SoundMarker>();
-        public IFormLinkNullable<SoundMarker> LoopingSound => this._LoopingSound;
+        public FormLinkNullable<SoundMarker> LoopingSound { get; set; } = new FormLinkNullable<SoundMarker>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundMarkerGetter> ITalkingActivatorGetter.LoopingSound => this.LoopingSound;
         #endregion
@@ -147,9 +145,7 @@ namespace Mutagen.Bethesda.Skyrim
         Int16? ITalkingActivatorGetter.Unknown2 => this.Unknown2;
         #endregion
         #region VoiceType
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<VoiceType> _VoiceType = new FormLinkNullable<VoiceType>();
-        public IFormLinkNullable<VoiceType> VoiceType => this._VoiceType;
+        public FormLinkNullable<VoiceType> VoiceType { get; set; } = new FormLinkNullable<VoiceType>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IVoiceTypeGetter> ITalkingActivatorGetter.VoiceType => this.VoiceType;
         #endregion
@@ -1043,9 +1039,9 @@ namespace Mutagen.Bethesda.Skyrim
         new Destructible? Destructible { get; set; }
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new Int32? Unknown { get; set; }
-        new IFormLinkNullable<SoundMarker> LoopingSound { get; }
+        new FormLinkNullable<SoundMarker> LoopingSound { get; set; }
         new Int16? Unknown2 { get; set; }
-        new IFormLinkNullable<VoiceType> VoiceType { get; }
+        new FormLinkNullable<VoiceType> VoiceType { get; set; }
         #region Mutagen
         new TalkingActivator.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1625,11 +1621,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case TalkingActivator_FieldIndex.Unknown:
                     return typeof(Int32);
                 case TalkingActivator_FieldIndex.LoopingSound:
-                    return typeof(IFormLinkNullable<SoundMarker>);
+                    return typeof(FormLinkNullable<SoundMarker>);
                 case TalkingActivator_FieldIndex.Unknown2:
                     return typeof(Int16);
                 case TalkingActivator_FieldIndex.VoiceType:
-                    return typeof(IFormLinkNullable<VoiceType>);
+                    return typeof(FormLinkNullable<VoiceType>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1702,9 +1698,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Destructible = null;
             item.Keywords = null;
             item.Unknown = default;
-            item.LoopingSound.FormKey = null;
+            item.LoopingSound = null;
             item.Unknown2 = default;
-            item.VoiceType.FormKey = null;
+            item.VoiceType = null;
             base.Clear(item);
         }
         
@@ -1875,7 +1871,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x52444E53: // SNDR
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.LoopingSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.LoopingSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.LoopingSound);
@@ -1889,7 +1885,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E56: // VNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.VoiceType.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.VoiceType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)TalkingActivator_FieldIndex.VoiceType);
@@ -2515,7 +2511,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.LoopingSound) ?? true))
             {
-                item.LoopingSound.FormKey = rhs.LoopingSound.FormKey;
+                item.LoopingSound = rhs.LoopingSound.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.Unknown2) ?? true))
             {
@@ -2523,7 +2519,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)TalkingActivator_FieldIndex.VoiceType) ?? true))
             {
-                item.VoiceType.FormKey = rhs.VoiceType.FormKey;
+                item.VoiceType = rhs.VoiceType.FormKey;
             }
         }
         
@@ -3040,7 +3036,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)TalkingActivator_FieldIndex.LoopingSound);
                     try
                     {
-                        item.LoopingSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.LoopingSound = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3076,7 +3072,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)TalkingActivator_FieldIndex.VoiceType);
                     try
                     {
-                        item.VoiceType.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.VoiceType = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3397,7 +3393,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region LoopingSound
         private int? _LoopingSoundLocation;
         public bool LoopingSound_IsSet => _LoopingSoundLocation.HasValue;
-        public IFormLinkNullableGetter<ISoundMarkerGetter> LoopingSound => _LoopingSoundLocation.HasValue ? new FormLinkNullable<ISoundMarkerGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LoopingSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundMarkerGetter>.Empty;
+        public IFormLinkNullableGetter<ISoundMarkerGetter> LoopingSound => _LoopingSoundLocation.HasValue ? new FormLinkNullable<ISoundMarkerGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LoopingSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundMarkerGetter>.Null;
         #endregion
         #region Unknown2
         private int? _Unknown2Location;
@@ -3406,7 +3402,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region VoiceType
         private int? _VoiceTypeLocation;
         public bool VoiceType_IsSet => _VoiceTypeLocation.HasValue;
-        public IFormLinkNullableGetter<IVoiceTypeGetter> VoiceType => _VoiceTypeLocation.HasValue ? new FormLinkNullable<IVoiceTypeGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VoiceTypeLocation.Value, _package.Meta)))) : FormLinkNullable<IVoiceTypeGetter>.Empty;
+        public IFormLinkNullableGetter<IVoiceTypeGetter> VoiceType => _VoiceTypeLocation.HasValue ? new FormLinkNullable<IVoiceTypeGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _VoiceTypeLocation.Value, _package.Meta)))) : FormLinkNullable<IVoiceTypeGetter>.Null;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

@@ -48,9 +48,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Reference
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<OblivionMajorRecord> _Reference = new FormLink<OblivionMajorRecord>();
-        public IFormLink<OblivionMajorRecord> Reference => this._Reference;
+        public FormLink<OblivionMajorRecord> Reference { get; set; } = new FormLink<OblivionMajorRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IOblivionMajorRecordGetter> IScriptObjectReferenceGetter.Reference => this.Reference;
         #endregion
@@ -536,7 +534,7 @@ namespace Mutagen.Bethesda.Oblivion
         IScriptReference,
         ILoquiObjectSetter<IScriptObjectReference>
     {
-        new IFormLink<OblivionMajorRecord> Reference { get; }
+        new FormLink<OblivionMajorRecord> Reference { get; set; }
     }
 
     public partial interface IScriptObjectReferenceGetter :
@@ -977,7 +975,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptObjectReference_FieldIndex.Reference:
-                    return typeof(IFormLink<OblivionMajorRecord>);
+                    return typeof(FormLink<OblivionMajorRecord>);
                 default:
                     return ScriptReference_Registration.GetNthType(index);
             }
@@ -1030,7 +1028,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IScriptObjectReference item)
         {
             ClearPartial();
-            item.Reference.FormKey = FormKey.Null;
+            item.Reference = new FormLink<OblivionMajorRecord>(FormKey.Null);
             base.Clear(item);
         }
         
@@ -1102,7 +1100,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptObjectReference_FieldIndex.Reference) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.Reference.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Reference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)ScriptObjectReference_FieldIndex.Reference);
@@ -1325,7 +1323,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)ScriptObjectReference_FieldIndex.Reference) ?? true))
             {
-                item.Reference.FormKey = rhs.Reference.FormKey;
+                item.Reference = rhs.Reference.FormKey;
             }
         }
         
@@ -1536,7 +1534,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)ScriptObjectReference_FieldIndex.Reference);
                     try
                     {
-                        item.Reference.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Reference = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1756,7 +1754,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Reference
         private int? _ReferenceLocation;
         public bool Reference_IsSet => _ReferenceLocation.HasValue;
-        public IFormLinkGetter<IOblivionMajorRecordGetter> Reference => _ReferenceLocation.HasValue ? new FormLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ReferenceLocation.Value, _package.Meta)))) : FormLink<IOblivionMajorRecordGetter>.Empty;
+        public IFormLinkGetter<IOblivionMajorRecordGetter> Reference => _ReferenceLocation.HasValue ? new FormLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ReferenceLocation.Value, _package.Meta)))) : FormLink<IOblivionMajorRecordGetter>.Null;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

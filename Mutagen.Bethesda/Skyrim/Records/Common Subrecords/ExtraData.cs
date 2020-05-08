@@ -24,24 +24,27 @@ namespace Mutagen.Bethesda.Skyrim
                 FormID form = new FormID(BinaryPrimitives.ReadUInt32LittleEndian(span));
                 if (cache.IsOfRecordType<Npc>(form))
                 {
-                    var npcOwner = new NpcOwner();
-                    npcOwner.Npc.FormKey = FormKeyBinaryTranslation.Instance.Parse(span, masters);
-                    npcOwner.RawVariableData = BinaryPrimitives.ReadUInt32LittleEndian(span.Slice(4));
-                    return npcOwner;
+                    return new NpcOwner()
+                    {
+                        Npc = FormKeyBinaryTranslation.Instance.Parse(span, masters),
+                        RawVariableData = BinaryPrimitives.ReadUInt32LittleEndian(span.Slice(4))
+                    };
                 }
                 else if (cache.IsOfRecordType<Faction>(form))
                 {
-                    var factionOwner = new FactionOwner();
-                    factionOwner.Faction.FormKey = FormKeyBinaryTranslation.Instance.Parse(span, masters);
-                    factionOwner.RequiredRank = BinaryPrimitives.ReadInt32LittleEndian(span.Slice(4));
-                    return factionOwner;
+                    return new FactionOwner()
+                    {
+                        Faction = FormKeyBinaryTranslation.Instance.Parse(span, masters),
+                        RequiredRank = BinaryPrimitives.ReadInt32LittleEndian(span.Slice(4))
+                    };
                 }
                 else
                 {
-                    var noOwner = new NoOwner();
-                    noOwner.RawOwnerData = BinaryPrimitives.ReadUInt32LittleEndian(span);
-                    noOwner.Global.FormKey = FormKeyBinaryTranslation.Instance.Parse(span, masters);
-                    return noOwner;
+                    return new NoOwner()
+                    {
+                        RawOwnerData = BinaryPrimitives.ReadUInt32LittleEndian(span),
+                        Global = FormKeyBinaryTranslation.Instance.Parse(span, masters)
+                    };
                 }
             }
 

@@ -140,9 +140,7 @@ namespace Mutagen.Bethesda.Skyrim
         Furniture.Flag? IFurnitureGetter.Flags => this.Flags;
         #endregion
         #region InteractionKeyword
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<Keyword> _InteractionKeyword = new FormLinkNullable<Keyword>();
-        public IFormLinkNullable<Keyword> InteractionKeyword => this._InteractionKeyword;
+        public FormLinkNullable<Keyword> InteractionKeyword { get; set; } = new FormLinkNullable<Keyword>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IKeywordGetter> IFurnitureGetter.InteractionKeyword => this.InteractionKeyword;
         #endregion
@@ -158,9 +156,7 @@ namespace Mutagen.Bethesda.Skyrim
         IWorkbenchDataGetter? IFurnitureGetter.WorkbenchData => this.WorkbenchData;
         #endregion
         #region AssociatedSpell
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<Spell> _AssociatedSpell = new FormLinkNullable<Spell>();
-        public IFormLinkNullable<Spell> AssociatedSpell => this._AssociatedSpell;
+        public FormLinkNullable<Spell> AssociatedSpell { get; set; } = new FormLinkNullable<Spell>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISpellGetter> IFurnitureGetter.AssociatedSpell => this.AssociatedSpell;
         #endregion
@@ -1249,9 +1245,9 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new Byte[]? Unknown { get; set; }
         new Furniture.Flag? Flags { get; set; }
-        new IFormLinkNullable<Keyword> InteractionKeyword { get; }
+        new FormLinkNullable<Keyword> InteractionKeyword { get; set; }
         new WorkbenchData? WorkbenchData { get; set; }
-        new IFormLinkNullable<Spell> AssociatedSpell { get; }
+        new FormLinkNullable<Spell> AssociatedSpell { get; set; }
         new ExtendedList<FurnitureMarker>? Markers { get; set; }
         new String? ModelFilename { get; set; }
         #region Mutagen
@@ -1869,11 +1865,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Furniture_FieldIndex.Flags:
                     return typeof(Furniture.Flag);
                 case Furniture_FieldIndex.InteractionKeyword:
-                    return typeof(IFormLinkNullable<Keyword>);
+                    return typeof(FormLinkNullable<Keyword>);
                 case Furniture_FieldIndex.WorkbenchData:
                     return typeof(WorkbenchData);
                 case Furniture_FieldIndex.AssociatedSpell:
-                    return typeof(IFormLinkNullable<Spell>);
+                    return typeof(FormLinkNullable<Spell>);
                 case Furniture_FieldIndex.Markers:
                     return typeof(ExtendedList<FurnitureMarker>);
                 case Furniture_FieldIndex.ModelFilename:
@@ -1956,9 +1952,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Keywords = null;
             item.Unknown = default;
             item.Flags = default;
-            item.InteractionKeyword.FormKey = null;
+            item.InteractionKeyword = null;
             item.WorkbenchData = null;
-            item.AssociatedSpell.FormKey = null;
+            item.AssociatedSpell = null;
             item.Markers = null;
             item.ModelFilename = default;
             base.Clear(item);
@@ -2138,7 +2134,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E4B: // KNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.InteractionKeyword.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.InteractionKeyword = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.InteractionKeyword);
@@ -2158,7 +2154,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x314D414E: // NAM1
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.AssociatedSpell.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.AssociatedSpell = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Furniture_FieldIndex.AssociatedSpell);
@@ -2886,7 +2882,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.InteractionKeyword) ?? true))
             {
-                item.InteractionKeyword.FormKey = rhs.InteractionKeyword.FormKey;
+                item.InteractionKeyword = rhs.InteractionKeyword.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.WorkbenchData) ?? true))
             {
@@ -2916,7 +2912,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.AssociatedSpell) ?? true))
             {
-                item.AssociatedSpell.FormKey = rhs.AssociatedSpell.FormKey;
+                item.AssociatedSpell = rhs.AssociatedSpell.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.Markers) ?? true))
             {
@@ -3532,7 +3528,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Furniture_FieldIndex.InteractionKeyword);
                     try
                     {
-                        item.InteractionKeyword.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.InteractionKeyword = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3569,7 +3565,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Furniture_FieldIndex.AssociatedSpell);
                     try
                     {
-                        item.AssociatedSpell.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.AssociatedSpell = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -4067,7 +4063,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region InteractionKeyword
         private int? _InteractionKeywordLocation;
         public bool InteractionKeyword_IsSet => _InteractionKeywordLocation.HasValue;
-        public IFormLinkNullableGetter<IKeywordGetter> InteractionKeyword => _InteractionKeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _InteractionKeywordLocation.Value, _package.Meta)))) : FormLinkNullable<IKeywordGetter>.Empty;
+        public IFormLinkNullableGetter<IKeywordGetter> InteractionKeyword => _InteractionKeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _InteractionKeywordLocation.Value, _package.Meta)))) : FormLinkNullable<IKeywordGetter>.Null;
         #endregion
         #region Flags2
         partial void Flags2CustomParse(
@@ -4082,7 +4078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region AssociatedSpell
         private int? _AssociatedSpellLocation;
         public bool AssociatedSpell_IsSet => _AssociatedSpellLocation.HasValue;
-        public IFormLinkNullableGetter<ISpellGetter> AssociatedSpell => _AssociatedSpellLocation.HasValue ? new FormLinkNullable<ISpellGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _AssociatedSpellLocation.Value, _package.Meta)))) : FormLinkNullable<ISpellGetter>.Empty;
+        public IFormLinkNullableGetter<ISpellGetter> AssociatedSpell => _AssociatedSpellLocation.HasValue ? new FormLinkNullable<ISpellGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _AssociatedSpellLocation.Value, _package.Meta)))) : FormLinkNullable<ISpellGetter>.Null;
         #endregion
         #region DisabledMarkers
         partial void DisabledMarkersCustomParse(

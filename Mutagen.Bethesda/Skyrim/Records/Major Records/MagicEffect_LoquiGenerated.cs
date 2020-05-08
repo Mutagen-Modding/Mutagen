@@ -71,9 +71,7 @@ namespace Mutagen.Bethesda.Skyrim
         String? IMagicEffectGetter.Name => this.Name;
         #endregion
         #region MenuDisplayObject
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<Static> _MenuDisplayObject = new FormLinkNullable<Static>();
-        public IFormLinkNullable<Static> MenuDisplayObject => this._MenuDisplayObject;
+        public FormLinkNullable<Static> MenuDisplayObject { get; set; } = new FormLinkNullable<Static>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IStaticGetter> IMagicEffectGetter.MenuDisplayObject => this.MenuDisplayObject;
         #endregion
@@ -1208,7 +1206,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new String? Name { get; set; }
-        new IFormLinkNullable<Static> MenuDisplayObject { get; }
+        new FormLinkNullable<Static> MenuDisplayObject { get; set; }
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new MagicEffectData Data { get; set; }
         new ExtendedList<IFormLink<MagicEffect>>? CounterEffects { get; set; }
@@ -1763,7 +1761,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MagicEffect_FieldIndex.Name:
                     return typeof(String);
                 case MagicEffect_FieldIndex.MenuDisplayObject:
-                    return typeof(IFormLinkNullable<Static>);
+                    return typeof(FormLinkNullable<Static>);
                 case MagicEffect_FieldIndex.Keywords:
                     return typeof(ExtendedList<IFormLink<Keyword>>);
                 case MagicEffect_FieldIndex.Data:
@@ -1840,7 +1838,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.VirtualMachineAdapter = null;
             item.Name = default;
-            item.MenuDisplayObject.FormKey = null;
+            item.MenuDisplayObject = null;
             item.Keywords = null;
             item.Data.Clear();
             item.CounterEffects = null;
@@ -1977,7 +1975,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x424F444D: // MDOB
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.MenuDisplayObject.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.MenuDisplayObject = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.MenuDisplayObject);
@@ -2584,7 +2582,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MenuDisplayObject) ?? true))
             {
-                item.MenuDisplayObject.FormKey = rhs.MenuDisplayObject.FormKey;
+                item.MenuDisplayObject = rhs.MenuDisplayObject.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Keywords) ?? true))
             {
@@ -3148,7 +3146,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)MagicEffect_FieldIndex.MenuDisplayObject);
                     try
                     {
-                        item.MenuDisplayObject.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.MenuDisplayObject = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3635,7 +3633,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region MenuDisplayObject
         private int? _MenuDisplayObjectLocation;
         public bool MenuDisplayObject_IsSet => _MenuDisplayObjectLocation.HasValue;
-        public IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject => _MenuDisplayObjectLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MenuDisplayObjectLocation.Value, _package.Meta)))) : FormLinkNullable<IStaticGetter>.Empty;
+        public IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject => _MenuDisplayObjectLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MenuDisplayObjectLocation.Value, _package.Meta)))) : FormLinkNullable<IStaticGetter>.Null;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         #region Data

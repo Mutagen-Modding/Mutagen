@@ -51,9 +51,7 @@ namespace Mutagen.Bethesda.Skyrim
         public UInt32 RawOwnerData { get; set; } = default;
         #endregion
         #region Global
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<Global> _Global = new FormLink<Global>();
-        public IFormLink<Global> Global => this._Global;
+        public FormLink<Global> Global { get; set; } = new FormLink<Global>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IGlobalGetter> INoOwnerGetter.Global => this.Global;
         #endregion
@@ -574,7 +572,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INoOwner>
     {
         new UInt32 RawOwnerData { get; set; }
-        new IFormLink<Global> Global { get; }
+        new FormLink<Global> Global { get; set; }
     }
 
     public partial interface INoOwnerGetter :
@@ -1028,7 +1026,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case NoOwner_FieldIndex.RawOwnerData:
                     return typeof(UInt32);
                 case NoOwner_FieldIndex.Global:
-                    return typeof(IFormLink<Global>);
+                    return typeof(FormLink<Global>);
                 default:
                     return OwnerTarget_Registration.GetNthType(index);
             }
@@ -1080,7 +1078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.RawOwnerData = default;
-            item.Global.FormKey = FormKey.Null;
+            item.Global = new FormLink<Global>(FormKey.Null);
             base.Clear(item);
         }
         
@@ -1136,7 +1134,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.RawOwnerData = frame.ReadUInt32();
-            item.Global.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Global = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
         }
@@ -1365,7 +1363,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)NoOwner_FieldIndex.Global) ?? true))
             {
-                item.Global.FormKey = rhs.Global.FormKey;
+                item.Global = rhs.Global.FormKey;
             }
         }
         
@@ -1603,7 +1601,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)NoOwner_FieldIndex.Global);
                     try
                     {
-                        item.Global.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Global = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

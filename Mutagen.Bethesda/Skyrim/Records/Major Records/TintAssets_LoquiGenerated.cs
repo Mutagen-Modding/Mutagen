@@ -80,9 +80,7 @@ namespace Mutagen.Bethesda.Skyrim
         TintAssets.TintMaskType? ITintAssetsGetter.MaskType => this.MaskType;
         #endregion
         #region PresetDefault
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<ColorRecord> _PresetDefault = new FormLinkNullable<ColorRecord>();
-        public IFormLinkNullable<ColorRecord> PresetDefault => this._PresetDefault;
+        public FormLinkNullable<ColorRecord> PresetDefault { get; set; } = new FormLinkNullable<ColorRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IColorRecordGetter> ITintAssetsGetter.PresetDefault => this.PresetDefault;
         #endregion
@@ -790,7 +788,7 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt16? Index { get; set; }
         new String? FileName { get; set; }
         new TintAssets.TintMaskType? MaskType { get; set; }
-        new IFormLinkNullable<ColorRecord> PresetDefault { get; }
+        new FormLinkNullable<ColorRecord> PresetDefault { get; set; }
         new ExtendedList<TintPreset> Presets { get; }
     }
 
@@ -1313,7 +1311,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case TintAssets_FieldIndex.MaskType:
                     return typeof(TintAssets.TintMaskType);
                 case TintAssets_FieldIndex.PresetDefault:
-                    return typeof(IFormLinkNullable<ColorRecord>);
+                    return typeof(FormLinkNullable<ColorRecord>);
                 case TintAssets_FieldIndex.Presets:
                     return typeof(ExtendedList<TintPreset>);
                 default:
@@ -1393,7 +1391,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Index = default;
             item.FileName = default;
             item.MaskType = default;
-            item.PresetDefault.FormKey = null;
+            item.PresetDefault = null;
             item.Presets.Clear();
         }
         
@@ -1470,7 +1468,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.PresetDefault) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.PresetDefault.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.PresetDefault = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.PresetDefault);
@@ -1746,7 +1744,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)TintAssets_FieldIndex.PresetDefault) ?? true))
             {
-                item.PresetDefault.FormKey = rhs.PresetDefault.FormKey;
+                item.PresetDefault = rhs.PresetDefault.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)TintAssets_FieldIndex.Presets) ?? true))
             {
@@ -2087,7 +2085,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)TintAssets_FieldIndex.PresetDefault);
                     try
                     {
-                        item.PresetDefault.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.PresetDefault = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2468,7 +2466,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region PresetDefault
         private int? _PresetDefaultLocation;
         public bool PresetDefault_IsSet => _PresetDefaultLocation.HasValue;
-        public IFormLinkNullableGetter<IColorRecordGetter> PresetDefault => _PresetDefaultLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PresetDefaultLocation.Value, _package.Meta)))) : FormLinkNullable<IColorRecordGetter>.Empty;
+        public IFormLinkNullableGetter<IColorRecordGetter> PresetDefault => _PresetDefaultLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PresetDefaultLocation.Value, _package.Meta)))) : FormLinkNullable<IColorRecordGetter>.Null;
         #endregion
         public IReadOnlyList<ITintPresetGetter> Presets { get; private set; } = ListExt.Empty<TintPresetBinaryOverlay>();
         partial void CustomCtor(

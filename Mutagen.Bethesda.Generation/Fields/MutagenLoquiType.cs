@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Generation
                 case LoquiRefType.Interface:
                     if (deepCopy)
                     {
-                        fg.AppendLine($"{retAccessor}(r.DeepCopy() as {this.TypeName(getter: false, internalInterface: true)})!;");
+                        fg.AppendLine($"{retAccessor}(r.DeepCopy() as {this.TypeNameInternal(getter: false, internalInterface: true)})!;");
                     }
                     else
                     {

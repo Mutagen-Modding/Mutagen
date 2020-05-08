@@ -46,9 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Texture
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<LandTexture> _Texture = new FormLink<LandTexture>();
-        public IFormLink<LandTexture> Texture => this._Texture;
+        public FormLink<LandTexture> Texture { get; set; } = new FormLink<LandTexture>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILandTextureGetter> ILayerHeaderGetter.Texture => this.Texture;
         #endregion
@@ -620,7 +618,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILayerHeaderGetter,
         ILoquiObjectSetter<ILayerHeaderInternal>
     {
-        new IFormLink<LandTexture> Texture { get; }
+        new FormLink<LandTexture> Texture { get; set; }
         new AlphaLayer.QuadrantEnum Quadrant { get; set; }
     }
 
@@ -1121,7 +1119,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LayerHeader_FieldIndex.Texture:
-                    return typeof(IFormLink<LandTexture>);
+                    return typeof(FormLink<LandTexture>);
                 case LayerHeader_FieldIndex.Quadrant:
                     return typeof(AlphaLayer.QuadrantEnum);
                 case LayerHeader_FieldIndex.LayerNumber:
@@ -1178,7 +1176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(ILayerHeaderInternal item)
         {
             ClearPartial();
-            item.Texture.FormKey = FormKey.Null;
+            item.Texture = new FormLink<LandTexture>(FormKey.Null);
             item.Quadrant = default;
         }
         
@@ -1253,7 +1251,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILayerHeaderInternal item,
             MutagenFrame frame)
         {
-            item.Texture.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Texture = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
             item.Quadrant = EnumBinaryTranslation<AlphaLayer.QuadrantEnum>.Instance.Parse(frame: frame.SpawnWithLength(2));
@@ -1453,7 +1451,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LayerHeader_FieldIndex.Texture) ?? true))
             {
-                item.Texture.FormKey = rhs.Texture.FormKey;
+                item.Texture = rhs.Texture.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)LayerHeader_FieldIndex.Quadrant) ?? true))
             {
@@ -1685,7 +1683,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)LayerHeader_FieldIndex.Texture);
                     try
                     {
-                        item.Texture.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Texture = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

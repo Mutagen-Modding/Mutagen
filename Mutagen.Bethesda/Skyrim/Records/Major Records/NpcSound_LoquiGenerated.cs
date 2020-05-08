@@ -46,9 +46,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Sound
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<SoundDescriptor> _Sound = new FormLinkNullable<SoundDescriptor>();
-        public IFormLinkNullable<SoundDescriptor> Sound => this._Sound;
+        public FormLinkNullable<SoundDescriptor> Sound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> INpcSoundGetter.Sound => this.Sound;
         #endregion
@@ -590,7 +588,7 @@ namespace Mutagen.Bethesda.Skyrim
         INpcSoundGetter,
         ILoquiObjectSetter<INpcSound>
     {
-        new IFormLinkNullable<SoundDescriptor> Sound { get; }
+        new FormLinkNullable<SoundDescriptor> Sound { get; set; }
         new Byte? SoundChance { get; set; }
     }
 
@@ -1072,7 +1070,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case NpcSound_FieldIndex.Sound:
-                    return typeof(IFormLinkNullable<SoundDescriptor>);
+                    return typeof(FormLinkNullable<SoundDescriptor>);
                 case NpcSound_FieldIndex.SoundChance:
                     return typeof(Byte);
                 default:
@@ -1139,7 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(INpcSound item)
         {
             ClearPartial();
-            item.Sound.FormKey = null;
+            item.Sound = null;
             item.SoundChance = default;
         }
         
@@ -1193,7 +1191,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSound_FieldIndex.Sound) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.Sound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Sound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)NpcSound_FieldIndex.Sound);
@@ -1389,7 +1387,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)NpcSound_FieldIndex.Sound) ?? true))
             {
-                item.Sound.FormKey = rhs.Sound.FormKey;
+                item.Sound = rhs.Sound.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)NpcSound_FieldIndex.SoundChance) ?? true))
             {
@@ -1614,7 +1612,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)NpcSound_FieldIndex.Sound);
                     try
                     {
-                        item.Sound.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Sound = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1950,7 +1948,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Sound
         private int? _SoundLocation;
         public bool Sound_IsSet => _SoundLocation.HasValue;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Empty;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region SoundChance
         private int? _SoundChanceLocation;

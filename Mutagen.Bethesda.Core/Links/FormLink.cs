@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// A readonly singleton representing an unlinked FormLink
         /// </summary>
-        public static readonly IFormLinkGetter<TMajor> Empty = new FormLink<TMajor>();
+        public static readonly IFormLinkGetter<TMajor> Null = new FormLink<TMajor>();
 
         /// <summary>
         /// FormKey of the target record
@@ -167,6 +167,11 @@ namespace Mutagen.Bethesda
         {
             modKey = this.FormKey.ModKey;
             return true;
+        }
+
+        public static implicit operator FormLink<TMajor>(FormKey formKey)
+        {
+            return new FormLink<TMajor>(formKey);
         }
     }
 }

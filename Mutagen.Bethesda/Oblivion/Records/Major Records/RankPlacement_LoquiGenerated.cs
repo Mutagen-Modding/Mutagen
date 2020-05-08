@@ -46,9 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Faction
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<Faction> _Faction = new FormLink<Faction>();
-        public IFormLink<Faction> Faction => this._Faction;
+        public FormLink<Faction> Faction { get; set; } = new FormLink<Faction>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IFactionGetter> IRankPlacementGetter.Faction => this.Faction;
         #endregion
@@ -622,7 +620,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRankPlacementGetter,
         ILoquiObjectSetter<IRankPlacement>
     {
-        new IFormLink<Faction> Faction { get; }
+        new FormLink<Faction> Faction { get; set; }
         new Byte Rank { get; set; }
         new Byte[] Unused { get; set; }
     }
@@ -1116,7 +1114,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RankPlacement_FieldIndex.Faction:
-                    return typeof(IFormLink<Faction>);
+                    return typeof(FormLink<Faction>);
                 case RankPlacement_FieldIndex.Rank:
                     return typeof(Byte);
                 case RankPlacement_FieldIndex.Unused:
@@ -1173,7 +1171,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRankPlacement item)
         {
             ClearPartial();
-            item.Faction.FormKey = FormKey.Null;
+            item.Faction = new FormLink<Faction>(FormKey.Null);
             item.Rank = default;
             item.Unused = new byte[3];
         }
@@ -1211,7 +1209,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRankPlacement item,
             MutagenFrame frame)
         {
-            item.Faction.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Faction = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
             item.Rank = frame.ReadUInt8();
@@ -1394,7 +1392,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RankPlacement_FieldIndex.Faction) ?? true))
             {
-                item.Faction.FormKey = rhs.Faction.FormKey;
+                item.Faction = rhs.Faction.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)RankPlacement_FieldIndex.Rank) ?? true))
             {
@@ -1630,7 +1628,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)RankPlacement_FieldIndex.Faction);
                     try
                     {
-                        item.Faction.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Faction = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

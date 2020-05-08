@@ -60,9 +60,7 @@ namespace Mutagen.Bethesda.Oblivion
         IModelGetter? IAnimatedObjectGetter.Model => this.Model;
         #endregion
         #region IdleAnimation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<IdleAnimation> _IdleAnimation = new FormLinkNullable<IdleAnimation>();
-        public IFormLinkNullable<IdleAnimation> IdleAnimation => this._IdleAnimation;
+        public FormLinkNullable<IdleAnimation> IdleAnimation { get; set; } = new FormLinkNullable<IdleAnimation>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IIdleAnimationGetter> IAnimatedObjectGetter.IdleAnimation => this.IdleAnimation;
         #endregion
@@ -619,7 +617,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IAnimatedObjectInternal>
     {
         new Model? Model { get; set; }
-        new IFormLinkNullable<IdleAnimation> IdleAnimation { get; }
+        new FormLinkNullable<IdleAnimation> IdleAnimation { get; set; }
     }
 
     public partial interface IAnimatedObjectInternal :
@@ -1086,7 +1084,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case AnimatedObject_FieldIndex.Model:
                     return typeof(Model);
                 case AnimatedObject_FieldIndex.IdleAnimation:
-                    return typeof(IFormLinkNullable<IdleAnimation>);
+                    return typeof(FormLinkNullable<IdleAnimation>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }
@@ -1142,7 +1140,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.Model = null;
-            item.IdleAnimation.FormKey = null;
+            item.IdleAnimation = null;
             base.Clear(item);
         }
         
@@ -1267,7 +1265,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x41544144: // DATA
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.IdleAnimation.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.IdleAnimation = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)AnimatedObject_FieldIndex.IdleAnimation);
@@ -1625,7 +1623,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AnimatedObject_FieldIndex.IdleAnimation) ?? true))
             {
-                item.IdleAnimation.FormKey = rhs.IdleAnimation.FormKey;
+                item.IdleAnimation = rhs.IdleAnimation.FormKey;
             }
         }
         
@@ -1923,7 +1921,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)AnimatedObject_FieldIndex.IdleAnimation);
                     try
                     {
-                        item.IdleAnimation.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.IdleAnimation = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2175,7 +2173,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region IdleAnimation
         private int? _IdleAnimationLocation;
         public bool IdleAnimation_IsSet => _IdleAnimationLocation.HasValue;
-        public IFormLinkNullableGetter<IIdleAnimationGetter> IdleAnimation => _IdleAnimationLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IdleAnimationLocation.Value, _package.Meta)))) : FormLinkNullable<IIdleAnimationGetter>.Empty;
+        public IFormLinkNullableGetter<IIdleAnimationGetter> IdleAnimation => _IdleAnimationLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IdleAnimationLocation.Value, _package.Meta)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

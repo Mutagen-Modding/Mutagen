@@ -46,9 +46,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Target
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<IRelatable> _Target = new FormLink<IRelatable>();
-        public IFormLink<IRelatable> Target => this._Target;
+        public FormLink<IRelatable> Target { get; set; } = new FormLink<IRelatable>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IRelatableGetter> IRelationGetter.Target => this.Target;
         #endregion
@@ -614,7 +612,7 @@ namespace Mutagen.Bethesda.Skyrim
         IRelationGetter,
         ILoquiObjectSetter<IRelation>
     {
-        new IFormLink<IRelatable> Target { get; }
+        new FormLink<IRelatable> Target { get; set; }
         new Int32 Modifier { get; set; }
         new CombatReaction Reaction { get; set; }
     }
@@ -1108,7 +1106,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case Relation_FieldIndex.Target:
-                    return typeof(IFormLink<IRelatable>);
+                    return typeof(FormLink<IRelatable>);
                 case Relation_FieldIndex.Modifier:
                     return typeof(Int32);
                 case Relation_FieldIndex.Reaction:
@@ -1165,7 +1163,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IRelation item)
         {
             ClearPartial();
-            item.Target.FormKey = FormKey.Null;
+            item.Target = new FormLink<IRelatable>(FormKey.Null);
             item.Modifier = default;
             item.Reaction = default;
         }
@@ -1203,7 +1201,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRelation item,
             MutagenFrame frame)
         {
-            item.Target.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Target = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
             item.Modifier = frame.ReadInt32();
@@ -1386,7 +1384,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)Relation_FieldIndex.Target) ?? true))
             {
-                item.Target.FormKey = rhs.Target.FormKey;
+                item.Target = rhs.Target.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Relation_FieldIndex.Modifier) ?? true))
             {
@@ -1622,7 +1620,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Relation_FieldIndex.Target);
                     try
                     {
-                        item.Target.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Target = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

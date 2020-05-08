@@ -129,23 +129,17 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? IIngredientGetter.Destructible => this.Destructible;
         #endregion
         #region EquipType
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<EquipType> _EquipType = new FormLinkNullable<EquipType>();
-        public IFormLinkNullable<EquipType> EquipType => this._EquipType;
+        public FormLinkNullable<EquipType> EquipType { get; set; } = new FormLinkNullable<EquipType>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEquipTypeGetter> IIngredientGetter.EquipType => this.EquipType;
         #endregion
         #region PickUpSound
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<SoundDescriptor> _PickUpSound = new FormLinkNullable<SoundDescriptor>();
-        public IFormLinkNullable<SoundDescriptor> PickUpSound => this._PickUpSound;
+        public FormLinkNullable<SoundDescriptor> PickUpSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IIngredientGetter.PickUpSound => this.PickUpSound;
         #endregion
         #region PutDownSound
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<SoundDescriptor> _PutDownSound = new FormLinkNullable<SoundDescriptor>();
-        public IFormLinkNullable<SoundDescriptor> PutDownSound => this._PutDownSound;
+        public FormLinkNullable<SoundDescriptor> PutDownSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IIngredientGetter.PutDownSound => this.PutDownSound;
         #endregion
@@ -1245,9 +1239,9 @@ namespace Mutagen.Bethesda.Skyrim
         new Model? Model { get; set; }
         new Icons? Icons { get; set; }
         new Destructible? Destructible { get; set; }
-        new IFormLinkNullable<EquipType> EquipType { get; }
-        new IFormLinkNullable<SoundDescriptor> PickUpSound { get; }
-        new IFormLinkNullable<SoundDescriptor> PutDownSound { get; }
+        new FormLinkNullable<EquipType> EquipType { get; set; }
+        new FormLinkNullable<SoundDescriptor> PickUpSound { get; set; }
+        new FormLinkNullable<SoundDescriptor> PutDownSound { get; set; }
         new WeightValue WeightValue { get; set; }
         new IngredientData Data { get; set; }
         new ExtendedList<Effect> Effects { get; }
@@ -1858,11 +1852,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ingredient_FieldIndex.Destructible:
                     return typeof(Destructible);
                 case Ingredient_FieldIndex.EquipType:
-                    return typeof(IFormLinkNullable<EquipType>);
+                    return typeof(FormLinkNullable<EquipType>);
                 case Ingredient_FieldIndex.PickUpSound:
-                    return typeof(IFormLinkNullable<SoundDescriptor>);
+                    return typeof(FormLinkNullable<SoundDescriptor>);
                 case Ingredient_FieldIndex.PutDownSound:
-                    return typeof(IFormLinkNullable<SoundDescriptor>);
+                    return typeof(FormLinkNullable<SoundDescriptor>);
                 case Ingredient_FieldIndex.WeightValue:
                     return typeof(WeightValue);
                 case Ingredient_FieldIndex.Data:
@@ -1946,9 +1940,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Model = null;
             item.Icons = null;
             item.Destructible = null;
-            item.EquipType.FormKey = null;
-            item.PickUpSound.FormKey = null;
-            item.PutDownSound.FormKey = null;
+            item.EquipType = null;
+            item.PickUpSound = null;
+            item.PutDownSound = null;
             item.WeightValue.Clear();
             item.Data.Clear();
             item.Effects.Clear();
@@ -2123,7 +2117,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x50595445: // ETYP
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.EquipType.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.EquipType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.EquipType);
@@ -2131,7 +2125,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E59: // YNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.PickUpSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.PickUpSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.PickUpSound);
@@ -2139,7 +2133,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E5A: // ZNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.PutDownSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.PutDownSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Ingredient_FieldIndex.PutDownSound);
@@ -2872,15 +2866,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.EquipType) ?? true))
             {
-                item.EquipType.FormKey = rhs.EquipType.FormKey;
+                item.EquipType = rhs.EquipType.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.PickUpSound) ?? true))
             {
-                item.PickUpSound.FormKey = rhs.PickUpSound.FormKey;
+                item.PickUpSound = rhs.PickUpSound.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.PutDownSound) ?? true))
             {
-                item.PutDownSound.FormKey = rhs.PutDownSound.FormKey;
+                item.PutDownSound = rhs.PutDownSound.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Ingredient_FieldIndex.WeightValue) ?? true))
             {
@@ -3512,7 +3506,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Ingredient_FieldIndex.EquipType);
                     try
                     {
-                        item.EquipType.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.EquipType = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3530,7 +3524,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Ingredient_FieldIndex.PickUpSound);
                     try
                     {
-                        item.PickUpSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.PickUpSound = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3548,7 +3542,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Ingredient_FieldIndex.PutDownSound);
                     try
                     {
-                        item.PutDownSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.PutDownSound = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3958,17 +3952,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region EquipType
         private int? _EquipTypeLocation;
         public bool EquipType_IsSet => _EquipTypeLocation.HasValue;
-        public IFormLinkNullableGetter<IEquipTypeGetter> EquipType => _EquipTypeLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EquipTypeLocation.Value, _package.Meta)))) : FormLinkNullable<IEquipTypeGetter>.Empty;
+        public IFormLinkNullableGetter<IEquipTypeGetter> EquipType => _EquipTypeLocation.HasValue ? new FormLinkNullable<IEquipTypeGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EquipTypeLocation.Value, _package.Meta)))) : FormLinkNullable<IEquipTypeGetter>.Null;
         #endregion
         #region PickUpSound
         private int? _PickUpSoundLocation;
         public bool PickUpSound_IsSet => _PickUpSoundLocation.HasValue;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PickUpSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Empty;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PickUpSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region PutDownSound
         private int? _PutDownSoundLocation;
         public bool PutDownSound_IsSet => _PutDownSoundLocation.HasValue;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PutDownSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Empty;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PutDownSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region WeightValue
         private IWeightValueGetter? _WeightValue;

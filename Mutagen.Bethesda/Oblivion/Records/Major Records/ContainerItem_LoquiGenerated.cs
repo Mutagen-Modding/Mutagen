@@ -46,9 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Item
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<AItem> _Item = new FormLink<AItem>();
-        public IFormLink<AItem> Item => this._Item;
+        public FormLink<AItem> Item { get; set; } = new FormLink<AItem>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IAItemGetter> IContainerItemGetter.Item => this.Item;
         #endregion
@@ -583,7 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
         IContainerItemGetter,
         ILoquiObjectSetter<IContainerItem>
     {
-        new IFormLink<AItem> Item { get; }
+        new FormLink<AItem> Item { get; set; }
         new UInt32 Count { get; set; }
     }
 
@@ -1065,7 +1063,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ContainerItem_FieldIndex.Item:
-                    return typeof(IFormLink<AItem>);
+                    return typeof(FormLink<AItem>);
                 case ContainerItem_FieldIndex.Count:
                     return typeof(UInt32);
                 default:
@@ -1120,7 +1118,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IContainerItem item)
         {
             ClearPartial();
-            item.Item.FormKey = FormKey.Null;
+            item.Item = new FormLink<AItem>(FormKey.Null);
             item.Count = default;
         }
         
@@ -1157,7 +1155,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IContainerItem item,
             MutagenFrame frame)
         {
-            item.Item.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Item = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
             item.Count = frame.ReadUInt32();
@@ -1331,7 +1329,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ContainerItem_FieldIndex.Item) ?? true))
             {
-                item.Item.FormKey = rhs.Item.FormKey;
+                item.Item = rhs.Item.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)ContainerItem_FieldIndex.Count) ?? true))
             {
@@ -1554,7 +1552,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)ContainerItem_FieldIndex.Item);
                     try
                     {
-                        item.Item.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Item = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

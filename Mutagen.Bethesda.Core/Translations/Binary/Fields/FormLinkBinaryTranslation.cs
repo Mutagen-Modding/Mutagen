@@ -50,6 +50,21 @@ namespace Mutagen.Bethesda.Binary
 
         public bool Parse<T>(
             MutagenFrame frame,
+            [MaybeNullWhen(false)] out FormLink<T> item,
+            RecordTypeConverter? recordTypeConverter = null)
+            where T : class, IMajorRecordCommonGetter
+        {
+            if (FormKeyBinaryTranslation.Instance.Parse(frame, out FormKey id))
+            {
+                item = new FormLink<T>(id);
+                return true;
+            }
+            item = new FormLink<T>();
+            return false;
+        }
+
+        public bool Parse<T>(
+            MutagenFrame frame,
             [MaybeNullWhen(false)] out IFormLink<T> item,
             RecordTypeConverter? recordTypeConverter = null)
             where T : class, IMajorRecordCommonGetter

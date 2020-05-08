@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda
     /// This class stores the target EDID as RecordType, as that is a convenient 4 character struct
     /// </summary>
     /// <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
-    public class EDIDLink<TMajor> : IEDIDLink<TMajor>, IEquatable<IEDIDLinkGetter<TMajor>>
+    public struct EDIDLink<TMajor> : IEDIDLink<TMajor>, IEquatable<IEDIDLinkGetter<TMajor>>
        where TMajor : class, IMajorRecordCommonGetter
     {
         /// <summary>
@@ -29,17 +29,9 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Record type representing the target EditorID to link against
         /// </summary>
-        public RecordType EDID { get; set; } = Null;
+        public RecordType EDID { get; set; }
         
         Type ILinkGetter.TargetType => typeof(TMajor);
-
-        /// <summary>
-        /// Default constructor that creates an unlinked EDIDLink
-        /// </summary>
-        public EDIDLink()
-            : base()
-        {
-        }
 
         /// <summary>
         /// Default constructor that creates an EDIDLink linked to the target EditorID
@@ -198,6 +190,11 @@ namespace Mutagen.Bethesda
         {
             modKey = default!;
             return false;
+        }
+
+        public static implicit operator EDIDLink<TMajor>(RecordType recordType)
+        {
+            return new EDIDLink<TMajor>(recordType);
         }
     }
 }

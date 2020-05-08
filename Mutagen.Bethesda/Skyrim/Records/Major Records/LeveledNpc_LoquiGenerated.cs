@@ -66,9 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Byte Flags { get; set; } = default;
         #endregion
         #region Global
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<Global> _Global = new FormLinkNullable<Global>();
-        public IFormLinkNullable<Global> Global => this._Global;
+        public FormLinkNullable<Global> Global { get; set; } = new FormLinkNullable<Global>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IGlobalGetter> ILeveledNpcGetter.Global => this.Global;
         #endregion
@@ -850,7 +848,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new Byte ChanceNone { get; set; }
         new Byte Flags { get; set; }
-        new IFormLinkNullable<Global> Global { get; }
+        new FormLinkNullable<Global> Global { get; set; }
         new ExtendedList<LeveledEntry<ANpcSpawn>>? Entries { get; set; }
         new Model? Model { get; set; }
     }
@@ -1369,7 +1367,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case LeveledNpc_FieldIndex.Flags:
                     return typeof(Byte);
                 case LeveledNpc_FieldIndex.Global:
-                    return typeof(IFormLinkNullable<Global>);
+                    return typeof(FormLinkNullable<Global>);
                 case LeveledNpc_FieldIndex.Entries:
                     return typeof(ExtendedList<LeveledEntry<ANpcSpawn>>);
                 case LeveledNpc_FieldIndex.Model:
@@ -1437,7 +1435,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ObjectBounds = new ObjectBounds();
             item.ChanceNone = default;
             item.Flags = default;
-            item.Global.FormKey = null;
+            item.Global = null;
             item.Entries = null;
             item.Model = null;
             base.Clear(item);
@@ -1592,7 +1590,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x474C564C: // LVLG
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.Global.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Global = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)LeveledNpc_FieldIndex.Global);
@@ -2097,7 +2095,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Global) ?? true))
             {
-                item.Global.FormKey = rhs.Global.FormKey;
+                item.Global = rhs.Global.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Entries) ?? true))
             {
@@ -2582,7 +2580,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)LeveledNpc_FieldIndex.Global);
                     try
                     {
-                        item.Global.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Global = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2932,7 +2930,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Global
         private int? _GlobalLocation;
         public bool Global_IsSet => _GlobalLocation.HasValue;
-        public IFormLinkNullableGetter<IGlobalGetter> Global => _GlobalLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _GlobalLocation.Value, _package.Meta)))) : FormLinkNullable<IGlobalGetter>.Empty;
+        public IFormLinkNullableGetter<IGlobalGetter> Global => _GlobalLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _GlobalLocation.Value, _package.Meta)))) : FormLinkNullable<IGlobalGetter>.Null;
         #endregion
         public IReadOnlyList<ILeveledEntryGetter<IANpcSpawnGetter>>? Entries { get; private set; }
         public IModelGetter? Model { get; private set; }

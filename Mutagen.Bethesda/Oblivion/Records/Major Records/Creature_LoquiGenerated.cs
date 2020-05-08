@@ -149,16 +149,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region DeathItem
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<AItem> _DeathItem = new FormLinkNullable<AItem>();
-        public IFormLinkNullable<AItem> DeathItem => this._DeathItem;
+        public FormLinkNullable<AItem> DeathItem { get; set; } = new FormLinkNullable<AItem>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IAItemGetter> ICreatureGetter.DeathItem => this.DeathItem;
         #endregion
         #region Script
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<Script> _Script = new FormLinkNullable<Script>();
-        public IFormLinkNullable<Script> Script => this._Script;
+        public FormLinkNullable<Script> Script { get; set; } = new FormLinkNullable<Script>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IScriptGetter> ICreatureGetter.Script => this.Script;
         #endregion
@@ -224,9 +220,7 @@ namespace Mutagen.Bethesda.Oblivion
         Byte? ICreatureGetter.AttackReach => this.AttackReach;
         #endregion
         #region CombatStyle
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<CombatStyle> _CombatStyle = new FormLinkNullable<CombatStyle>();
-        public IFormLinkNullable<CombatStyle> CombatStyle => this._CombatStyle;
+        public FormLinkNullable<CombatStyle> CombatStyle { get; set; } = new FormLinkNullable<CombatStyle>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ICombatStyleGetter> ICreatureGetter.CombatStyle => this.CombatStyle;
         #endregion
@@ -286,9 +280,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? ICreatureGetter.BloodDecal => this.BloodDecal;
         #endregion
         #region InheritsSoundFrom
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<Creature> _InheritsSoundFrom = new FormLinkNullable<Creature>();
-        public IFormLinkNullable<Creature> InheritsSoundFrom => this._InheritsSoundFrom;
+        public FormLinkNullable<Creature> InheritsSoundFrom { get; set; } = new FormLinkNullable<Creature>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ICreatureGetter> ICreatureGetter.InheritsSoundFrom => this.InheritsSoundFrom;
         #endregion
@@ -1999,20 +1991,20 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte[]? NIFT { get; set; }
         new CreatureConfiguration? Configuration { get; set; }
         new ExtendedList<RankPlacement> Factions { get; }
-        new IFormLinkNullable<AItem> DeathItem { get; }
-        new IFormLinkNullable<Script> Script { get; }
+        new FormLinkNullable<AItem> DeathItem { get; set; }
+        new FormLinkNullable<Script> Script { get; set; }
         new CreatureAIData? AIData { get; set; }
         new ExtendedList<IFormLink<AIPackage>>? AIPackages { get; set; }
         new ExtendedList<String>? Animations { get; set; }
         new CreatureData? Data { get; set; }
         new Byte? AttackReach { get; set; }
-        new IFormLinkNullable<CombatStyle> CombatStyle { get; }
+        new FormLinkNullable<CombatStyle> CombatStyle { get; set; }
         new Single? TurningSpeed { get; set; }
         new Single? BaseScale { get; set; }
         new Single? FootWeight { get; set; }
         new String? BloodSpray { get; set; }
         new String? BloodDecal { get; set; }
-        new IFormLinkNullable<Creature> InheritsSoundFrom { get; }
+        new FormLinkNullable<Creature> InheritsSoundFrom { get; set; }
         new ExtendedList<CreatureSound> Sounds { get; }
     }
 
@@ -2727,9 +2719,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.Factions:
                     return typeof(ExtendedList<RankPlacement>);
                 case Creature_FieldIndex.DeathItem:
-                    return typeof(IFormLinkNullable<AItem>);
+                    return typeof(FormLinkNullable<AItem>);
                 case Creature_FieldIndex.Script:
-                    return typeof(IFormLinkNullable<Script>);
+                    return typeof(FormLinkNullable<Script>);
                 case Creature_FieldIndex.AIData:
                     return typeof(CreatureAIData);
                 case Creature_FieldIndex.AIPackages:
@@ -2741,7 +2733,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.AttackReach:
                     return typeof(Byte);
                 case Creature_FieldIndex.CombatStyle:
-                    return typeof(IFormLinkNullable<CombatStyle>);
+                    return typeof(FormLinkNullable<CombatStyle>);
                 case Creature_FieldIndex.TurningSpeed:
                     return typeof(Single);
                 case Creature_FieldIndex.BaseScale:
@@ -2753,7 +2745,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.BloodDecal:
                     return typeof(String);
                 case Creature_FieldIndex.InheritsSoundFrom:
-                    return typeof(IFormLinkNullable<Creature>);
+                    return typeof(FormLinkNullable<Creature>);
                 case Creature_FieldIndex.Sounds:
                     return typeof(ExtendedList<CreatureSound>);
                 default:
@@ -2841,20 +2833,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.NIFT = default;
             item.Configuration = null;
             item.Factions.Clear();
-            item.DeathItem.FormKey = null;
-            item.Script.FormKey = null;
+            item.DeathItem = null;
+            item.Script = null;
             item.AIData = null;
             item.AIPackages = null;
             item.Animations = null;
             item.Data = null;
             item.AttackReach = default;
-            item.CombatStyle.FormKey = null;
+            item.CombatStyle = null;
             item.TurningSpeed = default;
             item.BaseScale = default;
             item.FootWeight = default;
             item.BloodSpray = default;
             item.BloodDecal = default;
-            item.InheritsSoundFrom.FormKey = null;
+            item.InheritsSoundFrom = null;
             item.Sounds.Clear();
             base.Clear(item);
         }
@@ -3094,7 +3086,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E49: // INAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.DeathItem.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.DeathItem = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.DeathItem);
@@ -3102,7 +3094,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x49524353: // SCRI
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.Script.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Script = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Script);
@@ -3153,7 +3145,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E5A: // ZNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.CombatStyle.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.CombatStyle = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.CombatStyle);
@@ -3195,7 +3187,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x52435343: // CSCR
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.InheritsSoundFrom.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.InheritsSoundFrom = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.InheritsSoundFrom);
@@ -4225,11 +4217,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Creature_FieldIndex.DeathItem) ?? true))
             {
-                item.DeathItem.FormKey = rhs.DeathItem.FormKey;
+                item.DeathItem = rhs.DeathItem.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Creature_FieldIndex.Script) ?? true))
             {
-                item.Script.FormKey = rhs.Script.FormKey;
+                item.Script = rhs.Script.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Creature_FieldIndex.AIData) ?? true))
             {
@@ -4342,7 +4334,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Creature_FieldIndex.CombatStyle) ?? true))
             {
-                item.CombatStyle.FormKey = rhs.CombatStyle.FormKey;
+                item.CombatStyle = rhs.CombatStyle.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Creature_FieldIndex.TurningSpeed) ?? true))
             {
@@ -4366,7 +4358,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Creature_FieldIndex.InheritsSoundFrom) ?? true))
             {
-                item.InheritsSoundFrom.FormKey = rhs.InheritsSoundFrom.FormKey;
+                item.InheritsSoundFrom = rhs.InheritsSoundFrom.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Creature_FieldIndex.Sounds) ?? true))
             {
@@ -5231,7 +5223,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)Creature_FieldIndex.DeathItem);
                     try
                     {
-                        item.DeathItem.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.DeathItem = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5249,7 +5241,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)Creature_FieldIndex.Script);
                     try
                     {
-                        item.Script.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Script = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5379,7 +5371,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)Creature_FieldIndex.CombatStyle);
                     try
                     {
-                        item.CombatStyle.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.CombatStyle = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5487,7 +5479,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)Creature_FieldIndex.InheritsSoundFrom);
                     try
                     {
-                        item.InheritsSoundFrom.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.InheritsSoundFrom = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5943,12 +5935,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region DeathItem
         private int? _DeathItemLocation;
         public bool DeathItem_IsSet => _DeathItemLocation.HasValue;
-        public IFormLinkNullableGetter<IAItemGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<IAItemGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _DeathItemLocation.Value, _package.Meta)))) : FormLinkNullable<IAItemGetter>.Empty;
+        public IFormLinkNullableGetter<IAItemGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<IAItemGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _DeathItemLocation.Value, _package.Meta)))) : FormLinkNullable<IAItemGetter>.Null;
         #endregion
         #region Script
         private int? _ScriptLocation;
         public bool Script_IsSet => _ScriptLocation.HasValue;
-        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormLinkNullable<IScriptGetter>.Empty;
+        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormLinkNullable<IScriptGetter>.Null;
         #endregion
         #region AIData
         private RangeInt32? _AIDataLocation;
@@ -5969,7 +5961,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region CombatStyle
         private int? _CombatStyleLocation;
         public bool CombatStyle_IsSet => _CombatStyleLocation.HasValue;
-        public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => _CombatStyleLocation.HasValue ? new FormLinkNullable<ICombatStyleGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _CombatStyleLocation.Value, _package.Meta)))) : FormLinkNullable<ICombatStyleGetter>.Empty;
+        public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => _CombatStyleLocation.HasValue ? new FormLinkNullable<ICombatStyleGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _CombatStyleLocation.Value, _package.Meta)))) : FormLinkNullable<ICombatStyleGetter>.Null;
         #endregion
         #region TurningSpeed
         private int? _TurningSpeedLocation;
@@ -5994,7 +5986,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region InheritsSoundFrom
         private int? _InheritsSoundFromLocation;
         public bool InheritsSoundFrom_IsSet => _InheritsSoundFromLocation.HasValue;
-        public IFormLinkNullableGetter<ICreatureGetter> InheritsSoundFrom => _InheritsSoundFromLocation.HasValue ? new FormLinkNullable<ICreatureGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _InheritsSoundFromLocation.Value, _package.Meta)))) : FormLinkNullable<ICreatureGetter>.Empty;
+        public IFormLinkNullableGetter<ICreatureGetter> InheritsSoundFrom => _InheritsSoundFromLocation.HasValue ? new FormLinkNullable<ICreatureGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _InheritsSoundFromLocation.Value, _package.Meta)))) : FormLinkNullable<ICreatureGetter>.Null;
         #endregion
         public IReadOnlyList<ICreatureSoundGetter> Sounds { get; private set; } = ListExt.Empty<CreatureSoundBinaryOverlay>();
         partial void CustomCtor(

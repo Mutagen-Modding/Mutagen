@@ -93,9 +93,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? IWaterGetter.MaterialID => this.MaterialID;
         #endregion
         #region Sound
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<Sound> _Sound = new FormLinkNullable<Sound>();
-        public IFormLinkNullable<Sound> Sound => this._Sound;
+        public FormLinkNullable<Sound> Sound { get; set; } = new FormLinkNullable<Sound>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundGetter> IWaterGetter.Sound => this.Sound;
         #endregion
@@ -825,7 +823,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte? Opacity { get; set; }
         new Water.Flag? Flags { get; set; }
         new String? MaterialID { get; set; }
-        new IFormLinkNullable<Sound> Sound { get; }
+        new FormLinkNullable<Sound> Sound { get; set; }
         new WaterData? Data { get; set; }
         new RelatedWaters? RelatedWaters { get; set; }
     }
@@ -1355,7 +1353,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Water_FieldIndex.MaterialID:
                     return typeof(String);
                 case Water_FieldIndex.Sound:
-                    return typeof(IFormLinkNullable<Sound>);
+                    return typeof(FormLinkNullable<Sound>);
                 case Water_FieldIndex.Data:
                     return typeof(WaterData);
                 case Water_FieldIndex.RelatedWaters:
@@ -1423,7 +1421,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Opacity = default;
             item.Flags = default;
             item.MaterialID = default;
-            item.Sound.FormKey = null;
+            item.Sound = null;
             item.Data = null;
             item.RelatedWaters = null;
             base.Clear(item);
@@ -1571,7 +1569,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E53: // SNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.Sound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Sound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Water_FieldIndex.Sound);
@@ -2009,7 +2007,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Sound) ?? true))
             {
-                item.Sound.FormKey = rhs.Sound.FormKey;
+                item.Sound = rhs.Sound.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.Data) ?? true))
             {
@@ -2466,7 +2464,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)Water_FieldIndex.Sound);
                     try
                     {
-                        item.Sound.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Sound = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2819,7 +2817,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Sound
         private int? _SoundLocation;
         public bool Sound_IsSet => _SoundLocation.HasValue;
-        public IFormLinkNullableGetter<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundGetter>.Empty;
+        public IFormLinkNullableGetter<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundGetter>.Null;
         #endregion
         #region Data
         partial void DataCustomParse(

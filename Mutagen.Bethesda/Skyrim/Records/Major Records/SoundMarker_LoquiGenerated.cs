@@ -82,9 +82,7 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? ISoundMarkerGetter.SNDD => this.SNDD;
         #endregion
         #region SoundDescriptor
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<SoundDescriptor> _SoundDescriptor = new FormLinkNullable<SoundDescriptor>();
-        public IFormLinkNullable<SoundDescriptor> SoundDescriptor => this._SoundDescriptor;
+        public FormLinkNullable<SoundDescriptor> SoundDescriptor { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> ISoundMarkerGetter.SoundDescriptor => this.SoundDescriptor;
         #endregion
@@ -702,7 +700,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new Byte[]? FNAM { get; set; }
         new Byte[]? SNDD { get; set; }
-        new IFormLinkNullable<SoundDescriptor> SoundDescriptor { get; }
+        new FormLinkNullable<SoundDescriptor> SoundDescriptor { get; set; }
     }
 
     public partial interface ISoundMarkerInternal :
@@ -1197,7 +1195,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SoundMarker_FieldIndex.SNDD:
                     return typeof(Byte[]);
                 case SoundMarker_FieldIndex.SoundDescriptor:
-                    return typeof(IFormLinkNullable<SoundDescriptor>);
+                    return typeof(FormLinkNullable<SoundDescriptor>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1257,7 +1255,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ObjectBounds = new ObjectBounds();
             item.FNAM = default;
             item.SNDD = default;
-            item.SoundDescriptor.FormKey = null;
+            item.SoundDescriptor = null;
             base.Clear(item);
         }
         
@@ -1392,7 +1390,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x43534453: // SDSC
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.SoundDescriptor.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.SoundDescriptor = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)SoundMarker_FieldIndex.SoundDescriptor);
@@ -1785,7 +1783,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SoundMarker_FieldIndex.SoundDescriptor) ?? true))
             {
-                item.SoundDescriptor.FormKey = rhs.SoundDescriptor.FormKey;
+                item.SoundDescriptor = rhs.SoundDescriptor.FormKey;
             }
         }
         
@@ -2136,7 +2134,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)SoundMarker_FieldIndex.SoundDescriptor);
                     try
                     {
-                        item.SoundDescriptor.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.SoundDescriptor = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2406,7 +2404,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region SoundDescriptor
         private int? _SoundDescriptorLocation;
         public bool SoundDescriptor_IsSet => _SoundDescriptorLocation.HasValue;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> SoundDescriptor => _SoundDescriptorLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundDescriptorLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Empty;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> SoundDescriptor => _SoundDescriptorLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SoundDescriptorLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

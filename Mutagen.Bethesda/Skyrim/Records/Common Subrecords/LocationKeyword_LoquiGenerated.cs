@@ -48,9 +48,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Link
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<Keyword> _Link = new FormLink<Keyword>();
-        public IFormLink<Keyword> Link => this._Link;
+        public FormLink<Keyword> Link { get; set; } = new FormLink<Keyword>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IKeywordGetter> ILocationKeywordGetter.Link => this.Link;
         #endregion
@@ -535,7 +533,7 @@ namespace Mutagen.Bethesda.Skyrim
         IALocationTarget,
         ILoquiObjectSetter<ILocationKeyword>
     {
-        new IFormLink<Keyword> Link { get; }
+        new FormLink<Keyword> Link { get; set; }
     }
 
     public partial interface ILocationKeywordGetter :
@@ -976,7 +974,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case LocationKeyword_FieldIndex.Link:
-                    return typeof(IFormLink<Keyword>);
+                    return typeof(FormLink<Keyword>);
                 default:
                     return ALocationTarget_Registration.GetNthType(index);
             }
@@ -1027,7 +1025,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ILocationKeyword item)
         {
             ClearPartial();
-            item.Link.FormKey = FormKey.Null;
+            item.Link = new FormLink<Keyword>(FormKey.Null);
             base.Clear(item);
         }
         
@@ -1082,7 +1080,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationKeyword item,
             MutagenFrame frame)
         {
-            item.Link.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Link = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
         }
@@ -1299,7 +1297,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)LocationKeyword_FieldIndex.Link) ?? true))
             {
-                item.Link.FormKey = rhs.Link.FormKey;
+                item.Link = rhs.Link.FormKey;
             }
         }
         
@@ -1510,7 +1508,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)LocationKeyword_FieldIndex.Link);
                     try
                     {
-                        item.Link.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Link = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

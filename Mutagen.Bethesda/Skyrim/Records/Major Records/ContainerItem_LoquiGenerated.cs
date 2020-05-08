@@ -46,9 +46,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Item
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<IItem> _Item = new FormLink<IItem>();
-        public IFormLink<IItem> Item => this._Item;
+        public FormLink<IItem> Item { get; set; } = new FormLink<IItem>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IItemGetter> IContainerItemGetter.Item => this.Item;
         #endregion
@@ -583,7 +581,7 @@ namespace Mutagen.Bethesda.Skyrim
         IContainerItemGetter,
         ILoquiObjectSetter<IContainerItem>
     {
-        new IFormLink<IItem> Item { get; }
+        new FormLink<IItem> Item { get; set; }
         new Int32 Count { get; set; }
     }
 
@@ -1065,7 +1063,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case ContainerItem_FieldIndex.Item:
-                    return typeof(IFormLink<IItem>);
+                    return typeof(FormLink<IItem>);
                 case ContainerItem_FieldIndex.Count:
                     return typeof(Int32);
                 default:
@@ -1120,7 +1118,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IContainerItem item)
         {
             ClearPartial();
-            item.Item.FormKey = FormKey.Null;
+            item.Item = new FormLink<IItem>(FormKey.Null);
             item.Count = default;
         }
         
@@ -1157,7 +1155,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IContainerItem item,
             MutagenFrame frame)
         {
-            item.Item.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Item = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
             item.Count = frame.ReadInt32();
@@ -1331,7 +1329,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ContainerItem_FieldIndex.Item) ?? true))
             {
-                item.Item.FormKey = rhs.Item.FormKey;
+                item.Item = rhs.Item.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)ContainerItem_FieldIndex.Count) ?? true))
             {
@@ -1554,7 +1552,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)ContainerItem_FieldIndex.Item);
                     try
                     {
-                        item.Item.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Item = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

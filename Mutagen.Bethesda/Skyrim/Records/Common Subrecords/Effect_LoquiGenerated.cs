@@ -47,9 +47,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region BaseEffect
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<MagicEffect> _BaseEffect = new FormLinkNullable<MagicEffect>();
-        public IFormLinkNullable<MagicEffect> BaseEffect => this._BaseEffect;
+        public FormLinkNullable<MagicEffect> BaseEffect { get; set; } = new FormLinkNullable<MagicEffect>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IMagicEffectGetter> IEffectGetter.BaseEffect => this.BaseEffect;
         #endregion
@@ -717,7 +715,7 @@ namespace Mutagen.Bethesda.Skyrim
         IEffectGetter,
         ILoquiObjectSetter<IEffect>
     {
-        new IFormLinkNullable<MagicEffect> BaseEffect { get; }
+        new FormLinkNullable<MagicEffect> BaseEffect { get; set; }
         new EffectData? Data { get; set; }
         new ExtendedList<Condition> Conditions { get; }
     }
@@ -1213,7 +1211,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case Effect_FieldIndex.BaseEffect:
-                    return typeof(IFormLinkNullable<MagicEffect>);
+                    return typeof(FormLinkNullable<MagicEffect>);
                 case Effect_FieldIndex.Data:
                     return typeof(EffectData);
                 case Effect_FieldIndex.Conditions:
@@ -1284,7 +1282,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IEffect item)
         {
             ClearPartial();
-            item.BaseEffect.FormKey = null;
+            item.BaseEffect = null;
             item.Data = null;
             item.Conditions.Clear();
         }
@@ -1339,7 +1337,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.BaseEffect) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.BaseEffect.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.BaseEffect = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Effect_FieldIndex.BaseEffect);
@@ -1579,7 +1577,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)Effect_FieldIndex.BaseEffect) ?? true))
             {
-                item.BaseEffect.FormKey = rhs.BaseEffect.FormKey;
+                item.BaseEffect = rhs.BaseEffect.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Effect_FieldIndex.Data) ?? true))
             {
@@ -1876,7 +1874,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)Effect_FieldIndex.BaseEffect);
                     try
                     {
-                        item.BaseEffect.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.BaseEffect = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2273,7 +2271,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region BaseEffect
         private int? _BaseEffectLocation;
         public bool BaseEffect_IsSet => _BaseEffectLocation.HasValue;
-        public IFormLinkNullableGetter<IMagicEffectGetter> BaseEffect => _BaseEffectLocation.HasValue ? new FormLinkNullable<IMagicEffectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _BaseEffectLocation.Value, _package.Meta)))) : FormLinkNullable<IMagicEffectGetter>.Empty;
+        public IFormLinkNullableGetter<IMagicEffectGetter> BaseEffect => _BaseEffectLocation.HasValue ? new FormLinkNullable<IMagicEffectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _BaseEffectLocation.Value, _package.Meta)))) : FormLinkNullable<IMagicEffectGetter>.Null;
         #endregion
         #region Data
         private RangeInt32? _DataLocation;

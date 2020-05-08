@@ -57,9 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
         public UInt16 EventMember { get; set; } = default;
         #endregion
         #region Parameter3
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<SkyrimMajorRecord> _Parameter3 = new FormLink<SkyrimMajorRecord>();
-        public IFormLink<SkyrimMajorRecord> Parameter3 => this._Parameter3;
+        public FormLink<SkyrimMajorRecord> Parameter3 { get; set; } = new FormLink<SkyrimMajorRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISkyrimMajorRecordGetter> IGetEventDataGetter.Parameter3 => this.Parameter3;
         #endregion
@@ -67,9 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Condition.RunOnType RunOnType { get; set; } = default;
         #endregion
         #region Reference
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<SkyrimMajorRecord> _Reference = new FormLink<SkyrimMajorRecord>();
-        public IFormLink<SkyrimMajorRecord> Reference => this._Reference;
+        public FormLink<SkyrimMajorRecord> Reference { get; set; } = new FormLink<SkyrimMajorRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISkyrimMajorRecordGetter> IGetEventDataGetter.Reference => this.Reference;
         #endregion
@@ -736,9 +732,9 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt16 Unknown2 { get; set; }
         new UInt16 EventFunction { get; set; }
         new UInt16 EventMember { get; set; }
-        new IFormLink<SkyrimMajorRecord> Parameter3 { get; }
+        new FormLink<SkyrimMajorRecord> Parameter3 { get; set; }
         new Condition.RunOnType RunOnType { get; set; }
-        new IFormLink<SkyrimMajorRecord> Reference { get; }
+        new FormLink<SkyrimMajorRecord> Reference { get; set; }
         new Int32 Unknown3 { get; set; }
     }
 
@@ -1252,11 +1248,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case GetEventData_FieldIndex.EventMember:
                     return typeof(UInt16);
                 case GetEventData_FieldIndex.Parameter3:
-                    return typeof(IFormLink<SkyrimMajorRecord>);
+                    return typeof(FormLink<SkyrimMajorRecord>);
                 case GetEventData_FieldIndex.RunOnType:
                     return typeof(Condition.RunOnType);
                 case GetEventData_FieldIndex.Reference:
-                    return typeof(IFormLink<SkyrimMajorRecord>);
+                    return typeof(FormLink<SkyrimMajorRecord>);
                 case GetEventData_FieldIndex.Unknown3:
                     return typeof(Int32);
                 default:
@@ -1312,9 +1308,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown2 = default;
             item.EventFunction = default;
             item.EventMember = default;
-            item.Parameter3.FormKey = FormKey.Null;
+            item.Parameter3 = new FormLink<SkyrimMajorRecord>(FormKey.Null);
             item.RunOnType = default;
-            item.Reference.FormKey = FormKey.Null;
+            item.Reference = new FormLink<SkyrimMajorRecord>(FormKey.Null);
             item.Unknown3 = GetEventData._Unknown3_Default;
             base.Clear(item);
         }
@@ -1373,11 +1369,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown2 = frame.ReadUInt16();
             item.EventFunction = frame.ReadUInt16();
             item.EventMember = frame.ReadUInt16();
-            item.Parameter3.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Parameter3 = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
             item.RunOnType = EnumBinaryTranslation<Condition.RunOnType>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Reference.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Reference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
             item.Unknown3 = frame.ReadInt32();
@@ -1656,7 +1652,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)GetEventData_FieldIndex.Parameter3) ?? true))
             {
-                item.Parameter3.FormKey = rhs.Parameter3.FormKey;
+                item.Parameter3 = rhs.Parameter3.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)GetEventData_FieldIndex.RunOnType) ?? true))
             {
@@ -1664,7 +1660,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)GetEventData_FieldIndex.Reference) ?? true))
             {
-                item.Reference.FormKey = rhs.Reference.FormKey;
+                item.Reference = rhs.Reference.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)GetEventData_FieldIndex.Unknown3) ?? true))
             {
@@ -1987,7 +1983,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)GetEventData_FieldIndex.Parameter3);
                     try
                     {
-                        item.Parameter3.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Parameter3 = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2023,7 +2019,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)GetEventData_FieldIndex.Reference);
                     try
                     {
-                        item.Reference.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Reference = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

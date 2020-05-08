@@ -52,9 +52,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Chance { get; set; } = default;
         #endregion
         #region Spell
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<ASpell> _Spell = new FormLink<ASpell>();
-        public IFormLink<ASpell> Spell => this._Spell;
+        public FormLink<ASpell> Spell { get; set; } = new FormLink<ASpell>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IASpellGetter> IAttackDataGetter.Spell => this.Spell;
         #endregion
@@ -71,9 +69,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Stagger { get; set; } = default;
         #endregion
         #region AttackType
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<Keyword> _AttackType = new FormLink<Keyword>();
-        public IFormLink<Keyword> AttackType => this._AttackType;
+        public FormLink<Keyword> AttackType { get; set; } = new FormLink<Keyword>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IKeywordGetter> IAttackDataGetter.AttackType => this.AttackType;
         #endregion
@@ -868,12 +864,12 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Single DamageMult { get; set; }
         new Single Chance { get; set; }
-        new IFormLink<ASpell> Spell { get; }
+        new FormLink<ASpell> Spell { get; set; }
         new AttackData.Flag Flags { get; set; }
         new Single AttackAngle { get; set; }
         new Single StrikeAngle { get; set; }
         new Single Stagger { get; set; }
-        new IFormLink<Keyword> AttackType { get; }
+        new FormLink<Keyword> AttackType { get; set; }
         new Single Knockdown { get; set; }
         new Single RecoveryTime { get; set; }
         new Single StaminaMult { get; set; }
@@ -1460,7 +1456,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case AttackData_FieldIndex.Chance:
                     return typeof(Single);
                 case AttackData_FieldIndex.Spell:
-                    return typeof(IFormLink<ASpell>);
+                    return typeof(FormLink<ASpell>);
                 case AttackData_FieldIndex.Flags:
                     return typeof(AttackData.Flag);
                 case AttackData_FieldIndex.AttackAngle:
@@ -1470,7 +1466,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case AttackData_FieldIndex.Stagger:
                     return typeof(Single);
                 case AttackData_FieldIndex.AttackType:
-                    return typeof(IFormLink<Keyword>);
+                    return typeof(FormLink<Keyword>);
                 case AttackData_FieldIndex.Knockdown:
                     return typeof(Single);
                 case AttackData_FieldIndex.RecoveryTime:
@@ -1531,12 +1527,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.DamageMult = default;
             item.Chance = default;
-            item.Spell.FormKey = FormKey.Null;
+            item.Spell = new FormLink<ASpell>(FormKey.Null);
             item.Flags = default;
             item.AttackAngle = default;
             item.StrikeAngle = default;
             item.Stagger = default;
-            item.AttackType.FormKey = FormKey.Null;
+            item.AttackType = new FormLink<Keyword>(FormKey.Null);
             item.Knockdown = default;
             item.RecoveryTime = default;
             item.StaminaMult = default;
@@ -1577,14 +1573,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             item.DamageMult = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.Chance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Spell.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Spell = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
             item.Flags = EnumBinaryTranslation<AttackData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.AttackAngle = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.StrikeAngle = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.Stagger = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.AttackType.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.AttackType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
             item.Knockdown = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
@@ -1841,7 +1837,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AttackData_FieldIndex.Spell) ?? true))
             {
-                item.Spell.FormKey = rhs.Spell.FormKey;
+                item.Spell = rhs.Spell.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)AttackData_FieldIndex.Flags) ?? true))
             {
@@ -1861,7 +1857,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AttackData_FieldIndex.AttackType) ?? true))
             {
-                item.AttackType.FormKey = rhs.AttackType.FormKey;
+                item.AttackType = rhs.AttackType.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)AttackData_FieldIndex.Knockdown) ?? true))
             {
@@ -2209,7 +2205,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)AttackData_FieldIndex.Spell);
                     try
                     {
-                        item.Spell.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Spell = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2299,7 +2295,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)AttackData_FieldIndex.AttackType);
                     try
                     {
-                        item.AttackType.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.AttackType = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

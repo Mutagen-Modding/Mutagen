@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Generation
                     if (itemAccessor.DirectIsAssignment)
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"{itemAccessor}.{(linkType.FormIDType == FormLinkType.FormIDTypeEnum.Normal ? "FormKey" : "EDID")} = {(linkType.FormIDType == FormLinkType.FormIDTypeEnum.Normal ? "FormKey" : "RecordType")}XmlTranslation.Instance.Parse"))
+                            $"{itemAccessor} = {(linkType.FormIDType == FormLinkType.FormIDTypeEnum.Normal ? "FormKey" : "RecordType")}XmlTranslation.Instance.Parse"))
                         {
                             args.AddPassArg("node");
                             args.AddPassArg("errorMask");

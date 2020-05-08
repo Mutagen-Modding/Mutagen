@@ -46,9 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Race
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<Race> _Race = new FormLink<Race>();
-        public IFormLink<Race> Race => this._Race;
+        public FormLink<Race> Race { get; set; } = new FormLink<Race>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IRaceGetter> IRaceRelationGetter.Race => this.Race;
         #endregion
@@ -583,7 +581,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRaceRelationGetter,
         ILoquiObjectSetter<IRaceRelation>
     {
-        new IFormLink<Race> Race { get; }
+        new FormLink<Race> Race { get; set; }
         new Int32 Modifier { get; set; }
     }
 
@@ -1065,7 +1063,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RaceRelation_FieldIndex.Race:
-                    return typeof(IFormLink<Race>);
+                    return typeof(FormLink<Race>);
                 case RaceRelation_FieldIndex.Modifier:
                     return typeof(Int32);
                 default:
@@ -1120,7 +1118,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRaceRelation item)
         {
             ClearPartial();
-            item.Race.FormKey = FormKey.Null;
+            item.Race = new FormLink<Race>(FormKey.Null);
             item.Modifier = default;
         }
         
@@ -1157,7 +1155,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRaceRelation item,
             MutagenFrame frame)
         {
-            item.Race.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Race = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
             item.Modifier = frame.ReadInt32();
@@ -1331,7 +1329,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RaceRelation_FieldIndex.Race) ?? true))
             {
-                item.Race.FormKey = rhs.Race.FormKey;
+                item.Race = rhs.Race.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)RaceRelation_FieldIndex.Modifier) ?? true))
             {
@@ -1554,7 +1552,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)RaceRelation_FieldIndex.Race);
                     try
                     {
-                        item.Race.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Race = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

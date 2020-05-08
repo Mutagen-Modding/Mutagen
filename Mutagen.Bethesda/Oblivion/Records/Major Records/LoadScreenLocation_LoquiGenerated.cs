@@ -46,16 +46,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Direct
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<Place> _Direct = new FormLink<Place>();
-        public IFormLink<Place> Direct => this._Direct;
+        public FormLink<Place> Direct { get; set; } = new FormLink<Place>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPlaceGetter> ILoadScreenLocationGetter.Direct => this.Direct;
         #endregion
         #region Indirect
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<Worldspace> _Indirect = new FormLink<Worldspace>();
-        public IFormLink<Worldspace> Indirect => this._Indirect;
+        public FormLink<Worldspace> Indirect { get; set; } = new FormLink<Worldspace>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IWorldspaceGetter> ILoadScreenLocationGetter.Indirect => this.Indirect;
         #endregion
@@ -618,8 +614,8 @@ namespace Mutagen.Bethesda.Oblivion
         ILoadScreenLocationGetter,
         ILoquiObjectSetter<ILoadScreenLocation>
     {
-        new IFormLink<Place> Direct { get; }
-        new IFormLink<Worldspace> Indirect { get; }
+        new FormLink<Place> Direct { get; set; }
+        new FormLink<Worldspace> Indirect { get; set; }
         new P2Int16 GridPoint { get; set; }
     }
 
@@ -1112,9 +1108,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LoadScreenLocation_FieldIndex.Direct:
-                    return typeof(IFormLink<Place>);
+                    return typeof(FormLink<Place>);
                 case LoadScreenLocation_FieldIndex.Indirect:
-                    return typeof(IFormLink<Worldspace>);
+                    return typeof(FormLink<Worldspace>);
                 case LoadScreenLocation_FieldIndex.GridPoint:
                     return typeof(P2Int16);
                 default:
@@ -1169,8 +1165,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(ILoadScreenLocation item)
         {
             ClearPartial();
-            item.Direct.FormKey = FormKey.Null;
-            item.Indirect.FormKey = FormKey.Null;
+            item.Direct = new FormLink<Place>(FormKey.Null);
+            item.Indirect = new FormLink<Worldspace>(FormKey.Null);
             item.GridPoint = default;
         }
         
@@ -1207,10 +1203,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILoadScreenLocation item,
             MutagenFrame frame)
         {
-            item.Direct.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Direct = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
-            item.Indirect.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Indirect = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
             item.GridPoint = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(frame: frame);
@@ -1393,11 +1389,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.Direct) ?? true))
             {
-                item.Direct.FormKey = rhs.Direct.FormKey;
+                item.Direct = rhs.Direct.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.Indirect) ?? true))
             {
-                item.Indirect.FormKey = rhs.Indirect.FormKey;
+                item.Indirect = rhs.Indirect.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.GridPoint) ?? true))
             {
@@ -1629,7 +1625,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)LoadScreenLocation_FieldIndex.Direct);
                     try
                     {
-                        item.Direct.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Direct = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1647,7 +1643,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)LoadScreenLocation_FieldIndex.Indirect);
                     try
                     {
-                        item.Indirect.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Indirect = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

@@ -96,9 +96,7 @@ namespace Mutagen.Bethesda.Skyrim
         public MoveableStatic.Flag Flags { get; set; } = default;
         #endregion
         #region LoopingSound
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<SoundDescriptor> _LoopingSound = new FormLinkNullable<SoundDescriptor>();
-        public IFormLinkNullable<SoundDescriptor> LoopingSound => this._LoopingSound;
+        public FormLinkNullable<SoundDescriptor> LoopingSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IMoveableStaticGetter.LoopingSound => this.LoopingSound;
         #endregion
@@ -798,7 +796,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
         new MoveableStatic.Flag Flags { get; set; }
-        new IFormLinkNullable<SoundDescriptor> LoopingSound { get; }
+        new FormLinkNullable<SoundDescriptor> LoopingSound { get; set; }
         #region Mutagen
         new MoveableStatic.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1330,7 +1328,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MoveableStatic_FieldIndex.Flags:
                     return typeof(MoveableStatic.Flag);
                 case MoveableStatic_FieldIndex.LoopingSound:
-                    return typeof(IFormLinkNullable<SoundDescriptor>);
+                    return typeof(FormLinkNullable<SoundDescriptor>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1396,7 +1394,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Model = null;
             item.Destructible = null;
             item.Flags = default;
-            item.LoopingSound.FormKey = null;
+            item.LoopingSound = null;
             base.Clear(item);
         }
         
@@ -1549,7 +1547,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case 0x4D414E53: // SNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.LoopingSound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.LoopingSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)MoveableStatic_FieldIndex.LoopingSound);
@@ -2027,7 +2025,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MoveableStatic_FieldIndex.LoopingSound) ?? true))
             {
-                item.LoopingSound.FormKey = rhs.LoopingSound.FormKey;
+                item.LoopingSound = rhs.LoopingSound.FormKey;
             }
         }
         
@@ -2443,7 +2441,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)MoveableStatic_FieldIndex.LoopingSound);
                     try
                     {
-                        item.LoopingSound.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.LoopingSound = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2732,7 +2730,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region LoopingSound
         private int? _LoopingSoundLocation;
         public bool LoopingSound_IsSet => _LoopingSoundLocation.HasValue;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> LoopingSound => _LoopingSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LoopingSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Empty;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> LoopingSound => _LoopingSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LoopingSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

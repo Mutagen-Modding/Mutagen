@@ -51,9 +51,7 @@ namespace Mutagen.Bethesda.Skyrim
         public static RangeFloat MaxAngle_Range = new RangeFloat(30f, 120f);
         #endregion
         #region Material
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<MaterialObject> _Material = new FormLink<MaterialObject>();
-        public IFormLink<MaterialObject> Material => this._Material;
+        public FormLink<MaterialObject> Material { get; set; } = new FormLink<MaterialObject>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IMaterialObjectGetter> IDirectionMaterialGetter.Material => this.Material;
         #endregion
@@ -586,7 +584,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IDirectionMaterial>
     {
         new Single MaxAngle { get; set; }
-        new IFormLink<MaterialObject> Material { get; }
+        new FormLink<MaterialObject> Material { get; set; }
     }
 
     public partial interface IDirectionMaterialGetter :
@@ -1069,7 +1067,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case DirectionMaterial_FieldIndex.MaxAngle:
                     return typeof(Single);
                 case DirectionMaterial_FieldIndex.Material:
-                    return typeof(IFormLink<MaterialObject>);
+                    return typeof(FormLink<MaterialObject>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1123,7 +1121,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.MaxAngle = DirectionMaterial._MaxAngle_Default;
-            item.Material.FormKey = FormKey.Null;
+            item.Material = new FormLink<MaterialObject>(FormKey.Null);
         }
         
         #region Xml Translation
@@ -1160,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.MaxAngle = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Material.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Material = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
         }
@@ -1337,7 +1335,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DirectionMaterial_FieldIndex.Material) ?? true))
             {
-                item.Material.FormKey = rhs.Material.FormKey;
+                item.Material = rhs.Material.FormKey;
             }
         }
         
@@ -1574,7 +1572,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)DirectionMaterial_FieldIndex.Material);
                     try
                     {
-                        item.Material.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Material = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

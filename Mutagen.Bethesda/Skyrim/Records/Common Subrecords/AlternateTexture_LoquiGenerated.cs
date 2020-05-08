@@ -49,9 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
         public String Name { get; set; } = string.Empty;
         #endregion
         #region NewTexture
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<TextureSet> _NewTexture = new FormLink<TextureSet>();
-        public IFormLink<TextureSet> NewTexture => this._NewTexture;
+        public FormLink<TextureSet> NewTexture { get; set; } = new FormLink<TextureSet>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ITextureSetGetter> IAlternateTextureGetter.NewTexture => this.NewTexture;
         #endregion
@@ -614,7 +612,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IAlternateTexture>
     {
         new String Name { get; set; }
-        new IFormLink<TextureSet> NewTexture { get; }
+        new FormLink<TextureSet> NewTexture { get; set; }
         new Int32 Index { get; set; }
     }
 
@@ -1109,7 +1107,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case AlternateTexture_FieldIndex.Name:
                     return typeof(String);
                 case AlternateTexture_FieldIndex.NewTexture:
-                    return typeof(IFormLink<TextureSet>);
+                    return typeof(FormLink<TextureSet>);
                 case AlternateTexture_FieldIndex.Index:
                     return typeof(Int32);
                 default:
@@ -1163,7 +1161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Name = string.Empty;
-            item.NewTexture.FormKey = FormKey.Null;
+            item.NewTexture = new FormLink<TextureSet>(FormKey.Null);
             item.Index = default;
         }
         
@@ -1203,7 +1201,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                 frame: frame,
                 stringBinaryType: StringBinaryType.PrependLength);
-            item.NewTexture.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.NewTexture = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
             item.Index = frame.ReadInt32();
@@ -1386,7 +1384,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AlternateTexture_FieldIndex.NewTexture) ?? true))
             {
-                item.NewTexture.FormKey = rhs.NewTexture.FormKey;
+                item.NewTexture = rhs.NewTexture.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)AlternateTexture_FieldIndex.Index) ?? true))
             {
@@ -1636,7 +1634,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)AlternateTexture_FieldIndex.NewTexture);
                     try
                     {
-                        item.NewTexture.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.NewTexture = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

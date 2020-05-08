@@ -46,9 +46,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Projectile
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<Projectile> _Projectile = new FormLink<Projectile>();
-        public IFormLink<Projectile> Projectile => this._Projectile;
+        public FormLink<Projectile> Projectile { get; set; } = new FormLink<Projectile>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IProjectileGetter> IAmmunitionDataGetter.Projectile => this.Projectile;
         #endregion
@@ -646,7 +644,7 @@ namespace Mutagen.Bethesda.Skyrim
         IWeightValue,
         ILoquiObjectSetter<IAmmunitionData>
     {
-        new IFormLink<Projectile> Projectile { get; }
+        new FormLink<Projectile> Projectile { get; set; }
         new AmmunitionData.Flag Flags { get; set; }
         new Single Damage { get; set; }
         new Int32 Value { get; set; }
@@ -1153,7 +1151,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case AmmunitionData_FieldIndex.Projectile:
-                    return typeof(IFormLink<Projectile>);
+                    return typeof(FormLink<Projectile>);
                 case AmmunitionData_FieldIndex.Flags:
                     return typeof(AmmunitionData.Flag);
                 case AmmunitionData_FieldIndex.Damage:
@@ -1212,7 +1210,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IAmmunitionData item)
         {
             ClearPartial();
-            item.Projectile.FormKey = FormKey.Null;
+            item.Projectile = new FormLink<Projectile>(FormKey.Null);
             item.Flags = default;
             item.Damage = default;
             item.Value = default;
@@ -1251,7 +1249,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAmmunitionData item,
             MutagenFrame frame)
         {
-            item.Projectile.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Projectile = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
             item.Flags = EnumBinaryTranslation<AmmunitionData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
@@ -1443,7 +1441,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)AmmunitionData_FieldIndex.Projectile) ?? true))
             {
-                item.Projectile.FormKey = rhs.Projectile.FormKey;
+                item.Projectile = rhs.Projectile.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)AmmunitionData_FieldIndex.Flags) ?? true))
             {
@@ -1699,7 +1697,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)AmmunitionData_FieldIndex.Projectile);
                     try
                     {
-                        item.Projectile.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Projectile = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

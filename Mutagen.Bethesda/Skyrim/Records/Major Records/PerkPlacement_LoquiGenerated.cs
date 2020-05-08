@@ -46,9 +46,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Perk
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<Perk> _Perk = new FormLink<Perk>();
-        public IFormLink<Perk> Perk => this._Perk;
+        public FormLink<Perk> Perk { get; set; } = new FormLink<Perk>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IPerkGetter> IPerkPlacementGetter.Perk => this.Perk;
         #endregion
@@ -622,7 +620,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPerkPlacementGetter,
         ILoquiObjectSetter<IPerkPlacement>
     {
-        new IFormLink<Perk> Perk { get; }
+        new FormLink<Perk> Perk { get; set; }
         new Byte Rank { get; set; }
         new Byte[] Fluff { get; set; }
     }
@@ -1116,7 +1114,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case PerkPlacement_FieldIndex.Perk:
-                    return typeof(IFormLink<Perk>);
+                    return typeof(FormLink<Perk>);
                 case PerkPlacement_FieldIndex.Rank:
                     return typeof(Byte);
                 case PerkPlacement_FieldIndex.Fluff:
@@ -1173,7 +1171,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPerkPlacement item)
         {
             ClearPartial();
-            item.Perk.FormKey = FormKey.Null;
+            item.Perk = new FormLink<Perk>(FormKey.Null);
             item.Rank = default;
             item.Fluff = new byte[3];
         }
@@ -1211,7 +1209,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPerkPlacement item,
             MutagenFrame frame)
         {
-            item.Perk.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Perk = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
             item.Rank = frame.ReadUInt8();
@@ -1394,7 +1392,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)PerkPlacement_FieldIndex.Perk) ?? true))
             {
-                item.Perk.FormKey = rhs.Perk.FormKey;
+                item.Perk = rhs.Perk.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)PerkPlacement_FieldIndex.Rank) ?? true))
             {
@@ -1630,7 +1628,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)PerkPlacement_FieldIndex.Perk);
                     try
                     {
-                        item.Perk.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Perk = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

@@ -57,9 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
         Int32? IHeadPartReferenceGetter.Number => this.Number;
         #endregion
         #region Head
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<HeadPart> _Head = new FormLinkNullable<HeadPart>();
-        public IFormLinkNullable<HeadPart> Head => this._Head;
+        public FormLinkNullable<HeadPart> Head { get; set; } = new FormLinkNullable<HeadPart>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IHeadPartGetter> IHeadPartReferenceGetter.Head => this.Head;
         #endregion
@@ -591,7 +589,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IHeadPartReference>
     {
         new Int32? Number { get; set; }
-        new IFormLinkNullable<HeadPart> Head { get; }
+        new FormLinkNullable<HeadPart> Head { get; set; }
     }
 
     public partial interface IHeadPartReferenceGetter :
@@ -1074,7 +1072,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case HeadPartReference_FieldIndex.Number:
                     return typeof(Int32);
                 case HeadPartReference_FieldIndex.Head:
-                    return typeof(IFormLinkNullable<HeadPart>);
+                    return typeof(FormLinkNullable<HeadPart>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1140,7 +1138,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Number = default;
-            item.Head.FormKey = null;
+            item.Head = null;
         }
         
         #region Xml Translation
@@ -1200,7 +1198,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadPartReference_FieldIndex.Head) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.Head.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Head = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)HeadPartReference_FieldIndex.Head);
@@ -1393,7 +1391,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)HeadPartReference_FieldIndex.Head) ?? true))
             {
-                item.Head.FormKey = rhs.Head.FormKey;
+                item.Head = rhs.Head.FormKey;
             }
         }
         
@@ -1632,7 +1630,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)HeadPartReference_FieldIndex.Head);
                     try
                     {
-                        item.Head.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Head = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1954,7 +1952,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Head
         private int? _HeadLocation;
         public bool Head_IsSet => _HeadLocation.HasValue;
-        public IFormLinkNullableGetter<IHeadPartGetter> Head => _HeadLocation.HasValue ? new FormLinkNullable<IHeadPartGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _HeadLocation.Value, _package.Meta)))) : FormLinkNullable<IHeadPartGetter>.Empty;
+        public IFormLinkNullableGetter<IHeadPartGetter> Head => _HeadLocation.HasValue ? new FormLinkNullable<IHeadPartGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _HeadLocation.Value, _package.Meta)))) : FormLinkNullable<IHeadPartGetter>.Null;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

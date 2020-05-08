@@ -38,9 +38,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if ((((int)item.Flags) & SpellFlag) > 0)
                 {
-                    var spell = new BookSpell();
-                    spell.Spell.FormKey = FormLinkBinaryTranslation.Instance.Parse(frame);
-                    item.Teaches = spell;
+                    item.Teaches = new BookSpell()
+                    {
+                        Spell = FormLinkBinaryTranslation.Instance.Parse(frame)
+                    };
                 }
                 else if ((((int)item.Flags) & SkillFlag) > 0)
                 {
@@ -116,9 +117,10 @@ namespace Mutagen.Bethesda.Skyrim
                 int flags = (int)this.Flags;
                 if ((flags & BookDataBinaryCreateTranslation.SpellFlag) > 0)
                 {
-                    var spell = new BookSpell();
-                    spell.Spell.FormKey = FormKeyBinaryTranslation.Instance.Parse(_data.Slice(location, 4), _package.MasterReferences);
-                    return spell;
+                    return new BookSpell()
+                    {
+                        Spell = FormKeyBinaryTranslation.Instance.Parse(_data.Slice(location, 4), _package.MasterReferences)
+                    };
                 }
                 else if ((flags & BookDataBinaryCreateTranslation.SkillFlag) > 0)
                 {

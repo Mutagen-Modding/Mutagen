@@ -48,9 +48,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Npc
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<Npc> _Npc = new FormLink<Npc>();
-        public IFormLink<Npc> Npc => this._Npc;
+        public FormLink<Npc> Npc { get; set; } = new FormLink<Npc>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<INpcGetter> INpcOwnerGetter.Npc => this.Npc;
         #endregion
@@ -573,7 +571,7 @@ namespace Mutagen.Bethesda.Skyrim
         IOwnerTarget,
         ILoquiObjectSetter<INpcOwner>
     {
-        new IFormLink<Npc> Npc { get; }
+        new FormLink<Npc> Npc { get; set; }
         new UInt32 RawVariableData { get; set; }
     }
 
@@ -1026,7 +1024,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case NpcOwner_FieldIndex.Npc:
-                    return typeof(IFormLink<Npc>);
+                    return typeof(FormLink<Npc>);
                 case NpcOwner_FieldIndex.RawVariableData:
                     return typeof(UInt32);
                 default:
@@ -1079,7 +1077,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(INpcOwner item)
         {
             ClearPartial();
-            item.Npc.FormKey = FormKey.Null;
+            item.Npc = new FormLink<Npc>(FormKey.Null);
             item.RawVariableData = default;
             base.Clear(item);
         }
@@ -1135,7 +1133,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INpcOwner item,
             MutagenFrame frame)
         {
-            item.Npc.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Npc = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
             item.RawVariableData = frame.ReadUInt32();
@@ -1361,7 +1359,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)NpcOwner_FieldIndex.Npc) ?? true))
             {
-                item.Npc.FormKey = rhs.Npc.FormKey;
+                item.Npc = rhs.Npc.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)NpcOwner_FieldIndex.RawVariableData) ?? true))
             {
@@ -1585,7 +1583,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)NpcOwner_FieldIndex.Npc);
                     try
                     {
-                        item.Npc.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Npc = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

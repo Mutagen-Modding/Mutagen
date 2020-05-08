@@ -48,9 +48,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region InheritsSoundsFrom
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<Npc> _InheritsSoundsFrom = new FormLinkNullable<Npc>();
-        public IFormLinkNullable<Npc> InheritsSoundsFrom => this._InheritsSoundsFrom;
+        public FormLinkNullable<Npc> InheritsSoundsFrom { get; set; } = new FormLinkNullable<Npc>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<INpcGetter> INpcInheritSoundGetter.InheritsSoundsFrom => this.InheritsSoundsFrom;
         #endregion
@@ -536,7 +534,7 @@ namespace Mutagen.Bethesda.Skyrim
         IANpcSoundDefinition,
         ILoquiObjectSetter<INpcInheritSound>
     {
-        new IFormLinkNullable<Npc> InheritsSoundsFrom { get; }
+        new FormLinkNullable<Npc> InheritsSoundsFrom { get; set; }
     }
 
     public partial interface INpcInheritSoundGetter :
@@ -977,7 +975,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case NpcInheritSound_FieldIndex.InheritsSoundsFrom:
-                    return typeof(IFormLinkNullable<Npc>);
+                    return typeof(FormLinkNullable<Npc>);
                 default:
                     return ANpcSoundDefinition_Registration.GetNthType(index);
             }
@@ -1030,7 +1028,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(INpcInheritSound item)
         {
             ClearPartial();
-            item.InheritsSoundsFrom.FormKey = null;
+            item.InheritsSoundsFrom = null;
             base.Clear(item);
         }
         
@@ -1102,7 +1100,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)NpcInheritSound_FieldIndex.InheritsSoundsFrom) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.InheritsSoundsFrom.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.InheritsSoundsFrom = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)NpcInheritSound_FieldIndex.InheritsSoundsFrom);
@@ -1333,7 +1331,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)NpcInheritSound_FieldIndex.InheritsSoundsFrom) ?? true))
             {
-                item.InheritsSoundsFrom.FormKey = rhs.InheritsSoundsFrom.FormKey;
+                item.InheritsSoundsFrom = rhs.InheritsSoundsFrom.FormKey;
             }
         }
         
@@ -1545,7 +1543,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)NpcInheritSound_FieldIndex.InheritsSoundsFrom);
                     try
                     {
-                        item.InheritsSoundsFrom.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.InheritsSoundsFrom = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1765,7 +1763,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region InheritsSoundsFrom
         private int? _InheritsSoundsFromLocation;
         public bool InheritsSoundsFrom_IsSet => _InheritsSoundsFromLocation.HasValue;
-        public IFormLinkNullableGetter<INpcGetter> InheritsSoundsFrom => _InheritsSoundsFromLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _InheritsSoundsFromLocation.Value, _package.Meta)))) : FormLinkNullable<INpcGetter>.Empty;
+        public IFormLinkNullableGetter<INpcGetter> InheritsSoundsFrom => _InheritsSoundsFromLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _InheritsSoundsFromLocation.Value, _package.Meta)))) : FormLinkNullable<INpcGetter>.Null;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

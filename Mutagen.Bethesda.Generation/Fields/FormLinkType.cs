@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.Generation
         public override bool HasProperty => false;
         public override bool IsEnumerable => false;
 
-        public override string TypeName(bool getter) => $"I{ClassTypeString}Link{(this.HasBeenSet ? "Nullable" : string.Empty)}{(getter ? "Getter" : null)}<{LoquiType.TypeName(getter, internalInterface: true)}>";
+        public override string TypeName(bool getter, bool needsCovariance = false) => $"{(getter || needsCovariance ? "I" : null)}{ClassTypeString}Link{(this.HasBeenSet ? "Nullable" : string.Empty)}{(getter ? "Getter" : null)}<{LoquiType.TypeNameInternal(getter, internalInterface: true)}>";
         public override Type Type(bool getter) => typeof(FormID);
         public string ClassTypeString
         {
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Generation
         }
         public string DirectTypeName(bool getter, bool internalInterface = false)
         {
-            return $"{ClassTypeString}Link{(this.HasBeenSet ? "Nullable" : string.Empty)}<{LoquiType.TypeName(getter: getter, internalInterface: internalInterface)}>";
+            return $"{ClassTypeString}Link{(this.HasBeenSet ? "Nullable" : string.Empty)}<{LoquiType.TypeNameInternal(getter: getter, internalInterface: internalInterface)}>";
         }
 
         public override async Task Load(XElement node, bool requireName = true)
@@ -122,13 +122,13 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (this.HasBeenSet)
                 {
-                    fg.AppendLine($"{accessor.PropertyOrDirectAccess}.{FormIDTypeString} = {rhs}.{FormIDTypeString};");
+                    fg.AppendLine($"{accessor.PropertyOrDirectAccess} = {rhs}.{FormIDTypeString};");
                 }
                 else
                 {
                     if (deepCopy)
                     {
-                        fg.AppendLine($"{accessor.PropertyOrDirectAccess}.{FormIDTypeString} = {rhs}.{FormIDTypeString};");
+                        fg.AppendLine($"{accessor.PropertyOrDirectAccess} = {rhs}.{FormIDTypeString};");
                     }
                     else
                     {
@@ -173,17 +173,17 @@ namespace Mutagen.Bethesda.Generation
             if (this.ReadOnly || !this.IntegrateField) return;
             if (this.HasBeenSet)
             {
-                fg.AppendLine($"{identifier.PropertyOrDirectAccess}.{FormIDTypeString} = null;");
+                fg.AppendLine($"{identifier.PropertyOrDirectAccess} = null;");
             }
             else
             {
                 switch (this.FormIDType)
                 {
                     case FormIDTypeEnum.Normal:
-                        fg.AppendLine($"{identifier.PropertyOrDirectAccess}.{FormIDTypeString} = FormKey.Null;");
+                        fg.AppendLine($"{identifier.PropertyOrDirectAccess} = new {DirectTypeName(getter: false)}(FormKey.Null);");
                         break;
                     case FormIDTypeEnum.EDIDChars:
-                        fg.AppendLine($"{identifier.PropertyOrDirectAccess}.{FormIDTypeString} = RecordType.Null;");
+                        fg.AppendLine($"{identifier.PropertyOrDirectAccess} = new {DirectTypeName(getter: false)}(RecordType.Null);");
                         break;
                     default:
                         throw new NotImplementedException();
@@ -193,14 +193,12 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateCopySetToConverter(FileGeneration fg)
         {
-            fg.AppendLine($".Select(r => ({TypeName(getter: false)})new {DirectTypeName(getter: false)}(r.{FormIDTypeString}))");
+            fg.AppendLine($".Select(r => ({TypeName(getter: false, needsCovariance: true)})new {DirectTypeName(getter: false)}(r.{FormIDTypeString}))");
         }
 
         public override void GenerateForClass(FileGeneration fg)
         {
-            fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
-            fg.AppendLine($"protected {this.TypeName(getter: false)} _{this.Name} = {GetNewForNonNullable()};");
-            fg.AppendLine($"public {this.TypeName(getter: false)} {this.Name} => this._{ this.Name};");
+            fg.AppendLine($"public {this.TypeName(getter: false)} {this.Name} {{ get; set; }} = {GetNewForNonNullable()};");
             fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
             fg.AppendLine($"{this.TypeName(getter: true)} {this.ObjectGen.Interface(getter: true, this.InternalGetInterface)}.{this.Name} => this.{this.Name};");
         }
@@ -215,7 +213,7 @@ namespace Mutagen.Bethesda.Generation
             else
             {
                 if (!ApplicableInterfaceField(getter, internalInterface)) return;
-                fg.AppendLine($"new {TypeName(getter: false)} {this.Name} {{ get; }}");
+                fg.AppendLine($"new {TypeName(getter: false)} {this.Name} {{ get; set; }}");
             }
         }
 
@@ -232,7 +230,7 @@ namespace Mutagen.Bethesda.Generation
         public override string GetDefault(bool getter)
         {
             if (this.HasBeenSet) return "default";
-            return $"new FormLink<{LoquiType.TypeName(getter, internalInterface: true)}>(FormKey.Null)";
+            return $"new FormLink<{LoquiType.TypeNameInternal(getter, internalInterface: true)}>(FormKey.Null)";
         }
     }
 }

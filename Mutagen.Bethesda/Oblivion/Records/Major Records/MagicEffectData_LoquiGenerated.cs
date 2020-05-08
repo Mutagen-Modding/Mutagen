@@ -68,9 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
         public UInt32 CounterEffectCount { get; set; } = default;
         #endregion
         #region Light
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<Light> _Light = new FormLink<Light>();
-        public IFormLink<Light> Light => this._Light;
+        public FormLink<Light> Light { get; set; } = new FormLink<Light>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ILightGetter> IMagicEffectDataGetter.Light => this.Light;
         #endregion
@@ -78,9 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Single ProjectileSpeed { get; set; } = default;
         #endregion
         #region EffectShader
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<EffectShader> _EffectShader = new FormLink<EffectShader>();
-        public IFormLink<EffectShader> EffectShader => this._EffectShader;
+        public FormLink<EffectShader> EffectShader { get; set; } = new FormLink<EffectShader>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IEffectShaderGetter> IMagicEffectDataGetter.EffectShader => this.EffectShader;
         #endregion
@@ -895,9 +891,9 @@ namespace Mutagen.Bethesda.Oblivion
         new MagicSchool MagicSchool { get; set; }
         new Resistance Resistance { get; set; }
         new UInt32 CounterEffectCount { get; set; }
-        new IFormLink<Light> Light { get; }
+        new FormLink<Light> Light { get; set; }
         new Single ProjectileSpeed { get; set; }
-        new IFormLink<EffectShader> EffectShader { get; }
+        new FormLink<EffectShader> EffectShader { get; set; }
         new MagicEffectSubData? SubData { get; set; }
     }
 
@@ -1493,11 +1489,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffectData_FieldIndex.CounterEffectCount:
                     return typeof(UInt32);
                 case MagicEffectData_FieldIndex.Light:
-                    return typeof(IFormLink<Light>);
+                    return typeof(FormLink<Light>);
                 case MagicEffectData_FieldIndex.ProjectileSpeed:
                     return typeof(Single);
                 case MagicEffectData_FieldIndex.EffectShader:
-                    return typeof(IFormLink<EffectShader>);
+                    return typeof(FormLink<EffectShader>);
                 case MagicEffectData_FieldIndex.SubData:
                     return typeof(MagicEffectSubData);
                 default:
@@ -1559,9 +1555,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.MagicSchool = default;
             item.Resistance = default;
             item.CounterEffectCount = default;
-            item.Light.FormKey = FormKey.Null;
+            item.Light = new FormLink<Light>(FormKey.Null);
             item.ProjectileSpeed = default;
-            item.EffectShader.FormKey = FormKey.Null;
+            item.EffectShader = new FormLink<EffectShader>(FormKey.Null);
             item.SubData = null;
         }
         
@@ -1604,11 +1600,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.MagicSchool = EnumBinaryTranslation<MagicSchool>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.Resistance = EnumBinaryTranslation<Resistance>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.CounterEffectCount = frame.ReadUInt32();
-            item.Light.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Light = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
             item.ProjectileSpeed = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.EffectShader.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.EffectShader = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
             if (frame.Complete)
@@ -1907,7 +1903,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Light) ?? true))
             {
-                item.Light.FormKey = rhs.Light.FormKey;
+                item.Light = rhs.Light.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.ProjectileSpeed) ?? true))
             {
@@ -1915,7 +1911,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.EffectShader) ?? true))
             {
-                item.EffectShader.FormKey = rhs.EffectShader.FormKey;
+                item.EffectShader = rhs.EffectShader.FormKey;
             }
             if (rhs.Versioning.HasFlag(MagicEffectData.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)MagicEffectData_FieldIndex.SubData) ?? true))
@@ -2373,7 +2369,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)MagicEffectData_FieldIndex.Light);
                     try
                     {
-                        item.Light.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Light = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2409,7 +2405,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)MagicEffectData_FieldIndex.EffectShader);
                     try
                     {
-                        item.EffectShader.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.EffectShader = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

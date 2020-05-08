@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Generation
             }
 
             using (var args = new ArgsWrapper(fg,
-                $"{itemAccessor} = {this.Namespace}GenderedItemBinaryTranslation.Parse{(gender.MarkerPerGender ? "MarkerPerItem" : null)}<{gender.SubTypeGeneration.TypeName(getter: false)}>"))
+                $"{itemAccessor} = {this.Namespace}GenderedItemBinaryTranslation.Parse{(gender.MarkerPerGender ? "MarkerPerItem" : null)}<{gender.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}>"))
             {
                 args.AddPassArg($"frame");
                 if (gender.MaleMarker.HasValue)
@@ -143,7 +143,7 @@ namespace Mutagen.Bethesda.Generation
             var loqui = gendered.SubTypeGeneration as LoquiType;
             if (loqui != null)
             {
-                typeName = loqui.TypeName(getter: true, internalInterface: true);
+                typeName = loqui.TypeNameInternal(getter: true, internalInterface: true);
             }
             using (var args = new ArgsWrapper(fg,
                 $"GenderedItemBinaryTranslation.Write{(gendered.MarkerPerGender ? "MarkerPerItem" : null)}"))

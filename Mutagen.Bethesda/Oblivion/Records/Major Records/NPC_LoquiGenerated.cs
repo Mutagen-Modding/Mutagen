@@ -97,16 +97,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region DeathItem
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<AItem> _DeathItem = new FormLinkNullable<AItem>();
-        public IFormLinkNullable<AItem> DeathItem => this._DeathItem;
+        public FormLinkNullable<AItem> DeathItem { get; set; } = new FormLinkNullable<AItem>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IAItemGetter> INpcGetter.DeathItem => this.DeathItem;
         #endregion
         #region Race
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<Race> _Race = new FormLinkNullable<Race>();
-        public IFormLinkNullable<Race> Race => this._Race;
+        public FormLinkNullable<Race> Race { get; set; } = new FormLinkNullable<Race>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IRaceGetter> INpcGetter.Race => this.Race;
         #endregion
@@ -125,9 +121,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Script
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<Script> _Script = new FormLinkNullable<Script>();
-        public IFormLinkNullable<Script> Script => this._Script;
+        public FormLinkNullable<Script> Script { get; set; } = new FormLinkNullable<Script>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IScriptGetter> INpcGetter.Script => this.Script;
         #endregion
@@ -185,9 +179,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Class
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<Class> _Class = new FormLinkNullable<Class>();
-        public IFormLinkNullable<Class> Class => this._Class;
+        public FormLinkNullable<Class> Class { get; set; } = new FormLinkNullable<Class>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IClassGetter> INpcGetter.Class => this.Class;
         #endregion
@@ -203,9 +195,7 @@ namespace Mutagen.Bethesda.Oblivion
         INpcDataGetter? INpcGetter.Stats => this.Stats;
         #endregion
         #region Hair
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<Hair> _Hair = new FormLinkNullable<Hair>();
-        public IFormLinkNullable<Hair> Hair => this._Hair;
+        public FormLinkNullable<Hair> Hair { get; set; } = new FormLinkNullable<Hair>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IHairGetter> INpcGetter.Hair => this.Hair;
         #endregion
@@ -246,9 +236,7 @@ namespace Mutagen.Bethesda.Oblivion
         Color? INpcGetter.HairColor => this.HairColor;
         #endregion
         #region CombatStyle
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<CombatStyle> _CombatStyle = new FormLinkNullable<CombatStyle>();
-        public IFormLinkNullable<CombatStyle> CombatStyle => this._CombatStyle;
+        public FormLinkNullable<CombatStyle> CombatStyle { get; set; } = new FormLinkNullable<CombatStyle>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ICombatStyleGetter> INpcGetter.CombatStyle => this.CombatStyle;
         #endregion
@@ -1910,21 +1898,21 @@ namespace Mutagen.Bethesda.Oblivion
         new Model? Model { get; set; }
         new NpcConfiguration? Configuration { get; set; }
         new ExtendedList<RankPlacement> Factions { get; }
-        new IFormLinkNullable<AItem> DeathItem { get; }
-        new IFormLinkNullable<Race> Race { get; }
+        new FormLinkNullable<AItem> DeathItem { get; set; }
+        new FormLinkNullable<Race> Race { get; set; }
         new ExtendedList<IFormLink<ASpell>>? Spells { get; set; }
-        new IFormLinkNullable<Script> Script { get; }
+        new FormLinkNullable<Script> Script { get; set; }
         new ExtendedList<ItemEntry> Items { get; }
         new AIData? AIData { get; set; }
         new ExtendedList<IFormLink<AIPackage>>? AIPackages { get; set; }
         new ExtendedList<String>? Animations { get; set; }
-        new IFormLinkNullable<Class> Class { get; }
+        new FormLinkNullable<Class> Class { get; set; }
         new NpcData? Stats { get; set; }
-        new IFormLinkNullable<Hair> Hair { get; }
+        new FormLinkNullable<Hair> Hair { get; set; }
         new Single? HairLength { get; set; }
         new ExtendedList<IFormLink<Eye>>? Eyes { get; set; }
         new Color? HairColor { get; set; }
-        new IFormLinkNullable<CombatStyle> CombatStyle { get; }
+        new FormLinkNullable<CombatStyle> CombatStyle { get; set; }
         new Byte[]? FaceGenGeometrySymmetric { get; set; }
         new Byte[]? FaceGenGeometryAsymmetric { get; set; }
         new Byte[]? FaceGenTextureSymmetric { get; set; }
@@ -2635,13 +2623,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Npc_FieldIndex.Factions:
                     return typeof(ExtendedList<RankPlacement>);
                 case Npc_FieldIndex.DeathItem:
-                    return typeof(IFormLinkNullable<AItem>);
+                    return typeof(FormLinkNullable<AItem>);
                 case Npc_FieldIndex.Race:
-                    return typeof(IFormLinkNullable<Race>);
+                    return typeof(FormLinkNullable<Race>);
                 case Npc_FieldIndex.Spells:
                     return typeof(ExtendedList<IFormLink<ASpell>>);
                 case Npc_FieldIndex.Script:
-                    return typeof(IFormLinkNullable<Script>);
+                    return typeof(FormLinkNullable<Script>);
                 case Npc_FieldIndex.Items:
                     return typeof(ExtendedList<ItemEntry>);
                 case Npc_FieldIndex.AIData:
@@ -2651,11 +2639,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Npc_FieldIndex.Animations:
                     return typeof(ExtendedList<String>);
                 case Npc_FieldIndex.Class:
-                    return typeof(IFormLinkNullable<Class>);
+                    return typeof(FormLinkNullable<Class>);
                 case Npc_FieldIndex.Stats:
                     return typeof(NpcData);
                 case Npc_FieldIndex.Hair:
-                    return typeof(IFormLinkNullable<Hair>);
+                    return typeof(FormLinkNullable<Hair>);
                 case Npc_FieldIndex.HairLength:
                     return typeof(Single);
                 case Npc_FieldIndex.Eyes:
@@ -2663,7 +2651,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Npc_FieldIndex.HairColor:
                     return typeof(Color);
                 case Npc_FieldIndex.CombatStyle:
-                    return typeof(IFormLinkNullable<CombatStyle>);
+                    return typeof(FormLinkNullable<CombatStyle>);
                 case Npc_FieldIndex.FaceGenGeometrySymmetric:
                     return typeof(Byte[]);
                 case Npc_FieldIndex.FaceGenGeometryAsymmetric:
@@ -2751,21 +2739,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Model = null;
             item.Configuration = null;
             item.Factions.Clear();
-            item.DeathItem.FormKey = null;
-            item.Race.FormKey = null;
+            item.DeathItem = null;
+            item.Race = null;
             item.Spells = null;
-            item.Script.FormKey = null;
+            item.Script = null;
             item.Items.Clear();
             item.AIData = null;
             item.AIPackages = null;
             item.Animations = null;
-            item.Class.FormKey = null;
+            item.Class = null;
             item.Stats = null;
-            item.Hair.FormKey = null;
+            item.Hair = null;
             item.HairLength = default;
             item.Eyes = null;
             item.HairColor = default;
-            item.CombatStyle.FormKey = null;
+            item.CombatStyle = null;
             item.FaceGenGeometrySymmetric = default;
             item.FaceGenGeometryAsymmetric = default;
             item.FaceGenTextureSymmetric = default;
@@ -2959,7 +2947,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E49: // INAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.DeathItem.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.DeathItem = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.DeathItem);
@@ -2967,7 +2955,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E52: // RNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.Race.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Race = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Race);
@@ -2986,7 +2974,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x49524353: // SCRI
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.Script.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Script = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Script);
@@ -3042,7 +3030,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E43: // CNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.Class.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Class = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Class);
@@ -3055,7 +3043,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E48: // HNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.Hair.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Hair = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Hair);
@@ -3086,7 +3074,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case 0x4D414E5A: // ZNAM
                 {
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.CombatStyle.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.CombatStyle = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.CombatStyle);
@@ -4032,11 +4020,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.DeathItem) ?? true))
             {
-                item.DeathItem.FormKey = rhs.DeathItem.FormKey;
+                item.DeathItem = rhs.DeathItem.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Race) ?? true))
             {
-                item.Race.FormKey = rhs.Race.FormKey;
+                item.Race = rhs.Race.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Spells) ?? true))
             {
@@ -4067,7 +4055,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Script) ?? true))
             {
-                item.Script.FormKey = rhs.Script.FormKey;
+                item.Script = rhs.Script.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Items) ?? true))
             {
@@ -4174,7 +4162,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Class) ?? true))
             {
-                item.Class.FormKey = rhs.Class.FormKey;
+                item.Class = rhs.Class.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Stats) ?? true))
             {
@@ -4204,7 +4192,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Hair) ?? true))
             {
-                item.Hair.FormKey = rhs.Hair.FormKey;
+                item.Hair = rhs.Hair.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.HairLength) ?? true))
             {
@@ -4243,7 +4231,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.CombatStyle) ?? true))
             {
-                item.CombatStyle.FormKey = rhs.CombatStyle.FormKey;
+                item.CombatStyle = rhs.CombatStyle.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.FaceGenGeometrySymmetric) ?? true))
             {
@@ -5014,7 +5002,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)Npc_FieldIndex.DeathItem);
                     try
                     {
-                        item.DeathItem.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.DeathItem = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5032,7 +5020,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)Npc_FieldIndex.Race);
                     try
                     {
-                        item.Race.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Race = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5078,7 +5066,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)Npc_FieldIndex.Script);
                     try
                     {
-                        item.Script.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Script = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5199,7 +5187,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)Npc_FieldIndex.Class);
                     try
                     {
-                        item.Class.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Class = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5236,7 +5224,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)Npc_FieldIndex.Hair);
                     try
                     {
-                        item.Hair.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Hair = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5318,7 +5306,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)Npc_FieldIndex.CombatStyle);
                     try
                     {
-                        item.CombatStyle.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.CombatStyle = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -5805,18 +5793,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region DeathItem
         private int? _DeathItemLocation;
         public bool DeathItem_IsSet => _DeathItemLocation.HasValue;
-        public IFormLinkNullableGetter<IAItemGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<IAItemGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _DeathItemLocation.Value, _package.Meta)))) : FormLinkNullable<IAItemGetter>.Empty;
+        public IFormLinkNullableGetter<IAItemGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<IAItemGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _DeathItemLocation.Value, _package.Meta)))) : FormLinkNullable<IAItemGetter>.Null;
         #endregion
         #region Race
         private int? _RaceLocation;
         public bool Race_IsSet => _RaceLocation.HasValue;
-        public IFormLinkNullableGetter<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _RaceLocation.Value, _package.Meta)))) : FormLinkNullable<IRaceGetter>.Empty;
+        public IFormLinkNullableGetter<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _RaceLocation.Value, _package.Meta)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IASpellGetter>>? Spells { get; private set; }
         #region Script
         private int? _ScriptLocation;
         public bool Script_IsSet => _ScriptLocation.HasValue;
-        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormLinkNullable<IScriptGetter>.Empty;
+        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.Meta)))) : FormLinkNullable<IScriptGetter>.Null;
         #endregion
         public IReadOnlyList<IItemEntryGetter> Items { get; private set; } = ListExt.Empty<ItemEntryBinaryOverlay>();
         #region AIData
@@ -5829,7 +5817,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Class
         private int? _ClassLocation;
         public bool Class_IsSet => _ClassLocation.HasValue;
-        public IFormLinkNullableGetter<IClassGetter> Class => _ClassLocation.HasValue ? new FormLinkNullable<IClassGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ClassLocation.Value, _package.Meta)))) : FormLinkNullable<IClassGetter>.Empty;
+        public IFormLinkNullableGetter<IClassGetter> Class => _ClassLocation.HasValue ? new FormLinkNullable<IClassGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ClassLocation.Value, _package.Meta)))) : FormLinkNullable<IClassGetter>.Null;
         #endregion
         #region Stats
         private RangeInt32? _StatsLocation;
@@ -5839,7 +5827,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Hair
         private int? _HairLocation;
         public bool Hair_IsSet => _HairLocation.HasValue;
-        public IFormLinkNullableGetter<IHairGetter> Hair => _HairLocation.HasValue ? new FormLinkNullable<IHairGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _HairLocation.Value, _package.Meta)))) : FormLinkNullable<IHairGetter>.Empty;
+        public IFormLinkNullableGetter<IHairGetter> Hair => _HairLocation.HasValue ? new FormLinkNullable<IHairGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _HairLocation.Value, _package.Meta)))) : FormLinkNullable<IHairGetter>.Null;
         #endregion
         #region HairLength
         private int? _HairLengthLocation;
@@ -5853,7 +5841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region CombatStyle
         private int? _CombatStyleLocation;
         public bool CombatStyle_IsSet => _CombatStyleLocation.HasValue;
-        public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => _CombatStyleLocation.HasValue ? new FormLinkNullable<ICombatStyleGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _CombatStyleLocation.Value, _package.Meta)))) : FormLinkNullable<ICombatStyleGetter>.Empty;
+        public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => _CombatStyleLocation.HasValue ? new FormLinkNullable<ICombatStyleGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _CombatStyleLocation.Value, _package.Meta)))) : FormLinkNullable<ICombatStyleGetter>.Null;
         #endregion
         #region FaceGenGeometrySymmetric
         private int? _FaceGenGeometrySymmetricLocation;

@@ -48,9 +48,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Object
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<SkyrimMajorRecord> _Object = new FormLink<SkyrimMajorRecord>();
-        public IFormLink<SkyrimMajorRecord> Object => this._Object;
+        public FormLink<SkyrimMajorRecord> Object { get; set; } = new FormLink<SkyrimMajorRecord>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISkyrimMajorRecordGetter> IScriptObjectPropertyGetter.Object => this.Object;
         #endregion
@@ -608,7 +606,7 @@ namespace Mutagen.Bethesda.Skyrim
         IScriptProperty,
         ILoquiObjectSetter<IScriptObjectProperty>
     {
-        new IFormLink<SkyrimMajorRecord> Object { get; }
+        new FormLink<SkyrimMajorRecord> Object { get; set; }
         new Int16 Alias { get; set; }
         new UInt16 Unused { get; set; }
     }
@@ -1075,7 +1073,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case ScriptObjectProperty_FieldIndex.Object:
-                    return typeof(IFormLink<SkyrimMajorRecord>);
+                    return typeof(FormLink<SkyrimMajorRecord>);
                 case ScriptObjectProperty_FieldIndex.Alias:
                     return typeof(Int16);
                 case ScriptObjectProperty_FieldIndex.Unused:
@@ -1130,7 +1128,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IScriptObjectProperty item)
         {
             ClearPartial();
-            item.Object.FormKey = FormKey.Null;
+            item.Object = new FormLink<SkyrimMajorRecord>(FormKey.Null);
             item.Alias = default;
             item.Unused = default;
             base.Clear(item);
@@ -1190,7 +1188,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ScriptPropertySetterCommon.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.Object.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Object = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
             item.Alias = frame.ReadInt16();
@@ -1429,7 +1427,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)ScriptObjectProperty_FieldIndex.Object) ?? true))
             {
-                item.Object.FormKey = rhs.Object.FormKey;
+                item.Object = rhs.Object.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)ScriptObjectProperty_FieldIndex.Alias) ?? true))
             {
@@ -1666,7 +1664,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)ScriptObjectProperty_FieldIndex.Object);
                     try
                     {
-                        item.Object.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Object = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

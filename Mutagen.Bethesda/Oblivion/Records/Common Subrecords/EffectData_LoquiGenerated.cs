@@ -46,9 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region MagicEffect
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEDIDLink<MagicEffect> _MagicEffect = new EDIDLink<MagicEffect>();
-        public IEDIDLink<MagicEffect> MagicEffect => this._MagicEffect;
+        public EDIDLink<MagicEffect> MagicEffect { get; set; } = new EDIDLink<MagicEffect>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IEDIDLinkGetter<IMagicEffectGetter> IEffectDataGetter.MagicEffect => this.MagicEffect;
         #endregion
@@ -707,7 +705,7 @@ namespace Mutagen.Bethesda.Oblivion
         IEffectDataGetter,
         ILoquiObjectSetter<IEffectData>
     {
-        new IEDIDLink<MagicEffect> MagicEffect { get; }
+        new EDIDLink<MagicEffect> MagicEffect { get; set; }
         new UInt32 Magnitude { get; set; }
         new UInt32 Area { get; set; }
         new UInt32 Duration { get; set; }
@@ -1237,7 +1235,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case EffectData_FieldIndex.MagicEffect:
-                    return typeof(IEDIDLink<MagicEffect>);
+                    return typeof(EDIDLink<MagicEffect>);
                 case EffectData_FieldIndex.Magnitude:
                     return typeof(UInt32);
                 case EffectData_FieldIndex.Area:
@@ -1300,7 +1298,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IEffectData item)
         {
             ClearPartial();
-            item.MagicEffect.EDID = RecordType.Null;
+            item.MagicEffect = new EDIDLink<MagicEffect>(RecordType.Null);
             item.Magnitude = default;
             item.Area = default;
             item.Duration = default;
@@ -1341,7 +1339,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEffectData item,
             MutagenFrame frame)
         {
-            item.MagicEffect.EDID = Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
+            item.MagicEffect = Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: RecordType.Null);
             item.Magnitude = frame.ReadUInt32();
@@ -1550,7 +1548,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)EffectData_FieldIndex.MagicEffect) ?? true))
             {
-                item.MagicEffect.EDID = rhs.MagicEffect.EDID;
+                item.MagicEffect = rhs.MagicEffect.EDID;
             }
             if ((copyMask?.GetShouldTranslate((int)EffectData_FieldIndex.Magnitude) ?? true))
             {
@@ -1825,7 +1823,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)EffectData_FieldIndex.MagicEffect);
                     try
                     {
-                        item.MagicEffect.EDID = RecordTypeXmlTranslation.Instance.Parse(
+                        item.MagicEffect = RecordTypeXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

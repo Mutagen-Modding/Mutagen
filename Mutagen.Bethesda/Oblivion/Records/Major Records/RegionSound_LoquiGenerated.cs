@@ -46,9 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Sound
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<Sound> _Sound = new FormLink<Sound>();
-        public IFormLink<Sound> Sound => this._Sound;
+        public FormLink<Sound> Sound { get; set; } = new FormLink<Sound>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISoundGetter> IRegionSoundGetter.Sound => this.Sound;
         #endregion
@@ -614,7 +612,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRegionSoundGetter,
         ILoquiObjectSetter<IRegionSound>
     {
-        new IFormLink<Sound> Sound { get; }
+        new FormLink<Sound> Sound { get; set; }
         new RegionSound.Flag Flags { get; set; }
         new Single Chance { get; set; }
     }
@@ -1108,7 +1106,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionSound_FieldIndex.Sound:
-                    return typeof(IFormLink<Sound>);
+                    return typeof(FormLink<Sound>);
                 case RegionSound_FieldIndex.Flags:
                     return typeof(RegionSound.Flag);
                 case RegionSound_FieldIndex.Chance:
@@ -1163,7 +1161,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRegionSound item)
         {
             ClearPartial();
-            item.Sound.FormKey = FormKey.Null;
+            item.Sound = new FormLink<Sound>(FormKey.Null);
             item.Flags = default;
             item.Chance = default;
         }
@@ -1201,7 +1199,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionSound item,
             MutagenFrame frame)
         {
-            item.Sound.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Sound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
             item.Flags = EnumBinaryTranslation<RegionSound.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
@@ -1381,7 +1379,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RegionSound_FieldIndex.Sound) ?? true))
             {
-                item.Sound.FormKey = rhs.Sound.FormKey;
+                item.Sound = rhs.Sound.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)RegionSound_FieldIndex.Flags) ?? true))
             {
@@ -1617,7 +1615,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)RegionSound_FieldIndex.Sound);
                     try
                     {
-                        item.Sound.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Sound = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

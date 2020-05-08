@@ -38,34 +38,30 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (type)
                 {
                     case Location.LocationType.NearReference:
+                        return new LocationReference()
                         {
-                            var ret = new LocationReference();
-                            ret.Link.FormKey = FormKeyBinaryTranslation.Instance.Parse(frame);
-                            return ret;
-                        }
+                            Link = FormKeyBinaryTranslation.Instance.Parse(frame)
+                        };
                     case Location.LocationType.InCell:
+                        return new LocationCell()
                         {
-                            var ret = new LocationCell();
-                            ret.Link.FormKey = FormKeyBinaryTranslation.Instance.Parse(frame);
-                            return ret;
-                        }
+                            Link = FormKeyBinaryTranslation.Instance.Parse(frame)
+                        };
                     case Location.LocationType.ObjectID:
+                        return new LocationObjectId()
                         {
-                            var ret = new LocationObjectId();
-                            ret.Link.FormKey = FormKeyBinaryTranslation.Instance.Parse(frame);
-                            return ret;
-                        }
+                            Link = FormKeyBinaryTranslation.Instance.Parse(frame)
+                        };
                     case Location.LocationType.ObjectType:
                         return new LocationObjectType()
                         {
                             Type = (ObjectType)frame.ReadInt32()
                         };
                     case Location.LocationType.LinkedReference:
+                        return new LocationKeyword()
                         {
-                            var ret = new LocationKeyword();
-                            ret.Link.FormKey = FormKeyBinaryTranslation.Instance.Parse(frame);
-                            return ret;
-                        }
+                            Link = FormKeyBinaryTranslation.Instance.Parse(frame)
+                        };
                     default:
                         return new LocationFallback()
                         {

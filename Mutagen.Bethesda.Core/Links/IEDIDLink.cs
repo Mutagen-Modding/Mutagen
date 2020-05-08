@@ -52,11 +52,11 @@ namespace Mutagen.Bethesda
         /// <param name="major">Located record if successful</param>
         /// <returns>True if link was resolved and a record was retrieved</returns>
         /// <typeparam name="TMajor">Major Record type to resolve to</typeparam>
-        public static bool TryResolve<TMajor>(this IEDIDLinkGetter<TMajor> edidLink, ILinkCache package, out TMajor item)
+        public static bool TryResolve<TMajor>(this IEDIDLinkGetter<TMajor> edidLink, ILinkCache package, out TMajor major)
             where TMajor : IMajorRecordCommonGetter
         {
-            item = edidLink.Resolve(package);
-            return item != null;
+            major = edidLink.Resolve(package);
+            return major != null;
         }
     }
 }

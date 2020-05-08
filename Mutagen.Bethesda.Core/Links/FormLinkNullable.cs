@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// A readonly singleton representing an unlinked and null FormLinkNullable
         /// </summary>
-        public static readonly IFormLinkNullableGetter<TMajor> Empty = new FormLinkNullable<TMajor>();
+        public static readonly IFormLinkNullableGetter<TMajor> Null = new FormLinkNullable<TMajor>();
 
         /// <summary>
         /// FormKey of the target record.
@@ -190,6 +190,16 @@ namespace Mutagen.Bethesda
             }
             modKey = default!;
             return false;
+        }
+
+        public static implicit operator FormLinkNullable<TMajor>(FormKey? formKey)
+        {
+            return new FormLinkNullable<TMajor>(formKey);
+        }
+
+        public static implicit operator FormLinkNullable<TMajor>(FormKey formKey)
+        {
+            return new FormLinkNullable<TMajor>(formKey);
         }
     }
 }

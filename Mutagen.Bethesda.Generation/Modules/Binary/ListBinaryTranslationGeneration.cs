@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Generation
             }
 
             var subMaskStr = subTransl.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetErrorMaskTypeStr(list.SubTypeGeneration);
-            return $"{TranslatorName}<{list.SubTypeGeneration.TypeName(getter)}, {subMaskStr}>.Instance";
+            return $"{TranslatorName}<{list.SubTypeGeneration.TypeName(getter, needsCovariance: true)}, {subMaskStr}>.Instance";
         }
 
         public override bool IsAsync(TypeGeneration gen, bool read)
@@ -147,10 +147,10 @@ namespace Mutagen.Bethesda.Generation
                 && allowDirectWrite;
             bool needsMasters = list.SubTypeGeneration is FormLinkType || list.SubTypeGeneration is LoquiType;
 
-            var typeName = list.SubTypeGeneration.TypeName(getter: true);
+            var typeName = list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true);
             if (list.SubTypeGeneration is LoquiType loqui)
             {
-                typeName = loqui.TypeName(getter: true, internalInterface: true);
+                typeName = loqui.TypeNameInternal(getter: true, internalInterface: true);
             }
 
             string suffix = string.Empty;
@@ -314,7 +314,7 @@ namespace Mutagen.Bethesda.Generation
             list.WrapSet(fg, itemAccessor, (wrapFg) =>
             {
                 using (var args = new ArgsWrapper(wrapFg,
-                    $"{(isAsync ? "(" : null)}{Loqui.Generation.Utility.Await(isAsync)}{this.Namespace}List{(isAsync ? "Async" : null)}BinaryTranslation<{list.SubTypeGeneration.TypeName(getter: false)}>.Instance.Parse{(recordPerItem ? "PerItem" : null)}",
+                    $"{(isAsync ? "(" : null)}{Loqui.Generation.Utility.Await(isAsync)}{this.Namespace}List{(isAsync ? "Async" : null)}BinaryTranslation<{list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}>.Instance.Parse{(recordPerItem ? "PerItem" : null)}",
                     suffixLine: $"{Loqui.Generation.Utility.ConfigAwait(isAsync)}{(isAsync ? ")" : null)}")
                 {
                     SemiColon = false,
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add((gen) =>
                         {
-                            gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName(getter: false)} listSubItem")}{(needsMasters ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
+                            gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} listSubItem")}{(needsMasters ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
                             using (new BraceWrapper(gen))
                             {
                                 if (subGenTypes.Count <= 1)
@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => BinaryOverlaySetList<{list.SubTypeGeneration.TypeName(getter: true)}>.FactoryByStartIndex({dataAccessor}.Slice({currentPosition}), _package, {await subGen.ExpectedLength(objGen, list.SubTypeGeneration)}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
+                fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => BinaryOverlaySetList<{list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>.FactoryByStartIndex({dataAccessor}.Slice({currentPosition}), _package, {await subGen.ExpectedLength(objGen, list.SubTypeGeneration)}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
             }
         }
 
@@ -577,7 +577,7 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                typeName = list.SubTypeGeneration.TypeName(getter: true);
+                typeName = list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true);
             }
             var expectedLen = await subGen.ExpectedLength(objGen, list.SubTypeGeneration);
             switch (listBinaryType)

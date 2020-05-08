@@ -114,9 +114,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region DefaultFaceTexture
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<TextureSet> _DefaultFaceTexture = new FormLinkNullable<TextureSet>();
-        public IFormLinkNullable<TextureSet> DefaultFaceTexture => this._DefaultFaceTexture;
+        public FormLinkNullable<TextureSet> DefaultFaceTexture { get; set; } = new FormLinkNullable<TextureSet>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ITextureSetGetter> IHeadDataGetter.DefaultFaceTexture => this.DefaultFaceTexture;
         #endregion
@@ -146,16 +144,12 @@ namespace Mutagen.Bethesda.Skyrim
         IModelGetter? IHeadDataGetter.Model => this.Model;
         #endregion
         #region MorphRace
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<Race> _MorphRace = new FormLinkNullable<Race>();
-        public IFormLinkNullable<Race> MorphRace => this._MorphRace;
+        public FormLinkNullable<Race> MorphRace { get; set; } = new FormLinkNullable<Race>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IRaceGetter> IHeadDataGetter.MorphRace => this.MorphRace;
         #endregion
         #region ArmorRace
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLinkNullable<Race> _ArmorRace = new FormLinkNullable<Race>();
-        public IFormLinkNullable<Race> ArmorRace => this._ArmorRace;
+        public FormLinkNullable<Race> ArmorRace { get; set; } = new FormLinkNullable<Race>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IRaceGetter> IHeadDataGetter.ArmorRace => this.ArmorRace;
         #endregion
@@ -1303,11 +1297,11 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<IFormLink<Npc>>? RacePresets { get; set; }
         new ExtendedList<IFormLink<ColorRecord>>? AvailableHairColors { get; set; }
         new ExtendedList<IFormLink<TextureSet>>? FaceDetails { get; set; }
-        new IFormLinkNullable<TextureSet> DefaultFaceTexture { get; }
+        new FormLinkNullable<TextureSet> DefaultFaceTexture { get; set; }
         new ExtendedList<TintAssets> TintMasks { get; }
         new Model? Model { get; set; }
-        new IFormLinkNullable<Race> MorphRace { get; }
-        new IFormLinkNullable<Race> ArmorRace { get; }
+        new FormLinkNullable<Race> MorphRace { get; set; }
+        new FormLinkNullable<Race> ArmorRace { get; set; }
     }
 
     public partial interface IHeadDataGetter :
@@ -1889,15 +1883,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case HeadData_FieldIndex.FaceDetails:
                     return typeof(ExtendedList<IFormLink<TextureSet>>);
                 case HeadData_FieldIndex.DefaultFaceTexture:
-                    return typeof(IFormLinkNullable<TextureSet>);
+                    return typeof(FormLinkNullable<TextureSet>);
                 case HeadData_FieldIndex.TintMasks:
                     return typeof(ExtendedList<TintAssets>);
                 case HeadData_FieldIndex.Model:
                     return typeof(Model);
                 case HeadData_FieldIndex.MorphRace:
-                    return typeof(IFormLinkNullable<Race>);
+                    return typeof(FormLinkNullable<Race>);
                 case HeadData_FieldIndex.ArmorRace:
-                    return typeof(IFormLinkNullable<Race>);
+                    return typeof(FormLinkNullable<Race>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1997,11 +1991,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.RacePresets = null;
             item.AvailableHairColors = null;
             item.FaceDetails = null;
-            item.DefaultFaceTexture.FormKey = null;
+            item.DefaultFaceTexture = null;
             item.TintMasks.Clear();
             item.Model = null;
-            item.MorphRace.FormKey = null;
-            item.ArmorRace.FormKey = null;
+            item.MorphRace = null;
+            item.ArmorRace = null;
         }
         
         #region Xml Translation
@@ -2114,7 +2108,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.DefaultFaceTexture) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.DefaultFaceTexture.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.DefaultFaceTexture = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.DefaultFaceTexture);
@@ -2154,7 +2148,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.MorphRace) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.MorphRace.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.MorphRace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.MorphRace);
@@ -2163,7 +2157,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.ArmorRace) return TryGet<int?>.Failure;
                     frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.ArmorRace.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.ArmorRace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.ArmorRace);
@@ -2711,7 +2705,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)HeadData_FieldIndex.DefaultFaceTexture) ?? true))
             {
-                item.DefaultFaceTexture.FormKey = rhs.DefaultFaceTexture.FormKey;
+                item.DefaultFaceTexture = rhs.DefaultFaceTexture.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)HeadData_FieldIndex.TintMasks) ?? true))
             {
@@ -2765,11 +2759,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)HeadData_FieldIndex.MorphRace) ?? true))
             {
-                item.MorphRace.FormKey = rhs.MorphRace.FormKey;
+                item.MorphRace = rhs.MorphRace.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)HeadData_FieldIndex.ArmorRace) ?? true))
             {
-                item.ArmorRace.FormKey = rhs.ArmorRace.FormKey;
+                item.ArmorRace = rhs.ArmorRace.FormKey;
             }
         }
         
@@ -3260,7 +3254,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)HeadData_FieldIndex.DefaultFaceTexture);
                     try
                     {
-                        item.DefaultFaceTexture.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.DefaultFaceTexture = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3325,7 +3319,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)HeadData_FieldIndex.MorphRace);
                     try
                     {
-                        item.MorphRace.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.MorphRace = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3343,7 +3337,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)HeadData_FieldIndex.ArmorRace);
                     try
                     {
-                        item.ArmorRace.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.ArmorRace = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3740,19 +3734,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region DefaultFaceTexture
         private int? _DefaultFaceTextureLocation;
         public bool DefaultFaceTexture_IsSet => _DefaultFaceTextureLocation.HasValue;
-        public IFormLinkNullableGetter<ITextureSetGetter> DefaultFaceTexture => _DefaultFaceTextureLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _DefaultFaceTextureLocation.Value, _package.Meta)))) : FormLinkNullable<ITextureSetGetter>.Empty;
+        public IFormLinkNullableGetter<ITextureSetGetter> DefaultFaceTexture => _DefaultFaceTextureLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _DefaultFaceTextureLocation.Value, _package.Meta)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
         public IReadOnlyList<ITintAssetsGetter> TintMasks { get; private set; } = ListExt.Empty<TintAssetsBinaryOverlay>();
         public IModelGetter? Model { get; private set; }
         #region MorphRace
         private int? _MorphRaceLocation;
         public bool MorphRace_IsSet => _MorphRaceLocation.HasValue;
-        public IFormLinkNullableGetter<IRaceGetter> MorphRace => _MorphRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MorphRaceLocation.Value, _package.Meta)))) : FormLinkNullable<IRaceGetter>.Empty;
+        public IFormLinkNullableGetter<IRaceGetter> MorphRace => _MorphRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MorphRaceLocation.Value, _package.Meta)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
         #region ArmorRace
         private int? _ArmorRaceLocation;
         public bool ArmorRace_IsSet => _ArmorRaceLocation.HasValue;
-        public IFormLinkNullableGetter<IRaceGetter> ArmorRace => _ArmorRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ArmorRaceLocation.Value, _package.Meta)))) : FormLinkNullable<IRaceGetter>.Empty;
+        public IFormLinkNullableGetter<IRaceGetter> ArmorRace => _ArmorRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ArmorRaceLocation.Value, _package.Meta)))) : FormLinkNullable<IRaceGetter>.Null;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,

@@ -48,9 +48,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Spell
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<Spell> _Spell = new FormLink<Spell>();
-        public IFormLink<Spell> Spell => this._Spell;
+        public FormLink<Spell> Spell { get; set; } = new FormLink<Spell>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISpellGetter> IBookSpellGetter.Spell => this.Spell;
         #endregion
@@ -535,7 +533,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBookTeachTarget,
         ILoquiObjectSetter<IBookSpell>
     {
-        new IFormLink<Spell> Spell { get; }
+        new FormLink<Spell> Spell { get; set; }
     }
 
     public partial interface IBookSpellGetter :
@@ -976,7 +974,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case BookSpell_FieldIndex.Spell:
-                    return typeof(IFormLink<Spell>);
+                    return typeof(FormLink<Spell>);
                 default:
                     return BookTeachTarget_Registration.GetNthType(index);
             }
@@ -1027,7 +1025,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IBookSpell item)
         {
             ClearPartial();
-            item.Spell.FormKey = FormKey.Null;
+            item.Spell = new FormLink<Spell>(FormKey.Null);
             base.Clear(item);
         }
         
@@ -1082,7 +1080,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBookSpell item,
             MutagenFrame frame)
         {
-            item.Spell.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.Spell = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
         }
@@ -1299,7 +1297,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)BookSpell_FieldIndex.Spell) ?? true))
             {
-                item.Spell.FormKey = rhs.Spell.FormKey;
+                item.Spell = rhs.Spell.FormKey;
             }
         }
         
@@ -1510,7 +1508,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)BookSpell_FieldIndex.Spell);
                     try
                     {
-                        item.Spell.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.Spell = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }

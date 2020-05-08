@@ -70,16 +70,12 @@ namespace Mutagen.Bethesda.Skyrim
         public Single ChargeTime { get; set; } = default;
         #endregion
         #region BaseEnchantment
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<ObjectEffect> _BaseEnchantment = new FormLink<ObjectEffect>();
-        public IFormLink<ObjectEffect> BaseEnchantment => this._BaseEnchantment;
+        public FormLink<ObjectEffect> BaseEnchantment { get; set; } = new FormLink<ObjectEffect>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IObjectEffectGetter> IObjectEffectDataGetter.BaseEnchantment => this.BaseEnchantment;
         #endregion
         #region WornRestrictions
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IFormLink<FormList> _WornRestrictions = new FormLink<FormList>();
-        public IFormLink<FormList> WornRestrictions => this._WornRestrictions;
+        public FormLink<FormList> WornRestrictions { get; set; } = new FormLink<FormList>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IFormListGetter> IObjectEffectDataGetter.WornRestrictions => this.WornRestrictions;
         #endregion
@@ -848,8 +844,8 @@ namespace Mutagen.Bethesda.Skyrim
         new TargetType TargetType { get; set; }
         new ObjectEffect.EnchantType EnchantType { get; set; }
         new Single ChargeTime { get; set; }
-        new IFormLink<ObjectEffect> BaseEnchantment { get; }
-        new IFormLink<FormList> WornRestrictions { get; }
+        new FormLink<ObjectEffect> BaseEnchantment { get; set; }
+        new FormLink<FormList> WornRestrictions { get; set; }
     }
 
     public partial interface IObjectEffectDataGetter :
@@ -1434,9 +1430,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ObjectEffectData_FieldIndex.ChargeTime:
                     return typeof(Single);
                 case ObjectEffectData_FieldIndex.BaseEnchantment:
-                    return typeof(IFormLink<ObjectEffect>);
+                    return typeof(FormLink<ObjectEffect>);
                 case ObjectEffectData_FieldIndex.WornRestrictions:
-                    return typeof(IFormLink<FormList>);
+                    return typeof(FormLink<FormList>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1497,8 +1493,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.TargetType = default;
             item.EnchantType = default;
             item.ChargeTime = default;
-            item.BaseEnchantment.FormKey = FormKey.Null;
-            item.WornRestrictions.FormKey = FormKey.Null;
+            item.BaseEnchantment = new FormLink<ObjectEffect>(FormKey.Null);
+            item.WornRestrictions = new FormLink<FormList>(FormKey.Null);
         }
         
         #region Xml Translation
@@ -1541,7 +1537,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.TargetType = EnumBinaryTranslation<TargetType>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.EnchantType = EnumBinaryTranslation<ObjectEffect.EnchantType>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.ChargeTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.BaseEnchantment.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.BaseEnchantment = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
             if (frame.Complete)
@@ -1549,7 +1545,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.Versioning |= ObjectEffectData.VersioningBreaks.Break0;
                 return;
             }
-            item.WornRestrictions.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+            item.WornRestrictions = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
         }
@@ -1819,12 +1815,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ObjectEffectData_FieldIndex.BaseEnchantment) ?? true))
             {
-                item.BaseEnchantment.FormKey = rhs.BaseEnchantment.FormKey;
+                item.BaseEnchantment = rhs.BaseEnchantment.FormKey;
             }
             if (rhs.Versioning.HasFlag(ObjectEffectData.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)ObjectEffectData_FieldIndex.WornRestrictions) ?? true))
             {
-                item.WornRestrictions.FormKey = rhs.WornRestrictions.FormKey;
+                item.WornRestrictions = rhs.WornRestrictions.FormKey;
             }
         }
         
@@ -2259,7 +2255,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)ObjectEffectData_FieldIndex.BaseEnchantment);
                     try
                     {
-                        item.BaseEnchantment.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.BaseEnchantment = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2277,7 +2273,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)ObjectEffectData_FieldIndex.WornRestrictions);
                     try
                     {
-                        item.WornRestrictions.FormKey = FormKeyXmlTranslation.Instance.Parse(
+                        item.WornRestrictions = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
