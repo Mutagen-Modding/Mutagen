@@ -2013,7 +2013,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.RelatedIdleAnimations = 
                             rhs.RelatedIdleAnimations
-                            .Select(r => new FormLink<IdleAnimation>(r.FormKey))
+                            .Select(r => (IFormLink<IdleAnimation>)new FormLink<IdleAnimation>(r.FormKey))
                             .ToExtendedList<IFormLink<IdleAnimation>>();
                     }
                     else

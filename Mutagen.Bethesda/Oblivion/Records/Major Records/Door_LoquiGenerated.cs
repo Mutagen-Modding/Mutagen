@@ -2213,7 +2213,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.RandomTeleportDestinations = 
                             rhs.RandomTeleportDestinations
-                            .Select(r => new FormLink<Place>(r.FormKey))
+                            .Select(r => (IFormLink<Place>)new FormLink<Place>(r.FormKey))
                             .ToExtendedList<IFormLink<Place>>();
                     }
                     else

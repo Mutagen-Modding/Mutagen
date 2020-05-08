@@ -3617,7 +3617,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Regions = 
                             rhs.Regions
-                            .Select(r => new FormLink<Region>(r.FormKey))
+                            .Select(r => (IFormLink<Region>)new FormLink<Region>(r.FormKey))
                             .ToExtendedList<IFormLink<Region>>();
                     }
                     else

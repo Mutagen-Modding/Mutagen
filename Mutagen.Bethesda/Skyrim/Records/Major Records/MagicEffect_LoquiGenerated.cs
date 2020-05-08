@@ -2595,7 +2595,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => new FormLink<Keyword>(r.FormKey))
+                            .Select(r => (IFormLink<Keyword>)new FormLink<Keyword>(r.FormKey))
                             .ToExtendedList<IFormLink<Keyword>>();
                     }
                     else
@@ -2644,7 +2644,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.CounterEffects = 
                             rhs.CounterEffects
-                            .Select(r => new FormLink<MagicEffect>(r.FormKey))
+                            .Select(r => (IFormLink<MagicEffect>)new FormLink<MagicEffect>(r.FormKey))
                             .ToExtendedList<IFormLink<MagicEffect>>();
                     }
                     else

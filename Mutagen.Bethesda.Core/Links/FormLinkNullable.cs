@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda
     /// FormKey allowed to be null to communicate the absence of the field.
     /// </summary>
     /// <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
-    public class FormLinkNullable<TMajor> : IFormLinkNullable<TMajor>, IEquatable<IFormLinkGetter<TMajor>>, IEquatable<IFormLinkNullableGetter<TMajor>>
+    public struct FormLinkNullable<TMajor> : IFormLinkNullable<TMajor>, IEquatable<IFormLinkGetter<TMajor>>, IEquatable<IFormLinkNullableGetter<TMajor>>
        where TMajor : class, IMajorRecordCommonGetter
     {
         /// <summary>
@@ -26,16 +26,9 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// FormKey of the target record.
         /// </summary>
-        public FormKey? FormKey { get; set; } = null;
+        public FormKey? FormKey { get; set; }
         
         Type ILinkGetter.TargetType => typeof(TMajor);
-
-        /// <summary>
-        /// Default constructor that starts unlinked and null
-        /// </summary>
-        public FormLinkNullable()
-        {
-        }
 
         /// <summary>
         /// Default constructor that creates a link to the target FormKey
@@ -85,7 +78,7 @@ namespace Mutagen.Bethesda
         /// Default Equality
         /// </summary>
         /// <param name="obj">Object to compare to</param>
-        /// <returns>True if object is ILinkGetter<TMajor> and FormKeys match</returns>
+        /// <returns>True if object is ILinkGetter and FormKeys match</returns>
         public override bool Equals(object obj)
         {
             if (!(obj is ILinkGetter<TMajor> rhs)) return false;
@@ -144,6 +137,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Attempts to locate an associated FormKey from the link
         /// </summary>
+        /// <param name="package">Link Cache to resolve against</param>
         /// <param name="formKey">FormKey if found</param>
         /// <returns>True if FormKey is not null</returns>
         public bool TryResolveFormKey(ILinkCache package, [MaybeNullWhen(false)] out FormKey formKey)

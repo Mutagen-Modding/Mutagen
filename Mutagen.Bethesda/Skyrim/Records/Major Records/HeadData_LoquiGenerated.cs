@@ -2637,7 +2637,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.RacePresets = 
                             rhs.RacePresets
-                            .Select(r => new FormLink<Npc>(r.FormKey))
+                            .Select(r => (IFormLink<Npc>)new FormLink<Npc>(r.FormKey))
                             .ToExtendedList<IFormLink<Npc>>();
                     }
                     else
@@ -2664,7 +2664,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.AvailableHairColors = 
                             rhs.AvailableHairColors
-                            .Select(r => new FormLink<ColorRecord>(r.FormKey))
+                            .Select(r => (IFormLink<ColorRecord>)new FormLink<ColorRecord>(r.FormKey))
                             .ToExtendedList<IFormLink<ColorRecord>>();
                     }
                     else
@@ -2691,7 +2691,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.FaceDetails = 
                             rhs.FaceDetails
-                            .Select(r => new FormLink<TextureSet>(r.FormKey))
+                            .Select(r => (IFormLink<TextureSet>)new FormLink<TextureSet>(r.FormKey))
                             .ToExtendedList<IFormLink<TextureSet>>();
                     }
                     else

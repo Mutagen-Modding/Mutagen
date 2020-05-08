@@ -2391,7 +2391,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.ExtraParts = 
                             rhs.ExtraParts
-                            .Select(r => new FormLink<HeadPart>(r.FormKey))
+                            .Select(r => (IFormLink<HeadPart>)new FormLink<HeadPart>(r.FormKey))
                             .ToExtendedList<IFormLink<HeadPart>>();
                     }
                     else

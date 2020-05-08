@@ -1889,7 +1889,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.PotentialGrass = 
                             rhs.PotentialGrass
-                            .Select(r => new FormLink<Grass>(r.FormKey))
+                            .Select(r => (IFormLink<Grass>)new FormLink<Grass>(r.FormKey))
                             .ToExtendedList<IFormLink<Grass>>();
                     }
                     else

@@ -3314,7 +3314,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Spells = 
                             rhs.Spells
-                            .Select(r => new FormLink<Spell>(r.FormKey))
+                            .Select(r => (IFormLink<Spell>)new FormLink<Spell>(r.FormKey))
                             .ToExtendedList<IFormLink<Spell>>();
                     }
                     else
@@ -3475,7 +3475,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Hairs = 
                             rhs.Hairs
-                            .Select(r => new FormLink<Hair>(r.FormKey))
+                            .Select(r => (IFormLink<Hair>)new FormLink<Hair>(r.FormKey))
                             .ToExtendedList<IFormLink<Hair>>();
                     }
                     else
@@ -3502,7 +3502,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Eyes = 
                             rhs.Eyes
-                            .Select(r => new FormLink<Eye>(r.FormKey))
+                            .Select(r => (IFormLink<Eye>)new FormLink<Eye>(r.FormKey))
                             .ToExtendedList<IFormLink<Eye>>();
                     }
                     else

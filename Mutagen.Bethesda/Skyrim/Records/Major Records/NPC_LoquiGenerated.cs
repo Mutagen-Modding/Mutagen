@@ -6040,7 +6040,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.ActorEffect = 
                             rhs.ActorEffect
-                            .Select(r => new FormLink<ASpell>(r.FormKey))
+                            .Select(r => (IFormLink<ASpell>)new FormLink<ASpell>(r.FormKey))
                             .ToExtendedList<IFormLink<ASpell>>();
                     }
                     else
@@ -6231,7 +6231,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Packages = 
                             rhs.Packages
-                            .Select(r => new FormLink<Package>(r.FormKey))
+                            .Select(r => (IFormLink<Package>)new FormLink<Package>(r.FormKey))
                             .ToExtendedList<IFormLink<Package>>();
                     }
                     else
@@ -6258,7 +6258,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => new FormLink<Keyword>(r.FormKey))
+                            .Select(r => (IFormLink<Keyword>)new FormLink<Keyword>(r.FormKey))
                             .ToExtendedList<IFormLink<Keyword>>();
                     }
                     else
@@ -6323,7 +6323,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.HeadParts = 
                             rhs.HeadParts
-                            .Select(r => new FormLink<HeadPart>(r.FormKey))
+                            .Select(r => (IFormLink<HeadPart>)new FormLink<HeadPart>(r.FormKey))
                             .ToExtendedList<IFormLink<HeadPart>>();
                     }
                     else

@@ -2755,7 +2755,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => new FormLink<Keyword>(r.FormKey))
+                            .Select(r => (IFormLink<Keyword>)new FormLink<Keyword>(r.FormKey))
                             .ToExtendedList<IFormLink<Keyword>>();
                     }
                     else

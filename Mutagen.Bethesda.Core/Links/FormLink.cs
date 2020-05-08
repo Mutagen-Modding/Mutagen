@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda
     /// This provides type safety concepts on top of a basic FormKey.
     /// </summary>
     /// <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
-    public class FormLink<TMajor> : IFormLink<TMajor>, IEquatable<IFormLinkGetter<TMajor>>
+    public struct FormLink<TMajor> : IFormLink<TMajor>, IEquatable<IFormLinkGetter<TMajor>>
        where TMajor : class, IMajorRecordCommonGetter
     {
         /// <summary>
@@ -25,16 +25,9 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// FormKey of the target record
         /// </summary>
-        public FormKey FormKey { get; set; } = FormKey.Null;
+        public FormKey FormKey { get; set; }
         
         Type ILinkGetter.TargetType => typeof(TMajor);
-
-        /// <summary>
-        /// Default constructor that starts unlinked
-        /// </summary>
-        public FormLink()
-        {
-        }
 
         /// <summary>
         /// Default constructor that creates a link to the target FormKey
@@ -84,7 +77,7 @@ namespace Mutagen.Bethesda
         /// Default Equality
         /// </summary>
         /// <param name="obj">Object to compare to</param>
-        /// <returns>True if object is ILinkGetter<TMajor> and FormKeys match</returns>
+        /// <returns>True if object is ILinkGetter and FormKeys match</returns>
         public override bool Equals(object obj)
         {
             if (!(obj is ILinkGetter<TMajor> rhs)) return false;

@@ -2489,7 +2489,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.OverriddenForms = 
                             rhs.OverriddenForms
-                            .Select(r => new FormLink<SkyrimMajorRecord>(r.FormKey))
+                            .Select(r => (IFormLink<SkyrimMajorRecord>)new FormLink<SkyrimMajorRecord>(r.FormKey))
                             .ToExtendedList<IFormLink<SkyrimMajorRecord>>();
                     }
                     else

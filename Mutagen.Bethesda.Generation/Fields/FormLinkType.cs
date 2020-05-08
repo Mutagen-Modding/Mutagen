@@ -193,7 +193,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateCopySetToConverter(FileGeneration fg)
         {
-            fg.AppendLine($".Select(r => new {DirectTypeName(getter: false)}(r.{FormIDTypeString}))");
+            fg.AppendLine($".Select(r => ({TypeName(getter: false)})new {DirectTypeName(getter: false)}(r.{FormIDTypeString}))");
         }
 
         public override void GenerateForClass(FileGeneration fg)

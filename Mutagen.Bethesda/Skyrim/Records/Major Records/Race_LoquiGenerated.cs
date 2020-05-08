@@ -5482,7 +5482,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.ActorEffect = 
                             rhs.ActorEffect
-                            .Select(r => new FormLink<ASpell>(r.FormKey))
+                            .Select(r => (IFormLink<ASpell>)new FormLink<ASpell>(r.FormKey))
                             .ToExtendedList<IFormLink<ASpell>>();
                     }
                     else
@@ -5539,7 +5539,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => new FormLink<Keyword>(r.FormKey))
+                            .Select(r => (IFormLink<Keyword>)new FormLink<Keyword>(r.FormKey))
                             .ToExtendedList<IFormLink<Keyword>>();
                     }
                     else
@@ -5698,7 +5698,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Hairs = 
                             rhs.Hairs
-                            .Select(r => new FormLink<Hair>(r.FormKey))
+                            .Select(r => (IFormLink<Hair>)new FormLink<Hair>(r.FormKey))
                             .ToExtendedList<IFormLink<Hair>>();
                     }
                     else
@@ -5725,7 +5725,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Eyes = 
                             rhs.Eyes
-                            .Select(r => new FormLink<Eyes>(r.FormKey))
+                            .Select(r => (IFormLink<Eyes>)new FormLink<Eyes>(r.FormKey))
                             .ToExtendedList<IFormLink<Eyes>>();
                     }
                     else
@@ -5828,7 +5828,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.EquipmentSlots = 
                             rhs.EquipmentSlots
-                            .Select(r => new FormLink<EquipType>(r.FormKey))
+                            .Select(r => (IFormLink<EquipType>)new FormLink<EquipType>(r.FormKey))
                             .ToExtendedList<IFormLink<EquipType>>();
                     }
                     else

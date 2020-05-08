@@ -2099,7 +2099,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Quests = 
                             rhs.Quests
-                            .Select(r => new FormLink<Quest>(r.FormKey))
+                            .Select(r => (IFormLink<Quest>)new FormLink<Quest>(r.FormKey))
                             .ToExtendedList<IFormLink<Quest>>();
                     }
                     else

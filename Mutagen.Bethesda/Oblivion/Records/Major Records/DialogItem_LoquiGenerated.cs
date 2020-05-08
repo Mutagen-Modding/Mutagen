@@ -2705,7 +2705,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Topics = 
                             rhs.Topics
-                            .Select(r => new FormLink<DialogTopic>(r.FormKey))
+                            .Select(r => (IFormLink<DialogTopic>)new FormLink<DialogTopic>(r.FormKey))
                             .ToExtendedList<IFormLink<DialogTopic>>();
                     }
                     else
@@ -2780,7 +2780,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Choices = 
                             rhs.Choices
-                            .Select(r => new FormLink<DialogTopic>(r.FormKey))
+                            .Select(r => (IFormLink<DialogTopic>)new FormLink<DialogTopic>(r.FormKey))
                             .ToExtendedList<IFormLink<DialogTopic>>();
                     }
                     else
@@ -2807,7 +2807,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.LinkFrom = 
                             rhs.LinkFrom
-                            .Select(r => new FormLink<DialogTopic>(r.FormKey))
+                            .Select(r => (IFormLink<DialogTopic>)new FormLink<DialogTopic>(r.FormKey))
                             .ToExtendedList<IFormLink<DialogTopic>>();
                     }
                     else

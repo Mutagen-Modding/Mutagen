@@ -1859,7 +1859,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Spells = 
                             rhs.Spells
-                            .Select(r => new FormLink<Spell>(r.FormKey))
+                            .Select(r => (IFormLink<Spell>)new FormLink<Spell>(r.FormKey))
                             .ToExtendedList<IFormLink<Spell>>();
                     }
                     else

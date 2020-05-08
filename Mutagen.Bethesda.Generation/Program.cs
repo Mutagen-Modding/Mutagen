@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "em.Color = Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(frame: frame);";
+            string testString = "elect(r => new FormLink<ColorRecord>(r.FormKey))";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

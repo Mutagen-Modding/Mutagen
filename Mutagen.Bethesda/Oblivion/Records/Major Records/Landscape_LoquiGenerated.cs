@@ -2177,7 +2177,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Textures = 
                             rhs.Textures
-                            .Select(r => new FormLink<LandTexture>(r.FormKey))
+                            .Select(r => (IFormLink<LandTexture>)new FormLink<LandTexture>(r.FormKey))
                             .ToExtendedList<IFormLink<LandTexture>>();
                     }
                     else
