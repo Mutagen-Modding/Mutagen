@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda
     /// modifications occur on content already cached.
     /// </summary>
     /// <typeparam name="TMod">Mod type</typeparam>
-    public class DirectModLinkCache<TMod> : ILinkCache<TMod>
+    public class DirectModLinkCache<TMod> : ILinkCache
         where TMod : IModGetter
     {
         private readonly TMod _sourceMod;
@@ -132,11 +132,14 @@ namespace Mutagen.Bethesda
             return cache;
         }
 
-        public IEnumerator<TMod> GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             yield return this._sourceMod;
         }
 
-        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+        IEnumerator<IModGetter> IEnumerable<IModGetter>.GetEnumerator()
+        {
+            yield return this._sourceMod;
+        }
     }
 }

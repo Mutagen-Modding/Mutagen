@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda
     /// incorrect if modifications occur on content already cached.
     /// </summary>
     /// <typeparam name="TMod">Mod type</typeparam>
-    public class LoadOrderLinkCache<TMod> : ILinkCache<TMod>
+    public class LoadOrderLinkCache<TMod> : ILinkCache
         where TMod : class, IModGetter
     {
         class InternalTypedCache
@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public IEnumerator<TMod> GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             foreach (var listing in this._loadOrder)
             {
@@ -182,6 +182,12 @@ namespace Mutagen.Bethesda
             }
         }
 
-        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+        IEnumerator<IModGetter> IEnumerable<IModGetter>.GetEnumerator()
+        {
+            foreach (var listing in this._loadOrder)
+            {
+                if (listing.Mod != null) yield return listing.Mod;
+            }
+        }
     }
 }

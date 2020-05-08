@@ -99,16 +99,14 @@ namespace Mutagen.Bethesda
         /// <param name="package">Link Cache to resolve against</param>
         /// <param name="major">Located record if successful</param>
         /// <returns>True if link was resolved and a record was retrieved</returns>
-        /// <typeparam name="TMod">Mod type</typeparam>
         /// <typeparam name="TMajor">Major Record type to resolve to</typeparam>
-        public static bool TryResolve<TMajor, TMod>(this IFormLinkGetter<TMajor> formLink, ILinkCache<TMod> package, out TMajor item)
+        public static bool TryResolve<TMajor>(this IFormLinkGetter<TMajor> formLink, ILinkCache package, out TMajor major)
             where TMajor : IMajorRecordCommonGetter
-            where TMod : IMod
         {
-            item = formLink.Resolve(package);
-            return item != null;
+            major = formLink.Resolve(package);
+            return major != null;
         }
-        
+
         /// <summary>
         /// Attempts to locate link target in given Link Cache.
         /// </summary>
@@ -118,12 +116,11 @@ namespace Mutagen.Bethesda
         /// <returns>True if link was resolved and a record was retrieved</returns>
         /// <typeparam name="TMod">Mod type</typeparam>
         /// <typeparam name="TMajor">Major Record type to resolve to</typeparam>
-        public static bool TryResolve<TMajor, TMod>(this IFormLinkNullableGetter<TMajor> formLink, ILinkCache<TMod> package, out TMajor item)
+        public static bool TryResolve<TMajor>(this IFormLinkNullableGetter<TMajor> formLink, ILinkCache package, out TMajor major)
             where TMajor : IMajorRecordCommonGetter
-            where TMod : IMod
         {
-            item = formLink.Resolve(package);
-            return item != null;
+            major = formLink.Resolve(package);
+            return major != null;
         }
     }
 }

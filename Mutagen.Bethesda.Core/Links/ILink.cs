@@ -24,14 +24,14 @@ namespace Mutagen.Bethesda
         /// <param name="modKey">ModKey if found</param>
         /// <returns>True of ModKey information was located</returns>
         bool TryGetModKey([MaybeNullWhen(false)] out ModKey modKey);
-        
+
         /// <summary>
         /// Attempts to locate an associated FormKey from the link
         /// </summary>
+        /// <param name="package">Link Cache to resolve against</param>
         /// <param name="formKey">FormKey if found</param>
         /// <returns>True if FormKey found</returns>
-        /// <typeparam name="TMod">Mod type</typeparam>
-        bool TryResolveFormKey<TMod>(ILinkCache<TMod> package, out FormKey formKey) where TMod : IModGetter;
+        bool TryResolveFormKey(ILinkCache package, out FormKey formKey);
         
         /// <summary>
         /// Attempts to locate link target in given Link Cache.
@@ -39,8 +39,7 @@ namespace Mutagen.Bethesda
         /// <param name="package">Link Cache to resolve against</param>
         /// <param name="majorRecord">Located record if successful</param>
         /// <returns>True if link was resolved and a record was retrieved</returns>
-        /// <typeparam name="TMod">Mod type</typeparam>
-        bool TryResolveCommon<TMod>(ILinkCache<TMod> package, out IMajorRecordCommonGetter majorRecord) where TMod : IModGetter;
+        bool TryResolveCommon(ILinkCache package, out IMajorRecordCommonGetter majorRecord);
     }
 
     /// <summary>
@@ -55,8 +54,7 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="package">Link Cache to resolve against</param>
         /// <returns>TryGet object with located record if successful</returns>
-        /// <typeparam name="TMod">Mod type</typeparam>
-        ITryGetter<TMajor> TryResolve<TMod>(ILinkCache<TMod> package) where TMod : IModGetter;
+        ITryGetter<TMajor> TryResolve(ILinkCache package);
     }
 
     /// <summary>
@@ -71,13 +69,11 @@ namespace Mutagen.Bethesda
         /// <param name="package">Link Cache to resolve against</param>
         /// <param name="majorRecord">Major Record if located</param>
         /// <returns>True if successful in linking to record</returns>
-        /// <typeparam name="TMod">Mod type</typeparam>
         /// <typeparam name="TMajor">Major Record type to resolve to</typeparam>
-        public static bool TryResolve<TMod, TMajor>(this ILinkGetter<TMajor> link, ILinkCache<TMod> package, [MaybeNullWhen(false)] out TMajor majorRecord)
-            where TMod : IModGetter
+        public static bool TryResolve<TMajor>(this ILinkGetter<TMajor> link, ILinkCache package, [MaybeNullWhen(false)] out TMajor majorRecord)
             where TMajor : IMajorRecordCommonGetter
         {
-            var ret = link.TryResolve<TMod>(package);
+            var ret = link.TryResolve(package);
             if (ret.Succeeded)
             {
                 majorRecord = ret.Value;
@@ -94,13 +90,11 @@ namespace Mutagen.Bethesda
         /// <param name="package">Link Cache to resolve against</param>
         /// <returns>Located Major Record</returns>
         /// <exception cref="NullReferenceException">If link was not succesful</exception>
-        /// <typeparam name="TMod">Mod type</typeparam>
         /// <typeparam name="TMajor">Major Record type to resolve to</typeparam>
-        public static TMajor Resolve<TMod, TMajor>(this ILinkGetter<TMajor> link, ILinkCache<TMod> package)
-            where TMod : IModGetter
+        public static TMajor Resolve<TMajor>(this ILinkGetter<TMajor> link, ILinkCache package)
             where TMajor : IMajorRecordCommonGetter
         {
-            return link.TryResolve<TMod>(package).Value;
+            return link.TryResolve(package).Value;
         }
     }
 }

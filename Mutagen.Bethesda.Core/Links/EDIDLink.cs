@@ -125,9 +125,7 @@ namespace Mutagen.Bethesda
         /// <param name="package">Link Cache to resolve against</param>
         /// <param name="major">Located record if successful</param>
         /// <returns>True if link was resolved and a record was retrieved</returns>
-        /// <typeparam name="TMod">Mod type</typeparam>
-        public bool TryResolve<TMod>(ILinkCache<TMod> package, out TMajor major)
-            where TMod : IModGetter
+        public bool TryResolve(ILinkCache package, out TMajor major)
         {
             if (this.EDID == Null)
             {
@@ -152,9 +150,7 @@ namespace Mutagen.Bethesda
         /// <param name="package">Link Cache to resolve against</param>
         /// <param name="major">Located FormKey if successful</param>
         /// <returns>True if link was resolved and a record was retrieved</returns>
-        /// <typeparam name="TMod">Mod type</typeparam>
-        public bool TryResolveFormKey<TMod>(ILinkCache<TMod> package, [MaybeNullWhen(false)]out FormKey formKey)
-            where TMod : IModGetter
+        public bool TryResolveFormKey(ILinkCache package, [MaybeNullWhen(false)]out FormKey formKey)
         {
             if (TryResolve(package, out var rec))
             {
@@ -165,7 +161,7 @@ namespace Mutagen.Bethesda
             return false;
         }
 
-        bool ILinkGetter.TryResolveCommon<M>(ILinkCache<M> package, [MaybeNullWhen(false)]out IMajorRecordCommonGetter formKey)
+        bool ILinkGetter.TryResolveCommon(ILinkCache package, [MaybeNullWhen(false)]out IMajorRecordCommonGetter formKey)
         {
             if (TryResolve(package, out TMajor rec))
             {
@@ -181,9 +177,7 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="package">Link Cache to resolve against</param>
         /// <returns>TryGet object with located record if successful</returns>
-        /// <typeparam name="TMod">Mod type</typeparam>
-        public ITryGetter<TMajor> TryResolve<TMod>(ILinkCache<TMod> package) 
-            where TMod : IModGetter
+        public ITryGetter<TMajor> TryResolve(ILinkCache package) 
         {
             if (TryResolve(package, out TMajor rec))
             {

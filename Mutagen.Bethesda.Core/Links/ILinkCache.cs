@@ -7,9 +7,7 @@ namespace Mutagen.Bethesda
     /// <summary>
     /// An interface for retriving records given a FormKey.
     /// </summary>
-    /// <typeparam name="TMod">Modtype records are being retrieved from</typeparam>
-    public interface ILinkCache<TMod> : IEnumerable<TMod>
-        where TMod : IModGetter
+    public interface ILinkCache : IEnumerable<IModGetter>
     {
         /// <summary>
         /// Retrieves the record that matches the FormKey relative to the source the package was attached to.
@@ -62,7 +60,7 @@ namespace Mutagen.Bethesda
         /// <typeparam name="TMod">Mod type</typeparam>
         /// <param name="loadOrder">LoadOrder to construct the package relative to</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static ILinkCache<TMod> CreateLinkCache<TMod>(this LoadOrder<TMod> loadOrder)
+        public static ILinkCache CreateLinkCache<TMod>(this LoadOrder<TMod> loadOrder)
             where TMod : class, IModGetter
         {
             return new LoadOrderLinkCache<TMod>(loadOrder);

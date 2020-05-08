@@ -51,11 +51,9 @@ namespace Mutagen.Bethesda
         /// <param name="package">Link Cache to resolve against</param>
         /// <param name="major">Located record if successful</param>
         /// <returns>True if link was resolved and a record was retrieved</returns>
-        /// <typeparam name="TMod">Mod type</typeparam>
         /// <typeparam name="TMajor">Major Record type to resolve to</typeparam>
-        public static bool TryResolve<TMajor, TMod>(this IEDIDLinkGetter<TMajor> edidLink, ILinkCache<TMod> package, out TMajor item)
+        public static bool TryResolve<TMajor>(this IEDIDLinkGetter<TMajor> edidLink, ILinkCache package, out TMajor item)
             where TMajor : IMajorRecordCommonGetter
-            where TMod : IMod
         {
             item = edidLink.Resolve(package);
             return item != null;
