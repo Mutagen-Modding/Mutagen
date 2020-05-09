@@ -52,6 +52,7 @@ namespace Mutagen.Bethesda.Generation
             xmlGen.AddTypeAssociation<FormIDType>(new PrimitiveXmlTranslationGeneration<FormID>());
             xmlGen.AddTypeAssociation<FormKeyType>(new PrimitiveXmlTranslationGeneration<FormKey>());
             xmlGen.AddTypeAssociation<ModKeyType>(new PrimitiveXmlTranslationGeneration<ModKey>());
+            xmlGen.AddTypeAssociation<DataType>(new DataTypeXmlTranslationGeneration());
             xmlGen.AddTypeAssociation<GenderedType>(new GenderedTypeXmlTranslationGeneration());
             gen.MaskModule.AddTypeAssociation<FormLinkType>(MaskModule.TypicalField);
             gen.MaskModule.AddTypeAssociation<GenderedType>(new GenderedItemMaskGeneration());
@@ -62,6 +63,7 @@ namespace Mutagen.Bethesda.Generation
             gen.AddTypeAssociation<FormKeyType>("FormKey");
             gen.AddTypeAssociation<ModKeyType>("ModKey");
             gen.AddTypeAssociation<BufferType>("Buffer");
+            gen.AddTypeAssociation<DataType>("Data");
             gen.AddTypeAssociation<ZeroType>("Zero");
             gen.AddTypeAssociation<CustomLogic>("CustomLogic");
             gen.AddTypeAssociation<TransferType>("Transfer");

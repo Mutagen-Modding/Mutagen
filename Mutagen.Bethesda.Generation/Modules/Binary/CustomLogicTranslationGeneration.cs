@@ -218,7 +218,8 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen,
             TypeGeneration typeGen,
             Accessor dataAccessor,
-            int? currentPosition)
+            int? currentPosition,
+            DataType dataType = null)
         {
             var fieldData = typeGen.GetFieldData();
             var gen = this.Module.GetTypeGeneration(typeGen.GetType());
@@ -238,6 +239,11 @@ namespace Mutagen.Bethesda.Generation
                 }
                 loc = $"_{typeGen.Name}Location.Value";
             }
+            else if (dataType != null)
+            {
+                loc = $"_{typeGen.Name}Location";
+                DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
+            }
             else
             {
                 loc = $"0x{currentPosition:X}";
@@ -245,7 +251,7 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new ArgsWrapper(fg,
                 $"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet && typeGen.CanBeNullable(getter: true) ? "?" : null)} {typeGen.Name} => Get{typeGen.Name}Custom"))
             {
-                if (!fieldData.HasTrigger)
+                if (!fieldData.HasTrigger && dataType == null)
                 {
                     args.Add($"location: {loc}");
                 }
@@ -262,7 +268,8 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen, 
             Accessor dataAccessor, 
             int? passedLength,
-            string passedLengthAccessor)
+            string passedLengthAccessor,
+            DataType data = null)
         {
             using (var args = new ArgsWrapper(fg,
                 $"partial void {(typeGen.Name == null ? typeGen.GetFieldData().RecordType?.ToString() : typeGen.Name)}CustomParse"))

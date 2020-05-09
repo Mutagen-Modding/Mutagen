@@ -267,7 +267,8 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             Accessor dataAccessor,
             int? currentPosition,
-            string passedLengthAccessor)
+            string passedLengthAccessor,
+            DataType dataType)
         {
             LoquiType loqui = typeGen as LoquiType;
             var data = typeGen.GetFieldData();
@@ -284,7 +285,8 @@ namespace Mutagen.Bethesda.Generation
                         objGen,
                         typeGen,
                         dataAccessor,
-                        currentPosition);
+                        currentPosition,
+                        dataType);
                     return;
                 default:
                     throw new NotImplementedException();
@@ -310,112 +312,125 @@ namespace Mutagen.Bethesda.Generation
             }
 
             var isRequiredRecord = !loqui.HasBeenSet && data.HasTrigger;
-            if (loqui.GetFieldData()?.HasTrigger ?? false)
+            if (dataType == null)
             {
-                if (loqui.TargetObjectGeneration.IsTypelessStruct())
+                if (loqui.GetFieldData()?.HasTrigger ?? false)
                 {
-                    if (loqui.Singleton
-                        || isRequiredRecord)
+                    if (loqui.TargetObjectGeneration.IsTypelessStruct())
                     {
-                        fg.AppendLine($"private {loqui.Interface(getter: true, internalInterface: true)}? _{typeGen.Name};");
-                    }
-                    else if (loqui.HasBeenSet)
-                    {
-                        fg.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)}? {typeGen.Name} {{ get; private set; }}");
-                    }
-                }
-                else
-                {
-                    var severalSubTypes = data.GenerationTypes
-                        .Select(i => i.Value)
-                        .WhereCastable<TypeGeneration, LoquiType>()
-                        .Where(loqui => !loqui?.TargetObjectGeneration?.Abstract ?? true)
-                        .CountGreaterThan(1);
-                    if (severalSubTypes)
-                    {
-                        fg.AppendLine($"private {nameof(RecordType)} _{typeGen.Name}Type;");
-                    }
-                    fg.AppendLine($"private {GetLocationObjectString(objGen)}? _{typeGen.Name}Location;");
-                    using (new LineWrapper(fg))
-                    {
-                        if (loqui.IsNullable)
-                        {
-                            fg.Append($"public ");
-                        }
-                        else
-                        {
-                            fg.Append($"private ");
-                        }
-                        fg.Append($"{loqui.Interface(getter: true, internalInterface: true)}{(typeGen.CanBeNullable(getter: true) ? "?" : null)} ");
-                        if (!loqui.IsNullable
+                        if (loqui.Singleton
                             || isRequiredRecord)
                         {
-                            fg.Append("_");
+                            fg.AppendLine($"private {loqui.Interface(getter: true, internalInterface: true)}? _{typeGen.Name};");
                         }
-                        fg.Append($"{typeGen.Name}");
-                        if (!severalSubTypes)
+                        else if (loqui.HasBeenSet)
                         {
-                            fg.Append($" => _{typeGen.Name}Location.HasValue ? ");
-                            fg.Append($"{this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({DataAccessor(dataAccessor, $"_{typeGen.Name}Location!.Value.Min", $"_{typeGen.Name}Location!.Value.Max")}), _package");
-                            if (!recConverter.StartsWith("default("))
-                            {
-                                fg.Append($", {recConverter}");
-                            }
-                            fg.Append($") ");
-                            fg.Append($": default;");
+                            fg.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)}? {typeGen.Name} {{ get; private set; }}");
                         }
                     }
-                    if (severalSubTypes)
+                    else
                     {
-                        using (new BraceWrapper(fg))
+                        var severalSubTypes = data.GenerationTypes
+                            .Select(i => i.Value)
+                            .WhereCastable<TypeGeneration, LoquiType>()
+                            .Where(loqui => !loqui?.TargetObjectGeneration?.Abstract ?? true)
+                            .CountGreaterThan(1);
+                        if (severalSubTypes)
                         {
-                            fg.AppendLine("get");
+                            fg.AppendLine($"private {nameof(RecordType)} _{typeGen.Name}Type;");
+                        }
+                        fg.AppendLine($"private {GetLocationObjectString(objGen)}? _{typeGen.Name}Location;");
+                        using (new LineWrapper(fg))
+                        {
+                            if (loqui.IsNullable)
+                            {
+                                fg.Append($"public ");
+                            }
+                            else
+                            {
+                                fg.Append($"private ");
+                            }
+                            fg.Append($"{loqui.Interface(getter: true, internalInterface: true)}{(typeGen.CanBeNullable(getter: true) ? "?" : null)} ");
+                            if (!loqui.IsNullable
+                                || isRequiredRecord)
+                            {
+                                fg.Append("_");
+                            }
+                            fg.Append($"{typeGen.Name}");
+                            if (!severalSubTypes)
+                            {
+                                fg.Append($" => _{typeGen.Name}Location.HasValue ? ");
+                                fg.Append($"{this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({DataAccessor(dataAccessor, $"_{typeGen.Name}Location!.Value.Min", $"_{typeGen.Name}Location!.Value.Max")}), _package");
+                                if (!recConverter.StartsWith("default("))
+                                {
+                                    fg.Append($", {recConverter}");
+                                }
+                                fg.Append($") ");
+                                fg.Append($": default;");
+                            }
+                        }
+                        if (severalSubTypes)
+                        {
                             using (new BraceWrapper(fg))
                             {
-                                fg.AppendLine($"if (!_{typeGen.Name}Location.HasValue) return default;");
-                                fg.AppendLine($"switch (_{typeGen.Name}Type.TypeInt)");
+                                fg.AppendLine("get");
                                 using (new BraceWrapper(fg))
                                 {
-                                    foreach (var gen in data.GenerationTypes)
+                                    fg.AppendLine($"if (!_{typeGen.Name}Location.HasValue) return default;");
+                                    fg.AppendLine($"switch (_{typeGen.Name}Type.TypeInt)");
+                                    using (new BraceWrapper(fg))
                                     {
-                                        if (!(gen.Value is LoquiType subLoq)) continue;
-                                        if (subLoq?.TargetObjectGeneration?.Abstract ?? false) continue;
-                                        foreach (var trigger in gen.Key)
+                                        foreach (var gen in data.GenerationTypes)
                                         {
-                                            fg.AppendLine($"case 0x{trigger.TypeInt.ToString("X")}: // {trigger.Type}");
-                                        }
-                                        using (new DepthWrapper(fg))
-                                        using (new LineWrapper(fg))
-                                        {
-                                            fg.Append($"return {this.Module.BinaryOverlayClassName(subLoq)}.{subLoq.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({DataAccessor(dataAccessor, $"_{subLoq.Name}Location!.Value.Min", $"_{subLoq.Name}Location!.Value.Max")}), _package");
-                                            if (!loqui.Singleton)
+                                            if (!(gen.Value is LoquiType subLoq)) continue;
+                                            if (subLoq?.TargetObjectGeneration?.Abstract ?? false) continue;
+                                            foreach (var trigger in gen.Key)
                                             {
-                                                fg.Append($", {recConverter}");
+                                                fg.AppendLine($"case 0x{trigger.TypeInt.ToString("X")}: // {trigger.Type}");
                                             }
-                                            fg.Append($");");
+                                            using (new DepthWrapper(fg))
+                                            using (new LineWrapper(fg))
+                                            {
+                                                fg.Append($"return {this.Module.BinaryOverlayClassName(subLoq)}.{subLoq.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({DataAccessor(dataAccessor, $"_{subLoq.Name}Location!.Value.Min", $"_{subLoq.Name}Location!.Value.Max")}), _package");
+                                                if (!loqui.Singleton)
+                                                {
+                                                    fg.Append($", {recConverter}");
+                                                }
+                                                fg.Append($");");
+                                            }
                                         }
-                                    }
-                                    fg.AppendLine("default:");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendLine("throw new ArgumentException();");
+                                        fg.AppendLine("default:");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine("throw new ArgumentException();");
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
+
+                else
+                {
+                    if (!loqui.Singleton)
+                    {
+                        fg.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)} {typeGen.Name} => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({dataAccessor}.Slice({passedLengthAccessor})), _package, {recConverter});");
+                    }
+                    else
+                    {
+                        fg.AppendLine($"private {loqui.Interface(getter: true, internalInterface: true)} _{typeGen.Name} {{ get; private set; }}");
+                    }
+                }
+            }
+            else if (!loqui.Singleton)
+            {
+                throw new NotImplementedException();
             }
             else
             {
-                if (!loqui.Singleton)
-                {
-                    fg.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)} {typeGen.Name} => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({dataAccessor}.Slice({passedLengthAccessor})), _package, {recConverter});");
-                }
-                else
-                {
-                    fg.AppendLine($"private {loqui.Interface(getter: true, internalInterface: true)} _{typeGen.Name} {{ get; private set; }}");
-                }
+                DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
+                fg.AppendLine($"private {loqui.Interface(getter: true, internalInterface: true)}? _{typeGen.Name} => _{typeGen.Name}_IsSet ? {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({DataAccessor(dataAccessor, $"_{typeGen.Name}Location", null)}), _package) : default;");
             }
 
             if (loqui.Singleton

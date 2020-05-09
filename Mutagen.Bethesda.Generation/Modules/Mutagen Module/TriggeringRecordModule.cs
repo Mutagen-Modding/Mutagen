@@ -512,6 +512,7 @@ namespace Mutagen.Bethesda.Generation
                 expandSets: SetMarkerType.ExpandSets.FalseAndInclude))
             {
                 if (!field.IntegrateField
+                    && !(field is DataType)
                     && !(field is SpecialParseType)
                     && !(field is CustomLogic)) continue;
                 if (!field.TryGetFieldData(out var fieldData)) break;

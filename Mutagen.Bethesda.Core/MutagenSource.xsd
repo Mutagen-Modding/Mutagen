@@ -359,6 +359,7 @@
         <xs:element name="FormKey" type="NFormKey"/>
         <xs:element name="ModKey" type="NModKey"/>
         <xs:element name="Buffer" type="NBuffer"/>
+        <xs:element name="Data" type="DataType" />
         <xs:element name="SpecialParse" type="NSpecialParse"/>
         <xs:element name="Transfer" type="TransferType"/>
         <xs:element name="Group" type="GroupType" />
@@ -591,6 +592,34 @@
         <xs:attribute name="name" type="xs:string" use="required" />
       </xs:extension>
     </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="DataTypeFieldRangeType">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="NamedFieldOptions" minOccurs="0" maxOccurs="unbounded" />
+    </xs:choice>
+    <xs:attribute name="Min" use="required" />
+  </xs:complexType>
+  
+  <xs:complexType name="DataTypeFields" >
+    <xs:choice minOccurs="0" maxOccurs="unbounded" >
+      <xs:group ref="NamedFieldOptions" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="Range" type="DataTypeFieldRangeType" />
+    </xs:choice>
+  </xs:complexType>
+  
+  <xs:complexType name="DataType" >
+    <xs:choice minOccurs="0" maxOccurs="unbounded" >
+      <xs:element name="Fields" type="DataTypeFields" minOccurs="0" maxOccurs="1" />
+    </xs:choice>
+    <xs:attribute name="recordType" />
+    <xs:attribute name="binaryOverlay" type="MutagenBinaryType" >
+      <xs:annotation>
+        <xs:documentation>
+          How to generate binary overlay translations.  Defaults to "normal" setting if missing
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
 
   <xs:complexType name="RecordTypeMappingsType" >

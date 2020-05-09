@@ -224,7 +224,8 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen, 
             Accessor dataAccessor,
             int? currentPosition,
-            string passedLengthAccessor)
+            string passedLengthAccessor,
+            DataType dataType = null)
         {
             var data = typeGen.GetFieldData();
             if (data.HasTrigger)
@@ -236,6 +237,7 @@ namespace Mutagen.Bethesda.Generation
             
             if (data.RecordType.HasValue)
             {
+                if (dataType != null) throw new ArgumentException();
                 dataAccessor = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}({dataAccessor}, _{typeGen.Name}Location.Value, _package.Meta)";
                 fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {GenerateForTypicalWrapper(objGen, typeGen, dataAccessor, "_package")} : {linkType.DirectTypeName(getter: true)}.Null;");
             }
@@ -245,7 +247,15 @@ namespace Mutagen.Bethesda.Generation
                 {
                     throw new NotImplementedException();
                 }
-                fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice({passedLengthAccessor}, 0x{(await this.ExpectedLength(objGen, typeGen)).Value:X})", "_package")};");
+                if (dataType == null)
+                {
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice({passedLengthAccessor}, 0x{(await this.ExpectedLength(objGen, typeGen)).Value:X})", "_package")};");
+                }
+                else
+                {
+                    DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice(_{typeGen.Name}Location, 0x{(await this.ExpectedLength(objGen, typeGen)).Value:X})", "_package")} : {linkType.DirectTypeName(getter: true)}.Empty;");
+                }
             }
         }
     }

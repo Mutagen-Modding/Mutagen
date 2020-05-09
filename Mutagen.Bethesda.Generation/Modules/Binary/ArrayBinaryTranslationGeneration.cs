@@ -17,13 +17,14 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen, 
             Accessor dataAccessor, 
             int? currentPosition,
-            string passedLengthAccessor)
+            string passedLengthAccessor,
+            DataType dataType = null)
         {
             ArrayType arr = typeGen as ArrayType;
             var data = arr.GetFieldData();
             if (data.BinaryOverlayFallback != BinaryGenerationType.Normal)
             {
-                await base.GenerateWrapperFields(fg, objGen, typeGen, dataAccessor, currentPosition, passedLengthAccessor);
+                await base.GenerateWrapperFields(fg, objGen, typeGen, dataAccessor, currentPosition, passedLengthAccessor, dataType);
                 return;
             }
             var subGen = this.Module.GetTypeGeneration(arr.SubTypeGeneration.GetType());

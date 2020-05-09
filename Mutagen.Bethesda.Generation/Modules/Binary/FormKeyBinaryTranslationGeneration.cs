@@ -23,7 +23,8 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             Accessor dataAccessor,
             int? currentPosition,
-            string passedLengthAccessor)
+            string passedLengthAccessor,
+            DataType dataType)
         {
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             if (data.RecordType.HasValue
@@ -32,7 +33,8 @@ namespace Mutagen.Bethesda.Generation
                 return;
                 throw new NotImplementedException();
             }
-            fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => FormKeyBinaryTranslation.Instance.Parse({dataAccessor}.Span.Slice({passedLengthAccessor}, {(await this.ExpectedLength(objGen, typeGen)).Value}), this._package.MasterReferences!);");
+            var posStr = dataType == null ? $"{passedLengthAccessor}" : $"_{dataType.GetFieldData().RecordType}Location + {passedLengthAccessor}";
+            fg.AppendLine($"public {typeGen.TypeName(getter: true)} {typeGen.Name} => FormKeyBinaryTranslation.Instance.Parse({dataAccessor}.Span.Slice({posStr}, {(await this.ExpectedLength(objGen, typeGen)).Value}), this._package.MasterReferences!);");
         }
 
         public override void GenerateCopyInRet(

@@ -217,7 +217,8 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             Accessor dataAccessor,
             int? currentPosition,
-            string passedLengthAccessor)
+            string passedLengthAccessor,
+            DataType dataType = null)
         {
             var data = typeGen.GetFieldData();
             switch (data.BinaryOverlayFallback)
@@ -233,7 +234,8 @@ namespace Mutagen.Bethesda.Generation
                         objGen,
                         typeGen,
                         dataAccessor,
-                        currentPosition);
+                        currentPosition,
+                        dataType);
                     return;
                 default:
                     throw new NotImplementedException();
@@ -272,25 +274,48 @@ namespace Mutagen.Bethesda.Generation
             else if (!data.HasTrigger
                 && !gendered.ItemHasBeenSet)
             {
-                var subLen = (await subBin.ExpectedLength(objGen, gendered.SubTypeGeneration)).Value;
-                if (data.HasTrigger)
+                var subLen = (await subBin.ExpectedLength(objGen, gendered.SubTypeGeneration)).Value; 
+                if (dataType == null)
                 {
-                    throw new NotImplementedException();
-                    //fg.AppendLine($"public {typeGen.TypeName(getter: true)}? {typeGen.Name} => {dataAccessor}.Length >= {(currentPosition + this.ExpectedLength(objGen, typeGen).Value)} ? {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice({currentPosition}, {this.ExpectedLength(objGen, typeGen).Value})", "_package")} : {typeGen.GetDefault()};");
+                    if (data.HasTrigger)
+                    {
+                        throw new NotImplementedException();
+                        //fg.AppendLine($"public {typeGen.TypeName(getter: true)}? {typeGen.Name} => {dataAccessor}.Length >= {(currentPosition + this.ExpectedLength(objGen, typeGen).Value)} ? {GenerateForTypicalWrapper(objGen, typeGen, $"{dataAccessor}.Span.Slice({currentPosition}, {this.ExpectedLength(objGen, typeGen).Value})", "_package")} : {typeGen.GetDefault()};");
+                    }
+                    else
+                    {
+                        fg.AppendLine($"public IGenderedItemGetter<{gendered.SubTypeGeneration.TypeName(getter: true)}> {typeGen.Name}");
+                        using (new BraceWrapper(fg))
+                        {
+                            fg.AppendLine("get");
+                            using (new BraceWrapper(fg))
+                            {
+                                if (data.HasTrigger)
+                                {
+                                    fg.AppendLine($"if (!_{typeGen.Name}Location.HasValue) return {typeGen.GetDefault(getter: true)};");
+                                }
+                                fg.AppendLine($"var data = {dataAccessor}.Span.Slice({passedLengthAccessor}, {subLen * 2});");
+                                using (var args = new ArgsWrapper(fg,
+                                    $"return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true)}>"))
+                                {
+                                    args.Add($"{subBin.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, "data", "_package")}");
+                                    args.Add($"{subBin.GenerateForTypicalWrapper(objGen, gendered.SubTypeGeneration, $"data.Slice({subLen})", "_package")}");
+                                }
+                            }
+                        }
+                    }
                 }
                 else
                 {
-                    fg.AppendLine($"public IGenderedItemGetter<{gendered.SubTypeGeneration.TypeName(getter: true)}> {typeGen.Name}");
+                    DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
+                    fg.AppendLine($"public IGenderedItemGetter<{gendered.SubTypeGeneration.TypeName(getter: true)}>{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name}");
                     using (new BraceWrapper(fg))
                     {
                         fg.AppendLine("get");
                         using (new BraceWrapper(fg))
                         {
-                            if (data.HasTrigger)
-                            {
-                                fg.AppendLine($"if (!_{typeGen.Name}Location.HasValue) return {typeGen.GetDefault(getter: true)};");
-                            }
-                            fg.AppendLine($"var data = {dataAccessor}.Span.Slice({passedLengthAccessor}, {subLen * 2});");
+                            fg.AppendLine($"if (!_{typeGen.Name}_IsSet) return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true)}>({gendered.SubTypeGeneration.GetDefault(getter: true)}, {gendered.SubTypeGeneration.GetDefault(getter: true)});");
+                            fg.AppendLine($"var data = {dataAccessor}.Span.Slice(_{typeGen.Name}Location);");
                             using (var args = new ArgsWrapper(fg,
                                 $"return new GenderedItem<{gendered.SubTypeGeneration.TypeName(getter: true)}>"))
                             {

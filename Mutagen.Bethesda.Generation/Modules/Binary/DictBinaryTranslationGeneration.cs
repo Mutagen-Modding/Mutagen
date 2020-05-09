@@ -297,7 +297,8 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             Accessor dataAccessor,
             int? passedLength,
-            string passedLengthAccessor)
+            string passedLengthAccessor,
+            DataType data = null)
         {
             DictType dict = typeGen as DictType;
             if (GetDictType(dict) != DictBinaryType.EnumMap)

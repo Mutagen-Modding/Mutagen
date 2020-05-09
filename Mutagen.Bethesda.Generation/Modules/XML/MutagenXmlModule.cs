@@ -87,10 +87,99 @@ namespace Mutagen.Bethesda.Generation
                         throw new ArgumentException("Unsupported type generator: " + field);
                     }
 
-                    generateNormal(generator, field);
+                    if (field is DataType dataType)
+                    {
+                        fg.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Has))");
+                        using (new BraceWrapper(fg))
+                        {
+                            bool isInRange = false;
+                            int encounteredBreakIndex = 0;
+                            foreach (var subField in dataType.IterateFieldsWithMeta())
+                            {
+                                if (!this.TryGetTypeGeneration(subField.Field.GetType(), out var subGenerator))
+                                {
+                                    throw new ArgumentException("Unsupported type generator: " + subField.Field);
+                                }
+
+                                var subData = subField.Field.GetFieldData();
+                                if (!subGenerator.ShouldGenerateCopyIn(subField.Field)) continue;
+                                if (subField.BreakIndex != -1)
+                                {
+                                    fg.AppendLine($"if (!item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Break{subField.BreakIndex}))");
+                                    fg.AppendLine("{");
+                                    fg.Depth++;
+                                    encounteredBreakIndex++;
+                                }
+                                if (subField.Range != null && !isInRange)
+                                {
+                                    isInRange = true;
+                                    fg.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Range{subField.RangeIndex}))");
+                                    fg.AppendLine("{");
+                                    fg.Depth++;
+                                }
+                                if (subField.Range == null && isInRange)
+                                {
+                                    isInRange = false;
+                                    fg.Depth--;
+                                    fg.AppendLine("}");
+                                }
+                                generateNormal(subGenerator, subField.Field);
+                            }
+                            for (int i = 0; i < encounteredBreakIndex; i++)
+                            {
+                                fg.Depth--;
+                                fg.AppendLine("}");
+                                if (i == encounteredBreakIndex - 1)
+                                {
+                                    fg.AppendLine("else");
+                                    using (new BraceWrapper(fg))
+                                    {
+                                        fg.AppendLine($"node.Add(new XElement(\"Has{dataType.EnumName}\"));");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        generateNormal(generator, field);
+                    }
                 }
             }
             fg.AppendLine();
+        }
+
+        private void HandleDataTypeParsing(ObjectGeneration obj, FileGeneration fg, DataType set, DataType.DataTypeIteration subField, ref bool isInRange)
+        {
+            if (subField.FieldIndex == 0)
+            {
+                fg.AppendLine($"item.{set.StateName} |= {obj.Name}.{set.EnumName}.Has;");
+            }
+            if (subField.BreakIndex != -1)
+            {
+                fg.AppendLine($"item.{set.StateName} &= ~{obj.Name}.{set.EnumName}.Break{subField.BreakIndex};");
+            }
+            if (subField.Range != null && !isInRange)
+            {
+                isInRange = true;
+                fg.AppendLine($"item.{set.StateName} |= {obj.Name}.{set.EnumName}.Range{subField.RangeIndex};");
+            }
+            if (subField.Range == null && isInRange)
+            {
+                isInRange = false;
+            }
+        }
+
+        protected override async Task PreCreateLoop(ObjectGeneration obj, FileGeneration fg)
+        {
+            foreach (var field in obj.IterateFields(nonIntegrated: true, expandSets: SetMarkerType.ExpandSets.FalseAndInclude))
+            {
+                if (!(field is DataType set)) continue;
+                for (int i = 0; i < set.BreakIndices.Count; i++)
+                {
+                    fg.AppendLine($"item.{set.StateName} |= {obj.Name}.{set.EnumName}.Break{i};");
+                }
+            }
         }
 
         protected override void FillPrivateElement(ObjectGeneration obj, FileGeneration fg)
@@ -111,9 +200,46 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine("switch (name)");
                     using (new BraceWrapper(fg))
                     {
+                        bool isInRange = false;
                         foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
                         {
-                            if (field.IntegrateField)
+                            if (field is DataType set)
+                            {
+                                fg.AppendLine($"case \"Has{set.EnumName}\":");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($"item.{set.StateName} |= {obj.Name}.{set.EnumName}.Has;");
+                                    fg.AppendLine("break;");
+                                }
+                                foreach (var subField in set.IterateFieldsWithMeta())
+                                {
+                                    if (subField.Field.Derivative) continue;
+                                    if (!subField.Field.ReadOnly) continue;
+                                    if (!subField.Field.IntegrateField) continue;
+                                    if (!this.TryGetTypeGeneration(subField.Field.GetType(), out var generator))
+                                    {
+                                        throw new ArgumentException("Unsupported type generator: " + subField.Field);
+                                    }
+                                    fg.AppendLine($"case \"{subField.Field.Name}\":");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        if (generator.ShouldGenerateCopyIn(subField.Field))
+                                        {
+                                            generator.GenerateCopyIn(
+                                                fg: fg,
+                                                objGen: obj,
+                                                typeGen: subField.Field,
+                                                nodeAccessor: XmlTranslationModule.XElementLine.GetParameterName(obj).Result,
+                                                itemAccessor: Accessor.FromType(subField.Field, "item"),
+                                                translationMaskAccessor: "translationMask",
+                                                errorMaskAccessor: $"errorMask");
+                                        }
+                                        HandleDataTypeParsing(obj, fg, set, subField, ref isInRange);
+                                        fg.AppendLine("break;");
+                                    }
+                                }
+                            }
+                            else if (field.IntegrateField)
                             {
                                 if (field.Derivative) continue;
                                 if (!field.ReadOnly) continue;
@@ -183,9 +309,41 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine("switch (name)");
                 using (new BraceWrapper(fg))
                 {
+                    bool isInRange = false;
                     foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
                     {
-                        if (field.IntegrateField)
+                        if (field is DataType set)
+                        {
+                            foreach (var subField in set.IterateFieldsWithMeta())
+                            {
+                                if (subField.Field.Derivative) continue;
+                                if (subField.Field.ReadOnly) continue;
+                                if (!subField.Field.IntegrateField) continue;
+                                if (!this.TryGetTypeGeneration(subField.Field.GetType(), out var generator))
+                                {
+                                    throw new ArgumentException("Unsupported type generator: " + subField.Field);
+                                }
+
+                                fg.AppendLine($"case \"{subField.Field.Name}\":");
+                                using (new DepthWrapper(fg))
+                                {
+                                    if (generator.ShouldGenerateCopyIn(subField.Field))
+                                    {
+                                        generator.GenerateCopyIn(
+                                            fg: fg,
+                                            objGen: obj,
+                                            typeGen: subField.Field,
+                                            nodeAccessor: XmlTranslationModule.XElementLine.GetParameterName(obj).Result,
+                                            itemAccessor: Accessor.FromType(subField.Field, "item"),
+                                            translationMaskAccessor: "translationMask",
+                                            errorMaskAccessor: $"errorMask");
+                                    }
+                                    HandleDataTypeParsing(obj, fg, set, subField, ref isInRange);
+                                    fg.AppendLine("break;");
+                                }
+                            }
+                        }
+                        else if (field.IntegrateField)
                         {
                             if (field.Derivative) continue;
                             if (field.ReadOnly) continue;

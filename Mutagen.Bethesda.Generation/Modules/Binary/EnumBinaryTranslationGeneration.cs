@@ -133,7 +133,8 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration typeGen,
             Accessor dataAccessor,
             int? currentPosition,
-            string passedLengthAccessor)
+            string passedLengthAccessor,
+            DataType dataType)
         {
             var eType = typeGen as EnumType;
             var data = typeGen.GetFieldData();
@@ -151,7 +152,8 @@ namespace Mutagen.Bethesda.Generation
                         objGen,
                         typeGen,
                         dataAccessor,
-                        currentPosition);
+                        currentPosition,
+                        dataType);
                     return;
                 default:
                     throw new NotImplementedException();
@@ -161,6 +163,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine($"private int? _{typeGen.Name}Location;");
             }
+            var posStr = dataType == null ? $"{passedLengthAccessor}" : $"_{typeGen.Name}Location";
             string slice;
             if (data.RecordType.HasValue)
             {
@@ -168,7 +171,7 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                slice = $"{dataAccessor}.Span.Slice({passedLengthAccessor}, 0x{eType.ByteLength:X})";
+                slice = $"{dataAccessor}.Span.Slice({posStr}, 0x{eType.ByteLength:X})";
             }
             var getType = GenerateForTypicalWrapper(objGen, typeGen, slice, "_package");
 
@@ -199,7 +202,15 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => {getType};");
+                if (dataType == null)
+                {
+                    fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => {getType};");
+                }
+                else
+                {
+                    DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
+                    fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => _{typeGen.Name}_IsSet ? {getType} : default;");
+                }
             }
 
         }
