@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Generation
             this.HasBeenSetProperty.Subscribe(i => LoquiType.HasBeenSetProperty.OnNext(i));
             this.HasBeenSetProperty.Subscribe(i => _rawFormID.HasBeenSetProperty.OnNext(i));
             this.FormIDType = node.GetAttribute<FormIDTypeEnum>("type", defaultVal: FormIDTypeEnum.Normal);
-            this.Singleton = SingletonLevel.Singleton;
+            this.Singleton = true;
             this.SetPermission = PermissionLevel.@private;
         }
 

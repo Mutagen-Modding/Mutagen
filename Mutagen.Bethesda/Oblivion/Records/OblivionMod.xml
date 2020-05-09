@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="OblivionMod" objType="Mod" failOnUnknownType="false" ctorPermission="protected" GUID="b6f626df-b164-466b-960a-1639d88f66bc" ID="3">
     <Fields>
-      <RefDirect name="ModHeader" refName="ModHeader" nullable="Singleton" />
+      <RefDirect name="ModHeader" refName="ModHeader" singleton="true" />
       <Group name="GameSettings" refName="GameSetting" />
       <Group name="Globals" refName="Global" />
       <Group name="Classes" refName="Class" />
@@ -47,7 +47,7 @@
       <Group name="Weathers" refName="Weather" />
       <Group name="Climates" refName="Climate" />
       <Group name="Regions" refName="Region" />
-      <Ref name="Cells" nullable="Singleton">
+      <Ref name="Cells" singleton="true" >
         <Direct refName="ListGroup" >
           <GenericSpecification Definition="Oblivion.CellBlock" TypeToSpecify="T" />
         </Direct>

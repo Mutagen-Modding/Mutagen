@@ -28,7 +28,7 @@
       <List name="LinkFrom">
         <FormLink recordType="TCLF" refName="DialogTopic" />
       </List>
-      <RefDirect name="Script" refName="ScriptFields" nullable="Singleton" />
+      <RefDirect name="Script" refName="ScriptFields" singleton="true" />
     </Fields>
   </Object>
   <Object name="DialogItemData" objType="Subrecord" recordType="DATA" GUID="2261ed10-f5dd-4b02-b71a-8eedb897e41e" ID="186">

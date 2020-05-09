@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 if (field is LoquiType loqui && loqui.GetFieldData().HasTrigger)
                 {
-                    if (loqui.SingletonType != SingletonLevel.None) break;
+                    if (loqui.Singleton) break;
                 }
             }
 

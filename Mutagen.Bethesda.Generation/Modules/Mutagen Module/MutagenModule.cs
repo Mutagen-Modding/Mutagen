@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Generation
         {
             if (!(field is LoquiType loqui)) return;
             if (loqui.TargetObjectGeneration?.GetObjectType() != ObjectType.Group) return;
-            loqui.SingletonType = SingletonLevel.Singleton;
+            loqui.Singleton = true;
             loqui.HasBeenSetProperty.OnNext((false, true));
             loqui.NotifyingProperty.OnNext((NotifyingType.None, true));
         }

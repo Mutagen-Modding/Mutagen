@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Generation
 
         public bool NeedsHeaderProcessing(LoquiType loquiGen)
         {
-            if (loquiGen.SingletonType != SingletonLevel.Singleton
+            if (!loquiGen.Singleton
                 && loquiGen.TargetObjectGeneration != null
                 && loquiGen.GetFieldData().HasTrigger
                 && !loquiGen.TargetObjectGeneration.Abstract
@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda.Generation
         public override bool ShouldGenerateCopyIn(TypeGeneration typeGen)
         {
             var loquiGen = typeGen as LoquiType;
-            return loquiGen.SingletonType != SingletonLevel.Singleton || loquiGen.SetterInterfaceType != LoquiInterfaceType.IGetter;
+            return !loquiGen.Singleton || loquiGen.SetterInterfaceType != LoquiInterfaceType.IGetter;
         }
 
         public override async Task GenerateCopyIn(
@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.Generation
             if (loqui.TargetObjectGeneration != null)
             {
                 if (loqui.SetterInterfaceType == LoquiInterfaceType.IGetter) return;
-                if (loqui.SingletonType == SingletonLevel.Singleton)
+                if (loqui.Singleton)
                 {
                     using (var args = new ArgsWrapper(fg,
                         $"{Loqui.Generation.Utility.Await(this.IsAsync(typeGen, read: true))}{itemAccessor.DirectAccess}.{this.Module.CopyInFromPrefix}{ModNickname}"))
@@ -314,7 +314,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (loqui.TargetObjectGeneration.IsTypelessStruct())
                 {
-                    if (loqui.SingletonType != SingletonLevel.None
+                    if (loqui.Singleton
                         || isRequiredRecord)
                     {
                         fg.AppendLine($"private {loqui.Interface(getter: true, internalInterface: true)}? _{typeGen.Name};");
@@ -388,7 +388,7 @@ namespace Mutagen.Bethesda.Generation
                                         using (new LineWrapper(fg))
                                         {
                                             fg.Append($"return {this.Module.BinaryOverlayClassName(subLoq)}.{subLoq.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({DataAccessor(dataAccessor, $"_{subLoq.Name}Location!.Value.Min", $"_{subLoq.Name}Location!.Value.Max")}), _package");
-                                            if (loqui.SingletonType == SingletonLevel.None)
+                                            if (!loqui.Singleton)
                                             {
                                                 fg.Append($", {recConverter}");
                                             }
@@ -408,7 +408,7 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                if (loqui.SingletonType == SingletonLevel.None)
+                if (!loqui.Singleton)
                 {
                     fg.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)} {typeGen.Name} => {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({dataAccessor}.Slice({passedLengthAccessor})), _package, {recConverter});");
                 }
@@ -418,7 +418,7 @@ namespace Mutagen.Bethesda.Generation
                 }
             }
 
-            if (loqui.SingletonType != SingletonLevel.None
+            if (loqui.Singleton
                 || isRequiredRecord)
             {
                 fg.AppendLine($"public {loqui.Interface(getter: true, internalInterface: true)} {typeGen.Name} => _{typeGen.Name} ?? new {loqui.DirectTypeName}({(loqui.ThisConstruction ? "this" : null)});");
@@ -509,23 +509,14 @@ namespace Mutagen.Bethesda.Generation
             }
 
             string accessor;
-            switch (loqui.SingletonType)
+            if (loqui.Singleton
+                || !loqui.HasBeenSet)
             {
-                case SingletonLevel.None:
-                    if (loqui.HasBeenSet)
-                    {
-                        accessor = typeGen.Name;
-                    }
-                    else
-                    {
-                        accessor = $"_{typeGen.Name}";
-                    }
-                    break;
-                case SingletonLevel.Singleton:
-                    accessor = $"_{typeGen.Name}";
-                    break;
-                default:
-                    throw new NotImplementedException();
+                accessor = $"_{typeGen.Name}";
+            }
+            else
+            {
+                accessor = typeGen.Name;
             }
             if (data.MarkerType.HasValue)
             {

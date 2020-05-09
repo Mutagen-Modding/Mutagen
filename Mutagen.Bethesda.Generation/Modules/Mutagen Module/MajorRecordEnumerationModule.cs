@@ -305,27 +305,18 @@ namespace Mutagen.Bethesda.Generation
                                     var fieldAccessor = loqui.HasBeenSet ? $"{loqui.Name}item" : $"{accessor}.{loqui.Name}";
                                     await LoquiTypeHandler(subFg, fieldAccessor, loqui, generic: null);
                                     if (subFg.Count == 0) continue;
-                                    switch (loqui.SingletonType)
+                                    if (loqui.Singleton
+                                        || !loqui.HasBeenSet)
                                     {
-                                        case SingletonLevel.None:
-                                            if (loqui.HasBeenSet)
-                                            {
-                                                fg.AppendLine($"if ({accessor}.{loqui.Name}.TryGet(out var {loqui.Name}item))");
-                                                using (new BraceWrapper(fg))
-                                                {
-                                                    fg.AppendLines(subFg);
-                                                }
-                                            }
-                                            else
-                                            {
-                                                fg.AppendLines(subFg);
-                                            }
-                                            break;
-                                        case SingletonLevel.Singleton:
+                                        fg.AppendLines(subFg);
+                                    }
+                                    else
+                                    {
+                                        fg.AppendLine($"if ({accessor}.{loqui.Name}.TryGet(out var {loqui.Name}item))");
+                                        using (new BraceWrapper(fg))
+                                        {
                                             fg.AppendLines(subFg);
-                                            break;
-                                        default:
-                                            throw new NotImplementedException();
+                                        }
                                     }
                                 }
                             }
@@ -511,27 +502,18 @@ namespace Mutagen.Bethesda.Generation
                                 var subFg = new FileGeneration();
                                 await LoquiTypeHandler(subFg, fieldAccessor, loqui, generic: "TMajor");
                                 if (subFg.Count == 0) continue;
-                                switch (loqui.SingletonType)
+                                if (loqui.Singleton
+                                    || !loqui.HasBeenSet)
                                 {
-                                    case SingletonLevel.None:
-                                        if (loqui.HasBeenSet)
-                                        {
-                                            fieldGen.AppendLine($"if ({accessor}.{loqui.Name}.TryGet(out var {loqui.Name}item))");
-                                            using (new BraceWrapper(fieldGen))
-                                            {
-                                                fieldGen.AppendLines(subFg);
-                                            }
-                                        }
-                                        else
-                                        {
-                                            fieldGen.AppendLines(subFg);
-                                        }
-                                        break;
-                                    case SingletonLevel.Singleton:
+                                    fieldGen.AppendLines(subFg);
+                                }
+                                else
+                                {
+                                    fieldGen.AppendLine($"if ({accessor}.{loqui.Name}.TryGet(out var {loqui.Name}item))");
+                                    using (new BraceWrapper(fieldGen))
+                                    {
                                         fieldGen.AppendLines(subFg);
-                                        break;
-                                    default:
-                                        throw new NotImplementedException();
+                                    }
                                 }
                             }
                             else if (field is ContainerType cont)

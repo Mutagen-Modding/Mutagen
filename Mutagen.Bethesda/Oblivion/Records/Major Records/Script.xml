@@ -2,13 +2,13 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Script" objType="Record" recordType="SCPT" baseClass="OblivionMajorRecord" GUID="4eda2162-86bb-49f3-babd-a9ea5ad8d928" ID="46">
     <Fields>
-      <RefDirect name="Fields" refName="ScriptFields" nullable="Singleton" />
+      <RefDirect name="Fields" refName="ScriptFields" singleton="true" />
     </Fields>
   </Object>
   <Object name="ScriptFields" objType="Subrecord" GUID="9b6e1edf-a601-4625-be5c-90b106975b45" ID="152">
     <Fields>
       <CustomLogic name="MetadataSummaryOld" recordType="SCHD" />
-      <RefDirect name="MetadataSummary" recordType="SCHR" refName="ScriptMetaSummary" nullable="Singleton" />
+      <RefDirect name="MetadataSummary" recordType="SCHR" refName="ScriptMetaSummary" singleton="true" />
       <ByteArray name="CompiledScript" recordType="SCDA" generateClassMembers="false" />
       <String name="SourceCode" recordType="SCTX" binaryType="Plain" />
       <RefList name="LocalVariables" refName="LocalVariable" />
