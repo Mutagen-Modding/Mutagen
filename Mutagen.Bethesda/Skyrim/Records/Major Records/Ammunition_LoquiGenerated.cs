@@ -132,10 +132,19 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region Data
-        public AmmunitionData Data { get; set; } = new AmmunitionData();
+        #region Projectile
+        public FormLink<Projectile> Projectile { get; set; } = new FormLink<Projectile>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IAmmunitionDataGetter IAmmunitionGetter.Data => Data;
+        IFormLinkGetter<IProjectileGetter> IAmmunitionGetter.Projectile => this.Projectile;
+        #endregion
+        #region Flags
+        public Ammunition.Flag Flags { get; set; } = default;
+        #endregion
+        #region Damage
+        public Single Damage { get; set; } = default;
+        #endregion
+        #region Value
+        public UInt32 Value { get; set; } = default;
         #endregion
         #region ShortName
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -147,6 +156,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IAmmunitionGetter.ShortName => this.ShortName;
+        #endregion
+        #region DATADataTypeState
+        public Ammunition.DATADataType DATADataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -327,8 +339,12 @@ namespace Mutagen.Bethesda.Skyrim
                 this.PutDownSound = initialValue;
                 this.Description = initialValue;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Data = new MaskItem<TItem, AmmunitionData.Mask<TItem>?>(initialValue, new AmmunitionData.Mask<TItem>(initialValue));
+                this.Projectile = initialValue;
+                this.Flags = initialValue;
+                this.Damage = initialValue;
+                this.Value = initialValue;
                 this.ShortName = initialValue;
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -347,8 +363,12 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem PutDownSound,
                 TItem Description,
                 TItem Keywords,
-                TItem Data,
-                TItem ShortName)
+                TItem Projectile,
+                TItem Flags,
+                TItem Damage,
+                TItem Value,
+                TItem ShortName,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -366,8 +386,12 @@ namespace Mutagen.Bethesda.Skyrim
                 this.PutDownSound = PutDownSound;
                 this.Description = Description;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Data = new MaskItem<TItem, AmmunitionData.Mask<TItem>?>(Data, new AmmunitionData.Mask<TItem>(Data));
+                this.Projectile = Projectile;
+                this.Flags = Flags;
+                this.Damage = Damage;
+                this.Value = Value;
                 this.ShortName = ShortName;
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -388,8 +412,12 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem PutDownSound;
             public TItem Description;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
-            public MaskItem<TItem, AmmunitionData.Mask<TItem>?>? Data { get; set; }
+            public TItem Projectile;
+            public TItem Flags;
+            public TItem Damage;
+            public TItem Value;
             public TItem ShortName;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -412,8 +440,12 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.PutDownSound, rhs.PutDownSound)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
-                if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.Projectile, rhs.Projectile)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Damage, rhs.Damage)) return false;
+                if (!object.Equals(this.Value, rhs.Value)) return false;
                 if (!object.Equals(this.ShortName, rhs.ShortName)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -428,8 +460,12 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.PutDownSound);
                 hash.Add(this.Description);
                 hash.Add(this.Keywords);
-                hash.Add(this.Data);
+                hash.Add(this.Projectile);
+                hash.Add(this.Flags);
+                hash.Add(this.Damage);
+                hash.Add(this.Value);
                 hash.Add(this.ShortName);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -475,12 +511,12 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (Data != null)
-                {
-                    if (!eval(this.Data.Overall)) return false;
-                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
-                }
+                if (!eval(this.Projectile)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Damage)) return false;
+                if (!eval(this.Value)) return false;
                 if (!eval(this.ShortName)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -524,12 +560,12 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (Data != null)
-                {
-                    if (eval(this.Data.Overall)) return true;
-                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
-                }
+                if (eval(this.Projectile)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.Damage)) return true;
+                if (eval(this.Value)) return true;
                 if (eval(this.ShortName)) return true;
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -567,8 +603,12 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                obj.Data = this.Data == null ? null : new MaskItem<R, AmmunitionData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
+                obj.Projectile = eval(this.Projectile);
+                obj.Flags = eval(this.Flags);
+                obj.Damage = eval(this.Damage);
+                obj.Value = eval(this.Value);
                 obj.ShortName = eval(this.ShortName);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -646,13 +686,29 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.Data?.Overall ?? true)
+                    if (printMask?.Projectile ?? true)
                     {
-                        Data?.ToString(fg);
+                        fg.AppendItem(Projectile, "Projectile");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.Damage ?? true)
+                    {
+                        fg.AppendItem(Damage, "Damage");
+                    }
+                    if (printMask?.Value ?? true)
+                    {
+                        fg.AppendItem(Value, "Value");
                     }
                     if (printMask?.ShortName ?? true)
                     {
                         fg.AppendItem(ShortName, "ShortName");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -675,8 +731,12 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? PutDownSound;
             public Exception? Description;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
-            public MaskItem<Exception?, AmmunitionData.ErrorMask?>? Data;
+            public Exception? Projectile;
+            public Exception? Flags;
+            public Exception? Damage;
+            public Exception? Value;
             public Exception? ShortName;
+            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -703,10 +763,18 @@ namespace Mutagen.Bethesda.Skyrim
                         return Description;
                     case Ammunition_FieldIndex.Keywords:
                         return Keywords;
-                    case Ammunition_FieldIndex.Data:
-                        return Data;
+                    case Ammunition_FieldIndex.Projectile:
+                        return Projectile;
+                    case Ammunition_FieldIndex.Flags:
+                        return Flags;
+                    case Ammunition_FieldIndex.Damage:
+                        return Damage;
+                    case Ammunition_FieldIndex.Value:
+                        return Value;
                     case Ammunition_FieldIndex.ShortName:
                         return ShortName;
+                    case Ammunition_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -744,11 +812,23 @@ namespace Mutagen.Bethesda.Skyrim
                     case Ammunition_FieldIndex.Keywords:
                         this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case Ammunition_FieldIndex.Data:
-                        this.Data = new MaskItem<Exception?, AmmunitionData.ErrorMask?>(ex, null);
+                    case Ammunition_FieldIndex.Projectile:
+                        this.Projectile = ex;
+                        break;
+                    case Ammunition_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Ammunition_FieldIndex.Damage:
+                        this.Damage = ex;
+                        break;
+                    case Ammunition_FieldIndex.Value:
+                        this.Value = ex;
                         break;
                     case Ammunition_FieldIndex.ShortName:
                         this.ShortName = ex;
+                        break;
+                    case Ammunition_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -788,11 +868,23 @@ namespace Mutagen.Bethesda.Skyrim
                     case Ammunition_FieldIndex.Keywords:
                         this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case Ammunition_FieldIndex.Data:
-                        this.Data = (MaskItem<Exception?, AmmunitionData.ErrorMask?>?)obj;
+                    case Ammunition_FieldIndex.Projectile:
+                        this.Projectile = (Exception?)obj;
+                        break;
+                    case Ammunition_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case Ammunition_FieldIndex.Damage:
+                        this.Damage = (Exception?)obj;
+                        break;
+                    case Ammunition_FieldIndex.Value:
+                        this.Value = (Exception?)obj;
                         break;
                     case Ammunition_FieldIndex.ShortName:
                         this.ShortName = (Exception?)obj;
+                        break;
+                    case Ammunition_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -812,8 +904,12 @@ namespace Mutagen.Bethesda.Skyrim
                 if (PutDownSound != null) return true;
                 if (Description != null) return true;
                 if (Keywords != null) return true;
-                if (Data != null) return true;
+                if (Projectile != null) return true;
+                if (Flags != null) return true;
+                if (Damage != null) return true;
+                if (Value != null) return true;
                 if (ShortName != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -879,8 +975,12 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                Data?.ToString(fg);
+                fg.AppendItem(Projectile, "Projectile");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(Damage, "Damage");
+                fg.AppendItem(Value, "Value");
                 fg.AppendItem(ShortName, "ShortName");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -898,8 +998,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.PutDownSound = this.PutDownSound.Combine(rhs.PutDownSound);
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
-                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
+                ret.Projectile = this.Projectile.Combine(rhs.Projectile);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Damage = this.Damage.Combine(rhs.Damage);
+                ret.Value = this.Value.Combine(rhs.Value);
                 ret.ShortName = this.ShortName.Combine(rhs.ShortName);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -931,8 +1035,12 @@ namespace Mutagen.Bethesda.Skyrim
             public bool PutDownSound;
             public bool Description;
             public bool Keywords;
-            public MaskItem<bool, AmmunitionData.TranslationMask?> Data;
+            public bool Projectile;
+            public bool Flags;
+            public bool Damage;
+            public bool Value;
             public bool ShortName;
+            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -948,8 +1056,12 @@ namespace Mutagen.Bethesda.Skyrim
                 this.PutDownSound = defaultOn;
                 this.Description = defaultOn;
                 this.Keywords = defaultOn;
-                this.Data = new MaskItem<bool, AmmunitionData.TranslationMask?>(defaultOn, null);
+                this.Projectile = defaultOn;
+                this.Flags = defaultOn;
+                this.Damage = defaultOn;
+                this.Value = defaultOn;
                 this.ShortName = defaultOn;
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -966,8 +1078,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((PutDownSound, null));
                 ret.Add((Description, null));
                 ret.Add((Keywords, null));
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((Projectile, null));
+                ret.Add((Flags, null));
+                ret.Add((Damage, null));
+                ret.Add((Value, null));
                 ret.Add((ShortName, null));
+                ret.Add((DATADataTypeState, null));
             }
         }
         #endregion
@@ -1001,6 +1117,10 @@ namespace Mutagen.Bethesda.Skyrim
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
+        }
+        [Flags]
+        public enum DATADataType
+        {
         }
         #endregion
 
@@ -1068,6 +1188,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeled,
         IHasIcons,
         IObjectId,
+        IWeightValue,
         ILoquiObjectSetter<IAmmunitionInternal>
     {
         new ObjectBounds ObjectBounds { get; set; }
@@ -1079,8 +1200,12 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<SoundDescriptor> PutDownSound { get; set; }
         new String? Description { get; set; }
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
-        new AmmunitionData Data { get; set; }
+        new FormLink<Projectile> Projectile { get; set; }
+        new Ammunition.Flag Flags { get; set; }
+        new Single Damage { get; set; }
+        new UInt32 Value { get; set; }
         new String? ShortName { get; set; }
+        new Ammunition.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Ammunition.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1102,6 +1227,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter,
         IHasIconsGetter,
         IObjectIdGetter,
+        IWeightValueGetter,
         ILoquiObject<IAmmunitionGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,
@@ -1117,8 +1243,12 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound { get; }
         String? Description { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
-        IAmmunitionDataGetter Data { get; }
+        IFormLinkGetter<IProjectileGetter> Projectile { get; }
+        Ammunition.Flag Flags { get; }
+        Single Damage { get; }
+        UInt32 Value { get; }
         String? ShortName { get; }
+        Ammunition.DATADataType DATADataTypeState { get; }
 
         #region Mutagen
         Ammunition.MajorFlag MajorFlags { get; }
@@ -1432,8 +1562,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         PutDownSound = 12,
         Description = 13,
         Keywords = 14,
-        Data = 15,
-        ShortName = 16,
+        Projectile = 15,
+        Flags = 16,
+        Damage = 17,
+        Value = 18,
+        ShortName = 19,
+        DATADataTypeState = 20,
     }
     #endregion
 
@@ -1451,9 +1585,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "14e93a4b-95d0-42a5-8ccf-bad4555e8184";
 
-        public const ushort AdditionalFieldCount = 11;
+        public const ushort AdditionalFieldCount = 15;
 
-        public const ushort FieldCount = 17;
+        public const ushort FieldCount = 21;
 
         public static readonly Type MaskType = typeof(Ammunition.Mask<>);
 
@@ -1501,10 +1635,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Ammunition_FieldIndex.Description;
                 case "KEYWORDS":
                     return (ushort)Ammunition_FieldIndex.Keywords;
-                case "DATA":
-                    return (ushort)Ammunition_FieldIndex.Data;
+                case "PROJECTILE":
+                    return (ushort)Ammunition_FieldIndex.Projectile;
+                case "FLAGS":
+                    return (ushort)Ammunition_FieldIndex.Flags;
+                case "DAMAGE":
+                    return (ushort)Ammunition_FieldIndex.Damage;
+                case "VALUE":
+                    return (ushort)Ammunition_FieldIndex.Value;
                 case "SHORTNAME":
                     return (ushort)Ammunition_FieldIndex.ShortName;
+                case "DATADATATYPESTATE":
+                    return (ushort)Ammunition_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -1525,8 +1667,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ammunition_FieldIndex.PickUpSound:
                 case Ammunition_FieldIndex.PutDownSound:
                 case Ammunition_FieldIndex.Description:
-                case Ammunition_FieldIndex.Data:
+                case Ammunition_FieldIndex.Projectile:
+                case Ammunition_FieldIndex.Flags:
+                case Ammunition_FieldIndex.Damage:
+                case Ammunition_FieldIndex.Value:
                 case Ammunition_FieldIndex.ShortName:
+                case Ammunition_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1542,14 +1688,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ammunition_FieldIndex.Model:
                 case Ammunition_FieldIndex.Icons:
                 case Ammunition_FieldIndex.Destructible:
-                case Ammunition_FieldIndex.Data:
                     return true;
                 case Ammunition_FieldIndex.Name:
                 case Ammunition_FieldIndex.PickUpSound:
                 case Ammunition_FieldIndex.PutDownSound:
                 case Ammunition_FieldIndex.Description:
                 case Ammunition_FieldIndex.Keywords:
+                case Ammunition_FieldIndex.Projectile:
+                case Ammunition_FieldIndex.Flags:
+                case Ammunition_FieldIndex.Damage:
+                case Ammunition_FieldIndex.Value:
                 case Ammunition_FieldIndex.ShortName:
+                case Ammunition_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1570,8 +1720,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ammunition_FieldIndex.PutDownSound:
                 case Ammunition_FieldIndex.Description:
                 case Ammunition_FieldIndex.Keywords:
-                case Ammunition_FieldIndex.Data:
+                case Ammunition_FieldIndex.Projectile:
+                case Ammunition_FieldIndex.Flags:
+                case Ammunition_FieldIndex.Damage:
+                case Ammunition_FieldIndex.Value:
                 case Ammunition_FieldIndex.ShortName:
+                case Ammunition_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1601,10 +1755,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Description";
                 case Ammunition_FieldIndex.Keywords:
                     return "Keywords";
-                case Ammunition_FieldIndex.Data:
-                    return "Data";
+                case Ammunition_FieldIndex.Projectile:
+                    return "Projectile";
+                case Ammunition_FieldIndex.Flags:
+                    return "Flags";
+                case Ammunition_FieldIndex.Damage:
+                    return "Damage";
+                case Ammunition_FieldIndex.Value:
+                    return "Value";
                 case Ammunition_FieldIndex.ShortName:
                     return "ShortName";
+                case Ammunition_FieldIndex.DATADataTypeState:
+                    return "DATADataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -1624,8 +1786,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ammunition_FieldIndex.PutDownSound:
                 case Ammunition_FieldIndex.Description:
                 case Ammunition_FieldIndex.Keywords:
-                case Ammunition_FieldIndex.Data:
+                case Ammunition_FieldIndex.Projectile:
+                case Ammunition_FieldIndex.Flags:
+                case Ammunition_FieldIndex.Damage:
+                case Ammunition_FieldIndex.Value:
                 case Ammunition_FieldIndex.ShortName:
+                case Ammunition_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
@@ -1646,8 +1812,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ammunition_FieldIndex.PutDownSound:
                 case Ammunition_FieldIndex.Description:
                 case Ammunition_FieldIndex.Keywords:
-                case Ammunition_FieldIndex.Data:
+                case Ammunition_FieldIndex.Projectile:
+                case Ammunition_FieldIndex.Flags:
+                case Ammunition_FieldIndex.Damage:
+                case Ammunition_FieldIndex.Value:
                 case Ammunition_FieldIndex.ShortName:
+                case Ammunition_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
@@ -1677,10 +1847,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(String);
                 case Ammunition_FieldIndex.Keywords:
                     return typeof(ExtendedList<IFormLink<Keyword>>);
-                case Ammunition_FieldIndex.Data:
-                    return typeof(AmmunitionData);
+                case Ammunition_FieldIndex.Projectile:
+                    return typeof(FormLink<Projectile>);
+                case Ammunition_FieldIndex.Flags:
+                    return typeof(Ammunition.Flag);
+                case Ammunition_FieldIndex.Damage:
+                    return typeof(Single);
+                case Ammunition_FieldIndex.Value:
+                    return typeof(UInt32);
                 case Ammunition_FieldIndex.ShortName:
                     return typeof(String);
+                case Ammunition_FieldIndex.DATADataTypeState:
+                    return typeof(Ammunition.DATADataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1704,7 +1882,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType ONAM_HEADER = new RecordType("ONAM");
         public static readonly RecordType TriggeringRecordType = AMMO_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 11;
+        public const int NumTypedFields = 10;
         public static readonly Type BinaryWriteTranslation = typeof(AmmunitionBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1756,8 +1934,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.PutDownSound = null;
             item.Description = default;
             item.Keywords = null;
-            item.Data.Clear();
+            item.Projectile = new FormLink<Projectile>(FormKey.Null);
+            item.Flags = default;
+            item.Damage = default;
+            item.Value = default;
             item.ShortName = default;
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1947,8 +2129,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    item.Data = Mutagen.Bethesda.Skyrim.AmmunitionData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Data);
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.Projectile = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    item.Flags = EnumBinaryTranslation<Ammunition.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.Damage = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.Value = dataFrame.ReadUInt32();
+                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Value);
                 }
                 case 0x4D414E4F: // ONAM
                 {
@@ -2056,8 +2245,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.Data = MaskItemExt.Factory(item.Data.GetEqualsMask(rhs.Data, include), include);
+            ret.Projectile = object.Equals(item.Projectile, rhs.Projectile);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Damage = item.Damage.EqualsWithin(rhs.Damage);
+            ret.Value = item.Value == rhs.Value;
             ret.ShortName = string.Equals(item.ShortName, rhs.ShortName);
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2167,14 +2360,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.Data?.Overall ?? true)
+            if (printMask?.Projectile ?? true)
             {
-                item.Data?.ToString(fg, "Data");
+                fg.AppendItem(item.Projectile, "Projectile");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.Damage ?? true)
+            {
+                fg.AppendItem(item.Damage, "Damage");
+            }
+            if (printMask?.Value ?? true)
+            {
+                fg.AppendItem(item.Value, "Value");
             }
             if ((printMask?.ShortName ?? true)
                 && item.ShortName.TryGet(out var ShortNameItem))
             {
                 fg.AppendItem(ShortNameItem, "ShortName");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -2215,8 +2424,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.PutDownSound = (item.PutDownSound.FormKey != null);
             mask.Description = (item.Description != null);
             mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
-            mask.Data = new MaskItem<bool, AmmunitionData.Mask<bool>?>(true, item.Data?.GetHasBeenSetMask());
+            mask.Projectile = true;
+            mask.Flags = true;
+            mask.Damage = true;
+            mask.Value = true;
             mask.ShortName = (item.ShortName != null);
+            mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -2277,8 +2490,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
             if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            if (!lhs.Projectile.Equals(rhs.Projectile)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (!lhs.Damage.EqualsWithin(rhs.Damage)) return false;
+            if (lhs.Value != rhs.Value) return false;
             if (!string.Equals(lhs.ShortName, rhs.ShortName)) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
         
@@ -2333,11 +2550,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 hash.Add(Descriptionitem);
             }
             hash.Add(item.Keywords);
-            hash.Add(item.Data);
+            hash.Add(item.Projectile);
+            hash.Add(item.Flags);
+            hash.Add(item.Damage);
+            hash.Add(item.Value);
             if (item.ShortName.TryGet(out var ShortNameitem))
             {
                 hash.Add(ShortNameitem);
             }
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2396,10 +2617,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            foreach (var item in obj.Data.LinkFormKeys)
-            {
-                yield return item;
-            }
+            yield return obj.Projectile.FormKey;
             yield break;
         }
         
@@ -2590,31 +2808,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Data) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Projectile) ?? true))
             {
-                errorMask?.PushIndex((int)Ammunition_FieldIndex.Data);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Data) ?? true))
-                    {
-                        item.Data = rhs.Data.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)Ammunition_FieldIndex.Data),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Projectile = rhs.Projectile.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Damage) ?? true))
+            {
+                item.Damage = rhs.Damage;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Value) ?? true))
+            {
+                item.Value = rhs.Value;
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.ShortName) ?? true))
             {
                 item.ShortName = rhs.ShortName;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
             }
         }
         
@@ -2870,16 +3086,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: listSubMask);
                     });
             }
-            if ((translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Data) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Projectile) ?? true))
             {
-                var DataItem = item.Data;
-                ((AmmunitionDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
-                    item: DataItem,
+                FormKeyXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Data),
-                    fieldIndex: (int)Ammunition_FieldIndex.Data,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Ammunition_FieldIndex.Data));
+                    name: nameof(item.Projectile),
+                    item: item.Projectile.FormKey,
+                    fieldIndex: (int)Ammunition_FieldIndex.Projectile,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Flags) ?? true))
+            {
+                EnumXmlTranslation<Ammunition.Flag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)Ammunition_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Damage) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Damage),
+                    item: item.Damage,
+                    fieldIndex: (int)Ammunition_FieldIndex.Damage,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Value) ?? true))
+            {
+                UInt32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Value),
+                    item: item.Value,
+                    fieldIndex: (int)Ammunition_FieldIndex.Value,
+                    errorMask: errorMask);
             }
             if ((item.ShortName != null)
                 && (translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.ShortName) ?? true))
@@ -2889,6 +3130,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     name: nameof(item.ShortName),
                     item: item.ShortName,
                     fieldIndex: (int)Ammunition_FieldIndex.ShortName,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<Ammunition.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)Ammunition_FieldIndex.DATADataTypeState,
                     errorMask: errorMask);
             }
         }
@@ -3174,14 +3424,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Data":
-                    errorMask?.PushIndex((int)Ammunition_FieldIndex.Data);
+                case "Projectile":
+                    errorMask?.PushIndex((int)Ammunition_FieldIndex.Projectile);
                     try
                     {
-                        item.Data = LoquiXmlTranslation<AmmunitionData>.Instance.Parse(
+                        item.Projectile = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Ammunition_FieldIndex.Data));
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3193,11 +3442,85 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "Flags":
+                    errorMask?.PushIndex((int)Ammunition_FieldIndex.Flags);
+                    try
+                    {
+                        item.Flags = EnumXmlTranslation<Ammunition.Flag>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Damage":
+                    errorMask?.PushIndex((int)Ammunition_FieldIndex.Damage);
+                    try
+                    {
+                        item.Damage = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Value":
+                    errorMask?.PushIndex((int)Ammunition_FieldIndex.Value);
+                    try
+                    {
+                        item.Value = UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Weight":
+                    break;
                 case "ShortName":
                     errorMask?.PushIndex((int)Ammunition_FieldIndex.ShortName);
                     try
                     {
                         item.ShortName = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DATADataTypeState":
+                    errorMask?.PushIndex((int)Ammunition_FieldIndex.DATADataTypeState);
+                    try
+                    {
+                        item.DATADataTypeState = EnumXmlTranslation<Ammunition.DATADataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3297,6 +3620,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static AmmunitionBinaryWriteTranslation Instance = new AmmunitionBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IAmmunitionGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
         public static void WriteRecordTypes(
             IAmmunitionGetter item,
             MutagenWriter writer,
@@ -3362,11 +3694,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         item: subItem);
                 });
-            var DataItem = item.Data;
-            ((AmmunitionDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
-                item: DataItem,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
+            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Ammunition_Registration.DATA_HEADER)))
+            {
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Projectile);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Ammunition.Flag>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 4);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Damage);
+                writer.Write(item.Value);
+            }
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ShortName,
@@ -3384,7 +3725,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(Ammunition_Registration.AMMO_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -3528,10 +3869,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta)) : default(string?);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
-        #region Data
-        private RangeInt32? _DataLocation;
-        private IAmmunitionDataGetter? _Data => _DataLocation.HasValue ? AmmunitionDataBinaryOverlay.AmmunitionDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
-        public IAmmunitionDataGetter Data => _Data ?? new AmmunitionData();
+        private int? _DATALocation;
+        public Ammunition.DATADataType DATADataTypeState { get; private set; }
+        #region Projectile
+        private int _ProjectileLocation => _DATALocation!.Value + 0x0;
+        private bool _Projectile_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IProjectileGetter> Projectile => _Projectile_IsSet ? new FormLink<IProjectileGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ProjectileLocation, 0x4)))) : FormLink<IProjectileGetter>.Null;
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _DATALocation!.Value + 0x4;
+        private bool _Flags_IsSet => _DATALocation.HasValue;
+        public Ammunition.Flag Flags => _Flags_IsSet ? (Ammunition.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
+        #endregion
+        #region Damage
+        private int _DamageLocation => _DATALocation!.Value + 0x8;
+        private bool _Damage_IsSet => _DATALocation.HasValue;
+        public Single Damage => _Damage_IsSet ? SpanExt.GetFloat(_data.Slice(_DamageLocation, 4)) : default;
+        #endregion
+        #region Value
+        private int _ValueLocation => _DATALocation!.Value + 0xC;
+        private bool _Value_IsSet => _DATALocation.HasValue;
+        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ValueLocation, 4)) : default;
         #endregion
         #region ShortName
         private int? _ShortNameLocation;
@@ -3665,8 +4023,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Data);
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Value);
                 }
                 case 0x4D414E4F: // ONAM
                 {

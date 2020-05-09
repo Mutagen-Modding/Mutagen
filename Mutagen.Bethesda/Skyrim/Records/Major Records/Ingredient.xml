@@ -7,6 +7,7 @@
     <Interface>IHasIcons</Interface>
     <Interface>IModeled</Interface>
     <Interface>IObjectBounded</Interface>
+    <Interface>IWeightValue</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
@@ -20,15 +21,19 @@
       <FormLink name="EquipType" recordType="ETYP" refName="EquipType" />
       <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
       <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
-      <RefDirect name="WeightValue" refName="WeightValue" recordType="DATA" hasBeenSet="False" />
-      <RefDirect name="Data" refName="IngredientData" hasBeenSet="False" />
+      <Data>
+        <Fields>
+          <UInt32 name="Value" />
+          <Float name="Weight" />
+        </Fields>
+      </Data>
+      <Data recordType="ENIT" >
+        <Fields>
+          <Int32 name="IngredientValue" />
+          <Enum name="Flags" enumName="Ingredient.Flag" byteLength="4" />
+        </Fields>
+      </Data>
       <RefList name="Effects" refName="Effect" hasBeenSet="False" />
-    </Fields>
-  </Object>
-  <Object name="IngredientData" objType="Subrecord" recordType="ENIT" GUID="c4118d6d-037a-40c2-959f-692f05695b79" ID="180">
-    <Fields>
-      <Int32 name="Value" />
-      <Enum name="Flags" enumName="IngredientData.Flag" byteLength="4" />
     </Fields>
   </Object>
 </Loqui>

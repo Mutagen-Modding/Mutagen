@@ -58,10 +58,11 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IMaterialTypeGetter> ILandscapeTextureGetter.MaterialType => this.MaterialType;
         #endregion
-        #region HavokData
-        public HavokData HavokData { get; set; } = new HavokData();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IHavokDataGetter ILandscapeTextureGetter.HavokData => HavokData;
+        #region HavokFriction
+        public Byte HavokFriction { get; set; } = default;
+        #endregion
+        #region HavokRestitution
+        public Byte HavokRestitution { get; set; } = default;
         #endregion
         #region TextureSpecularExponent
         public Byte TextureSpecularExponent { get; set; } = default;
@@ -79,6 +80,9 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLinkGetter<IGrassGetter>>? ILandscapeTextureGetter.Grasses => _Grasses;
         #endregion
 
+        #endregion
+        #region HNAMDataTypeState
+        public LandscapeTexture.HNAMDataType HNAMDataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -252,9 +256,11 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.TextureSet = initialValue;
                 this.MaterialType = initialValue;
-                this.HavokData = new MaskItem<TItem, HavokData.Mask<TItem>?>(initialValue, new HavokData.Mask<TItem>(initialValue));
+                this.HavokFriction = initialValue;
+                this.HavokRestitution = initialValue;
                 this.TextureSpecularExponent = initialValue;
                 this.Grasses = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.HNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -266,9 +272,11 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version2,
                 TItem TextureSet,
                 TItem MaterialType,
-                TItem HavokData,
+                TItem HavokFriction,
+                TItem HavokRestitution,
                 TItem TextureSpecularExponent,
-                TItem Grasses)
+                TItem Grasses,
+                TItem HNAMDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -279,9 +287,11 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.TextureSet = TextureSet;
                 this.MaterialType = MaterialType;
-                this.HavokData = new MaskItem<TItem, HavokData.Mask<TItem>?>(HavokData, new HavokData.Mask<TItem>(HavokData));
+                this.HavokFriction = HavokFriction;
+                this.HavokRestitution = HavokRestitution;
                 this.TextureSpecularExponent = TextureSpecularExponent;
                 this.Grasses = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Grasses, Enumerable.Empty<(int Index, TItem Value)>());
+                this.HNAMDataTypeState = HNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -295,9 +305,11 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public TItem TextureSet;
             public TItem MaterialType;
-            public MaskItem<TItem, HavokData.Mask<TItem>?>? HavokData { get; set; }
+            public TItem HavokFriction;
+            public TItem HavokRestitution;
             public TItem TextureSpecularExponent;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Grasses;
+            public TItem HNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -313,9 +325,11 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.TextureSet, rhs.TextureSet)) return false;
                 if (!object.Equals(this.MaterialType, rhs.MaterialType)) return false;
-                if (!object.Equals(this.HavokData, rhs.HavokData)) return false;
+                if (!object.Equals(this.HavokFriction, rhs.HavokFriction)) return false;
+                if (!object.Equals(this.HavokRestitution, rhs.HavokRestitution)) return false;
                 if (!object.Equals(this.TextureSpecularExponent, rhs.TextureSpecularExponent)) return false;
                 if (!object.Equals(this.Grasses, rhs.Grasses)) return false;
+                if (!object.Equals(this.HNAMDataTypeState, rhs.HNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -323,9 +337,11 @@ namespace Mutagen.Bethesda.Skyrim
                 var hash = new HashCode();
                 hash.Add(this.TextureSet);
                 hash.Add(this.MaterialType);
-                hash.Add(this.HavokData);
+                hash.Add(this.HavokFriction);
+                hash.Add(this.HavokRestitution);
                 hash.Add(this.TextureSpecularExponent);
                 hash.Add(this.Grasses);
+                hash.Add(this.HNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -338,11 +354,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!base.All(eval)) return false;
                 if (!eval(this.TextureSet)) return false;
                 if (!eval(this.MaterialType)) return false;
-                if (HavokData != null)
-                {
-                    if (!eval(this.HavokData.Overall)) return false;
-                    if (this.HavokData.Specific != null && !this.HavokData.Specific.All(eval)) return false;
-                }
+                if (!eval(this.HavokFriction)) return false;
+                if (!eval(this.HavokRestitution)) return false;
                 if (!eval(this.TextureSpecularExponent)) return false;
                 if (this.Grasses != null)
                 {
@@ -355,6 +368,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
+                if (!eval(this.HNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -365,11 +379,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (base.Any(eval)) return true;
                 if (eval(this.TextureSet)) return true;
                 if (eval(this.MaterialType)) return true;
-                if (HavokData != null)
-                {
-                    if (eval(this.HavokData.Overall)) return true;
-                    if (this.HavokData.Specific != null && this.HavokData.Specific.Any(eval)) return true;
-                }
+                if (eval(this.HavokFriction)) return true;
+                if (eval(this.HavokRestitution)) return true;
                 if (eval(this.TextureSpecularExponent)) return true;
                 if (this.Grasses != null)
                 {
@@ -382,6 +393,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
+                if (eval(this.HNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -399,7 +411,8 @@ namespace Mutagen.Bethesda.Skyrim
                 base.Translate_InternalFill(obj, eval);
                 obj.TextureSet = eval(this.TextureSet);
                 obj.MaterialType = eval(this.MaterialType);
-                obj.HavokData = this.HavokData == null ? null : new MaskItem<R, HavokData.Mask<R>?>(eval(this.HavokData.Overall), this.HavokData.Specific?.Translate(eval));
+                obj.HavokFriction = eval(this.HavokFriction);
+                obj.HavokRestitution = eval(this.HavokRestitution);
                 obj.TextureSpecularExponent = eval(this.TextureSpecularExponent);
                 if (Grasses != null)
                 {
@@ -415,6 +428,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
+                obj.HNAMDataTypeState = eval(this.HNAMDataTypeState);
             }
             #endregion
 
@@ -445,9 +459,13 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(MaterialType, "MaterialType");
                     }
-                    if (printMask?.HavokData?.Overall ?? true)
+                    if (printMask?.HavokFriction ?? true)
                     {
-                        HavokData?.ToString(fg);
+                        fg.AppendItem(HavokFriction, "HavokFriction");
+                    }
+                    if (printMask?.HavokRestitution ?? true)
+                    {
+                        fg.AppendItem(HavokRestitution, "HavokRestitution");
                     }
                     if (printMask?.TextureSpecularExponent ?? true)
                     {
@@ -476,6 +494,10 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                         fg.AppendLine("]");
                     }
+                    if (printMask?.HNAMDataTypeState ?? true)
+                    {
+                        fg.AppendItem(HNAMDataTypeState, "HNAMDataTypeState");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -490,9 +512,11 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public Exception? TextureSet;
             public Exception? MaterialType;
-            public MaskItem<Exception?, HavokData.ErrorMask?>? HavokData;
+            public Exception? HavokFriction;
+            public Exception? HavokRestitution;
             public Exception? TextureSpecularExponent;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Grasses;
+            public Exception? HNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -505,12 +529,16 @@ namespace Mutagen.Bethesda.Skyrim
                         return TextureSet;
                     case LandscapeTexture_FieldIndex.MaterialType:
                         return MaterialType;
-                    case LandscapeTexture_FieldIndex.HavokData:
-                        return HavokData;
+                    case LandscapeTexture_FieldIndex.HavokFriction:
+                        return HavokFriction;
+                    case LandscapeTexture_FieldIndex.HavokRestitution:
+                        return HavokRestitution;
                     case LandscapeTexture_FieldIndex.TextureSpecularExponent:
                         return TextureSpecularExponent;
                     case LandscapeTexture_FieldIndex.Grasses:
                         return Grasses;
+                    case LandscapeTexture_FieldIndex.HNAMDataTypeState:
+                        return HNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -527,14 +555,20 @@ namespace Mutagen.Bethesda.Skyrim
                     case LandscapeTexture_FieldIndex.MaterialType:
                         this.MaterialType = ex;
                         break;
-                    case LandscapeTexture_FieldIndex.HavokData:
-                        this.HavokData = new MaskItem<Exception?, HavokData.ErrorMask?>(ex, null);
+                    case LandscapeTexture_FieldIndex.HavokFriction:
+                        this.HavokFriction = ex;
+                        break;
+                    case LandscapeTexture_FieldIndex.HavokRestitution:
+                        this.HavokRestitution = ex;
                         break;
                     case LandscapeTexture_FieldIndex.TextureSpecularExponent:
                         this.TextureSpecularExponent = ex;
                         break;
                     case LandscapeTexture_FieldIndex.Grasses:
                         this.Grasses = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case LandscapeTexture_FieldIndex.HNAMDataTypeState:
+                        this.HNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -553,14 +587,20 @@ namespace Mutagen.Bethesda.Skyrim
                     case LandscapeTexture_FieldIndex.MaterialType:
                         this.MaterialType = (Exception?)obj;
                         break;
-                    case LandscapeTexture_FieldIndex.HavokData:
-                        this.HavokData = (MaskItem<Exception?, HavokData.ErrorMask?>?)obj;
+                    case LandscapeTexture_FieldIndex.HavokFriction:
+                        this.HavokFriction = (Exception?)obj;
+                        break;
+                    case LandscapeTexture_FieldIndex.HavokRestitution:
+                        this.HavokRestitution = (Exception?)obj;
                         break;
                     case LandscapeTexture_FieldIndex.TextureSpecularExponent:
                         this.TextureSpecularExponent = (Exception?)obj;
                         break;
                     case LandscapeTexture_FieldIndex.Grasses:
                         this.Grasses = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case LandscapeTexture_FieldIndex.HNAMDataTypeState:
+                        this.HNAMDataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -573,9 +613,11 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Overall != null) return true;
                 if (TextureSet != null) return true;
                 if (MaterialType != null) return true;
-                if (HavokData != null) return true;
+                if (HavokFriction != null) return true;
+                if (HavokRestitution != null) return true;
                 if (TextureSpecularExponent != null) return true;
                 if (Grasses != null) return true;
+                if (HNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -613,7 +655,8 @@ namespace Mutagen.Bethesda.Skyrim
                 base.ToString_FillInternal(fg);
                 fg.AppendItem(TextureSet, "TextureSet");
                 fg.AppendItem(MaterialType, "MaterialType");
-                HavokData?.ToString(fg);
+                fg.AppendItem(HavokFriction, "HavokFriction");
+                fg.AppendItem(HavokRestitution, "HavokRestitution");
                 fg.AppendItem(TextureSpecularExponent, "TextureSpecularExponent");
                 if (Grasses.TryGet(out var GrassesItem))
                 {
@@ -637,6 +680,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
+                fg.AppendItem(HNAMDataTypeState, "HNAMDataTypeState");
             }
             #endregion
 
@@ -647,9 +691,11 @@ namespace Mutagen.Bethesda.Skyrim
                 var ret = new ErrorMask();
                 ret.TextureSet = this.TextureSet.Combine(rhs.TextureSet);
                 ret.MaterialType = this.MaterialType.Combine(rhs.MaterialType);
-                ret.HavokData = this.HavokData.Combine(rhs.HavokData, (l, r) => l.Combine(r));
+                ret.HavokFriction = this.HavokFriction.Combine(rhs.HavokFriction);
+                ret.HavokRestitution = this.HavokRestitution.Combine(rhs.HavokRestitution);
                 ret.TextureSpecularExponent = this.TextureSpecularExponent.Combine(rhs.TextureSpecularExponent);
                 ret.Grasses = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Grasses?.Overall, rhs.Grasses?.Overall), ExceptionExt.Combine(this.Grasses?.Specific, rhs.Grasses?.Specific));
+                ret.HNAMDataTypeState = this.HNAMDataTypeState.Combine(rhs.HNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -674,9 +720,11 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public bool TextureSet;
             public bool MaterialType;
-            public MaskItem<bool, HavokData.TranslationMask?> HavokData;
+            public bool HavokFriction;
+            public bool HavokRestitution;
             public bool TextureSpecularExponent;
             public bool Grasses;
+            public bool HNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -685,9 +733,11 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.TextureSet = defaultOn;
                 this.MaterialType = defaultOn;
-                this.HavokData = new MaskItem<bool, HavokData.TranslationMask?>(defaultOn, null);
+                this.HavokFriction = defaultOn;
+                this.HavokRestitution = defaultOn;
                 this.TextureSpecularExponent = defaultOn;
                 this.Grasses = defaultOn;
+                this.HNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -697,9 +747,11 @@ namespace Mutagen.Bethesda.Skyrim
                 base.GetCrystal(ret);
                 ret.Add((TextureSet, null));
                 ret.Add((MaterialType, null));
-                ret.Add((HavokData?.Overall ?? true, HavokData?.Specific?.GetCrystal()));
+                ret.Add((HavokFriction, null));
+                ret.Add((HavokRestitution, null));
                 ret.Add((TextureSpecularExponent, null));
                 ret.Add((Grasses, null));
+                ret.Add((HNAMDataTypeState, null));
             }
         }
         #endregion
@@ -729,6 +781,10 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        [Flags]
+        public enum HNAMDataType
+        {
+        }
         #endregion
 
         #region Binary Translation
@@ -793,9 +849,11 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new FormLinkNullable<TextureSet> TextureSet { get; set; }
         new FormLink<MaterialType> MaterialType { get; set; }
-        new HavokData HavokData { get; set; }
+        new Byte HavokFriction { get; set; }
+        new Byte HavokRestitution { get; set; }
         new Byte TextureSpecularExponent { get; set; }
         new ExtendedList<IFormLink<Grass>>? Grasses { get; set; }
+        new LandscapeTexture.HNAMDataType HNAMDataTypeState { get; set; }
     }
 
     public partial interface ILandscapeTextureInternal :
@@ -815,9 +873,11 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => LandscapeTexture_Registration.Instance;
         IFormLinkNullableGetter<ITextureSetGetter> TextureSet { get; }
         IFormLinkGetter<IMaterialTypeGetter> MaterialType { get; }
-        IHavokDataGetter HavokData { get; }
+        Byte HavokFriction { get; }
+        Byte HavokRestitution { get; }
         Byte TextureSpecularExponent { get; }
         IReadOnlyList<IFormLinkGetter<IGrassGetter>>? Grasses { get; }
+        LandscapeTexture.HNAMDataType HNAMDataTypeState { get; }
 
     }
 
@@ -1120,9 +1180,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Version2 = 5,
         TextureSet = 6,
         MaterialType = 7,
-        HavokData = 8,
-        TextureSpecularExponent = 9,
-        Grasses = 10,
+        HavokFriction = 8,
+        HavokRestitution = 9,
+        TextureSpecularExponent = 10,
+        Grasses = 11,
+        HNAMDataTypeState = 12,
     }
     #endregion
 
@@ -1140,9 +1202,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "f6e8d6f6-773c-4c3b-b09b-d892c0114ed7";
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(LandscapeTexture.Mask<>);
 
@@ -1176,12 +1238,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)LandscapeTexture_FieldIndex.TextureSet;
                 case "MATERIALTYPE":
                     return (ushort)LandscapeTexture_FieldIndex.MaterialType;
-                case "HAVOKDATA":
-                    return (ushort)LandscapeTexture_FieldIndex.HavokData;
+                case "HAVOKFRICTION":
+                    return (ushort)LandscapeTexture_FieldIndex.HavokFriction;
+                case "HAVOKRESTITUTION":
+                    return (ushort)LandscapeTexture_FieldIndex.HavokRestitution;
                 case "TEXTURESPECULAREXPONENT":
                     return (ushort)LandscapeTexture_FieldIndex.TextureSpecularExponent;
                 case "GRASSES":
                     return (ushort)LandscapeTexture_FieldIndex.Grasses;
+                case "HNAMDATATYPESTATE":
+                    return (ushort)LandscapeTexture_FieldIndex.HNAMDataTypeState;
                 default:
                     return null;
             }
@@ -1196,8 +1262,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return true;
                 case LandscapeTexture_FieldIndex.TextureSet:
                 case LandscapeTexture_FieldIndex.MaterialType:
-                case LandscapeTexture_FieldIndex.HavokData:
+                case LandscapeTexture_FieldIndex.HavokFriction:
+                case LandscapeTexture_FieldIndex.HavokRestitution:
                 case LandscapeTexture_FieldIndex.TextureSpecularExponent:
+                case LandscapeTexture_FieldIndex.HNAMDataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1209,12 +1277,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LandscapeTexture_FieldIndex enu = (LandscapeTexture_FieldIndex)index;
             switch (enu)
             {
-                case LandscapeTexture_FieldIndex.HavokData:
-                    return true;
                 case LandscapeTexture_FieldIndex.TextureSet:
                 case LandscapeTexture_FieldIndex.MaterialType:
+                case LandscapeTexture_FieldIndex.HavokFriction:
+                case LandscapeTexture_FieldIndex.HavokRestitution:
                 case LandscapeTexture_FieldIndex.TextureSpecularExponent:
                 case LandscapeTexture_FieldIndex.Grasses:
+                case LandscapeTexture_FieldIndex.HNAMDataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1228,9 +1297,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case LandscapeTexture_FieldIndex.TextureSet:
                 case LandscapeTexture_FieldIndex.MaterialType:
-                case LandscapeTexture_FieldIndex.HavokData:
+                case LandscapeTexture_FieldIndex.HavokFriction:
+                case LandscapeTexture_FieldIndex.HavokRestitution:
                 case LandscapeTexture_FieldIndex.TextureSpecularExponent:
                 case LandscapeTexture_FieldIndex.Grasses:
+                case LandscapeTexture_FieldIndex.HNAMDataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1246,12 +1317,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "TextureSet";
                 case LandscapeTexture_FieldIndex.MaterialType:
                     return "MaterialType";
-                case LandscapeTexture_FieldIndex.HavokData:
-                    return "HavokData";
+                case LandscapeTexture_FieldIndex.HavokFriction:
+                    return "HavokFriction";
+                case LandscapeTexture_FieldIndex.HavokRestitution:
+                    return "HavokRestitution";
                 case LandscapeTexture_FieldIndex.TextureSpecularExponent:
                     return "TextureSpecularExponent";
                 case LandscapeTexture_FieldIndex.Grasses:
                     return "Grasses";
+                case LandscapeTexture_FieldIndex.HNAMDataTypeState:
+                    return "HNAMDataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -1264,9 +1339,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case LandscapeTexture_FieldIndex.TextureSet:
                 case LandscapeTexture_FieldIndex.MaterialType:
-                case LandscapeTexture_FieldIndex.HavokData:
+                case LandscapeTexture_FieldIndex.HavokFriction:
+                case LandscapeTexture_FieldIndex.HavokRestitution:
                 case LandscapeTexture_FieldIndex.TextureSpecularExponent:
                 case LandscapeTexture_FieldIndex.Grasses:
+                case LandscapeTexture_FieldIndex.HNAMDataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
@@ -1280,9 +1357,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case LandscapeTexture_FieldIndex.TextureSet:
                 case LandscapeTexture_FieldIndex.MaterialType:
-                case LandscapeTexture_FieldIndex.HavokData:
+                case LandscapeTexture_FieldIndex.HavokFriction:
+                case LandscapeTexture_FieldIndex.HavokRestitution:
                 case LandscapeTexture_FieldIndex.TextureSpecularExponent:
                 case LandscapeTexture_FieldIndex.Grasses:
+                case LandscapeTexture_FieldIndex.HNAMDataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
@@ -1298,12 +1377,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(FormLinkNullable<TextureSet>);
                 case LandscapeTexture_FieldIndex.MaterialType:
                     return typeof(FormLink<MaterialType>);
-                case LandscapeTexture_FieldIndex.HavokData:
-                    return typeof(HavokData);
+                case LandscapeTexture_FieldIndex.HavokFriction:
+                    return typeof(Byte);
+                case LandscapeTexture_FieldIndex.HavokRestitution:
+                    return typeof(Byte);
                 case LandscapeTexture_FieldIndex.TextureSpecularExponent:
                     return typeof(Byte);
                 case LandscapeTexture_FieldIndex.Grasses:
                     return typeof(ExtendedList<IFormLink<Grass>>);
+                case LandscapeTexture_FieldIndex.HNAMDataTypeState:
+                    return typeof(LandscapeTexture.HNAMDataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1318,7 +1401,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType GNAM_HEADER = new RecordType("GNAM");
         public static readonly RecordType TriggeringRecordType = LTEX_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 5;
+        public const int NumTypedFields = 4;
         public static readonly Type BinaryWriteTranslation = typeof(LandscapeTextureBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1363,9 +1446,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.TextureSet = null;
             item.MaterialType = new FormLink<MaterialType>(FormKey.Null);
-            item.HavokData.Clear();
+            item.HavokFriction = default;
+            item.HavokRestitution = default;
             item.TextureSpecularExponent = default;
             item.Grasses = null;
+            item.HNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1498,8 +1583,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E48: // HNAM
                 {
-                    item.HavokData = Mutagen.Bethesda.Skyrim.HavokData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.HavokData);
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.HavokFriction = dataFrame.ReadUInt8();
+                    item.HavokRestitution = dataFrame.ReadUInt8();
+                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.HavokRestitution);
                 }
                 case 0x4D414E53: // SNAM
                 {
@@ -1594,12 +1682,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (rhs == null) return;
             ret.TextureSet = object.Equals(item.TextureSet, rhs.TextureSet);
             ret.MaterialType = object.Equals(item.MaterialType, rhs.MaterialType);
-            ret.HavokData = MaskItemExt.Factory(item.HavokData.GetEqualsMask(rhs.HavokData, include), include);
+            ret.HavokFriction = item.HavokFriction == rhs.HavokFriction;
+            ret.HavokRestitution = item.HavokRestitution == rhs.HavokRestitution;
             ret.TextureSpecularExponent = item.TextureSpecularExponent == rhs.TextureSpecularExponent;
             ret.Grasses = item.Grasses.CollectionEqualsHelper(
                 rhs.Grasses,
                 (l, r) => object.Equals(l, r),
                 include);
+            ret.HNAMDataTypeState = item.HNAMDataTypeState == rhs.HNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1660,9 +1750,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.MaterialType, "MaterialType");
             }
-            if (printMask?.HavokData?.Overall ?? true)
+            if (printMask?.HavokFriction ?? true)
             {
-                item.HavokData?.ToString(fg, "HavokData");
+                fg.AppendItem(item.HavokFriction, "HavokFriction");
+            }
+            if (printMask?.HavokRestitution ?? true)
+            {
+                fg.AppendItem(item.HavokRestitution, "HavokRestitution");
             }
             if (printMask?.TextureSpecularExponent ?? true)
             {
@@ -1687,6 +1781,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
+            if (printMask?.HNAMDataTypeState ?? true)
+            {
+                fg.AppendItem(item.HNAMDataTypeState, "HNAMDataTypeState");
+            }
         }
         
         public bool HasBeenSet(
@@ -1706,9 +1804,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             mask.TextureSet = (item.TextureSet.FormKey != null);
             mask.MaterialType = true;
-            mask.HavokData = new MaskItem<bool, HavokData.Mask<bool>?>(true, item.HavokData?.GetHasBeenSetMask());
+            mask.HavokFriction = true;
+            mask.HavokRestitution = true;
             mask.TextureSpecularExponent = true;
             mask.Grasses = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Grasses != null), default);
+            mask.HNAMDataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1762,9 +1862,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!base.Equals(rhs)) return false;
             if (!lhs.TextureSet.Equals(rhs.TextureSet)) return false;
             if (!lhs.MaterialType.Equals(rhs.MaterialType)) return false;
-            if (!object.Equals(lhs.HavokData, rhs.HavokData)) return false;
+            if (lhs.HavokFriction != rhs.HavokFriction) return false;
+            if (lhs.HavokRestitution != rhs.HavokRestitution) return false;
             if (lhs.TextureSpecularExponent != rhs.TextureSpecularExponent) return false;
             if (!lhs.Grasses.SequenceEqual(rhs.Grasses)) return false;
+            if (lhs.HNAMDataTypeState != rhs.HNAMDataTypeState) return false;
             return true;
         }
         
@@ -1794,9 +1896,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 hash.Add(TextureSetitem);
             }
             hash.Add(item.MaterialType);
-            hash.Add(item.HavokData);
+            hash.Add(item.HavokFriction);
+            hash.Add(item.HavokRestitution);
             hash.Add(item.TextureSpecularExponent);
             hash.Add(item.Grasses);
+            hash.Add(item.HNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1893,27 +1997,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.MaterialType = rhs.MaterialType.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HavokData) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HavokFriction) ?? true))
             {
-                errorMask?.PushIndex((int)LandscapeTexture_FieldIndex.HavokData);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HavokData) ?? true))
-                    {
-                        item.HavokData = rhs.HavokData.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)LandscapeTexture_FieldIndex.HavokData),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.HavokFriction = rhs.HavokFriction;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HavokRestitution) ?? true))
+            {
+                item.HavokRestitution = rhs.HavokRestitution;
             }
             if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.TextureSpecularExponent) ?? true))
             {
@@ -1945,6 +2035,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HNAMDataTypeState) ?? true))
+            {
+                item.HNAMDataTypeState = rhs.HNAMDataTypeState;
             }
         }
         
@@ -2107,16 +2201,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)LandscapeTexture_FieldIndex.MaterialType,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HavokData) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HavokFriction) ?? true))
             {
-                var HavokDataItem = item.HavokData;
-                ((HavokDataXmlWriteTranslation)((IXmlItem)HavokDataItem).XmlWriteTranslator).Write(
-                    item: HavokDataItem,
+                ByteXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.HavokData),
-                    fieldIndex: (int)LandscapeTexture_FieldIndex.HavokData,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)LandscapeTexture_FieldIndex.HavokData));
+                    name: nameof(item.HavokFriction),
+                    item: item.HavokFriction,
+                    fieldIndex: (int)LandscapeTexture_FieldIndex.HavokFriction,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HavokRestitution) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.HavokRestitution),
+                    item: item.HavokRestitution,
+                    fieldIndex: (int)LandscapeTexture_FieldIndex.HavokRestitution,
+                    errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.TextureSpecularExponent) ?? true))
             {
@@ -2145,6 +2246,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             item: subItem.FormKey,
                             errorMask: listSubMask);
                     });
+            }
+            if ((translationMask?.GetShouldTranslate((int)LandscapeTexture_FieldIndex.HNAMDataTypeState) ?? true))
+            {
+                EnumXmlTranslation<LandscapeTexture.HNAMDataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.HNAMDataTypeState),
+                    item: item.HNAMDataTypeState,
+                    fieldIndex: (int)LandscapeTexture_FieldIndex.HNAMDataTypeState,
+                    errorMask: errorMask);
             }
         }
 
@@ -2289,14 +2399,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "HavokData":
-                    errorMask?.PushIndex((int)LandscapeTexture_FieldIndex.HavokData);
+                case "HavokFriction":
+                    errorMask?.PushIndex((int)LandscapeTexture_FieldIndex.HavokFriction);
                     try
                     {
-                        item.HavokData = LoquiXmlTranslation<HavokData>.Instance.Parse(
+                        item.HavokFriction = ByteXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)LandscapeTexture_FieldIndex.HavokData));
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HavokRestitution":
+                    errorMask?.PushIndex((int)LandscapeTexture_FieldIndex.HavokRestitution);
+                    try
+                    {
+                        item.HavokRestitution = ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2343,6 +2470,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         {
                             item.Grasses = null;
                         }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HNAMDataTypeState":
+                    errorMask?.PushIndex((int)LandscapeTexture_FieldIndex.HNAMDataTypeState);
+                    try
+                    {
+                        item.HNAMDataTypeState = EnumXmlTranslation<LandscapeTexture.HNAMDataType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2440,6 +2585,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static LandscapeTextureBinaryWriteTranslation Instance = new LandscapeTextureBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            ILandscapeTextureGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
         public static void WriteRecordTypes(
             ILandscapeTextureGetter item,
             MutagenWriter writer,
@@ -2457,11 +2611,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.MaterialType,
                 header: recordTypeConverter.ConvertToCustom(LandscapeTexture_Registration.MNAM_HEADER));
-            var HavokDataItem = item.HavokData;
-            ((HavokDataBinaryWriteTranslation)((IBinaryItem)HavokDataItem).BinaryWriteTranslator).Write(
-                item: HavokDataItem,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
+            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(LandscapeTexture_Registration.HNAM_HEADER)))
+            {
+                writer.Write(item.HavokFriction);
+                writer.Write(item.HavokRestitution);
+            }
             Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.TextureSpecularExponent,
@@ -2488,7 +2642,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(LandscapeTexture_Registration.LTEX_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -2614,10 +2768,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool MaterialType_IsSet => _MaterialTypeLocation.HasValue;
         public IFormLinkGetter<IMaterialTypeGetter> MaterialType => _MaterialTypeLocation.HasValue ? new FormLink<IMaterialTypeGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MaterialTypeLocation.Value, _package.Meta)))) : FormLink<IMaterialTypeGetter>.Null;
         #endregion
-        #region HavokData
-        private RangeInt32? _HavokDataLocation;
-        private IHavokDataGetter? _HavokData => _HavokDataLocation.HasValue ? HavokDataBinaryOverlay.HavokDataFactory(new BinaryMemoryReadStream(_data.Slice(_HavokDataLocation!.Value.Min)), _package) : default;
-        public IHavokDataGetter HavokData => _HavokData ?? new HavokData();
+        private int? _HNAMLocation;
+        public LandscapeTexture.HNAMDataType HNAMDataTypeState { get; private set; }
+        #region HavokFriction
+        private int _HavokFrictionLocation => _HNAMLocation!.Value + 0x0;
+        private bool _HavokFriction_IsSet => _HNAMLocation.HasValue;
+        public Byte HavokFriction => _HavokFriction_IsSet ? _data.Span[_HavokFrictionLocation] : default;
+        #endregion
+        #region HavokRestitution
+        private int _HavokRestitutionLocation => _HNAMLocation!.Value + 0x1;
+        private bool _HavokRestitution_IsSet => _HNAMLocation.HasValue;
+        public Byte HavokRestitution => _HavokRestitution_IsSet ? _data.Span[_HavokRestitutionLocation] : default;
         #endregion
         #region TextureSpecularExponent
         private int? _TextureSpecularExponentLocation;
@@ -2697,8 +2858,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E48: // HNAM
                 {
-                    _HavokDataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.HavokData);
+                    _HNAMLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.HavokRestitution);
                 }
                 case 0x4D414E53: // SNAM
                 {

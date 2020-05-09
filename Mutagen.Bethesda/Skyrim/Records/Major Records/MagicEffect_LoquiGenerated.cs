@@ -89,10 +89,151 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region Data
-        public MagicEffectData Data { get; set; } = new MagicEffectData();
+        #region Flags
+        public MagicEffect.Flag Flags { get; set; } = default;
+        #endregion
+        #region BaseCost
+        public Single BaseCost { get; set; } = default;
+        #endregion
+        #region MagicSkill
+        public readonly static ActorValueExtended _MagicSkill_Default = ActorValueExtended.None;
+        public ActorValueExtended MagicSkill { get; set; } = default;
+        #endregion
+        #region ResistValue
+        public readonly static ActorValueExtended _ResistValue_Default = ActorValueExtended.None;
+        public ActorValueExtended ResistValue { get; set; } = default;
+        #endregion
+        #region CounterEffectCount
+        public UInt16 CounterEffectCount { get; set; } = default;
+        #endregion
+        #region Unknown1
+        public UInt16 Unknown1 { get; set; } = default;
+        #endregion
+        #region CastingLight
+        public FormLink<Light> CastingLight { get; set; } = new FormLink<Light>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IMagicEffectDataGetter IMagicEffectGetter.Data => Data;
+        IFormLinkGetter<ILightGetter> IMagicEffectGetter.CastingLight => this.CastingLight;
+        #endregion
+        #region TaperWeight
+        public Single TaperWeight { get; set; } = default;
+        #endregion
+        #region HitShader
+        public FormLink<EffectShader> HitShader { get; set; } = new FormLink<EffectShader>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IEffectShaderGetter> IMagicEffectGetter.HitShader => this.HitShader;
+        #endregion
+        #region EnchantShader
+        public FormLink<EffectShader> EnchantShader { get; set; } = new FormLink<EffectShader>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IEffectShaderGetter> IMagicEffectGetter.EnchantShader => this.EnchantShader;
+        #endregion
+        #region MinimumSkillLevel
+        public UInt32 MinimumSkillLevel { get; set; } = default;
+        #endregion
+        #region SpellmakingArea
+        public UInt32 SpellmakingArea { get; set; } = default;
+        #endregion
+        #region SpellmakingCastingTime
+        public Single SpellmakingCastingTime { get; set; } = default;
+        #endregion
+        #region TaperCurve
+        public Single TaperCurve { get; set; } = default;
+        #endregion
+        #region TaperDuration
+        public Single TaperDuration { get; set; } = default;
+        #endregion
+        #region SecondActorValueWeight
+        public Single SecondActorValueWeight { get; set; } = default;
+        #endregion
+        #region Archetype
+        public MagicEffectArchetype Archetype { get; set; } = new MagicEffectArchetype();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IMagicEffectArchetypeGetter IMagicEffectGetter.Archetype => Archetype;
+        #endregion
+        #region Projectile
+        public FormLink<Projectile> Projectile { get; set; } = new FormLink<Projectile>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IProjectileGetter> IMagicEffectGetter.Projectile => this.Projectile;
+        #endregion
+        #region Explosion
+        public FormLink<Explosion> Explosion { get; set; } = new FormLink<Explosion>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IExplosionGetter> IMagicEffectGetter.Explosion => this.Explosion;
+        #endregion
+        #region CastType
+        public CastType CastType { get; set; } = default;
+        #endregion
+        #region TargetType
+        public TargetType TargetType { get; set; } = default;
+        #endregion
+        #region SecondActorValue
+        public readonly static ActorValueExtended _SecondActorValue_Default = ActorValueExtended.None;
+        public ActorValueExtended SecondActorValue { get; set; } = default;
+        #endregion
+        #region CastingArt
+        public FormLink<ArtObject> CastingArt { get; set; } = new FormLink<ArtObject>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IArtObjectGetter> IMagicEffectGetter.CastingArt => this.CastingArt;
+        #endregion
+        #region HitEffectArt
+        public FormLink<ArtObject> HitEffectArt { get; set; } = new FormLink<ArtObject>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IArtObjectGetter> IMagicEffectGetter.HitEffectArt => this.HitEffectArt;
+        #endregion
+        #region ImpactData
+        public FormLink<ImpactDataSet> ImpactData { get; set; } = new FormLink<ImpactDataSet>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImpactDataSetGetter> IMagicEffectGetter.ImpactData => this.ImpactData;
+        #endregion
+        #region SkillUsageMultiplier
+        public Single SkillUsageMultiplier { get; set; } = default;
+        #endregion
+        #region DualCastArt
+        public FormLink<DualCastData> DualCastArt { get; set; } = new FormLink<DualCastData>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IDualCastDataGetter> IMagicEffectGetter.DualCastArt => this.DualCastArt;
+        #endregion
+        #region DualCastScale
+        public Single DualCastScale { get; set; } = default;
+        #endregion
+        #region EnchantArt
+        public FormLink<ArtObject> EnchantArt { get; set; } = new FormLink<ArtObject>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IArtObjectGetter> IMagicEffectGetter.EnchantArt => this.EnchantArt;
+        #endregion
+        #region Unknown2
+        public FormLink<SkyrimMajorRecord> Unknown2 { get; set; } = new FormLink<SkyrimMajorRecord>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISkyrimMajorRecordGetter> IMagicEffectGetter.Unknown2 => this.Unknown2;
+        #endregion
+        #region Unknown3
+        public FormLink<SkyrimMajorRecord> Unknown3 { get; set; } = new FormLink<SkyrimMajorRecord>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISkyrimMajorRecordGetter> IMagicEffectGetter.Unknown3 => this.Unknown3;
+        #endregion
+        #region EquipAbility
+        public FormLink<Spell> EquipAbility { get; set; } = new FormLink<Spell>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISpellGetter> IMagicEffectGetter.EquipAbility => this.EquipAbility;
+        #endregion
+        #region ImageSpaceModifier
+        public FormLink<ImageSpaceAdapter> ImageSpaceModifier { get; set; } = new FormLink<ImageSpaceAdapter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImageSpaceAdapterGetter> IMagicEffectGetter.ImageSpaceModifier => this.ImageSpaceModifier;
+        #endregion
+        #region PerkToApply
+        public FormLink<Perk> PerkToApply { get; set; } = new FormLink<Perk>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IPerkGetter> IMagicEffectGetter.PerkToApply => this.PerkToApply;
+        #endregion
+        #region CastingSoundLevel
+        public SoundLevel CastingSoundLevel { get; set; } = default;
+        #endregion
+        #region ScriptEffectAIScore
+        public Single ScriptEffectAIScore { get; set; } = default;
+        #endregion
+        #region ScriptEffectAIDelayTime
+        public Single ScriptEffectAIDelayTime { get; set; } = default;
         #endregion
         #region CounterEffects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -146,6 +287,9 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IConditionGetter> IMagicEffectGetter.Conditions => _Conditions;
         #endregion
 
+        #endregion
+        #region DATADataTypeState
+        public MagicEffect.DATADataType DATADataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -321,11 +465,48 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Name = initialValue;
                 this.MenuDisplayObject = initialValue;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Data = new MaskItem<TItem, MagicEffectData.Mask<TItem>?>(initialValue, new MagicEffectData.Mask<TItem>(initialValue));
+                this.Flags = initialValue;
+                this.BaseCost = initialValue;
+                this.MagicSkill = initialValue;
+                this.ResistValue = initialValue;
+                this.CounterEffectCount = initialValue;
+                this.Unknown1 = initialValue;
+                this.CastingLight = initialValue;
+                this.TaperWeight = initialValue;
+                this.HitShader = initialValue;
+                this.EnchantShader = initialValue;
+                this.MinimumSkillLevel = initialValue;
+                this.SpellmakingArea = initialValue;
+                this.SpellmakingCastingTime = initialValue;
+                this.TaperCurve = initialValue;
+                this.TaperDuration = initialValue;
+                this.SecondActorValueWeight = initialValue;
+                this.Archetype = new MaskItem<TItem, MagicEffectArchetype.Mask<TItem>?>(initialValue, new MagicEffectArchetype.Mask<TItem>(initialValue));
+                this.Projectile = initialValue;
+                this.Explosion = initialValue;
+                this.CastType = initialValue;
+                this.TargetType = initialValue;
+                this.SecondActorValue = initialValue;
+                this.CastingArt = initialValue;
+                this.HitEffectArt = initialValue;
+                this.ImpactData = initialValue;
+                this.SkillUsageMultiplier = initialValue;
+                this.DualCastArt = initialValue;
+                this.DualCastScale = initialValue;
+                this.EnchantArt = initialValue;
+                this.Unknown2 = initialValue;
+                this.Unknown3 = initialValue;
+                this.EquipAbility = initialValue;
+                this.ImageSpaceModifier = initialValue;
+                this.PerkToApply = initialValue;
+                this.CastingSoundLevel = initialValue;
+                this.ScriptEffectAIScore = initialValue;
+                this.ScriptEffectAIDelayTime = initialValue;
                 this.CounterEffects = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MagicEffectSound.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MagicEffectSound.Mask<TItem>?>>());
                 this.MagicItemDescription = initialValue;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -339,11 +520,48 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Name,
                 TItem MenuDisplayObject,
                 TItem Keywords,
-                TItem Data,
+                TItem Flags,
+                TItem BaseCost,
+                TItem MagicSkill,
+                TItem ResistValue,
+                TItem CounterEffectCount,
+                TItem Unknown1,
+                TItem CastingLight,
+                TItem TaperWeight,
+                TItem HitShader,
+                TItem EnchantShader,
+                TItem MinimumSkillLevel,
+                TItem SpellmakingArea,
+                TItem SpellmakingCastingTime,
+                TItem TaperCurve,
+                TItem TaperDuration,
+                TItem SecondActorValueWeight,
+                TItem Archetype,
+                TItem Projectile,
+                TItem Explosion,
+                TItem CastType,
+                TItem TargetType,
+                TItem SecondActorValue,
+                TItem CastingArt,
+                TItem HitEffectArt,
+                TItem ImpactData,
+                TItem SkillUsageMultiplier,
+                TItem DualCastArt,
+                TItem DualCastScale,
+                TItem EnchantArt,
+                TItem Unknown2,
+                TItem Unknown3,
+                TItem EquipAbility,
+                TItem ImageSpaceModifier,
+                TItem PerkToApply,
+                TItem CastingSoundLevel,
+                TItem ScriptEffectAIScore,
+                TItem ScriptEffectAIDelayTime,
                 TItem CounterEffects,
                 TItem Sounds,
                 TItem MagicItemDescription,
-                TItem Conditions)
+                TItem Conditions,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -356,11 +574,48 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Name = Name;
                 this.MenuDisplayObject = MenuDisplayObject;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Data = new MaskItem<TItem, MagicEffectData.Mask<TItem>?>(Data, new MagicEffectData.Mask<TItem>(Data));
+                this.Flags = Flags;
+                this.BaseCost = BaseCost;
+                this.MagicSkill = MagicSkill;
+                this.ResistValue = ResistValue;
+                this.CounterEffectCount = CounterEffectCount;
+                this.Unknown1 = Unknown1;
+                this.CastingLight = CastingLight;
+                this.TaperWeight = TaperWeight;
+                this.HitShader = HitShader;
+                this.EnchantShader = EnchantShader;
+                this.MinimumSkillLevel = MinimumSkillLevel;
+                this.SpellmakingArea = SpellmakingArea;
+                this.SpellmakingCastingTime = SpellmakingCastingTime;
+                this.TaperCurve = TaperCurve;
+                this.TaperDuration = TaperDuration;
+                this.SecondActorValueWeight = SecondActorValueWeight;
+                this.Archetype = new MaskItem<TItem, MagicEffectArchetype.Mask<TItem>?>(Archetype, new MagicEffectArchetype.Mask<TItem>(Archetype));
+                this.Projectile = Projectile;
+                this.Explosion = Explosion;
+                this.CastType = CastType;
+                this.TargetType = TargetType;
+                this.SecondActorValue = SecondActorValue;
+                this.CastingArt = CastingArt;
+                this.HitEffectArt = HitEffectArt;
+                this.ImpactData = ImpactData;
+                this.SkillUsageMultiplier = SkillUsageMultiplier;
+                this.DualCastArt = DualCastArt;
+                this.DualCastScale = DualCastScale;
+                this.EnchantArt = EnchantArt;
+                this.Unknown2 = Unknown2;
+                this.Unknown3 = Unknown3;
+                this.EquipAbility = EquipAbility;
+                this.ImageSpaceModifier = ImageSpaceModifier;
+                this.PerkToApply = PerkToApply;
+                this.CastingSoundLevel = CastingSoundLevel;
+                this.ScriptEffectAIScore = ScriptEffectAIScore;
+                this.ScriptEffectAIDelayTime = ScriptEffectAIDelayTime;
                 this.CounterEffects = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(CounterEffects, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MagicEffectSound.Mask<TItem>?>>?>(Sounds, Enumerable.Empty<MaskItemIndexed<TItem, MagicEffectSound.Mask<TItem>?>>());
                 this.MagicItemDescription = MagicItemDescription;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -376,11 +631,48 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Name;
             public TItem MenuDisplayObject;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
-            public MaskItem<TItem, MagicEffectData.Mask<TItem>?>? Data { get; set; }
+            public TItem Flags;
+            public TItem BaseCost;
+            public TItem MagicSkill;
+            public TItem ResistValue;
+            public TItem CounterEffectCount;
+            public TItem Unknown1;
+            public TItem CastingLight;
+            public TItem TaperWeight;
+            public TItem HitShader;
+            public TItem EnchantShader;
+            public TItem MinimumSkillLevel;
+            public TItem SpellmakingArea;
+            public TItem SpellmakingCastingTime;
+            public TItem TaperCurve;
+            public TItem TaperDuration;
+            public TItem SecondActorValueWeight;
+            public MaskItem<TItem, MagicEffectArchetype.Mask<TItem>?>? Archetype { get; set; }
+            public TItem Projectile;
+            public TItem Explosion;
+            public TItem CastType;
+            public TItem TargetType;
+            public TItem SecondActorValue;
+            public TItem CastingArt;
+            public TItem HitEffectArt;
+            public TItem ImpactData;
+            public TItem SkillUsageMultiplier;
+            public TItem DualCastArt;
+            public TItem DualCastScale;
+            public TItem EnchantArt;
+            public TItem Unknown2;
+            public TItem Unknown3;
+            public TItem EquipAbility;
+            public TItem ImageSpaceModifier;
+            public TItem PerkToApply;
+            public TItem CastingSoundLevel;
+            public TItem ScriptEffectAIScore;
+            public TItem ScriptEffectAIDelayTime;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? CounterEffects;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MagicEffectSound.Mask<TItem>?>>?>? Sounds;
             public TItem MagicItemDescription;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -398,11 +690,48 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.MenuDisplayObject, rhs.MenuDisplayObject)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
-                if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.BaseCost, rhs.BaseCost)) return false;
+                if (!object.Equals(this.MagicSkill, rhs.MagicSkill)) return false;
+                if (!object.Equals(this.ResistValue, rhs.ResistValue)) return false;
+                if (!object.Equals(this.CounterEffectCount, rhs.CounterEffectCount)) return false;
+                if (!object.Equals(this.Unknown1, rhs.Unknown1)) return false;
+                if (!object.Equals(this.CastingLight, rhs.CastingLight)) return false;
+                if (!object.Equals(this.TaperWeight, rhs.TaperWeight)) return false;
+                if (!object.Equals(this.HitShader, rhs.HitShader)) return false;
+                if (!object.Equals(this.EnchantShader, rhs.EnchantShader)) return false;
+                if (!object.Equals(this.MinimumSkillLevel, rhs.MinimumSkillLevel)) return false;
+                if (!object.Equals(this.SpellmakingArea, rhs.SpellmakingArea)) return false;
+                if (!object.Equals(this.SpellmakingCastingTime, rhs.SpellmakingCastingTime)) return false;
+                if (!object.Equals(this.TaperCurve, rhs.TaperCurve)) return false;
+                if (!object.Equals(this.TaperDuration, rhs.TaperDuration)) return false;
+                if (!object.Equals(this.SecondActorValueWeight, rhs.SecondActorValueWeight)) return false;
+                if (!object.Equals(this.Archetype, rhs.Archetype)) return false;
+                if (!object.Equals(this.Projectile, rhs.Projectile)) return false;
+                if (!object.Equals(this.Explosion, rhs.Explosion)) return false;
+                if (!object.Equals(this.CastType, rhs.CastType)) return false;
+                if (!object.Equals(this.TargetType, rhs.TargetType)) return false;
+                if (!object.Equals(this.SecondActorValue, rhs.SecondActorValue)) return false;
+                if (!object.Equals(this.CastingArt, rhs.CastingArt)) return false;
+                if (!object.Equals(this.HitEffectArt, rhs.HitEffectArt)) return false;
+                if (!object.Equals(this.ImpactData, rhs.ImpactData)) return false;
+                if (!object.Equals(this.SkillUsageMultiplier, rhs.SkillUsageMultiplier)) return false;
+                if (!object.Equals(this.DualCastArt, rhs.DualCastArt)) return false;
+                if (!object.Equals(this.DualCastScale, rhs.DualCastScale)) return false;
+                if (!object.Equals(this.EnchantArt, rhs.EnchantArt)) return false;
+                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
+                if (!object.Equals(this.EquipAbility, rhs.EquipAbility)) return false;
+                if (!object.Equals(this.ImageSpaceModifier, rhs.ImageSpaceModifier)) return false;
+                if (!object.Equals(this.PerkToApply, rhs.PerkToApply)) return false;
+                if (!object.Equals(this.CastingSoundLevel, rhs.CastingSoundLevel)) return false;
+                if (!object.Equals(this.ScriptEffectAIScore, rhs.ScriptEffectAIScore)) return false;
+                if (!object.Equals(this.ScriptEffectAIDelayTime, rhs.ScriptEffectAIDelayTime)) return false;
                 if (!object.Equals(this.CounterEffects, rhs.CounterEffects)) return false;
                 if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
                 if (!object.Equals(this.MagicItemDescription, rhs.MagicItemDescription)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -412,11 +741,48 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Name);
                 hash.Add(this.MenuDisplayObject);
                 hash.Add(this.Keywords);
-                hash.Add(this.Data);
+                hash.Add(this.Flags);
+                hash.Add(this.BaseCost);
+                hash.Add(this.MagicSkill);
+                hash.Add(this.ResistValue);
+                hash.Add(this.CounterEffectCount);
+                hash.Add(this.Unknown1);
+                hash.Add(this.CastingLight);
+                hash.Add(this.TaperWeight);
+                hash.Add(this.HitShader);
+                hash.Add(this.EnchantShader);
+                hash.Add(this.MinimumSkillLevel);
+                hash.Add(this.SpellmakingArea);
+                hash.Add(this.SpellmakingCastingTime);
+                hash.Add(this.TaperCurve);
+                hash.Add(this.TaperDuration);
+                hash.Add(this.SecondActorValueWeight);
+                hash.Add(this.Archetype);
+                hash.Add(this.Projectile);
+                hash.Add(this.Explosion);
+                hash.Add(this.CastType);
+                hash.Add(this.TargetType);
+                hash.Add(this.SecondActorValue);
+                hash.Add(this.CastingArt);
+                hash.Add(this.HitEffectArt);
+                hash.Add(this.ImpactData);
+                hash.Add(this.SkillUsageMultiplier);
+                hash.Add(this.DualCastArt);
+                hash.Add(this.DualCastScale);
+                hash.Add(this.EnchantArt);
+                hash.Add(this.Unknown2);
+                hash.Add(this.Unknown3);
+                hash.Add(this.EquipAbility);
+                hash.Add(this.ImageSpaceModifier);
+                hash.Add(this.PerkToApply);
+                hash.Add(this.CastingSoundLevel);
+                hash.Add(this.ScriptEffectAIScore);
+                hash.Add(this.ScriptEffectAIDelayTime);
                 hash.Add(this.CounterEffects);
                 hash.Add(this.Sounds);
                 hash.Add(this.MagicItemDescription);
                 hash.Add(this.Conditions);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -445,11 +811,47 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (Data != null)
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.BaseCost)) return false;
+                if (!eval(this.MagicSkill)) return false;
+                if (!eval(this.ResistValue)) return false;
+                if (!eval(this.CounterEffectCount)) return false;
+                if (!eval(this.Unknown1)) return false;
+                if (!eval(this.CastingLight)) return false;
+                if (!eval(this.TaperWeight)) return false;
+                if (!eval(this.HitShader)) return false;
+                if (!eval(this.EnchantShader)) return false;
+                if (!eval(this.MinimumSkillLevel)) return false;
+                if (!eval(this.SpellmakingArea)) return false;
+                if (!eval(this.SpellmakingCastingTime)) return false;
+                if (!eval(this.TaperCurve)) return false;
+                if (!eval(this.TaperDuration)) return false;
+                if (!eval(this.SecondActorValueWeight)) return false;
+                if (Archetype != null)
                 {
-                    if (!eval(this.Data.Overall)) return false;
-                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                    if (!eval(this.Archetype.Overall)) return false;
+                    if (this.Archetype.Specific != null && !this.Archetype.Specific.All(eval)) return false;
                 }
+                if (!eval(this.Projectile)) return false;
+                if (!eval(this.Explosion)) return false;
+                if (!eval(this.CastType)) return false;
+                if (!eval(this.TargetType)) return false;
+                if (!eval(this.SecondActorValue)) return false;
+                if (!eval(this.CastingArt)) return false;
+                if (!eval(this.HitEffectArt)) return false;
+                if (!eval(this.ImpactData)) return false;
+                if (!eval(this.SkillUsageMultiplier)) return false;
+                if (!eval(this.DualCastArt)) return false;
+                if (!eval(this.DualCastScale)) return false;
+                if (!eval(this.EnchantArt)) return false;
+                if (!eval(this.Unknown2)) return false;
+                if (!eval(this.Unknown3)) return false;
+                if (!eval(this.EquipAbility)) return false;
+                if (!eval(this.ImageSpaceModifier)) return false;
+                if (!eval(this.PerkToApply)) return false;
+                if (!eval(this.CastingSoundLevel)) return false;
+                if (!eval(this.ScriptEffectAIScore)) return false;
+                if (!eval(this.ScriptEffectAIDelayTime)) return false;
                 if (this.CounterEffects != null)
                 {
                     if (!eval(this.CounterEffects.Overall)) return false;
@@ -486,6 +888,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -512,11 +915,47 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (Data != null)
+                if (eval(this.Flags)) return true;
+                if (eval(this.BaseCost)) return true;
+                if (eval(this.MagicSkill)) return true;
+                if (eval(this.ResistValue)) return true;
+                if (eval(this.CounterEffectCount)) return true;
+                if (eval(this.Unknown1)) return true;
+                if (eval(this.CastingLight)) return true;
+                if (eval(this.TaperWeight)) return true;
+                if (eval(this.HitShader)) return true;
+                if (eval(this.EnchantShader)) return true;
+                if (eval(this.MinimumSkillLevel)) return true;
+                if (eval(this.SpellmakingArea)) return true;
+                if (eval(this.SpellmakingCastingTime)) return true;
+                if (eval(this.TaperCurve)) return true;
+                if (eval(this.TaperDuration)) return true;
+                if (eval(this.SecondActorValueWeight)) return true;
+                if (Archetype != null)
                 {
-                    if (eval(this.Data.Overall)) return true;
-                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                    if (eval(this.Archetype.Overall)) return true;
+                    if (this.Archetype.Specific != null && this.Archetype.Specific.Any(eval)) return true;
                 }
+                if (eval(this.Projectile)) return true;
+                if (eval(this.Explosion)) return true;
+                if (eval(this.CastType)) return true;
+                if (eval(this.TargetType)) return true;
+                if (eval(this.SecondActorValue)) return true;
+                if (eval(this.CastingArt)) return true;
+                if (eval(this.HitEffectArt)) return true;
+                if (eval(this.ImpactData)) return true;
+                if (eval(this.SkillUsageMultiplier)) return true;
+                if (eval(this.DualCastArt)) return true;
+                if (eval(this.DualCastScale)) return true;
+                if (eval(this.EnchantArt)) return true;
+                if (eval(this.Unknown2)) return true;
+                if (eval(this.Unknown3)) return true;
+                if (eval(this.EquipAbility)) return true;
+                if (eval(this.ImageSpaceModifier)) return true;
+                if (eval(this.PerkToApply)) return true;
+                if (eval(this.CastingSoundLevel)) return true;
+                if (eval(this.ScriptEffectAIScore)) return true;
+                if (eval(this.ScriptEffectAIDelayTime)) return true;
                 if (this.CounterEffects != null)
                 {
                     if (eval(this.CounterEffects.Overall)) return true;
@@ -553,6 +992,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -585,7 +1025,43 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                obj.Data = this.Data == null ? null : new MaskItem<R, MagicEffectData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
+                obj.Flags = eval(this.Flags);
+                obj.BaseCost = eval(this.BaseCost);
+                obj.MagicSkill = eval(this.MagicSkill);
+                obj.ResistValue = eval(this.ResistValue);
+                obj.CounterEffectCount = eval(this.CounterEffectCount);
+                obj.Unknown1 = eval(this.Unknown1);
+                obj.CastingLight = eval(this.CastingLight);
+                obj.TaperWeight = eval(this.TaperWeight);
+                obj.HitShader = eval(this.HitShader);
+                obj.EnchantShader = eval(this.EnchantShader);
+                obj.MinimumSkillLevel = eval(this.MinimumSkillLevel);
+                obj.SpellmakingArea = eval(this.SpellmakingArea);
+                obj.SpellmakingCastingTime = eval(this.SpellmakingCastingTime);
+                obj.TaperCurve = eval(this.TaperCurve);
+                obj.TaperDuration = eval(this.TaperDuration);
+                obj.SecondActorValueWeight = eval(this.SecondActorValueWeight);
+                obj.Archetype = this.Archetype == null ? null : new MaskItem<R, MagicEffectArchetype.Mask<R>?>(eval(this.Archetype.Overall), this.Archetype.Specific?.Translate(eval));
+                obj.Projectile = eval(this.Projectile);
+                obj.Explosion = eval(this.Explosion);
+                obj.CastType = eval(this.CastType);
+                obj.TargetType = eval(this.TargetType);
+                obj.SecondActorValue = eval(this.SecondActorValue);
+                obj.CastingArt = eval(this.CastingArt);
+                obj.HitEffectArt = eval(this.HitEffectArt);
+                obj.ImpactData = eval(this.ImpactData);
+                obj.SkillUsageMultiplier = eval(this.SkillUsageMultiplier);
+                obj.DualCastArt = eval(this.DualCastArt);
+                obj.DualCastScale = eval(this.DualCastScale);
+                obj.EnchantArt = eval(this.EnchantArt);
+                obj.Unknown2 = eval(this.Unknown2);
+                obj.Unknown3 = eval(this.Unknown3);
+                obj.EquipAbility = eval(this.EquipAbility);
+                obj.ImageSpaceModifier = eval(this.ImageSpaceModifier);
+                obj.PerkToApply = eval(this.PerkToApply);
+                obj.CastingSoundLevel = eval(this.CastingSoundLevel);
+                obj.ScriptEffectAIScore = eval(this.ScriptEffectAIScore);
+                obj.ScriptEffectAIDelayTime = eval(this.ScriptEffectAIDelayTime);
                 if (CounterEffects != null)
                 {
                     obj.CounterEffects = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.CounterEffects.Overall), Enumerable.Empty<(int Index, R Value)>());
@@ -631,6 +1107,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -688,9 +1165,153 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.Data?.Overall ?? true)
+                    if (printMask?.Flags ?? true)
                     {
-                        Data?.ToString(fg);
+                        fg.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.BaseCost ?? true)
+                    {
+                        fg.AppendItem(BaseCost, "BaseCost");
+                    }
+                    if (printMask?.MagicSkill ?? true)
+                    {
+                        fg.AppendItem(MagicSkill, "MagicSkill");
+                    }
+                    if (printMask?.ResistValue ?? true)
+                    {
+                        fg.AppendItem(ResistValue, "ResistValue");
+                    }
+                    if (printMask?.CounterEffectCount ?? true)
+                    {
+                        fg.AppendItem(CounterEffectCount, "CounterEffectCount");
+                    }
+                    if (printMask?.Unknown1 ?? true)
+                    {
+                        fg.AppendItem(Unknown1, "Unknown1");
+                    }
+                    if (printMask?.CastingLight ?? true)
+                    {
+                        fg.AppendItem(CastingLight, "CastingLight");
+                    }
+                    if (printMask?.TaperWeight ?? true)
+                    {
+                        fg.AppendItem(TaperWeight, "TaperWeight");
+                    }
+                    if (printMask?.HitShader ?? true)
+                    {
+                        fg.AppendItem(HitShader, "HitShader");
+                    }
+                    if (printMask?.EnchantShader ?? true)
+                    {
+                        fg.AppendItem(EnchantShader, "EnchantShader");
+                    }
+                    if (printMask?.MinimumSkillLevel ?? true)
+                    {
+                        fg.AppendItem(MinimumSkillLevel, "MinimumSkillLevel");
+                    }
+                    if (printMask?.SpellmakingArea ?? true)
+                    {
+                        fg.AppendItem(SpellmakingArea, "SpellmakingArea");
+                    }
+                    if (printMask?.SpellmakingCastingTime ?? true)
+                    {
+                        fg.AppendItem(SpellmakingCastingTime, "SpellmakingCastingTime");
+                    }
+                    if (printMask?.TaperCurve ?? true)
+                    {
+                        fg.AppendItem(TaperCurve, "TaperCurve");
+                    }
+                    if (printMask?.TaperDuration ?? true)
+                    {
+                        fg.AppendItem(TaperDuration, "TaperDuration");
+                    }
+                    if (printMask?.SecondActorValueWeight ?? true)
+                    {
+                        fg.AppendItem(SecondActorValueWeight, "SecondActorValueWeight");
+                    }
+                    if (printMask?.Archetype?.Overall ?? true)
+                    {
+                        Archetype?.ToString(fg);
+                    }
+                    if (printMask?.Projectile ?? true)
+                    {
+                        fg.AppendItem(Projectile, "Projectile");
+                    }
+                    if (printMask?.Explosion ?? true)
+                    {
+                        fg.AppendItem(Explosion, "Explosion");
+                    }
+                    if (printMask?.CastType ?? true)
+                    {
+                        fg.AppendItem(CastType, "CastType");
+                    }
+                    if (printMask?.TargetType ?? true)
+                    {
+                        fg.AppendItem(TargetType, "TargetType");
+                    }
+                    if (printMask?.SecondActorValue ?? true)
+                    {
+                        fg.AppendItem(SecondActorValue, "SecondActorValue");
+                    }
+                    if (printMask?.CastingArt ?? true)
+                    {
+                        fg.AppendItem(CastingArt, "CastingArt");
+                    }
+                    if (printMask?.HitEffectArt ?? true)
+                    {
+                        fg.AppendItem(HitEffectArt, "HitEffectArt");
+                    }
+                    if (printMask?.ImpactData ?? true)
+                    {
+                        fg.AppendItem(ImpactData, "ImpactData");
+                    }
+                    if (printMask?.SkillUsageMultiplier ?? true)
+                    {
+                        fg.AppendItem(SkillUsageMultiplier, "SkillUsageMultiplier");
+                    }
+                    if (printMask?.DualCastArt ?? true)
+                    {
+                        fg.AppendItem(DualCastArt, "DualCastArt");
+                    }
+                    if (printMask?.DualCastScale ?? true)
+                    {
+                        fg.AppendItem(DualCastScale, "DualCastScale");
+                    }
+                    if (printMask?.EnchantArt ?? true)
+                    {
+                        fg.AppendItem(EnchantArt, "EnchantArt");
+                    }
+                    if (printMask?.Unknown2 ?? true)
+                    {
+                        fg.AppendItem(Unknown2, "Unknown2");
+                    }
+                    if (printMask?.Unknown3 ?? true)
+                    {
+                        fg.AppendItem(Unknown3, "Unknown3");
+                    }
+                    if (printMask?.EquipAbility ?? true)
+                    {
+                        fg.AppendItem(EquipAbility, "EquipAbility");
+                    }
+                    if (printMask?.ImageSpaceModifier ?? true)
+                    {
+                        fg.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
+                    }
+                    if (printMask?.PerkToApply ?? true)
+                    {
+                        fg.AppendItem(PerkToApply, "PerkToApply");
+                    }
+                    if (printMask?.CastingSoundLevel ?? true)
+                    {
+                        fg.AppendItem(CastingSoundLevel, "CastingSoundLevel");
+                    }
+                    if (printMask?.ScriptEffectAIScore ?? true)
+                    {
+                        fg.AppendItem(ScriptEffectAIScore, "ScriptEffectAIScore");
+                    }
+                    if (printMask?.ScriptEffectAIDelayTime ?? true)
+                    {
+                        fg.AppendItem(ScriptEffectAIDelayTime, "ScriptEffectAIDelayTime");
                     }
                     if ((printMask?.CounterEffects?.Overall ?? true)
                         && CounterEffects.TryGet(out var CounterEffectsItem))
@@ -765,6 +1386,10 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                         fg.AppendLine("]");
                     }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -781,11 +1406,48 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Name;
             public Exception? MenuDisplayObject;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
-            public MaskItem<Exception?, MagicEffectData.ErrorMask?>? Data;
+            public Exception? Flags;
+            public Exception? BaseCost;
+            public Exception? MagicSkill;
+            public Exception? ResistValue;
+            public Exception? CounterEffectCount;
+            public Exception? Unknown1;
+            public Exception? CastingLight;
+            public Exception? TaperWeight;
+            public Exception? HitShader;
+            public Exception? EnchantShader;
+            public Exception? MinimumSkillLevel;
+            public Exception? SpellmakingArea;
+            public Exception? SpellmakingCastingTime;
+            public Exception? TaperCurve;
+            public Exception? TaperDuration;
+            public Exception? SecondActorValueWeight;
+            public MaskItem<Exception?, MagicEffectArchetype.ErrorMask?>? Archetype;
+            public Exception? Projectile;
+            public Exception? Explosion;
+            public Exception? CastType;
+            public Exception? TargetType;
+            public Exception? SecondActorValue;
+            public Exception? CastingArt;
+            public Exception? HitEffectArt;
+            public Exception? ImpactData;
+            public Exception? SkillUsageMultiplier;
+            public Exception? DualCastArt;
+            public Exception? DualCastScale;
+            public Exception? EnchantArt;
+            public Exception? Unknown2;
+            public Exception? Unknown3;
+            public Exception? EquipAbility;
+            public Exception? ImageSpaceModifier;
+            public Exception? PerkToApply;
+            public Exception? CastingSoundLevel;
+            public Exception? ScriptEffectAIScore;
+            public Exception? ScriptEffectAIDelayTime;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? CounterEffects;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MagicEffectSound.ErrorMask?>>?>? Sounds;
             public Exception? MagicItemDescription;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
+            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -802,8 +1464,80 @@ namespace Mutagen.Bethesda.Skyrim
                         return MenuDisplayObject;
                     case MagicEffect_FieldIndex.Keywords:
                         return Keywords;
-                    case MagicEffect_FieldIndex.Data:
-                        return Data;
+                    case MagicEffect_FieldIndex.Flags:
+                        return Flags;
+                    case MagicEffect_FieldIndex.BaseCost:
+                        return BaseCost;
+                    case MagicEffect_FieldIndex.MagicSkill:
+                        return MagicSkill;
+                    case MagicEffect_FieldIndex.ResistValue:
+                        return ResistValue;
+                    case MagicEffect_FieldIndex.CounterEffectCount:
+                        return CounterEffectCount;
+                    case MagicEffect_FieldIndex.Unknown1:
+                        return Unknown1;
+                    case MagicEffect_FieldIndex.CastingLight:
+                        return CastingLight;
+                    case MagicEffect_FieldIndex.TaperWeight:
+                        return TaperWeight;
+                    case MagicEffect_FieldIndex.HitShader:
+                        return HitShader;
+                    case MagicEffect_FieldIndex.EnchantShader:
+                        return EnchantShader;
+                    case MagicEffect_FieldIndex.MinimumSkillLevel:
+                        return MinimumSkillLevel;
+                    case MagicEffect_FieldIndex.SpellmakingArea:
+                        return SpellmakingArea;
+                    case MagicEffect_FieldIndex.SpellmakingCastingTime:
+                        return SpellmakingCastingTime;
+                    case MagicEffect_FieldIndex.TaperCurve:
+                        return TaperCurve;
+                    case MagicEffect_FieldIndex.TaperDuration:
+                        return TaperDuration;
+                    case MagicEffect_FieldIndex.SecondActorValueWeight:
+                        return SecondActorValueWeight;
+                    case MagicEffect_FieldIndex.Archetype:
+                        return Archetype;
+                    case MagicEffect_FieldIndex.Projectile:
+                        return Projectile;
+                    case MagicEffect_FieldIndex.Explosion:
+                        return Explosion;
+                    case MagicEffect_FieldIndex.CastType:
+                        return CastType;
+                    case MagicEffect_FieldIndex.TargetType:
+                        return TargetType;
+                    case MagicEffect_FieldIndex.SecondActorValue:
+                        return SecondActorValue;
+                    case MagicEffect_FieldIndex.CastingArt:
+                        return CastingArt;
+                    case MagicEffect_FieldIndex.HitEffectArt:
+                        return HitEffectArt;
+                    case MagicEffect_FieldIndex.ImpactData:
+                        return ImpactData;
+                    case MagicEffect_FieldIndex.SkillUsageMultiplier:
+                        return SkillUsageMultiplier;
+                    case MagicEffect_FieldIndex.DualCastArt:
+                        return DualCastArt;
+                    case MagicEffect_FieldIndex.DualCastScale:
+                        return DualCastScale;
+                    case MagicEffect_FieldIndex.EnchantArt:
+                        return EnchantArt;
+                    case MagicEffect_FieldIndex.Unknown2:
+                        return Unknown2;
+                    case MagicEffect_FieldIndex.Unknown3:
+                        return Unknown3;
+                    case MagicEffect_FieldIndex.EquipAbility:
+                        return EquipAbility;
+                    case MagicEffect_FieldIndex.ImageSpaceModifier:
+                        return ImageSpaceModifier;
+                    case MagicEffect_FieldIndex.PerkToApply:
+                        return PerkToApply;
+                    case MagicEffect_FieldIndex.CastingSoundLevel:
+                        return CastingSoundLevel;
+                    case MagicEffect_FieldIndex.ScriptEffectAIScore:
+                        return ScriptEffectAIScore;
+                    case MagicEffect_FieldIndex.ScriptEffectAIDelayTime:
+                        return ScriptEffectAIDelayTime;
                     case MagicEffect_FieldIndex.CounterEffects:
                         return CounterEffects;
                     case MagicEffect_FieldIndex.Sounds:
@@ -812,6 +1546,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return MagicItemDescription;
                     case MagicEffect_FieldIndex.Conditions:
                         return Conditions;
+                    case MagicEffect_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -834,8 +1570,116 @@ namespace Mutagen.Bethesda.Skyrim
                     case MagicEffect_FieldIndex.Keywords:
                         this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case MagicEffect_FieldIndex.Data:
-                        this.Data = new MaskItem<Exception?, MagicEffectData.ErrorMask?>(ex, null);
+                    case MagicEffect_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case MagicEffect_FieldIndex.BaseCost:
+                        this.BaseCost = ex;
+                        break;
+                    case MagicEffect_FieldIndex.MagicSkill:
+                        this.MagicSkill = ex;
+                        break;
+                    case MagicEffect_FieldIndex.ResistValue:
+                        this.ResistValue = ex;
+                        break;
+                    case MagicEffect_FieldIndex.CounterEffectCount:
+                        this.CounterEffectCount = ex;
+                        break;
+                    case MagicEffect_FieldIndex.Unknown1:
+                        this.Unknown1 = ex;
+                        break;
+                    case MagicEffect_FieldIndex.CastingLight:
+                        this.CastingLight = ex;
+                        break;
+                    case MagicEffect_FieldIndex.TaperWeight:
+                        this.TaperWeight = ex;
+                        break;
+                    case MagicEffect_FieldIndex.HitShader:
+                        this.HitShader = ex;
+                        break;
+                    case MagicEffect_FieldIndex.EnchantShader:
+                        this.EnchantShader = ex;
+                        break;
+                    case MagicEffect_FieldIndex.MinimumSkillLevel:
+                        this.MinimumSkillLevel = ex;
+                        break;
+                    case MagicEffect_FieldIndex.SpellmakingArea:
+                        this.SpellmakingArea = ex;
+                        break;
+                    case MagicEffect_FieldIndex.SpellmakingCastingTime:
+                        this.SpellmakingCastingTime = ex;
+                        break;
+                    case MagicEffect_FieldIndex.TaperCurve:
+                        this.TaperCurve = ex;
+                        break;
+                    case MagicEffect_FieldIndex.TaperDuration:
+                        this.TaperDuration = ex;
+                        break;
+                    case MagicEffect_FieldIndex.SecondActorValueWeight:
+                        this.SecondActorValueWeight = ex;
+                        break;
+                    case MagicEffect_FieldIndex.Archetype:
+                        this.Archetype = new MaskItem<Exception?, MagicEffectArchetype.ErrorMask?>(ex, null);
+                        break;
+                    case MagicEffect_FieldIndex.Projectile:
+                        this.Projectile = ex;
+                        break;
+                    case MagicEffect_FieldIndex.Explosion:
+                        this.Explosion = ex;
+                        break;
+                    case MagicEffect_FieldIndex.CastType:
+                        this.CastType = ex;
+                        break;
+                    case MagicEffect_FieldIndex.TargetType:
+                        this.TargetType = ex;
+                        break;
+                    case MagicEffect_FieldIndex.SecondActorValue:
+                        this.SecondActorValue = ex;
+                        break;
+                    case MagicEffect_FieldIndex.CastingArt:
+                        this.CastingArt = ex;
+                        break;
+                    case MagicEffect_FieldIndex.HitEffectArt:
+                        this.HitEffectArt = ex;
+                        break;
+                    case MagicEffect_FieldIndex.ImpactData:
+                        this.ImpactData = ex;
+                        break;
+                    case MagicEffect_FieldIndex.SkillUsageMultiplier:
+                        this.SkillUsageMultiplier = ex;
+                        break;
+                    case MagicEffect_FieldIndex.DualCastArt:
+                        this.DualCastArt = ex;
+                        break;
+                    case MagicEffect_FieldIndex.DualCastScale:
+                        this.DualCastScale = ex;
+                        break;
+                    case MagicEffect_FieldIndex.EnchantArt:
+                        this.EnchantArt = ex;
+                        break;
+                    case MagicEffect_FieldIndex.Unknown2:
+                        this.Unknown2 = ex;
+                        break;
+                    case MagicEffect_FieldIndex.Unknown3:
+                        this.Unknown3 = ex;
+                        break;
+                    case MagicEffect_FieldIndex.EquipAbility:
+                        this.EquipAbility = ex;
+                        break;
+                    case MagicEffect_FieldIndex.ImageSpaceModifier:
+                        this.ImageSpaceModifier = ex;
+                        break;
+                    case MagicEffect_FieldIndex.PerkToApply:
+                        this.PerkToApply = ex;
+                        break;
+                    case MagicEffect_FieldIndex.CastingSoundLevel:
+                        this.CastingSoundLevel = ex;
+                        break;
+                    case MagicEffect_FieldIndex.ScriptEffectAIScore:
+                        this.ScriptEffectAIScore = ex;
+                        break;
+                    case MagicEffect_FieldIndex.ScriptEffectAIDelayTime:
+                        this.ScriptEffectAIDelayTime = ex;
                         break;
                     case MagicEffect_FieldIndex.CounterEffects:
                         this.CounterEffects = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
@@ -848,6 +1692,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case MagicEffect_FieldIndex.Conditions:
                         this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case MagicEffect_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -872,8 +1719,116 @@ namespace Mutagen.Bethesda.Skyrim
                     case MagicEffect_FieldIndex.Keywords:
                         this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case MagicEffect_FieldIndex.Data:
-                        this.Data = (MaskItem<Exception?, MagicEffectData.ErrorMask?>?)obj;
+                    case MagicEffect_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.BaseCost:
+                        this.BaseCost = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.MagicSkill:
+                        this.MagicSkill = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.ResistValue:
+                        this.ResistValue = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.CounterEffectCount:
+                        this.CounterEffectCount = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.Unknown1:
+                        this.Unknown1 = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.CastingLight:
+                        this.CastingLight = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.TaperWeight:
+                        this.TaperWeight = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.HitShader:
+                        this.HitShader = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.EnchantShader:
+                        this.EnchantShader = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.MinimumSkillLevel:
+                        this.MinimumSkillLevel = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.SpellmakingArea:
+                        this.SpellmakingArea = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.SpellmakingCastingTime:
+                        this.SpellmakingCastingTime = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.TaperCurve:
+                        this.TaperCurve = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.TaperDuration:
+                        this.TaperDuration = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.SecondActorValueWeight:
+                        this.SecondActorValueWeight = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.Archetype:
+                        this.Archetype = (MaskItem<Exception?, MagicEffectArchetype.ErrorMask?>?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.Projectile:
+                        this.Projectile = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.Explosion:
+                        this.Explosion = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.CastType:
+                        this.CastType = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.TargetType:
+                        this.TargetType = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.SecondActorValue:
+                        this.SecondActorValue = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.CastingArt:
+                        this.CastingArt = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.HitEffectArt:
+                        this.HitEffectArt = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.ImpactData:
+                        this.ImpactData = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.SkillUsageMultiplier:
+                        this.SkillUsageMultiplier = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.DualCastArt:
+                        this.DualCastArt = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.DualCastScale:
+                        this.DualCastScale = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.EnchantArt:
+                        this.EnchantArt = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.Unknown2:
+                        this.Unknown2 = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.Unknown3:
+                        this.Unknown3 = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.EquipAbility:
+                        this.EquipAbility = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.ImageSpaceModifier:
+                        this.ImageSpaceModifier = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.PerkToApply:
+                        this.PerkToApply = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.CastingSoundLevel:
+                        this.CastingSoundLevel = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.ScriptEffectAIScore:
+                        this.ScriptEffectAIScore = (Exception?)obj;
+                        break;
+                    case MagicEffect_FieldIndex.ScriptEffectAIDelayTime:
+                        this.ScriptEffectAIDelayTime = (Exception?)obj;
                         break;
                     case MagicEffect_FieldIndex.CounterEffects:
                         this.CounterEffects = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
@@ -886,6 +1841,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case MagicEffect_FieldIndex.Conditions:
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
+                    case MagicEffect_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -900,11 +1858,48 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Name != null) return true;
                 if (MenuDisplayObject != null) return true;
                 if (Keywords != null) return true;
-                if (Data != null) return true;
+                if (Flags != null) return true;
+                if (BaseCost != null) return true;
+                if (MagicSkill != null) return true;
+                if (ResistValue != null) return true;
+                if (CounterEffectCount != null) return true;
+                if (Unknown1 != null) return true;
+                if (CastingLight != null) return true;
+                if (TaperWeight != null) return true;
+                if (HitShader != null) return true;
+                if (EnchantShader != null) return true;
+                if (MinimumSkillLevel != null) return true;
+                if (SpellmakingArea != null) return true;
+                if (SpellmakingCastingTime != null) return true;
+                if (TaperCurve != null) return true;
+                if (TaperDuration != null) return true;
+                if (SecondActorValueWeight != null) return true;
+                if (Archetype != null) return true;
+                if (Projectile != null) return true;
+                if (Explosion != null) return true;
+                if (CastType != null) return true;
+                if (TargetType != null) return true;
+                if (SecondActorValue != null) return true;
+                if (CastingArt != null) return true;
+                if (HitEffectArt != null) return true;
+                if (ImpactData != null) return true;
+                if (SkillUsageMultiplier != null) return true;
+                if (DualCastArt != null) return true;
+                if (DualCastScale != null) return true;
+                if (EnchantArt != null) return true;
+                if (Unknown2 != null) return true;
+                if (Unknown3 != null) return true;
+                if (EquipAbility != null) return true;
+                if (ImageSpaceModifier != null) return true;
+                if (PerkToApply != null) return true;
+                if (CastingSoundLevel != null) return true;
+                if (ScriptEffectAIScore != null) return true;
+                if (ScriptEffectAIDelayTime != null) return true;
                 if (CounterEffects != null) return true;
                 if (Sounds != null) return true;
                 if (MagicItemDescription != null) return true;
                 if (Conditions != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -965,7 +1960,43 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                Data?.ToString(fg);
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(BaseCost, "BaseCost");
+                fg.AppendItem(MagicSkill, "MagicSkill");
+                fg.AppendItem(ResistValue, "ResistValue");
+                fg.AppendItem(CounterEffectCount, "CounterEffectCount");
+                fg.AppendItem(Unknown1, "Unknown1");
+                fg.AppendItem(CastingLight, "CastingLight");
+                fg.AppendItem(TaperWeight, "TaperWeight");
+                fg.AppendItem(HitShader, "HitShader");
+                fg.AppendItem(EnchantShader, "EnchantShader");
+                fg.AppendItem(MinimumSkillLevel, "MinimumSkillLevel");
+                fg.AppendItem(SpellmakingArea, "SpellmakingArea");
+                fg.AppendItem(SpellmakingCastingTime, "SpellmakingCastingTime");
+                fg.AppendItem(TaperCurve, "TaperCurve");
+                fg.AppendItem(TaperDuration, "TaperDuration");
+                fg.AppendItem(SecondActorValueWeight, "SecondActorValueWeight");
+                Archetype?.ToString(fg);
+                fg.AppendItem(Projectile, "Projectile");
+                fg.AppendItem(Explosion, "Explosion");
+                fg.AppendItem(CastType, "CastType");
+                fg.AppendItem(TargetType, "TargetType");
+                fg.AppendItem(SecondActorValue, "SecondActorValue");
+                fg.AppendItem(CastingArt, "CastingArt");
+                fg.AppendItem(HitEffectArt, "HitEffectArt");
+                fg.AppendItem(ImpactData, "ImpactData");
+                fg.AppendItem(SkillUsageMultiplier, "SkillUsageMultiplier");
+                fg.AppendItem(DualCastArt, "DualCastArt");
+                fg.AppendItem(DualCastScale, "DualCastScale");
+                fg.AppendItem(EnchantArt, "EnchantArt");
+                fg.AppendItem(Unknown2, "Unknown2");
+                fg.AppendItem(Unknown3, "Unknown3");
+                fg.AppendItem(EquipAbility, "EquipAbility");
+                fg.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
+                fg.AppendItem(PerkToApply, "PerkToApply");
+                fg.AppendItem(CastingSoundLevel, "CastingSoundLevel");
+                fg.AppendItem(ScriptEffectAIScore, "ScriptEffectAIScore");
+                fg.AppendItem(ScriptEffectAIDelayTime, "ScriptEffectAIDelayTime");
                 if (CounterEffects.TryGet(out var CounterEffectsItem))
                 {
                     fg.AppendLine("CounterEffects =>");
@@ -1033,6 +2064,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -1045,11 +2077,48 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.MenuDisplayObject = this.MenuDisplayObject.Combine(rhs.MenuDisplayObject);
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
-                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.BaseCost = this.BaseCost.Combine(rhs.BaseCost);
+                ret.MagicSkill = this.MagicSkill.Combine(rhs.MagicSkill);
+                ret.ResistValue = this.ResistValue.Combine(rhs.ResistValue);
+                ret.CounterEffectCount = this.CounterEffectCount.Combine(rhs.CounterEffectCount);
+                ret.Unknown1 = this.Unknown1.Combine(rhs.Unknown1);
+                ret.CastingLight = this.CastingLight.Combine(rhs.CastingLight);
+                ret.TaperWeight = this.TaperWeight.Combine(rhs.TaperWeight);
+                ret.HitShader = this.HitShader.Combine(rhs.HitShader);
+                ret.EnchantShader = this.EnchantShader.Combine(rhs.EnchantShader);
+                ret.MinimumSkillLevel = this.MinimumSkillLevel.Combine(rhs.MinimumSkillLevel);
+                ret.SpellmakingArea = this.SpellmakingArea.Combine(rhs.SpellmakingArea);
+                ret.SpellmakingCastingTime = this.SpellmakingCastingTime.Combine(rhs.SpellmakingCastingTime);
+                ret.TaperCurve = this.TaperCurve.Combine(rhs.TaperCurve);
+                ret.TaperDuration = this.TaperDuration.Combine(rhs.TaperDuration);
+                ret.SecondActorValueWeight = this.SecondActorValueWeight.Combine(rhs.SecondActorValueWeight);
+                ret.Archetype = this.Archetype.Combine(rhs.Archetype, (l, r) => l.Combine(r));
+                ret.Projectile = this.Projectile.Combine(rhs.Projectile);
+                ret.Explosion = this.Explosion.Combine(rhs.Explosion);
+                ret.CastType = this.CastType.Combine(rhs.CastType);
+                ret.TargetType = this.TargetType.Combine(rhs.TargetType);
+                ret.SecondActorValue = this.SecondActorValue.Combine(rhs.SecondActorValue);
+                ret.CastingArt = this.CastingArt.Combine(rhs.CastingArt);
+                ret.HitEffectArt = this.HitEffectArt.Combine(rhs.HitEffectArt);
+                ret.ImpactData = this.ImpactData.Combine(rhs.ImpactData);
+                ret.SkillUsageMultiplier = this.SkillUsageMultiplier.Combine(rhs.SkillUsageMultiplier);
+                ret.DualCastArt = this.DualCastArt.Combine(rhs.DualCastArt);
+                ret.DualCastScale = this.DualCastScale.Combine(rhs.DualCastScale);
+                ret.EnchantArt = this.EnchantArt.Combine(rhs.EnchantArt);
+                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
+                ret.EquipAbility = this.EquipAbility.Combine(rhs.EquipAbility);
+                ret.ImageSpaceModifier = this.ImageSpaceModifier.Combine(rhs.ImageSpaceModifier);
+                ret.PerkToApply = this.PerkToApply.Combine(rhs.PerkToApply);
+                ret.CastingSoundLevel = this.CastingSoundLevel.Combine(rhs.CastingSoundLevel);
+                ret.ScriptEffectAIScore = this.ScriptEffectAIScore.Combine(rhs.ScriptEffectAIScore);
+                ret.ScriptEffectAIDelayTime = this.ScriptEffectAIDelayTime.Combine(rhs.ScriptEffectAIDelayTime);
                 ret.CounterEffects = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.CounterEffects?.Overall, rhs.CounterEffects?.Overall), ExceptionExt.Combine(this.CounterEffects?.Specific, rhs.CounterEffects?.Specific));
                 ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MagicEffectSound.ErrorMask?>>?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
                 ret.MagicItemDescription = this.MagicItemDescription.Combine(rhs.MagicItemDescription);
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1076,11 +2145,48 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Name;
             public bool MenuDisplayObject;
             public bool Keywords;
-            public MaskItem<bool, MagicEffectData.TranslationMask?> Data;
+            public bool Flags;
+            public bool BaseCost;
+            public bool MagicSkill;
+            public bool ResistValue;
+            public bool CounterEffectCount;
+            public bool Unknown1;
+            public bool CastingLight;
+            public bool TaperWeight;
+            public bool HitShader;
+            public bool EnchantShader;
+            public bool MinimumSkillLevel;
+            public bool SpellmakingArea;
+            public bool SpellmakingCastingTime;
+            public bool TaperCurve;
+            public bool TaperDuration;
+            public bool SecondActorValueWeight;
+            public MaskItem<bool, MagicEffectArchetype.TranslationMask?> Archetype;
+            public bool Projectile;
+            public bool Explosion;
+            public bool CastType;
+            public bool TargetType;
+            public bool SecondActorValue;
+            public bool CastingArt;
+            public bool HitEffectArt;
+            public bool ImpactData;
+            public bool SkillUsageMultiplier;
+            public bool DualCastArt;
+            public bool DualCastScale;
+            public bool EnchantArt;
+            public bool Unknown2;
+            public bool Unknown3;
+            public bool EquipAbility;
+            public bool ImageSpaceModifier;
+            public bool PerkToApply;
+            public bool CastingSoundLevel;
+            public bool ScriptEffectAIScore;
+            public bool ScriptEffectAIDelayTime;
             public bool CounterEffects;
             public MaskItem<bool, MagicEffectSound.TranslationMask?> Sounds;
             public bool MagicItemDescription;
             public MaskItem<bool, Condition.TranslationMask?> Conditions;
+            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -1091,11 +2197,48 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Name = defaultOn;
                 this.MenuDisplayObject = defaultOn;
                 this.Keywords = defaultOn;
-                this.Data = new MaskItem<bool, MagicEffectData.TranslationMask?>(defaultOn, null);
+                this.Flags = defaultOn;
+                this.BaseCost = defaultOn;
+                this.MagicSkill = defaultOn;
+                this.ResistValue = defaultOn;
+                this.CounterEffectCount = defaultOn;
+                this.Unknown1 = defaultOn;
+                this.CastingLight = defaultOn;
+                this.TaperWeight = defaultOn;
+                this.HitShader = defaultOn;
+                this.EnchantShader = defaultOn;
+                this.MinimumSkillLevel = defaultOn;
+                this.SpellmakingArea = defaultOn;
+                this.SpellmakingCastingTime = defaultOn;
+                this.TaperCurve = defaultOn;
+                this.TaperDuration = defaultOn;
+                this.SecondActorValueWeight = defaultOn;
+                this.Archetype = new MaskItem<bool, MagicEffectArchetype.TranslationMask?>(defaultOn, null);
+                this.Projectile = defaultOn;
+                this.Explosion = defaultOn;
+                this.CastType = defaultOn;
+                this.TargetType = defaultOn;
+                this.SecondActorValue = defaultOn;
+                this.CastingArt = defaultOn;
+                this.HitEffectArt = defaultOn;
+                this.ImpactData = defaultOn;
+                this.SkillUsageMultiplier = defaultOn;
+                this.DualCastArt = defaultOn;
+                this.DualCastScale = defaultOn;
+                this.EnchantArt = defaultOn;
+                this.Unknown2 = defaultOn;
+                this.Unknown3 = defaultOn;
+                this.EquipAbility = defaultOn;
+                this.ImageSpaceModifier = defaultOn;
+                this.PerkToApply = defaultOn;
+                this.CastingSoundLevel = defaultOn;
+                this.ScriptEffectAIScore = defaultOn;
+                this.ScriptEffectAIDelayTime = defaultOn;
                 this.CounterEffects = defaultOn;
                 this.Sounds = new MaskItem<bool, MagicEffectSound.TranslationMask?>(defaultOn, null);
                 this.MagicItemDescription = defaultOn;
                 this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -1107,11 +2250,48 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Name, null));
                 ret.Add((MenuDisplayObject, null));
                 ret.Add((Keywords, null));
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((Flags, null));
+                ret.Add((BaseCost, null));
+                ret.Add((MagicSkill, null));
+                ret.Add((ResistValue, null));
+                ret.Add((CounterEffectCount, null));
+                ret.Add((Unknown1, null));
+                ret.Add((CastingLight, null));
+                ret.Add((TaperWeight, null));
+                ret.Add((HitShader, null));
+                ret.Add((EnchantShader, null));
+                ret.Add((MinimumSkillLevel, null));
+                ret.Add((SpellmakingArea, null));
+                ret.Add((SpellmakingCastingTime, null));
+                ret.Add((TaperCurve, null));
+                ret.Add((TaperDuration, null));
+                ret.Add((SecondActorValueWeight, null));
+                ret.Add((Archetype?.Overall ?? true, Archetype?.Specific?.GetCrystal()));
+                ret.Add((Projectile, null));
+                ret.Add((Explosion, null));
+                ret.Add((CastType, null));
+                ret.Add((TargetType, null));
+                ret.Add((SecondActorValue, null));
+                ret.Add((CastingArt, null));
+                ret.Add((HitEffectArt, null));
+                ret.Add((ImpactData, null));
+                ret.Add((SkillUsageMultiplier, null));
+                ret.Add((DualCastArt, null));
+                ret.Add((DualCastScale, null));
+                ret.Add((EnchantArt, null));
+                ret.Add((Unknown2, null));
+                ret.Add((Unknown3, null));
+                ret.Add((EquipAbility, null));
+                ret.Add((ImageSpaceModifier, null));
+                ret.Add((PerkToApply, null));
+                ret.Add((CastingSoundLevel, null));
+                ret.Add((ScriptEffectAIScore, null));
+                ret.Add((ScriptEffectAIDelayTime, null));
                 ret.Add((CounterEffects, null));
                 ret.Add((Sounds?.Overall ?? true, Sounds?.Specific?.GetCrystal()));
                 ret.Add((MagicItemDescription, null));
                 ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
+                ret.Add((DATADataTypeState, null));
             }
         }
         #endregion
@@ -1141,6 +2321,10 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        [Flags]
+        public enum DATADataType
+        {
+        }
         #endregion
 
         #region Binary Translation
@@ -1208,11 +2392,48 @@ namespace Mutagen.Bethesda.Skyrim
         new String? Name { get; set; }
         new FormLinkNullable<Static> MenuDisplayObject { get; set; }
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
-        new MagicEffectData Data { get; set; }
+        new MagicEffect.Flag Flags { get; set; }
+        new Single BaseCost { get; set; }
+        new ActorValueExtended MagicSkill { get; set; }
+        new ActorValueExtended ResistValue { get; set; }
+        new UInt16 CounterEffectCount { get; set; }
+        new UInt16 Unknown1 { get; set; }
+        new FormLink<Light> CastingLight { get; set; }
+        new Single TaperWeight { get; set; }
+        new FormLink<EffectShader> HitShader { get; set; }
+        new FormLink<EffectShader> EnchantShader { get; set; }
+        new UInt32 MinimumSkillLevel { get; set; }
+        new UInt32 SpellmakingArea { get; set; }
+        new Single SpellmakingCastingTime { get; set; }
+        new Single TaperCurve { get; set; }
+        new Single TaperDuration { get; set; }
+        new Single SecondActorValueWeight { get; set; }
+        new MagicEffectArchetype Archetype { get; set; }
+        new FormLink<Projectile> Projectile { get; set; }
+        new FormLink<Explosion> Explosion { get; set; }
+        new CastType CastType { get; set; }
+        new TargetType TargetType { get; set; }
+        new ActorValueExtended SecondActorValue { get; set; }
+        new FormLink<ArtObject> CastingArt { get; set; }
+        new FormLink<ArtObject> HitEffectArt { get; set; }
+        new FormLink<ImpactDataSet> ImpactData { get; set; }
+        new Single SkillUsageMultiplier { get; set; }
+        new FormLink<DualCastData> DualCastArt { get; set; }
+        new Single DualCastScale { get; set; }
+        new FormLink<ArtObject> EnchantArt { get; set; }
+        new FormLink<SkyrimMajorRecord> Unknown2 { get; set; }
+        new FormLink<SkyrimMajorRecord> Unknown3 { get; set; }
+        new FormLink<Spell> EquipAbility { get; set; }
+        new FormLink<ImageSpaceAdapter> ImageSpaceModifier { get; set; }
+        new FormLink<Perk> PerkToApply { get; set; }
+        new SoundLevel CastingSoundLevel { get; set; }
+        new Single ScriptEffectAIScore { get; set; }
+        new Single ScriptEffectAIDelayTime { get; set; }
         new ExtendedList<IFormLink<MagicEffect>>? CounterEffects { get; set; }
         new ExtendedList<MagicEffectSound>? Sounds { get; set; }
         new String? MagicItemDescription { get; set; }
         new ExtendedList<Condition> Conditions { get; }
+        new MagicEffect.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IMagicEffectInternal :
@@ -1235,11 +2456,48 @@ namespace Mutagen.Bethesda.Skyrim
         String? Name { get; }
         IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
-        IMagicEffectDataGetter Data { get; }
+        MagicEffect.Flag Flags { get; }
+        Single BaseCost { get; }
+        ActorValueExtended MagicSkill { get; }
+        ActorValueExtended ResistValue { get; }
+        UInt16 CounterEffectCount { get; }
+        UInt16 Unknown1 { get; }
+        IFormLinkGetter<ILightGetter> CastingLight { get; }
+        Single TaperWeight { get; }
+        IFormLinkGetter<IEffectShaderGetter> HitShader { get; }
+        IFormLinkGetter<IEffectShaderGetter> EnchantShader { get; }
+        UInt32 MinimumSkillLevel { get; }
+        UInt32 SpellmakingArea { get; }
+        Single SpellmakingCastingTime { get; }
+        Single TaperCurve { get; }
+        Single TaperDuration { get; }
+        Single SecondActorValueWeight { get; }
+        IMagicEffectArchetypeGetter Archetype { get; }
+        IFormLinkGetter<IProjectileGetter> Projectile { get; }
+        IFormLinkGetter<IExplosionGetter> Explosion { get; }
+        CastType CastType { get; }
+        TargetType TargetType { get; }
+        ActorValueExtended SecondActorValue { get; }
+        IFormLinkGetter<IArtObjectGetter> CastingArt { get; }
+        IFormLinkGetter<IArtObjectGetter> HitEffectArt { get; }
+        IFormLinkGetter<IImpactDataSetGetter> ImpactData { get; }
+        Single SkillUsageMultiplier { get; }
+        IFormLinkGetter<IDualCastDataGetter> DualCastArt { get; }
+        Single DualCastScale { get; }
+        IFormLinkGetter<IArtObjectGetter> EnchantArt { get; }
+        IFormLinkGetter<ISkyrimMajorRecordGetter> Unknown2 { get; }
+        IFormLinkGetter<ISkyrimMajorRecordGetter> Unknown3 { get; }
+        IFormLinkGetter<ISpellGetter> EquipAbility { get; }
+        IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
+        IFormLinkGetter<IPerkGetter> PerkToApply { get; }
+        SoundLevel CastingSoundLevel { get; }
+        Single ScriptEffectAIScore { get; }
+        Single ScriptEffectAIDelayTime { get; }
         IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>>? CounterEffects { get; }
         IReadOnlyList<IMagicEffectSoundGetter>? Sounds { get; }
         String? MagicItemDescription { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
+        MagicEffect.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -1544,11 +2802,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Name = 7,
         MenuDisplayObject = 8,
         Keywords = 9,
-        Data = 10,
-        CounterEffects = 11,
-        Sounds = 12,
-        MagicItemDescription = 13,
-        Conditions = 14,
+        Flags = 10,
+        BaseCost = 11,
+        MagicSkill = 12,
+        ResistValue = 13,
+        CounterEffectCount = 14,
+        Unknown1 = 15,
+        CastingLight = 16,
+        TaperWeight = 17,
+        HitShader = 18,
+        EnchantShader = 19,
+        MinimumSkillLevel = 20,
+        SpellmakingArea = 21,
+        SpellmakingCastingTime = 22,
+        TaperCurve = 23,
+        TaperDuration = 24,
+        SecondActorValueWeight = 25,
+        Archetype = 26,
+        Projectile = 27,
+        Explosion = 28,
+        CastType = 29,
+        TargetType = 30,
+        SecondActorValue = 31,
+        CastingArt = 32,
+        HitEffectArt = 33,
+        ImpactData = 34,
+        SkillUsageMultiplier = 35,
+        DualCastArt = 36,
+        DualCastScale = 37,
+        EnchantArt = 38,
+        Unknown2 = 39,
+        Unknown3 = 40,
+        EquipAbility = 41,
+        ImageSpaceModifier = 42,
+        PerkToApply = 43,
+        CastingSoundLevel = 44,
+        ScriptEffectAIScore = 45,
+        ScriptEffectAIDelayTime = 46,
+        CounterEffects = 47,
+        Sounds = 48,
+        MagicItemDescription = 49,
+        Conditions = 50,
+        DATADataTypeState = 51,
     }
     #endregion
 
@@ -1566,9 +2861,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "6f4b3983-51e3-47e9-894e-9c442948e6d1";
 
-        public const ushort AdditionalFieldCount = 9;
+        public const ushort AdditionalFieldCount = 46;
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 52;
 
         public static readonly Type MaskType = typeof(MagicEffect.Mask<>);
 
@@ -1606,8 +2901,80 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)MagicEffect_FieldIndex.MenuDisplayObject;
                 case "KEYWORDS":
                     return (ushort)MagicEffect_FieldIndex.Keywords;
-                case "DATA":
-                    return (ushort)MagicEffect_FieldIndex.Data;
+                case "FLAGS":
+                    return (ushort)MagicEffect_FieldIndex.Flags;
+                case "BASECOST":
+                    return (ushort)MagicEffect_FieldIndex.BaseCost;
+                case "MAGICSKILL":
+                    return (ushort)MagicEffect_FieldIndex.MagicSkill;
+                case "RESISTVALUE":
+                    return (ushort)MagicEffect_FieldIndex.ResistValue;
+                case "COUNTEREFFECTCOUNT":
+                    return (ushort)MagicEffect_FieldIndex.CounterEffectCount;
+                case "UNKNOWN1":
+                    return (ushort)MagicEffect_FieldIndex.Unknown1;
+                case "CASTINGLIGHT":
+                    return (ushort)MagicEffect_FieldIndex.CastingLight;
+                case "TAPERWEIGHT":
+                    return (ushort)MagicEffect_FieldIndex.TaperWeight;
+                case "HITSHADER":
+                    return (ushort)MagicEffect_FieldIndex.HitShader;
+                case "ENCHANTSHADER":
+                    return (ushort)MagicEffect_FieldIndex.EnchantShader;
+                case "MINIMUMSKILLLEVEL":
+                    return (ushort)MagicEffect_FieldIndex.MinimumSkillLevel;
+                case "SPELLMAKINGAREA":
+                    return (ushort)MagicEffect_FieldIndex.SpellmakingArea;
+                case "SPELLMAKINGCASTINGTIME":
+                    return (ushort)MagicEffect_FieldIndex.SpellmakingCastingTime;
+                case "TAPERCURVE":
+                    return (ushort)MagicEffect_FieldIndex.TaperCurve;
+                case "TAPERDURATION":
+                    return (ushort)MagicEffect_FieldIndex.TaperDuration;
+                case "SECONDACTORVALUEWEIGHT":
+                    return (ushort)MagicEffect_FieldIndex.SecondActorValueWeight;
+                case "ARCHETYPE":
+                    return (ushort)MagicEffect_FieldIndex.Archetype;
+                case "PROJECTILE":
+                    return (ushort)MagicEffect_FieldIndex.Projectile;
+                case "EXPLOSION":
+                    return (ushort)MagicEffect_FieldIndex.Explosion;
+                case "CASTTYPE":
+                    return (ushort)MagicEffect_FieldIndex.CastType;
+                case "TARGETTYPE":
+                    return (ushort)MagicEffect_FieldIndex.TargetType;
+                case "SECONDACTORVALUE":
+                    return (ushort)MagicEffect_FieldIndex.SecondActorValue;
+                case "CASTINGART":
+                    return (ushort)MagicEffect_FieldIndex.CastingArt;
+                case "HITEFFECTART":
+                    return (ushort)MagicEffect_FieldIndex.HitEffectArt;
+                case "IMPACTDATA":
+                    return (ushort)MagicEffect_FieldIndex.ImpactData;
+                case "SKILLUSAGEMULTIPLIER":
+                    return (ushort)MagicEffect_FieldIndex.SkillUsageMultiplier;
+                case "DUALCASTART":
+                    return (ushort)MagicEffect_FieldIndex.DualCastArt;
+                case "DUALCASTSCALE":
+                    return (ushort)MagicEffect_FieldIndex.DualCastScale;
+                case "ENCHANTART":
+                    return (ushort)MagicEffect_FieldIndex.EnchantArt;
+                case "UNKNOWN2":
+                    return (ushort)MagicEffect_FieldIndex.Unknown2;
+                case "UNKNOWN3":
+                    return (ushort)MagicEffect_FieldIndex.Unknown3;
+                case "EQUIPABILITY":
+                    return (ushort)MagicEffect_FieldIndex.EquipAbility;
+                case "IMAGESPACEMODIFIER":
+                    return (ushort)MagicEffect_FieldIndex.ImageSpaceModifier;
+                case "PERKTOAPPLY":
+                    return (ushort)MagicEffect_FieldIndex.PerkToApply;
+                case "CASTINGSOUNDLEVEL":
+                    return (ushort)MagicEffect_FieldIndex.CastingSoundLevel;
+                case "SCRIPTEFFECTAISCORE":
+                    return (ushort)MagicEffect_FieldIndex.ScriptEffectAIScore;
+                case "SCRIPTEFFECTAIDELAYTIME":
+                    return (ushort)MagicEffect_FieldIndex.ScriptEffectAIDelayTime;
                 case "COUNTEREFFECTS":
                     return (ushort)MagicEffect_FieldIndex.CounterEffects;
                 case "SOUNDS":
@@ -1616,6 +2983,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)MagicEffect_FieldIndex.MagicItemDescription;
                 case "CONDITIONS":
                     return (ushort)MagicEffect_FieldIndex.Conditions;
+                case "DATADATATYPESTATE":
+                    return (ushort)MagicEffect_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -1634,8 +3003,45 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MagicEffect_FieldIndex.VirtualMachineAdapter:
                 case MagicEffect_FieldIndex.Name:
                 case MagicEffect_FieldIndex.MenuDisplayObject:
-                case MagicEffect_FieldIndex.Data:
+                case MagicEffect_FieldIndex.Flags:
+                case MagicEffect_FieldIndex.BaseCost:
+                case MagicEffect_FieldIndex.MagicSkill:
+                case MagicEffect_FieldIndex.ResistValue:
+                case MagicEffect_FieldIndex.CounterEffectCount:
+                case MagicEffect_FieldIndex.Unknown1:
+                case MagicEffect_FieldIndex.CastingLight:
+                case MagicEffect_FieldIndex.TaperWeight:
+                case MagicEffect_FieldIndex.HitShader:
+                case MagicEffect_FieldIndex.EnchantShader:
+                case MagicEffect_FieldIndex.MinimumSkillLevel:
+                case MagicEffect_FieldIndex.SpellmakingArea:
+                case MagicEffect_FieldIndex.SpellmakingCastingTime:
+                case MagicEffect_FieldIndex.TaperCurve:
+                case MagicEffect_FieldIndex.TaperDuration:
+                case MagicEffect_FieldIndex.SecondActorValueWeight:
+                case MagicEffect_FieldIndex.Archetype:
+                case MagicEffect_FieldIndex.Projectile:
+                case MagicEffect_FieldIndex.Explosion:
+                case MagicEffect_FieldIndex.CastType:
+                case MagicEffect_FieldIndex.TargetType:
+                case MagicEffect_FieldIndex.SecondActorValue:
+                case MagicEffect_FieldIndex.CastingArt:
+                case MagicEffect_FieldIndex.HitEffectArt:
+                case MagicEffect_FieldIndex.ImpactData:
+                case MagicEffect_FieldIndex.SkillUsageMultiplier:
+                case MagicEffect_FieldIndex.DualCastArt:
+                case MagicEffect_FieldIndex.DualCastScale:
+                case MagicEffect_FieldIndex.EnchantArt:
+                case MagicEffect_FieldIndex.Unknown2:
+                case MagicEffect_FieldIndex.Unknown3:
+                case MagicEffect_FieldIndex.EquipAbility:
+                case MagicEffect_FieldIndex.ImageSpaceModifier:
+                case MagicEffect_FieldIndex.PerkToApply:
+                case MagicEffect_FieldIndex.CastingSoundLevel:
+                case MagicEffect_FieldIndex.ScriptEffectAIScore:
+                case MagicEffect_FieldIndex.ScriptEffectAIDelayTime:
                 case MagicEffect_FieldIndex.MagicItemDescription:
+                case MagicEffect_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1648,15 +3054,52 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case MagicEffect_FieldIndex.VirtualMachineAdapter:
-                case MagicEffect_FieldIndex.Data:
+                case MagicEffect_FieldIndex.Archetype:
                 case MagicEffect_FieldIndex.Sounds:
                 case MagicEffect_FieldIndex.Conditions:
                     return true;
                 case MagicEffect_FieldIndex.Name:
                 case MagicEffect_FieldIndex.MenuDisplayObject:
                 case MagicEffect_FieldIndex.Keywords:
+                case MagicEffect_FieldIndex.Flags:
+                case MagicEffect_FieldIndex.BaseCost:
+                case MagicEffect_FieldIndex.MagicSkill:
+                case MagicEffect_FieldIndex.ResistValue:
+                case MagicEffect_FieldIndex.CounterEffectCount:
+                case MagicEffect_FieldIndex.Unknown1:
+                case MagicEffect_FieldIndex.CastingLight:
+                case MagicEffect_FieldIndex.TaperWeight:
+                case MagicEffect_FieldIndex.HitShader:
+                case MagicEffect_FieldIndex.EnchantShader:
+                case MagicEffect_FieldIndex.MinimumSkillLevel:
+                case MagicEffect_FieldIndex.SpellmakingArea:
+                case MagicEffect_FieldIndex.SpellmakingCastingTime:
+                case MagicEffect_FieldIndex.TaperCurve:
+                case MagicEffect_FieldIndex.TaperDuration:
+                case MagicEffect_FieldIndex.SecondActorValueWeight:
+                case MagicEffect_FieldIndex.Projectile:
+                case MagicEffect_FieldIndex.Explosion:
+                case MagicEffect_FieldIndex.CastType:
+                case MagicEffect_FieldIndex.TargetType:
+                case MagicEffect_FieldIndex.SecondActorValue:
+                case MagicEffect_FieldIndex.CastingArt:
+                case MagicEffect_FieldIndex.HitEffectArt:
+                case MagicEffect_FieldIndex.ImpactData:
+                case MagicEffect_FieldIndex.SkillUsageMultiplier:
+                case MagicEffect_FieldIndex.DualCastArt:
+                case MagicEffect_FieldIndex.DualCastScale:
+                case MagicEffect_FieldIndex.EnchantArt:
+                case MagicEffect_FieldIndex.Unknown2:
+                case MagicEffect_FieldIndex.Unknown3:
+                case MagicEffect_FieldIndex.EquipAbility:
+                case MagicEffect_FieldIndex.ImageSpaceModifier:
+                case MagicEffect_FieldIndex.PerkToApply:
+                case MagicEffect_FieldIndex.CastingSoundLevel:
+                case MagicEffect_FieldIndex.ScriptEffectAIScore:
+                case MagicEffect_FieldIndex.ScriptEffectAIDelayTime:
                 case MagicEffect_FieldIndex.CounterEffects:
                 case MagicEffect_FieldIndex.MagicItemDescription:
+                case MagicEffect_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1672,11 +3115,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MagicEffect_FieldIndex.Name:
                 case MagicEffect_FieldIndex.MenuDisplayObject:
                 case MagicEffect_FieldIndex.Keywords:
-                case MagicEffect_FieldIndex.Data:
+                case MagicEffect_FieldIndex.Flags:
+                case MagicEffect_FieldIndex.BaseCost:
+                case MagicEffect_FieldIndex.MagicSkill:
+                case MagicEffect_FieldIndex.ResistValue:
+                case MagicEffect_FieldIndex.CounterEffectCount:
+                case MagicEffect_FieldIndex.Unknown1:
+                case MagicEffect_FieldIndex.CastingLight:
+                case MagicEffect_FieldIndex.TaperWeight:
+                case MagicEffect_FieldIndex.HitShader:
+                case MagicEffect_FieldIndex.EnchantShader:
+                case MagicEffect_FieldIndex.MinimumSkillLevel:
+                case MagicEffect_FieldIndex.SpellmakingArea:
+                case MagicEffect_FieldIndex.SpellmakingCastingTime:
+                case MagicEffect_FieldIndex.TaperCurve:
+                case MagicEffect_FieldIndex.TaperDuration:
+                case MagicEffect_FieldIndex.SecondActorValueWeight:
+                case MagicEffect_FieldIndex.Archetype:
+                case MagicEffect_FieldIndex.Projectile:
+                case MagicEffect_FieldIndex.Explosion:
+                case MagicEffect_FieldIndex.CastType:
+                case MagicEffect_FieldIndex.TargetType:
+                case MagicEffect_FieldIndex.SecondActorValue:
+                case MagicEffect_FieldIndex.CastingArt:
+                case MagicEffect_FieldIndex.HitEffectArt:
+                case MagicEffect_FieldIndex.ImpactData:
+                case MagicEffect_FieldIndex.SkillUsageMultiplier:
+                case MagicEffect_FieldIndex.DualCastArt:
+                case MagicEffect_FieldIndex.DualCastScale:
+                case MagicEffect_FieldIndex.EnchantArt:
+                case MagicEffect_FieldIndex.Unknown2:
+                case MagicEffect_FieldIndex.Unknown3:
+                case MagicEffect_FieldIndex.EquipAbility:
+                case MagicEffect_FieldIndex.ImageSpaceModifier:
+                case MagicEffect_FieldIndex.PerkToApply:
+                case MagicEffect_FieldIndex.CastingSoundLevel:
+                case MagicEffect_FieldIndex.ScriptEffectAIScore:
+                case MagicEffect_FieldIndex.ScriptEffectAIDelayTime:
                 case MagicEffect_FieldIndex.CounterEffects:
                 case MagicEffect_FieldIndex.Sounds:
                 case MagicEffect_FieldIndex.MagicItemDescription:
                 case MagicEffect_FieldIndex.Conditions:
+                case MagicEffect_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1696,8 +3176,80 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "MenuDisplayObject";
                 case MagicEffect_FieldIndex.Keywords:
                     return "Keywords";
-                case MagicEffect_FieldIndex.Data:
-                    return "Data";
+                case MagicEffect_FieldIndex.Flags:
+                    return "Flags";
+                case MagicEffect_FieldIndex.BaseCost:
+                    return "BaseCost";
+                case MagicEffect_FieldIndex.MagicSkill:
+                    return "MagicSkill";
+                case MagicEffect_FieldIndex.ResistValue:
+                    return "ResistValue";
+                case MagicEffect_FieldIndex.CounterEffectCount:
+                    return "CounterEffectCount";
+                case MagicEffect_FieldIndex.Unknown1:
+                    return "Unknown1";
+                case MagicEffect_FieldIndex.CastingLight:
+                    return "CastingLight";
+                case MagicEffect_FieldIndex.TaperWeight:
+                    return "TaperWeight";
+                case MagicEffect_FieldIndex.HitShader:
+                    return "HitShader";
+                case MagicEffect_FieldIndex.EnchantShader:
+                    return "EnchantShader";
+                case MagicEffect_FieldIndex.MinimumSkillLevel:
+                    return "MinimumSkillLevel";
+                case MagicEffect_FieldIndex.SpellmakingArea:
+                    return "SpellmakingArea";
+                case MagicEffect_FieldIndex.SpellmakingCastingTime:
+                    return "SpellmakingCastingTime";
+                case MagicEffect_FieldIndex.TaperCurve:
+                    return "TaperCurve";
+                case MagicEffect_FieldIndex.TaperDuration:
+                    return "TaperDuration";
+                case MagicEffect_FieldIndex.SecondActorValueWeight:
+                    return "SecondActorValueWeight";
+                case MagicEffect_FieldIndex.Archetype:
+                    return "Archetype";
+                case MagicEffect_FieldIndex.Projectile:
+                    return "Projectile";
+                case MagicEffect_FieldIndex.Explosion:
+                    return "Explosion";
+                case MagicEffect_FieldIndex.CastType:
+                    return "CastType";
+                case MagicEffect_FieldIndex.TargetType:
+                    return "TargetType";
+                case MagicEffect_FieldIndex.SecondActorValue:
+                    return "SecondActorValue";
+                case MagicEffect_FieldIndex.CastingArt:
+                    return "CastingArt";
+                case MagicEffect_FieldIndex.HitEffectArt:
+                    return "HitEffectArt";
+                case MagicEffect_FieldIndex.ImpactData:
+                    return "ImpactData";
+                case MagicEffect_FieldIndex.SkillUsageMultiplier:
+                    return "SkillUsageMultiplier";
+                case MagicEffect_FieldIndex.DualCastArt:
+                    return "DualCastArt";
+                case MagicEffect_FieldIndex.DualCastScale:
+                    return "DualCastScale";
+                case MagicEffect_FieldIndex.EnchantArt:
+                    return "EnchantArt";
+                case MagicEffect_FieldIndex.Unknown2:
+                    return "Unknown2";
+                case MagicEffect_FieldIndex.Unknown3:
+                    return "Unknown3";
+                case MagicEffect_FieldIndex.EquipAbility:
+                    return "EquipAbility";
+                case MagicEffect_FieldIndex.ImageSpaceModifier:
+                    return "ImageSpaceModifier";
+                case MagicEffect_FieldIndex.PerkToApply:
+                    return "PerkToApply";
+                case MagicEffect_FieldIndex.CastingSoundLevel:
+                    return "CastingSoundLevel";
+                case MagicEffect_FieldIndex.ScriptEffectAIScore:
+                    return "ScriptEffectAIScore";
+                case MagicEffect_FieldIndex.ScriptEffectAIDelayTime:
+                    return "ScriptEffectAIDelayTime";
                 case MagicEffect_FieldIndex.CounterEffects:
                     return "CounterEffects";
                 case MagicEffect_FieldIndex.Sounds:
@@ -1706,6 +3258,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "MagicItemDescription";
                 case MagicEffect_FieldIndex.Conditions:
                     return "Conditions";
+                case MagicEffect_FieldIndex.DATADataTypeState:
+                    return "DATADataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -1720,11 +3274,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MagicEffect_FieldIndex.Name:
                 case MagicEffect_FieldIndex.MenuDisplayObject:
                 case MagicEffect_FieldIndex.Keywords:
-                case MagicEffect_FieldIndex.Data:
+                case MagicEffect_FieldIndex.Flags:
+                case MagicEffect_FieldIndex.BaseCost:
+                case MagicEffect_FieldIndex.MagicSkill:
+                case MagicEffect_FieldIndex.ResistValue:
+                case MagicEffect_FieldIndex.CounterEffectCount:
+                case MagicEffect_FieldIndex.Unknown1:
+                case MagicEffect_FieldIndex.CastingLight:
+                case MagicEffect_FieldIndex.TaperWeight:
+                case MagicEffect_FieldIndex.HitShader:
+                case MagicEffect_FieldIndex.EnchantShader:
+                case MagicEffect_FieldIndex.MinimumSkillLevel:
+                case MagicEffect_FieldIndex.SpellmakingArea:
+                case MagicEffect_FieldIndex.SpellmakingCastingTime:
+                case MagicEffect_FieldIndex.TaperCurve:
+                case MagicEffect_FieldIndex.TaperDuration:
+                case MagicEffect_FieldIndex.SecondActorValueWeight:
+                case MagicEffect_FieldIndex.Archetype:
+                case MagicEffect_FieldIndex.Projectile:
+                case MagicEffect_FieldIndex.Explosion:
+                case MagicEffect_FieldIndex.CastType:
+                case MagicEffect_FieldIndex.TargetType:
+                case MagicEffect_FieldIndex.SecondActorValue:
+                case MagicEffect_FieldIndex.CastingArt:
+                case MagicEffect_FieldIndex.HitEffectArt:
+                case MagicEffect_FieldIndex.ImpactData:
+                case MagicEffect_FieldIndex.SkillUsageMultiplier:
+                case MagicEffect_FieldIndex.DualCastArt:
+                case MagicEffect_FieldIndex.DualCastScale:
+                case MagicEffect_FieldIndex.EnchantArt:
+                case MagicEffect_FieldIndex.Unknown2:
+                case MagicEffect_FieldIndex.Unknown3:
+                case MagicEffect_FieldIndex.EquipAbility:
+                case MagicEffect_FieldIndex.ImageSpaceModifier:
+                case MagicEffect_FieldIndex.PerkToApply:
+                case MagicEffect_FieldIndex.CastingSoundLevel:
+                case MagicEffect_FieldIndex.ScriptEffectAIScore:
+                case MagicEffect_FieldIndex.ScriptEffectAIDelayTime:
                 case MagicEffect_FieldIndex.CounterEffects:
                 case MagicEffect_FieldIndex.Sounds:
                 case MagicEffect_FieldIndex.MagicItemDescription:
                 case MagicEffect_FieldIndex.Conditions:
+                case MagicEffect_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
@@ -1740,11 +3331,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MagicEffect_FieldIndex.Name:
                 case MagicEffect_FieldIndex.MenuDisplayObject:
                 case MagicEffect_FieldIndex.Keywords:
-                case MagicEffect_FieldIndex.Data:
+                case MagicEffect_FieldIndex.Flags:
+                case MagicEffect_FieldIndex.BaseCost:
+                case MagicEffect_FieldIndex.MagicSkill:
+                case MagicEffect_FieldIndex.ResistValue:
+                case MagicEffect_FieldIndex.CounterEffectCount:
+                case MagicEffect_FieldIndex.Unknown1:
+                case MagicEffect_FieldIndex.CastingLight:
+                case MagicEffect_FieldIndex.TaperWeight:
+                case MagicEffect_FieldIndex.HitShader:
+                case MagicEffect_FieldIndex.EnchantShader:
+                case MagicEffect_FieldIndex.MinimumSkillLevel:
+                case MagicEffect_FieldIndex.SpellmakingArea:
+                case MagicEffect_FieldIndex.SpellmakingCastingTime:
+                case MagicEffect_FieldIndex.TaperCurve:
+                case MagicEffect_FieldIndex.TaperDuration:
+                case MagicEffect_FieldIndex.SecondActorValueWeight:
+                case MagicEffect_FieldIndex.Archetype:
+                case MagicEffect_FieldIndex.Projectile:
+                case MagicEffect_FieldIndex.Explosion:
+                case MagicEffect_FieldIndex.CastType:
+                case MagicEffect_FieldIndex.TargetType:
+                case MagicEffect_FieldIndex.SecondActorValue:
+                case MagicEffect_FieldIndex.CastingArt:
+                case MagicEffect_FieldIndex.HitEffectArt:
+                case MagicEffect_FieldIndex.ImpactData:
+                case MagicEffect_FieldIndex.SkillUsageMultiplier:
+                case MagicEffect_FieldIndex.DualCastArt:
+                case MagicEffect_FieldIndex.DualCastScale:
+                case MagicEffect_FieldIndex.EnchantArt:
+                case MagicEffect_FieldIndex.Unknown2:
+                case MagicEffect_FieldIndex.Unknown3:
+                case MagicEffect_FieldIndex.EquipAbility:
+                case MagicEffect_FieldIndex.ImageSpaceModifier:
+                case MagicEffect_FieldIndex.PerkToApply:
+                case MagicEffect_FieldIndex.CastingSoundLevel:
+                case MagicEffect_FieldIndex.ScriptEffectAIScore:
+                case MagicEffect_FieldIndex.ScriptEffectAIDelayTime:
                 case MagicEffect_FieldIndex.CounterEffects:
                 case MagicEffect_FieldIndex.Sounds:
                 case MagicEffect_FieldIndex.MagicItemDescription:
                 case MagicEffect_FieldIndex.Conditions:
+                case MagicEffect_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
@@ -1764,8 +3392,80 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(FormLinkNullable<Static>);
                 case MagicEffect_FieldIndex.Keywords:
                     return typeof(ExtendedList<IFormLink<Keyword>>);
-                case MagicEffect_FieldIndex.Data:
-                    return typeof(MagicEffectData);
+                case MagicEffect_FieldIndex.Flags:
+                    return typeof(MagicEffect.Flag);
+                case MagicEffect_FieldIndex.BaseCost:
+                    return typeof(Single);
+                case MagicEffect_FieldIndex.MagicSkill:
+                    return typeof(ActorValueExtended);
+                case MagicEffect_FieldIndex.ResistValue:
+                    return typeof(ActorValueExtended);
+                case MagicEffect_FieldIndex.CounterEffectCount:
+                    return typeof(UInt16);
+                case MagicEffect_FieldIndex.Unknown1:
+                    return typeof(UInt16);
+                case MagicEffect_FieldIndex.CastingLight:
+                    return typeof(FormLink<Light>);
+                case MagicEffect_FieldIndex.TaperWeight:
+                    return typeof(Single);
+                case MagicEffect_FieldIndex.HitShader:
+                    return typeof(FormLink<EffectShader>);
+                case MagicEffect_FieldIndex.EnchantShader:
+                    return typeof(FormLink<EffectShader>);
+                case MagicEffect_FieldIndex.MinimumSkillLevel:
+                    return typeof(UInt32);
+                case MagicEffect_FieldIndex.SpellmakingArea:
+                    return typeof(UInt32);
+                case MagicEffect_FieldIndex.SpellmakingCastingTime:
+                    return typeof(Single);
+                case MagicEffect_FieldIndex.TaperCurve:
+                    return typeof(Single);
+                case MagicEffect_FieldIndex.TaperDuration:
+                    return typeof(Single);
+                case MagicEffect_FieldIndex.SecondActorValueWeight:
+                    return typeof(Single);
+                case MagicEffect_FieldIndex.Archetype:
+                    return typeof(MagicEffectArchetype);
+                case MagicEffect_FieldIndex.Projectile:
+                    return typeof(FormLink<Projectile>);
+                case MagicEffect_FieldIndex.Explosion:
+                    return typeof(FormLink<Explosion>);
+                case MagicEffect_FieldIndex.CastType:
+                    return typeof(CastType);
+                case MagicEffect_FieldIndex.TargetType:
+                    return typeof(TargetType);
+                case MagicEffect_FieldIndex.SecondActorValue:
+                    return typeof(ActorValueExtended);
+                case MagicEffect_FieldIndex.CastingArt:
+                    return typeof(FormLink<ArtObject>);
+                case MagicEffect_FieldIndex.HitEffectArt:
+                    return typeof(FormLink<ArtObject>);
+                case MagicEffect_FieldIndex.ImpactData:
+                    return typeof(FormLink<ImpactDataSet>);
+                case MagicEffect_FieldIndex.SkillUsageMultiplier:
+                    return typeof(Single);
+                case MagicEffect_FieldIndex.DualCastArt:
+                    return typeof(FormLink<DualCastData>);
+                case MagicEffect_FieldIndex.DualCastScale:
+                    return typeof(Single);
+                case MagicEffect_FieldIndex.EnchantArt:
+                    return typeof(FormLink<ArtObject>);
+                case MagicEffect_FieldIndex.Unknown2:
+                    return typeof(FormLink<SkyrimMajorRecord>);
+                case MagicEffect_FieldIndex.Unknown3:
+                    return typeof(FormLink<SkyrimMajorRecord>);
+                case MagicEffect_FieldIndex.EquipAbility:
+                    return typeof(FormLink<Spell>);
+                case MagicEffect_FieldIndex.ImageSpaceModifier:
+                    return typeof(FormLink<ImageSpaceAdapter>);
+                case MagicEffect_FieldIndex.PerkToApply:
+                    return typeof(FormLink<Perk>);
+                case MagicEffect_FieldIndex.CastingSoundLevel:
+                    return typeof(SoundLevel);
+                case MagicEffect_FieldIndex.ScriptEffectAIScore:
+                    return typeof(Single);
+                case MagicEffect_FieldIndex.ScriptEffectAIDelayTime:
+                    return typeof(Single);
                 case MagicEffect_FieldIndex.CounterEffects:
                     return typeof(ExtendedList<IFormLink<MagicEffect>>);
                 case MagicEffect_FieldIndex.Sounds:
@@ -1774,6 +3474,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(String);
                 case MagicEffect_FieldIndex.Conditions:
                     return typeof(ExtendedList<Condition>);
+                case MagicEffect_FieldIndex.DATADataTypeState:
+                    return typeof(MagicEffect.DATADataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1793,7 +3495,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
         public static readonly RecordType TriggeringRecordType = MGEF_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 9;
+        public const int NumTypedFields = 8;
         public static readonly Type BinaryWriteTranslation = typeof(MagicEffectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1840,11 +3542,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Name = default;
             item.MenuDisplayObject = null;
             item.Keywords = null;
-            item.Data.Clear();
+            item.Flags = default;
+            item.BaseCost = default;
+            item.MagicSkill = MagicEffect._MagicSkill_Default;
+            item.ResistValue = MagicEffect._ResistValue_Default;
+            item.CounterEffectCount = default;
+            item.Unknown1 = default;
+            item.CastingLight = new FormLink<Light>(FormKey.Null);
+            item.TaperWeight = default;
+            item.HitShader = new FormLink<EffectShader>(FormKey.Null);
+            item.EnchantShader = new FormLink<EffectShader>(FormKey.Null);
+            item.MinimumSkillLevel = default;
+            item.SpellmakingArea = default;
+            item.SpellmakingCastingTime = default;
+            item.TaperCurve = default;
+            item.TaperDuration = default;
+            item.SecondActorValueWeight = default;
+            item.Archetype.Clear();
+            item.Projectile = new FormLink<Projectile>(FormKey.Null);
+            item.Explosion = new FormLink<Explosion>(FormKey.Null);
+            item.CastType = default;
+            item.TargetType = default;
+            item.SecondActorValue = MagicEffect._SecondActorValue_Default;
+            item.CastingArt = new FormLink<ArtObject>(FormKey.Null);
+            item.HitEffectArt = new FormLink<ArtObject>(FormKey.Null);
+            item.ImpactData = new FormLink<ImpactDataSet>(FormKey.Null);
+            item.SkillUsageMultiplier = default;
+            item.DualCastArt = new FormLink<DualCastData>(FormKey.Null);
+            item.DualCastScale = default;
+            item.EnchantArt = new FormLink<ArtObject>(FormKey.Null);
+            item.Unknown2 = new FormLink<SkyrimMajorRecord>(FormKey.Null);
+            item.Unknown3 = new FormLink<SkyrimMajorRecord>(FormKey.Null);
+            item.EquipAbility = new FormLink<Spell>(FormKey.Null);
+            item.ImageSpaceModifier = new FormLink<ImageSpaceAdapter>(FormKey.Null);
+            item.PerkToApply = new FormLink<Perk>(FormKey.Null);
+            item.CastingSoundLevel = default;
+            item.ScriptEffectAIScore = default;
+            item.ScriptEffectAIDelayTime = default;
             item.CounterEffects = null;
             item.Sounds = null;
             item.MagicItemDescription = default;
             item.Conditions.Clear();
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1995,8 +3734,81 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    item.Data = Mutagen.Bethesda.Skyrim.MagicEffectData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Data);
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.Flags = EnumBinaryTranslation<MagicEffect.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.BaseCost = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    MagicEffectBinaryCreateTranslation.FillBinaryAssociatedItemCustomPublic(
+                        frame: dataFrame,
+                        item: item);
+                    item.MagicSkill = EnumBinaryTranslation<ActorValueExtended>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.ResistValue = EnumBinaryTranslation<ActorValueExtended>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.CounterEffectCount = dataFrame.ReadUInt16();
+                    item.Unknown1 = dataFrame.ReadUInt16();
+                    item.CastingLight = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    item.TaperWeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.HitShader = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    item.EnchantShader = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    item.MinimumSkillLevel = dataFrame.ReadUInt32();
+                    item.SpellmakingArea = dataFrame.ReadUInt32();
+                    item.SpellmakingCastingTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.TaperCurve = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.TaperDuration = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.SecondActorValueWeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    MagicEffectBinaryCreateTranslation.FillBinaryArchetypeCustomPublic(
+                        frame: dataFrame,
+                        item: item);
+                    item.Projectile = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    item.Explosion = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    item.CastType = EnumBinaryTranslation<CastType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.TargetType = EnumBinaryTranslation<TargetType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.SecondActorValue = EnumBinaryTranslation<ActorValueExtended>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.CastingArt = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    item.HitEffectArt = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    item.ImpactData = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    item.SkillUsageMultiplier = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.DualCastArt = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    item.DualCastScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.EnchantArt = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    item.Unknown2 = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    item.Unknown3 = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    item.EquipAbility = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    item.ImageSpaceModifier = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    item.PerkToApply = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    item.CastingSoundLevel = EnumBinaryTranslation<SoundLevel>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.ScriptEffectAIScore = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.ScriptEffectAIDelayTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.ScriptEffectAIDelayTime);
                 }
                 case 0x45435345: // ESCE
                 {
@@ -2124,7 +3936,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.Data = MaskItemExt.Factory(item.Data.GetEqualsMask(rhs.Data, include), include);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.BaseCost = item.BaseCost.EqualsWithin(rhs.BaseCost);
+            ret.MagicSkill = item.MagicSkill == rhs.MagicSkill;
+            ret.ResistValue = item.ResistValue == rhs.ResistValue;
+            ret.CounterEffectCount = item.CounterEffectCount == rhs.CounterEffectCount;
+            ret.Unknown1 = item.Unknown1 == rhs.Unknown1;
+            ret.CastingLight = object.Equals(item.CastingLight, rhs.CastingLight);
+            ret.TaperWeight = item.TaperWeight.EqualsWithin(rhs.TaperWeight);
+            ret.HitShader = object.Equals(item.HitShader, rhs.HitShader);
+            ret.EnchantShader = object.Equals(item.EnchantShader, rhs.EnchantShader);
+            ret.MinimumSkillLevel = item.MinimumSkillLevel == rhs.MinimumSkillLevel;
+            ret.SpellmakingArea = item.SpellmakingArea == rhs.SpellmakingArea;
+            ret.SpellmakingCastingTime = item.SpellmakingCastingTime.EqualsWithin(rhs.SpellmakingCastingTime);
+            ret.TaperCurve = item.TaperCurve.EqualsWithin(rhs.TaperCurve);
+            ret.TaperDuration = item.TaperDuration.EqualsWithin(rhs.TaperDuration);
+            ret.SecondActorValueWeight = item.SecondActorValueWeight.EqualsWithin(rhs.SecondActorValueWeight);
+            ret.Archetype = MaskItemExt.Factory(item.Archetype.GetEqualsMask(rhs.Archetype, include), include);
+            ret.Projectile = object.Equals(item.Projectile, rhs.Projectile);
+            ret.Explosion = object.Equals(item.Explosion, rhs.Explosion);
+            ret.CastType = item.CastType == rhs.CastType;
+            ret.TargetType = item.TargetType == rhs.TargetType;
+            ret.SecondActorValue = item.SecondActorValue == rhs.SecondActorValue;
+            ret.CastingArt = object.Equals(item.CastingArt, rhs.CastingArt);
+            ret.HitEffectArt = object.Equals(item.HitEffectArt, rhs.HitEffectArt);
+            ret.ImpactData = object.Equals(item.ImpactData, rhs.ImpactData);
+            ret.SkillUsageMultiplier = item.SkillUsageMultiplier.EqualsWithin(rhs.SkillUsageMultiplier);
+            ret.DualCastArt = object.Equals(item.DualCastArt, rhs.DualCastArt);
+            ret.DualCastScale = item.DualCastScale.EqualsWithin(rhs.DualCastScale);
+            ret.EnchantArt = object.Equals(item.EnchantArt, rhs.EnchantArt);
+            ret.Unknown2 = object.Equals(item.Unknown2, rhs.Unknown2);
+            ret.Unknown3 = object.Equals(item.Unknown3, rhs.Unknown3);
+            ret.EquipAbility = object.Equals(item.EquipAbility, rhs.EquipAbility);
+            ret.ImageSpaceModifier = object.Equals(item.ImageSpaceModifier, rhs.ImageSpaceModifier);
+            ret.PerkToApply = object.Equals(item.PerkToApply, rhs.PerkToApply);
+            ret.CastingSoundLevel = item.CastingSoundLevel == rhs.CastingSoundLevel;
+            ret.ScriptEffectAIScore = item.ScriptEffectAIScore.EqualsWithin(rhs.ScriptEffectAIScore);
+            ret.ScriptEffectAIDelayTime = item.ScriptEffectAIDelayTime.EqualsWithin(rhs.ScriptEffectAIDelayTime);
             ret.CounterEffects = item.CounterEffects.CollectionEqualsHelper(
                 rhs.CounterEffects,
                 (l, r) => object.Equals(l, r),
@@ -2138,6 +3986,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2223,9 +4072,153 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.Data?.Overall ?? true)
+            if (printMask?.Flags ?? true)
             {
-                item.Data?.ToString(fg, "Data");
+                fg.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.BaseCost ?? true)
+            {
+                fg.AppendItem(item.BaseCost, "BaseCost");
+            }
+            if (printMask?.MagicSkill ?? true)
+            {
+                fg.AppendItem(item.MagicSkill, "MagicSkill");
+            }
+            if (printMask?.ResistValue ?? true)
+            {
+                fg.AppendItem(item.ResistValue, "ResistValue");
+            }
+            if (printMask?.CounterEffectCount ?? true)
+            {
+                fg.AppendItem(item.CounterEffectCount, "CounterEffectCount");
+            }
+            if (printMask?.Unknown1 ?? true)
+            {
+                fg.AppendItem(item.Unknown1, "Unknown1");
+            }
+            if (printMask?.CastingLight ?? true)
+            {
+                fg.AppendItem(item.CastingLight, "CastingLight");
+            }
+            if (printMask?.TaperWeight ?? true)
+            {
+                fg.AppendItem(item.TaperWeight, "TaperWeight");
+            }
+            if (printMask?.HitShader ?? true)
+            {
+                fg.AppendItem(item.HitShader, "HitShader");
+            }
+            if (printMask?.EnchantShader ?? true)
+            {
+                fg.AppendItem(item.EnchantShader, "EnchantShader");
+            }
+            if (printMask?.MinimumSkillLevel ?? true)
+            {
+                fg.AppendItem(item.MinimumSkillLevel, "MinimumSkillLevel");
+            }
+            if (printMask?.SpellmakingArea ?? true)
+            {
+                fg.AppendItem(item.SpellmakingArea, "SpellmakingArea");
+            }
+            if (printMask?.SpellmakingCastingTime ?? true)
+            {
+                fg.AppendItem(item.SpellmakingCastingTime, "SpellmakingCastingTime");
+            }
+            if (printMask?.TaperCurve ?? true)
+            {
+                fg.AppendItem(item.TaperCurve, "TaperCurve");
+            }
+            if (printMask?.TaperDuration ?? true)
+            {
+                fg.AppendItem(item.TaperDuration, "TaperDuration");
+            }
+            if (printMask?.SecondActorValueWeight ?? true)
+            {
+                fg.AppendItem(item.SecondActorValueWeight, "SecondActorValueWeight");
+            }
+            if (printMask?.Archetype?.Overall ?? true)
+            {
+                item.Archetype?.ToString(fg, "Archetype");
+            }
+            if (printMask?.Projectile ?? true)
+            {
+                fg.AppendItem(item.Projectile, "Projectile");
+            }
+            if (printMask?.Explosion ?? true)
+            {
+                fg.AppendItem(item.Explosion, "Explosion");
+            }
+            if (printMask?.CastType ?? true)
+            {
+                fg.AppendItem(item.CastType, "CastType");
+            }
+            if (printMask?.TargetType ?? true)
+            {
+                fg.AppendItem(item.TargetType, "TargetType");
+            }
+            if (printMask?.SecondActorValue ?? true)
+            {
+                fg.AppendItem(item.SecondActorValue, "SecondActorValue");
+            }
+            if (printMask?.CastingArt ?? true)
+            {
+                fg.AppendItem(item.CastingArt, "CastingArt");
+            }
+            if (printMask?.HitEffectArt ?? true)
+            {
+                fg.AppendItem(item.HitEffectArt, "HitEffectArt");
+            }
+            if (printMask?.ImpactData ?? true)
+            {
+                fg.AppendItem(item.ImpactData, "ImpactData");
+            }
+            if (printMask?.SkillUsageMultiplier ?? true)
+            {
+                fg.AppendItem(item.SkillUsageMultiplier, "SkillUsageMultiplier");
+            }
+            if (printMask?.DualCastArt ?? true)
+            {
+                fg.AppendItem(item.DualCastArt, "DualCastArt");
+            }
+            if (printMask?.DualCastScale ?? true)
+            {
+                fg.AppendItem(item.DualCastScale, "DualCastScale");
+            }
+            if (printMask?.EnchantArt ?? true)
+            {
+                fg.AppendItem(item.EnchantArt, "EnchantArt");
+            }
+            if (printMask?.Unknown2 ?? true)
+            {
+                fg.AppendItem(item.Unknown2, "Unknown2");
+            }
+            if (printMask?.Unknown3 ?? true)
+            {
+                fg.AppendItem(item.Unknown3, "Unknown3");
+            }
+            if (printMask?.EquipAbility ?? true)
+            {
+                fg.AppendItem(item.EquipAbility, "EquipAbility");
+            }
+            if (printMask?.ImageSpaceModifier ?? true)
+            {
+                fg.AppendItem(item.ImageSpaceModifier, "ImageSpaceModifier");
+            }
+            if (printMask?.PerkToApply ?? true)
+            {
+                fg.AppendItem(item.PerkToApply, "PerkToApply");
+            }
+            if (printMask?.CastingSoundLevel ?? true)
+            {
+                fg.AppendItem(item.CastingSoundLevel, "CastingSoundLevel");
+            }
+            if (printMask?.ScriptEffectAIScore ?? true)
+            {
+                fg.AppendItem(item.ScriptEffectAIScore, "ScriptEffectAIScore");
+            }
+            if (printMask?.ScriptEffectAIDelayTime ?? true)
+            {
+                fg.AppendItem(item.ScriptEffectAIDelayTime, "ScriptEffectAIDelayTime");
             }
             if ((printMask?.CounterEffects?.Overall ?? true)
                 && item.CounterEffects.TryGet(out var CounterEffectsItem))
@@ -2288,6 +4281,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+            }
         }
         
         public bool HasBeenSet(
@@ -2316,7 +4313,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Name = (item.Name != null);
             mask.MenuDisplayObject = (item.MenuDisplayObject.FormKey != null);
             mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
-            mask.Data = new MaskItem<bool, MagicEffectData.Mask<bool>?>(true, item.Data?.GetHasBeenSetMask());
+            mask.Flags = true;
+            mask.BaseCost = true;
+            mask.MagicSkill = true;
+            mask.ResistValue = true;
+            mask.CounterEffectCount = true;
+            mask.Unknown1 = true;
+            mask.CastingLight = true;
+            mask.TaperWeight = true;
+            mask.HitShader = true;
+            mask.EnchantShader = true;
+            mask.MinimumSkillLevel = true;
+            mask.SpellmakingArea = true;
+            mask.SpellmakingCastingTime = true;
+            mask.TaperCurve = true;
+            mask.TaperDuration = true;
+            mask.SecondActorValueWeight = true;
+            mask.Archetype = new MaskItem<bool, MagicEffectArchetype.Mask<bool>?>(true, item.Archetype?.GetHasBeenSetMask());
+            mask.Projectile = true;
+            mask.Explosion = true;
+            mask.CastType = true;
+            mask.TargetType = true;
+            mask.SecondActorValue = true;
+            mask.CastingArt = true;
+            mask.HitEffectArt = true;
+            mask.ImpactData = true;
+            mask.SkillUsageMultiplier = true;
+            mask.DualCastArt = true;
+            mask.DualCastScale = true;
+            mask.EnchantArt = true;
+            mask.Unknown2 = true;
+            mask.Unknown3 = true;
+            mask.EquipAbility = true;
+            mask.ImageSpaceModifier = true;
+            mask.PerkToApply = true;
+            mask.CastingSoundLevel = true;
+            mask.ScriptEffectAIScore = true;
+            mask.ScriptEffectAIDelayTime = true;
             mask.CounterEffects = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.CounterEffects != null), default);
             if (item.Sounds.TryGet(out var SoundsItem))
             {
@@ -2325,6 +4358,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.MagicItemDescription = (item.MagicItemDescription != null);
             var ConditionsItem = item.Conditions;
             mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -2380,11 +4414,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!lhs.MenuDisplayObject.Equals(rhs.MenuDisplayObject)) return false;
             if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (!lhs.BaseCost.EqualsWithin(rhs.BaseCost)) return false;
+            if (lhs.MagicSkill != rhs.MagicSkill) return false;
+            if (lhs.ResistValue != rhs.ResistValue) return false;
+            if (lhs.CounterEffectCount != rhs.CounterEffectCount) return false;
+            if (lhs.Unknown1 != rhs.Unknown1) return false;
+            if (!lhs.CastingLight.Equals(rhs.CastingLight)) return false;
+            if (!lhs.TaperWeight.EqualsWithin(rhs.TaperWeight)) return false;
+            if (!lhs.HitShader.Equals(rhs.HitShader)) return false;
+            if (!lhs.EnchantShader.Equals(rhs.EnchantShader)) return false;
+            if (lhs.MinimumSkillLevel != rhs.MinimumSkillLevel) return false;
+            if (lhs.SpellmakingArea != rhs.SpellmakingArea) return false;
+            if (!lhs.SpellmakingCastingTime.EqualsWithin(rhs.SpellmakingCastingTime)) return false;
+            if (!lhs.TaperCurve.EqualsWithin(rhs.TaperCurve)) return false;
+            if (!lhs.TaperDuration.EqualsWithin(rhs.TaperDuration)) return false;
+            if (!lhs.SecondActorValueWeight.EqualsWithin(rhs.SecondActorValueWeight)) return false;
+            if (!object.Equals(lhs.Archetype, rhs.Archetype)) return false;
+            if (!lhs.Projectile.Equals(rhs.Projectile)) return false;
+            if (!lhs.Explosion.Equals(rhs.Explosion)) return false;
+            if (lhs.CastType != rhs.CastType) return false;
+            if (lhs.TargetType != rhs.TargetType) return false;
+            if (lhs.SecondActorValue != rhs.SecondActorValue) return false;
+            if (!lhs.CastingArt.Equals(rhs.CastingArt)) return false;
+            if (!lhs.HitEffectArt.Equals(rhs.HitEffectArt)) return false;
+            if (!lhs.ImpactData.Equals(rhs.ImpactData)) return false;
+            if (!lhs.SkillUsageMultiplier.EqualsWithin(rhs.SkillUsageMultiplier)) return false;
+            if (!lhs.DualCastArt.Equals(rhs.DualCastArt)) return false;
+            if (!lhs.DualCastScale.EqualsWithin(rhs.DualCastScale)) return false;
+            if (!lhs.EnchantArt.Equals(rhs.EnchantArt)) return false;
+            if (!lhs.Unknown2.Equals(rhs.Unknown2)) return false;
+            if (!lhs.Unknown3.Equals(rhs.Unknown3)) return false;
+            if (!lhs.EquipAbility.Equals(rhs.EquipAbility)) return false;
+            if (!lhs.ImageSpaceModifier.Equals(rhs.ImageSpaceModifier)) return false;
+            if (!lhs.PerkToApply.Equals(rhs.PerkToApply)) return false;
+            if (lhs.CastingSoundLevel != rhs.CastingSoundLevel) return false;
+            if (!lhs.ScriptEffectAIScore.EqualsWithin(rhs.ScriptEffectAIScore)) return false;
+            if (!lhs.ScriptEffectAIDelayTime.EqualsWithin(rhs.ScriptEffectAIDelayTime)) return false;
             if (!lhs.CounterEffects.SequenceEqual(rhs.CounterEffects)) return false;
             if (!lhs.Sounds.SequenceEqual(rhs.Sounds)) return false;
             if (!string.Equals(lhs.MagicItemDescription, rhs.MagicItemDescription)) return false;
             if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
         
@@ -2422,7 +4493,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 hash.Add(MenuDisplayObjectitem);
             }
             hash.Add(item.Keywords);
-            hash.Add(item.Data);
+            hash.Add(item.Flags);
+            hash.Add(item.BaseCost);
+            hash.Add(item.MagicSkill);
+            hash.Add(item.ResistValue);
+            hash.Add(item.CounterEffectCount);
+            hash.Add(item.Unknown1);
+            hash.Add(item.CastingLight);
+            hash.Add(item.TaperWeight);
+            hash.Add(item.HitShader);
+            hash.Add(item.EnchantShader);
+            hash.Add(item.MinimumSkillLevel);
+            hash.Add(item.SpellmakingArea);
+            hash.Add(item.SpellmakingCastingTime);
+            hash.Add(item.TaperCurve);
+            hash.Add(item.TaperDuration);
+            hash.Add(item.SecondActorValueWeight);
+            hash.Add(item.Archetype);
+            hash.Add(item.Projectile);
+            hash.Add(item.Explosion);
+            hash.Add(item.CastType);
+            hash.Add(item.TargetType);
+            hash.Add(item.SecondActorValue);
+            hash.Add(item.CastingArt);
+            hash.Add(item.HitEffectArt);
+            hash.Add(item.ImpactData);
+            hash.Add(item.SkillUsageMultiplier);
+            hash.Add(item.DualCastArt);
+            hash.Add(item.DualCastScale);
+            hash.Add(item.EnchantArt);
+            hash.Add(item.Unknown2);
+            hash.Add(item.Unknown3);
+            hash.Add(item.EquipAbility);
+            hash.Add(item.ImageSpaceModifier);
+            hash.Add(item.PerkToApply);
+            hash.Add(item.CastingSoundLevel);
+            hash.Add(item.ScriptEffectAIScore);
+            hash.Add(item.ScriptEffectAIDelayTime);
             hash.Add(item.CounterEffects);
             hash.Add(item.Sounds);
             if (item.MagicItemDescription.TryGet(out var MagicItemDescriptionitem))
@@ -2430,6 +4537,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 hash.Add(MagicItemDescriptionitem);
             }
             hash.Add(item.Conditions);
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2477,10 +4585,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            foreach (var item in obj.Data.LinkFormKeys)
-            {
-                yield return item;
-            }
+            yield return obj.CastingLight.FormKey;
+            yield return obj.HitShader.FormKey;
+            yield return obj.EnchantShader.FormKey;
+            yield return obj.Projectile.FormKey;
+            yield return obj.Explosion.FormKey;
+            yield return obj.CastingArt.FormKey;
+            yield return obj.HitEffectArt.FormKey;
+            yield return obj.ImpactData.FormKey;
+            yield return obj.DualCastArt.FormKey;
+            yield return obj.EnchantArt.FormKey;
+            yield return obj.Unknown2.FormKey;
+            yield return obj.Unknown3.FormKey;
+            yield return obj.EquipAbility.FormKey;
+            yield return obj.ImageSpaceModifier.FormKey;
+            yield return obj.PerkToApply.FormKey;
             if (obj.CounterEffects.TryGet(out var CounterEffectsItem))
             {
                 foreach (var item in CounterEffectsItem.Select(f => f.FormKey))
@@ -2608,15 +4727,79 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Data) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Flags) ?? true))
             {
-                errorMask?.PushIndex((int)MagicEffect_FieldIndex.Data);
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.BaseCost) ?? true))
+            {
+                item.BaseCost = rhs.BaseCost;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MagicSkill) ?? true))
+            {
+                item.MagicSkill = rhs.MagicSkill;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ResistValue) ?? true))
+            {
+                item.ResistValue = rhs.ResistValue;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffectCount) ?? true))
+            {
+                item.CounterEffectCount = rhs.CounterEffectCount;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown1) ?? true))
+            {
+                item.Unknown1 = rhs.Unknown1;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingLight) ?? true))
+            {
+                item.CastingLight = rhs.CastingLight.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperWeight) ?? true))
+            {
+                item.TaperWeight = rhs.TaperWeight;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitShader) ?? true))
+            {
+                item.HitShader = rhs.HitShader.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EnchantShader) ?? true))
+            {
+                item.EnchantShader = rhs.EnchantShader.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MinimumSkillLevel) ?? true))
+            {
+                item.MinimumSkillLevel = rhs.MinimumSkillLevel;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SpellmakingArea) ?? true))
+            {
+                item.SpellmakingArea = rhs.SpellmakingArea;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SpellmakingCastingTime) ?? true))
+            {
+                item.SpellmakingCastingTime = rhs.SpellmakingCastingTime;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperCurve) ?? true))
+            {
+                item.TaperCurve = rhs.TaperCurve;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperDuration) ?? true))
+            {
+                item.TaperDuration = rhs.TaperDuration;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SecondActorValueWeight) ?? true))
+            {
+                item.SecondActorValueWeight = rhs.SecondActorValueWeight;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Archetype) ?? true))
+            {
+                errorMask?.PushIndex((int)MagicEffect_FieldIndex.Archetype);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Data) ?? true))
+                    if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Archetype) ?? true))
                     {
-                        item.Data = rhs.Data.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Data),
+                        item.Archetype = rhs.Archetype.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Archetype),
                             errorMask: errorMask);
                     }
                 }
@@ -2629,6 +4812,86 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Projectile) ?? true))
+            {
+                item.Projectile = rhs.Projectile.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Explosion) ?? true))
+            {
+                item.Explosion = rhs.Explosion.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastType) ?? true))
+            {
+                item.CastType = rhs.CastType;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.TargetType) ?? true))
+            {
+                item.TargetType = rhs.TargetType;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SecondActorValue) ?? true))
+            {
+                item.SecondActorValue = rhs.SecondActorValue;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingArt) ?? true))
+            {
+                item.CastingArt = rhs.CastingArt.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitEffectArt) ?? true))
+            {
+                item.HitEffectArt = rhs.HitEffectArt.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ImpactData) ?? true))
+            {
+                item.ImpactData = rhs.ImpactData.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SkillUsageMultiplier) ?? true))
+            {
+                item.SkillUsageMultiplier = rhs.SkillUsageMultiplier;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.DualCastArt) ?? true))
+            {
+                item.DualCastArt = rhs.DualCastArt.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.DualCastScale) ?? true))
+            {
+                item.DualCastScale = rhs.DualCastScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EnchantArt) ?? true))
+            {
+                item.EnchantArt = rhs.EnchantArt.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown2) ?? true))
+            {
+                item.Unknown2 = rhs.Unknown2.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown3) ?? true))
+            {
+                item.Unknown3 = rhs.Unknown3.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EquipAbility) ?? true))
+            {
+                item.EquipAbility = rhs.EquipAbility.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ImageSpaceModifier) ?? true))
+            {
+                item.ImageSpaceModifier = rhs.ImageSpaceModifier.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.PerkToApply) ?? true))
+            {
+                item.PerkToApply = rhs.PerkToApply.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingSoundLevel) ?? true))
+            {
+                item.CastingSoundLevel = rhs.CastingSoundLevel;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ScriptEffectAIScore) ?? true))
+            {
+                item.ScriptEffectAIScore = rhs.ScriptEffectAIScore;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ScriptEffectAIDelayTime) ?? true))
+            {
+                item.ScriptEffectAIDelayTime = rhs.ScriptEffectAIDelayTime;
             }
             if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffects) ?? true))
             {
@@ -2716,6 +4979,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
             }
         }
         
@@ -2912,16 +5179,340 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: listSubMask);
                     });
             }
-            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Data) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Flags) ?? true))
             {
-                var DataItem = item.Data;
-                ((MagicEffectDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
-                    item: DataItem,
+                EnumXmlTranslation<MagicEffect.Flag>.Instance.Write(
                     node: node,
-                    name: nameof(item.Data),
-                    fieldIndex: (int)MagicEffect_FieldIndex.Data,
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)MagicEffect_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.BaseCost) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.BaseCost),
+                    item: item.BaseCost,
+                    fieldIndex: (int)MagicEffect_FieldIndex.BaseCost,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MagicSkill) ?? true))
+            {
+                EnumXmlTranslation<ActorValueExtended>.Instance.Write(
+                    node: node,
+                    name: nameof(item.MagicSkill),
+                    item: item.MagicSkill,
+                    fieldIndex: (int)MagicEffect_FieldIndex.MagicSkill,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ResistValue) ?? true))
+            {
+                EnumXmlTranslation<ActorValueExtended>.Instance.Write(
+                    node: node,
+                    name: nameof(item.ResistValue),
+                    item: item.ResistValue,
+                    fieldIndex: (int)MagicEffect_FieldIndex.ResistValue,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffectCount) ?? true))
+            {
+                UInt16XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.CounterEffectCount),
+                    item: item.CounterEffectCount,
+                    fieldIndex: (int)MagicEffect_FieldIndex.CounterEffectCount,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown1) ?? true))
+            {
+                UInt16XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown1),
+                    item: item.Unknown1,
+                    fieldIndex: (int)MagicEffect_FieldIndex.Unknown1,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingLight) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.CastingLight),
+                    item: item.CastingLight.FormKey,
+                    fieldIndex: (int)MagicEffect_FieldIndex.CastingLight,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperWeight) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.TaperWeight),
+                    item: item.TaperWeight,
+                    fieldIndex: (int)MagicEffect_FieldIndex.TaperWeight,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitShader) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.HitShader),
+                    item: item.HitShader.FormKey,
+                    fieldIndex: (int)MagicEffect_FieldIndex.HitShader,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EnchantShader) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.EnchantShader),
+                    item: item.EnchantShader.FormKey,
+                    fieldIndex: (int)MagicEffect_FieldIndex.EnchantShader,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.MinimumSkillLevel) ?? true))
+            {
+                UInt32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.MinimumSkillLevel),
+                    item: item.MinimumSkillLevel,
+                    fieldIndex: (int)MagicEffect_FieldIndex.MinimumSkillLevel,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SpellmakingArea) ?? true))
+            {
+                UInt32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.SpellmakingArea),
+                    item: item.SpellmakingArea,
+                    fieldIndex: (int)MagicEffect_FieldIndex.SpellmakingArea,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SpellmakingCastingTime) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.SpellmakingCastingTime),
+                    item: item.SpellmakingCastingTime,
+                    fieldIndex: (int)MagicEffect_FieldIndex.SpellmakingCastingTime,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperCurve) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.TaperCurve),
+                    item: item.TaperCurve,
+                    fieldIndex: (int)MagicEffect_FieldIndex.TaperCurve,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.TaperDuration) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.TaperDuration),
+                    item: item.TaperDuration,
+                    fieldIndex: (int)MagicEffect_FieldIndex.TaperDuration,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SecondActorValueWeight) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.SecondActorValueWeight),
+                    item: item.SecondActorValueWeight,
+                    fieldIndex: (int)MagicEffect_FieldIndex.SecondActorValueWeight,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Archetype) ?? true))
+            {
+                var ArchetypeItem = item.Archetype;
+                ((MagicEffectArchetypeXmlWriteTranslation)((IXmlItem)ArchetypeItem).XmlWriteTranslator).Write(
+                    item: ArchetypeItem,
+                    node: node,
+                    name: nameof(item.Archetype),
+                    fieldIndex: (int)MagicEffect_FieldIndex.Archetype,
                     errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Data));
+                    translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Archetype));
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Projectile) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Projectile),
+                    item: item.Projectile.FormKey,
+                    fieldIndex: (int)MagicEffect_FieldIndex.Projectile,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Explosion) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Explosion),
+                    item: item.Explosion.FormKey,
+                    fieldIndex: (int)MagicEffect_FieldIndex.Explosion,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastType) ?? true))
+            {
+                EnumXmlTranslation<CastType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.CastType),
+                    item: item.CastType,
+                    fieldIndex: (int)MagicEffect_FieldIndex.CastType,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.TargetType) ?? true))
+            {
+                EnumXmlTranslation<TargetType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.TargetType),
+                    item: item.TargetType,
+                    fieldIndex: (int)MagicEffect_FieldIndex.TargetType,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SecondActorValue) ?? true))
+            {
+                EnumXmlTranslation<ActorValueExtended>.Instance.Write(
+                    node: node,
+                    name: nameof(item.SecondActorValue),
+                    item: item.SecondActorValue,
+                    fieldIndex: (int)MagicEffect_FieldIndex.SecondActorValue,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingArt) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.CastingArt),
+                    item: item.CastingArt.FormKey,
+                    fieldIndex: (int)MagicEffect_FieldIndex.CastingArt,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.HitEffectArt) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.HitEffectArt),
+                    item: item.HitEffectArt.FormKey,
+                    fieldIndex: (int)MagicEffect_FieldIndex.HitEffectArt,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ImpactData) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ImpactData),
+                    item: item.ImpactData.FormKey,
+                    fieldIndex: (int)MagicEffect_FieldIndex.ImpactData,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.SkillUsageMultiplier) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.SkillUsageMultiplier),
+                    item: item.SkillUsageMultiplier,
+                    fieldIndex: (int)MagicEffect_FieldIndex.SkillUsageMultiplier,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.DualCastArt) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DualCastArt),
+                    item: item.DualCastArt.FormKey,
+                    fieldIndex: (int)MagicEffect_FieldIndex.DualCastArt,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.DualCastScale) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DualCastScale),
+                    item: item.DualCastScale,
+                    fieldIndex: (int)MagicEffect_FieldIndex.DualCastScale,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EnchantArt) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.EnchantArt),
+                    item: item.EnchantArt.FormKey,
+                    fieldIndex: (int)MagicEffect_FieldIndex.EnchantArt,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown2) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown2),
+                    item: item.Unknown2.FormKey,
+                    fieldIndex: (int)MagicEffect_FieldIndex.Unknown2,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.Unknown3) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown3),
+                    item: item.Unknown3.FormKey,
+                    fieldIndex: (int)MagicEffect_FieldIndex.Unknown3,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.EquipAbility) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.EquipAbility),
+                    item: item.EquipAbility.FormKey,
+                    fieldIndex: (int)MagicEffect_FieldIndex.EquipAbility,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ImageSpaceModifier) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ImageSpaceModifier),
+                    item: item.ImageSpaceModifier.FormKey,
+                    fieldIndex: (int)MagicEffect_FieldIndex.ImageSpaceModifier,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.PerkToApply) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.PerkToApply),
+                    item: item.PerkToApply.FormKey,
+                    fieldIndex: (int)MagicEffect_FieldIndex.PerkToApply,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CastingSoundLevel) ?? true))
+            {
+                EnumXmlTranslation<SoundLevel>.Instance.Write(
+                    node: node,
+                    name: nameof(item.CastingSoundLevel),
+                    item: item.CastingSoundLevel,
+                    fieldIndex: (int)MagicEffect_FieldIndex.CastingSoundLevel,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ScriptEffectAIScore) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ScriptEffectAIScore),
+                    item: item.ScriptEffectAIScore,
+                    fieldIndex: (int)MagicEffect_FieldIndex.ScriptEffectAIScore,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.ScriptEffectAIDelayTime) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ScriptEffectAIDelayTime),
+                    item: item.ScriptEffectAIDelayTime,
+                    fieldIndex: (int)MagicEffect_FieldIndex.ScriptEffectAIDelayTime,
+                    errorMask: errorMask);
             }
             if ((item.CounterEffects != null)
                 && (translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.CounterEffects) ?? true))
@@ -2994,6 +5585,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 translationMask: listTranslMask);
                         }
                     });
+            }
+            if ((translationMask?.GetShouldTranslate((int)MagicEffect_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<MagicEffect.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)MagicEffect_FieldIndex.DATADataTypeState,
+                    errorMask: errorMask);
             }
         }
 
@@ -3185,14 +5785,662 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Data":
-                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.Data);
+                case "Flags":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.Flags);
                     try
                     {
-                        item.Data = LoquiXmlTranslation<MagicEffectData>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<MagicEffect.Flag>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BaseCost":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.BaseCost);
+                    try
+                    {
+                        item.BaseCost = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MagicSkill":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.MagicSkill);
+                    try
+                    {
+                        item.MagicSkill = EnumXmlTranslation<ActorValueExtended>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ResistValue":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.ResistValue);
+                    try
+                    {
+                        item.ResistValue = EnumXmlTranslation<ActorValueExtended>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CounterEffectCount":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.CounterEffectCount);
+                    try
+                    {
+                        item.CounterEffectCount = UInt16XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown1":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.Unknown1);
+                    try
+                    {
+                        item.Unknown1 = UInt16XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CastingLight":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.CastingLight);
+                    try
+                    {
+                        item.CastingLight = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "TaperWeight":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.TaperWeight);
+                    try
+                    {
+                        item.TaperWeight = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HitShader":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.HitShader);
+                    try
+                    {
+                        item.HitShader = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "EnchantShader":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.EnchantShader);
+                    try
+                    {
+                        item.EnchantShader = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MinimumSkillLevel":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.MinimumSkillLevel);
+                    try
+                    {
+                        item.MinimumSkillLevel = UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SpellmakingArea":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.SpellmakingArea);
+                    try
+                    {
+                        item.SpellmakingArea = UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SpellmakingCastingTime":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.SpellmakingCastingTime);
+                    try
+                    {
+                        item.SpellmakingCastingTime = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "TaperCurve":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.TaperCurve);
+                    try
+                    {
+                        item.TaperCurve = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "TaperDuration":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.TaperDuration);
+                    try
+                    {
+                        item.TaperDuration = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SecondActorValueWeight":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.SecondActorValueWeight);
+                    try
+                    {
+                        item.SecondActorValueWeight = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Archetype":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.Archetype);
+                    try
+                    {
+                        item.Archetype = LoquiXmlTranslation<MagicEffectArchetype>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Data));
+                            translationMask: translationMask?.GetSubCrystal((int)MagicEffect_FieldIndex.Archetype));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Projectile":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.Projectile);
+                    try
+                    {
+                        item.Projectile = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Explosion":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.Explosion);
+                    try
+                    {
+                        item.Explosion = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CastType":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.CastType);
+                    try
+                    {
+                        item.CastType = EnumXmlTranslation<CastType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "TargetType":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.TargetType);
+                    try
+                    {
+                        item.TargetType = EnumXmlTranslation<TargetType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SecondActorValue":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.SecondActorValue);
+                    try
+                    {
+                        item.SecondActorValue = EnumXmlTranslation<ActorValueExtended>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CastingArt":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.CastingArt);
+                    try
+                    {
+                        item.CastingArt = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HitEffectArt":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.HitEffectArt);
+                    try
+                    {
+                        item.HitEffectArt = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ImpactData":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.ImpactData);
+                    try
+                    {
+                        item.ImpactData = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SkillUsageMultiplier":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.SkillUsageMultiplier);
+                    try
+                    {
+                        item.SkillUsageMultiplier = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DualCastArt":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.DualCastArt);
+                    try
+                    {
+                        item.DualCastArt = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DualCastScale":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.DualCastScale);
+                    try
+                    {
+                        item.DualCastScale = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "EnchantArt":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.EnchantArt);
+                    try
+                    {
+                        item.EnchantArt = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown2":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.Unknown2);
+                    try
+                    {
+                        item.Unknown2 = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown3":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.Unknown3);
+                    try
+                    {
+                        item.Unknown3 = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "EquipAbility":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.EquipAbility);
+                    try
+                    {
+                        item.EquipAbility = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ImageSpaceModifier":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.ImageSpaceModifier);
+                    try
+                    {
+                        item.ImageSpaceModifier = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "PerkToApply":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.PerkToApply);
+                    try
+                    {
+                        item.PerkToApply = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CastingSoundLevel":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.CastingSoundLevel);
+                    try
+                    {
+                        item.CastingSoundLevel = EnumXmlTranslation<SoundLevel>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ScriptEffectAIScore":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.ScriptEffectAIScore);
+                    try
+                    {
+                        item.ScriptEffectAIScore = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ScriptEffectAIDelayTime":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.ScriptEffectAIDelayTime);
+                    try
+                    {
+                        item.ScriptEffectAIDelayTime = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3306,6 +6554,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "DATADataTypeState":
+                    errorMask?.PushIndex((int)MagicEffect_FieldIndex.DATADataTypeState);
+                    try
+                    {
+                        item.DATADataTypeState = EnumXmlTranslation<MagicEffect.DATADataType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -3392,6 +6658,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static MagicEffectBinaryWriteTranslation Instance = new MagicEffectBinaryWriteTranslation();
 
+        static partial void WriteBinaryAssociatedItemCustom(
+            MutagenWriter writer,
+            IMagicEffectGetter item);
+
+        public static void WriteBinaryAssociatedItem(
+            MutagenWriter writer,
+            IMagicEffectGetter item)
+        {
+            WriteBinaryAssociatedItemCustom(
+                writer: writer,
+                item: item);
+        }
+
+        static partial void WriteBinaryArchetypeCustom(
+            MutagenWriter writer,
+            IMagicEffectGetter item);
+
+        public static void WriteBinaryArchetype(
+            MutagenWriter writer,
+            IMagicEffectGetter item)
+        {
+            WriteBinaryArchetypeCustom(
+                writer: writer,
+                item: item);
+        }
+
         static partial void WriteBinaryConditionsCustom(
             MutagenWriter writer,
             IMagicEffectGetter item);
@@ -3403,6 +6695,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WriteBinaryConditionsCustom(
                 writer: writer,
                 item: item);
+        }
+
+        public static void WriteEmbedded(
+            IMagicEffectGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
         }
 
         public static void WriteRecordTypes(
@@ -3442,11 +6743,122 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         item: subItem);
                 });
-            var DataItem = item.Data;
-            ((MagicEffectDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
-                item: DataItem,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
+            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(MagicEffect_Registration.DATA_HEADER)))
+            {
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicEffect.Flag>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 4);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.BaseCost);
+                MagicEffectBinaryWriteTranslation.WriteBinaryAssociatedItem(
+                    writer: writer,
+                    item: item);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValueExtended>.Instance.Write(
+                    writer,
+                    item.MagicSkill,
+                    length: 4);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValueExtended>.Instance.Write(
+                    writer,
+                    item.ResistValue,
+                    length: 4);
+                writer.Write(item.CounterEffectCount);
+                writer.Write(item.Unknown1);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.CastingLight);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.TaperWeight);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.HitShader);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.EnchantShader);
+                writer.Write(item.MinimumSkillLevel);
+                writer.Write(item.SpellmakingArea);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.SpellmakingCastingTime);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.TaperCurve);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.TaperDuration);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.SecondActorValueWeight);
+                MagicEffectBinaryWriteTranslation.WriteBinaryArchetype(
+                    writer: writer,
+                    item: item);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Projectile);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Explosion);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<CastType>.Instance.Write(
+                    writer,
+                    item.CastType,
+                    length: 4);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<TargetType>.Instance.Write(
+                    writer,
+                    item.TargetType,
+                    length: 4);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValueExtended>.Instance.Write(
+                    writer,
+                    item.SecondActorValue,
+                    length: 4);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.CastingArt);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.HitEffectArt);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ImpactData);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.SkillUsageMultiplier);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.DualCastArt);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.DualCastScale);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.EnchantArt);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Unknown2);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Unknown3);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.EquipAbility);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ImageSpaceModifier);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.PerkToApply);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoundLevel>.Instance.Write(
+                    writer,
+                    item.CastingSoundLevel,
+                    length: 4);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ScriptEffectAIScore);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ScriptEffectAIDelayTime);
+            }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IMagicEffectGetter>>.Instance.Write(
                 writer: writer,
                 items: item.CounterEffects,
@@ -3489,7 +6901,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(MagicEffect_Registration.MGEF_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -3537,6 +6949,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class MagicEffectBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static MagicEffectBinaryCreateTranslation Instance = new MagicEffectBinaryCreateTranslation();
+
+        static partial void FillBinaryAssociatedItemCustom(
+            MutagenFrame frame,
+            IMagicEffectInternal item);
+
+        public static void FillBinaryAssociatedItemCustomPublic(
+            MutagenFrame frame,
+            IMagicEffectInternal item)
+        {
+            FillBinaryAssociatedItemCustom(
+                frame: frame,
+                item: item);
+        }
+
+        static partial void FillBinaryArchetypeCustom(
+            MutagenFrame frame,
+            IMagicEffectInternal item);
+
+        public static void FillBinaryArchetypeCustomPublic(
+            MutagenFrame frame,
+            IMagicEffectInternal item)
+        {
+            FillBinaryArchetypeCustom(
+                frame: frame,
+                item: item);
+        }
 
         static partial void FillBinaryConditionsCustom(
             MutagenFrame frame,
@@ -3633,10 +7071,191 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject => _MenuDisplayObjectLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MenuDisplayObjectLocation.Value, _package.Meta)))) : FormLinkNullable<IStaticGetter>.Null;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
-        #region Data
-        private RangeInt32? _DataLocation;
-        private IMagicEffectDataGetter? _Data => _DataLocation.HasValue ? MagicEffectDataBinaryOverlay.MagicEffectDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
-        public IMagicEffectDataGetter Data => _Data ?? new MagicEffectData();
+        private int? _DATALocation;
+        public MagicEffect.DATADataType DATADataTypeState { get; private set; }
+        #region Flags
+        private int _FlagsLocation => _DATALocation!.Value + 0x0;
+        private bool _Flags_IsSet => _DATALocation.HasValue;
+        public MagicEffect.Flag Flags => _Flags_IsSet ? (MagicEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
+        #endregion
+        #region BaseCost
+        private int _BaseCostLocation => _DATALocation!.Value + 0x4;
+        private bool _BaseCost_IsSet => _DATALocation.HasValue;
+        public Single BaseCost => _BaseCost_IsSet ? SpanExt.GetFloat(_data.Slice(_BaseCostLocation, 4)) : default;
+        #endregion
+        #region MagicSkill
+        private int _MagicSkillLocation => _DATALocation!.Value + 0xC;
+        private bool _MagicSkill_IsSet => _DATALocation.HasValue;
+        public ActorValueExtended MagicSkill => _MagicSkill_IsSet ? (ActorValueExtended)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_MagicSkillLocation, 0x4)) : default;
+        #endregion
+        #region ResistValue
+        private int _ResistValueLocation => _DATALocation!.Value + 0x10;
+        private bool _ResistValue_IsSet => _DATALocation.HasValue;
+        public ActorValueExtended ResistValue => _ResistValue_IsSet ? (ActorValueExtended)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ResistValueLocation, 0x4)) : default;
+        #endregion
+        #region CounterEffectCount
+        private int _CounterEffectCountLocation => _DATALocation!.Value + 0x14;
+        private bool _CounterEffectCount_IsSet => _DATALocation.HasValue;
+        public UInt16 CounterEffectCount => _CounterEffectCount_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_CounterEffectCountLocation, 2)) : default;
+        #endregion
+        #region Unknown1
+        private int _Unknown1Location => _DATALocation!.Value + 0x16;
+        private bool _Unknown1_IsSet => _DATALocation.HasValue;
+        public UInt16 Unknown1 => _Unknown1_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_Unknown1Location, 2)) : default;
+        #endregion
+        #region CastingLight
+        private int _CastingLightLocation => _DATALocation!.Value + 0x18;
+        private bool _CastingLight_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<ILightGetter> CastingLight => _CastingLight_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_CastingLightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
+        #endregion
+        #region TaperWeight
+        private int _TaperWeightLocation => _DATALocation!.Value + 0x1C;
+        private bool _TaperWeight_IsSet => _DATALocation.HasValue;
+        public Single TaperWeight => _TaperWeight_IsSet ? SpanExt.GetFloat(_data.Slice(_TaperWeightLocation, 4)) : default;
+        #endregion
+        #region HitShader
+        private int _HitShaderLocation => _DATALocation!.Value + 0x20;
+        private bool _HitShader_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IEffectShaderGetter> HitShader => _HitShader_IsSet ? new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HitShaderLocation, 0x4)))) : FormLink<IEffectShaderGetter>.Null;
+        #endregion
+        #region EnchantShader
+        private int _EnchantShaderLocation => _DATALocation!.Value + 0x24;
+        private bool _EnchantShader_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IEffectShaderGetter> EnchantShader => _EnchantShader_IsSet ? new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EnchantShaderLocation, 0x4)))) : FormLink<IEffectShaderGetter>.Null;
+        #endregion
+        #region MinimumSkillLevel
+        private int _MinimumSkillLevelLocation => _DATALocation!.Value + 0x28;
+        private bool _MinimumSkillLevel_IsSet => _DATALocation.HasValue;
+        public UInt32 MinimumSkillLevel => _MinimumSkillLevel_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_MinimumSkillLevelLocation, 4)) : default;
+        #endregion
+        #region SpellmakingArea
+        private int _SpellmakingAreaLocation => _DATALocation!.Value + 0x2C;
+        private bool _SpellmakingArea_IsSet => _DATALocation.HasValue;
+        public UInt32 SpellmakingArea => _SpellmakingArea_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_SpellmakingAreaLocation, 4)) : default;
+        #endregion
+        #region SpellmakingCastingTime
+        private int _SpellmakingCastingTimeLocation => _DATALocation!.Value + 0x30;
+        private bool _SpellmakingCastingTime_IsSet => _DATALocation.HasValue;
+        public Single SpellmakingCastingTime => _SpellmakingCastingTime_IsSet ? SpanExt.GetFloat(_data.Slice(_SpellmakingCastingTimeLocation, 4)) : default;
+        #endregion
+        #region TaperCurve
+        private int _TaperCurveLocation => _DATALocation!.Value + 0x34;
+        private bool _TaperCurve_IsSet => _DATALocation.HasValue;
+        public Single TaperCurve => _TaperCurve_IsSet ? SpanExt.GetFloat(_data.Slice(_TaperCurveLocation, 4)) : default;
+        #endregion
+        #region TaperDuration
+        private int _TaperDurationLocation => _DATALocation!.Value + 0x38;
+        private bool _TaperDuration_IsSet => _DATALocation.HasValue;
+        public Single TaperDuration => _TaperDuration_IsSet ? SpanExt.GetFloat(_data.Slice(_TaperDurationLocation, 4)) : default;
+        #endregion
+        #region SecondActorValueWeight
+        private int _SecondActorValueWeightLocation => _DATALocation!.Value + 0x3C;
+        private bool _SecondActorValueWeight_IsSet => _DATALocation.HasValue;
+        public Single SecondActorValueWeight => _SecondActorValueWeight_IsSet ? SpanExt.GetFloat(_data.Slice(_SecondActorValueWeightLocation, 4)) : default;
+        #endregion
+        #region Archetype
+        private int _ArchetypeLocation => _DATALocation!.Value + 0x40;
+        public IMagicEffectArchetypeGetter Archetype => GetArchetypeCustom();
+        #endregion
+        #region Projectile
+        private int _ProjectileLocation => _DATALocation!.Value + 0x48;
+        private bool _Projectile_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IProjectileGetter> Projectile => _Projectile_IsSet ? new FormLink<IProjectileGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ProjectileLocation, 0x4)))) : FormLink<IProjectileGetter>.Null;
+        #endregion
+        #region Explosion
+        private int _ExplosionLocation => _DATALocation!.Value + 0x4C;
+        private bool _Explosion_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IExplosionGetter> Explosion => _Explosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        #endregion
+        #region CastType
+        private int _CastTypeLocation => _DATALocation!.Value + 0x50;
+        private bool _CastType_IsSet => _DATALocation.HasValue;
+        public CastType CastType => _CastType_IsSet ? (CastType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_CastTypeLocation, 0x4)) : default;
+        #endregion
+        #region TargetType
+        private int _TargetTypeLocation => _DATALocation!.Value + 0x54;
+        private bool _TargetType_IsSet => _DATALocation.HasValue;
+        public TargetType TargetType => _TargetType_IsSet ? (TargetType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_TargetTypeLocation, 0x4)) : default;
+        #endregion
+        #region SecondActorValue
+        private int _SecondActorValueLocation => _DATALocation!.Value + 0x58;
+        private bool _SecondActorValue_IsSet => _DATALocation.HasValue;
+        public ActorValueExtended SecondActorValue => _SecondActorValue_IsSet ? (ActorValueExtended)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_SecondActorValueLocation, 0x4)) : default;
+        #endregion
+        #region CastingArt
+        private int _CastingArtLocation => _DATALocation!.Value + 0x5C;
+        private bool _CastingArt_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IArtObjectGetter> CastingArt => _CastingArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_CastingArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
+        #endregion
+        #region HitEffectArt
+        private int _HitEffectArtLocation => _DATALocation!.Value + 0x60;
+        private bool _HitEffectArt_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IArtObjectGetter> HitEffectArt => _HitEffectArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HitEffectArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
+        #endregion
+        #region ImpactData
+        private int _ImpactDataLocation => _DATALocation!.Value + 0x64;
+        private bool _ImpactData_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IImpactDataSetGetter> ImpactData => _ImpactData_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImpactDataLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        #endregion
+        #region SkillUsageMultiplier
+        private int _SkillUsageMultiplierLocation => _DATALocation!.Value + 0x68;
+        private bool _SkillUsageMultiplier_IsSet => _DATALocation.HasValue;
+        public Single SkillUsageMultiplier => _SkillUsageMultiplier_IsSet ? SpanExt.GetFloat(_data.Slice(_SkillUsageMultiplierLocation, 4)) : default;
+        #endregion
+        #region DualCastArt
+        private int _DualCastArtLocation => _DATALocation!.Value + 0x6C;
+        private bool _DualCastArt_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IDualCastDataGetter> DualCastArt => _DualCastArt_IsSet ? new FormLink<IDualCastDataGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_DualCastArtLocation, 0x4)))) : FormLink<IDualCastDataGetter>.Null;
+        #endregion
+        #region DualCastScale
+        private int _DualCastScaleLocation => _DATALocation!.Value + 0x70;
+        private bool _DualCastScale_IsSet => _DATALocation.HasValue;
+        public Single DualCastScale => _DualCastScale_IsSet ? SpanExt.GetFloat(_data.Slice(_DualCastScaleLocation, 4)) : default;
+        #endregion
+        #region EnchantArt
+        private int _EnchantArtLocation => _DATALocation!.Value + 0x74;
+        private bool _EnchantArt_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IArtObjectGetter> EnchantArt => _EnchantArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EnchantArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
+        #endregion
+        #region Unknown2
+        private int _Unknown2Location => _DATALocation!.Value + 0x78;
+        private bool _Unknown2_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<ISkyrimMajorRecordGetter> Unknown2 => _Unknown2_IsSet ? new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_Unknown2Location, 0x4)))) : FormLink<ISkyrimMajorRecordGetter>.Null;
+        #endregion
+        #region Unknown3
+        private int _Unknown3Location => _DATALocation!.Value + 0x7C;
+        private bool _Unknown3_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<ISkyrimMajorRecordGetter> Unknown3 => _Unknown3_IsSet ? new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_Unknown3Location, 0x4)))) : FormLink<ISkyrimMajorRecordGetter>.Null;
+        #endregion
+        #region EquipAbility
+        private int _EquipAbilityLocation => _DATALocation!.Value + 0x80;
+        private bool _EquipAbility_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<ISpellGetter> EquipAbility => _EquipAbility_IsSet ? new FormLink<ISpellGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EquipAbilityLocation, 0x4)))) : FormLink<ISpellGetter>.Null;
+        #endregion
+        #region ImageSpaceModifier
+        private int _ImageSpaceModifierLocation => _DATALocation!.Value + 0x84;
+        private bool _ImageSpaceModifier_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifier_IsSet ? new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImageSpaceModifierLocation, 0x4)))) : FormLink<IImageSpaceAdapterGetter>.Null;
+        #endregion
+        #region PerkToApply
+        private int _PerkToApplyLocation => _DATALocation!.Value + 0x88;
+        private bool _PerkToApply_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IPerkGetter> PerkToApply => _PerkToApply_IsSet ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_PerkToApplyLocation, 0x4)))) : FormLink<IPerkGetter>.Null;
+        #endregion
+        #region CastingSoundLevel
+        private int _CastingSoundLevelLocation => _DATALocation!.Value + 0x8C;
+        private bool _CastingSoundLevel_IsSet => _DATALocation.HasValue;
+        public SoundLevel CastingSoundLevel => _CastingSoundLevel_IsSet ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_CastingSoundLevelLocation, 0x4)) : default;
+        #endregion
+        #region ScriptEffectAIScore
+        private int _ScriptEffectAIScoreLocation => _DATALocation!.Value + 0x90;
+        private bool _ScriptEffectAIScore_IsSet => _DATALocation.HasValue;
+        public Single ScriptEffectAIScore => _ScriptEffectAIScore_IsSet ? SpanExt.GetFloat(_data.Slice(_ScriptEffectAIScoreLocation, 4)) : default;
+        #endregion
+        #region ScriptEffectAIDelayTime
+        private int _ScriptEffectAIDelayTimeLocation => _DATALocation!.Value + 0x94;
+        private bool _ScriptEffectAIDelayTime_IsSet => _DATALocation.HasValue;
+        public Single ScriptEffectAIDelayTime => _ScriptEffectAIDelayTime_IsSet ? SpanExt.GetFloat(_data.Slice(_ScriptEffectAIDelayTimeLocation, 4)) : default;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>>? CounterEffects { get; private set; }
         public IReadOnlyList<IMagicEffectSoundGetter>? Sounds { get; private set; }
@@ -3744,8 +7363,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Data);
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.ScriptEffectAIDelayTime);
                 }
                 case 0x45435345: // ESCE
                 {

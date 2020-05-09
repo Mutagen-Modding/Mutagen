@@ -32,5 +32,11 @@ namespace Mutagen.Bethesda.Skyrim
             ShowInWorldMap = 0x1000_0000,
             NavMeshGenerationGround = 0x4000_0000,
         }
+
+        [Flags]
+        public enum Flag
+        {
+            ConsideredSnow = 0x01
+        }
     }
 }

@@ -64,10 +64,15 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IStaticGetter.Model => this.Model;
         #endregion
-        #region DirectionMaterial
-        public DirectionMaterial DirectionMaterial { get; set; } = new DirectionMaterial();
+        #region MaxAngle
+        public readonly static Single _MaxAngle_Default = 30;
+        public Single MaxAngle { get; set; } = default;
+        public static RangeFloat MaxAngle_Range = new RangeFloat(30f, 120f);
+        #endregion
+        #region Material
+        public FormLink<MaterialObject> Material { get; set; } = new FormLink<MaterialObject>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IDirectionMaterialGetter IStaticGetter.DirectionMaterial => DirectionMaterial;
+        IFormLinkGetter<IMaterialObjectGetter> IStaticGetter.Material => this.Material;
         #endregion
         #region Lod
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -79,6 +84,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILodGetter? IStaticGetter.Lod => this.Lod;
+        #endregion
+        #region DNAMDataTypeState
+        public Static.DNAMDataType DNAMDataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -252,8 +260,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.DirectionMaterial = new MaskItem<TItem, DirectionMaterial.Mask<TItem>?>(initialValue, new DirectionMaterial.Mask<TItem>(initialValue));
+                this.MaxAngle = initialValue;
+                this.Material = initialValue;
                 this.Lod = new MaskItem<TItem, Lod.Mask<TItem>?>(initialValue, new Lod.Mask<TItem>(initialValue));
+                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -265,8 +275,10 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version2,
                 TItem ObjectBounds,
                 TItem Model,
-                TItem DirectionMaterial,
-                TItem Lod)
+                TItem MaxAngle,
+                TItem Material,
+                TItem Lod,
+                TItem DNAMDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -277,8 +289,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.DirectionMaterial = new MaskItem<TItem, DirectionMaterial.Mask<TItem>?>(DirectionMaterial, new DirectionMaterial.Mask<TItem>(DirectionMaterial));
+                this.MaxAngle = MaxAngle;
+                this.Material = Material;
                 this.Lod = new MaskItem<TItem, Lod.Mask<TItem>?>(Lod, new Lod.Mask<TItem>(Lod));
+                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -292,8 +306,10 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
-            public MaskItem<TItem, DirectionMaterial.Mask<TItem>?>? DirectionMaterial { get; set; }
+            public TItem MaxAngle;
+            public TItem Material;
             public MaskItem<TItem, Lod.Mask<TItem>?>? Lod { get; set; }
+            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -309,8 +325,10 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
-                if (!object.Equals(this.DirectionMaterial, rhs.DirectionMaterial)) return false;
+                if (!object.Equals(this.MaxAngle, rhs.MaxAngle)) return false;
+                if (!object.Equals(this.Material, rhs.Material)) return false;
                 if (!object.Equals(this.Lod, rhs.Lod)) return false;
+                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -318,8 +336,10 @@ namespace Mutagen.Bethesda.Skyrim
                 var hash = new HashCode();
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.Model);
-                hash.Add(this.DirectionMaterial);
+                hash.Add(this.MaxAngle);
+                hash.Add(this.Material);
                 hash.Add(this.Lod);
+                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -340,16 +360,14 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Model.Overall)) return false;
                     if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
-                if (DirectionMaterial != null)
-                {
-                    if (!eval(this.DirectionMaterial.Overall)) return false;
-                    if (this.DirectionMaterial.Specific != null && !this.DirectionMaterial.Specific.All(eval)) return false;
-                }
+                if (!eval(this.MaxAngle)) return false;
+                if (!eval(this.Material)) return false;
                 if (Lod != null)
                 {
                     if (!eval(this.Lod.Overall)) return false;
                     if (this.Lod.Specific != null && !this.Lod.Specific.All(eval)) return false;
                 }
+                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -368,16 +386,14 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Model.Overall)) return true;
                     if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
                 }
-                if (DirectionMaterial != null)
-                {
-                    if (eval(this.DirectionMaterial.Overall)) return true;
-                    if (this.DirectionMaterial.Specific != null && this.DirectionMaterial.Specific.Any(eval)) return true;
-                }
+                if (eval(this.MaxAngle)) return true;
+                if (eval(this.Material)) return true;
                 if (Lod != null)
                 {
                     if (eval(this.Lod.Overall)) return true;
                     if (this.Lod.Specific != null && this.Lod.Specific.Any(eval)) return true;
                 }
+                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -395,8 +411,10 @@ namespace Mutagen.Bethesda.Skyrim
                 base.Translate_InternalFill(obj, eval);
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-                obj.DirectionMaterial = this.DirectionMaterial == null ? null : new MaskItem<R, DirectionMaterial.Mask<R>?>(eval(this.DirectionMaterial.Overall), this.DirectionMaterial.Specific?.Translate(eval));
+                obj.MaxAngle = eval(this.MaxAngle);
+                obj.Material = eval(this.Material);
                 obj.Lod = this.Lod == null ? null : new MaskItem<R, Lod.Mask<R>?>(eval(this.Lod.Overall), this.Lod.Specific?.Translate(eval));
+                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -427,13 +445,21 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Model?.ToString(fg);
                     }
-                    if (printMask?.DirectionMaterial?.Overall ?? true)
+                    if (printMask?.MaxAngle ?? true)
                     {
-                        DirectionMaterial?.ToString(fg);
+                        fg.AppendItem(MaxAngle, "MaxAngle");
+                    }
+                    if (printMask?.Material ?? true)
+                    {
+                        fg.AppendItem(Material, "Material");
                     }
                     if (printMask?.Lod?.Overall ?? true)
                     {
                         Lod?.ToString(fg);
+                    }
+                    if (printMask?.DNAMDataTypeState ?? true)
+                    {
+                        fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -449,8 +475,10 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
-            public MaskItem<Exception?, DirectionMaterial.ErrorMask?>? DirectionMaterial;
+            public Exception? MaxAngle;
+            public Exception? Material;
             public MaskItem<Exception?, Lod.ErrorMask?>? Lod;
+            public Exception? DNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -463,10 +491,14 @@ namespace Mutagen.Bethesda.Skyrim
                         return ObjectBounds;
                     case Static_FieldIndex.Model:
                         return Model;
-                    case Static_FieldIndex.DirectionMaterial:
-                        return DirectionMaterial;
+                    case Static_FieldIndex.MaxAngle:
+                        return MaxAngle;
+                    case Static_FieldIndex.Material:
+                        return Material;
                     case Static_FieldIndex.Lod:
                         return Lod;
+                    case Static_FieldIndex.DNAMDataTypeState:
+                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -483,11 +515,17 @@ namespace Mutagen.Bethesda.Skyrim
                     case Static_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
-                    case Static_FieldIndex.DirectionMaterial:
-                        this.DirectionMaterial = new MaskItem<Exception?, DirectionMaterial.ErrorMask?>(ex, null);
+                    case Static_FieldIndex.MaxAngle:
+                        this.MaxAngle = ex;
+                        break;
+                    case Static_FieldIndex.Material:
+                        this.Material = ex;
                         break;
                     case Static_FieldIndex.Lod:
                         this.Lod = new MaskItem<Exception?, Lod.ErrorMask?>(ex, null);
+                        break;
+                    case Static_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -506,11 +544,17 @@ namespace Mutagen.Bethesda.Skyrim
                     case Static_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
-                    case Static_FieldIndex.DirectionMaterial:
-                        this.DirectionMaterial = (MaskItem<Exception?, DirectionMaterial.ErrorMask?>?)obj;
+                    case Static_FieldIndex.MaxAngle:
+                        this.MaxAngle = (Exception?)obj;
+                        break;
+                    case Static_FieldIndex.Material:
+                        this.Material = (Exception?)obj;
                         break;
                     case Static_FieldIndex.Lod:
                         this.Lod = (MaskItem<Exception?, Lod.ErrorMask?>?)obj;
+                        break;
+                    case Static_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -523,8 +567,10 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Overall != null) return true;
                 if (ObjectBounds != null) return true;
                 if (Model != null) return true;
-                if (DirectionMaterial != null) return true;
+                if (MaxAngle != null) return true;
+                if (Material != null) return true;
                 if (Lod != null) return true;
+                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -562,8 +608,10 @@ namespace Mutagen.Bethesda.Skyrim
                 base.ToString_FillInternal(fg);
                 ObjectBounds?.ToString(fg);
                 Model?.ToString(fg);
-                DirectionMaterial?.ToString(fg);
+                fg.AppendItem(MaxAngle, "MaxAngle");
+                fg.AppendItem(Material, "Material");
                 Lod?.ToString(fg);
+                fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
             }
             #endregion
 
@@ -574,8 +622,10 @@ namespace Mutagen.Bethesda.Skyrim
                 var ret = new ErrorMask();
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.DirectionMaterial = this.DirectionMaterial.Combine(rhs.DirectionMaterial, (l, r) => l.Combine(r));
+                ret.MaxAngle = this.MaxAngle.Combine(rhs.MaxAngle);
+                ret.Material = this.Material.Combine(rhs.Material);
                 ret.Lod = this.Lod.Combine(rhs.Lod, (l, r) => l.Combine(r));
+                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -600,8 +650,10 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
             public MaskItem<bool, Model.TranslationMask?> Model;
-            public MaskItem<bool, DirectionMaterial.TranslationMask?> DirectionMaterial;
+            public bool MaxAngle;
+            public bool Material;
             public MaskItem<bool, Lod.TranslationMask?> Lod;
+            public bool DNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -610,8 +662,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
                 this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
-                this.DirectionMaterial = new MaskItem<bool, DirectionMaterial.TranslationMask?>(defaultOn, null);
+                this.MaxAngle = defaultOn;
+                this.Material = defaultOn;
                 this.Lod = new MaskItem<bool, Lod.TranslationMask?>(defaultOn, null);
+                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -621,8 +675,10 @@ namespace Mutagen.Bethesda.Skyrim
                 base.GetCrystal(ret);
                 ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
                 ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-                ret.Add((DirectionMaterial?.Overall ?? true, DirectionMaterial?.Specific?.GetCrystal()));
+                ret.Add((MaxAngle, null));
+                ret.Add((Material, null));
                 ret.Add((Lod?.Overall ?? true, Lod?.Specific?.GetCrystal()));
+                ret.Add((DNAMDataTypeState, null));
             }
         }
         #endregion
@@ -656,6 +712,10 @@ namespace Mutagen.Bethesda.Skyrim
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
+        }
+        [Flags]
+        public enum DNAMDataType
+        {
         }
         #endregion
 
@@ -724,8 +784,10 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new ObjectBounds ObjectBounds { get; set; }
         new Model? Model { get; set; }
-        new DirectionMaterial DirectionMaterial { get; set; }
+        new Single MaxAngle { get; set; }
+        new FormLink<MaterialObject> Material { get; set; }
         new Lod? Lod { get; set; }
+        new Static.DNAMDataType DNAMDataTypeState { get; set; }
         #region Mutagen
         new Static.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -752,8 +814,10 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => Static_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
         IModelGetter? Model { get; }
-        IDirectionMaterialGetter DirectionMaterial { get; }
+        Single MaxAngle { get; }
+        IFormLinkGetter<IMaterialObjectGetter> Material { get; }
         ILodGetter? Lod { get; }
+        Static.DNAMDataType DNAMDataTypeState { get; }
 
         #region Mutagen
         Static.MajorFlag MajorFlags { get; }
@@ -1060,8 +1124,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Version2 = 5,
         ObjectBounds = 6,
         Model = 7,
-        DirectionMaterial = 8,
-        Lod = 9,
+        MaxAngle = 8,
+        Material = 9,
+        Lod = 10,
+        DNAMDataTypeState = 11,
     }
     #endregion
 
@@ -1079,9 +1145,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "89036057-4570-493d-a5f7-4c5718f67a06";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(Static.Mask<>);
 
@@ -1115,10 +1181,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Static_FieldIndex.ObjectBounds;
                 case "MODEL":
                     return (ushort)Static_FieldIndex.Model;
-                case "DIRECTIONMATERIAL":
-                    return (ushort)Static_FieldIndex.DirectionMaterial;
+                case "MAXANGLE":
+                    return (ushort)Static_FieldIndex.MaxAngle;
+                case "MATERIAL":
+                    return (ushort)Static_FieldIndex.Material;
                 case "LOD":
                     return (ushort)Static_FieldIndex.Lod;
+                case "DNAMDATATYPESTATE":
+                    return (ushort)Static_FieldIndex.DNAMDataTypeState;
                 default:
                     return null;
             }
@@ -1131,8 +1201,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case Static_FieldIndex.ObjectBounds:
                 case Static_FieldIndex.Model:
-                case Static_FieldIndex.DirectionMaterial:
+                case Static_FieldIndex.MaxAngle:
+                case Static_FieldIndex.Material:
                 case Static_FieldIndex.Lod:
+                case Static_FieldIndex.DNAMDataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1146,9 +1218,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case Static_FieldIndex.ObjectBounds:
                 case Static_FieldIndex.Model:
-                case Static_FieldIndex.DirectionMaterial:
                 case Static_FieldIndex.Lod:
                     return true;
+                case Static_FieldIndex.MaxAngle:
+                case Static_FieldIndex.Material:
+                case Static_FieldIndex.DNAMDataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -1161,8 +1236,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case Static_FieldIndex.ObjectBounds:
                 case Static_FieldIndex.Model:
-                case Static_FieldIndex.DirectionMaterial:
+                case Static_FieldIndex.MaxAngle:
+                case Static_FieldIndex.Material:
                 case Static_FieldIndex.Lod:
+                case Static_FieldIndex.DNAMDataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1178,10 +1255,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "ObjectBounds";
                 case Static_FieldIndex.Model:
                     return "Model";
-                case Static_FieldIndex.DirectionMaterial:
-                    return "DirectionMaterial";
+                case Static_FieldIndex.MaxAngle:
+                    return "MaxAngle";
+                case Static_FieldIndex.Material:
+                    return "Material";
                 case Static_FieldIndex.Lod:
                     return "Lod";
+                case Static_FieldIndex.DNAMDataTypeState:
+                    return "DNAMDataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -1194,8 +1275,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case Static_FieldIndex.ObjectBounds:
                 case Static_FieldIndex.Model:
-                case Static_FieldIndex.DirectionMaterial:
+                case Static_FieldIndex.MaxAngle:
+                case Static_FieldIndex.Material:
                 case Static_FieldIndex.Lod:
+                case Static_FieldIndex.DNAMDataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
@@ -1209,8 +1292,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case Static_FieldIndex.ObjectBounds:
                 case Static_FieldIndex.Model:
-                case Static_FieldIndex.DirectionMaterial:
+                case Static_FieldIndex.MaxAngle:
+                case Static_FieldIndex.Material:
                 case Static_FieldIndex.Lod:
+                case Static_FieldIndex.DNAMDataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
@@ -1226,10 +1311,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(ObjectBounds);
                 case Static_FieldIndex.Model:
                     return typeof(Model);
-                case Static_FieldIndex.DirectionMaterial:
-                    return typeof(DirectionMaterial);
+                case Static_FieldIndex.MaxAngle:
+                    return typeof(Single);
+                case Static_FieldIndex.Material:
+                    return typeof(FormLink<MaterialObject>);
                 case Static_FieldIndex.Lod:
                     return typeof(Lod);
+                case Static_FieldIndex.DNAMDataTypeState:
+                    return typeof(Static.DNAMDataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1243,7 +1332,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
         public static readonly RecordType TriggeringRecordType = STAT_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 4;
+        public const int NumTypedFields = 3;
         public static readonly Type BinaryWriteTranslation = typeof(StaticBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1288,8 +1377,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.ObjectBounds.Clear();
             item.Model = null;
-            item.DirectionMaterial.Clear();
+            item.MaxAngle = Static._MaxAngle_Default;
+            item.Material = new FormLink<MaterialObject>(FormKey.Null);
             item.Lod = null;
+            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1418,8 +1509,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E44: // DNAM
                 {
-                    item.DirectionMaterial = Mutagen.Bethesda.Skyrim.DirectionMaterial.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Static_FieldIndex.DirectionMaterial);
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.MaxAngle = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.Material = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Static_FieldIndex.Material);
                 }
                 case 0x4D414E4D: // MNAM
                 {
@@ -1506,12 +1602,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.DirectionMaterial = MaskItemExt.Factory(item.DirectionMaterial.GetEqualsMask(rhs.DirectionMaterial, include), include);
+            ret.MaxAngle = item.MaxAngle.EqualsWithin(rhs.MaxAngle);
+            ret.Material = object.Equals(item.Material, rhs.Material);
             ret.Lod = EqualsMaskHelper.EqualsHelper(
                 item.Lod,
                 rhs.Lod,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
+            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1572,14 +1670,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ModelItem?.ToString(fg, "Model");
             }
-            if (printMask?.DirectionMaterial?.Overall ?? true)
+            if (printMask?.MaxAngle ?? true)
             {
-                item.DirectionMaterial?.ToString(fg, "DirectionMaterial");
+                fg.AppendItem(item.MaxAngle, "MaxAngle");
+            }
+            if (printMask?.Material ?? true)
+            {
+                fg.AppendItem(item.Material, "Material");
             }
             if ((printMask?.Lod?.Overall ?? true)
                 && item.Lod.TryGet(out var LodItem))
             {
                 LodItem?.ToString(fg, "Lod");
+            }
+            if (printMask?.DNAMDataTypeState ?? true)
+            {
+                fg.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
             }
         }
         
@@ -1603,9 +1709,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
             var itemModel = item.Model;
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            mask.DirectionMaterial = new MaskItem<bool, DirectionMaterial.Mask<bool>?>(true, item.DirectionMaterial?.GetHasBeenSetMask());
+            mask.MaxAngle = true;
+            mask.Material = true;
             var itemLod = item.Lod;
             mask.Lod = new MaskItem<bool, Lod.Mask<bool>?>(itemLod != null, itemLod?.GetHasBeenSetMask());
+            mask.DNAMDataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1659,8 +1767,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!base.Equals(rhs)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!object.Equals(lhs.DirectionMaterial, rhs.DirectionMaterial)) return false;
+            if (!lhs.MaxAngle.EqualsWithin(rhs.MaxAngle)) return false;
+            if (!lhs.Material.Equals(rhs.Material)) return false;
             if (!object.Equals(lhs.Lod, rhs.Lod)) return false;
+            if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             return true;
         }
         
@@ -1690,11 +1800,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Modelitem);
             }
-            hash.Add(item.DirectionMaterial);
+            hash.Add(item.MaxAngle);
+            hash.Add(item.Material);
             if (item.Lod.TryGet(out var Loditem))
             {
                 hash.Add(Loditem);
             }
+            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1731,10 +1843,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            foreach (var item in obj.DirectionMaterial.LinkFormKeys)
-            {
-                yield return item;
-            }
+            yield return obj.Material.FormKey;
             yield break;
         }
         
@@ -1830,27 +1939,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.DirectionMaterial) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.MaxAngle) ?? true))
             {
-                errorMask?.PushIndex((int)Static_FieldIndex.DirectionMaterial);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.DirectionMaterial) ?? true))
-                    {
-                        item.DirectionMaterial = rhs.DirectionMaterial.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)Static_FieldIndex.DirectionMaterial),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.MaxAngle = rhs.MaxAngle;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.Material) ?? true))
+            {
+                item.Material = rhs.Material.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.Lod) ?? true))
             {
@@ -1877,6 +1972,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
             }
         }
         
@@ -2045,16 +2144,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         translationMask: translationMask?.GetSubCrystal((int)Static_FieldIndex.Model));
                 }
             }
-            if ((translationMask?.GetShouldTranslate((int)Static_FieldIndex.DirectionMaterial) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Static_FieldIndex.MaxAngle) ?? true))
             {
-                var DirectionMaterialItem = item.DirectionMaterial;
-                ((DirectionMaterialXmlWriteTranslation)((IXmlItem)DirectionMaterialItem).XmlWriteTranslator).Write(
-                    item: DirectionMaterialItem,
+                FloatXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.DirectionMaterial),
-                    fieldIndex: (int)Static_FieldIndex.DirectionMaterial,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Static_FieldIndex.DirectionMaterial));
+                    name: nameof(item.MaxAngle),
+                    item: item.MaxAngle,
+                    fieldIndex: (int)Static_FieldIndex.MaxAngle,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Static_FieldIndex.Material) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Material),
+                    item: item.Material.FormKey,
+                    fieldIndex: (int)Static_FieldIndex.Material,
+                    errorMask: errorMask);
             }
             if ((item.Lod != null)
                 && (translationMask?.GetShouldTranslate((int)Static_FieldIndex.Lod) ?? true))
@@ -2069,6 +2175,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask: errorMask,
                         translationMask: translationMask?.GetSubCrystal((int)Static_FieldIndex.Lod));
                 }
+            }
+            if ((translationMask?.GetShouldTranslate((int)Static_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                EnumXmlTranslation<Static.DNAMDataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DNAMDataTypeState),
+                    item: item.DNAMDataTypeState,
+                    fieldIndex: (int)Static_FieldIndex.DNAMDataTypeState,
+                    errorMask: errorMask);
             }
         }
 
@@ -2215,14 +2330,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "DirectionMaterial":
-                    errorMask?.PushIndex((int)Static_FieldIndex.DirectionMaterial);
+                case "MaxAngle":
+                    errorMask?.PushIndex((int)Static_FieldIndex.MaxAngle);
                     try
                     {
-                        item.DirectionMaterial = LoquiXmlTranslation<DirectionMaterial>.Instance.Parse(
+                        item.MaxAngle = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Static_FieldIndex.DirectionMaterial));
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2234,6 +2348,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "Material":
+                    errorMask?.PushIndex((int)Static_FieldIndex.Material);
+                    try
+                    {
+                        item.Material = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    break;
+                case "Unused":
+                    break;
                 case "Lod":
                     errorMask?.PushIndex((int)Static_FieldIndex.Lod);
                     try
@@ -2242,6 +2378,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             node: node,
                             errorMask: errorMask,
                             translationMask: translationMask?.GetSubCrystal((int)Static_FieldIndex.Lod));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DNAMDataTypeState":
+                    errorMask?.PushIndex((int)Static_FieldIndex.DNAMDataTypeState);
+                    try
+                    {
+                        item.DNAMDataTypeState = EnumXmlTranslation<Static.DNAMDataType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2339,6 +2493,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static StaticBinaryWriteTranslation Instance = new StaticBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IStaticGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
         public static void WriteRecordTypes(
             IStaticGetter item,
             MutagenWriter writer,
@@ -2360,11 +2523,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            var DirectionMaterialItem = item.DirectionMaterial;
-            ((DirectionMaterialBinaryWriteTranslation)((IBinaryItem)DirectionMaterialItem).BinaryWriteTranslator).Write(
-                item: DirectionMaterialItem,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
+            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Static_Registration.DNAM_HEADER)))
+            {
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.MaxAngle);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Material);
+            }
             if (item.Lod.TryGet(out var LodItem))
             {
                 ((LodBinaryWriteTranslation)((IBinaryItem)LodItem).BinaryWriteTranslator).Write(
@@ -2384,7 +2551,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(Static_Registration.STAT_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -2507,10 +2674,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
         public IModelGetter? Model { get; private set; }
-        #region DirectionMaterial
-        private RangeInt32? _DirectionMaterialLocation;
-        private IDirectionMaterialGetter? _DirectionMaterial => _DirectionMaterialLocation.HasValue ? DirectionMaterialBinaryOverlay.DirectionMaterialFactory(new BinaryMemoryReadStream(_data.Slice(_DirectionMaterialLocation!.Value.Min)), _package) : default;
-        public IDirectionMaterialGetter DirectionMaterial => _DirectionMaterial ?? new DirectionMaterial();
+        private int? _DNAMLocation;
+        public Static.DNAMDataType DNAMDataTypeState { get; private set; }
+        #region MaxAngle
+        private int _MaxAngleLocation => _DNAMLocation!.Value + 0x0;
+        private bool _MaxAngle_IsSet => _DNAMLocation.HasValue;
+        public Single MaxAngle => _MaxAngle_IsSet ? SpanExt.GetFloat(_data.Slice(_MaxAngleLocation, 4)) : default;
+        #endregion
+        #region Material
+        private int _MaterialLocation => _DNAMLocation!.Value + 0x4;
+        private bool _Material_IsSet => _DNAMLocation.HasValue;
+        public IFormLinkGetter<IMaterialObjectGetter> Material => _Material_IsSet ? new FormLink<IMaterialObjectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_MaterialLocation, 0x4)))) : FormLink<IMaterialObjectGetter>.Null;
         #endregion
         #region Lod
         private RangeInt32? _LodLocation;
@@ -2593,8 +2767,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E44: // DNAM
                 {
-                    _DirectionMaterialLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Static_FieldIndex.DirectionMaterial);
+                    _DNAMLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    return TryGet<int?>.Succeed((int)Static_FieldIndex.Material);
                 }
                 case 0x4D414E4D: // MNAM
                 {

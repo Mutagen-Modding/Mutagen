@@ -132,10 +132,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region WeightValue
-        public WeightValue WeightValue { get; set; } = new WeightValue();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IWeightValueGetter IMiscItemGetter.WeightValue => WeightValue;
+        #region Value
+        public UInt32 Value { get; set; } = default;
+        #endregion
+        #region Weight
+        public Single Weight { get; set; } = default;
+        #endregion
+        #region DATADataTypeState
+        public MiscItem.DATADataType DATADataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -316,7 +320,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.PickUpSound = initialValue;
                 this.PutDownSound = initialValue;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.WeightValue = new MaskItem<TItem, WeightValue.Mask<TItem>?>(initialValue, new WeightValue.Mask<TItem>(initialValue));
+                this.Value = initialValue;
+                this.Weight = initialValue;
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -335,7 +341,9 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem PickUpSound,
                 TItem PutDownSound,
                 TItem Keywords,
-                TItem WeightValue)
+                TItem Value,
+                TItem Weight,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -353,7 +361,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.PickUpSound = PickUpSound;
                 this.PutDownSound = PutDownSound;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.WeightValue = new MaskItem<TItem, WeightValue.Mask<TItem>?>(WeightValue, new WeightValue.Mask<TItem>(WeightValue));
+                this.Value = Value;
+                this.Weight = Weight;
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -374,7 +384,9 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem PickUpSound;
             public TItem PutDownSound;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
-            public MaskItem<TItem, WeightValue.Mask<TItem>?>? WeightValue { get; set; }
+            public TItem Value;
+            public TItem Weight;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -397,7 +409,9 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.PickUpSound, rhs.PickUpSound)) return false;
                 if (!object.Equals(this.PutDownSound, rhs.PutDownSound)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
-                if (!object.Equals(this.WeightValue, rhs.WeightValue)) return false;
+                if (!object.Equals(this.Value, rhs.Value)) return false;
+                if (!object.Equals(this.Weight, rhs.Weight)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -412,7 +426,9 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.PickUpSound);
                 hash.Add(this.PutDownSound);
                 hash.Add(this.Keywords);
-                hash.Add(this.WeightValue);
+                hash.Add(this.Value);
+                hash.Add(this.Weight);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -462,11 +478,9 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (WeightValue != null)
-                {
-                    if (!eval(this.WeightValue.Overall)) return false;
-                    if (this.WeightValue.Specific != null && !this.WeightValue.Specific.All(eval)) return false;
-                }
+                if (!eval(this.Value)) return false;
+                if (!eval(this.Weight)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -514,11 +528,9 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (WeightValue != null)
-                {
-                    if (eval(this.WeightValue.Overall)) return true;
-                    if (this.WeightValue.Specific != null && this.WeightValue.Specific.Any(eval)) return true;
-                }
+                if (eval(this.Value)) return true;
+                if (eval(this.Weight)) return true;
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -556,7 +568,9 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                obj.WeightValue = this.WeightValue == null ? null : new MaskItem<R, WeightValue.Mask<R>?>(eval(this.WeightValue.Overall), this.WeightValue.Specific?.Translate(eval));
+                obj.Value = eval(this.Value);
+                obj.Weight = eval(this.Weight);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -634,9 +648,17 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.WeightValue?.Overall ?? true)
+                    if (printMask?.Value ?? true)
                     {
-                        WeightValue?.ToString(fg);
+                        fg.AppendItem(Value, "Value");
+                    }
+                    if (printMask?.Weight ?? true)
+                    {
+                        fg.AppendItem(Weight, "Weight");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -659,7 +681,9 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? PickUpSound;
             public Exception? PutDownSound;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
-            public MaskItem<Exception?, WeightValue.ErrorMask?>? WeightValue;
+            public Exception? Value;
+            public Exception? Weight;
+            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -686,8 +710,12 @@ namespace Mutagen.Bethesda.Skyrim
                         return PutDownSound;
                     case MiscItem_FieldIndex.Keywords:
                         return Keywords;
-                    case MiscItem_FieldIndex.WeightValue:
-                        return WeightValue;
+                    case MiscItem_FieldIndex.Value:
+                        return Value;
+                    case MiscItem_FieldIndex.Weight:
+                        return Weight;
+                    case MiscItem_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -725,8 +753,14 @@ namespace Mutagen.Bethesda.Skyrim
                     case MiscItem_FieldIndex.Keywords:
                         this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case MiscItem_FieldIndex.WeightValue:
-                        this.WeightValue = new MaskItem<Exception?, WeightValue.ErrorMask?>(ex, null);
+                    case MiscItem_FieldIndex.Value:
+                        this.Value = ex;
+                        break;
+                    case MiscItem_FieldIndex.Weight:
+                        this.Weight = ex;
+                        break;
+                    case MiscItem_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -766,8 +800,14 @@ namespace Mutagen.Bethesda.Skyrim
                     case MiscItem_FieldIndex.Keywords:
                         this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case MiscItem_FieldIndex.WeightValue:
-                        this.WeightValue = (MaskItem<Exception?, WeightValue.ErrorMask?>?)obj;
+                    case MiscItem_FieldIndex.Value:
+                        this.Value = (Exception?)obj;
+                        break;
+                    case MiscItem_FieldIndex.Weight:
+                        this.Weight = (Exception?)obj;
+                        break;
+                    case MiscItem_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -787,7 +827,9 @@ namespace Mutagen.Bethesda.Skyrim
                 if (PickUpSound != null) return true;
                 if (PutDownSound != null) return true;
                 if (Keywords != null) return true;
-                if (WeightValue != null) return true;
+                if (Value != null) return true;
+                if (Weight != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -853,7 +895,9 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                WeightValue?.ToString(fg);
+                fg.AppendItem(Value, "Value");
+                fg.AppendItem(Weight, "Weight");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -871,7 +915,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
                 ret.PutDownSound = this.PutDownSound.Combine(rhs.PutDownSound);
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
-                ret.WeightValue = this.WeightValue.Combine(rhs.WeightValue, (l, r) => l.Combine(r));
+                ret.Value = this.Value.Combine(rhs.Value);
+                ret.Weight = this.Weight.Combine(rhs.Weight);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -903,7 +949,9 @@ namespace Mutagen.Bethesda.Skyrim
             public bool PickUpSound;
             public bool PutDownSound;
             public bool Keywords;
-            public MaskItem<bool, WeightValue.TranslationMask?> WeightValue;
+            public bool Value;
+            public bool Weight;
+            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -919,7 +967,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.PickUpSound = defaultOn;
                 this.PutDownSound = defaultOn;
                 this.Keywords = defaultOn;
-                this.WeightValue = new MaskItem<bool, WeightValue.TranslationMask?>(defaultOn, null);
+                this.Value = defaultOn;
+                this.Weight = defaultOn;
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -936,7 +986,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((PickUpSound, null));
                 ret.Add((PutDownSound, null));
                 ret.Add((Keywords, null));
-                ret.Add((WeightValue?.Overall ?? true, WeightValue?.Specific?.GetCrystal()));
+                ret.Add((Value, null));
+                ret.Add((Weight, null));
+                ret.Add((DATADataTypeState, null));
             }
         }
         #endregion
@@ -970,6 +1022,10 @@ namespace Mutagen.Bethesda.Skyrim
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
+        }
+        [Flags]
+        public enum DATADataType
+        {
         }
         #endregion
 
@@ -1038,6 +1094,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeled,
         IObjectBounded,
         IObjectId,
+        IWeightValue,
         ILoquiObjectSetter<IMiscItemInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -1049,7 +1106,9 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<SoundDescriptor> PickUpSound { get; set; }
         new FormLinkNullable<SoundDescriptor> PutDownSound { get; set; }
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
-        new WeightValue WeightValue { get; set; }
+        new UInt32 Value { get; set; }
+        new Single Weight { get; set; }
+        new MiscItem.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new MiscItem.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1072,6 +1131,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter,
         IObjectBoundedGetter,
         IObjectIdGetter,
+        IWeightValueGetter,
         ILoquiObject<IMiscItemGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,
@@ -1087,7 +1147,9 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
-        IWeightValueGetter WeightValue { get; }
+        UInt32 Value { get; }
+        Single Weight { get; }
+        MiscItem.DATADataType DATADataTypeState { get; }
 
         #region Mutagen
         MiscItem.MajorFlag MajorFlags { get; }
@@ -1401,7 +1463,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         PickUpSound = 12,
         PutDownSound = 13,
         Keywords = 14,
-        WeightValue = 15,
+        Value = 15,
+        Weight = 16,
+        DATADataTypeState = 17,
     }
     #endregion
 
@@ -1419,9 +1483,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "91d335f8-47e0-4625-928e-ad386acf723b";
 
-        public const ushort AdditionalFieldCount = 10;
+        public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 16;
+        public const ushort FieldCount = 18;
 
         public static readonly Type MaskType = typeof(MiscItem.Mask<>);
 
@@ -1469,8 +1533,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)MiscItem_FieldIndex.PutDownSound;
                 case "KEYWORDS":
                     return (ushort)MiscItem_FieldIndex.Keywords;
-                case "WEIGHTVALUE":
-                    return (ushort)MiscItem_FieldIndex.WeightValue;
+                case "VALUE":
+                    return (ushort)MiscItem_FieldIndex.Value;
+                case "WEIGHT":
+                    return (ushort)MiscItem_FieldIndex.Weight;
+                case "DATADATATYPESTATE":
+                    return (ushort)MiscItem_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -1491,7 +1559,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MiscItem_FieldIndex.Destructible:
                 case MiscItem_FieldIndex.PickUpSound:
                 case MiscItem_FieldIndex.PutDownSound:
-                case MiscItem_FieldIndex.WeightValue:
+                case MiscItem_FieldIndex.Value:
+                case MiscItem_FieldIndex.Weight:
+                case MiscItem_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1508,12 +1578,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MiscItem_FieldIndex.Model:
                 case MiscItem_FieldIndex.Icons:
                 case MiscItem_FieldIndex.Destructible:
-                case MiscItem_FieldIndex.WeightValue:
                     return true;
                 case MiscItem_FieldIndex.Name:
                 case MiscItem_FieldIndex.PickUpSound:
                 case MiscItem_FieldIndex.PutDownSound:
                 case MiscItem_FieldIndex.Keywords:
+                case MiscItem_FieldIndex.Value:
+                case MiscItem_FieldIndex.Weight:
+                case MiscItem_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1534,7 +1606,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MiscItem_FieldIndex.PickUpSound:
                 case MiscItem_FieldIndex.PutDownSound:
                 case MiscItem_FieldIndex.Keywords:
-                case MiscItem_FieldIndex.WeightValue:
+                case MiscItem_FieldIndex.Value:
+                case MiscItem_FieldIndex.Weight:
+                case MiscItem_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1564,8 +1638,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "PutDownSound";
                 case MiscItem_FieldIndex.Keywords:
                     return "Keywords";
-                case MiscItem_FieldIndex.WeightValue:
-                    return "WeightValue";
+                case MiscItem_FieldIndex.Value:
+                    return "Value";
+                case MiscItem_FieldIndex.Weight:
+                    return "Weight";
+                case MiscItem_FieldIndex.DATADataTypeState:
+                    return "DATADataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -1585,7 +1663,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MiscItem_FieldIndex.PickUpSound:
                 case MiscItem_FieldIndex.PutDownSound:
                 case MiscItem_FieldIndex.Keywords:
-                case MiscItem_FieldIndex.WeightValue:
+                case MiscItem_FieldIndex.Value:
+                case MiscItem_FieldIndex.Weight:
+                case MiscItem_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
@@ -1606,7 +1686,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MiscItem_FieldIndex.PickUpSound:
                 case MiscItem_FieldIndex.PutDownSound:
                 case MiscItem_FieldIndex.Keywords:
-                case MiscItem_FieldIndex.WeightValue:
+                case MiscItem_FieldIndex.Value:
+                case MiscItem_FieldIndex.Weight:
+                case MiscItem_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
@@ -1636,8 +1718,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(FormLinkNullable<SoundDescriptor>);
                 case MiscItem_FieldIndex.Keywords:
                     return typeof(ExtendedList<IFormLink<Keyword>>);
-                case MiscItem_FieldIndex.WeightValue:
-                    return typeof(WeightValue);
+                case MiscItem_FieldIndex.Value:
+                    return typeof(UInt32);
+                case MiscItem_FieldIndex.Weight:
+                    return typeof(Single);
+                case MiscItem_FieldIndex.DATADataTypeState:
+                    return typeof(MiscItem.DATADataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1660,7 +1746,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = MISC_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 10;
+        public const int NumTypedFields = 9;
         public static readonly Type BinaryWriteTranslation = typeof(MiscItemBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1712,7 +1798,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.PickUpSound = null;
             item.PutDownSound = null;
             item.Keywords = null;
-            item.WeightValue.Clear();
+            item.Value = default;
+            item.Weight = default;
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1899,9 +1987,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength; // Skip header
-                    item.WeightValue = Mutagen.Bethesda.Skyrim.WeightValue.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)MiscItem_FieldIndex.WeightValue);
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.Value = dataFrame.ReadUInt32();
+                    item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    return TryGet<int?>.Succeed((int)MiscItem_FieldIndex.Weight);
                 }
                 default:
                     return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
@@ -2005,7 +2095,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.WeightValue = MaskItemExt.Factory(item.WeightValue.GetEqualsMask(rhs.WeightValue, include), include);
+            ret.Value = item.Value == rhs.Value;
+            ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2115,9 +2207,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.WeightValue?.Overall ?? true)
+            if (printMask?.Value ?? true)
             {
-                item.WeightValue?.ToString(fg, "WeightValue");
+                fg.AppendItem(item.Value, "Value");
+            }
+            if (printMask?.Weight ?? true)
+            {
+                fg.AppendItem(item.Weight, "Weight");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -2159,7 +2259,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.PickUpSound = (item.PickUpSound.FormKey != null);
             mask.PutDownSound = (item.PutDownSound.FormKey != null);
             mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
-            mask.WeightValue = new MaskItem<bool, WeightValue.Mask<bool>?>(true, item.WeightValue?.GetHasBeenSetMask());
+            mask.Value = true;
+            mask.Weight = true;
+            mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -2220,7 +2322,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
             if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
             if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
-            if (!object.Equals(lhs.WeightValue, rhs.WeightValue)) return false;
+            if (lhs.Value != rhs.Value) return false;
+            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
         
@@ -2275,7 +2379,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 hash.Add(PutDownSounditem);
             }
             hash.Add(item.Keywords);
-            hash.Add(item.WeightValue);
+            hash.Add(item.Value);
+            hash.Add(item.Weight);
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2553,27 +2659,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.WeightValue) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Value) ?? true))
             {
-                errorMask?.PushIndex((int)MiscItem_FieldIndex.WeightValue);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.WeightValue) ?? true))
-                    {
-                        item.WeightValue = rhs.WeightValue.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)MiscItem_FieldIndex.WeightValue),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Value = rhs.Value;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Weight) ?? true))
+            {
+                item.Weight = rhs.Weight;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MiscItem_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
             }
         }
         
@@ -2833,16 +2929,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: listSubMask);
                     });
             }
-            if ((translationMask?.GetShouldTranslate((int)MiscItem_FieldIndex.WeightValue) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Value) ?? true))
             {
-                var WeightValueItem = item.WeightValue;
-                ((WeightValueXmlWriteTranslation)((IXmlItem)WeightValueItem).XmlWriteTranslator).Write(
-                    item: WeightValueItem,
+                UInt32XmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.WeightValue),
-                    fieldIndex: (int)MiscItem_FieldIndex.WeightValue,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)MiscItem_FieldIndex.WeightValue));
+                    name: nameof(item.Value),
+                    item: item.Value,
+                    fieldIndex: (int)MiscItem_FieldIndex.Value,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MiscItem_FieldIndex.Weight) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Weight),
+                    item: item.Weight,
+                    fieldIndex: (int)MiscItem_FieldIndex.Weight,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MiscItem_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<MiscItem.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)MiscItem_FieldIndex.DATADataTypeState,
+                    errorMask: errorMask);
             }
         }
 
@@ -3128,14 +3240,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "WeightValue":
-                    errorMask?.PushIndex((int)MiscItem_FieldIndex.WeightValue);
+                case "Value":
+                    errorMask?.PushIndex((int)MiscItem_FieldIndex.Value);
                     try
                     {
-                        item.WeightValue = LoquiXmlTranslation<WeightValue>.Instance.Parse(
+                        item.Value = UInt32XmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)MiscItem_FieldIndex.WeightValue));
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Weight":
+                    errorMask?.PushIndex((int)MiscItem_FieldIndex.Weight);
+                    try
+                    {
+                        item.Weight = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DATADataTypeState":
+                    errorMask?.PushIndex((int)MiscItem_FieldIndex.DATADataTypeState);
+                    try
+                    {
+                        item.DATADataTypeState = EnumXmlTranslation<MiscItem.DATADataType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3233,6 +3380,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static MiscItemBinaryWriteTranslation Instance = new MiscItemBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IMiscItemGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
         public static void WriteRecordTypes(
             IMiscItemGetter item,
             MutagenWriter writer,
@@ -3300,13 +3456,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         item: subItem);
                 });
-            var WeightValueItem = item.WeightValue;
-            using (HeaderExport.ExportHeader(writer, MiscItem_Registration.DATA_HEADER, Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(MiscItem_Registration.DATA_HEADER)))
             {
-                ((WeightValueBinaryWriteTranslation)((IBinaryItem)WeightValueItem).BinaryWriteTranslator).Write(
-                    item: WeightValueItem,
+                writer.Write(item.Value);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    item: item.Weight);
             }
         }
 
@@ -3320,7 +3475,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(MiscItem_Registration.MISC_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -3465,9 +3620,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PutDownSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
-        #region WeightValue
-        private IWeightValueGetter? _WeightValue;
-        public IWeightValueGetter WeightValue => _WeightValue ?? new WeightValue();
+        private int? _DATALocation;
+        public MiscItem.DATADataType DATADataTypeState { get; private set; }
+        #region Value
+        private int _ValueLocation => _DATALocation!.Value + 0x0;
+        private bool _Value_IsSet => _DATALocation.HasValue;
+        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ValueLocation, 4)) : default;
+        #endregion
+        #region Weight
+        private int _WeightLocation => _DATALocation!.Value + 0x4;
+        private bool _Weight_IsSet => _DATALocation.HasValue;
+        public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Slice(_WeightLocation, 4)) : default;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
@@ -3597,12 +3760,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    stream.Position += _package.Meta.SubConstants.HeaderLength;
-                    this._WeightValue = WeightValueBinaryOverlay.WeightValueFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)MiscItem_FieldIndex.WeightValue);
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    return TryGet<int?>.Succeed((int)MiscItem_FieldIndex.Weight);
                 }
                 default:
                     return base.FillRecordType(

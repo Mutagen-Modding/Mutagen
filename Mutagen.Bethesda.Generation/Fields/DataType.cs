@@ -21,6 +21,7 @@ namespace Mutagen.Bethesda.Generation
         public bool HasStateLogic => this.BreakIndices.Count > 0 || this.RangeIndices.Count > 0;
         public string EnumName => $"{this.GetFieldData().RecordType.Value.Type}DataType";
         public string StateName => $"{this.EnumName}State";
+        public bool HasBeenSet = false;
 
         public class DataTypeRange
         {
@@ -92,9 +93,9 @@ namespace Mutagen.Bethesda.Generation
                     typeGen = await this.ObjectGen.LoadField(fieldNode, true);
                     if (typeGen.Succeeded)
                     {
-                        typeGen.Value.HasBeenSetProperty.OnNext((false, true));
                         if (typeGen.Value is LoquiType loqui
-                            && loqui.HasBeenSet)
+                            && loqui.HasBeenSet
+                            && !loqui.HasBeenSetProperty.Value.HasBeenSet)
                         {
                             loqui.HasBeenSetProperty.OnNext((false, true));
                         }
@@ -108,7 +109,10 @@ namespace Mutagen.Bethesda.Generation
                     {
                         typical.PreSetEvent += (fg) =>
                         {
-                            fg.AppendLine($"this.{this.StateName} |= {this.EnumName}.Has;");
+                            if (this.HasBeenSet)
+                            {
+                                fg.AppendLine($"this.{this.StateName} |= {this.EnumName}.Has;");
+                            }
                             foreach (var b in subField.EncounteredBreaks)
                             {
                                 fg.AppendLine($"this.{this.StateName} &= ~{this.EnumName}.Break{b};");
@@ -121,7 +125,6 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
             }
-            this.HasBeenSetProperty.OnNext((false, true));
         }
 
         public IEnumerable<DataTypeIteration> IterateFieldsWithMeta()

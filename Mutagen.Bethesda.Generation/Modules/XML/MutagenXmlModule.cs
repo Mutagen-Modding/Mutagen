@@ -89,8 +89,11 @@ namespace Mutagen.Bethesda.Generation
 
                     if (field is DataType dataType)
                     {
-                        fg.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Has))");
-                        using (new BraceWrapper(fg))
+                        if (dataType.HasBeenSet)
+                        {
+                            fg.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Has))");
+                        }
+                        using (new BraceWrapper(fg, doIt: dataType.HasBeenSet))
                         {
                             bool isInRange = false;
                             int encounteredBreakIndex = 0;
@@ -151,7 +154,7 @@ namespace Mutagen.Bethesda.Generation
 
         private void HandleDataTypeParsing(ObjectGeneration obj, FileGeneration fg, DataType set, DataType.DataTypeIteration subField, ref bool isInRange)
         {
-            if (subField.FieldIndex == 0)
+            if (subField.FieldIndex == 0 && set.HasBeenSet)
             {
                 fg.AppendLine($"item.{set.StateName} |= {obj.Name}.{set.EnumName}.Has;");
             }
@@ -205,11 +208,14 @@ namespace Mutagen.Bethesda.Generation
                         {
                             if (field is DataType set)
                             {
-                                fg.AppendLine($"case \"Has{set.EnumName}\":");
-                                using (new DepthWrapper(fg))
+                                if (set.HasBeenSet)
                                 {
-                                    fg.AppendLine($"item.{set.StateName} |= {obj.Name}.{set.EnumName}.Has;");
-                                    fg.AppendLine("break;");
+                                    fg.AppendLine($"case \"Has{set.EnumName}\":");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendLine($"item.{set.StateName} |= {obj.Name}.{set.EnumName}.Has;");
+                                        fg.AppendLine("break;");
+                                    }
                                 }
                                 foreach (var subField in set.IterateFieldsWithMeta())
                                 {

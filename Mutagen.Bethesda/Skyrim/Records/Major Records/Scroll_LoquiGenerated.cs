@@ -131,15 +131,40 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> IScrollGetter.PutDownSound => this.PutDownSound;
         #endregion
-        #region Data
-        public ScrollData Data { get; set; } = new ScrollData();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IScrollDataGetter IScrollGetter.Data => Data;
+        #region Value
+        public UInt32 Value { get; set; } = default;
         #endregion
-        #region SpellData
-        public SpellData SpellData { get; set; } = new SpellData();
+        #region Weight
+        public Single Weight { get; set; } = default;
+        #endregion
+        #region BaseCost
+        public UInt32 BaseCost { get; set; } = default;
+        #endregion
+        #region Flags
+        public SpellDataFlag Flags { get; set; } = default;
+        #endregion
+        #region Type
+        public SpellType Type { get; set; } = default;
+        #endregion
+        #region ChargeTime
+        public Single ChargeTime { get; set; } = default;
+        #endregion
+        #region CastType
+        public CastType CastType { get; set; } = default;
+        #endregion
+        #region TargetType
+        public TargetType TargetType { get; set; } = default;
+        #endregion
+        #region CastDuration
+        public Single CastDuration { get; set; } = default;
+        #endregion
+        #region Range
+        public Single Range { get; set; } = default;
+        #endregion
+        #region HalfCostPerk
+        public FormLink<Perk> HalfCostPerk { get; set; } = new FormLink<Perk>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISpellDataGetter IScrollGetter.SpellData => SpellData;
+        IFormLinkGetter<IPerkGetter> IScrollGetter.HalfCostPerk => this.HalfCostPerk;
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -154,6 +179,12 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IEffectGetter> IScrollGetter.Effects => _Effects;
         #endregion
 
+        #endregion
+        #region DATADataTypeState
+        public Scroll.DATADataType DATADataTypeState { get; set; } = default;
+        #endregion
+        #region SPITDataTypeState
+        public Scroll.SPITDataType SPITDataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -335,9 +366,20 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
                 this.PickUpSound = initialValue;
                 this.PutDownSound = initialValue;
-                this.Data = new MaskItem<TItem, ScrollData.Mask<TItem>?>(initialValue, new ScrollData.Mask<TItem>(initialValue));
-                this.SpellData = new MaskItem<TItem, SpellData.Mask<TItem>?>(initialValue, new SpellData.Mask<TItem>(initialValue));
+                this.Value = initialValue;
+                this.Weight = initialValue;
+                this.BaseCost = initialValue;
+                this.Flags = initialValue;
+                this.Type = initialValue;
+                this.ChargeTime = initialValue;
+                this.CastType = initialValue;
+                this.TargetType = initialValue;
+                this.CastDuration = initialValue;
+                this.Range = initialValue;
+                this.HalfCostPerk = initialValue;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
+                this.DATADataTypeState = initialValue;
+                this.SPITDataTypeState = initialValue;
             }
 
             public Mask(
@@ -357,9 +399,20 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Destructible,
                 TItem PickUpSound,
                 TItem PutDownSound,
-                TItem Data,
-                TItem SpellData,
-                TItem Effects)
+                TItem Value,
+                TItem Weight,
+                TItem BaseCost,
+                TItem Flags,
+                TItem Type,
+                TItem ChargeTime,
+                TItem CastType,
+                TItem TargetType,
+                TItem CastDuration,
+                TItem Range,
+                TItem HalfCostPerk,
+                TItem Effects,
+                TItem DATADataTypeState,
+                TItem SPITDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -378,9 +431,20 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
                 this.PickUpSound = PickUpSound;
                 this.PutDownSound = PutDownSound;
-                this.Data = new MaskItem<TItem, ScrollData.Mask<TItem>?>(Data, new ScrollData.Mask<TItem>(Data));
-                this.SpellData = new MaskItem<TItem, SpellData.Mask<TItem>?>(SpellData, new SpellData.Mask<TItem>(SpellData));
+                this.Value = Value;
+                this.Weight = Weight;
+                this.BaseCost = BaseCost;
+                this.Flags = Flags;
+                this.Type = Type;
+                this.ChargeTime = ChargeTime;
+                this.CastType = CastType;
+                this.TargetType = TargetType;
+                this.CastDuration = CastDuration;
+                this.Range = Range;
+                this.HalfCostPerk = HalfCostPerk;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
+                this.DATADataTypeState = DATADataTypeState;
+                this.SPITDataTypeState = SPITDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -402,9 +466,20 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
             public TItem PickUpSound;
             public TItem PutDownSound;
-            public MaskItem<TItem, ScrollData.Mask<TItem>?>? Data { get; set; }
-            public MaskItem<TItem, SpellData.Mask<TItem>?>? SpellData { get; set; }
+            public TItem Value;
+            public TItem Weight;
+            public TItem BaseCost;
+            public TItem Flags;
+            public TItem Type;
+            public TItem ChargeTime;
+            public TItem CastType;
+            public TItem TargetType;
+            public TItem CastDuration;
+            public TItem Range;
+            public TItem HalfCostPerk;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>? Effects;
+            public TItem DATADataTypeState;
+            public TItem SPITDataTypeState;
             #endregion
 
             #region Equals
@@ -428,9 +503,20 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
                 if (!object.Equals(this.PickUpSound, rhs.PickUpSound)) return false;
                 if (!object.Equals(this.PutDownSound, rhs.PutDownSound)) return false;
-                if (!object.Equals(this.Data, rhs.Data)) return false;
-                if (!object.Equals(this.SpellData, rhs.SpellData)) return false;
+                if (!object.Equals(this.Value, rhs.Value)) return false;
+                if (!object.Equals(this.Weight, rhs.Weight)) return false;
+                if (!object.Equals(this.BaseCost, rhs.BaseCost)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
+                if (!object.Equals(this.ChargeTime, rhs.ChargeTime)) return false;
+                if (!object.Equals(this.CastType, rhs.CastType)) return false;
+                if (!object.Equals(this.TargetType, rhs.TargetType)) return false;
+                if (!object.Equals(this.CastDuration, rhs.CastDuration)) return false;
+                if (!object.Equals(this.Range, rhs.Range)) return false;
+                if (!object.Equals(this.HalfCostPerk, rhs.HalfCostPerk)) return false;
                 if (!object.Equals(this.Effects, rhs.Effects)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
+                if (!object.Equals(this.SPITDataTypeState, rhs.SPITDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -446,9 +532,20 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Destructible);
                 hash.Add(this.PickUpSound);
                 hash.Add(this.PutDownSound);
-                hash.Add(this.Data);
-                hash.Add(this.SpellData);
+                hash.Add(this.Value);
+                hash.Add(this.Weight);
+                hash.Add(this.BaseCost);
+                hash.Add(this.Flags);
+                hash.Add(this.Type);
+                hash.Add(this.ChargeTime);
+                hash.Add(this.CastType);
+                hash.Add(this.TargetType);
+                hash.Add(this.CastDuration);
+                hash.Add(this.Range);
+                hash.Add(this.HalfCostPerk);
                 hash.Add(this.Effects);
+                hash.Add(this.DATADataTypeState);
+                hash.Add(this.SPITDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -491,16 +588,17 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (!eval(this.PickUpSound)) return false;
                 if (!eval(this.PutDownSound)) return false;
-                if (Data != null)
-                {
-                    if (!eval(this.Data.Overall)) return false;
-                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
-                }
-                if (SpellData != null)
-                {
-                    if (!eval(this.SpellData.Overall)) return false;
-                    if (this.SpellData.Specific != null && !this.SpellData.Specific.All(eval)) return false;
-                }
+                if (!eval(this.Value)) return false;
+                if (!eval(this.Weight)) return false;
+                if (!eval(this.BaseCost)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Type)) return false;
+                if (!eval(this.ChargeTime)) return false;
+                if (!eval(this.CastType)) return false;
+                if (!eval(this.TargetType)) return false;
+                if (!eval(this.CastDuration)) return false;
+                if (!eval(this.Range)) return false;
+                if (!eval(this.HalfCostPerk)) return false;
                 if (this.Effects != null)
                 {
                     if (!eval(this.Effects.Overall)) return false;
@@ -513,6 +611,8 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
+                if (!eval(this.DATADataTypeState)) return false;
+                if (!eval(this.SPITDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -553,16 +653,17 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (eval(this.PickUpSound)) return true;
                 if (eval(this.PutDownSound)) return true;
-                if (Data != null)
-                {
-                    if (eval(this.Data.Overall)) return true;
-                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
-                }
-                if (SpellData != null)
-                {
-                    if (eval(this.SpellData.Overall)) return true;
-                    if (this.SpellData.Specific != null && this.SpellData.Specific.Any(eval)) return true;
-                }
+                if (eval(this.Value)) return true;
+                if (eval(this.Weight)) return true;
+                if (eval(this.BaseCost)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.Type)) return true;
+                if (eval(this.ChargeTime)) return true;
+                if (eval(this.CastType)) return true;
+                if (eval(this.TargetType)) return true;
+                if (eval(this.CastDuration)) return true;
+                if (eval(this.Range)) return true;
+                if (eval(this.HalfCostPerk)) return true;
                 if (this.Effects != null)
                 {
                     if (eval(this.Effects.Overall)) return true;
@@ -575,6 +676,8 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
+                if (eval(this.DATADataTypeState)) return true;
+                if (eval(this.SPITDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -613,8 +716,17 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
                 obj.PickUpSound = eval(this.PickUpSound);
                 obj.PutDownSound = eval(this.PutDownSound);
-                obj.Data = this.Data == null ? null : new MaskItem<R, ScrollData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
-                obj.SpellData = this.SpellData == null ? null : new MaskItem<R, SpellData.Mask<R>?>(eval(this.SpellData.Overall), this.SpellData.Specific?.Translate(eval));
+                obj.Value = eval(this.Value);
+                obj.Weight = eval(this.Weight);
+                obj.BaseCost = eval(this.BaseCost);
+                obj.Flags = eval(this.Flags);
+                obj.Type = eval(this.Type);
+                obj.ChargeTime = eval(this.ChargeTime);
+                obj.CastType = eval(this.CastType);
+                obj.TargetType = eval(this.TargetType);
+                obj.CastDuration = eval(this.CastDuration);
+                obj.Range = eval(this.Range);
+                obj.HalfCostPerk = eval(this.HalfCostPerk);
                 if (Effects != null)
                 {
                     obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect.Mask<R>?>>?>(eval(this.Effects.Overall), Enumerable.Empty<MaskItemIndexed<R, Effect.Mask<R>?>>());
@@ -630,6 +742,8 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
+                obj.SPITDataTypeState = eval(this.SPITDataTypeState);
             }
             #endregion
 
@@ -711,13 +825,49 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(PutDownSound, "PutDownSound");
                     }
-                    if (printMask?.Data?.Overall ?? true)
+                    if (printMask?.Value ?? true)
                     {
-                        Data?.ToString(fg);
+                        fg.AppendItem(Value, "Value");
                     }
-                    if (printMask?.SpellData?.Overall ?? true)
+                    if (printMask?.Weight ?? true)
                     {
-                        SpellData?.ToString(fg);
+                        fg.AppendItem(Weight, "Weight");
+                    }
+                    if (printMask?.BaseCost ?? true)
+                    {
+                        fg.AppendItem(BaseCost, "BaseCost");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.Type ?? true)
+                    {
+                        fg.AppendItem(Type, "Type");
+                    }
+                    if (printMask?.ChargeTime ?? true)
+                    {
+                        fg.AppendItem(ChargeTime, "ChargeTime");
+                    }
+                    if (printMask?.CastType ?? true)
+                    {
+                        fg.AppendItem(CastType, "CastType");
+                    }
+                    if (printMask?.TargetType ?? true)
+                    {
+                        fg.AppendItem(TargetType, "TargetType");
+                    }
+                    if (printMask?.CastDuration ?? true)
+                    {
+                        fg.AppendItem(CastDuration, "CastDuration");
+                    }
+                    if (printMask?.Range ?? true)
+                    {
+                        fg.AppendItem(Range, "Range");
+                    }
+                    if (printMask?.HalfCostPerk ?? true)
+                    {
+                        fg.AppendItem(HalfCostPerk, "HalfCostPerk");
                     }
                     if ((printMask?.Effects?.Overall ?? true)
                         && Effects.TryGet(out var EffectsItem))
@@ -742,6 +892,14 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                         fg.AppendLine("]");
                     }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                    }
+                    if (printMask?.SPITDataTypeState ?? true)
+                    {
+                        fg.AppendItem(SPITDataTypeState, "SPITDataTypeState");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -764,9 +922,20 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
             public Exception? PickUpSound;
             public Exception? PutDownSound;
-            public MaskItem<Exception?, ScrollData.ErrorMask?>? Data;
-            public MaskItem<Exception?, SpellData.ErrorMask?>? SpellData;
+            public Exception? Value;
+            public Exception? Weight;
+            public Exception? BaseCost;
+            public Exception? Flags;
+            public Exception? Type;
+            public Exception? ChargeTime;
+            public Exception? CastType;
+            public Exception? TargetType;
+            public Exception? CastDuration;
+            public Exception? Range;
+            public Exception? HalfCostPerk;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>? Effects;
+            public Exception? DATADataTypeState;
+            public Exception? SPITDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -795,12 +964,34 @@ namespace Mutagen.Bethesda.Skyrim
                         return PickUpSound;
                     case Scroll_FieldIndex.PutDownSound:
                         return PutDownSound;
-                    case Scroll_FieldIndex.Data:
-                        return Data;
-                    case Scroll_FieldIndex.SpellData:
-                        return SpellData;
+                    case Scroll_FieldIndex.Value:
+                        return Value;
+                    case Scroll_FieldIndex.Weight:
+                        return Weight;
+                    case Scroll_FieldIndex.BaseCost:
+                        return BaseCost;
+                    case Scroll_FieldIndex.Flags:
+                        return Flags;
+                    case Scroll_FieldIndex.Type:
+                        return Type;
+                    case Scroll_FieldIndex.ChargeTime:
+                        return ChargeTime;
+                    case Scroll_FieldIndex.CastType:
+                        return CastType;
+                    case Scroll_FieldIndex.TargetType:
+                        return TargetType;
+                    case Scroll_FieldIndex.CastDuration:
+                        return CastDuration;
+                    case Scroll_FieldIndex.Range:
+                        return Range;
+                    case Scroll_FieldIndex.HalfCostPerk:
+                        return HalfCostPerk;
                     case Scroll_FieldIndex.Effects:
                         return Effects;
+                    case Scroll_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
+                    case Scroll_FieldIndex.SPITDataTypeState:
+                        return SPITDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -841,14 +1032,47 @@ namespace Mutagen.Bethesda.Skyrim
                     case Scroll_FieldIndex.PutDownSound:
                         this.PutDownSound = ex;
                         break;
-                    case Scroll_FieldIndex.Data:
-                        this.Data = new MaskItem<Exception?, ScrollData.ErrorMask?>(ex, null);
+                    case Scroll_FieldIndex.Value:
+                        this.Value = ex;
                         break;
-                    case Scroll_FieldIndex.SpellData:
-                        this.SpellData = new MaskItem<Exception?, SpellData.ErrorMask?>(ex, null);
+                    case Scroll_FieldIndex.Weight:
+                        this.Weight = ex;
+                        break;
+                    case Scroll_FieldIndex.BaseCost:
+                        this.BaseCost = ex;
+                        break;
+                    case Scroll_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Scroll_FieldIndex.Type:
+                        this.Type = ex;
+                        break;
+                    case Scroll_FieldIndex.ChargeTime:
+                        this.ChargeTime = ex;
+                        break;
+                    case Scroll_FieldIndex.CastType:
+                        this.CastType = ex;
+                        break;
+                    case Scroll_FieldIndex.TargetType:
+                        this.TargetType = ex;
+                        break;
+                    case Scroll_FieldIndex.CastDuration:
+                        this.CastDuration = ex;
+                        break;
+                    case Scroll_FieldIndex.Range:
+                        this.Range = ex;
+                        break;
+                    case Scroll_FieldIndex.HalfCostPerk:
+                        this.HalfCostPerk = ex;
                         break;
                     case Scroll_FieldIndex.Effects:
                         this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Scroll_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
+                    case Scroll_FieldIndex.SPITDataTypeState:
+                        this.SPITDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -891,14 +1115,47 @@ namespace Mutagen.Bethesda.Skyrim
                     case Scroll_FieldIndex.PutDownSound:
                         this.PutDownSound = (Exception?)obj;
                         break;
-                    case Scroll_FieldIndex.Data:
-                        this.Data = (MaskItem<Exception?, ScrollData.ErrorMask?>?)obj;
+                    case Scroll_FieldIndex.Value:
+                        this.Value = (Exception?)obj;
                         break;
-                    case Scroll_FieldIndex.SpellData:
-                        this.SpellData = (MaskItem<Exception?, SpellData.ErrorMask?>?)obj;
+                    case Scroll_FieldIndex.Weight:
+                        this.Weight = (Exception?)obj;
+                        break;
+                    case Scroll_FieldIndex.BaseCost:
+                        this.BaseCost = (Exception?)obj;
+                        break;
+                    case Scroll_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case Scroll_FieldIndex.Type:
+                        this.Type = (Exception?)obj;
+                        break;
+                    case Scroll_FieldIndex.ChargeTime:
+                        this.ChargeTime = (Exception?)obj;
+                        break;
+                    case Scroll_FieldIndex.CastType:
+                        this.CastType = (Exception?)obj;
+                        break;
+                    case Scroll_FieldIndex.TargetType:
+                        this.TargetType = (Exception?)obj;
+                        break;
+                    case Scroll_FieldIndex.CastDuration:
+                        this.CastDuration = (Exception?)obj;
+                        break;
+                    case Scroll_FieldIndex.Range:
+                        this.Range = (Exception?)obj;
+                        break;
+                    case Scroll_FieldIndex.HalfCostPerk:
+                        this.HalfCostPerk = (Exception?)obj;
                         break;
                     case Scroll_FieldIndex.Effects:
                         this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>)obj;
+                        break;
+                    case Scroll_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
+                        break;
+                    case Scroll_FieldIndex.SPITDataTypeState:
+                        this.SPITDataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -919,9 +1176,20 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Destructible != null) return true;
                 if (PickUpSound != null) return true;
                 if (PutDownSound != null) return true;
-                if (Data != null) return true;
-                if (SpellData != null) return true;
+                if (Value != null) return true;
+                if (Weight != null) return true;
+                if (BaseCost != null) return true;
+                if (Flags != null) return true;
+                if (Type != null) return true;
+                if (ChargeTime != null) return true;
+                if (CastType != null) return true;
+                if (TargetType != null) return true;
+                if (CastDuration != null) return true;
+                if (Range != null) return true;
+                if (HalfCostPerk != null) return true;
                 if (Effects != null) return true;
+                if (DATADataTypeState != null) return true;
+                if (SPITDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -988,8 +1256,17 @@ namespace Mutagen.Bethesda.Skyrim
                 Destructible?.ToString(fg);
                 fg.AppendItem(PickUpSound, "PickUpSound");
                 fg.AppendItem(PutDownSound, "PutDownSound");
-                Data?.ToString(fg);
-                SpellData?.ToString(fg);
+                fg.AppendItem(Value, "Value");
+                fg.AppendItem(Weight, "Weight");
+                fg.AppendItem(BaseCost, "BaseCost");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(Type, "Type");
+                fg.AppendItem(ChargeTime, "ChargeTime");
+                fg.AppendItem(CastType, "CastType");
+                fg.AppendItem(TargetType, "TargetType");
+                fg.AppendItem(CastDuration, "CastDuration");
+                fg.AppendItem(Range, "Range");
+                fg.AppendItem(HalfCostPerk, "HalfCostPerk");
                 if (Effects.TryGet(out var EffectsItem))
                 {
                     fg.AppendLine("Effects =>");
@@ -1012,6 +1289,8 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                fg.AppendItem(SPITDataTypeState, "SPITDataTypeState");
             }
             #endregion
 
@@ -1030,9 +1309,20 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
                 ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
                 ret.PutDownSound = this.PutDownSound.Combine(rhs.PutDownSound);
-                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
-                ret.SpellData = this.SpellData.Combine(rhs.SpellData, (l, r) => l.Combine(r));
+                ret.Value = this.Value.Combine(rhs.Value);
+                ret.Weight = this.Weight.Combine(rhs.Weight);
+                ret.BaseCost = this.BaseCost.Combine(rhs.BaseCost);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Type = this.Type.Combine(rhs.Type);
+                ret.ChargeTime = this.ChargeTime.Combine(rhs.ChargeTime);
+                ret.CastType = this.CastType.Combine(rhs.CastType);
+                ret.TargetType = this.TargetType.Combine(rhs.TargetType);
+                ret.CastDuration = this.CastDuration.Combine(rhs.CastDuration);
+                ret.Range = this.Range.Combine(rhs.Range);
+                ret.HalfCostPerk = this.HalfCostPerk.Combine(rhs.HalfCostPerk);
                 ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+                ret.SPITDataTypeState = this.SPITDataTypeState.Combine(rhs.SPITDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1065,9 +1355,20 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Destructible.TranslationMask?> Destructible;
             public bool PickUpSound;
             public bool PutDownSound;
-            public MaskItem<bool, ScrollData.TranslationMask?> Data;
-            public MaskItem<bool, SpellData.TranslationMask?> SpellData;
+            public bool Value;
+            public bool Weight;
+            public bool BaseCost;
+            public bool Flags;
+            public bool Type;
+            public bool ChargeTime;
+            public bool CastType;
+            public bool TargetType;
+            public bool CastDuration;
+            public bool Range;
+            public bool HalfCostPerk;
             public MaskItem<bool, Effect.TranslationMask?> Effects;
+            public bool DATADataTypeState;
+            public bool SPITDataTypeState;
             #endregion
 
             #region Ctors
@@ -1084,9 +1385,20 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Destructible = new MaskItem<bool, Destructible.TranslationMask?>(defaultOn, null);
                 this.PickUpSound = defaultOn;
                 this.PutDownSound = defaultOn;
-                this.Data = new MaskItem<bool, ScrollData.TranslationMask?>(defaultOn, null);
-                this.SpellData = new MaskItem<bool, SpellData.TranslationMask?>(defaultOn, null);
+                this.Value = defaultOn;
+                this.Weight = defaultOn;
+                this.BaseCost = defaultOn;
+                this.Flags = defaultOn;
+                this.Type = defaultOn;
+                this.ChargeTime = defaultOn;
+                this.CastType = defaultOn;
+                this.TargetType = defaultOn;
+                this.CastDuration = defaultOn;
+                this.Range = defaultOn;
+                this.HalfCostPerk = defaultOn;
                 this.Effects = new MaskItem<bool, Effect.TranslationMask?>(defaultOn, null);
+                this.DATADataTypeState = defaultOn;
+                this.SPITDataTypeState = defaultOn;
             }
 
             #endregion
@@ -1104,9 +1416,20 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Destructible?.Overall ?? true, Destructible?.Specific?.GetCrystal()));
                 ret.Add((PickUpSound, null));
                 ret.Add((PutDownSound, null));
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
-                ret.Add((SpellData?.Overall ?? true, SpellData?.Specific?.GetCrystal()));
+                ret.Add((Value, null));
+                ret.Add((Weight, null));
+                ret.Add((BaseCost, null));
+                ret.Add((Flags, null));
+                ret.Add((Type, null));
+                ret.Add((ChargeTime, null));
+                ret.Add((CastType, null));
+                ret.Add((TargetType, null));
+                ret.Add((CastDuration, null));
+                ret.Add((Range, null));
+                ret.Add((HalfCostPerk, null));
                 ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
+                ret.Add((DATADataTypeState, null));
+                ret.Add((SPITDataTypeState, null));
             }
         }
         #endregion
@@ -1136,6 +1459,14 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        [Flags]
+        public enum DATADataType
+        {
+        }
+        [Flags]
+        public enum SPITDataType
+        {
+        }
         #endregion
 
         #region Binary Translation
@@ -1201,6 +1532,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeled,
         IObjectBounded,
         IObjectId,
+        IWeightValue,
         ILoquiObjectSetter<IScrollInternal>
     {
         new ObjectBounds ObjectBounds { get; set; }
@@ -1213,9 +1545,20 @@ namespace Mutagen.Bethesda.Skyrim
         new Destructible? Destructible { get; set; }
         new FormLinkNullable<SoundDescriptor> PickUpSound { get; set; }
         new FormLinkNullable<SoundDescriptor> PutDownSound { get; set; }
-        new ScrollData Data { get; set; }
-        new SpellData SpellData { get; set; }
+        new UInt32 Value { get; set; }
+        new Single Weight { get; set; }
+        new UInt32 BaseCost { get; set; }
+        new SpellDataFlag Flags { get; set; }
+        new SpellType Type { get; set; }
+        new Single ChargeTime { get; set; }
+        new CastType CastType { get; set; }
+        new TargetType TargetType { get; set; }
+        new Single CastDuration { get; set; }
+        new Single Range { get; set; }
+        new FormLink<Perk> HalfCostPerk { get; set; }
         new ExtendedList<Effect> Effects { get; }
+        new Scroll.DATADataType DATADataTypeState { get; set; }
+        new Scroll.SPITDataType SPITDataTypeState { get; set; }
     }
 
     public partial interface IScrollInternal :
@@ -1232,6 +1575,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter,
         IObjectBoundedGetter,
         IObjectIdGetter,
+        IWeightValueGetter,
         ILoquiObject<IScrollGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,
@@ -1248,9 +1592,20 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? Destructible { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound { get; }
-        IScrollDataGetter Data { get; }
-        ISpellDataGetter SpellData { get; }
+        UInt32 Value { get; }
+        Single Weight { get; }
+        UInt32 BaseCost { get; }
+        SpellDataFlag Flags { get; }
+        SpellType Type { get; }
+        Single ChargeTime { get; }
+        CastType CastType { get; }
+        TargetType TargetType { get; }
+        Single CastDuration { get; }
+        Single Range { get; }
+        IFormLinkGetter<IPerkGetter> HalfCostPerk { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
+        Scroll.DATADataType DATADataTypeState { get; }
+        Scroll.SPITDataType SPITDataTypeState { get; }
 
     }
 
@@ -1561,9 +1916,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Destructible = 13,
         PickUpSound = 14,
         PutDownSound = 15,
-        Data = 16,
-        SpellData = 17,
-        Effects = 18,
+        Value = 16,
+        Weight = 17,
+        BaseCost = 18,
+        Flags = 19,
+        Type = 20,
+        ChargeTime = 21,
+        CastType = 22,
+        TargetType = 23,
+        CastDuration = 24,
+        Range = 25,
+        HalfCostPerk = 26,
+        Effects = 27,
+        DATADataTypeState = 28,
+        SPITDataTypeState = 29,
     }
     #endregion
 
@@ -1581,9 +1947,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "966367fb-9898-41f3-a250-d453749a138b";
 
-        public const ushort AdditionalFieldCount = 13;
+        public const ushort AdditionalFieldCount = 24;
 
-        public const ushort FieldCount = 19;
+        public const ushort FieldCount = 30;
 
         public static readonly Type MaskType = typeof(Scroll.Mask<>);
 
@@ -1633,12 +1999,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Scroll_FieldIndex.PickUpSound;
                 case "PUTDOWNSOUND":
                     return (ushort)Scroll_FieldIndex.PutDownSound;
-                case "DATA":
-                    return (ushort)Scroll_FieldIndex.Data;
-                case "SPELLDATA":
-                    return (ushort)Scroll_FieldIndex.SpellData;
+                case "VALUE":
+                    return (ushort)Scroll_FieldIndex.Value;
+                case "WEIGHT":
+                    return (ushort)Scroll_FieldIndex.Weight;
+                case "BASECOST":
+                    return (ushort)Scroll_FieldIndex.BaseCost;
+                case "FLAGS":
+                    return (ushort)Scroll_FieldIndex.Flags;
+                case "TYPE":
+                    return (ushort)Scroll_FieldIndex.Type;
+                case "CHARGETIME":
+                    return (ushort)Scroll_FieldIndex.ChargeTime;
+                case "CASTTYPE":
+                    return (ushort)Scroll_FieldIndex.CastType;
+                case "TARGETTYPE":
+                    return (ushort)Scroll_FieldIndex.TargetType;
+                case "CASTDURATION":
+                    return (ushort)Scroll_FieldIndex.CastDuration;
+                case "RANGE":
+                    return (ushort)Scroll_FieldIndex.Range;
+                case "HALFCOSTPERK":
+                    return (ushort)Scroll_FieldIndex.HalfCostPerk;
                 case "EFFECTS":
                     return (ushort)Scroll_FieldIndex.Effects;
+                case "DATADATATYPESTATE":
+                    return (ushort)Scroll_FieldIndex.DATADataTypeState;
+                case "SPITDATATYPESTATE":
+                    return (ushort)Scroll_FieldIndex.SPITDataTypeState;
                 default:
                     return null;
             }
@@ -1661,8 +2049,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Scroll_FieldIndex.Destructible:
                 case Scroll_FieldIndex.PickUpSound:
                 case Scroll_FieldIndex.PutDownSound:
-                case Scroll_FieldIndex.Data:
-                case Scroll_FieldIndex.SpellData:
+                case Scroll_FieldIndex.Value:
+                case Scroll_FieldIndex.Weight:
+                case Scroll_FieldIndex.BaseCost:
+                case Scroll_FieldIndex.Flags:
+                case Scroll_FieldIndex.Type:
+                case Scroll_FieldIndex.ChargeTime:
+                case Scroll_FieldIndex.CastType:
+                case Scroll_FieldIndex.TargetType:
+                case Scroll_FieldIndex.CastDuration:
+                case Scroll_FieldIndex.Range:
+                case Scroll_FieldIndex.HalfCostPerk:
+                case Scroll_FieldIndex.DATADataTypeState:
+                case Scroll_FieldIndex.SPITDataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1677,8 +2076,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Scroll_FieldIndex.ObjectBounds:
                 case Scroll_FieldIndex.Model:
                 case Scroll_FieldIndex.Destructible:
-                case Scroll_FieldIndex.Data:
-                case Scroll_FieldIndex.SpellData:
                 case Scroll_FieldIndex.Effects:
                     return true;
                 case Scroll_FieldIndex.Name:
@@ -1688,6 +2085,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Scroll_FieldIndex.Description:
                 case Scroll_FieldIndex.PickUpSound:
                 case Scroll_FieldIndex.PutDownSound:
+                case Scroll_FieldIndex.Value:
+                case Scroll_FieldIndex.Weight:
+                case Scroll_FieldIndex.BaseCost:
+                case Scroll_FieldIndex.Flags:
+                case Scroll_FieldIndex.Type:
+                case Scroll_FieldIndex.ChargeTime:
+                case Scroll_FieldIndex.CastType:
+                case Scroll_FieldIndex.TargetType:
+                case Scroll_FieldIndex.CastDuration:
+                case Scroll_FieldIndex.Range:
+                case Scroll_FieldIndex.HalfCostPerk:
+                case Scroll_FieldIndex.DATADataTypeState:
+                case Scroll_FieldIndex.SPITDataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1709,9 +2119,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Scroll_FieldIndex.Destructible:
                 case Scroll_FieldIndex.PickUpSound:
                 case Scroll_FieldIndex.PutDownSound:
-                case Scroll_FieldIndex.Data:
-                case Scroll_FieldIndex.SpellData:
+                case Scroll_FieldIndex.Value:
+                case Scroll_FieldIndex.Weight:
+                case Scroll_FieldIndex.BaseCost:
+                case Scroll_FieldIndex.Flags:
+                case Scroll_FieldIndex.Type:
+                case Scroll_FieldIndex.ChargeTime:
+                case Scroll_FieldIndex.CastType:
+                case Scroll_FieldIndex.TargetType:
+                case Scroll_FieldIndex.CastDuration:
+                case Scroll_FieldIndex.Range:
+                case Scroll_FieldIndex.HalfCostPerk:
                 case Scroll_FieldIndex.Effects:
+                case Scroll_FieldIndex.DATADataTypeState:
+                case Scroll_FieldIndex.SPITDataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1743,12 +2164,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "PickUpSound";
                 case Scroll_FieldIndex.PutDownSound:
                     return "PutDownSound";
-                case Scroll_FieldIndex.Data:
-                    return "Data";
-                case Scroll_FieldIndex.SpellData:
-                    return "SpellData";
+                case Scroll_FieldIndex.Value:
+                    return "Value";
+                case Scroll_FieldIndex.Weight:
+                    return "Weight";
+                case Scroll_FieldIndex.BaseCost:
+                    return "BaseCost";
+                case Scroll_FieldIndex.Flags:
+                    return "Flags";
+                case Scroll_FieldIndex.Type:
+                    return "Type";
+                case Scroll_FieldIndex.ChargeTime:
+                    return "ChargeTime";
+                case Scroll_FieldIndex.CastType:
+                    return "CastType";
+                case Scroll_FieldIndex.TargetType:
+                    return "TargetType";
+                case Scroll_FieldIndex.CastDuration:
+                    return "CastDuration";
+                case Scroll_FieldIndex.Range:
+                    return "Range";
+                case Scroll_FieldIndex.HalfCostPerk:
+                    return "HalfCostPerk";
                 case Scroll_FieldIndex.Effects:
                     return "Effects";
+                case Scroll_FieldIndex.DATADataTypeState:
+                    return "DATADataTypeState";
+                case Scroll_FieldIndex.SPITDataTypeState:
+                    return "SPITDataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -1769,9 +2212,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Scroll_FieldIndex.Destructible:
                 case Scroll_FieldIndex.PickUpSound:
                 case Scroll_FieldIndex.PutDownSound:
-                case Scroll_FieldIndex.Data:
-                case Scroll_FieldIndex.SpellData:
+                case Scroll_FieldIndex.Value:
+                case Scroll_FieldIndex.Weight:
+                case Scroll_FieldIndex.BaseCost:
+                case Scroll_FieldIndex.Flags:
+                case Scroll_FieldIndex.Type:
+                case Scroll_FieldIndex.ChargeTime:
+                case Scroll_FieldIndex.CastType:
+                case Scroll_FieldIndex.TargetType:
+                case Scroll_FieldIndex.CastDuration:
+                case Scroll_FieldIndex.Range:
+                case Scroll_FieldIndex.HalfCostPerk:
                 case Scroll_FieldIndex.Effects:
+                case Scroll_FieldIndex.DATADataTypeState:
+                case Scroll_FieldIndex.SPITDataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
@@ -1793,9 +2247,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Scroll_FieldIndex.Destructible:
                 case Scroll_FieldIndex.PickUpSound:
                 case Scroll_FieldIndex.PutDownSound:
-                case Scroll_FieldIndex.Data:
-                case Scroll_FieldIndex.SpellData:
+                case Scroll_FieldIndex.Value:
+                case Scroll_FieldIndex.Weight:
+                case Scroll_FieldIndex.BaseCost:
+                case Scroll_FieldIndex.Flags:
+                case Scroll_FieldIndex.Type:
+                case Scroll_FieldIndex.ChargeTime:
+                case Scroll_FieldIndex.CastType:
+                case Scroll_FieldIndex.TargetType:
+                case Scroll_FieldIndex.CastDuration:
+                case Scroll_FieldIndex.Range:
+                case Scroll_FieldIndex.HalfCostPerk:
                 case Scroll_FieldIndex.Effects:
+                case Scroll_FieldIndex.DATADataTypeState:
+                case Scroll_FieldIndex.SPITDataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
@@ -1827,12 +2292,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(FormLinkNullable<SoundDescriptor>);
                 case Scroll_FieldIndex.PutDownSound:
                     return typeof(FormLinkNullable<SoundDescriptor>);
-                case Scroll_FieldIndex.Data:
-                    return typeof(ScrollData);
-                case Scroll_FieldIndex.SpellData:
-                    return typeof(SpellData);
+                case Scroll_FieldIndex.Value:
+                    return typeof(UInt32);
+                case Scroll_FieldIndex.Weight:
+                    return typeof(Single);
+                case Scroll_FieldIndex.BaseCost:
+                    return typeof(UInt32);
+                case Scroll_FieldIndex.Flags:
+                    return typeof(SpellDataFlag);
+                case Scroll_FieldIndex.Type:
+                    return typeof(SpellType);
+                case Scroll_FieldIndex.ChargeTime:
+                    return typeof(Single);
+                case Scroll_FieldIndex.CastType:
+                    return typeof(CastType);
+                case Scroll_FieldIndex.TargetType:
+                    return typeof(TargetType);
+                case Scroll_FieldIndex.CastDuration:
+                    return typeof(Single);
+                case Scroll_FieldIndex.Range:
+                    return typeof(Single);
+                case Scroll_FieldIndex.HalfCostPerk:
+                    return typeof(FormLink<Perk>);
                 case Scroll_FieldIndex.Effects:
                     return typeof(ExtendedList<Effect>);
+                case Scroll_FieldIndex.DATADataTypeState:
+                    return typeof(Scroll.DATADataType);
+                case Scroll_FieldIndex.SPITDataTypeState:
+                    return typeof(Scroll.SPITDataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1860,7 +2347,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
         public static readonly RecordType TriggeringRecordType = SCRL_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 13;
+        public const int NumTypedFields = 11;
         public static readonly Type BinaryWriteTranslation = typeof(ScrollBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1913,9 +2400,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Destructible = null;
             item.PickUpSound = null;
             item.PutDownSound = null;
-            item.Data.Clear();
-            item.SpellData.Clear();
+            item.Value = default;
+            item.Weight = default;
+            item.BaseCost = default;
+            item.Flags = default;
+            item.Type = default;
+            item.ChargeTime = default;
+            item.CastType = default;
+            item.TargetType = default;
+            item.CastDuration = default;
+            item.Range = default;
+            item.HalfCostPerk = new FormLink<Perk>(FormKey.Null);
             item.Effects.Clear();
+            item.DATADataTypeState = default;
+            item.SPITDataTypeState = default;
             base.Clear(item);
         }
         
@@ -2114,13 +2612,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    item.Data = Mutagen.Bethesda.Skyrim.ScrollData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.Data);
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.Value = dataFrame.ReadUInt32();
+                    item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.Weight);
                 }
                 case 0x54495053: // SPIT
                 {
-                    item.SpellData = Mutagen.Bethesda.Skyrim.SpellData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.SpellData);
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.BaseCost = dataFrame.ReadUInt32();
+                    item.Flags = EnumBinaryTranslation<SpellDataFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.Type = EnumBinaryTranslation<SpellType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.ChargeTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.CastType = EnumBinaryTranslation<CastType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.TargetType = EnumBinaryTranslation<TargetType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.CastDuration = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.Range = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.HalfCostPerk = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.HalfCostPerk);
                 }
                 case 0x44494645: // EFID
                 case 0x54494645: // EFIT
@@ -2235,12 +2748,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
             ret.PickUpSound = object.Equals(item.PickUpSound, rhs.PickUpSound);
             ret.PutDownSound = object.Equals(item.PutDownSound, rhs.PutDownSound);
-            ret.Data = MaskItemExt.Factory(item.Data.GetEqualsMask(rhs.Data, include), include);
-            ret.SpellData = MaskItemExt.Factory(item.SpellData.GetEqualsMask(rhs.SpellData, include), include);
+            ret.Value = item.Value == rhs.Value;
+            ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
+            ret.BaseCost = item.BaseCost == rhs.BaseCost;
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Type = item.Type == rhs.Type;
+            ret.ChargeTime = item.ChargeTime.EqualsWithin(rhs.ChargeTime);
+            ret.CastType = item.CastType == rhs.CastType;
+            ret.TargetType = item.TargetType == rhs.TargetType;
+            ret.CastDuration = item.CastDuration.EqualsWithin(rhs.CastDuration);
+            ret.Range = item.Range.EqualsWithin(rhs.Range);
+            ret.HalfCostPerk = object.Equals(item.HalfCostPerk, rhs.HalfCostPerk);
             ret.Effects = item.Effects.CollectionEqualsHelper(
                 rhs.Effects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
+            ret.SPITDataTypeState = item.SPITDataTypeState == rhs.SPITDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2355,13 +2879,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(PutDownSoundItem, "PutDownSound");
             }
-            if (printMask?.Data?.Overall ?? true)
+            if (printMask?.Value ?? true)
             {
-                item.Data?.ToString(fg, "Data");
+                fg.AppendItem(item.Value, "Value");
             }
-            if (printMask?.SpellData?.Overall ?? true)
+            if (printMask?.Weight ?? true)
             {
-                item.SpellData?.ToString(fg, "SpellData");
+                fg.AppendItem(item.Weight, "Weight");
+            }
+            if (printMask?.BaseCost ?? true)
+            {
+                fg.AppendItem(item.BaseCost, "BaseCost");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.Type ?? true)
+            {
+                fg.AppendItem(item.Type, "Type");
+            }
+            if (printMask?.ChargeTime ?? true)
+            {
+                fg.AppendItem(item.ChargeTime, "ChargeTime");
+            }
+            if (printMask?.CastType ?? true)
+            {
+                fg.AppendItem(item.CastType, "CastType");
+            }
+            if (printMask?.TargetType ?? true)
+            {
+                fg.AppendItem(item.TargetType, "TargetType");
+            }
+            if (printMask?.CastDuration ?? true)
+            {
+                fg.AppendItem(item.CastDuration, "CastDuration");
+            }
+            if (printMask?.Range ?? true)
+            {
+                fg.AppendItem(item.Range, "Range");
+            }
+            if (printMask?.HalfCostPerk ?? true)
+            {
+                fg.AppendItem(item.HalfCostPerk, "HalfCostPerk");
             }
             if (printMask?.Effects?.Overall ?? true)
             {
@@ -2380,6 +2940,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                 }
                 fg.AppendLine("]");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+            }
+            if (printMask?.SPITDataTypeState ?? true)
+            {
+                fg.AppendItem(item.SPITDataTypeState, "SPITDataTypeState");
             }
         }
         
@@ -2419,10 +2987,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Destructible = new MaskItem<bool, Destructible.Mask<bool>?>(itemDestructible != null, itemDestructible?.GetHasBeenSetMask());
             mask.PickUpSound = (item.PickUpSound.FormKey != null);
             mask.PutDownSound = (item.PutDownSound.FormKey != null);
-            mask.Data = new MaskItem<bool, ScrollData.Mask<bool>?>(true, item.Data?.GetHasBeenSetMask());
-            mask.SpellData = new MaskItem<bool, SpellData.Mask<bool>?>(true, item.SpellData?.GetHasBeenSetMask());
+            mask.Value = true;
+            mask.Weight = true;
+            mask.BaseCost = true;
+            mask.Flags = true;
+            mask.Type = true;
+            mask.ChargeTime = true;
+            mask.CastType = true;
+            mask.TargetType = true;
+            mask.CastDuration = true;
+            mask.Range = true;
+            mask.HalfCostPerk = true;
             var EffectsItem = item.Effects;
             mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect.Mask<bool>?>>?>(true, EffectsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.DATADataTypeState = true;
+            mask.SPITDataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -2484,9 +3063,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
             if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
             if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            if (!object.Equals(lhs.SpellData, rhs.SpellData)) return false;
+            if (lhs.Value != rhs.Value) return false;
+            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            if (lhs.BaseCost != rhs.BaseCost) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.Type != rhs.Type) return false;
+            if (!lhs.ChargeTime.EqualsWithin(rhs.ChargeTime)) return false;
+            if (lhs.CastType != rhs.CastType) return false;
+            if (lhs.TargetType != rhs.TargetType) return false;
+            if (!lhs.CastDuration.EqualsWithin(rhs.CastDuration)) return false;
+            if (!lhs.Range.EqualsWithin(rhs.Range)) return false;
+            if (!lhs.HalfCostPerk.Equals(rhs.HalfCostPerk)) return false;
             if (!lhs.Effects.SequenceEqual(rhs.Effects)) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (lhs.SPITDataTypeState != rhs.SPITDataTypeState) return false;
             return true;
         }
         
@@ -2545,9 +3135,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(PutDownSounditem);
             }
-            hash.Add(item.Data);
-            hash.Add(item.SpellData);
+            hash.Add(item.Value);
+            hash.Add(item.Weight);
+            hash.Add(item.BaseCost);
+            hash.Add(item.Flags);
+            hash.Add(item.Type);
+            hash.Add(item.ChargeTime);
+            hash.Add(item.CastType);
+            hash.Add(item.TargetType);
+            hash.Add(item.CastDuration);
+            hash.Add(item.Range);
+            hash.Add(item.HalfCostPerk);
             hash.Add(item.Effects);
+            hash.Add(item.DATADataTypeState);
+            hash.Add(item.SPITDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2614,10 +3215,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return PutDownSoundKey;
             }
-            foreach (var item in obj.SpellData.LinkFormKeys)
-            {
-                yield return item;
-            }
+            yield return obj.HalfCostPerk.FormKey;
             foreach (var item in obj.Effects.SelectMany(f => f.LinkFormKeys))
             {
                 yield return item;
@@ -2794,49 +3392,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.PutDownSound = rhs.PutDownSound.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Data) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Value) ?? true))
             {
-                errorMask?.PushIndex((int)Scroll_FieldIndex.Data);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Data) ?? true))
-                    {
-                        item.Data = rhs.Data.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)Scroll_FieldIndex.Data),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Value = rhs.Value;
             }
-            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.SpellData) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Weight) ?? true))
             {
-                errorMask?.PushIndex((int)Scroll_FieldIndex.SpellData);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.SpellData) ?? true))
-                    {
-                        item.SpellData = rhs.SpellData.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)Scroll_FieldIndex.SpellData),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Weight = rhs.Weight;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.BaseCost) ?? true))
+            {
+                item.BaseCost = rhs.BaseCost;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Type) ?? true))
+            {
+                item.Type = rhs.Type;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.ChargeTime) ?? true))
+            {
+                item.ChargeTime = rhs.ChargeTime;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.CastType) ?? true))
+            {
+                item.CastType = rhs.CastType;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.TargetType) ?? true))
+            {
+                item.TargetType = rhs.TargetType;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.CastDuration) ?? true))
+            {
+                item.CastDuration = rhs.CastDuration;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Range) ?? true))
+            {
+                item.Range = rhs.Range;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.HalfCostPerk) ?? true))
+            {
+                item.HalfCostPerk = rhs.HalfCostPerk.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.Effects) ?? true))
             {
@@ -2861,6 +3459,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Scroll_FieldIndex.SPITDataTypeState) ?? true))
+            {
+                item.SPITDataTypeState = rhs.SPITDataTypeState;
             }
         }
         
@@ -3122,27 +3728,104 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Scroll_FieldIndex.PutDownSound,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.Data) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.Value) ?? true))
             {
-                var DataItem = item.Data;
-                ((ScrollDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
-                    item: DataItem,
+                UInt32XmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Data),
-                    fieldIndex: (int)Scroll_FieldIndex.Data,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Scroll_FieldIndex.Data));
+                    name: nameof(item.Value),
+                    item: item.Value,
+                    fieldIndex: (int)Scroll_FieldIndex.Value,
+                    errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.SpellData) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.Weight) ?? true))
             {
-                var SpellDataItem = item.SpellData;
-                ((SpellDataXmlWriteTranslation)((IXmlItem)SpellDataItem).XmlWriteTranslator).Write(
-                    item: SpellDataItem,
+                FloatXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.SpellData),
-                    fieldIndex: (int)Scroll_FieldIndex.SpellData,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Scroll_FieldIndex.SpellData));
+                    name: nameof(item.Weight),
+                    item: item.Weight,
+                    fieldIndex: (int)Scroll_FieldIndex.Weight,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.BaseCost) ?? true))
+            {
+                UInt32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.BaseCost),
+                    item: item.BaseCost,
+                    fieldIndex: (int)Scroll_FieldIndex.BaseCost,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.Flags) ?? true))
+            {
+                EnumXmlTranslation<SpellDataFlag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)Scroll_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.Type) ?? true))
+            {
+                EnumXmlTranslation<SpellType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Type),
+                    item: item.Type,
+                    fieldIndex: (int)Scroll_FieldIndex.Type,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.ChargeTime) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ChargeTime),
+                    item: item.ChargeTime,
+                    fieldIndex: (int)Scroll_FieldIndex.ChargeTime,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.CastType) ?? true))
+            {
+                EnumXmlTranslation<CastType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.CastType),
+                    item: item.CastType,
+                    fieldIndex: (int)Scroll_FieldIndex.CastType,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.TargetType) ?? true))
+            {
+                EnumXmlTranslation<TargetType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.TargetType),
+                    item: item.TargetType,
+                    fieldIndex: (int)Scroll_FieldIndex.TargetType,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.CastDuration) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.CastDuration),
+                    item: item.CastDuration,
+                    fieldIndex: (int)Scroll_FieldIndex.CastDuration,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.Range) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Range),
+                    item: item.Range,
+                    fieldIndex: (int)Scroll_FieldIndex.Range,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.HalfCostPerk) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.HalfCostPerk),
+                    item: item.HalfCostPerk.FormKey,
+                    fieldIndex: (int)Scroll_FieldIndex.HalfCostPerk,
+                    errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.Effects) ?? true))
             {
@@ -3163,6 +3846,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: listSubMask,
                             translationMask: listTranslMask);
                     });
+            }
+            if ((translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<Scroll.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)Scroll_FieldIndex.DATADataTypeState,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Scroll_FieldIndex.SPITDataTypeState) ?? true))
+            {
+                EnumXmlTranslation<Scroll.SPITDataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.SPITDataTypeState),
+                    item: item.SPITDataTypeState,
+                    fieldIndex: (int)Scroll_FieldIndex.SPITDataTypeState,
+                    errorMask: errorMask);
             }
         }
 
@@ -3464,14 +4165,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Data":
-                    errorMask?.PushIndex((int)Scroll_FieldIndex.Data);
+                case "Value":
+                    errorMask?.PushIndex((int)Scroll_FieldIndex.Value);
                     try
                     {
-                        item.Data = LoquiXmlTranslation<ScrollData>.Instance.Parse(
+                        item.Value = UInt32XmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Scroll_FieldIndex.Data));
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3483,14 +4183,175 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "SpellData":
-                    errorMask?.PushIndex((int)Scroll_FieldIndex.SpellData);
+                case "Weight":
+                    errorMask?.PushIndex((int)Scroll_FieldIndex.Weight);
                     try
                     {
-                        item.SpellData = LoquiXmlTranslation<SpellData>.Instance.Parse(
+                        item.Weight = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Scroll_FieldIndex.SpellData));
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BaseCost":
+                    errorMask?.PushIndex((int)Scroll_FieldIndex.BaseCost);
+                    try
+                    {
+                        item.BaseCost = UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    errorMask?.PushIndex((int)Scroll_FieldIndex.Flags);
+                    try
+                    {
+                        item.Flags = EnumXmlTranslation<SpellDataFlag>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Type":
+                    errorMask?.PushIndex((int)Scroll_FieldIndex.Type);
+                    try
+                    {
+                        item.Type = EnumXmlTranslation<SpellType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ChargeTime":
+                    errorMask?.PushIndex((int)Scroll_FieldIndex.ChargeTime);
+                    try
+                    {
+                        item.ChargeTime = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CastType":
+                    errorMask?.PushIndex((int)Scroll_FieldIndex.CastType);
+                    try
+                    {
+                        item.CastType = EnumXmlTranslation<CastType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "TargetType":
+                    errorMask?.PushIndex((int)Scroll_FieldIndex.TargetType);
+                    try
+                    {
+                        item.TargetType = EnumXmlTranslation<TargetType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CastDuration":
+                    errorMask?.PushIndex((int)Scroll_FieldIndex.CastDuration);
+                    try
+                    {
+                        item.CastDuration = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Range":
+                    errorMask?.PushIndex((int)Scroll_FieldIndex.Range);
+                    try
+                    {
+                        item.Range = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HalfCostPerk":
+                    errorMask?.PushIndex((int)Scroll_FieldIndex.HalfCostPerk);
+                    try
+                    {
+                        item.HalfCostPerk = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3519,6 +4380,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         {
                             item.Effects.Clear();
                         }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DATADataTypeState":
+                    errorMask?.PushIndex((int)Scroll_FieldIndex.DATADataTypeState);
+                    try
+                    {
+                        item.DATADataTypeState = EnumXmlTranslation<Scroll.DATADataType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SPITDataTypeState":
+                    errorMask?.PushIndex((int)Scroll_FieldIndex.SPITDataTypeState);
+                    try
+                    {
+                        item.SPITDataTypeState = EnumXmlTranslation<Scroll.SPITDataType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3616,6 +4513,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ScrollBinaryWriteTranslation Instance = new ScrollBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IScrollGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
         public static void WriteRecordTypes(
             IScrollGetter item,
             MutagenWriter writer,
@@ -3682,16 +4588,45 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.PutDownSound,
                 header: recordTypeConverter.ConvertToCustom(Scroll_Registration.ZNAM_HEADER));
-            var DataItem = item.Data;
-            ((ScrollDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
-                item: DataItem,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-            var SpellDataItem = item.SpellData;
-            ((SpellDataBinaryWriteTranslation)((IBinaryItem)SpellDataItem).BinaryWriteTranslator).Write(
-                item: SpellDataItem,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
+            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Scroll_Registration.DATA_HEADER)))
+            {
+                writer.Write(item.Value);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Weight);
+            }
+            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Scroll_Registration.SPIT_HEADER)))
+            {
+                writer.Write(item.BaseCost);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<SpellDataFlag>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 4);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<SpellType>.Instance.Write(
+                    writer,
+                    item.Type,
+                    length: 4);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ChargeTime);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<CastType>.Instance.Write(
+                    writer,
+                    item.CastType,
+                    length: 4);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<TargetType>.Instance.Write(
+                    writer,
+                    item.TargetType,
+                    length: 4);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.CastDuration);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Range);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.HalfCostPerk);
+            }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IEffectGetter>.Instance.Write(
                 writer: writer,
                 items: item.Effects,
@@ -3715,7 +4650,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(Scroll_Registration.SCRL_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -3867,15 +4802,64 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool PutDownSound_IsSet => _PutDownSoundLocation.HasValue;
         public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PutDownSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
-        #region Data
-        private RangeInt32? _DataLocation;
-        private IScrollDataGetter? _Data => _DataLocation.HasValue ? ScrollDataBinaryOverlay.ScrollDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
-        public IScrollDataGetter Data => _Data ?? new ScrollData();
+        private int? _DATALocation;
+        public Scroll.DATADataType DATADataTypeState { get; private set; }
+        #region Value
+        private int _ValueLocation => _DATALocation!.Value + 0x0;
+        private bool _Value_IsSet => _DATALocation.HasValue;
+        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ValueLocation, 4)) : default;
         #endregion
-        #region SpellData
-        private RangeInt32? _SpellDataLocation;
-        private ISpellDataGetter? _SpellData => _SpellDataLocation.HasValue ? SpellDataBinaryOverlay.SpellDataFactory(new BinaryMemoryReadStream(_data.Slice(_SpellDataLocation!.Value.Min)), _package) : default;
-        public ISpellDataGetter SpellData => _SpellData ?? new SpellData();
+        #region Weight
+        private int _WeightLocation => _DATALocation!.Value + 0x4;
+        private bool _Weight_IsSet => _DATALocation.HasValue;
+        public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Slice(_WeightLocation, 4)) : default;
+        #endregion
+        private int? _SPITLocation;
+        public Scroll.SPITDataType SPITDataTypeState { get; private set; }
+        #region BaseCost
+        private int _BaseCostLocation => _SPITLocation!.Value + 0x0;
+        private bool _BaseCost_IsSet => _SPITLocation.HasValue;
+        public UInt32 BaseCost => _BaseCost_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_BaseCostLocation, 4)) : default;
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _SPITLocation!.Value + 0x4;
+        private bool _Flags_IsSet => _SPITLocation.HasValue;
+        public SpellDataFlag Flags => _Flags_IsSet ? (SpellDataFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
+        #endregion
+        #region Type
+        private int _TypeLocation => _SPITLocation!.Value + 0x8;
+        private bool _Type_IsSet => _SPITLocation.HasValue;
+        public SpellType Type => _Type_IsSet ? (SpellType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_TypeLocation, 0x4)) : default;
+        #endregion
+        #region ChargeTime
+        private int _ChargeTimeLocation => _SPITLocation!.Value + 0xC;
+        private bool _ChargeTime_IsSet => _SPITLocation.HasValue;
+        public Single ChargeTime => _ChargeTime_IsSet ? SpanExt.GetFloat(_data.Slice(_ChargeTimeLocation, 4)) : default;
+        #endregion
+        #region CastType
+        private int _CastTypeLocation => _SPITLocation!.Value + 0x10;
+        private bool _CastType_IsSet => _SPITLocation.HasValue;
+        public CastType CastType => _CastType_IsSet ? (CastType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_CastTypeLocation, 0x4)) : default;
+        #endregion
+        #region TargetType
+        private int _TargetTypeLocation => _SPITLocation!.Value + 0x14;
+        private bool _TargetType_IsSet => _SPITLocation.HasValue;
+        public TargetType TargetType => _TargetType_IsSet ? (TargetType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_TargetTypeLocation, 0x4)) : default;
+        #endregion
+        #region CastDuration
+        private int _CastDurationLocation => _SPITLocation!.Value + 0x18;
+        private bool _CastDuration_IsSet => _SPITLocation.HasValue;
+        public Single CastDuration => _CastDuration_IsSet ? SpanExt.GetFloat(_data.Slice(_CastDurationLocation, 4)) : default;
+        #endregion
+        #region Range
+        private int _RangeLocation => _SPITLocation!.Value + 0x1C;
+        private bool _Range_IsSet => _SPITLocation.HasValue;
+        public Single Range => _Range_IsSet ? SpanExt.GetFloat(_data.Slice(_RangeLocation, 4)) : default;
+        #endregion
+        #region HalfCostPerk
+        private int _HalfCostPerkLocation => _SPITLocation!.Value + 0x20;
+        private bool _HalfCostPerk_IsSet => _SPITLocation.HasValue;
+        public IFormLinkGetter<IPerkGetter> HalfCostPerk => _HalfCostPerk_IsSet ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HalfCostPerkLocation, 0x4)))) : FormLink<IPerkGetter>.Null;
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = ListExt.Empty<EffectBinaryOverlay>();
         partial void CustomCtor(
@@ -4008,13 +4992,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.Data);
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.Weight);
                 }
                 case 0x54495053: // SPIT
                 {
-                    _SpellDataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.SpellData);
+                    _SPITLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    return TryGet<int?>.Succeed((int)Scroll_FieldIndex.HalfCostPerk);
                 }
                 case 0x44494645: // EFID
                 case 0x54494645: // EFIT

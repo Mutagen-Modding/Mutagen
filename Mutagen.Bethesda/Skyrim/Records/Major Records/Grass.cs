@@ -13,5 +13,25 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter IObjectBoundedGetter.ObjectBounds => this.ObjectBounds;
         #endregion
+
+        public enum UnitsFromWaterTypeEnum
+        {
+            AboveAtLeast,
+            AboveAtMost,
+            BelowAtLeast,
+            BelowAtMost,
+            EitherAtLeast,
+            EitherAtMost,
+            EitherAtMostAbove,
+            EitherAtMostBelow,
+        }
+
+        [Flags]
+        public enum Flag
+        {
+            VertexLighting = 0x01,
+            UniformScaling = 0x02,
+            FitToSlope = 0x04,
+        }
     }
 }

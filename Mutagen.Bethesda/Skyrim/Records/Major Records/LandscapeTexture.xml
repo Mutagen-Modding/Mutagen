@@ -4,17 +4,16 @@
     <Fields>
       <FormLink name="TextureSet" refName="TextureSet" recordType="TNAM" />
       <FormLink name="MaterialType" refName="MaterialType" recordType="MNAM" hasBeenSet="False" />
-      <RefDirect name="HavokData" refName="HavokData" hasBeenSet="False" />
+      <Data recordType="HNAM" >
+        <Fields>
+          <UInt8 name="HavokFriction" />
+          <UInt8 name="HavokRestitution" />
+        </Fields>
+      </Data>
       <UInt8 name="TextureSpecularExponent" recordType="SNAM" hasBeenSet="False" />
       <List name="Grasses">
         <FormLink refName="Grass" recordType="GNAM" />
       </List>
-    </Fields>
-  </Object>
-  <Object name="HavokData" objType="Subrecord" recordType="HNAM" GUID="bc8d2e74-e5f5-43ae-96e6-3691eed4d27a" ID="131">
-    <Fields>
-      <UInt8 name="Friction" />
-      <UInt8 name="Restitution" />
     </Fields>
   </Object>
 </Loqui>

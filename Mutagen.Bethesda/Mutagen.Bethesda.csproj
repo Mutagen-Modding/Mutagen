@@ -62,6 +62,9 @@
     <Compile Include="Skyrim\Enums\Mood.cs" />
     <Compile Include="Skyrim\Enums\ObjectType.cs" />
     <Compile Include="Skyrim\Enums\Responsibility.cs" />
+    <Compile Include="Skyrim\Enums\Size.cs" />
+    <Compile Include="Skyrim\Enums\SpellDataFlag.cs" />
+    <Compile Include="Skyrim\Enums\SpellType.cs" />
     <Compile Include="Skyrim\Enums\WeaponAnimationType.cs" />
     <Compile Include="Skyrim\Interfaces\IHarvestable.cs" />
     <Compile Include="Skyrim\Interfaces\IHasIcons.cs" />
@@ -73,6 +76,7 @@
     <Compile Include="Skyrim\Interfaces\IHarvestTarget.cs" />
     <Compile Include="Skyrim\Interfaces\IObjectId.cs" />
     <Compile Include="Skyrim\Interfaces\IRelatable.cs" />
+    <Compile Include="Skyrim\Interfaces\IWeightValue.cs" />
     <Compile Include="Skyrim\Records\Common Subrecords\DestructionStageData.cs">
       <DependentUpon>Destructible.xml</DependentUpon>
     </Compile>
@@ -100,9 +104,6 @@
     <Compile Include="Skyrim\Records\Major Records\Ammunition.cs">
       <DependentUpon>Ammunition.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\AmmunitionData.cs">
-      <DependentUpon>Ammunition.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Major Records\Armor.cs">
       <DependentUpon>Armor.xml</DependentUpon>
     </Compile>
@@ -110,9 +111,6 @@
       <DependentUpon>Armor.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Book.cs">
-      <DependentUpon>Book.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Major Records\BookData.cs">
       <DependentUpon>Book.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\CriticalData.cs">
@@ -127,19 +125,10 @@
     <Compile Include="Skyrim\Records\Major Records\Container.cs">
       <DependentUpon>Container.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\ContainerData.cs">
-      <DependentUpon>Container.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Major Records\DirectionMaterial.cs">
-      <DependentUpon>Static.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Major Records\Door.cs">
       <DependentUpon>Door.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Grass.cs">
-      <DependentUpon>Grass.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Major Records\GrassData.cs">
       <DependentUpon>Grass.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\HeadData.cs">
@@ -148,16 +137,10 @@
     <Compile Include="Skyrim\Records\Major Records\Ingredient.cs">
       <DependentUpon>Ingredient.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\IngredientData.cs">
-      <DependentUpon>Ingredient.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Major Records\LeveledNpc.cs">
       <DependentUpon>LeveledNpc.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Light.cs">
-      <DependentUpon>Light.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Major Records\LightData.cs">
       <DependentUpon>Light.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Lod.cs">
@@ -173,7 +156,7 @@
       <DependentUpon>Npc.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\NpcConfiguration.cs">
-      <DependentUpon>Npc.xml</DependentUpon>
+      <DependentUpon>NPC.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\NpcSoundType.cs">
       <DependentUpon>Npc.xml</DependentUpon>
@@ -191,9 +174,6 @@
       <DependentUpon>SoundMarker.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Spell.cs">
-      <DependentUpon>Spell.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Major Records\SpellData.cs">
       <DependentUpon>Spell.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Static.cs">
@@ -1121,9 +1101,6 @@
     <Compile Include="Skyrim\Records\Major Records\MagicEffectBoundArchetype.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\MagicEffectData.cs">
-      <DependentUpon>MagicEffect.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Major Records\MagicEffectGuideArchetype.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
@@ -1173,12 +1150,6 @@
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Race.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Major Records\RaceData.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Major Records\RaceData_LoquiGenerated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\RaceMovementType_LoquiGenerated.cs">
@@ -1322,9 +1293,6 @@
     <Compile Include="Skyrim\Records\Common Subrecords\ScriptBoolListProperty_LoquiGenerated.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\MagicEffectData_LoquiGenerated.cs">
-      <DependentUpon>MagicEffect.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Major Records\Static_LoquiGenerated.cs">
       <DependentUpon>Static.xml</DependentUpon>
     </Compile>
@@ -1396,9 +1364,6 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Grass_LoquiGenerated.cs">
       <DependentUpon>Grass.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Major Records\HavokData_LoquiGenerated.cs">
-      <DependentUpon>LandscapeTexture.xml</DependentUpon>
     </Compile>
     <Compile Include="Oblivion\Records\Major Records\ClothingFlags_LoquiGenerated.cs">
       <DependentUpon>AClothing.xml</DependentUpon>
@@ -1547,20 +1512,11 @@
     <Compile Include="Oblivion\Records\Common Subrecords\ScriptEffectData_LoquiGenerated.cs">
       <DependentUpon>Effect.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\ClassData_LoquiGenerated.cs">
-      <DependentUpon>Class.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\Effect_LoquiGenerated.cs">
       <DependentUpon>Effect.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\EffectData_LoquiGenerated.cs">
       <DependentUpon>Effect.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Major Records\ObjectEffectData_LoquiGenerated.cs">
-      <DependentUpon>ObjectEffect.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Major Records\SpellData_LoquiGenerated.cs">
-      <DependentUpon>Spell.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Scroll_LoquiGenerated.cs">
       <DependentUpon>Scroll.xml</DependentUpon>
@@ -1576,9 +1532,6 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Debris_LoquiGenerated.cs">
       <DependentUpon>Debris.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Major Records\ScrollData_LoquiGenerated.cs">
-      <DependentUpon>Scroll.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Activator_LoquiGenerated.cs">
       <DependentUpon>Activator.xml</DependentUpon>
@@ -1614,9 +1567,6 @@
       <DependentUpon>ArmorAddon.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Book_LoquiGenerated.cs">
-      <DependentUpon>Book.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Major Records\BookData_LoquiGenerated.cs">
       <DependentUpon>Book.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\BookTeachTarget_LoquiGenerated.cs">
@@ -1658,26 +1608,11 @@
     <Compile Include="Skyrim\Records\Major Records\Weapon_LoquiGenerated.cs">
       <DependentUpon>Weapon.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\ContainerData_LoquiGenerated.cs">
-      <DependentUpon>Container.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Major Records\Door_LoquiGenerated.cs">
       <DependentUpon>Door.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\IngredientData_LoquiGenerated.cs">
-      <DependentUpon>Ingredient.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Major Records\LightData_LoquiGenerated.cs">
-      <DependentUpon>Light.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Common Subrecords\WeightValue_LoquiGenerated.cs">
-      <DependentUpon>WeightValue.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Major Records\MaterialObject_LoquiGenerated.cs">
       <DependentUpon>MaterialObject.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Major Records\DirectionMaterial_LoquiGenerated.cs">
-      <DependentUpon>Static.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Lod_LoquiGenerated.cs">
       <DependentUpon>Static.xml</DependentUpon>
@@ -1685,13 +1620,7 @@
     <Compile Include="Skyrim\Records\Major Records\MoveableStatic_LoquiGenerated.cs">
       <DependentUpon>MoveableStatic.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\GrassData_LoquiGenerated.cs">
-      <DependentUpon>Grass.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Major Records\Tree_LoquiGenerated.cs">
-      <DependentUpon>Tree.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Major Records\TreeData_LoquiGenerated.cs">
       <DependentUpon>Tree.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Common Subrecords\SeasonalIngredientProduction_LoquiGenerated.cs">
@@ -1715,9 +1644,6 @@
     <Compile Include="Skyrim\Records\Major Records\EntryPoints_LoquiGenerated.cs">
       <DependentUpon>Furniture.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\WeaponBasicStats_LoquiGenerated.cs">
-      <DependentUpon>Weapon.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Major Records\WeaponData_LoquiGenerated.cs">
       <DependentUpon>Weapon.xml</DependentUpon>
     </Compile>
@@ -1733,14 +1659,8 @@
     <Compile Include="Skyrim\Records\Major Records\Ammunition_LoquiGenerated.cs">
       <DependentUpon>Ammunition.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\AmmunitionData_LoquiGenerated.cs">
-      <DependentUpon>Ammunition.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Major Records\LeveledNpc_LoquiGenerated.cs">
       <DependentUpon>LeveledNpc.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Major Records\NpcConfiguration_LoquiGenerated.cs">
-      <DependentUpon>Npc.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\ANpcLevel_LoquiGenerated.cs">
       <DependentUpon>Npc.xml</DependentUpon>
@@ -1867,6 +1787,12 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\MountData_LoquiGenerated.cs">
       <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WeaponBasicStats_LoquiGenerated.cs">
+      <DependentUpon>Weapon.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\NpcConfiguration_LoquiGenerated.cs">
+      <DependentUpon>NPC.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

@@ -23,6 +23,14 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IIconsGetter? IHasIconsGetter.Icons => this.Icons;
         #endregion
+
+        [Flags]
+        public enum Flag
+        {
+            NoAutoCalculation = 0x001,
+            FoodItem = 0x002,
+            ReferencesPersist = 0x100
+        }
     }
 
     namespace Internals

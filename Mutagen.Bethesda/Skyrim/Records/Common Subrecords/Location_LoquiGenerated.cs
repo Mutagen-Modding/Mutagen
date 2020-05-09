@@ -1933,7 +1933,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public IALocationTargetGetter Target => GetTargetCustom(location: 0x0);
         public UInt32 Radius => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x8, 0x4));
-        private int TargetEndingPos;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -1954,10 +1953,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new LocationBinaryOverlay(
-                bytes: stream.RemainingMemory,
+                bytes: stream.RemainingMemory.Slice(0, 0xC),
                 package: package);
             int offset = stream.Position;
-            stream.Position += ret.TargetEndingPos + 0x4;
+            stream.Position += 0xC;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,

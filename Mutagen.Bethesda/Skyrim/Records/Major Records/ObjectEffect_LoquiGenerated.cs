@@ -64,10 +64,36 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IObjectEffectGetter.Name => this.Name;
         #endregion
-        #region Data
-        public ObjectEffectData Data { get; set; } = new ObjectEffectData();
+        #region EnchantmentCost
+        public UInt32 EnchantmentCost { get; set; } = default;
+        #endregion
+        #region Flags
+        public ObjectEffect.Flag Flags { get; set; } = default;
+        #endregion
+        #region CastType
+        public CastType CastType { get; set; } = default;
+        #endregion
+        #region EnchantmentAmount
+        public Int32 EnchantmentAmount { get; set; } = default;
+        #endregion
+        #region TargetType
+        public TargetType TargetType { get; set; } = default;
+        #endregion
+        #region EnchantType
+        public ObjectEffect.EnchantTypeEnum EnchantType { get; set; } = default;
+        #endregion
+        #region ChargeTime
+        public Single ChargeTime { get; set; } = default;
+        #endregion
+        #region BaseEnchantment
+        public FormLink<ObjectEffect> BaseEnchantment { get; set; } = new FormLink<ObjectEffect>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectEffectDataGetter IObjectEffectGetter.Data => Data;
+        IFormLinkGetter<IObjectEffectGetter> IObjectEffectGetter.BaseEnchantment => this.BaseEnchantment;
+        #endregion
+        #region WornRestrictions
+        public FormLink<FormList> WornRestrictions { get; set; } = new FormLink<FormList>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IFormListGetter> IObjectEffectGetter.WornRestrictions => this.WornRestrictions;
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -82,6 +108,9 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IEffectGetter> IObjectEffectGetter.Effects => _Effects;
         #endregion
 
+        #endregion
+        #region ENITDataTypeState
+        public ObjectEffect.ENITDataType ENITDataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -255,8 +284,17 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.Name = initialValue;
-                this.Data = new MaskItem<TItem, ObjectEffectData.Mask<TItem>?>(initialValue, new ObjectEffectData.Mask<TItem>(initialValue));
+                this.EnchantmentCost = initialValue;
+                this.Flags = initialValue;
+                this.CastType = initialValue;
+                this.EnchantmentAmount = initialValue;
+                this.TargetType = initialValue;
+                this.EnchantType = initialValue;
+                this.ChargeTime = initialValue;
+                this.BaseEnchantment = initialValue;
+                this.WornRestrictions = initialValue;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
+                this.ENITDataTypeState = initialValue;
             }
 
             public Mask(
@@ -268,8 +306,17 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version2,
                 TItem ObjectBounds,
                 TItem Name,
-                TItem Data,
-                TItem Effects)
+                TItem EnchantmentCost,
+                TItem Flags,
+                TItem CastType,
+                TItem EnchantmentAmount,
+                TItem TargetType,
+                TItem EnchantType,
+                TItem ChargeTime,
+                TItem BaseEnchantment,
+                TItem WornRestrictions,
+                TItem Effects,
+                TItem ENITDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -280,8 +327,17 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.Name = Name;
-                this.Data = new MaskItem<TItem, ObjectEffectData.Mask<TItem>?>(Data, new ObjectEffectData.Mask<TItem>(Data));
+                this.EnchantmentCost = EnchantmentCost;
+                this.Flags = Flags;
+                this.CastType = CastType;
+                this.EnchantmentAmount = EnchantmentAmount;
+                this.TargetType = TargetType;
+                this.EnchantType = EnchantType;
+                this.ChargeTime = ChargeTime;
+                this.BaseEnchantment = BaseEnchantment;
+                this.WornRestrictions = WornRestrictions;
                 this.Effects = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>(Effects, Enumerable.Empty<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>());
+                this.ENITDataTypeState = ENITDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -295,8 +351,17 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem Name;
-            public MaskItem<TItem, ObjectEffectData.Mask<TItem>?>? Data { get; set; }
+            public TItem EnchantmentCost;
+            public TItem Flags;
+            public TItem CastType;
+            public TItem EnchantmentAmount;
+            public TItem TargetType;
+            public TItem EnchantType;
+            public TItem ChargeTime;
+            public TItem BaseEnchantment;
+            public TItem WornRestrictions;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Effect.Mask<TItem>?>>?>? Effects;
+            public TItem ENITDataTypeState;
             #endregion
 
             #region Equals
@@ -312,8 +377,17 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
-                if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.EnchantmentCost, rhs.EnchantmentCost)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.CastType, rhs.CastType)) return false;
+                if (!object.Equals(this.EnchantmentAmount, rhs.EnchantmentAmount)) return false;
+                if (!object.Equals(this.TargetType, rhs.TargetType)) return false;
+                if (!object.Equals(this.EnchantType, rhs.EnchantType)) return false;
+                if (!object.Equals(this.ChargeTime, rhs.ChargeTime)) return false;
+                if (!object.Equals(this.BaseEnchantment, rhs.BaseEnchantment)) return false;
+                if (!object.Equals(this.WornRestrictions, rhs.WornRestrictions)) return false;
                 if (!object.Equals(this.Effects, rhs.Effects)) return false;
+                if (!object.Equals(this.ENITDataTypeState, rhs.ENITDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -321,8 +395,17 @@ namespace Mutagen.Bethesda.Skyrim
                 var hash = new HashCode();
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.Name);
-                hash.Add(this.Data);
+                hash.Add(this.EnchantmentCost);
+                hash.Add(this.Flags);
+                hash.Add(this.CastType);
+                hash.Add(this.EnchantmentAmount);
+                hash.Add(this.TargetType);
+                hash.Add(this.EnchantType);
+                hash.Add(this.ChargeTime);
+                hash.Add(this.BaseEnchantment);
+                hash.Add(this.WornRestrictions);
                 hash.Add(this.Effects);
+                hash.Add(this.ENITDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -339,11 +422,15 @@ namespace Mutagen.Bethesda.Skyrim
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Name)) return false;
-                if (Data != null)
-                {
-                    if (!eval(this.Data.Overall)) return false;
-                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
-                }
+                if (!eval(this.EnchantmentCost)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.CastType)) return false;
+                if (!eval(this.EnchantmentAmount)) return false;
+                if (!eval(this.TargetType)) return false;
+                if (!eval(this.EnchantType)) return false;
+                if (!eval(this.ChargeTime)) return false;
+                if (!eval(this.BaseEnchantment)) return false;
+                if (!eval(this.WornRestrictions)) return false;
                 if (this.Effects != null)
                 {
                     if (!eval(this.Effects.Overall)) return false;
@@ -356,6 +443,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
+                if (!eval(this.ENITDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -370,11 +458,15 @@ namespace Mutagen.Bethesda.Skyrim
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
                 if (eval(this.Name)) return true;
-                if (Data != null)
-                {
-                    if (eval(this.Data.Overall)) return true;
-                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
-                }
+                if (eval(this.EnchantmentCost)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.CastType)) return true;
+                if (eval(this.EnchantmentAmount)) return true;
+                if (eval(this.TargetType)) return true;
+                if (eval(this.EnchantType)) return true;
+                if (eval(this.ChargeTime)) return true;
+                if (eval(this.BaseEnchantment)) return true;
+                if (eval(this.WornRestrictions)) return true;
                 if (this.Effects != null)
                 {
                     if (eval(this.Effects.Overall)) return true;
@@ -387,6 +479,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
+                if (eval(this.ENITDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -404,7 +497,15 @@ namespace Mutagen.Bethesda.Skyrim
                 base.Translate_InternalFill(obj, eval);
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.Name = eval(this.Name);
-                obj.Data = this.Data == null ? null : new MaskItem<R, ObjectEffectData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
+                obj.EnchantmentCost = eval(this.EnchantmentCost);
+                obj.Flags = eval(this.Flags);
+                obj.CastType = eval(this.CastType);
+                obj.EnchantmentAmount = eval(this.EnchantmentAmount);
+                obj.TargetType = eval(this.TargetType);
+                obj.EnchantType = eval(this.EnchantType);
+                obj.ChargeTime = eval(this.ChargeTime);
+                obj.BaseEnchantment = eval(this.BaseEnchantment);
+                obj.WornRestrictions = eval(this.WornRestrictions);
                 if (Effects != null)
                 {
                     obj.Effects = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Effect.Mask<R>?>>?>(eval(this.Effects.Overall), Enumerable.Empty<MaskItemIndexed<R, Effect.Mask<R>?>>());
@@ -420,6 +521,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
+                obj.ENITDataTypeState = eval(this.ENITDataTypeState);
             }
             #endregion
 
@@ -450,9 +552,41 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(Name, "Name");
                     }
-                    if (printMask?.Data?.Overall ?? true)
+                    if (printMask?.EnchantmentCost ?? true)
                     {
-                        Data?.ToString(fg);
+                        fg.AppendItem(EnchantmentCost, "EnchantmentCost");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.CastType ?? true)
+                    {
+                        fg.AppendItem(CastType, "CastType");
+                    }
+                    if (printMask?.EnchantmentAmount ?? true)
+                    {
+                        fg.AppendItem(EnchantmentAmount, "EnchantmentAmount");
+                    }
+                    if (printMask?.TargetType ?? true)
+                    {
+                        fg.AppendItem(TargetType, "TargetType");
+                    }
+                    if (printMask?.EnchantType ?? true)
+                    {
+                        fg.AppendItem(EnchantType, "EnchantType");
+                    }
+                    if (printMask?.ChargeTime ?? true)
+                    {
+                        fg.AppendItem(ChargeTime, "ChargeTime");
+                    }
+                    if (printMask?.BaseEnchantment ?? true)
+                    {
+                        fg.AppendItem(BaseEnchantment, "BaseEnchantment");
+                    }
+                    if (printMask?.WornRestrictions ?? true)
+                    {
+                        fg.AppendItem(WornRestrictions, "WornRestrictions");
                     }
                     if ((printMask?.Effects?.Overall ?? true)
                         && Effects.TryGet(out var EffectsItem))
@@ -477,6 +611,10 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                         fg.AppendLine("]");
                     }
+                    if (printMask?.ENITDataTypeState ?? true)
+                    {
+                        fg.AppendItem(ENITDataTypeState, "ENITDataTypeState");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -491,8 +629,17 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? Name;
-            public MaskItem<Exception?, ObjectEffectData.ErrorMask?>? Data;
+            public Exception? EnchantmentCost;
+            public Exception? Flags;
+            public Exception? CastType;
+            public Exception? EnchantmentAmount;
+            public Exception? TargetType;
+            public Exception? EnchantType;
+            public Exception? ChargeTime;
+            public Exception? BaseEnchantment;
+            public Exception? WornRestrictions;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>? Effects;
+            public Exception? ENITDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -505,10 +652,28 @@ namespace Mutagen.Bethesda.Skyrim
                         return ObjectBounds;
                     case ObjectEffect_FieldIndex.Name:
                         return Name;
-                    case ObjectEffect_FieldIndex.Data:
-                        return Data;
+                    case ObjectEffect_FieldIndex.EnchantmentCost:
+                        return EnchantmentCost;
+                    case ObjectEffect_FieldIndex.Flags:
+                        return Flags;
+                    case ObjectEffect_FieldIndex.CastType:
+                        return CastType;
+                    case ObjectEffect_FieldIndex.EnchantmentAmount:
+                        return EnchantmentAmount;
+                    case ObjectEffect_FieldIndex.TargetType:
+                        return TargetType;
+                    case ObjectEffect_FieldIndex.EnchantType:
+                        return EnchantType;
+                    case ObjectEffect_FieldIndex.ChargeTime:
+                        return ChargeTime;
+                    case ObjectEffect_FieldIndex.BaseEnchantment:
+                        return BaseEnchantment;
+                    case ObjectEffect_FieldIndex.WornRestrictions:
+                        return WornRestrictions;
                     case ObjectEffect_FieldIndex.Effects:
                         return Effects;
+                    case ObjectEffect_FieldIndex.ENITDataTypeState:
+                        return ENITDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -525,11 +690,38 @@ namespace Mutagen.Bethesda.Skyrim
                     case ObjectEffect_FieldIndex.Name:
                         this.Name = ex;
                         break;
-                    case ObjectEffect_FieldIndex.Data:
-                        this.Data = new MaskItem<Exception?, ObjectEffectData.ErrorMask?>(ex, null);
+                    case ObjectEffect_FieldIndex.EnchantmentCost:
+                        this.EnchantmentCost = ex;
+                        break;
+                    case ObjectEffect_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case ObjectEffect_FieldIndex.CastType:
+                        this.CastType = ex;
+                        break;
+                    case ObjectEffect_FieldIndex.EnchantmentAmount:
+                        this.EnchantmentAmount = ex;
+                        break;
+                    case ObjectEffect_FieldIndex.TargetType:
+                        this.TargetType = ex;
+                        break;
+                    case ObjectEffect_FieldIndex.EnchantType:
+                        this.EnchantType = ex;
+                        break;
+                    case ObjectEffect_FieldIndex.ChargeTime:
+                        this.ChargeTime = ex;
+                        break;
+                    case ObjectEffect_FieldIndex.BaseEnchantment:
+                        this.BaseEnchantment = ex;
+                        break;
+                    case ObjectEffect_FieldIndex.WornRestrictions:
+                        this.WornRestrictions = ex;
                         break;
                     case ObjectEffect_FieldIndex.Effects:
                         this.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ObjectEffect_FieldIndex.ENITDataTypeState:
+                        this.ENITDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -548,11 +740,38 @@ namespace Mutagen.Bethesda.Skyrim
                     case ObjectEffect_FieldIndex.Name:
                         this.Name = (Exception?)obj;
                         break;
-                    case ObjectEffect_FieldIndex.Data:
-                        this.Data = (MaskItem<Exception?, ObjectEffectData.ErrorMask?>?)obj;
+                    case ObjectEffect_FieldIndex.EnchantmentCost:
+                        this.EnchantmentCost = (Exception?)obj;
+                        break;
+                    case ObjectEffect_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case ObjectEffect_FieldIndex.CastType:
+                        this.CastType = (Exception?)obj;
+                        break;
+                    case ObjectEffect_FieldIndex.EnchantmentAmount:
+                        this.EnchantmentAmount = (Exception?)obj;
+                        break;
+                    case ObjectEffect_FieldIndex.TargetType:
+                        this.TargetType = (Exception?)obj;
+                        break;
+                    case ObjectEffect_FieldIndex.EnchantType:
+                        this.EnchantType = (Exception?)obj;
+                        break;
+                    case ObjectEffect_FieldIndex.ChargeTime:
+                        this.ChargeTime = (Exception?)obj;
+                        break;
+                    case ObjectEffect_FieldIndex.BaseEnchantment:
+                        this.BaseEnchantment = (Exception?)obj;
+                        break;
+                    case ObjectEffect_FieldIndex.WornRestrictions:
+                        this.WornRestrictions = (Exception?)obj;
                         break;
                     case ObjectEffect_FieldIndex.Effects:
                         this.Effects = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>)obj;
+                        break;
+                    case ObjectEffect_FieldIndex.ENITDataTypeState:
+                        this.ENITDataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -565,8 +784,17 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Overall != null) return true;
                 if (ObjectBounds != null) return true;
                 if (Name != null) return true;
-                if (Data != null) return true;
+                if (EnchantmentCost != null) return true;
+                if (Flags != null) return true;
+                if (CastType != null) return true;
+                if (EnchantmentAmount != null) return true;
+                if (TargetType != null) return true;
+                if (EnchantType != null) return true;
+                if (ChargeTime != null) return true;
+                if (BaseEnchantment != null) return true;
+                if (WornRestrictions != null) return true;
                 if (Effects != null) return true;
+                if (ENITDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -604,7 +832,15 @@ namespace Mutagen.Bethesda.Skyrim
                 base.ToString_FillInternal(fg);
                 ObjectBounds?.ToString(fg);
                 fg.AppendItem(Name, "Name");
-                Data?.ToString(fg);
+                fg.AppendItem(EnchantmentCost, "EnchantmentCost");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(CastType, "CastType");
+                fg.AppendItem(EnchantmentAmount, "EnchantmentAmount");
+                fg.AppendItem(TargetType, "TargetType");
+                fg.AppendItem(EnchantType, "EnchantType");
+                fg.AppendItem(ChargeTime, "ChargeTime");
+                fg.AppendItem(BaseEnchantment, "BaseEnchantment");
+                fg.AppendItem(WornRestrictions, "WornRestrictions");
                 if (Effects.TryGet(out var EffectsItem))
                 {
                     fg.AppendLine("Effects =>");
@@ -627,6 +863,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
+                fg.AppendItem(ENITDataTypeState, "ENITDataTypeState");
             }
             #endregion
 
@@ -637,8 +874,17 @@ namespace Mutagen.Bethesda.Skyrim
                 var ret = new ErrorMask();
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
+                ret.EnchantmentCost = this.EnchantmentCost.Combine(rhs.EnchantmentCost);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.CastType = this.CastType.Combine(rhs.CastType);
+                ret.EnchantmentAmount = this.EnchantmentAmount.Combine(rhs.EnchantmentAmount);
+                ret.TargetType = this.TargetType.Combine(rhs.TargetType);
+                ret.EnchantType = this.EnchantType.Combine(rhs.EnchantType);
+                ret.ChargeTime = this.ChargeTime.Combine(rhs.ChargeTime);
+                ret.BaseEnchantment = this.BaseEnchantment.Combine(rhs.BaseEnchantment);
+                ret.WornRestrictions = this.WornRestrictions.Combine(rhs.WornRestrictions);
                 ret.Effects = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Effect.ErrorMask?>>?>(ExceptionExt.Combine(this.Effects?.Overall, rhs.Effects?.Overall), ExceptionExt.Combine(this.Effects?.Specific, rhs.Effects?.Specific));
+                ret.ENITDataTypeState = this.ENITDataTypeState.Combine(rhs.ENITDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -663,8 +909,17 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
             public bool Name;
-            public MaskItem<bool, ObjectEffectData.TranslationMask?> Data;
+            public bool EnchantmentCost;
+            public bool Flags;
+            public bool CastType;
+            public bool EnchantmentAmount;
+            public bool TargetType;
+            public bool EnchantType;
+            public bool ChargeTime;
+            public bool BaseEnchantment;
+            public bool WornRestrictions;
             public MaskItem<bool, Effect.TranslationMask?> Effects;
+            public bool ENITDataTypeState;
             #endregion
 
             #region Ctors
@@ -673,8 +928,17 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
                 this.Name = defaultOn;
-                this.Data = new MaskItem<bool, ObjectEffectData.TranslationMask?>(defaultOn, null);
+                this.EnchantmentCost = defaultOn;
+                this.Flags = defaultOn;
+                this.CastType = defaultOn;
+                this.EnchantmentAmount = defaultOn;
+                this.TargetType = defaultOn;
+                this.EnchantType = defaultOn;
+                this.ChargeTime = defaultOn;
+                this.BaseEnchantment = defaultOn;
+                this.WornRestrictions = defaultOn;
                 this.Effects = new MaskItem<bool, Effect.TranslationMask?>(defaultOn, null);
+                this.ENITDataTypeState = defaultOn;
             }
 
             #endregion
@@ -684,8 +948,17 @@ namespace Mutagen.Bethesda.Skyrim
                 base.GetCrystal(ret);
                 ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
                 ret.Add((Name, null));
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((EnchantmentCost, null));
+                ret.Add((Flags, null));
+                ret.Add((CastType, null));
+                ret.Add((EnchantmentAmount, null));
+                ret.Add((TargetType, null));
+                ret.Add((EnchantType, null));
+                ret.Add((ChargeTime, null));
+                ret.Add((BaseEnchantment, null));
+                ret.Add((WornRestrictions, null));
                 ret.Add((Effects?.Overall ?? true, Effects?.Specific?.GetCrystal()));
+                ret.Add((ENITDataTypeState, null));
             }
         }
         #endregion
@@ -715,6 +988,11 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        [Flags]
+        public enum ENITDataType
+        {
+            Break0 = 1
+        }
         #endregion
 
         #region Binary Translation
@@ -782,8 +1060,17 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new ObjectBounds ObjectBounds { get; set; }
         new String? Name { get; set; }
-        new ObjectEffectData Data { get; set; }
+        new UInt32 EnchantmentCost { get; set; }
+        new ObjectEffect.Flag Flags { get; set; }
+        new CastType CastType { get; set; }
+        new Int32 EnchantmentAmount { get; set; }
+        new TargetType TargetType { get; set; }
+        new ObjectEffect.EnchantTypeEnum EnchantType { get; set; }
+        new Single ChargeTime { get; set; }
+        new FormLink<ObjectEffect> BaseEnchantment { get; set; }
+        new FormLink<FormList> WornRestrictions { get; set; }
         new ExtendedList<Effect> Effects { get; }
+        new ObjectEffect.ENITDataType ENITDataTypeState { get; set; }
     }
 
     public partial interface IObjectEffectInternal :
@@ -806,8 +1093,17 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => ObjectEffect_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
         String? Name { get; }
-        IObjectEffectDataGetter Data { get; }
+        UInt32 EnchantmentCost { get; }
+        ObjectEffect.Flag Flags { get; }
+        CastType CastType { get; }
+        Int32 EnchantmentAmount { get; }
+        TargetType TargetType { get; }
+        ObjectEffect.EnchantTypeEnum EnchantType { get; }
+        Single ChargeTime { get; }
+        IFormLinkGetter<IObjectEffectGetter> BaseEnchantment { get; }
+        IFormLinkGetter<IFormListGetter> WornRestrictions { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
+        ObjectEffect.ENITDataType ENITDataTypeState { get; }
 
     }
 
@@ -1110,8 +1406,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Version2 = 5,
         ObjectBounds = 6,
         Name = 7,
-        Data = 8,
-        Effects = 9,
+        EnchantmentCost = 8,
+        Flags = 9,
+        CastType = 10,
+        EnchantmentAmount = 11,
+        TargetType = 12,
+        EnchantType = 13,
+        ChargeTime = 14,
+        BaseEnchantment = 15,
+        WornRestrictions = 16,
+        Effects = 17,
+        ENITDataTypeState = 18,
     }
     #endregion
 
@@ -1129,9 +1434,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "0f27c016-189e-43f2-8328-927b0ace82d4";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(ObjectEffect.Mask<>);
 
@@ -1165,10 +1470,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)ObjectEffect_FieldIndex.ObjectBounds;
                 case "NAME":
                     return (ushort)ObjectEffect_FieldIndex.Name;
-                case "DATA":
-                    return (ushort)ObjectEffect_FieldIndex.Data;
+                case "ENCHANTMENTCOST":
+                    return (ushort)ObjectEffect_FieldIndex.EnchantmentCost;
+                case "FLAGS":
+                    return (ushort)ObjectEffect_FieldIndex.Flags;
+                case "CASTTYPE":
+                    return (ushort)ObjectEffect_FieldIndex.CastType;
+                case "ENCHANTMENTAMOUNT":
+                    return (ushort)ObjectEffect_FieldIndex.EnchantmentAmount;
+                case "TARGETTYPE":
+                    return (ushort)ObjectEffect_FieldIndex.TargetType;
+                case "ENCHANTTYPE":
+                    return (ushort)ObjectEffect_FieldIndex.EnchantType;
+                case "CHARGETIME":
+                    return (ushort)ObjectEffect_FieldIndex.ChargeTime;
+                case "BASEENCHANTMENT":
+                    return (ushort)ObjectEffect_FieldIndex.BaseEnchantment;
+                case "WORNRESTRICTIONS":
+                    return (ushort)ObjectEffect_FieldIndex.WornRestrictions;
                 case "EFFECTS":
                     return (ushort)ObjectEffect_FieldIndex.Effects;
+                case "ENITDATATYPESTATE":
+                    return (ushort)ObjectEffect_FieldIndex.ENITDataTypeState;
                 default:
                     return null;
             }
@@ -1183,7 +1506,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return true;
                 case ObjectEffect_FieldIndex.ObjectBounds:
                 case ObjectEffect_FieldIndex.Name:
-                case ObjectEffect_FieldIndex.Data:
+                case ObjectEffect_FieldIndex.EnchantmentCost:
+                case ObjectEffect_FieldIndex.Flags:
+                case ObjectEffect_FieldIndex.CastType:
+                case ObjectEffect_FieldIndex.EnchantmentAmount:
+                case ObjectEffect_FieldIndex.TargetType:
+                case ObjectEffect_FieldIndex.EnchantType:
+                case ObjectEffect_FieldIndex.ChargeTime:
+                case ObjectEffect_FieldIndex.BaseEnchantment:
+                case ObjectEffect_FieldIndex.WornRestrictions:
+                case ObjectEffect_FieldIndex.ENITDataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1196,10 +1528,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case ObjectEffect_FieldIndex.ObjectBounds:
-                case ObjectEffect_FieldIndex.Data:
                 case ObjectEffect_FieldIndex.Effects:
                     return true;
                 case ObjectEffect_FieldIndex.Name:
+                case ObjectEffect_FieldIndex.EnchantmentCost:
+                case ObjectEffect_FieldIndex.Flags:
+                case ObjectEffect_FieldIndex.CastType:
+                case ObjectEffect_FieldIndex.EnchantmentAmount:
+                case ObjectEffect_FieldIndex.TargetType:
+                case ObjectEffect_FieldIndex.EnchantType:
+                case ObjectEffect_FieldIndex.ChargeTime:
+                case ObjectEffect_FieldIndex.BaseEnchantment:
+                case ObjectEffect_FieldIndex.WornRestrictions:
+                case ObjectEffect_FieldIndex.ENITDataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1213,8 +1554,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case ObjectEffect_FieldIndex.ObjectBounds:
                 case ObjectEffect_FieldIndex.Name:
-                case ObjectEffect_FieldIndex.Data:
+                case ObjectEffect_FieldIndex.EnchantmentCost:
+                case ObjectEffect_FieldIndex.Flags:
+                case ObjectEffect_FieldIndex.CastType:
+                case ObjectEffect_FieldIndex.EnchantmentAmount:
+                case ObjectEffect_FieldIndex.TargetType:
+                case ObjectEffect_FieldIndex.EnchantType:
+                case ObjectEffect_FieldIndex.ChargeTime:
+                case ObjectEffect_FieldIndex.BaseEnchantment:
+                case ObjectEffect_FieldIndex.WornRestrictions:
                 case ObjectEffect_FieldIndex.Effects:
+                case ObjectEffect_FieldIndex.ENITDataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1230,10 +1580,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "ObjectBounds";
                 case ObjectEffect_FieldIndex.Name:
                     return "Name";
-                case ObjectEffect_FieldIndex.Data:
-                    return "Data";
+                case ObjectEffect_FieldIndex.EnchantmentCost:
+                    return "EnchantmentCost";
+                case ObjectEffect_FieldIndex.Flags:
+                    return "Flags";
+                case ObjectEffect_FieldIndex.CastType:
+                    return "CastType";
+                case ObjectEffect_FieldIndex.EnchantmentAmount:
+                    return "EnchantmentAmount";
+                case ObjectEffect_FieldIndex.TargetType:
+                    return "TargetType";
+                case ObjectEffect_FieldIndex.EnchantType:
+                    return "EnchantType";
+                case ObjectEffect_FieldIndex.ChargeTime:
+                    return "ChargeTime";
+                case ObjectEffect_FieldIndex.BaseEnchantment:
+                    return "BaseEnchantment";
+                case ObjectEffect_FieldIndex.WornRestrictions:
+                    return "WornRestrictions";
                 case ObjectEffect_FieldIndex.Effects:
                     return "Effects";
+                case ObjectEffect_FieldIndex.ENITDataTypeState:
+                    return "ENITDataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -1246,8 +1614,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case ObjectEffect_FieldIndex.ObjectBounds:
                 case ObjectEffect_FieldIndex.Name:
-                case ObjectEffect_FieldIndex.Data:
+                case ObjectEffect_FieldIndex.EnchantmentCost:
+                case ObjectEffect_FieldIndex.Flags:
+                case ObjectEffect_FieldIndex.CastType:
+                case ObjectEffect_FieldIndex.EnchantmentAmount:
+                case ObjectEffect_FieldIndex.TargetType:
+                case ObjectEffect_FieldIndex.EnchantType:
+                case ObjectEffect_FieldIndex.ChargeTime:
+                case ObjectEffect_FieldIndex.BaseEnchantment:
+                case ObjectEffect_FieldIndex.WornRestrictions:
                 case ObjectEffect_FieldIndex.Effects:
+                case ObjectEffect_FieldIndex.ENITDataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
@@ -1261,8 +1638,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case ObjectEffect_FieldIndex.ObjectBounds:
                 case ObjectEffect_FieldIndex.Name:
-                case ObjectEffect_FieldIndex.Data:
+                case ObjectEffect_FieldIndex.EnchantmentCost:
+                case ObjectEffect_FieldIndex.Flags:
+                case ObjectEffect_FieldIndex.CastType:
+                case ObjectEffect_FieldIndex.EnchantmentAmount:
+                case ObjectEffect_FieldIndex.TargetType:
+                case ObjectEffect_FieldIndex.EnchantType:
+                case ObjectEffect_FieldIndex.ChargeTime:
+                case ObjectEffect_FieldIndex.BaseEnchantment:
+                case ObjectEffect_FieldIndex.WornRestrictions:
                 case ObjectEffect_FieldIndex.Effects:
+                case ObjectEffect_FieldIndex.ENITDataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
@@ -1278,10 +1664,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(ObjectBounds);
                 case ObjectEffect_FieldIndex.Name:
                     return typeof(String);
-                case ObjectEffect_FieldIndex.Data:
-                    return typeof(ObjectEffectData);
+                case ObjectEffect_FieldIndex.EnchantmentCost:
+                    return typeof(UInt32);
+                case ObjectEffect_FieldIndex.Flags:
+                    return typeof(ObjectEffect.Flag);
+                case ObjectEffect_FieldIndex.CastType:
+                    return typeof(CastType);
+                case ObjectEffect_FieldIndex.EnchantmentAmount:
+                    return typeof(Int32);
+                case ObjectEffect_FieldIndex.TargetType:
+                    return typeof(TargetType);
+                case ObjectEffect_FieldIndex.EnchantType:
+                    return typeof(ObjectEffect.EnchantTypeEnum);
+                case ObjectEffect_FieldIndex.ChargeTime:
+                    return typeof(Single);
+                case ObjectEffect_FieldIndex.BaseEnchantment:
+                    return typeof(FormLink<ObjectEffect>);
+                case ObjectEffect_FieldIndex.WornRestrictions:
+                    return typeof(FormLink<FormList>);
                 case ObjectEffect_FieldIndex.Effects:
                     return typeof(ExtendedList<Effect>);
+                case ObjectEffect_FieldIndex.ENITDataTypeState:
+                    return typeof(ObjectEffect.ENITDataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1297,7 +1701,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType CTDA_HEADER = new RecordType("CTDA");
         public static readonly RecordType TriggeringRecordType = ENCH_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 4;
+        public const int NumTypedFields = 3;
         public static readonly Type BinaryWriteTranslation = typeof(ObjectEffectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1342,8 +1746,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.ObjectBounds.Clear();
             item.Name = default;
-            item.Data.Clear();
+            item.EnchantmentCost = default;
+            item.Flags = default;
+            item.CastType = default;
+            item.EnchantmentAmount = default;
+            item.TargetType = default;
+            item.EnchantType = default;
+            item.ChargeTime = default;
+            item.BaseEnchantment = new FormLink<ObjectEffect>(FormKey.Null);
+            item.WornRestrictions = new FormLink<FormList>(FormKey.Null);
             item.Effects.Clear();
+            item.ENITDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1386,6 +1799,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             try
             {
+                item.ENITDataTypeState |= ObjectEffect.ENITDataType.Break0;
                 foreach (var elem in node.Elements())
                 {
                     FillPrivateElementXml(
@@ -1473,8 +1887,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x54494E45: // ENIT
                 {
-                    item.Data = Mutagen.Bethesda.Skyrim.ObjectEffectData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.Data);
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.EnchantmentCost = dataFrame.ReadUInt32();
+                    item.Flags = EnumBinaryTranslation<ObjectEffect.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.CastType = EnumBinaryTranslation<CastType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.EnchantmentAmount = dataFrame.ReadInt32();
+                    item.TargetType = EnumBinaryTranslation<TargetType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.EnchantType = EnumBinaryTranslation<ObjectEffect.EnchantTypeEnum>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.ChargeTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.BaseEnchantment = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    if (dataFrame.Complete)
+                    {
+                        item.ENITDataTypeState |= ObjectEffect.ENITDataType.Break0;
+                        return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.BaseEnchantment);
+                    }
+                    item.WornRestrictions = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.WornRestrictions);
                 }
                 case 0x44494645: // EFID
                 case 0x54494645: // EFIT
@@ -1570,11 +2003,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (rhs == null) return;
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.Name = string.Equals(item.Name, rhs.Name);
-            ret.Data = MaskItemExt.Factory(item.Data.GetEqualsMask(rhs.Data, include), include);
+            ret.EnchantmentCost = item.EnchantmentCost == rhs.EnchantmentCost;
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.CastType = item.CastType == rhs.CastType;
+            ret.EnchantmentAmount = item.EnchantmentAmount == rhs.EnchantmentAmount;
+            ret.TargetType = item.TargetType == rhs.TargetType;
+            ret.EnchantType = item.EnchantType == rhs.EnchantType;
+            ret.ChargeTime = item.ChargeTime.EqualsWithin(rhs.ChargeTime);
+            ret.BaseEnchantment = object.Equals(item.BaseEnchantment, rhs.BaseEnchantment);
+            ret.WornRestrictions = object.Equals(item.WornRestrictions, rhs.WornRestrictions);
             ret.Effects = item.Effects.CollectionEqualsHelper(
                 rhs.Effects,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            ret.ENITDataTypeState = item.ENITDataTypeState == rhs.ENITDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1635,9 +2077,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(NameItem, "Name");
             }
-            if (printMask?.Data?.Overall ?? true)
+            if (printMask?.EnchantmentCost ?? true)
             {
-                item.Data?.ToString(fg, "Data");
+                fg.AppendItem(item.EnchantmentCost, "EnchantmentCost");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.CastType ?? true)
+            {
+                fg.AppendItem(item.CastType, "CastType");
+            }
+            if (printMask?.EnchantmentAmount ?? true)
+            {
+                fg.AppendItem(item.EnchantmentAmount, "EnchantmentAmount");
+            }
+            if (printMask?.TargetType ?? true)
+            {
+                fg.AppendItem(item.TargetType, "TargetType");
+            }
+            if (printMask?.EnchantType ?? true)
+            {
+                fg.AppendItem(item.EnchantType, "EnchantType");
+            }
+            if (printMask?.ChargeTime ?? true)
+            {
+                fg.AppendItem(item.ChargeTime, "ChargeTime");
+            }
+            if (printMask?.BaseEnchantment ?? true)
+            {
+                fg.AppendItem(item.BaseEnchantment, "BaseEnchantment");
+            }
+            if (printMask?.WornRestrictions ?? true)
+            {
+                fg.AppendItem(item.WornRestrictions, "WornRestrictions");
             }
             if (printMask?.Effects?.Overall ?? true)
             {
@@ -1657,6 +2131,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
+            if (printMask?.ENITDataTypeState ?? true)
+            {
+                fg.AppendItem(item.ENITDataTypeState, "ENITDataTypeState");
+            }
         }
         
         public bool HasBeenSet(
@@ -1675,9 +2153,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
             mask.Name = (item.Name != null);
-            mask.Data = new MaskItem<bool, ObjectEffectData.Mask<bool>?>(true, item.Data?.GetHasBeenSetMask());
+            mask.EnchantmentCost = true;
+            mask.Flags = true;
+            mask.CastType = true;
+            mask.EnchantmentAmount = true;
+            mask.TargetType = true;
+            mask.EnchantType = true;
+            mask.ChargeTime = true;
+            mask.BaseEnchantment = true;
+            mask.WornRestrictions = true;
             var EffectsItem = item.Effects;
             mask.Effects = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Effect.Mask<bool>?>>?>(true, EffectsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Effect.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.ENITDataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1731,8 +2218,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!base.Equals(rhs)) return false;
             if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            if (lhs.EnchantmentCost != rhs.EnchantmentCost) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.CastType != rhs.CastType) return false;
+            if (lhs.EnchantmentAmount != rhs.EnchantmentAmount) return false;
+            if (lhs.TargetType != rhs.TargetType) return false;
+            if (lhs.EnchantType != rhs.EnchantType) return false;
+            if (!lhs.ChargeTime.EqualsWithin(rhs.ChargeTime)) return false;
+            if (!lhs.BaseEnchantment.Equals(rhs.BaseEnchantment)) return false;
+            if (!lhs.WornRestrictions.Equals(rhs.WornRestrictions)) return false;
             if (!lhs.Effects.SequenceEqual(rhs.Effects)) return false;
+            if (lhs.ENITDataTypeState != rhs.ENITDataTypeState) return false;
             return true;
         }
         
@@ -1762,8 +2258,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Nameitem);
             }
-            hash.Add(item.Data);
+            hash.Add(item.EnchantmentCost);
+            hash.Add(item.Flags);
+            hash.Add(item.CastType);
+            hash.Add(item.EnchantmentAmount);
+            hash.Add(item.TargetType);
+            hash.Add(item.EnchantType);
+            hash.Add(item.ChargeTime);
+            hash.Add(item.BaseEnchantment);
+            hash.Add(item.WornRestrictions);
             hash.Add(item.Effects);
+            hash.Add(item.ENITDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1793,10 +2298,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
-            foreach (var item in obj.Data.LinkFormKeys)
-            {
-                yield return item;
-            }
+            yield return obj.BaseEnchantment.FormKey;
+            yield return obj.WornRestrictions.FormKey;
             foreach (var item in obj.Effects.SelectMany(f => f.LinkFormKeys))
             {
                 yield return item;
@@ -1874,27 +2377,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Name = rhs.Name;
             }
-            if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Data) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.EnchantmentCost) ?? true))
             {
-                errorMask?.PushIndex((int)ObjectEffect_FieldIndex.Data);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Data) ?? true))
-                    {
-                        item.Data = rhs.Data.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)ObjectEffect_FieldIndex.Data),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.EnchantmentCost = rhs.EnchantmentCost;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.CastType) ?? true))
+            {
+                item.CastType = rhs.CastType;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.EnchantmentAmount) ?? true))
+            {
+                item.EnchantmentAmount = rhs.EnchantmentAmount;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.TargetType) ?? true))
+            {
+                item.TargetType = rhs.TargetType;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.EnchantType) ?? true))
+            {
+                item.EnchantType = rhs.EnchantType;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.ChargeTime) ?? true))
+            {
+                item.ChargeTime = rhs.ChargeTime;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.BaseEnchantment) ?? true))
+            {
+                item.BaseEnchantment = rhs.BaseEnchantment.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.WornRestrictions) ?? true))
+            {
+                item.WornRestrictions = rhs.WornRestrictions.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Effects) ?? true))
             {
@@ -1919,6 +2436,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.ENITDataTypeState) ?? true))
+            {
+                item.ENITDataTypeState = rhs.ENITDataTypeState;
             }
         }
         
@@ -2083,16 +2604,93 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)ObjectEffect_FieldIndex.Name,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Data) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.EnchantmentCost) ?? true))
             {
-                var DataItem = item.Data;
-                ((ObjectEffectDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
-                    item: DataItem,
+                UInt32XmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Data),
-                    fieldIndex: (int)ObjectEffect_FieldIndex.Data,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)ObjectEffect_FieldIndex.Data));
+                    name: nameof(item.EnchantmentCost),
+                    item: item.EnchantmentCost,
+                    fieldIndex: (int)ObjectEffect_FieldIndex.EnchantmentCost,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Flags) ?? true))
+            {
+                EnumXmlTranslation<ObjectEffect.Flag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)ObjectEffect_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.CastType) ?? true))
+            {
+                EnumXmlTranslation<CastType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.CastType),
+                    item: item.CastType,
+                    fieldIndex: (int)ObjectEffect_FieldIndex.CastType,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.EnchantmentAmount) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.EnchantmentAmount),
+                    item: item.EnchantmentAmount,
+                    fieldIndex: (int)ObjectEffect_FieldIndex.EnchantmentAmount,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.TargetType) ?? true))
+            {
+                EnumXmlTranslation<TargetType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.TargetType),
+                    item: item.TargetType,
+                    fieldIndex: (int)ObjectEffect_FieldIndex.TargetType,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.EnchantType) ?? true))
+            {
+                EnumXmlTranslation<ObjectEffect.EnchantTypeEnum>.Instance.Write(
+                    node: node,
+                    name: nameof(item.EnchantType),
+                    item: item.EnchantType,
+                    fieldIndex: (int)ObjectEffect_FieldIndex.EnchantType,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.ChargeTime) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ChargeTime),
+                    item: item.ChargeTime,
+                    fieldIndex: (int)ObjectEffect_FieldIndex.ChargeTime,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.BaseEnchantment) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.BaseEnchantment),
+                    item: item.BaseEnchantment.FormKey,
+                    fieldIndex: (int)ObjectEffect_FieldIndex.BaseEnchantment,
+                    errorMask: errorMask);
+            }
+            if (!item.ENITDataTypeState.HasFlag(ObjectEffect.ENITDataType.Break0))
+            {
+                if ((translationMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.WornRestrictions) ?? true))
+                {
+                    FormKeyXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.WornRestrictions),
+                        item: item.WornRestrictions.FormKey,
+                        fieldIndex: (int)ObjectEffect_FieldIndex.WornRestrictions,
+                        errorMask: errorMask);
+                }
+            }
+            else
+            {
+                node.Add(new XElement("HasENITDataType"));
             }
             if ((translationMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Effects) ?? true))
             {
@@ -2113,6 +2711,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: listSubMask,
                             translationMask: listTranslMask);
                     });
+            }
+            if ((translationMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.ENITDataTypeState) ?? true))
+            {
+                EnumXmlTranslation<ObjectEffect.ENITDataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.ENITDataTypeState),
+                    item: item.ENITDataTypeState,
+                    fieldIndex: (int)ObjectEffect_FieldIndex.ENITDataTypeState,
+                    errorMask: errorMask);
             }
         }
 
@@ -2258,14 +2865,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Data":
-                    errorMask?.PushIndex((int)ObjectEffect_FieldIndex.Data);
+                case "EnchantmentCost":
+                    errorMask?.PushIndex((int)ObjectEffect_FieldIndex.EnchantmentCost);
                     try
                     {
-                        item.Data = LoquiXmlTranslation<ObjectEffectData>.Instance.Parse(
+                        item.EnchantmentCost = UInt32XmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)ObjectEffect_FieldIndex.Data));
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2276,6 +2882,151 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    break;
+                case "Flags":
+                    errorMask?.PushIndex((int)ObjectEffect_FieldIndex.Flags);
+                    try
+                    {
+                        item.Flags = EnumXmlTranslation<ObjectEffect.Flag>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CastType":
+                    errorMask?.PushIndex((int)ObjectEffect_FieldIndex.CastType);
+                    try
+                    {
+                        item.CastType = EnumXmlTranslation<CastType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "EnchantmentAmount":
+                    errorMask?.PushIndex((int)ObjectEffect_FieldIndex.EnchantmentAmount);
+                    try
+                    {
+                        item.EnchantmentAmount = Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "TargetType":
+                    errorMask?.PushIndex((int)ObjectEffect_FieldIndex.TargetType);
+                    try
+                    {
+                        item.TargetType = EnumXmlTranslation<TargetType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "EnchantType":
+                    errorMask?.PushIndex((int)ObjectEffect_FieldIndex.EnchantType);
+                    try
+                    {
+                        item.EnchantType = EnumXmlTranslation<ObjectEffect.EnchantTypeEnum>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ChargeTime":
+                    errorMask?.PushIndex((int)ObjectEffect_FieldIndex.ChargeTime);
+                    try
+                    {
+                        item.ChargeTime = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BaseEnchantment":
+                    errorMask?.PushIndex((int)ObjectEffect_FieldIndex.BaseEnchantment);
+                    try
+                    {
+                        item.BaseEnchantment = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "WornRestrictions":
+                    errorMask?.PushIndex((int)ObjectEffect_FieldIndex.WornRestrictions);
+                    try
+                    {
+                        item.WornRestrictions = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    item.ENITDataTypeState &= ~ObjectEffect.ENITDataType.Break0;
                     break;
                 case "Effects":
                     errorMask?.PushIndex((int)ObjectEffect_FieldIndex.Effects);
@@ -2294,6 +3045,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         {
                             item.Effects.Clear();
                         }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ENITDataTypeState":
+                    errorMask?.PushIndex((int)ObjectEffect_FieldIndex.ENITDataTypeState);
+                    try
+                    {
+                        item.ENITDataTypeState = EnumXmlTranslation<ObjectEffect.ENITDataType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2391,6 +3160,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ObjectEffectBinaryWriteTranslation Instance = new ObjectEffectBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IObjectEffectGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
         public static void WriteRecordTypes(
             IObjectEffectGetter item,
             MutagenWriter writer,
@@ -2410,11 +3188,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(ObjectEffect_Registration.FULL_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
-            var DataItem = item.Data;
-            ((ObjectEffectDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
-                item: DataItem,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
+            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(ObjectEffect_Registration.ENIT_HEADER)))
+            {
+                writer.Write(item.EnchantmentCost);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ObjectEffect.Flag>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 4);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<CastType>.Instance.Write(
+                    writer,
+                    item.CastType,
+                    length: 4);
+                writer.Write(item.EnchantmentAmount);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<TargetType>.Instance.Write(
+                    writer,
+                    item.TargetType,
+                    length: 4);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ObjectEffect.EnchantTypeEnum>.Instance.Write(
+                    writer,
+                    item.EnchantType,
+                    length: 4);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ChargeTime);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.BaseEnchantment);
+                if (!item.ENITDataTypeState.HasFlag(ObjectEffect.ENITDataType.Break0))
+                {
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.WornRestrictions);
+                }
+            }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IEffectGetter>.Instance.Write(
                 writer: writer,
                 items: item.Effects,
@@ -2438,7 +3244,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(ObjectEffect_Registration.ENCH_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -2563,10 +3369,52 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
         #endregion
-        #region Data
-        private RangeInt32? _DataLocation;
-        private IObjectEffectDataGetter? _Data => _DataLocation.HasValue ? ObjectEffectDataBinaryOverlay.ObjectEffectDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
-        public IObjectEffectDataGetter Data => _Data ?? new ObjectEffectData();
+        private int? _ENITLocation;
+        public ObjectEffect.ENITDataType ENITDataTypeState { get; private set; }
+        #region EnchantmentCost
+        private int _EnchantmentCostLocation => _ENITLocation!.Value + 0x0;
+        private bool _EnchantmentCost_IsSet => _ENITLocation.HasValue;
+        public UInt32 EnchantmentCost => _EnchantmentCost_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_EnchantmentCostLocation, 4)) : default;
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _ENITLocation!.Value + 0x4;
+        private bool _Flags_IsSet => _ENITLocation.HasValue;
+        public ObjectEffect.Flag Flags => _Flags_IsSet ? (ObjectEffect.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
+        #endregion
+        #region CastType
+        private int _CastTypeLocation => _ENITLocation!.Value + 0x8;
+        private bool _CastType_IsSet => _ENITLocation.HasValue;
+        public CastType CastType => _CastType_IsSet ? (CastType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_CastTypeLocation, 0x4)) : default;
+        #endregion
+        #region EnchantmentAmount
+        private int _EnchantmentAmountLocation => _ENITLocation!.Value + 0xC;
+        private bool _EnchantmentAmount_IsSet => _ENITLocation.HasValue;
+        public Int32 EnchantmentAmount => _EnchantmentAmount_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_EnchantmentAmountLocation, 4)) : default;
+        #endregion
+        #region TargetType
+        private int _TargetTypeLocation => _ENITLocation!.Value + 0x10;
+        private bool _TargetType_IsSet => _ENITLocation.HasValue;
+        public TargetType TargetType => _TargetType_IsSet ? (TargetType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_TargetTypeLocation, 0x4)) : default;
+        #endregion
+        #region EnchantType
+        private int _EnchantTypeLocation => _ENITLocation!.Value + 0x14;
+        private bool _EnchantType_IsSet => _ENITLocation.HasValue;
+        public ObjectEffect.EnchantTypeEnum EnchantType => _EnchantType_IsSet ? (ObjectEffect.EnchantTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_EnchantTypeLocation, 0x4)) : default;
+        #endregion
+        #region ChargeTime
+        private int _ChargeTimeLocation => _ENITLocation!.Value + 0x18;
+        private bool _ChargeTime_IsSet => _ENITLocation.HasValue;
+        public Single ChargeTime => _ChargeTime_IsSet ? SpanExt.GetFloat(_data.Slice(_ChargeTimeLocation, 4)) : default;
+        #endregion
+        #region BaseEnchantment
+        private int _BaseEnchantmentLocation => _ENITLocation!.Value + 0x1C;
+        private bool _BaseEnchantment_IsSet => _ENITLocation.HasValue;
+        public IFormLinkGetter<IObjectEffectGetter> BaseEnchantment => _BaseEnchantment_IsSet ? new FormLink<IObjectEffectGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_BaseEnchantmentLocation, 0x4)))) : FormLink<IObjectEffectGetter>.Null;
+        #endregion
+        #region WornRestrictions
+        private int _WornRestrictionsLocation => _ENITLocation!.Value + 0x20;
+        private bool _WornRestrictions_IsSet => _ENITLocation.HasValue && !ENITDataTypeState.HasFlag(ObjectEffect.ENITDataType.Break0);
+        public IFormLinkGetter<IFormListGetter> WornRestrictions => _WornRestrictions_IsSet ? new FormLink<IFormListGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_WornRestrictionsLocation, 0x4)))) : FormLink<IFormListGetter>.Null;
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = ListExt.Empty<EffectBinaryOverlay>();
         partial void CustomCtor(
@@ -2642,8 +3490,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x54494E45: // ENIT
                 {
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.Data);
+                    _ENITLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    var subLen = _package.Meta.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    if (subLen <= 0x20)
+                    {
+                        this.ENITDataTypeState |= ObjectEffect.ENITDataType.Break0;
+                    }
+                    return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.WornRestrictions);
                 }
                 case 0x44494645: // EFID
                 case 0x54494645: // EFIT

@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.Skyrim
             ExtendDurationOnRecast = 0x04
         }
 
-        public enum EnchantType
+        public enum EnchantTypeEnum
         {
             Enchantment = 0x06,
             StaffEnchantment = 0x0C

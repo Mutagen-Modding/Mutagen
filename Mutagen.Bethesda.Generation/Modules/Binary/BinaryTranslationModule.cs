@@ -767,7 +767,7 @@ namespace Mutagen.Bethesda.Generation
             await toDo();
             if (dataSet != null)
             {
-                fg.AppendLine($"return TryGet<int?>.Succeed((int){dataSet.SubFields.Last(f => f.IntegrateField).IndexEnumName});");
+                fg.AppendLine($"return TryGet<int?>.Succeed((int){dataSet.SubFields.Last(f => f.IntegrateField && f.Enabled).IndexEnumName});");
             }
             else if (field.Field is SpecialParseType
                 || field.Field is CustomLogic)
@@ -859,10 +859,13 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
                 fg.AppendLine($"var dataFrame = {frameAccessor}.SpawnWithLength(contentLength);");
-                fg.AppendLine($"if (!dataFrame.Complete)");
-                using (new BraceWrapper(fg))
+                if (set.HasBeenSet)
                 {
-                    fg.AppendLine($"item.{set.StateName} = {obj.ObjectName}.{set.EnumName}.Has;");
+                    fg.AppendLine($"if (!dataFrame.Complete)");
+                    using (new BraceWrapper(fg))
+                    {
+                        fg.AppendLine($"item.{set.StateName} = {obj.ObjectName}.{set.EnumName}.Has;");
+                    }
                 }
                 bool isInRange = false;
                 foreach (var subField in set.IterateFieldsWithMeta())
@@ -1447,8 +1450,11 @@ namespace Mutagen.Bethesda.Generation
                         var accessor = Accessor.FromType(field, "item");
                         if (field is DataType dataType)
                         {
-                            fg.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Has))");
-                            using (new BraceWrapper(fg))
+                            if (dataType.HasBeenSet)
+                            {
+                                fg.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Has))");
+                            }
+                            using (new BraceWrapper(fg, doIt: dataType.HasBeenSet))
                             {
                                 fg.AppendLine($"using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom({obj.RecordTypeHeaderName(fieldData.RecordType.Value)})))");
                                 using (new BraceWrapper(fg))

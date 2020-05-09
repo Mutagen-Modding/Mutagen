@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
+using System.Drawing;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -108,10 +109,41 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IIconsGetter? ILightGetter.Icons => this.Icons;
         #endregion
-        #region Data
-        public LightData Data { get; set; } = new LightData();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILightDataGetter ILightGetter.Data => Data;
+        #region Time
+        public Int32 Time { get; set; } = default;
+        #endregion
+        #region Radius
+        public UInt32 Radius { get; set; } = default;
+        #endregion
+        #region Color
+        public Color Color { get; set; } = default;
+        #endregion
+        #region Flags
+        public Light.Flag Flags { get; set; } = default;
+        #endregion
+        #region FalloffExponent
+        public Single FalloffExponent { get; set; } = default;
+        #endregion
+        #region FOV
+        public Single FOV { get; set; } = default;
+        #endregion
+        #region NearClip
+        public Single NearClip { get; set; } = default;
+        #endregion
+        #region FlickerPeriod
+        public Single FlickerPeriod { get; set; } = default;
+        #endregion
+        #region FlickerIntensityAmplitude
+        public Single FlickerIntensityAmplitude { get; set; } = default;
+        #endregion
+        #region FlickerMovementAmplitude
+        public Single FlickerMovementAmplitude { get; set; } = default;
+        #endregion
+        #region Value
+        public UInt32 Value { get; set; } = default;
+        #endregion
+        #region Weight
+        public Single Weight { get; set; } = default;
         #endregion
         #region FadeValue
         public Single FadeValue { get; set; } = default;
@@ -120,6 +152,9 @@ namespace Mutagen.Bethesda.Skyrim
         public FormLinkNullable<SoundDescriptor> Sound { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISoundDescriptorGetter> ILightGetter.Sound => this.Sound;
+        #endregion
+        #region DATADataTypeState
+        public Light.DATADataType DATADataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -297,9 +332,21 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
                 this.Name = initialValue;
                 this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(initialValue, new Icons.Mask<TItem>(initialValue));
-                this.Data = new MaskItem<TItem, LightData.Mask<TItem>?>(initialValue, new LightData.Mask<TItem>(initialValue));
+                this.Time = initialValue;
+                this.Radius = initialValue;
+                this.Color = initialValue;
+                this.Flags = initialValue;
+                this.FalloffExponent = initialValue;
+                this.FOV = initialValue;
+                this.NearClip = initialValue;
+                this.FlickerPeriod = initialValue;
+                this.FlickerIntensityAmplitude = initialValue;
+                this.FlickerMovementAmplitude = initialValue;
+                this.Value = initialValue;
+                this.Weight = initialValue;
                 this.FadeValue = initialValue;
                 this.Sound = initialValue;
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -315,9 +362,21 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Destructible,
                 TItem Name,
                 TItem Icons,
-                TItem Data,
+                TItem Time,
+                TItem Radius,
+                TItem Color,
+                TItem Flags,
+                TItem FalloffExponent,
+                TItem FOV,
+                TItem NearClip,
+                TItem FlickerPeriod,
+                TItem FlickerIntensityAmplitude,
+                TItem FlickerMovementAmplitude,
+                TItem Value,
+                TItem Weight,
                 TItem FadeValue,
-                TItem Sound)
+                TItem Sound,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -332,9 +391,21 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
                 this.Name = Name;
                 this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(Icons, new Icons.Mask<TItem>(Icons));
-                this.Data = new MaskItem<TItem, LightData.Mask<TItem>?>(Data, new LightData.Mask<TItem>(Data));
+                this.Time = Time;
+                this.Radius = Radius;
+                this.Color = Color;
+                this.Flags = Flags;
+                this.FalloffExponent = FalloffExponent;
+                this.FOV = FOV;
+                this.NearClip = NearClip;
+                this.FlickerPeriod = FlickerPeriod;
+                this.FlickerIntensityAmplitude = FlickerIntensityAmplitude;
+                this.FlickerMovementAmplitude = FlickerMovementAmplitude;
+                this.Value = Value;
+                this.Weight = Weight;
                 this.FadeValue = FadeValue;
                 this.Sound = Sound;
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -352,9 +423,21 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
             public TItem Name;
             public MaskItem<TItem, Icons.Mask<TItem>?>? Icons { get; set; }
-            public MaskItem<TItem, LightData.Mask<TItem>?>? Data { get; set; }
+            public TItem Time;
+            public TItem Radius;
+            public TItem Color;
+            public TItem Flags;
+            public TItem FalloffExponent;
+            public TItem FOV;
+            public TItem NearClip;
+            public TItem FlickerPeriod;
+            public TItem FlickerIntensityAmplitude;
+            public TItem FlickerMovementAmplitude;
+            public TItem Value;
+            public TItem Weight;
             public TItem FadeValue;
             public TItem Sound;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -374,9 +457,21 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Icons, rhs.Icons)) return false;
-                if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.Time, rhs.Time)) return false;
+                if (!object.Equals(this.Radius, rhs.Radius)) return false;
+                if (!object.Equals(this.Color, rhs.Color)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.FalloffExponent, rhs.FalloffExponent)) return false;
+                if (!object.Equals(this.FOV, rhs.FOV)) return false;
+                if (!object.Equals(this.NearClip, rhs.NearClip)) return false;
+                if (!object.Equals(this.FlickerPeriod, rhs.FlickerPeriod)) return false;
+                if (!object.Equals(this.FlickerIntensityAmplitude, rhs.FlickerIntensityAmplitude)) return false;
+                if (!object.Equals(this.FlickerMovementAmplitude, rhs.FlickerMovementAmplitude)) return false;
+                if (!object.Equals(this.Value, rhs.Value)) return false;
+                if (!object.Equals(this.Weight, rhs.Weight)) return false;
                 if (!object.Equals(this.FadeValue, rhs.FadeValue)) return false;
                 if (!object.Equals(this.Sound, rhs.Sound)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -388,9 +483,21 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Destructible);
                 hash.Add(this.Name);
                 hash.Add(this.Icons);
-                hash.Add(this.Data);
+                hash.Add(this.Time);
+                hash.Add(this.Radius);
+                hash.Add(this.Color);
+                hash.Add(this.Flags);
+                hash.Add(this.FalloffExponent);
+                hash.Add(this.FOV);
+                hash.Add(this.NearClip);
+                hash.Add(this.FlickerPeriod);
+                hash.Add(this.FlickerIntensityAmplitude);
+                hash.Add(this.FlickerMovementAmplitude);
+                hash.Add(this.Value);
+                hash.Add(this.Weight);
                 hash.Add(this.FadeValue);
                 hash.Add(this.Sound);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -427,13 +534,21 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Icons.Overall)) return false;
                     if (this.Icons.Specific != null && !this.Icons.Specific.All(eval)) return false;
                 }
-                if (Data != null)
-                {
-                    if (!eval(this.Data.Overall)) return false;
-                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
-                }
+                if (!eval(this.Time)) return false;
+                if (!eval(this.Radius)) return false;
+                if (!eval(this.Color)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.FalloffExponent)) return false;
+                if (!eval(this.FOV)) return false;
+                if (!eval(this.NearClip)) return false;
+                if (!eval(this.FlickerPeriod)) return false;
+                if (!eval(this.FlickerIntensityAmplitude)) return false;
+                if (!eval(this.FlickerMovementAmplitude)) return false;
+                if (!eval(this.Value)) return false;
+                if (!eval(this.Weight)) return false;
                 if (!eval(this.FadeValue)) return false;
                 if (!eval(this.Sound)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -468,13 +583,21 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Icons.Overall)) return true;
                     if (this.Icons.Specific != null && this.Icons.Specific.Any(eval)) return true;
                 }
-                if (Data != null)
-                {
-                    if (eval(this.Data.Overall)) return true;
-                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
-                }
+                if (eval(this.Time)) return true;
+                if (eval(this.Radius)) return true;
+                if (eval(this.Color)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.FalloffExponent)) return true;
+                if (eval(this.FOV)) return true;
+                if (eval(this.NearClip)) return true;
+                if (eval(this.FlickerPeriod)) return true;
+                if (eval(this.FlickerIntensityAmplitude)) return true;
+                if (eval(this.FlickerMovementAmplitude)) return true;
+                if (eval(this.Value)) return true;
+                if (eval(this.Weight)) return true;
                 if (eval(this.FadeValue)) return true;
                 if (eval(this.Sound)) return true;
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -496,9 +619,21 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
                 obj.Name = eval(this.Name);
                 obj.Icons = this.Icons == null ? null : new MaskItem<R, Icons.Mask<R>?>(eval(this.Icons.Overall), this.Icons.Specific?.Translate(eval));
-                obj.Data = this.Data == null ? null : new MaskItem<R, LightData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
+                obj.Time = eval(this.Time);
+                obj.Radius = eval(this.Radius);
+                obj.Color = eval(this.Color);
+                obj.Flags = eval(this.Flags);
+                obj.FalloffExponent = eval(this.FalloffExponent);
+                obj.FOV = eval(this.FOV);
+                obj.NearClip = eval(this.NearClip);
+                obj.FlickerPeriod = eval(this.FlickerPeriod);
+                obj.FlickerIntensityAmplitude = eval(this.FlickerIntensityAmplitude);
+                obj.FlickerMovementAmplitude = eval(this.FlickerMovementAmplitude);
+                obj.Value = eval(this.Value);
+                obj.Weight = eval(this.Weight);
                 obj.FadeValue = eval(this.FadeValue);
                 obj.Sound = eval(this.Sound);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -545,9 +680,53 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Icons?.ToString(fg);
                     }
-                    if (printMask?.Data?.Overall ?? true)
+                    if (printMask?.Time ?? true)
                     {
-                        Data?.ToString(fg);
+                        fg.AppendItem(Time, "Time");
+                    }
+                    if (printMask?.Radius ?? true)
+                    {
+                        fg.AppendItem(Radius, "Radius");
+                    }
+                    if (printMask?.Color ?? true)
+                    {
+                        fg.AppendItem(Color, "Color");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.FalloffExponent ?? true)
+                    {
+                        fg.AppendItem(FalloffExponent, "FalloffExponent");
+                    }
+                    if (printMask?.FOV ?? true)
+                    {
+                        fg.AppendItem(FOV, "FOV");
+                    }
+                    if (printMask?.NearClip ?? true)
+                    {
+                        fg.AppendItem(NearClip, "NearClip");
+                    }
+                    if (printMask?.FlickerPeriod ?? true)
+                    {
+                        fg.AppendItem(FlickerPeriod, "FlickerPeriod");
+                    }
+                    if (printMask?.FlickerIntensityAmplitude ?? true)
+                    {
+                        fg.AppendItem(FlickerIntensityAmplitude, "FlickerIntensityAmplitude");
+                    }
+                    if (printMask?.FlickerMovementAmplitude ?? true)
+                    {
+                        fg.AppendItem(FlickerMovementAmplitude, "FlickerMovementAmplitude");
+                    }
+                    if (printMask?.Value ?? true)
+                    {
+                        fg.AppendItem(Value, "Value");
+                    }
+                    if (printMask?.Weight ?? true)
+                    {
+                        fg.AppendItem(Weight, "Weight");
                     }
                     if (printMask?.FadeValue ?? true)
                     {
@@ -556,6 +735,10 @@ namespace Mutagen.Bethesda.Skyrim
                     if (printMask?.Sound ?? true)
                     {
                         fg.AppendItem(Sound, "Sound");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -575,9 +758,21 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
             public Exception? Name;
             public MaskItem<Exception?, Icons.ErrorMask?>? Icons;
-            public MaskItem<Exception?, LightData.ErrorMask?>? Data;
+            public Exception? Time;
+            public Exception? Radius;
+            public Exception? Color;
+            public Exception? Flags;
+            public Exception? FalloffExponent;
+            public Exception? FOV;
+            public Exception? NearClip;
+            public Exception? FlickerPeriod;
+            public Exception? FlickerIntensityAmplitude;
+            public Exception? FlickerMovementAmplitude;
+            public Exception? Value;
+            public Exception? Weight;
             public Exception? FadeValue;
             public Exception? Sound;
+            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -598,12 +793,36 @@ namespace Mutagen.Bethesda.Skyrim
                         return Name;
                     case Light_FieldIndex.Icons:
                         return Icons;
-                    case Light_FieldIndex.Data:
-                        return Data;
+                    case Light_FieldIndex.Time:
+                        return Time;
+                    case Light_FieldIndex.Radius:
+                        return Radius;
+                    case Light_FieldIndex.Color:
+                        return Color;
+                    case Light_FieldIndex.Flags:
+                        return Flags;
+                    case Light_FieldIndex.FalloffExponent:
+                        return FalloffExponent;
+                    case Light_FieldIndex.FOV:
+                        return FOV;
+                    case Light_FieldIndex.NearClip:
+                        return NearClip;
+                    case Light_FieldIndex.FlickerPeriod:
+                        return FlickerPeriod;
+                    case Light_FieldIndex.FlickerIntensityAmplitude:
+                        return FlickerIntensityAmplitude;
+                    case Light_FieldIndex.FlickerMovementAmplitude:
+                        return FlickerMovementAmplitude;
+                    case Light_FieldIndex.Value:
+                        return Value;
+                    case Light_FieldIndex.Weight:
+                        return Weight;
                     case Light_FieldIndex.FadeValue:
                         return FadeValue;
                     case Light_FieldIndex.Sound:
                         return Sound;
+                    case Light_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -632,14 +851,50 @@ namespace Mutagen.Bethesda.Skyrim
                     case Light_FieldIndex.Icons:
                         this.Icons = new MaskItem<Exception?, Icons.ErrorMask?>(ex, null);
                         break;
-                    case Light_FieldIndex.Data:
-                        this.Data = new MaskItem<Exception?, LightData.ErrorMask?>(ex, null);
+                    case Light_FieldIndex.Time:
+                        this.Time = ex;
+                        break;
+                    case Light_FieldIndex.Radius:
+                        this.Radius = ex;
+                        break;
+                    case Light_FieldIndex.Color:
+                        this.Color = ex;
+                        break;
+                    case Light_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Light_FieldIndex.FalloffExponent:
+                        this.FalloffExponent = ex;
+                        break;
+                    case Light_FieldIndex.FOV:
+                        this.FOV = ex;
+                        break;
+                    case Light_FieldIndex.NearClip:
+                        this.NearClip = ex;
+                        break;
+                    case Light_FieldIndex.FlickerPeriod:
+                        this.FlickerPeriod = ex;
+                        break;
+                    case Light_FieldIndex.FlickerIntensityAmplitude:
+                        this.FlickerIntensityAmplitude = ex;
+                        break;
+                    case Light_FieldIndex.FlickerMovementAmplitude:
+                        this.FlickerMovementAmplitude = ex;
+                        break;
+                    case Light_FieldIndex.Value:
+                        this.Value = ex;
+                        break;
+                    case Light_FieldIndex.Weight:
+                        this.Weight = ex;
                         break;
                     case Light_FieldIndex.FadeValue:
                         this.FadeValue = ex;
                         break;
                     case Light_FieldIndex.Sound:
                         this.Sound = ex;
+                        break;
+                    case Light_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -670,14 +925,50 @@ namespace Mutagen.Bethesda.Skyrim
                     case Light_FieldIndex.Icons:
                         this.Icons = (MaskItem<Exception?, Icons.ErrorMask?>?)obj;
                         break;
-                    case Light_FieldIndex.Data:
-                        this.Data = (MaskItem<Exception?, LightData.ErrorMask?>?)obj;
+                    case Light_FieldIndex.Time:
+                        this.Time = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.Radius:
+                        this.Radius = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.Color:
+                        this.Color = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.FalloffExponent:
+                        this.FalloffExponent = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.FOV:
+                        this.FOV = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.NearClip:
+                        this.NearClip = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.FlickerPeriod:
+                        this.FlickerPeriod = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.FlickerIntensityAmplitude:
+                        this.FlickerIntensityAmplitude = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.FlickerMovementAmplitude:
+                        this.FlickerMovementAmplitude = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.Value:
+                        this.Value = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.Weight:
+                        this.Weight = (Exception?)obj;
                         break;
                     case Light_FieldIndex.FadeValue:
                         this.FadeValue = (Exception?)obj;
                         break;
                     case Light_FieldIndex.Sound:
                         this.Sound = (Exception?)obj;
+                        break;
+                    case Light_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -694,9 +985,21 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Destructible != null) return true;
                 if (Name != null) return true;
                 if (Icons != null) return true;
-                if (Data != null) return true;
+                if (Time != null) return true;
+                if (Radius != null) return true;
+                if (Color != null) return true;
+                if (Flags != null) return true;
+                if (FalloffExponent != null) return true;
+                if (FOV != null) return true;
+                if (NearClip != null) return true;
+                if (FlickerPeriod != null) return true;
+                if (FlickerIntensityAmplitude != null) return true;
+                if (FlickerMovementAmplitude != null) return true;
+                if (Value != null) return true;
+                if (Weight != null) return true;
                 if (FadeValue != null) return true;
                 if (Sound != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -738,9 +1041,21 @@ namespace Mutagen.Bethesda.Skyrim
                 Destructible?.ToString(fg);
                 fg.AppendItem(Name, "Name");
                 Icons?.ToString(fg);
-                Data?.ToString(fg);
+                fg.AppendItem(Time, "Time");
+                fg.AppendItem(Radius, "Radius");
+                fg.AppendItem(Color, "Color");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(FalloffExponent, "FalloffExponent");
+                fg.AppendItem(FOV, "FOV");
+                fg.AppendItem(NearClip, "NearClip");
+                fg.AppendItem(FlickerPeriod, "FlickerPeriod");
+                fg.AppendItem(FlickerIntensityAmplitude, "FlickerIntensityAmplitude");
+                fg.AppendItem(FlickerMovementAmplitude, "FlickerMovementAmplitude");
+                fg.AppendItem(Value, "Value");
+                fg.AppendItem(Weight, "Weight");
                 fg.AppendItem(FadeValue, "FadeValue");
                 fg.AppendItem(Sound, "Sound");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -755,9 +1070,21 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Icons = this.Icons.Combine(rhs.Icons, (l, r) => l.Combine(r));
-                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
+                ret.Time = this.Time.Combine(rhs.Time);
+                ret.Radius = this.Radius.Combine(rhs.Radius);
+                ret.Color = this.Color.Combine(rhs.Color);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.FalloffExponent = this.FalloffExponent.Combine(rhs.FalloffExponent);
+                ret.FOV = this.FOV.Combine(rhs.FOV);
+                ret.NearClip = this.NearClip.Combine(rhs.NearClip);
+                ret.FlickerPeriod = this.FlickerPeriod.Combine(rhs.FlickerPeriod);
+                ret.FlickerIntensityAmplitude = this.FlickerIntensityAmplitude.Combine(rhs.FlickerIntensityAmplitude);
+                ret.FlickerMovementAmplitude = this.FlickerMovementAmplitude.Combine(rhs.FlickerMovementAmplitude);
+                ret.Value = this.Value.Combine(rhs.Value);
+                ret.Weight = this.Weight.Combine(rhs.Weight);
                 ret.FadeValue = this.FadeValue.Combine(rhs.FadeValue);
                 ret.Sound = this.Sound.Combine(rhs.Sound);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -786,9 +1113,21 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Destructible.TranslationMask?> Destructible;
             public bool Name;
             public MaskItem<bool, Icons.TranslationMask?> Icons;
-            public MaskItem<bool, LightData.TranslationMask?> Data;
+            public bool Time;
+            public bool Radius;
+            public bool Color;
+            public bool Flags;
+            public bool FalloffExponent;
+            public bool FOV;
+            public bool NearClip;
+            public bool FlickerPeriod;
+            public bool FlickerIntensityAmplitude;
+            public bool FlickerMovementAmplitude;
+            public bool Value;
+            public bool Weight;
             public bool FadeValue;
             public bool Sound;
+            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -801,9 +1140,21 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Destructible = new MaskItem<bool, Destructible.TranslationMask?>(defaultOn, null);
                 this.Name = defaultOn;
                 this.Icons = new MaskItem<bool, Icons.TranslationMask?>(defaultOn, null);
-                this.Data = new MaskItem<bool, LightData.TranslationMask?>(defaultOn, null);
+                this.Time = defaultOn;
+                this.Radius = defaultOn;
+                this.Color = defaultOn;
+                this.Flags = defaultOn;
+                this.FalloffExponent = defaultOn;
+                this.FOV = defaultOn;
+                this.NearClip = defaultOn;
+                this.FlickerPeriod = defaultOn;
+                this.FlickerIntensityAmplitude = defaultOn;
+                this.FlickerMovementAmplitude = defaultOn;
+                this.Value = defaultOn;
+                this.Weight = defaultOn;
                 this.FadeValue = defaultOn;
                 this.Sound = defaultOn;
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -817,9 +1168,21 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Destructible?.Overall ?? true, Destructible?.Specific?.GetCrystal()));
                 ret.Add((Name, null));
                 ret.Add((Icons?.Overall ?? true, Icons?.Specific?.GetCrystal()));
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((Time, null));
+                ret.Add((Radius, null));
+                ret.Add((Color, null));
+                ret.Add((Flags, null));
+                ret.Add((FalloffExponent, null));
+                ret.Add((FOV, null));
+                ret.Add((NearClip, null));
+                ret.Add((FlickerPeriod, null));
+                ret.Add((FlickerIntensityAmplitude, null));
+                ret.Add((FlickerMovementAmplitude, null));
+                ret.Add((Value, null));
+                ret.Add((Weight, null));
                 ret.Add((FadeValue, null));
                 ret.Add((Sound, null));
+                ret.Add((DATADataTypeState, null));
             }
         }
         #endregion
@@ -853,6 +1216,10 @@ namespace Mutagen.Bethesda.Skyrim
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
+        }
+        [Flags]
+        public enum DATADataType
+        {
         }
         #endregion
 
@@ -920,6 +1287,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeled,
         IObjectBounded,
         IObjectId,
+        IWeightValue,
         ILoquiObjectSetter<ILightInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -928,9 +1296,21 @@ namespace Mutagen.Bethesda.Skyrim
         new Destructible? Destructible { get; set; }
         new String? Name { get; set; }
         new Icons? Icons { get; set; }
-        new LightData Data { get; set; }
+        new Int32 Time { get; set; }
+        new UInt32 Radius { get; set; }
+        new Color Color { get; set; }
+        new Light.Flag Flags { get; set; }
+        new Single FalloffExponent { get; set; }
+        new Single FOV { get; set; }
+        new Single NearClip { get; set; }
+        new Single FlickerPeriod { get; set; }
+        new Single FlickerIntensityAmplitude { get; set; }
+        new Single FlickerMovementAmplitude { get; set; }
+        new UInt32 Value { get; set; }
+        new Single Weight { get; set; }
         new Single FadeValue { get; set; }
         new FormLinkNullable<SoundDescriptor> Sound { get; set; }
+        new Light.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Light.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -952,6 +1332,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter,
         IObjectBoundedGetter,
         IObjectIdGetter,
+        IWeightValueGetter,
         ILoquiObject<ILightGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,
@@ -964,9 +1345,21 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? Destructible { get; }
         String? Name { get; }
         IIconsGetter? Icons { get; }
-        ILightDataGetter Data { get; }
+        Int32 Time { get; }
+        UInt32 Radius { get; }
+        Color Color { get; }
+        Light.Flag Flags { get; }
+        Single FalloffExponent { get; }
+        Single FOV { get; }
+        Single NearClip { get; }
+        Single FlickerPeriod { get; }
+        Single FlickerIntensityAmplitude { get; }
+        Single FlickerMovementAmplitude { get; }
+        UInt32 Value { get; }
+        Single Weight { get; }
         Single FadeValue { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> Sound { get; }
+        Light.DATADataType DATADataTypeState { get; }
 
         #region Mutagen
         Light.MajorFlag MajorFlags { get; }
@@ -1277,9 +1670,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Destructible = 9,
         Name = 10,
         Icons = 11,
-        Data = 12,
-        FadeValue = 13,
-        Sound = 14,
+        Time = 12,
+        Radius = 13,
+        Color = 14,
+        Flags = 15,
+        FalloffExponent = 16,
+        FOV = 17,
+        NearClip = 18,
+        FlickerPeriod = 19,
+        FlickerIntensityAmplitude = 20,
+        FlickerMovementAmplitude = 21,
+        Value = 22,
+        Weight = 23,
+        FadeValue = 24,
+        Sound = 25,
+        DATADataTypeState = 26,
     }
     #endregion
 
@@ -1297,9 +1702,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "749a2492-52b8-4580-ac1c-b645cabfd20b";
 
-        public const ushort AdditionalFieldCount = 9;
+        public const ushort AdditionalFieldCount = 21;
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 27;
 
         public static readonly Type MaskType = typeof(Light.Mask<>);
 
@@ -1341,12 +1746,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Light_FieldIndex.Name;
                 case "ICONS":
                     return (ushort)Light_FieldIndex.Icons;
-                case "DATA":
-                    return (ushort)Light_FieldIndex.Data;
+                case "TIME":
+                    return (ushort)Light_FieldIndex.Time;
+                case "RADIUS":
+                    return (ushort)Light_FieldIndex.Radius;
+                case "COLOR":
+                    return (ushort)Light_FieldIndex.Color;
+                case "FLAGS":
+                    return (ushort)Light_FieldIndex.Flags;
+                case "FALLOFFEXPONENT":
+                    return (ushort)Light_FieldIndex.FalloffExponent;
+                case "FOV":
+                    return (ushort)Light_FieldIndex.FOV;
+                case "NEARCLIP":
+                    return (ushort)Light_FieldIndex.NearClip;
+                case "FLICKERPERIOD":
+                    return (ushort)Light_FieldIndex.FlickerPeriod;
+                case "FLICKERINTENSITYAMPLITUDE":
+                    return (ushort)Light_FieldIndex.FlickerIntensityAmplitude;
+                case "FLICKERMOVEMENTAMPLITUDE":
+                    return (ushort)Light_FieldIndex.FlickerMovementAmplitude;
+                case "VALUE":
+                    return (ushort)Light_FieldIndex.Value;
+                case "WEIGHT":
+                    return (ushort)Light_FieldIndex.Weight;
                 case "FADEVALUE":
                     return (ushort)Light_FieldIndex.FadeValue;
                 case "SOUND":
                     return (ushort)Light_FieldIndex.Sound;
+                case "DATADATATYPESTATE":
+                    return (ushort)Light_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -1363,9 +1792,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Light_FieldIndex.Destructible:
                 case Light_FieldIndex.Name:
                 case Light_FieldIndex.Icons:
-                case Light_FieldIndex.Data:
+                case Light_FieldIndex.Time:
+                case Light_FieldIndex.Radius:
+                case Light_FieldIndex.Color:
+                case Light_FieldIndex.Flags:
+                case Light_FieldIndex.FalloffExponent:
+                case Light_FieldIndex.FOV:
+                case Light_FieldIndex.NearClip:
+                case Light_FieldIndex.FlickerPeriod:
+                case Light_FieldIndex.FlickerIntensityAmplitude:
+                case Light_FieldIndex.FlickerMovementAmplitude:
+                case Light_FieldIndex.Value:
+                case Light_FieldIndex.Weight:
                 case Light_FieldIndex.FadeValue:
                 case Light_FieldIndex.Sound:
+                case Light_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1382,11 +1823,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Light_FieldIndex.Model:
                 case Light_FieldIndex.Destructible:
                 case Light_FieldIndex.Icons:
-                case Light_FieldIndex.Data:
                     return true;
                 case Light_FieldIndex.Name:
+                case Light_FieldIndex.Time:
+                case Light_FieldIndex.Radius:
+                case Light_FieldIndex.Color:
+                case Light_FieldIndex.Flags:
+                case Light_FieldIndex.FalloffExponent:
+                case Light_FieldIndex.FOV:
+                case Light_FieldIndex.NearClip:
+                case Light_FieldIndex.FlickerPeriod:
+                case Light_FieldIndex.FlickerIntensityAmplitude:
+                case Light_FieldIndex.FlickerMovementAmplitude:
+                case Light_FieldIndex.Value:
+                case Light_FieldIndex.Weight:
                 case Light_FieldIndex.FadeValue:
                 case Light_FieldIndex.Sound:
+                case Light_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1404,9 +1857,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Light_FieldIndex.Destructible:
                 case Light_FieldIndex.Name:
                 case Light_FieldIndex.Icons:
-                case Light_FieldIndex.Data:
+                case Light_FieldIndex.Time:
+                case Light_FieldIndex.Radius:
+                case Light_FieldIndex.Color:
+                case Light_FieldIndex.Flags:
+                case Light_FieldIndex.FalloffExponent:
+                case Light_FieldIndex.FOV:
+                case Light_FieldIndex.NearClip:
+                case Light_FieldIndex.FlickerPeriod:
+                case Light_FieldIndex.FlickerIntensityAmplitude:
+                case Light_FieldIndex.FlickerMovementAmplitude:
+                case Light_FieldIndex.Value:
+                case Light_FieldIndex.Weight:
                 case Light_FieldIndex.FadeValue:
                 case Light_FieldIndex.Sound:
+                case Light_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1430,12 +1895,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Name";
                 case Light_FieldIndex.Icons:
                     return "Icons";
-                case Light_FieldIndex.Data:
-                    return "Data";
+                case Light_FieldIndex.Time:
+                    return "Time";
+                case Light_FieldIndex.Radius:
+                    return "Radius";
+                case Light_FieldIndex.Color:
+                    return "Color";
+                case Light_FieldIndex.Flags:
+                    return "Flags";
+                case Light_FieldIndex.FalloffExponent:
+                    return "FalloffExponent";
+                case Light_FieldIndex.FOV:
+                    return "FOV";
+                case Light_FieldIndex.NearClip:
+                    return "NearClip";
+                case Light_FieldIndex.FlickerPeriod:
+                    return "FlickerPeriod";
+                case Light_FieldIndex.FlickerIntensityAmplitude:
+                    return "FlickerIntensityAmplitude";
+                case Light_FieldIndex.FlickerMovementAmplitude:
+                    return "FlickerMovementAmplitude";
+                case Light_FieldIndex.Value:
+                    return "Value";
+                case Light_FieldIndex.Weight:
+                    return "Weight";
                 case Light_FieldIndex.FadeValue:
                     return "FadeValue";
                 case Light_FieldIndex.Sound:
                     return "Sound";
+                case Light_FieldIndex.DATADataTypeState:
+                    return "DATADataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -1452,9 +1941,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Light_FieldIndex.Destructible:
                 case Light_FieldIndex.Name:
                 case Light_FieldIndex.Icons:
-                case Light_FieldIndex.Data:
+                case Light_FieldIndex.Time:
+                case Light_FieldIndex.Radius:
+                case Light_FieldIndex.Color:
+                case Light_FieldIndex.Flags:
+                case Light_FieldIndex.FalloffExponent:
+                case Light_FieldIndex.FOV:
+                case Light_FieldIndex.NearClip:
+                case Light_FieldIndex.FlickerPeriod:
+                case Light_FieldIndex.FlickerIntensityAmplitude:
+                case Light_FieldIndex.FlickerMovementAmplitude:
+                case Light_FieldIndex.Value:
+                case Light_FieldIndex.Weight:
                 case Light_FieldIndex.FadeValue:
                 case Light_FieldIndex.Sound:
+                case Light_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
@@ -1472,9 +1973,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Light_FieldIndex.Destructible:
                 case Light_FieldIndex.Name:
                 case Light_FieldIndex.Icons:
-                case Light_FieldIndex.Data:
+                case Light_FieldIndex.Time:
+                case Light_FieldIndex.Radius:
+                case Light_FieldIndex.Color:
+                case Light_FieldIndex.Flags:
+                case Light_FieldIndex.FalloffExponent:
+                case Light_FieldIndex.FOV:
+                case Light_FieldIndex.NearClip:
+                case Light_FieldIndex.FlickerPeriod:
+                case Light_FieldIndex.FlickerIntensityAmplitude:
+                case Light_FieldIndex.FlickerMovementAmplitude:
+                case Light_FieldIndex.Value:
+                case Light_FieldIndex.Weight:
                 case Light_FieldIndex.FadeValue:
                 case Light_FieldIndex.Sound:
+                case Light_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
@@ -1498,12 +2011,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(String);
                 case Light_FieldIndex.Icons:
                     return typeof(Icons);
-                case Light_FieldIndex.Data:
-                    return typeof(LightData);
+                case Light_FieldIndex.Time:
+                    return typeof(Int32);
+                case Light_FieldIndex.Radius:
+                    return typeof(UInt32);
+                case Light_FieldIndex.Color:
+                    return typeof(Color);
+                case Light_FieldIndex.Flags:
+                    return typeof(Light.Flag);
+                case Light_FieldIndex.FalloffExponent:
+                    return typeof(Single);
+                case Light_FieldIndex.FOV:
+                    return typeof(Single);
+                case Light_FieldIndex.NearClip:
+                    return typeof(Single);
+                case Light_FieldIndex.FlickerPeriod:
+                    return typeof(Single);
+                case Light_FieldIndex.FlickerIntensityAmplitude:
+                    return typeof(Single);
+                case Light_FieldIndex.FlickerMovementAmplitude:
+                    return typeof(Single);
+                case Light_FieldIndex.Value:
+                    return typeof(UInt32);
+                case Light_FieldIndex.Weight:
+                    return typeof(Single);
                 case Light_FieldIndex.FadeValue:
                     return typeof(Single);
                 case Light_FieldIndex.Sound:
                     return typeof(FormLinkNullable<SoundDescriptor>);
+                case Light_FieldIndex.DATADataTypeState:
+                    return typeof(Light.DATADataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1524,7 +2061,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
         public static readonly RecordType TriggeringRecordType = LIGH_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 9;
+        public const int NumTypedFields = 8;
         public static readonly Type BinaryWriteTranslation = typeof(LightBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1573,9 +2110,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Destructible = null;
             item.Name = default;
             item.Icons = null;
-            item.Data.Clear();
+            item.Time = default;
+            item.Radius = default;
+            item.Color = default;
+            item.Flags = default;
+            item.FalloffExponent = default;
+            item.FOV = default;
+            item.NearClip = default;
+            item.FlickerPeriod = default;
+            item.FlickerIntensityAmplitude = default;
+            item.FlickerMovementAmplitude = default;
+            item.Value = default;
+            item.Weight = default;
             item.FadeValue = default;
             item.Sound = null;
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1733,8 +2282,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    item.Data = Mutagen.Bethesda.Skyrim.LightData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Light_FieldIndex.Data);
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.Time = dataFrame.ReadInt32();
+                    item.Radius = dataFrame.ReadUInt32();
+                    item.Color = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    item.Flags = EnumBinaryTranslation<Light.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.FalloffExponent = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.FOV = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.NearClip = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.FlickerPeriod = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.FlickerIntensityAmplitude = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.FlickerMovementAmplitude = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.Value = dataFrame.ReadUInt32();
+                    item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    return TryGet<int?>.Succeed((int)Light_FieldIndex.Weight);
                 }
                 case 0x4D414E46: // FNAM
                 {
@@ -1846,9 +2408,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Icons,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Data = MaskItemExt.Factory(item.Data.GetEqualsMask(rhs.Data, include), include);
+            ret.Time = item.Time == rhs.Time;
+            ret.Radius = item.Radius == rhs.Radius;
+            ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.FalloffExponent = item.FalloffExponent.EqualsWithin(rhs.FalloffExponent);
+            ret.FOV = item.FOV.EqualsWithin(rhs.FOV);
+            ret.NearClip = item.NearClip.EqualsWithin(rhs.NearClip);
+            ret.FlickerPeriod = item.FlickerPeriod.EqualsWithin(rhs.FlickerPeriod);
+            ret.FlickerIntensityAmplitude = item.FlickerIntensityAmplitude.EqualsWithin(rhs.FlickerIntensityAmplitude);
+            ret.FlickerMovementAmplitude = item.FlickerMovementAmplitude.EqualsWithin(rhs.FlickerMovementAmplitude);
+            ret.Value = item.Value == rhs.Value;
+            ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.FadeValue = item.FadeValue.EqualsWithin(rhs.FadeValue);
             ret.Sound = object.Equals(item.Sound, rhs.Sound);
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1929,9 +2503,53 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 IconsItem?.ToString(fg, "Icons");
             }
-            if (printMask?.Data?.Overall ?? true)
+            if (printMask?.Time ?? true)
             {
-                item.Data?.ToString(fg, "Data");
+                fg.AppendItem(item.Time, "Time");
+            }
+            if (printMask?.Radius ?? true)
+            {
+                fg.AppendItem(item.Radius, "Radius");
+            }
+            if (printMask?.Color ?? true)
+            {
+                fg.AppendItem(item.Color, "Color");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.FalloffExponent ?? true)
+            {
+                fg.AppendItem(item.FalloffExponent, "FalloffExponent");
+            }
+            if (printMask?.FOV ?? true)
+            {
+                fg.AppendItem(item.FOV, "FOV");
+            }
+            if (printMask?.NearClip ?? true)
+            {
+                fg.AppendItem(item.NearClip, "NearClip");
+            }
+            if (printMask?.FlickerPeriod ?? true)
+            {
+                fg.AppendItem(item.FlickerPeriod, "FlickerPeriod");
+            }
+            if (printMask?.FlickerIntensityAmplitude ?? true)
+            {
+                fg.AppendItem(item.FlickerIntensityAmplitude, "FlickerIntensityAmplitude");
+            }
+            if (printMask?.FlickerMovementAmplitude ?? true)
+            {
+                fg.AppendItem(item.FlickerMovementAmplitude, "FlickerMovementAmplitude");
+            }
+            if (printMask?.Value ?? true)
+            {
+                fg.AppendItem(item.Value, "Value");
+            }
+            if (printMask?.Weight ?? true)
+            {
+                fg.AppendItem(item.Weight, "Weight");
             }
             if (printMask?.FadeValue ?? true)
             {
@@ -1941,6 +2559,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 && item.Sound.TryGet(out var SoundItem))
             {
                 fg.AppendItem(SoundItem, "Sound");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -1977,9 +2599,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Name = (item.Name != null);
             var itemIcons = item.Icons;
             mask.Icons = new MaskItem<bool, Icons.Mask<bool>?>(itemIcons != null, itemIcons?.GetHasBeenSetMask());
-            mask.Data = new MaskItem<bool, LightData.Mask<bool>?>(true, item.Data?.GetHasBeenSetMask());
+            mask.Time = true;
+            mask.Radius = true;
+            mask.Color = true;
+            mask.Flags = true;
+            mask.FalloffExponent = true;
+            mask.FOV = true;
+            mask.NearClip = true;
+            mask.FlickerPeriod = true;
+            mask.FlickerIntensityAmplitude = true;
+            mask.FlickerMovementAmplitude = true;
+            mask.Value = true;
+            mask.Weight = true;
             mask.FadeValue = true;
             mask.Sound = (item.Sound.FormKey != null);
+            mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -2037,9 +2671,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            if (lhs.Time != rhs.Time) return false;
+            if (lhs.Radius != rhs.Radius) return false;
+            if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (!lhs.FalloffExponent.EqualsWithin(rhs.FalloffExponent)) return false;
+            if (!lhs.FOV.EqualsWithin(rhs.FOV)) return false;
+            if (!lhs.NearClip.EqualsWithin(rhs.NearClip)) return false;
+            if (!lhs.FlickerPeriod.EqualsWithin(rhs.FlickerPeriod)) return false;
+            if (!lhs.FlickerIntensityAmplitude.EqualsWithin(rhs.FlickerIntensityAmplitude)) return false;
+            if (!lhs.FlickerMovementAmplitude.EqualsWithin(rhs.FlickerMovementAmplitude)) return false;
+            if (lhs.Value != rhs.Value) return false;
+            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             if (!lhs.FadeValue.EqualsWithin(rhs.FadeValue)) return false;
             if (!lhs.Sound.Equals(rhs.Sound)) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
         
@@ -2085,12 +2731,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Iconsitem);
             }
-            hash.Add(item.Data);
+            hash.Add(item.Time);
+            hash.Add(item.Radius);
+            hash.Add(item.Color);
+            hash.Add(item.Flags);
+            hash.Add(item.FalloffExponent);
+            hash.Add(item.FOV);
+            hash.Add(item.NearClip);
+            hash.Add(item.FlickerPeriod);
+            hash.Add(item.FlickerIntensityAmplitude);
+            hash.Add(item.FlickerMovementAmplitude);
+            hash.Add(item.Value);
+            hash.Add(item.Weight);
             hash.Add(item.FadeValue);
             if (item.Sound.TryGet(out var Sounditem))
             {
                 hash.Add(Sounditem);
             }
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2322,27 +2980,53 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Data) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Time) ?? true))
             {
-                errorMask?.PushIndex((int)Light_FieldIndex.Data);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Data) ?? true))
-                    {
-                        item.Data = rhs.Data.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)Light_FieldIndex.Data),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Time = rhs.Time;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Radius) ?? true))
+            {
+                item.Radius = rhs.Radius;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Color) ?? true))
+            {
+                item.Color = rhs.Color;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.FalloffExponent) ?? true))
+            {
+                item.FalloffExponent = rhs.FalloffExponent;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.FOV) ?? true))
+            {
+                item.FOV = rhs.FOV;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.NearClip) ?? true))
+            {
+                item.NearClip = rhs.NearClip;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.FlickerPeriod) ?? true))
+            {
+                item.FlickerPeriod = rhs.FlickerPeriod;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.FlickerIntensityAmplitude) ?? true))
+            {
+                item.FlickerIntensityAmplitude = rhs.FlickerIntensityAmplitude;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.FlickerMovementAmplitude) ?? true))
+            {
+                item.FlickerMovementAmplitude = rhs.FlickerMovementAmplitude;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Value) ?? true))
+            {
+                item.Value = rhs.Value;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Weight) ?? true))
+            {
+                item.Weight = rhs.Weight;
             }
             if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.FadeValue) ?? true))
             {
@@ -2351,6 +3035,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.Sound) ?? true))
             {
                 item.Sound = rhs.Sound.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Light_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
             }
         }
         
@@ -2571,16 +3259,113 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         translationMask: translationMask?.GetSubCrystal((int)Light_FieldIndex.Icons));
                 }
             }
-            if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Data) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Time) ?? true))
             {
-                var DataItem = item.Data;
-                ((LightDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
-                    item: DataItem,
+                Int32XmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Data),
-                    fieldIndex: (int)Light_FieldIndex.Data,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Light_FieldIndex.Data));
+                    name: nameof(item.Time),
+                    item: item.Time,
+                    fieldIndex: (int)Light_FieldIndex.Time,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Radius) ?? true))
+            {
+                UInt32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Radius),
+                    item: item.Radius,
+                    fieldIndex: (int)Light_FieldIndex.Radius,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Color) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Color),
+                    item: item.Color,
+                    fieldIndex: (int)Light_FieldIndex.Color,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Flags) ?? true))
+            {
+                EnumXmlTranslation<Light.Flag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)Light_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.FalloffExponent) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FalloffExponent),
+                    item: item.FalloffExponent,
+                    fieldIndex: (int)Light_FieldIndex.FalloffExponent,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.FOV) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FOV),
+                    item: item.FOV,
+                    fieldIndex: (int)Light_FieldIndex.FOV,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.NearClip) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NearClip),
+                    item: item.NearClip,
+                    fieldIndex: (int)Light_FieldIndex.NearClip,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.FlickerPeriod) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FlickerPeriod),
+                    item: item.FlickerPeriod,
+                    fieldIndex: (int)Light_FieldIndex.FlickerPeriod,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.FlickerIntensityAmplitude) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FlickerIntensityAmplitude),
+                    item: item.FlickerIntensityAmplitude,
+                    fieldIndex: (int)Light_FieldIndex.FlickerIntensityAmplitude,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.FlickerMovementAmplitude) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FlickerMovementAmplitude),
+                    item: item.FlickerMovementAmplitude,
+                    fieldIndex: (int)Light_FieldIndex.FlickerMovementAmplitude,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Value) ?? true))
+            {
+                UInt32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Value),
+                    item: item.Value,
+                    fieldIndex: (int)Light_FieldIndex.Value,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.Weight) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Weight),
+                    item: item.Weight,
+                    fieldIndex: (int)Light_FieldIndex.Weight,
+                    errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.FadeValue) ?? true))
             {
@@ -2599,6 +3384,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     name: nameof(item.Sound),
                     item: item.Sound.FormKey.Value,
                     fieldIndex: (int)Light_FieldIndex.Sound,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Light_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<Light.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)Light_FieldIndex.DATADataTypeState,
                     errorMask: errorMask);
             }
         }
@@ -2821,14 +3615,211 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Data":
-                    errorMask?.PushIndex((int)Light_FieldIndex.Data);
+                case "Time":
+                    errorMask?.PushIndex((int)Light_FieldIndex.Time);
                     try
                     {
-                        item.Data = LoquiXmlTranslation<LightData>.Instance.Parse(
+                        item.Time = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Light_FieldIndex.Data));
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Radius":
+                    errorMask?.PushIndex((int)Light_FieldIndex.Radius);
+                    try
+                    {
+                        item.Radius = UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Color":
+                    errorMask?.PushIndex((int)Light_FieldIndex.Color);
+                    try
+                    {
+                        item.Color = ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    errorMask?.PushIndex((int)Light_FieldIndex.Flags);
+                    try
+                    {
+                        item.Flags = EnumXmlTranslation<Light.Flag>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FalloffExponent":
+                    errorMask?.PushIndex((int)Light_FieldIndex.FalloffExponent);
+                    try
+                    {
+                        item.FalloffExponent = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FOV":
+                    errorMask?.PushIndex((int)Light_FieldIndex.FOV);
+                    try
+                    {
+                        item.FOV = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "NearClip":
+                    errorMask?.PushIndex((int)Light_FieldIndex.NearClip);
+                    try
+                    {
+                        item.NearClip = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FlickerPeriod":
+                    errorMask?.PushIndex((int)Light_FieldIndex.FlickerPeriod);
+                    try
+                    {
+                        item.FlickerPeriod = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FlickerIntensityAmplitude":
+                    errorMask?.PushIndex((int)Light_FieldIndex.FlickerIntensityAmplitude);
+                    try
+                    {
+                        item.FlickerIntensityAmplitude = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FlickerMovementAmplitude":
+                    errorMask?.PushIndex((int)Light_FieldIndex.FlickerMovementAmplitude);
+                    try
+                    {
+                        item.FlickerMovementAmplitude = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Value":
+                    errorMask?.PushIndex((int)Light_FieldIndex.Value);
+                    try
+                    {
+                        item.Value = UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Weight":
+                    errorMask?.PushIndex((int)Light_FieldIndex.Weight);
+                    try
+                    {
+                        item.Weight = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2863,6 +3854,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         item.Sound = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DATADataTypeState":
+                    errorMask?.PushIndex((int)Light_FieldIndex.DATADataTypeState);
+                    try
+                    {
+                        item.DATADataTypeState = EnumXmlTranslation<Light.DATADataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2962,6 +3971,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static LightBinaryWriteTranslation Instance = new LightBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            ILightGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
         public static void WriteRecordTypes(
             ILightGetter item,
             MutagenWriter writer,
@@ -3009,11 +4027,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            var DataItem = item.Data;
-            ((LightDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
-                item: DataItem,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
+            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Light_Registration.DATA_HEADER)))
+            {
+                writer.Write(item.Time);
+                writer.Write(item.Radius);
+                Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Color);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Light.Flag>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 4);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FalloffExponent);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FOV);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.NearClip);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FlickerPeriod);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FlickerIntensityAmplitude);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FlickerMovementAmplitude);
+                writer.Write(item.Value);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Weight);
+            }
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FadeValue,
@@ -3034,7 +4081,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(Light_Registration.LIGH_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -3168,10 +4215,67 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
         #endregion
         public IIconsGetter? Icons { get; private set; }
-        #region Data
-        private RangeInt32? _DataLocation;
-        private ILightDataGetter? _Data => _DataLocation.HasValue ? LightDataBinaryOverlay.LightDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
-        public ILightDataGetter Data => _Data ?? new LightData();
+        private int? _DATALocation;
+        public Light.DATADataType DATADataTypeState { get; private set; }
+        #region Time
+        private int _TimeLocation => _DATALocation!.Value + 0x0;
+        private bool _Time_IsSet => _DATALocation.HasValue;
+        public Int32 Time => _Time_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_TimeLocation, 4)) : default;
+        #endregion
+        #region Radius
+        private int _RadiusLocation => _DATALocation!.Value + 0x4;
+        private bool _Radius_IsSet => _DATALocation.HasValue;
+        public UInt32 Radius => _Radius_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_RadiusLocation, 4)) : default;
+        #endregion
+        #region Color
+        private int _ColorLocation => _DATALocation!.Value + 0x8;
+        private bool _Color_IsSet => _DATALocation.HasValue;
+        public Color Color => _Color_IsSet ? _data.Slice(_ColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _DATALocation!.Value + 0xC;
+        private bool _Flags_IsSet => _DATALocation.HasValue;
+        public Light.Flag Flags => _Flags_IsSet ? (Light.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
+        #endregion
+        #region FalloffExponent
+        private int _FalloffExponentLocation => _DATALocation!.Value + 0x10;
+        private bool _FalloffExponent_IsSet => _DATALocation.HasValue;
+        public Single FalloffExponent => _FalloffExponent_IsSet ? SpanExt.GetFloat(_data.Slice(_FalloffExponentLocation, 4)) : default;
+        #endregion
+        #region FOV
+        private int _FOVLocation => _DATALocation!.Value + 0x14;
+        private bool _FOV_IsSet => _DATALocation.HasValue;
+        public Single FOV => _FOV_IsSet ? SpanExt.GetFloat(_data.Slice(_FOVLocation, 4)) : default;
+        #endregion
+        #region NearClip
+        private int _NearClipLocation => _DATALocation!.Value + 0x18;
+        private bool _NearClip_IsSet => _DATALocation.HasValue;
+        public Single NearClip => _NearClip_IsSet ? SpanExt.GetFloat(_data.Slice(_NearClipLocation, 4)) : default;
+        #endregion
+        #region FlickerPeriod
+        private int _FlickerPeriodLocation => _DATALocation!.Value + 0x1C;
+        private bool _FlickerPeriod_IsSet => _DATALocation.HasValue;
+        public Single FlickerPeriod => _FlickerPeriod_IsSet ? SpanExt.GetFloat(_data.Slice(_FlickerPeriodLocation, 4)) : default;
+        #endregion
+        #region FlickerIntensityAmplitude
+        private int _FlickerIntensityAmplitudeLocation => _DATALocation!.Value + 0x20;
+        private bool _FlickerIntensityAmplitude_IsSet => _DATALocation.HasValue;
+        public Single FlickerIntensityAmplitude => _FlickerIntensityAmplitude_IsSet ? SpanExt.GetFloat(_data.Slice(_FlickerIntensityAmplitudeLocation, 4)) : default;
+        #endregion
+        #region FlickerMovementAmplitude
+        private int _FlickerMovementAmplitudeLocation => _DATALocation!.Value + 0x24;
+        private bool _FlickerMovementAmplitude_IsSet => _DATALocation.HasValue;
+        public Single FlickerMovementAmplitude => _FlickerMovementAmplitude_IsSet ? SpanExt.GetFloat(_data.Slice(_FlickerMovementAmplitudeLocation, 4)) : default;
+        #endregion
+        #region Value
+        private int _ValueLocation => _DATALocation!.Value + 0x28;
+        private bool _Value_IsSet => _DATALocation.HasValue;
+        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ValueLocation, 4)) : default;
+        #endregion
+        #region Weight
+        private int _WeightLocation => _DATALocation!.Value + 0x2C;
+        private bool _Weight_IsSet => _DATALocation.HasValue;
+        public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Slice(_WeightLocation, 4)) : default;
         #endregion
         #region FadeValue
         private int? _FadeValueLocation;
@@ -3286,8 +4390,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Light_FieldIndex.Data);
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    return TryGet<int?>.Succeed((int)Light_FieldIndex.Weight);
                 }
                 case 0x4D414E46: // FNAM
                 {

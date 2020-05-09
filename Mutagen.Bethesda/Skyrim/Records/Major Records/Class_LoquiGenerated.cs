@@ -65,10 +65,52 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IClassGetter.Icon => this.Icon;
         #endregion
-        #region Data
-        public ClassData Data { get; set; } = new ClassData();
+        #region Unknown
+        public Int32 Unknown { get; set; } = default;
+        #endregion
+        #region Teaches
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IClassDataGetter IClassGetter.Data => Data;
+        private Skill? _Teaches;
+        public Skill? Teaches
+        {
+            get => this._Teaches;
+            set => this._Teaches = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Skill? IClassGetter.Teaches => this.Teaches;
+        #endregion
+        #region MaxTrainingLevel
+        public Byte MaxTrainingLevel { get; set; } = default;
+        #endregion
+        #region SkillWeights
+        private readonly Dictionary<Skill, Byte> _SkillWeights = new Dictionary<Skill, Byte>();
+        public IDictionary<Skill, Byte> SkillWeights => _SkillWeights;
+        #region Interface Members
+        IDictionary<Skill, Byte> IClass.SkillWeights => _SkillWeights;
+        IReadOnlyDictionary<Skill, Byte> IClassGetter.SkillWeights => _SkillWeights;
+        #endregion
+
+        #endregion
+        #region BleedoutDefault
+        public Single BleedoutDefault { get; set; } = default;
+        #endregion
+        #region VoicePoints
+        public UInt32 VoicePoints { get; set; } = default;
+        #endregion
+        #region StatWeights
+        private readonly Dictionary<BasicStat, Byte> _StatWeights = new Dictionary<BasicStat, Byte>();
+        public IDictionary<BasicStat, Byte> StatWeights => _StatWeights;
+        #region Interface Members
+        IDictionary<BasicStat, Byte> IClass.StatWeights => _StatWeights;
+        IReadOnlyDictionary<BasicStat, Byte> IClassGetter.StatWeights => _StatWeights;
+        #endregion
+
+        #endregion
+        #region Unknown2
+        public Byte Unknown2 { get; set; } = default;
+        #endregion
+        #region DATADataTypeState
+        public Class.DATADataType DATADataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -243,7 +285,15 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Name = initialValue;
                 this.Description = initialValue;
                 this.Icon = initialValue;
-                this.Data = new MaskItem<TItem, ClassData.Mask<TItem>?>(initialValue, new ClassData.Mask<TItem>(initialValue));
+                this.Unknown = initialValue;
+                this.Teaches = initialValue;
+                this.MaxTrainingLevel = initialValue;
+                this.SkillWeights = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(initialValue, null);
+                this.BleedoutDefault = initialValue;
+                this.VoicePoints = initialValue;
+                this.StatWeights = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(initialValue, null);
+                this.Unknown2 = initialValue;
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -256,7 +306,15 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Name,
                 TItem Description,
                 TItem Icon,
-                TItem Data)
+                TItem Unknown,
+                TItem Teaches,
+                TItem MaxTrainingLevel,
+                TItem SkillWeights,
+                TItem BleedoutDefault,
+                TItem VoicePoints,
+                TItem StatWeights,
+                TItem Unknown2,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -268,7 +326,15 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Name = Name;
                 this.Description = Description;
                 this.Icon = Icon;
-                this.Data = new MaskItem<TItem, ClassData.Mask<TItem>?>(Data, new ClassData.Mask<TItem>(Data));
+                this.Unknown = Unknown;
+                this.Teaches = Teaches;
+                this.MaxTrainingLevel = MaxTrainingLevel;
+                this.SkillWeights = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(SkillWeights, null);
+                this.BleedoutDefault = BleedoutDefault;
+                this.VoicePoints = VoicePoints;
+                this.StatWeights = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(StatWeights, null);
+                this.Unknown2 = Unknown2;
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -283,7 +349,15 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Name;
             public TItem Description;
             public TItem Icon;
-            public MaskItem<TItem, ClassData.Mask<TItem>?>? Data { get; set; }
+            public TItem Unknown;
+            public TItem Teaches;
+            public TItem MaxTrainingLevel;
+            public MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>? SkillWeights;
+            public TItem BleedoutDefault;
+            public TItem VoicePoints;
+            public MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>? StatWeights;
+            public TItem Unknown2;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -300,7 +374,15 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.Icon, rhs.Icon)) return false;
-                if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.Teaches, rhs.Teaches)) return false;
+                if (!object.Equals(this.MaxTrainingLevel, rhs.MaxTrainingLevel)) return false;
+                if (!object.Equals(this.SkillWeights, rhs.SkillWeights)) return false;
+                if (!object.Equals(this.BleedoutDefault, rhs.BleedoutDefault)) return false;
+                if (!object.Equals(this.VoicePoints, rhs.VoicePoints)) return false;
+                if (!object.Equals(this.StatWeights, rhs.StatWeights)) return false;
+                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -309,7 +391,15 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Name);
                 hash.Add(this.Description);
                 hash.Add(this.Icon);
-                hash.Add(this.Data);
+                hash.Add(this.Unknown);
+                hash.Add(this.Teaches);
+                hash.Add(this.MaxTrainingLevel);
+                hash.Add(this.SkillWeights);
+                hash.Add(this.BleedoutDefault);
+                hash.Add(this.VoicePoints);
+                hash.Add(this.StatWeights);
+                hash.Add(this.Unknown2);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -323,11 +413,37 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.Name)) return false;
                 if (!eval(this.Description)) return false;
                 if (!eval(this.Icon)) return false;
-                if (Data != null)
+                if (!eval(this.Unknown)) return false;
+                if (!eval(this.Teaches)) return false;
+                if (!eval(this.MaxTrainingLevel)) return false;
+                if (this.SkillWeights != null)
                 {
-                    if (!eval(this.Data.Overall)) return false;
-                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                    if (!eval(this.SkillWeights.Overall)) return false;
+                    if (this.SkillWeights.Specific != null)
+                    {
+                        foreach (var item in this.SkillWeights.Specific)
+                        {
+                            if (!eval(item.Key)) return false;
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
                 }
+                if (!eval(this.BleedoutDefault)) return false;
+                if (!eval(this.VoicePoints)) return false;
+                if (this.StatWeights != null)
+                {
+                    if (!eval(this.StatWeights.Overall)) return false;
+                    if (this.StatWeights.Specific != null)
+                    {
+                        foreach (var item in this.StatWeights.Specific)
+                        {
+                            if (!eval(item.Key)) return false;
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Unknown2)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -339,11 +455,37 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.Name)) return true;
                 if (eval(this.Description)) return true;
                 if (eval(this.Icon)) return true;
-                if (Data != null)
+                if (eval(this.Unknown)) return true;
+                if (eval(this.Teaches)) return true;
+                if (eval(this.MaxTrainingLevel)) return true;
+                if (this.SkillWeights != null)
                 {
-                    if (eval(this.Data.Overall)) return true;
-                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                    if (eval(this.SkillWeights.Overall)) return true;
+                    if (this.SkillWeights.Specific != null)
+                    {
+                        foreach (var item in this.SkillWeights.Specific)
+                        {
+                            if (!eval(item.Key)) return false;
+                            if (eval(item.Value)) return true;
+                        }
+                    }
                 }
+                if (eval(this.BleedoutDefault)) return true;
+                if (eval(this.VoicePoints)) return true;
+                if (this.StatWeights != null)
+                {
+                    if (eval(this.StatWeights.Overall)) return true;
+                    if (this.StatWeights.Specific != null)
+                    {
+                        foreach (var item in this.StatWeights.Specific)
+                        {
+                            if (!eval(item.Key)) return false;
+                            if (eval(item.Value)) return true;
+                        }
+                    }
+                }
+                if (eval(this.Unknown2)) return true;
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -362,7 +504,43 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Name = eval(this.Name);
                 obj.Description = eval(this.Description);
                 obj.Icon = eval(this.Icon);
-                obj.Data = this.Data == null ? null : new MaskItem<R, ClassData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
+                obj.Unknown = eval(this.Unknown);
+                obj.Teaches = eval(this.Teaches);
+                obj.MaxTrainingLevel = eval(this.MaxTrainingLevel);
+                if (SkillWeights != null)
+                {
+                    obj.SkillWeights = new MaskItem<R, IEnumerable<KeyValuePair<R, R>>?>(eval(this.SkillWeights.Overall), default);
+                    if (SkillWeights.Specific != null)
+                    {
+                        List<KeyValuePair<R, R>> l = new List<KeyValuePair<R, R>>();
+                        obj.SkillWeights.Specific = l;
+                        foreach (var item in SkillWeights.Specific)
+                        {
+                            R keyVal = eval(item.Key);
+                            R valVal = eval(item.Value);
+                            l.Add(new KeyValuePair<R, R>(keyVal, valVal));
+                        }
+                    }
+                }
+                obj.BleedoutDefault = eval(this.BleedoutDefault);
+                obj.VoicePoints = eval(this.VoicePoints);
+                if (StatWeights != null)
+                {
+                    obj.StatWeights = new MaskItem<R, IEnumerable<KeyValuePair<R, R>>?>(eval(this.StatWeights.Overall), default);
+                    if (StatWeights.Specific != null)
+                    {
+                        List<KeyValuePair<R, R>> l = new List<KeyValuePair<R, R>>();
+                        obj.StatWeights.Specific = l;
+                        foreach (var item in StatWeights.Specific)
+                        {
+                            R keyVal = eval(item.Key);
+                            R valVal = eval(item.Value);
+                            l.Add(new KeyValuePair<R, R>(keyVal, valVal));
+                        }
+                    }
+                }
+                obj.Unknown2 = eval(this.Unknown2);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -397,9 +575,111 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(Icon, "Icon");
                     }
-                    if (printMask?.Data?.Overall ?? true)
+                    if (printMask?.Unknown ?? true)
                     {
-                        Data?.ToString(fg);
+                        fg.AppendItem(Unknown, "Unknown");
+                    }
+                    if (printMask?.Teaches ?? true)
+                    {
+                        fg.AppendItem(Teaches, "Teaches");
+                    }
+                    if (printMask?.MaxTrainingLevel ?? true)
+                    {
+                        fg.AppendItem(MaxTrainingLevel, "MaxTrainingLevel");
+                    }
+                    if (printMask?.SkillWeights?.Overall ?? true)
+                    {
+                        fg.AppendLine("SkillWeights =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (SkillWeights != null)
+                            {
+                                if (SkillWeights.Overall != null)
+                                {
+                                    fg.AppendLine(SkillWeights.Overall.ToString());
+                                }
+                                if (SkillWeights.Specific != null)
+                                {
+                                    foreach (var subItem in SkillWeights.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine("Key => [");
+                                            using (new DepthWrapper(fg))
+                                            {
+                                                fg.AppendItem(subItem.Key);
+                                            }
+                                            fg.AppendLine("]");
+                                            fg.AppendLine("Value => [");
+                                            using (new DepthWrapper(fg))
+                                            {
+                                                fg.AppendItem(subItem.Value);
+                                            }
+                                            fg.AppendLine("]");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.BleedoutDefault ?? true)
+                    {
+                        fg.AppendItem(BleedoutDefault, "BleedoutDefault");
+                    }
+                    if (printMask?.VoicePoints ?? true)
+                    {
+                        fg.AppendItem(VoicePoints, "VoicePoints");
+                    }
+                    if (printMask?.StatWeights?.Overall ?? true)
+                    {
+                        fg.AppendLine("StatWeights =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (StatWeights != null)
+                            {
+                                if (StatWeights.Overall != null)
+                                {
+                                    fg.AppendLine(StatWeights.Overall.ToString());
+                                }
+                                if (StatWeights.Specific != null)
+                                {
+                                    foreach (var subItem in StatWeights.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine("Key => [");
+                                            using (new DepthWrapper(fg))
+                                            {
+                                                fg.AppendItem(subItem.Key);
+                                            }
+                                            fg.AppendLine("]");
+                                            fg.AppendLine("Value => [");
+                                            using (new DepthWrapper(fg))
+                                            {
+                                                fg.AppendItem(subItem.Value);
+                                            }
+                                            fg.AppendLine("]");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Unknown2 ?? true)
+                    {
+                        fg.AppendItem(Unknown2, "Unknown2");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -416,7 +696,15 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Name;
             public Exception? Description;
             public Exception? Icon;
-            public MaskItem<Exception?, ClassData.ErrorMask?>? Data;
+            public Exception? Unknown;
+            public Exception? Teaches;
+            public Exception? MaxTrainingLevel;
+            public MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>? SkillWeights;
+            public Exception? BleedoutDefault;
+            public Exception? VoicePoints;
+            public MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>? StatWeights;
+            public Exception? Unknown2;
+            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -431,8 +719,24 @@ namespace Mutagen.Bethesda.Skyrim
                         return Description;
                     case Class_FieldIndex.Icon:
                         return Icon;
-                    case Class_FieldIndex.Data:
-                        return Data;
+                    case Class_FieldIndex.Unknown:
+                        return Unknown;
+                    case Class_FieldIndex.Teaches:
+                        return Teaches;
+                    case Class_FieldIndex.MaxTrainingLevel:
+                        return MaxTrainingLevel;
+                    case Class_FieldIndex.SkillWeights:
+                        return SkillWeights;
+                    case Class_FieldIndex.BleedoutDefault:
+                        return BleedoutDefault;
+                    case Class_FieldIndex.VoicePoints:
+                        return VoicePoints;
+                    case Class_FieldIndex.StatWeights:
+                        return StatWeights;
+                    case Class_FieldIndex.Unknown2:
+                        return Unknown2;
+                    case Class_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -452,8 +756,32 @@ namespace Mutagen.Bethesda.Skyrim
                     case Class_FieldIndex.Icon:
                         this.Icon = ex;
                         break;
-                    case Class_FieldIndex.Data:
-                        this.Data = new MaskItem<Exception?, ClassData.ErrorMask?>(ex, null);
+                    case Class_FieldIndex.Unknown:
+                        this.Unknown = ex;
+                        break;
+                    case Class_FieldIndex.Teaches:
+                        this.Teaches = ex;
+                        break;
+                    case Class_FieldIndex.MaxTrainingLevel:
+                        this.MaxTrainingLevel = ex;
+                        break;
+                    case Class_FieldIndex.SkillWeights:
+                        this.SkillWeights = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ex, null);
+                        break;
+                    case Class_FieldIndex.BleedoutDefault:
+                        this.BleedoutDefault = ex;
+                        break;
+                    case Class_FieldIndex.VoicePoints:
+                        this.VoicePoints = ex;
+                        break;
+                    case Class_FieldIndex.StatWeights:
+                        this.StatWeights = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ex, null);
+                        break;
+                    case Class_FieldIndex.Unknown2:
+                        this.Unknown2 = ex;
+                        break;
+                    case Class_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -475,8 +803,32 @@ namespace Mutagen.Bethesda.Skyrim
                     case Class_FieldIndex.Icon:
                         this.Icon = (Exception?)obj;
                         break;
-                    case Class_FieldIndex.Data:
-                        this.Data = (MaskItem<Exception?, ClassData.ErrorMask?>?)obj;
+                    case Class_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
+                        break;
+                    case Class_FieldIndex.Teaches:
+                        this.Teaches = (Exception?)obj;
+                        break;
+                    case Class_FieldIndex.MaxTrainingLevel:
+                        this.MaxTrainingLevel = (Exception?)obj;
+                        break;
+                    case Class_FieldIndex.SkillWeights:
+                        this.SkillWeights = (MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>)obj;
+                        break;
+                    case Class_FieldIndex.BleedoutDefault:
+                        this.BleedoutDefault = (Exception?)obj;
+                        break;
+                    case Class_FieldIndex.VoicePoints:
+                        this.VoicePoints = (Exception?)obj;
+                        break;
+                    case Class_FieldIndex.StatWeights:
+                        this.StatWeights = (MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>)obj;
+                        break;
+                    case Class_FieldIndex.Unknown2:
+                        this.Unknown2 = (Exception?)obj;
+                        break;
+                    case Class_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -490,7 +842,15 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Name != null) return true;
                 if (Description != null) return true;
                 if (Icon != null) return true;
-                if (Data != null) return true;
+                if (Unknown != null) return true;
+                if (Teaches != null) return true;
+                if (MaxTrainingLevel != null) return true;
+                if (SkillWeights != null) return true;
+                if (BleedoutDefault != null) return true;
+                if (VoicePoints != null) return true;
+                if (StatWeights != null) return true;
+                if (Unknown2 != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -529,7 +889,85 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Name, "Name");
                 fg.AppendItem(Description, "Description");
                 fg.AppendItem(Icon, "Icon");
-                Data?.ToString(fg);
+                fg.AppendItem(Unknown, "Unknown");
+                fg.AppendItem(Teaches, "Teaches");
+                fg.AppendItem(MaxTrainingLevel, "MaxTrainingLevel");
+                fg.AppendLine("SkillWeights =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (SkillWeights != null)
+                    {
+                        if (SkillWeights.Overall != null)
+                        {
+                            fg.AppendLine(SkillWeights.Overall.ToString());
+                        }
+                        if (SkillWeights.Specific != null)
+                        {
+                            foreach (var subItem in SkillWeights.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine("Key => [");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem.Key);
+                                    }
+                                    fg.AppendLine("]");
+                                    fg.AppendLine("Value => [");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem.Value);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendItem(BleedoutDefault, "BleedoutDefault");
+                fg.AppendItem(VoicePoints, "VoicePoints");
+                fg.AppendLine("StatWeights =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (StatWeights != null)
+                    {
+                        if (StatWeights.Overall != null)
+                        {
+                            fg.AppendLine(StatWeights.Overall.ToString());
+                        }
+                        if (StatWeights.Specific != null)
+                        {
+                            foreach (var subItem in StatWeights.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine("Key => [");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem.Key);
+                                    }
+                                    fg.AppendLine("]");
+                                    fg.AppendLine("Value => [");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem.Value);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendItem(Unknown2, "Unknown2");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -541,7 +979,15 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.Icon = this.Icon.Combine(rhs.Icon);
-                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.Teaches = this.Teaches.Combine(rhs.Teaches);
+                ret.MaxTrainingLevel = this.MaxTrainingLevel.Combine(rhs.MaxTrainingLevel);
+                ret.SkillWeights = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ExceptionExt.Combine(this.SkillWeights?.Overall, rhs.SkillWeights?.Overall), new List<KeyValuePair<Exception?, Exception?>>(ExceptionExt.Combine(this.SkillWeights?.Specific, rhs.SkillWeights?.Specific)));
+                ret.BleedoutDefault = this.BleedoutDefault.Combine(rhs.BleedoutDefault);
+                ret.VoicePoints = this.VoicePoints.Combine(rhs.VoicePoints);
+                ret.StatWeights = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ExceptionExt.Combine(this.StatWeights?.Overall, rhs.StatWeights?.Overall), new List<KeyValuePair<Exception?, Exception?>>(ExceptionExt.Combine(this.StatWeights?.Specific, rhs.StatWeights?.Specific)));
+                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -567,7 +1013,15 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Name;
             public bool Description;
             public bool Icon;
-            public MaskItem<bool, ClassData.TranslationMask?> Data;
+            public bool Unknown;
+            public bool Teaches;
+            public bool MaxTrainingLevel;
+            public bool SkillWeights;
+            public bool BleedoutDefault;
+            public bool VoicePoints;
+            public bool StatWeights;
+            public bool Unknown2;
+            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -577,7 +1031,15 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Name = defaultOn;
                 this.Description = defaultOn;
                 this.Icon = defaultOn;
-                this.Data = new MaskItem<bool, ClassData.TranslationMask?>(defaultOn, null);
+                this.Unknown = defaultOn;
+                this.Teaches = defaultOn;
+                this.MaxTrainingLevel = defaultOn;
+                this.SkillWeights = defaultOn;
+                this.BleedoutDefault = defaultOn;
+                this.VoicePoints = defaultOn;
+                this.StatWeights = defaultOn;
+                this.Unknown2 = defaultOn;
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -588,7 +1050,15 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Name, null));
                 ret.Add((Description, null));
                 ret.Add((Icon, null));
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((Unknown, null));
+                ret.Add((Teaches, null));
+                ret.Add((MaxTrainingLevel, null));
+                ret.Add((SkillWeights, null));
+                ret.Add((BleedoutDefault, null));
+                ret.Add((VoicePoints, null));
+                ret.Add((StatWeights, null));
+                ret.Add((Unknown2, null));
+                ret.Add((DATADataTypeState, null));
             }
         }
         #endregion
@@ -612,6 +1082,10 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        [Flags]
+        public enum DATADataType
+        {
+        }
         #endregion
 
         #region Binary Translation
@@ -678,7 +1152,15 @@ namespace Mutagen.Bethesda.Skyrim
         new String Name { get; set; }
         new String Description { get; set; }
         new String? Icon { get; set; }
-        new ClassData Data { get; set; }
+        new Int32 Unknown { get; set; }
+        new Skill? Teaches { get; set; }
+        new Byte MaxTrainingLevel { get; set; }
+        new IDictionary<Skill, Byte> SkillWeights { get; }
+        new Single BleedoutDefault { get; set; }
+        new UInt32 VoicePoints { get; set; }
+        new IDictionary<BasicStat, Byte> StatWeights { get; }
+        new Byte Unknown2 { get; set; }
+        new Class.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IClassInternal :
@@ -686,6 +1168,8 @@ namespace Mutagen.Bethesda.Skyrim
         IClass,
         IClassGetter
     {
+        new IDictionary<Skill, Byte> SkillWeights { get; }
+        new IDictionary<BasicStat, Byte> StatWeights { get; }
     }
 
     public partial interface IClassGetter :
@@ -699,7 +1183,15 @@ namespace Mutagen.Bethesda.Skyrim
         String Name { get; }
         String Description { get; }
         String? Icon { get; }
-        IClassDataGetter Data { get; }
+        Int32 Unknown { get; }
+        Skill? Teaches { get; }
+        Byte MaxTrainingLevel { get; }
+        IReadOnlyDictionary<Skill, Byte> SkillWeights { get; }
+        Single BleedoutDefault { get; }
+        UInt32 VoicePoints { get; }
+        IReadOnlyDictionary<BasicStat, Byte> StatWeights { get; }
+        Byte Unknown2 { get; }
+        Class.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -1003,7 +1495,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Name = 6,
         Description = 7,
         Icon = 8,
-        Data = 9,
+        Unknown = 9,
+        Teaches = 10,
+        MaxTrainingLevel = 11,
+        SkillWeights = 12,
+        BleedoutDefault = 13,
+        VoicePoints = 14,
+        StatWeights = 15,
+        Unknown2 = 16,
+        DATADataTypeState = 17,
     }
     #endregion
 
@@ -1021,9 +1521,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "faa1b071-96bf-43c3-be87-10d98e0b6cd8";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 18;
 
         public static readonly Type MaskType = typeof(Class.Mask<>);
 
@@ -1059,8 +1559,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Class_FieldIndex.Description;
                 case "ICON":
                     return (ushort)Class_FieldIndex.Icon;
-                case "DATA":
-                    return (ushort)Class_FieldIndex.Data;
+                case "UNKNOWN":
+                    return (ushort)Class_FieldIndex.Unknown;
+                case "TEACHES":
+                    return (ushort)Class_FieldIndex.Teaches;
+                case "MAXTRAININGLEVEL":
+                    return (ushort)Class_FieldIndex.MaxTrainingLevel;
+                case "SKILLWEIGHTS":
+                    return (ushort)Class_FieldIndex.SkillWeights;
+                case "BLEEDOUTDEFAULT":
+                    return (ushort)Class_FieldIndex.BleedoutDefault;
+                case "VOICEPOINTS":
+                    return (ushort)Class_FieldIndex.VoicePoints;
+                case "STATWEIGHTS":
+                    return (ushort)Class_FieldIndex.StatWeights;
+                case "UNKNOWN2":
+                    return (ushort)Class_FieldIndex.Unknown2;
+                case "DATADATATYPESTATE":
+                    return (ushort)Class_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -1074,7 +1590,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Class_FieldIndex.Name:
                 case Class_FieldIndex.Description:
                 case Class_FieldIndex.Icon:
-                case Class_FieldIndex.Data:
+                case Class_FieldIndex.Unknown:
+                case Class_FieldIndex.Teaches:
+                case Class_FieldIndex.MaxTrainingLevel:
+                case Class_FieldIndex.SkillWeights:
+                case Class_FieldIndex.BleedoutDefault:
+                case Class_FieldIndex.VoicePoints:
+                case Class_FieldIndex.StatWeights:
+                case Class_FieldIndex.Unknown2:
+                case Class_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1086,11 +1610,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Class_FieldIndex enu = (Class_FieldIndex)index;
             switch (enu)
             {
-                case Class_FieldIndex.Data:
-                    return true;
                 case Class_FieldIndex.Name:
                 case Class_FieldIndex.Description:
                 case Class_FieldIndex.Icon:
+                case Class_FieldIndex.Unknown:
+                case Class_FieldIndex.Teaches:
+                case Class_FieldIndex.MaxTrainingLevel:
+                case Class_FieldIndex.SkillWeights:
+                case Class_FieldIndex.BleedoutDefault:
+                case Class_FieldIndex.VoicePoints:
+                case Class_FieldIndex.StatWeights:
+                case Class_FieldIndex.Unknown2:
+                case Class_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1105,7 +1636,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Class_FieldIndex.Name:
                 case Class_FieldIndex.Description:
                 case Class_FieldIndex.Icon:
-                case Class_FieldIndex.Data:
+                case Class_FieldIndex.Unknown:
+                case Class_FieldIndex.Teaches:
+                case Class_FieldIndex.MaxTrainingLevel:
+                case Class_FieldIndex.SkillWeights:
+                case Class_FieldIndex.BleedoutDefault:
+                case Class_FieldIndex.VoicePoints:
+                case Class_FieldIndex.StatWeights:
+                case Class_FieldIndex.Unknown2:
+                case Class_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1123,8 +1662,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Description";
                 case Class_FieldIndex.Icon:
                     return "Icon";
-                case Class_FieldIndex.Data:
-                    return "Data";
+                case Class_FieldIndex.Unknown:
+                    return "Unknown";
+                case Class_FieldIndex.Teaches:
+                    return "Teaches";
+                case Class_FieldIndex.MaxTrainingLevel:
+                    return "MaxTrainingLevel";
+                case Class_FieldIndex.SkillWeights:
+                    return "SkillWeights";
+                case Class_FieldIndex.BleedoutDefault:
+                    return "BleedoutDefault";
+                case Class_FieldIndex.VoicePoints:
+                    return "VoicePoints";
+                case Class_FieldIndex.StatWeights:
+                    return "StatWeights";
+                case Class_FieldIndex.Unknown2:
+                    return "Unknown2";
+                case Class_FieldIndex.DATADataTypeState:
+                    return "DATADataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -1138,7 +1693,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Class_FieldIndex.Name:
                 case Class_FieldIndex.Description:
                 case Class_FieldIndex.Icon:
-                case Class_FieldIndex.Data:
+                case Class_FieldIndex.Unknown:
+                case Class_FieldIndex.Teaches:
+                case Class_FieldIndex.MaxTrainingLevel:
+                case Class_FieldIndex.SkillWeights:
+                case Class_FieldIndex.BleedoutDefault:
+                case Class_FieldIndex.VoicePoints:
+                case Class_FieldIndex.StatWeights:
+                case Class_FieldIndex.Unknown2:
+                case Class_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
@@ -1153,7 +1716,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Class_FieldIndex.Name:
                 case Class_FieldIndex.Description:
                 case Class_FieldIndex.Icon:
-                case Class_FieldIndex.Data:
+                case Class_FieldIndex.Unknown:
+                case Class_FieldIndex.Teaches:
+                case Class_FieldIndex.MaxTrainingLevel:
+                case Class_FieldIndex.SkillWeights:
+                case Class_FieldIndex.BleedoutDefault:
+                case Class_FieldIndex.VoicePoints:
+                case Class_FieldIndex.StatWeights:
+                case Class_FieldIndex.Unknown2:
+                case Class_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
@@ -1171,8 +1742,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(String);
                 case Class_FieldIndex.Icon:
                     return typeof(String);
-                case Class_FieldIndex.Data:
-                    return typeof(ClassData);
+                case Class_FieldIndex.Unknown:
+                    return typeof(Int32);
+                case Class_FieldIndex.Teaches:
+                    return typeof(Skill);
+                case Class_FieldIndex.MaxTrainingLevel:
+                    return typeof(Byte);
+                case Class_FieldIndex.SkillWeights:
+                    return typeof(Dictionary<Skill, Byte>);
+                case Class_FieldIndex.BleedoutDefault:
+                    return typeof(Single);
+                case Class_FieldIndex.VoicePoints:
+                    return typeof(UInt32);
+                case Class_FieldIndex.StatWeights:
+                    return typeof(Dictionary<BasicStat, Byte>);
+                case Class_FieldIndex.Unknown2:
+                    return typeof(Byte);
+                case Class_FieldIndex.DATADataTypeState:
+                    return typeof(Class.DATADataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1186,7 +1773,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = CLAS_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 4;
+        public const int NumTypedFields = 3;
         public static readonly Type BinaryWriteTranslation = typeof(ClassBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1232,7 +1819,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Name = string.Empty;
             item.Description = string.Empty;
             item.Icon = default;
-            item.Data.Clear();
+            item.Unknown = default;
+            item.Teaches = default;
+            item.MaxTrainingLevel = default;
+            item.SkillWeights.Clear();
+            item.BleedoutDefault = default;
+            item.VoicePoints = default;
+            item.StatWeights.Clear();
+            item.Unknown2 = default;
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1373,8 +1968,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    item.Data = Mutagen.Bethesda.Skyrim.ClassData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Data);
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.Unknown = dataFrame.ReadInt32();
+                    item.Teaches = EnumBinaryTranslation<Skill>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
+                    item.MaxTrainingLevel = dataFrame.ReadUInt8();
+                    Mutagen.Bethesda.Binary.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
+                        frame: frame,
+                        item: item.SkillWeights,
+                        transl: ByteBinaryTranslation.Instance.Parse);
+                    item.BleedoutDefault = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.VoicePoints = dataFrame.ReadUInt32();
+                    Mutagen.Bethesda.Binary.DictBinaryTranslation<Byte>.Instance.Parse<BasicStat>(
+                        frame: frame,
+                        item: item.StatWeights,
+                        transl: ByteBinaryTranslation.Instance.Parse);
+                    item.Unknown2 = dataFrame.ReadUInt8();
+                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Unknown2);
                 }
                 default:
                     return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
@@ -1453,7 +2063,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Description = string.Equals(item.Description, rhs.Description);
             ret.Icon = string.Equals(item.Icon, rhs.Icon);
-            ret.Data = MaskItemExt.Factory(item.Data.GetEqualsMask(rhs.Data, include), include);
+            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.Teaches = item.Teaches == rhs.Teaches;
+            ret.MaxTrainingLevel = item.MaxTrainingLevel == rhs.MaxTrainingLevel;
+            {
+                var specific = item.SkillWeights.SelectAgainst<KeyValuePair<Skill, Byte>, KeyValuePair<bool, bool>>(rhs.SkillWeights, ((l, r) => new KeyValuePair<bool, bool>(object.Equals(l.Key, r.Key), object.Equals(l.Value, r.Value))), out var countEqual);
+                ret.SkillWeights = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(countEqual && specific.All((b) => b.Key && b.Value), specific);
+            }
+            ret.BleedoutDefault = item.BleedoutDefault.EqualsWithin(rhs.BleedoutDefault);
+            ret.VoicePoints = item.VoicePoints == rhs.VoicePoints;
+            {
+                var specific = item.StatWeights.SelectAgainst<KeyValuePair<BasicStat, Byte>, KeyValuePair<bool, bool>>(rhs.StatWeights, ((l, r) => new KeyValuePair<bool, bool>(object.Equals(l.Key, r.Key), object.Equals(l.Value, r.Value))), out var countEqual);
+                ret.StatWeights = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(countEqual && specific.All((b) => b.Key && b.Value), specific);
+            }
+            ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1518,9 +2142,72 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(IconItem, "Icon");
             }
-            if (printMask?.Data?.Overall ?? true)
+            if (printMask?.Unknown ?? true)
             {
-                item.Data?.ToString(fg, "Data");
+                fg.AppendItem(item.Unknown, "Unknown");
+            }
+            if ((printMask?.Teaches ?? true)
+                && item.Teaches.TryGet(out var TeachesItem))
+            {
+                fg.AppendItem(TeachesItem, "Teaches");
+            }
+            if (printMask?.MaxTrainingLevel ?? true)
+            {
+                fg.AppendItem(item.MaxTrainingLevel, "MaxTrainingLevel");
+            }
+            if (printMask?.SkillWeights?.Overall ?? true)
+            {
+                fg.AppendLine("SkillWeights =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.SkillWeights)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem.Key);
+                            fg.AppendItem(subItem.Value);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.BleedoutDefault ?? true)
+            {
+                fg.AppendItem(item.BleedoutDefault, "BleedoutDefault");
+            }
+            if (printMask?.VoicePoints ?? true)
+            {
+                fg.AppendItem(item.VoicePoints, "VoicePoints");
+            }
+            if (printMask?.StatWeights?.Overall ?? true)
+            {
+                fg.AppendLine("StatWeights =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.StatWeights)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem.Key);
+                            fg.AppendItem(subItem.Value);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Unknown2 ?? true)
+            {
+                fg.AppendItem(item.Unknown2, "Unknown2");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -1529,6 +2216,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Class.Mask<bool?> checkMask)
         {
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != (item.Icon != null)) return false;
+            if (checkMask.Teaches.HasValue && checkMask.Teaches.Value != (item.Teaches != null)) return false;
+            if (checkMask.SkillWeights?.Overall.HasValue ?? false) return false;
+            if (checkMask.StatWeights?.Overall.HasValue ?? false) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1541,7 +2231,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Name = true;
             mask.Description = true;
             mask.Icon = (item.Icon != null);
-            mask.Data = new MaskItem<bool, ClassData.Mask<bool>?>(true, item.Data?.GetHasBeenSetMask());
+            mask.Unknown = true;
+            mask.Teaches = (item.Teaches != null);
+            mask.MaxTrainingLevel = true;
+            mask.SkillWeights = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(item.SkillWeights != null, null);
+            mask.BleedoutDefault = true;
+            mask.VoicePoints = true;
+            mask.StatWeights = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(item.StatWeights != null, null);
+            mask.Unknown2 = true;
+            mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1596,7 +2294,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
             if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            if (lhs.Unknown != rhs.Unknown) return false;
+            if (lhs.Teaches != rhs.Teaches) return false;
+            if (lhs.MaxTrainingLevel != rhs.MaxTrainingLevel) return false;
+            if (!lhs.SkillWeights.SequenceEqual(rhs.SkillWeights)) return false;
+            if (!lhs.BleedoutDefault.EqualsWithin(rhs.BleedoutDefault)) return false;
+            if (lhs.VoicePoints != rhs.VoicePoints) return false;
+            if (!lhs.StatWeights.SequenceEqual(rhs.StatWeights)) return false;
+            if (lhs.Unknown2 != rhs.Unknown2) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
         
@@ -1627,7 +2333,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Iconitem);
             }
-            hash.Add(item.Data);
+            hash.Add(item.Unknown);
+            if (item.Teaches.TryGet(out var Teachesitem))
+            {
+                hash.Add(Teachesitem);
+            }
+            hash.Add(item.MaxTrainingLevel);
+            hash.Add(item.SkillWeights);
+            hash.Add(item.BleedoutDefault);
+            hash.Add(item.VoicePoints);
+            hash.Add(item.StatWeights);
+            hash.Add(item.Unknown2);
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1716,17 +2433,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Icon = rhs.Icon;
             }
-            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Data) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Unknown) ?? true))
             {
-                errorMask?.PushIndex((int)Class_FieldIndex.Data);
+                item.Unknown = rhs.Unknown;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Teaches) ?? true))
+            {
+                item.Teaches = rhs.Teaches;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.MaxTrainingLevel) ?? true))
+            {
+                item.MaxTrainingLevel = rhs.MaxTrainingLevel;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.SkillWeights) ?? true))
+            {
+                errorMask?.PushIndex((int)Class_FieldIndex.SkillWeights);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Data) ?? true))
-                    {
-                        item.Data = rhs.Data.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)Class_FieldIndex.Data),
-                            errorMask: errorMask);
-                    }
+                    item.SkillWeights.SetTo(rhs.SkillWeights);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1737,6 +2461,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.BleedoutDefault) ?? true))
+            {
+                item.BleedoutDefault = rhs.BleedoutDefault;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.VoicePoints) ?? true))
+            {
+                item.VoicePoints = rhs.VoicePoints;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.StatWeights) ?? true))
+            {
+                errorMask?.PushIndex((int)Class_FieldIndex.StatWeights);
+                try
+                {
+                    item.StatWeights.SetTo(rhs.StatWeights);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Unknown2) ?? true))
+            {
+                item.Unknown2 = rhs.Unknown2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
             }
         }
         
@@ -1908,16 +2665,121 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Class_FieldIndex.Icon,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.Data) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.Unknown) ?? true))
             {
-                var DataItem = item.Data;
-                ((ClassDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
-                    item: DataItem,
+                Int32XmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Data),
-                    fieldIndex: (int)Class_FieldIndex.Data,
+                    name: nameof(item.Unknown),
+                    item: item.Unknown,
+                    fieldIndex: (int)Class_FieldIndex.Unknown,
+                    errorMask: errorMask);
+            }
+            if ((item.Teaches != null)
+                && (translationMask?.GetShouldTranslate((int)Class_FieldIndex.Teaches) ?? true))
+            {
+                EnumXmlTranslation<Skill>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Teaches),
+                    item: item.Teaches,
+                    fieldIndex: (int)Class_FieldIndex.Teaches,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.MaxTrainingLevel) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.MaxTrainingLevel),
+                    item: item.MaxTrainingLevel,
+                    fieldIndex: (int)Class_FieldIndex.MaxTrainingLevel,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.SkillWeights) ?? true))
+            {
+                DictXmlTranslation<Skill, Byte>.Instance.Write(
+                    node: node,
+                    name: nameof(item.SkillWeights),
+                    items: item.SkillWeights,
+                    fieldIndex: (int)Class_FieldIndex.SkillWeights,
                     errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Class_FieldIndex.Data));
+                    translationMask: translationMask,
+                    keyTransl: (XElement subNode, Skill subItem, ErrorMaskBuilder? dictSubMask, TranslationCrystal? dictSubTranslMask) =>
+                    {
+                        EnumXmlTranslation<Skill>.Instance.Write(
+                            node: subNode,
+                            name: "Key",
+                            item: subItem,
+                            errorMask: dictSubMask);
+                    },
+                    valTransl: (XElement subNode, Byte subItem, ErrorMaskBuilder? dictSubMask, TranslationCrystal? dictSubTranslMask) =>
+                    {
+                        ByteXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: "Value",
+                            item: subItem,
+                            errorMask: dictSubMask);
+                    });
+            }
+            if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.BleedoutDefault) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.BleedoutDefault),
+                    item: item.BleedoutDefault,
+                    fieldIndex: (int)Class_FieldIndex.BleedoutDefault,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.VoicePoints) ?? true))
+            {
+                UInt32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.VoicePoints),
+                    item: item.VoicePoints,
+                    fieldIndex: (int)Class_FieldIndex.VoicePoints,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.StatWeights) ?? true))
+            {
+                DictXmlTranslation<BasicStat, Byte>.Instance.Write(
+                    node: node,
+                    name: nameof(item.StatWeights),
+                    items: item.StatWeights,
+                    fieldIndex: (int)Class_FieldIndex.StatWeights,
+                    errorMask: errorMask,
+                    translationMask: translationMask,
+                    keyTransl: (XElement subNode, BasicStat subItem, ErrorMaskBuilder? dictSubMask, TranslationCrystal? dictSubTranslMask) =>
+                    {
+                        EnumXmlTranslation<BasicStat>.Instance.Write(
+                            node: subNode,
+                            name: "Key",
+                            item: subItem,
+                            errorMask: dictSubMask);
+                    },
+                    valTransl: (XElement subNode, Byte subItem, ErrorMaskBuilder? dictSubMask, TranslationCrystal? dictSubTranslMask) =>
+                    {
+                        ByteXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: "Value",
+                            item: subItem,
+                            errorMask: dictSubMask);
+                    });
+            }
+            if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.Unknown2) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown2),
+                    item: item.Unknown2,
+                    fieldIndex: (int)Class_FieldIndex.Unknown2,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Class_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<Class.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)Class_FieldIndex.DATADataTypeState,
+                    errorMask: errorMask);
             }
         }
 
@@ -2080,14 +2942,141 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Data":
-                    errorMask?.PushIndex((int)Class_FieldIndex.Data);
+                case "Unknown":
+                    errorMask?.PushIndex((int)Class_FieldIndex.Unknown);
                     try
                     {
-                        item.Data = LoquiXmlTranslation<ClassData>.Instance.Parse(
+                        item.Unknown = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Class_FieldIndex.Data));
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Teaches":
+                    errorMask?.PushIndex((int)Class_FieldIndex.Teaches);
+                    try
+                    {
+                        item.Teaches = EnumXmlTranslation<Skill>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MaxTrainingLevel":
+                    errorMask?.PushIndex((int)Class_FieldIndex.MaxTrainingLevel);
+                    try
+                    {
+                        item.MaxTrainingLevel = ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SkillWeights":
+                    DictXmlTranslation<Skill, Byte>.Instance.ParseInto(
+                        node: node,
+                        item: item.SkillWeights,
+                        fieldIndex: (int)Class_FieldIndex.SkillWeights,
+                        errorMask: errorMask,
+                        translationMask: translationMask,
+                        keyTransl: EnumXmlTranslation<Skill>.Instance.Parse,
+                        valTransl: ByteXmlTranslation.Instance.Parse);
+                    break;
+                case "BleedoutDefault":
+                    errorMask?.PushIndex((int)Class_FieldIndex.BleedoutDefault);
+                    try
+                    {
+                        item.BleedoutDefault = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "VoicePoints":
+                    errorMask?.PushIndex((int)Class_FieldIndex.VoicePoints);
+                    try
+                    {
+                        item.VoicePoints = UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "StatWeights":
+                    DictXmlTranslation<BasicStat, Byte>.Instance.ParseInto(
+                        node: node,
+                        item: item.StatWeights,
+                        fieldIndex: (int)Class_FieldIndex.StatWeights,
+                        errorMask: errorMask,
+                        translationMask: translationMask,
+                        keyTransl: EnumXmlTranslation<BasicStat>.Instance.Parse,
+                        valTransl: ByteXmlTranslation.Instance.Parse);
+                    break;
+                case "Unknown2":
+                    errorMask?.PushIndex((int)Class_FieldIndex.Unknown2);
+                    try
+                    {
+                        item.Unknown2 = ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DATADataTypeState":
+                    errorMask?.PushIndex((int)Class_FieldIndex.DATADataTypeState);
+                    try
+                    {
+                        item.DATADataTypeState = EnumXmlTranslation<Class.DATADataType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2185,6 +3174,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ClassBinaryWriteTranslation Instance = new ClassBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IClassGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
         public static void WriteRecordTypes(
             IClassGetter item,
             MutagenWriter writer,
@@ -2209,11 +3207,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.Icon,
                 header: recordTypeConverter.ConvertToCustom(Class_Registration.ICON_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
-            var DataItem = item.Data;
-            ((ClassDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
-                item: DataItem,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
+            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Class_Registration.DATA_HEADER)))
+            {
+                writer.Write(item.Unknown);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
+                    writer,
+                    ((int?)item.Teaches) ?? -1,
+                    length: 1);
+                writer.Write(item.MaxTrainingLevel);
+                Mutagen.Bethesda.Binary.DictBinaryTranslation<Byte>.Instance.Write(
+                    writer: writer,
+                    items: item.SkillWeights,
+                    transl: ByteBinaryTranslation.Instance.Write);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.BleedoutDefault);
+                writer.Write(item.VoicePoints);
+                Mutagen.Bethesda.Binary.DictBinaryTranslation<Byte>.Instance.Write(
+                    writer: writer,
+                    items: item.StatWeights,
+                    transl: ByteBinaryTranslation.Instance.Write);
+                writer.Write(item.Unknown2);
+            }
         }
 
         public void Write(
@@ -2226,7 +3241,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(Class_Registration.CLAS_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -2348,10 +3363,61 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _IconLocation;
         public String? Icon => _IconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _IconLocation.Value, _package.Meta)) : default(string?);
         #endregion
-        #region Data
-        private RangeInt32? _DataLocation;
-        private IClassDataGetter? _Data => _DataLocation.HasValue ? ClassDataBinaryOverlay.ClassDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
-        public IClassDataGetter Data => _Data ?? new ClassData();
+        private int? _DATALocation;
+        public Class.DATADataType DATADataTypeState { get; private set; }
+        #region Unknown
+        private int _UnknownLocation => _DATALocation!.Value + 0x0;
+        private bool _Unknown_IsSet => _DATALocation.HasValue;
+        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_UnknownLocation, 4)) : default;
+        #endregion
+        #region Teaches
+        private int _TeachesLocation => _DATALocation!.Value + 0x4;
+        private bool _Teaches_IsSet => _DATALocation.HasValue;
+        public Skill? Teaches
+        {
+            get
+            {
+                var val = (Skill)_data.Span.Slice(_TeachesLocation, 0x1)[0];
+                if (((int)val) == -1) return null;
+                return val;
+            }
+        }
+        #endregion
+        #region MaxTrainingLevel
+        private int _MaxTrainingLevelLocation => _DATALocation!.Value + 0x5;
+        private bool _MaxTrainingLevel_IsSet => _DATALocation.HasValue;
+        public Byte MaxTrainingLevel => _MaxTrainingLevel_IsSet ? _data.Span[_MaxTrainingLevelLocation] : default;
+        #endregion
+        #region SkillWeights
+        private int _SkillWeightsLocation => _DATALocation!.Value + 6;
+        private bool _SkillWeights_IsSet => _DATALocation.HasValue;
+        public IReadOnlyDictionary<Skill, Byte> SkillWeights => DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
+            new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(_SkillWeightsLocation), _package.Meta, _package.MasterReferences)),
+            new Dictionary<Skill, Byte>(),
+            ByteBinaryTranslation.Instance.Parse);
+        #endregion
+        #region BleedoutDefault
+        private int _BleedoutDefaultLocation => _DATALocation!.Value + 0x18;
+        private bool _BleedoutDefault_IsSet => _DATALocation.HasValue;
+        public Single BleedoutDefault => _BleedoutDefault_IsSet ? SpanExt.GetFloat(_data.Slice(_BleedoutDefaultLocation, 4)) : default;
+        #endregion
+        #region VoicePoints
+        private int _VoicePointsLocation => _DATALocation!.Value + 0x1C;
+        private bool _VoicePoints_IsSet => _DATALocation.HasValue;
+        public UInt32 VoicePoints => _VoicePoints_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_VoicePointsLocation, 4)) : default;
+        #endregion
+        #region StatWeights
+        private int _StatWeightsLocation => _DATALocation!.Value + 32;
+        private bool _StatWeights_IsSet => _DATALocation.HasValue;
+        public IReadOnlyDictionary<BasicStat, Byte> StatWeights => DictBinaryTranslation<Byte>.Instance.Parse<BasicStat>(
+            new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(_StatWeightsLocation), _package.Meta, _package.MasterReferences)),
+            new Dictionary<BasicStat, Byte>(),
+            ByteBinaryTranslation.Instance.Parse);
+        #endregion
+        #region Unknown2
+        private int _Unknown2Location => _DATALocation!.Value + 0x23;
+        private bool _Unknown2_IsSet => _DATALocation.HasValue;
+        public Byte Unknown2 => _Unknown2_IsSet ? _data.Span[_Unknown2Location] : default;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
@@ -2431,8 +3497,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Data);
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Unknown2);
                 }
                 default:
                     return base.FillRecordType(

@@ -197,10 +197,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region WeightValue
-        public WeightValue WeightValue { get; set; } = new WeightValue();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IWeightValueGetter IArmorGetter.WeightValue => WeightValue;
+        #region Value
+        public UInt32 Value { get; set; } = default;
+        #endregion
+        #region Weight
+        public Single Weight { get; set; } = default;
         #endregion
         #region ArmorRating
         public Single ArmorRating { get; set; } = default;
@@ -209,6 +210,9 @@ namespace Mutagen.Bethesda.Skyrim
         public FormLinkNullable<Armor> TemplateArmor { get; set; } = new FormLinkNullable<Armor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IArmorGetter> IArmorGetter.TemplateArmor => this.TemplateArmor;
+        #endregion
+        #region DATADataTypeState
+        public Armor.DATADataType DATADataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -398,9 +402,11 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Description = initialValue;
                 this.Armature = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.WeightValue = new MaskItem<TItem, WeightValue.Mask<TItem>?>(initialValue, new WeightValue.Mask<TItem>(initialValue));
+                this.Value = initialValue;
+                this.Weight = initialValue;
                 this.ArmorRating = initialValue;
                 this.TemplateArmor = initialValue;
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -428,9 +434,11 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Keywords,
                 TItem Description,
                 TItem Armature,
-                TItem WeightValue,
+                TItem Value,
+                TItem Weight,
                 TItem ArmorRating,
-                TItem TemplateArmor)
+                TItem TemplateArmor,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -457,9 +465,11 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Description = Description;
                 this.Armature = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Armature, Enumerable.Empty<(int Index, TItem Value)>());
-                this.WeightValue = new MaskItem<TItem, WeightValue.Mask<TItem>?>(WeightValue, new WeightValue.Mask<TItem>(WeightValue));
+                this.Value = Value;
+                this.Weight = Weight;
                 this.ArmorRating = ArmorRating;
                 this.TemplateArmor = TemplateArmor;
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -489,9 +499,11 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
             public TItem Description;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Armature;
-            public MaskItem<TItem, WeightValue.Mask<TItem>?>? WeightValue { get; set; }
+            public TItem Value;
+            public TItem Weight;
             public TItem ArmorRating;
             public TItem TemplateArmor;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -523,9 +535,11 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.Armature, rhs.Armature)) return false;
-                if (!object.Equals(this.WeightValue, rhs.WeightValue)) return false;
+                if (!object.Equals(this.Value, rhs.Value)) return false;
+                if (!object.Equals(this.Weight, rhs.Weight)) return false;
                 if (!object.Equals(this.ArmorRating, rhs.ArmorRating)) return false;
                 if (!object.Equals(this.TemplateArmor, rhs.TemplateArmor)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -549,9 +563,11 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Keywords);
                 hash.Add(this.Description);
                 hash.Add(this.Armature);
-                hash.Add(this.WeightValue);
+                hash.Add(this.Value);
+                hash.Add(this.Weight);
                 hash.Add(this.ArmorRating);
                 hash.Add(this.TemplateArmor);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -618,13 +634,11 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (WeightValue != null)
-                {
-                    if (!eval(this.WeightValue.Overall)) return false;
-                    if (this.WeightValue.Specific != null && !this.WeightValue.Specific.All(eval)) return false;
-                }
+                if (!eval(this.Value)) return false;
+                if (!eval(this.Weight)) return false;
                 if (!eval(this.ArmorRating)) return false;
                 if (!eval(this.TemplateArmor)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -689,13 +703,11 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (WeightValue != null)
-                {
-                    if (eval(this.WeightValue.Overall)) return true;
-                    if (this.WeightValue.Specific != null && this.WeightValue.Specific.Any(eval)) return true;
-                }
+                if (eval(this.Value)) return true;
+                if (eval(this.Weight)) return true;
                 if (eval(this.ArmorRating)) return true;
                 if (eval(this.TemplateArmor)) return true;
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -758,9 +770,11 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                obj.WeightValue = this.WeightValue == null ? null : new MaskItem<R, WeightValue.Mask<R>?>(eval(this.WeightValue.Overall), this.WeightValue.Specific?.Translate(eval));
+                obj.Value = eval(this.Value);
+                obj.Weight = eval(this.Weight);
                 obj.ArmorRating = eval(this.ArmorRating);
                 obj.TemplateArmor = eval(this.TemplateArmor);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -894,9 +908,13 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.WeightValue?.Overall ?? true)
+                    if (printMask?.Value ?? true)
                     {
-                        WeightValue?.ToString(fg);
+                        fg.AppendItem(Value, "Value");
+                    }
+                    if (printMask?.Weight ?? true)
+                    {
+                        fg.AppendItem(Weight, "Weight");
                     }
                     if (printMask?.ArmorRating ?? true)
                     {
@@ -905,6 +923,10 @@ namespace Mutagen.Bethesda.Skyrim
                     if (printMask?.TemplateArmor ?? true)
                     {
                         fg.AppendItem(TemplateArmor, "TemplateArmor");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -936,9 +958,11 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
             public Exception? Description;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Armature;
-            public MaskItem<Exception?, WeightValue.ErrorMask?>? WeightValue;
+            public Exception? Value;
+            public Exception? Weight;
             public Exception? ArmorRating;
             public Exception? TemplateArmor;
+            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -983,12 +1007,16 @@ namespace Mutagen.Bethesda.Skyrim
                         return Description;
                     case Armor_FieldIndex.Armature:
                         return Armature;
-                    case Armor_FieldIndex.WeightValue:
-                        return WeightValue;
+                    case Armor_FieldIndex.Value:
+                        return Value;
+                    case Armor_FieldIndex.Weight:
+                        return Weight;
                     case Armor_FieldIndex.ArmorRating:
                         return ArmorRating;
                     case Armor_FieldIndex.TemplateArmor:
                         return TemplateArmor;
+                    case Armor_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1053,14 +1081,20 @@ namespace Mutagen.Bethesda.Skyrim
                     case Armor_FieldIndex.Armature:
                         this.Armature = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case Armor_FieldIndex.WeightValue:
-                        this.WeightValue = new MaskItem<Exception?, WeightValue.ErrorMask?>(ex, null);
+                    case Armor_FieldIndex.Value:
+                        this.Value = ex;
+                        break;
+                    case Armor_FieldIndex.Weight:
+                        this.Weight = ex;
                         break;
                     case Armor_FieldIndex.ArmorRating:
                         this.ArmorRating = ex;
                         break;
                     case Armor_FieldIndex.TemplateArmor:
                         this.TemplateArmor = ex;
+                        break;
+                    case Armor_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1127,14 +1161,20 @@ namespace Mutagen.Bethesda.Skyrim
                     case Armor_FieldIndex.Armature:
                         this.Armature = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case Armor_FieldIndex.WeightValue:
-                        this.WeightValue = (MaskItem<Exception?, WeightValue.ErrorMask?>?)obj;
+                    case Armor_FieldIndex.Value:
+                        this.Value = (Exception?)obj;
+                        break;
+                    case Armor_FieldIndex.Weight:
+                        this.Weight = (Exception?)obj;
                         break;
                     case Armor_FieldIndex.ArmorRating:
                         this.ArmorRating = (Exception?)obj;
                         break;
                     case Armor_FieldIndex.TemplateArmor:
                         this.TemplateArmor = (Exception?)obj;
+                        break;
+                    case Armor_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -1163,9 +1203,11 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Keywords != null) return true;
                 if (Description != null) return true;
                 if (Armature != null) return true;
-                if (WeightValue != null) return true;
+                if (Value != null) return true;
+                if (Weight != null) return true;
                 if (ArmorRating != null) return true;
                 if (TemplateArmor != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1264,9 +1306,11 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                WeightValue?.ToString(fg);
+                fg.AppendItem(Value, "Value");
+                fg.AppendItem(Weight, "Weight");
                 fg.AppendItem(ArmorRating, "ArmorRating");
                 fg.AppendItem(TemplateArmor, "TemplateArmor");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -1293,9 +1337,11 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.Armature = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Armature?.Overall, rhs.Armature?.Overall), ExceptionExt.Combine(this.Armature?.Specific, rhs.Armature?.Specific));
-                ret.WeightValue = this.WeightValue.Combine(rhs.WeightValue, (l, r) => l.Combine(r));
+                ret.Value = this.Value.Combine(rhs.Value);
+                ret.Weight = this.Weight.Combine(rhs.Weight);
                 ret.ArmorRating = this.ArmorRating.Combine(rhs.ArmorRating);
                 ret.TemplateArmor = this.TemplateArmor.Combine(rhs.TemplateArmor);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1336,9 +1382,11 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Keywords;
             public bool Description;
             public bool Armature;
-            public MaskItem<bool, WeightValue.TranslationMask?> WeightValue;
+            public bool Value;
+            public bool Weight;
             public bool ArmorRating;
             public bool TemplateArmor;
+            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -1363,9 +1411,11 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Keywords = defaultOn;
                 this.Description = defaultOn;
                 this.Armature = defaultOn;
-                this.WeightValue = new MaskItem<bool, WeightValue.TranslationMask?>(defaultOn, null);
+                this.Value = defaultOn;
+                this.Weight = defaultOn;
                 this.ArmorRating = defaultOn;
                 this.TemplateArmor = defaultOn;
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -1391,9 +1441,11 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Keywords, null));
                 ret.Add((Description, null));
                 ret.Add((Armature, null));
-                ret.Add((WeightValue?.Overall ?? true, WeightValue?.Specific?.GetCrystal()));
+                ret.Add((Value, null));
+                ret.Add((Weight, null));
                 ret.Add((ArmorRating, null));
                 ret.Add((TemplateArmor, null));
+                ret.Add((DATADataTypeState, null));
             }
         }
         #endregion
@@ -1427,6 +1479,10 @@ namespace Mutagen.Bethesda.Skyrim
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
+        }
+        [Flags]
+        public enum DATADataType
+        {
         }
         #endregion
 
@@ -1492,6 +1548,7 @@ namespace Mutagen.Bethesda.Skyrim
         IItem,
         IObjectBounded,
         IObjectId,
+        IWeightValue,
         ILoquiObjectSetter<IArmorInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -1512,9 +1569,11 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new String? Description { get; set; }
         new ExtendedList<IFormLink<ArmorAddon>>? Armature { get; set; }
-        new WeightValue WeightValue { get; set; }
+        new UInt32 Value { get; set; }
+        new Single Weight { get; set; }
         new Single ArmorRating { get; set; }
         new FormLinkNullable<Armor> TemplateArmor { get; set; }
+        new Armor.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Armor.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1535,6 +1594,7 @@ namespace Mutagen.Bethesda.Skyrim
         IItemGetter,
         IObjectBoundedGetter,
         IObjectIdGetter,
+        IWeightValueGetter,
         ILoquiObject<IArmorGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,
@@ -1559,9 +1619,11 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         String? Description { get; }
         IReadOnlyList<IFormLinkGetter<IArmorAddonGetter>>? Armature { get; }
-        IWeightValueGetter WeightValue { get; }
+        UInt32 Value { get; }
+        Single Weight { get; }
         Single ArmorRating { get; }
         IFormLinkNullableGetter<IArmorGetter> TemplateArmor { get; }
+        Armor.DATADataType DATADataTypeState { get; }
 
         #region Mutagen
         Armor.MajorFlag MajorFlags { get; }
@@ -1884,9 +1946,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Keywords = 21,
         Description = 22,
         Armature = 23,
-        WeightValue = 24,
-        ArmorRating = 25,
-        TemplateArmor = 26,
+        Value = 24,
+        Weight = 25,
+        ArmorRating = 26,
+        TemplateArmor = 27,
+        DATADataTypeState = 28,
     }
     #endregion
 
@@ -1904,9 +1968,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "e2a20eca-5715-4c3b-9189-5cb7b6248375";
 
-        public const ushort AdditionalFieldCount = 21;
+        public const ushort AdditionalFieldCount = 23;
 
-        public const ushort FieldCount = 27;
+        public const ushort FieldCount = 29;
 
         public static readonly Type MaskType = typeof(Armor.Mask<>);
 
@@ -1972,12 +2036,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Armor_FieldIndex.Description;
                 case "ARMATURE":
                     return (ushort)Armor_FieldIndex.Armature;
-                case "WEIGHTVALUE":
-                    return (ushort)Armor_FieldIndex.WeightValue;
+                case "VALUE":
+                    return (ushort)Armor_FieldIndex.Value;
+                case "WEIGHT":
+                    return (ushort)Armor_FieldIndex.Weight;
                 case "ARMORRATING":
                     return (ushort)Armor_FieldIndex.ArmorRating;
                 case "TEMPLATEARMOR":
                     return (ushort)Armor_FieldIndex.TemplateArmor;
+                case "DATADATATYPESTATE":
+                    return (ushort)Armor_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -2007,9 +2075,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Armor_FieldIndex.AlternateBlockMaterial:
                 case Armor_FieldIndex.Race:
                 case Armor_FieldIndex.Description:
-                case Armor_FieldIndex.WeightValue:
+                case Armor_FieldIndex.Value:
+                case Armor_FieldIndex.Weight:
                 case Armor_FieldIndex.ArmorRating:
                 case Armor_FieldIndex.TemplateArmor:
+                case Armor_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -2026,7 +2096,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Armor_FieldIndex.WorldModel:
                 case Armor_FieldIndex.BodyTemplate:
                 case Armor_FieldIndex.Destructible:
-                case Armor_FieldIndex.WeightValue:
                     return true;
                 case Armor_FieldIndex.Name:
                 case Armor_FieldIndex.ObjectEffect:
@@ -2041,8 +2110,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Armor_FieldIndex.Keywords:
                 case Armor_FieldIndex.Description:
                 case Armor_FieldIndex.Armature:
+                case Armor_FieldIndex.Value:
+                case Armor_FieldIndex.Weight:
                 case Armor_FieldIndex.ArmorRating:
                 case Armor_FieldIndex.TemplateArmor:
+                case Armor_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
@@ -2072,9 +2144,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Armor_FieldIndex.Keywords:
                 case Armor_FieldIndex.Description:
                 case Armor_FieldIndex.Armature:
-                case Armor_FieldIndex.WeightValue:
+                case Armor_FieldIndex.Value:
+                case Armor_FieldIndex.Weight:
                 case Armor_FieldIndex.ArmorRating:
                 case Armor_FieldIndex.TemplateArmor:
+                case Armor_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
@@ -2122,12 +2196,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Description";
                 case Armor_FieldIndex.Armature:
                     return "Armature";
-                case Armor_FieldIndex.WeightValue:
-                    return "WeightValue";
+                case Armor_FieldIndex.Value:
+                    return "Value";
+                case Armor_FieldIndex.Weight:
+                    return "Weight";
                 case Armor_FieldIndex.ArmorRating:
                     return "ArmorRating";
                 case Armor_FieldIndex.TemplateArmor:
                     return "TemplateArmor";
+                case Armor_FieldIndex.DATADataTypeState:
+                    return "DATADataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -2156,9 +2234,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Armor_FieldIndex.Keywords:
                 case Armor_FieldIndex.Description:
                 case Armor_FieldIndex.Armature:
-                case Armor_FieldIndex.WeightValue:
+                case Armor_FieldIndex.Value:
+                case Armor_FieldIndex.Weight:
                 case Armor_FieldIndex.ArmorRating:
                 case Armor_FieldIndex.TemplateArmor:
+                case Armor_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
@@ -2188,9 +2268,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Armor_FieldIndex.Keywords:
                 case Armor_FieldIndex.Description:
                 case Armor_FieldIndex.Armature:
-                case Armor_FieldIndex.WeightValue:
+                case Armor_FieldIndex.Value:
+                case Armor_FieldIndex.Weight:
                 case Armor_FieldIndex.ArmorRating:
                 case Armor_FieldIndex.TemplateArmor:
+                case Armor_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
@@ -2238,12 +2320,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(String);
                 case Armor_FieldIndex.Armature:
                     return typeof(ExtendedList<IFormLink<ArmorAddon>>);
-                case Armor_FieldIndex.WeightValue:
-                    return typeof(WeightValue);
+                case Armor_FieldIndex.Value:
+                    return typeof(UInt32);
+                case Armor_FieldIndex.Weight:
+                    return typeof(Single);
                 case Armor_FieldIndex.ArmorRating:
                     return typeof(Single);
                 case Armor_FieldIndex.TemplateArmor:
                     return typeof(FormLinkNullable<Armor>);
+                case Armor_FieldIndex.DATADataTypeState:
+                    return typeof(Armor.DATADataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -2280,7 +2366,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType TNAM_HEADER = new RecordType("TNAM");
         public static readonly RecordType TriggeringRecordType = ARMO_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 21;
+        public const int NumTypedFields = 20;
         public static readonly Type BinaryWriteTranslation = typeof(ArmorBinaryWriteTranslation);
         public static RecordTypeConverter WorldModelFemaleConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
@@ -2367,9 +2453,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Keywords = null;
             item.Description = default;
             item.Armature = null;
-            item.WeightValue.Clear();
+            item.Value = default;
+            item.Weight = default;
             item.ArmorRating = default;
             item.TemplateArmor = null;
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -2632,9 +2720,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength; // Skip header
-                    item.WeightValue = Mutagen.Bethesda.Skyrim.WeightValue.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Armor_FieldIndex.WeightValue);
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.Value = dataFrame.ReadUInt32();
+                    item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    return TryGet<int?>.Succeed((int)Armor_FieldIndex.Weight);
                 }
                 case 0x4D414E44: // DNAM
                 {
@@ -2767,9 +2857,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Armature,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.WeightValue = MaskItemExt.Factory(item.WeightValue.GetEqualsMask(rhs.WeightValue, include), include);
+            ret.Value = item.Value == rhs.Value;
+            ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.ArmorRating = item.ArmorRating.EqualsWithin(rhs.ArmorRating);
             ret.TemplateArmor = object.Equals(item.TemplateArmor, rhs.TemplateArmor);
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2938,9 +3030,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.WeightValue?.Overall ?? true)
+            if (printMask?.Value ?? true)
             {
-                item.WeightValue?.ToString(fg, "WeightValue");
+                fg.AppendItem(item.Value, "Value");
+            }
+            if (printMask?.Weight ?? true)
+            {
+                fg.AppendItem(item.Weight, "Weight");
             }
             if (printMask?.ArmorRating ?? true)
             {
@@ -2950,6 +3046,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 && item.TemplateArmor.TryGet(out var TemplateArmorItem))
             {
                 fg.AppendItem(TemplateArmorItem, "TemplateArmor");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -3010,9 +3110,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
             mask.Description = (item.Description != null);
             mask.Armature = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Armature != null), default);
-            mask.WeightValue = new MaskItem<bool, WeightValue.Mask<bool>?>(true, item.WeightValue?.GetHasBeenSetMask());
+            mask.Value = true;
+            mask.Weight = true;
             mask.ArmorRating = true;
             mask.TemplateArmor = (item.TemplateArmor.FormKey != null);
+            mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -3082,9 +3184,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
             if (!lhs.Armature.SequenceEqual(rhs.Armature)) return false;
-            if (!object.Equals(lhs.WeightValue, rhs.WeightValue)) return false;
+            if (lhs.Value != rhs.Value) return false;
+            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             if (!lhs.ArmorRating.EqualsWithin(rhs.ArmorRating)) return false;
             if (!lhs.TemplateArmor.Equals(rhs.TemplateArmor)) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
         
@@ -3172,12 +3276,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 hash.Add(Descriptionitem);
             }
             hash.Add(item.Armature);
-            hash.Add(item.WeightValue);
+            hash.Add(item.Value);
+            hash.Add(item.Weight);
             hash.Add(item.ArmorRating);
             if (item.TemplateArmor.TryGet(out var TemplateArmoritem))
             {
                 hash.Add(TemplateArmoritem);
             }
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -3526,27 +3632,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.WeightValue) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Value) ?? true))
             {
-                errorMask?.PushIndex((int)Armor_FieldIndex.WeightValue);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.WeightValue) ?? true))
-                    {
-                        item.WeightValue = rhs.WeightValue.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)Armor_FieldIndex.WeightValue),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Value = rhs.Value;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Weight) ?? true))
+            {
+                item.Weight = rhs.Weight;
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.ArmorRating) ?? true))
             {
@@ -3555,6 +3647,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.TemplateArmor) ?? true))
             {
                 item.TemplateArmor = rhs.TemplateArmor.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
             }
         }
         
@@ -3925,16 +4021,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: listSubMask);
                     });
             }
-            if ((translationMask?.GetShouldTranslate((int)Armor_FieldIndex.WeightValue) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Armor_FieldIndex.Value) ?? true))
             {
-                var WeightValueItem = item.WeightValue;
-                ((WeightValueXmlWriteTranslation)((IXmlItem)WeightValueItem).XmlWriteTranslator).Write(
-                    item: WeightValueItem,
+                UInt32XmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.WeightValue),
-                    fieldIndex: (int)Armor_FieldIndex.WeightValue,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Armor_FieldIndex.WeightValue));
+                    name: nameof(item.Value),
+                    item: item.Value,
+                    fieldIndex: (int)Armor_FieldIndex.Value,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Armor_FieldIndex.Weight) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Weight),
+                    item: item.Weight,
+                    fieldIndex: (int)Armor_FieldIndex.Weight,
+                    errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)Armor_FieldIndex.ArmorRating) ?? true))
             {
@@ -3953,6 +4056,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     name: nameof(item.TemplateArmor),
                     item: item.TemplateArmor.FormKey.Value,
                     fieldIndex: (int)Armor_FieldIndex.TemplateArmor,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Armor_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<Armor.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)Armor_FieldIndex.DATADataTypeState,
                     errorMask: errorMask);
             }
         }
@@ -4416,14 +4528,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "WeightValue":
-                    errorMask?.PushIndex((int)Armor_FieldIndex.WeightValue);
+                case "Value":
+                    errorMask?.PushIndex((int)Armor_FieldIndex.Value);
                     try
                     {
-                        item.WeightValue = LoquiXmlTranslation<WeightValue>.Instance.Parse(
+                        item.Value = UInt32XmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Armor_FieldIndex.WeightValue));
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Weight":
+                    errorMask?.PushIndex((int)Armor_FieldIndex.Weight);
+                    try
+                    {
+                        item.Weight = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -4458,6 +4587,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         item.TemplateArmor = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DATADataTypeState":
+                    errorMask?.PushIndex((int)Armor_FieldIndex.DATADataTypeState);
+                    try
+                    {
+                        item.DATADataTypeState = EnumXmlTranslation<Armor.DATADataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -4556,6 +4703,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IBinaryWriteTranslator
     {
         public new readonly static ArmorBinaryWriteTranslation Instance = new ArmorBinaryWriteTranslation();
+
+        public static void WriteEmbedded(
+            IArmorGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
 
         public static void WriteRecordTypes(
             IArmorGetter item,
@@ -4676,13 +4832,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(Armor_Registration.MODL_HEADER));
                 });
-            var WeightValueItem = item.WeightValue;
-            using (HeaderExport.ExportHeader(writer, Armor_Registration.DATA_HEADER, Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Armor_Registration.DATA_HEADER)))
             {
-                ((WeightValueBinaryWriteTranslation)((IBinaryItem)WeightValueItem).BinaryWriteTranslator).Write(
-                    item: WeightValueItem,
+                writer.Write(item.Value);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    item: item.Weight);
             }
             FloatBinaryTranslation.Write(
                 writer: writer,
@@ -4706,7 +4861,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(Armor_Registration.ARMO_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -4896,9 +5051,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.Meta)) : default(string?);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IArmorAddonGetter>>? Armature { get; private set; }
-        #region WeightValue
-        private IWeightValueGetter? _WeightValue;
-        public IWeightValueGetter WeightValue => _WeightValue ?? new WeightValue();
+        private int? _DATALocation;
+        public Armor.DATADataType DATADataTypeState { get; private set; }
+        #region Value
+        private int _ValueLocation => _DATALocation!.Value + 0x0;
+        private bool _Value_IsSet => _DATALocation.HasValue;
+        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ValueLocation, 4)) : default;
+        #endregion
+        #region Weight
+        private int _WeightLocation => _DATALocation!.Value + 0x4;
+        private bool _Weight_IsSet => _DATALocation.HasValue;
+        public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Slice(_WeightLocation, 4)) : default;
         #endregion
         #region ArmorRating
         private int? _ArmorRatingLocation;
@@ -5094,12 +5257,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    stream.Position += _package.Meta.SubConstants.HeaderLength;
-                    this._WeightValue = WeightValueBinaryOverlay.WeightValueFactory(
-                        stream: stream,
-                        package: _package,
-                        recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Armor_FieldIndex.WeightValue);
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    return TryGet<int?>.Succeed((int)Armor_FieldIndex.Weight);
                 }
                 case 0x4D414E44: // DNAM
                 {

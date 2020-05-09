@@ -410,7 +410,6 @@ namespace Mutagen.Bethesda.Generation
                         }
                     }
                 }
-
                 else
                 {
                     if (!loqui.Singleton)
@@ -423,13 +422,10 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
             }
-            else if (!loqui.Singleton)
-            {
-                throw new NotImplementedException();
-            }
             else
             {
-                DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
+                isRequiredRecord = true;
+                DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, $"0x{currentPosition:X}");
                 fg.AppendLine($"private {loqui.Interface(getter: true, internalInterface: true)}? _{typeGen.Name} => _{typeGen.Name}_IsSet ? {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({DataAccessor(dataAccessor, $"_{typeGen.Name}Location", null)}), _package) : default;");
             }
 
@@ -446,6 +442,9 @@ namespace Mutagen.Bethesda.Generation
 
         public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
         {
+            var data = typeGen.GetFieldData();
+            if (data.Length.HasValue) return data.Length;
+
             LoquiType loqui = typeGen as LoquiType;
             if (loqui.TargetObjectGeneration == null) return null;
 

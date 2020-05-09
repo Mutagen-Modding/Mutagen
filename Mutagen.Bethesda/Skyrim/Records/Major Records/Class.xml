@@ -6,33 +6,32 @@
       <String name="Name" recordType="FULL" hasBeenSet="False" />
       <String name="Description" recordType="DESC" hasBeenSet="False" />
       <String name="Icon" recordType="ICON" />
-      <RefDirect name="Data" refName="ClassData" hasBeenSet="False" />
-    </Fields>
-  </Object>
-  <Object name="ClassData" objType="Subrecord" recordType="DATA" GUID="34be387d-c309-4620-be5f-49b0e7037fc4" ID="133">
-    <Fields>
-      <Int32 name="Unknown" />
-      <Enum name="Teaches" byteLength="1" enumName="Skill" hasBeenSet="True" hasBeenSetBinaryFallback="-1" />
-      <UInt8 name="MaxTrainingLevel" />
-      <Dict name="SkillWeights" numEnumKeys="18" >
-        <Key>
-          <Enum enumName="Skill" />
-        </Key>
-        <Value>
-          <UInt8 />
-        </Value>
-      </Dict>
-      <Float name="BleedoutDefault" />
-      <UInt32 name="VoicePoints" />
-      <Dict name="StatWeights" numEnumKeys="3" >
-        <Key>
-          <Enum enumName="BasicStat" />
-        </Key>
-        <Value>
-          <UInt8 />
-        </Value>
-      </Dict>
-      <UInt8 name="Unknown2" />
+      <Data>
+        <Fields>
+          <Int32 name="Unknown" />
+          <Enum name="Teaches" byteLength="1" enumName="Skill" hasBeenSet="True" hasBeenSetBinaryFallback="-1" />
+          <UInt8 name="MaxTrainingLevel" />
+          <Dict name="SkillWeights" numEnumKeys="18" >
+            <Key>
+              <Enum enumName="Skill" />
+            </Key>
+            <Value>
+              <UInt8 />
+            </Value>
+          </Dict>
+          <Float name="BleedoutDefault" />
+          <UInt32 name="VoicePoints" />
+          <Dict name="StatWeights" numEnumKeys="3" >
+            <Key>
+              <Enum enumName="BasicStat" />
+            </Key>
+            <Value>
+              <UInt8 />
+            </Value>
+          </Dict>
+          <UInt8 name="Unknown2" />
+        </Fields>
+      </Data>
     </Fields>
   </Object>
 </Loqui>

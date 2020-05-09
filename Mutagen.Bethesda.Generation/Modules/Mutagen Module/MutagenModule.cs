@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda.Generation
             this.SubModules.Add(new ContainerParentModule());
             this.SubModules.Add(new MajorRecordFlagModule());
             this.SubModules.Add(new SpecialEditionModule());
+            this.SubModules.Add(new DataTypeModule());
         }
 
         public bool FieldFilter(TypeGeneration field)

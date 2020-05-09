@@ -7,6 +7,7 @@
     <Interface>IModeled</Interface>
     <Interface>IHasIcons</Interface>
     <Interface>IObjectId</Interface>
+    <Interface>IWeightValue</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
       <String name="Name" recordType="FULL" />
@@ -19,18 +20,16 @@
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
         <FormLink refName="Keyword" />
       </List>
-      <RefDirect name="Data" refName="AmmunitionData" hasBeenSet="False" />
+      <Data>
+        <Fields>
+          <FormLink name="Projectile" refName="Projectile" />
+          <Enum name="Flags" enumName="Ammunition.Flag" byteLength="4" />
+          <Float name="Damage" />
+          <UInt32 name="Value" />
+          <Float name="Weight" isSE="true" />
+        </Fields>
+      </Data>
       <String name="ShortName" recordType="ONAM" />
-    </Fields>
-  </Object>
-  <Object name="AmmunitionData" objType="Subrecord" recordType="DATA" GUID="0795c30f-6798-4e4d-a3fe-cdb7b93a52c4" ID="199">
-    <Interface>IWeightValue</Interface>
-    <Fields>
-      <FormLink name="Projectile" refName="Projectile" />
-      <Enum name="Flags" enumName="AmmunitionData.Flag" byteLength="4" />
-      <Float name="Damage" />
-      <Int32 name="Value" />
-      <Float name="Weight" isSE="true" />
     </Fields>
   </Object>
 </Loqui>

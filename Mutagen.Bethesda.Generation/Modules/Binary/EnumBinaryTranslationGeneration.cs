@@ -175,6 +175,10 @@ namespace Mutagen.Bethesda.Generation
             }
             var getType = GenerateForTypicalWrapper(objGen, typeGen, slice, "_package");
 
+            if (dataType != null)
+            {
+                DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, $"0x{currentPosition:X}");
+            }
             if (eType.HasBeenSetFallbackInt != null)
             {
                 fg.AppendLine($"public {eType.TypeName(getter: true)}? {eType.Name}");
@@ -208,7 +212,6 @@ namespace Mutagen.Bethesda.Generation
                 }
                 else
                 {
-                    DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
                     fg.AppendLine($"public {eType.TypeName(getter: true)} {eType.Name} => _{typeGen.Name}_IsSet ? {getType} : default;");
                 }
             }

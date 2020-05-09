@@ -8,6 +8,7 @@
     <Interface>IModeled</Interface>
     <Interface>IObjectBounded</Interface>
     <Interface>IObjectId</Interface>
+    <Interface>IWeightValue</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
@@ -20,7 +21,12 @@
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
         <FormLink refName="Keyword" />
       </List>
-      <RefDirect name="WeightValue" refName="WeightValue" recordType="DATA" hasBeenSet="False" />
+      <Data>
+        <Fields>
+          <UInt32 name="Value" />
+          <Float name="Weight" />
+        </Fields>
+      </Data>
     </Fields>
   </Object>
 </Loqui>

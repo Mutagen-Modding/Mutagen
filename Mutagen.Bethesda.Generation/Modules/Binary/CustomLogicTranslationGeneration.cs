@@ -242,14 +242,14 @@ namespace Mutagen.Bethesda.Generation
             else if (dataType != null)
             {
                 loc = $"_{typeGen.Name}Location";
-                DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, currentPosition);
+                DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, $"0x{currentPosition:X}");
             }
             else
             {
                 loc = $"0x{currentPosition:X}";
             }
             using (var args = new ArgsWrapper(fg,
-                $"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet && typeGen.CanBeNullable(getter: true) ? "?" : null)} {typeGen.Name} => Get{typeGen.Name}Custom"))
+                $"public {typeGen.TypeName(getter: true)}{(typeGen.IsNullable ? "?" : null)} {typeGen.Name} => Get{typeGen.Name}Custom"))
             {
                 if (!fieldData.HasTrigger && dataType == null)
                 {

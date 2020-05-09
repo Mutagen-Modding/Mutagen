@@ -14,7 +14,64 @@
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
-      <RefDirect name="Data" refName="RaceData" hasBeenSet="False" />
+      <Data>
+        <Fields>
+          <RefDirect name="SkillBoost0" refName="SkillBoost" />
+          <RefDirect name="SkillBoost1" refName="SkillBoost" />
+          <RefDirect name="SkillBoost2" refName="SkillBoost" />
+          <RefDirect name="SkillBoost3" refName="SkillBoost" />
+          <RefDirect name="SkillBoost4" refName="SkillBoost" />
+          <RefDirect name="SkillBoost5" refName="SkillBoost" />
+          <RefDirect name="SkillBoost6" refName="SkillBoost" />
+          <Int16 name="Unknown" />
+          <Gendered name="Height">
+            <Fields>
+              <Float />
+            </Fields>
+          </Gendered>
+          <Gendered name="Weight">
+            <Fields>
+              <Float />
+            </Fields>
+          </Gendered>
+          <Enum name="Flags" enumName="Race.Flag" byteLength="4" binaryOverlay="Custom" />
+          <Dict name="Starting" numEnumKeys="3">
+            <Key>
+              <Enum enumName="BasicStat" />
+            </Key>
+            <Value>
+              <Float />
+            </Value>
+          </Dict>
+          <Float name="BaseCarryWeight" />
+          <Float name="BaseMass" />
+          <Float name="AccelerationRate" />
+          <Float name="DecelerationRate" />
+          <Enum name="Size" enumName="Size" byteLength="4" />
+          <Enum name="HeadBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
+          <Enum name="HairBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
+          <Float name="InjuredHealthPercent" />
+          <Enum name="ShieldBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
+          <Dict name="Regen" numEnumKeys="3">
+            <Key>
+              <Enum enumName="BasicStat" />
+            </Key>
+            <Value>
+              <Float />
+            </Value>
+          </Dict>
+          <Float name="UnarmedDamage" />
+          <Float name="UnarmedReach" />
+          <Enum name="BodyBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
+          <Float name="AimAngleTolerance" />
+          <Float name="FlightRadius" />
+          <Float name="AngularAccelerationRate" />
+          <Float name="AngularTolerance" />
+          <CustomLogic name="Flags2" byteLength="4" />
+          <Break />
+          <RefDirect name="MountData" refName="MountData" />
+        </Fields>
+      </Data>
       <Gendered name="SkeletalModel" maleMarker="MNAM" femaleMarker="FNAM">
         <Fields>
           <RefDirect refName="SimpleModel" recordType="ANAM">
@@ -106,64 +163,6 @@
           <RefDirect refName="HeadData" />
         </Fields>
       </Gendered>
-    </Fields>
-  </Object>
-  <Object name="RaceData" recordType="DATA" objType="Subrecord" GUID="b455e069-05b6-4f16-b587-b7f1530d620b" ID="52">
-    <Fields>
-      <RefDirect name="SkillBoost0" refName="SkillBoost" />
-      <RefDirect name="SkillBoost1" refName="SkillBoost" />
-      <RefDirect name="SkillBoost2" refName="SkillBoost" />
-      <RefDirect name="SkillBoost3" refName="SkillBoost" />
-      <RefDirect name="SkillBoost4" refName="SkillBoost" />
-      <RefDirect name="SkillBoost5" refName="SkillBoost" />
-      <RefDirect name="SkillBoost6" refName="SkillBoost" />
-      <Int16 name="Unknown" />
-      <Gendered name="Height">
-        <Fields>
-          <Float />
-        </Fields>
-      </Gendered>
-      <Gendered name="Weight">
-        <Fields>
-          <Float />
-        </Fields>
-      </Gendered>
-      <Enum name="Flags" enumName="RaceData.Flag" byteLength="4" binaryOverlay="Custom" />
-      <Dict name="Starting" numEnumKeys="3">
-        <Key>
-          <Enum enumName="BasicStat" />
-        </Key>
-        <Value>
-          <Float />
-        </Value>
-      </Dict>
-      <Float name="BaseCarryWeight" />
-      <Float name="BaseMass" />
-      <Float name="AccelerationRate" />
-      <Float name="DecelerationRate" />
-      <Enum name="Size" enumName="Race.Size" byteLength="4" />
-      <Enum name="HeadBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
-      <Enum name="HairBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
-      <Float name="InjuredHealthPercent" />
-      <Enum name="ShieldBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
-      <Dict name="Regen" numEnumKeys="3">
-        <Key>
-          <Enum enumName="BasicStat" />
-        </Key>
-        <Value>
-          <Float />
-        </Value>
-      </Dict>
-      <Float name="UnarmedDamage" />
-      <Float name="UnarmedReach" />
-      <Enum name="BodyBipedObject" enumName="BipedObject" byteLength="4" default="BipedObject.None" />
-      <Float name="AimAngleTolerance" />
-      <Float name="FlightRadius" />
-      <Float name="AngularAccelerationRate" />
-      <Float name="AngularTolerance" />
-      <CustomLogic name="Flags2" byteLength="4" />
-      <Break />
-      <RefDirect name="MountData" refName="MountData" />
     </Fields>
   </Object>
   <Object name="SkillBoost" objType="Subrecord" GUID="8397e320-5ee6-4314-b35a-b69c871fa3ec" ID="53">

@@ -312,10 +312,16 @@ namespace Mutagen.Bethesda.Generation
                 throw new ArgumentException("Unsupported type generator: " + dict.ValueTypeGen);
             }
 
+            var posStr = data == null ? $"{passedLengthAccessor}" : $"_{typeGen.Name}Location";
+            if (data != null)
+            {
+                DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, data, objGen, typeGen, passedLengthAccessor);
+            }
+
             using (var args = new ArgsWrapper(fg,
                 $"public IReadOnlyDictionary<{dict.KeyTypeGen.TypeName(getter: true)}, {dict.ValueTypeGen.TypeName(getter: true)}> {typeGen.Name} => DictBinaryTranslation<{dict.ValueTypeGen.TypeName(getter: false)}>.Instance.Parse<{dict.KeyTypeGen.TypeName(false)}>"))
             {
-                args.Add($"new {nameof(MutagenFrame)}(new {nameof(MutagenMemoryReadStream)}({dataAccessor}.Slice({passedLengthAccessor}), _package.Meta, _package.MasterReferences))");
+                args.Add($"new {nameof(MutagenFrame)}(new {nameof(MutagenMemoryReadStream)}({dataAccessor}.Slice({posStr}), _package.Meta, _package.MasterReferences))");
                 args.Add($"new Dictionary<{dict.KeyTypeGen.TypeName(getter: true)}, {dict.ValueTypeGen.TypeName(getter: true)}>()");
                 args.Add($"{subTransl.GetTranslatorInstance(dict.ValueTypeGen, getter: true)}.Parse");
             }

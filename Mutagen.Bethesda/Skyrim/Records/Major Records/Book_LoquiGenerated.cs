@@ -135,10 +135,31 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region Data
-        public BookData Data { get; set; } = new BookData();
+        #region Flags
+        public Book.Flag Flags { get; set; } = default;
+        #endregion
+        #region Type
+        public Book.BookType Type { get; set; } = default;
+        #endregion
+        #region Unused
+        public UInt16 Unused { get; set; } = default;
+        #endregion
+        #region Teaches
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IBookDataGetter IBookGetter.Data => Data;
+        private BookTeachTarget? _Teaches;
+        public BookTeachTarget? Teaches
+        {
+            get => _Teaches;
+            set => _Teaches = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IBookTeachTargetGetter? IBookGetter.Teaches => this.Teaches;
+        #endregion
+        #region Value
+        public UInt32 Value { get; set; } = default;
+        #endregion
+        #region Weight
+        public Single Weight { get; set; } = default;
         #endregion
         #region InventoryArt
         public FormLinkNullable<Static> InventoryArt { get; set; } = new FormLinkNullable<Static>();
@@ -155,6 +176,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IBookGetter.Description => this.Description;
+        #endregion
+        #region DATADataTypeState
+        public Book.DATADataType DATADataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -336,9 +360,15 @@ namespace Mutagen.Bethesda.Skyrim
                 this.PickUpSound = initialValue;
                 this.PutDownSound = initialValue;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Data = new MaskItem<TItem, BookData.Mask<TItem>?>(initialValue, new BookData.Mask<TItem>(initialValue));
+                this.Flags = initialValue;
+                this.Type = initialValue;
+                this.Unused = initialValue;
+                this.Teaches = new MaskItem<TItem, BookTeachTarget.Mask<TItem>?>(initialValue, new BookTeachTarget.Mask<TItem>(initialValue));
+                this.Value = initialValue;
+                this.Weight = initialValue;
                 this.InventoryArt = initialValue;
                 this.Description = initialValue;
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -358,9 +388,15 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem PickUpSound,
                 TItem PutDownSound,
                 TItem Keywords,
-                TItem Data,
+                TItem Flags,
+                TItem Type,
+                TItem Unused,
+                TItem Teaches,
+                TItem Value,
+                TItem Weight,
                 TItem InventoryArt,
-                TItem Description)
+                TItem Description,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -379,9 +415,15 @@ namespace Mutagen.Bethesda.Skyrim
                 this.PickUpSound = PickUpSound;
                 this.PutDownSound = PutDownSound;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Data = new MaskItem<TItem, BookData.Mask<TItem>?>(Data, new BookData.Mask<TItem>(Data));
+                this.Flags = Flags;
+                this.Type = Type;
+                this.Unused = Unused;
+                this.Teaches = new MaskItem<TItem, BookTeachTarget.Mask<TItem>?>(Teaches, new BookTeachTarget.Mask<TItem>(Teaches));
+                this.Value = Value;
+                this.Weight = Weight;
                 this.InventoryArt = InventoryArt;
                 this.Description = Description;
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -403,9 +445,15 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem PickUpSound;
             public TItem PutDownSound;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
-            public MaskItem<TItem, BookData.Mask<TItem>?>? Data { get; set; }
+            public TItem Flags;
+            public TItem Type;
+            public TItem Unused;
+            public MaskItem<TItem, BookTeachTarget.Mask<TItem>?>? Teaches { get; set; }
+            public TItem Value;
+            public TItem Weight;
             public TItem InventoryArt;
             public TItem Description;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -429,9 +477,15 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.PickUpSound, rhs.PickUpSound)) return false;
                 if (!object.Equals(this.PutDownSound, rhs.PutDownSound)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
-                if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
+                if (!object.Equals(this.Unused, rhs.Unused)) return false;
+                if (!object.Equals(this.Teaches, rhs.Teaches)) return false;
+                if (!object.Equals(this.Value, rhs.Value)) return false;
+                if (!object.Equals(this.Weight, rhs.Weight)) return false;
                 if (!object.Equals(this.InventoryArt, rhs.InventoryArt)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -447,9 +501,15 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.PickUpSound);
                 hash.Add(this.PutDownSound);
                 hash.Add(this.Keywords);
-                hash.Add(this.Data);
+                hash.Add(this.Flags);
+                hash.Add(this.Type);
+                hash.Add(this.Unused);
+                hash.Add(this.Teaches);
+                hash.Add(this.Value);
+                hash.Add(this.Weight);
                 hash.Add(this.InventoryArt);
                 hash.Add(this.Description);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -500,13 +560,19 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (Data != null)
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Type)) return false;
+                if (!eval(this.Unused)) return false;
+                if (Teaches != null)
                 {
-                    if (!eval(this.Data.Overall)) return false;
-                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                    if (!eval(this.Teaches.Overall)) return false;
+                    if (this.Teaches.Specific != null && !this.Teaches.Specific.All(eval)) return false;
                 }
+                if (!eval(this.Value)) return false;
+                if (!eval(this.Weight)) return false;
                 if (!eval(this.InventoryArt)) return false;
                 if (!eval(this.Description)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -555,13 +621,19 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (Data != null)
+                if (eval(this.Flags)) return true;
+                if (eval(this.Type)) return true;
+                if (eval(this.Unused)) return true;
+                if (Teaches != null)
                 {
-                    if (eval(this.Data.Overall)) return true;
-                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                    if (eval(this.Teaches.Overall)) return true;
+                    if (this.Teaches.Specific != null && this.Teaches.Specific.Any(eval)) return true;
                 }
+                if (eval(this.Value)) return true;
+                if (eval(this.Weight)) return true;
                 if (eval(this.InventoryArt)) return true;
                 if (eval(this.Description)) return true;
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -600,9 +672,15 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                obj.Data = this.Data == null ? null : new MaskItem<R, BookData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
+                obj.Flags = eval(this.Flags);
+                obj.Type = eval(this.Type);
+                obj.Unused = eval(this.Unused);
+                obj.Teaches = this.Teaches == null ? null : new MaskItem<R, BookTeachTarget.Mask<R>?>(eval(this.Teaches.Overall), this.Teaches.Specific?.Translate(eval));
+                obj.Value = eval(this.Value);
+                obj.Weight = eval(this.Weight);
                 obj.InventoryArt = eval(this.InventoryArt);
                 obj.Description = eval(this.Description);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -684,9 +762,29 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.Data?.Overall ?? true)
+                    if (printMask?.Flags ?? true)
                     {
-                        Data?.ToString(fg);
+                        fg.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.Type ?? true)
+                    {
+                        fg.AppendItem(Type, "Type");
+                    }
+                    if (printMask?.Unused ?? true)
+                    {
+                        fg.AppendItem(Unused, "Unused");
+                    }
+                    if (printMask?.Teaches?.Overall ?? true)
+                    {
+                        Teaches?.ToString(fg);
+                    }
+                    if (printMask?.Value ?? true)
+                    {
+                        fg.AppendItem(Value, "Value");
+                    }
+                    if (printMask?.Weight ?? true)
+                    {
+                        fg.AppendItem(Weight, "Weight");
                     }
                     if (printMask?.InventoryArt ?? true)
                     {
@@ -695,6 +793,10 @@ namespace Mutagen.Bethesda.Skyrim
                     if (printMask?.Description ?? true)
                     {
                         fg.AppendItem(Description, "Description");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -718,9 +820,15 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? PickUpSound;
             public Exception? PutDownSound;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
-            public MaskItem<Exception?, BookData.ErrorMask?>? Data;
+            public Exception? Flags;
+            public Exception? Type;
+            public Exception? Unused;
+            public MaskItem<Exception?, BookTeachTarget.ErrorMask?>? Teaches;
+            public Exception? Value;
+            public Exception? Weight;
             public Exception? InventoryArt;
             public Exception? Description;
+            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -749,12 +857,24 @@ namespace Mutagen.Bethesda.Skyrim
                         return PutDownSound;
                     case Book_FieldIndex.Keywords:
                         return Keywords;
-                    case Book_FieldIndex.Data:
-                        return Data;
+                    case Book_FieldIndex.Flags:
+                        return Flags;
+                    case Book_FieldIndex.Type:
+                        return Type;
+                    case Book_FieldIndex.Unused:
+                        return Unused;
+                    case Book_FieldIndex.Teaches:
+                        return Teaches;
+                    case Book_FieldIndex.Value:
+                        return Value;
+                    case Book_FieldIndex.Weight:
+                        return Weight;
                     case Book_FieldIndex.InventoryArt:
                         return InventoryArt;
                     case Book_FieldIndex.Description:
                         return Description;
+                    case Book_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -795,14 +915,32 @@ namespace Mutagen.Bethesda.Skyrim
                     case Book_FieldIndex.Keywords:
                         this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case Book_FieldIndex.Data:
-                        this.Data = new MaskItem<Exception?, BookData.ErrorMask?>(ex, null);
+                    case Book_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Book_FieldIndex.Type:
+                        this.Type = ex;
+                        break;
+                    case Book_FieldIndex.Unused:
+                        this.Unused = ex;
+                        break;
+                    case Book_FieldIndex.Teaches:
+                        this.Teaches = new MaskItem<Exception?, BookTeachTarget.ErrorMask?>(ex, null);
+                        break;
+                    case Book_FieldIndex.Value:
+                        this.Value = ex;
+                        break;
+                    case Book_FieldIndex.Weight:
+                        this.Weight = ex;
                         break;
                     case Book_FieldIndex.InventoryArt:
                         this.InventoryArt = ex;
                         break;
                     case Book_FieldIndex.Description:
                         this.Description = ex;
+                        break;
+                    case Book_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -845,14 +983,32 @@ namespace Mutagen.Bethesda.Skyrim
                     case Book_FieldIndex.Keywords:
                         this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case Book_FieldIndex.Data:
-                        this.Data = (MaskItem<Exception?, BookData.ErrorMask?>?)obj;
+                    case Book_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case Book_FieldIndex.Type:
+                        this.Type = (Exception?)obj;
+                        break;
+                    case Book_FieldIndex.Unused:
+                        this.Unused = (Exception?)obj;
+                        break;
+                    case Book_FieldIndex.Teaches:
+                        this.Teaches = (MaskItem<Exception?, BookTeachTarget.ErrorMask?>?)obj;
+                        break;
+                    case Book_FieldIndex.Value:
+                        this.Value = (Exception?)obj;
+                        break;
+                    case Book_FieldIndex.Weight:
+                        this.Weight = (Exception?)obj;
                         break;
                     case Book_FieldIndex.InventoryArt:
                         this.InventoryArt = (Exception?)obj;
                         break;
                     case Book_FieldIndex.Description:
                         this.Description = (Exception?)obj;
+                        break;
+                    case Book_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -873,9 +1029,15 @@ namespace Mutagen.Bethesda.Skyrim
                 if (PickUpSound != null) return true;
                 if (PutDownSound != null) return true;
                 if (Keywords != null) return true;
-                if (Data != null) return true;
+                if (Flags != null) return true;
+                if (Type != null) return true;
+                if (Unused != null) return true;
+                if (Teaches != null) return true;
+                if (Value != null) return true;
+                if (Weight != null) return true;
                 if (InventoryArt != null) return true;
                 if (Description != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -942,9 +1104,15 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                Data?.ToString(fg);
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(Type, "Type");
+                fg.AppendItem(Unused, "Unused");
+                Teaches?.ToString(fg);
+                fg.AppendItem(Value, "Value");
+                fg.AppendItem(Weight, "Weight");
                 fg.AppendItem(InventoryArt, "InventoryArt");
                 fg.AppendItem(Description, "Description");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -963,9 +1131,15 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
                 ret.PutDownSound = this.PutDownSound.Combine(rhs.PutDownSound);
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
-                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Type = this.Type.Combine(rhs.Type);
+                ret.Unused = this.Unused.Combine(rhs.Unused);
+                ret.Teaches = this.Teaches.Combine(rhs.Teaches, (l, r) => l.Combine(r));
+                ret.Value = this.Value.Combine(rhs.Value);
+                ret.Weight = this.Weight.Combine(rhs.Weight);
                 ret.InventoryArt = this.InventoryArt.Combine(rhs.InventoryArt);
                 ret.Description = this.Description.Combine(rhs.Description);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -998,9 +1172,15 @@ namespace Mutagen.Bethesda.Skyrim
             public bool PickUpSound;
             public bool PutDownSound;
             public bool Keywords;
-            public MaskItem<bool, BookData.TranslationMask?> Data;
+            public bool Flags;
+            public bool Type;
+            public bool Unused;
+            public MaskItem<bool, BookTeachTarget.TranslationMask?> Teaches;
+            public bool Value;
+            public bool Weight;
             public bool InventoryArt;
             public bool Description;
+            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -1017,9 +1197,15 @@ namespace Mutagen.Bethesda.Skyrim
                 this.PickUpSound = defaultOn;
                 this.PutDownSound = defaultOn;
                 this.Keywords = defaultOn;
-                this.Data = new MaskItem<bool, BookData.TranslationMask?>(defaultOn, null);
+                this.Flags = defaultOn;
+                this.Type = defaultOn;
+                this.Unused = defaultOn;
+                this.Teaches = new MaskItem<bool, BookTeachTarget.TranslationMask?>(defaultOn, null);
+                this.Value = defaultOn;
+                this.Weight = defaultOn;
                 this.InventoryArt = defaultOn;
                 this.Description = defaultOn;
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -1037,9 +1223,15 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((PickUpSound, null));
                 ret.Add((PutDownSound, null));
                 ret.Add((Keywords, null));
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((Flags, null));
+                ret.Add((Type, null));
+                ret.Add((Unused, null));
+                ret.Add((Teaches?.Overall ?? true, Teaches?.Specific?.GetCrystal()));
+                ret.Add((Value, null));
+                ret.Add((Weight, null));
                 ret.Add((InventoryArt, null));
                 ret.Add((Description, null));
+                ret.Add((DATADataTypeState, null));
             }
         }
         #endregion
@@ -1069,6 +1261,10 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        [Flags]
+        public enum DATADataType
+        {
+        }
         #endregion
 
         #region Binary Translation
@@ -1135,6 +1331,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeled,
         IObjectBounded,
         IObjectId,
+        IWeightValue,
         ILoquiObjectSetter<IBookInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -1147,9 +1344,15 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<SoundDescriptor> PickUpSound { get; set; }
         new FormLinkNullable<SoundDescriptor> PutDownSound { get; set; }
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
-        new BookData Data { get; set; }
+        new Book.Flag Flags { get; set; }
+        new Book.BookType Type { get; set; }
+        new UInt16 Unused { get; set; }
+        new BookTeachTarget? Teaches { get; set; }
+        new UInt32 Value { get; set; }
+        new Single Weight { get; set; }
         new FormLinkNullable<Static> InventoryArt { get; set; }
         new String? Description { get; set; }
+        new Book.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IBookInternal :
@@ -1167,6 +1370,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter,
         IObjectBoundedGetter,
         IObjectIdGetter,
+        IWeightValueGetter,
         ILoquiObject<IBookGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,
@@ -1183,9 +1387,15 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
-        IBookDataGetter Data { get; }
+        Book.Flag Flags { get; }
+        Book.BookType Type { get; }
+        UInt16 Unused { get; }
+        IBookTeachTargetGetter? Teaches { get; }
+        UInt32 Value { get; }
+        Single Weight { get; }
         IFormLinkNullableGetter<IStaticGetter> InventoryArt { get; }
         String? Description { get; }
+        Book.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -1496,9 +1706,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         PickUpSound = 13,
         PutDownSound = 14,
         Keywords = 15,
-        Data = 16,
-        InventoryArt = 17,
-        Description = 18,
+        Flags = 16,
+        Type = 17,
+        Unused = 18,
+        Teaches = 19,
+        Value = 20,
+        Weight = 21,
+        InventoryArt = 22,
+        Description = 23,
+        DATADataTypeState = 24,
     }
     #endregion
 
@@ -1516,9 +1732,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "75309913-652c-4e97-9cf4-6ccb493d3143";
 
-        public const ushort AdditionalFieldCount = 13;
+        public const ushort AdditionalFieldCount = 19;
 
-        public const ushort FieldCount = 19;
+        public const ushort FieldCount = 25;
 
         public static readonly Type MaskType = typeof(Book.Mask<>);
 
@@ -1568,12 +1784,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Book_FieldIndex.PutDownSound;
                 case "KEYWORDS":
                     return (ushort)Book_FieldIndex.Keywords;
-                case "DATA":
-                    return (ushort)Book_FieldIndex.Data;
+                case "FLAGS":
+                    return (ushort)Book_FieldIndex.Flags;
+                case "TYPE":
+                    return (ushort)Book_FieldIndex.Type;
+                case "UNUSED":
+                    return (ushort)Book_FieldIndex.Unused;
+                case "TEACHES":
+                    return (ushort)Book_FieldIndex.Teaches;
+                case "VALUE":
+                    return (ushort)Book_FieldIndex.Value;
+                case "WEIGHT":
+                    return (ushort)Book_FieldIndex.Weight;
                 case "INVENTORYART":
                     return (ushort)Book_FieldIndex.InventoryArt;
                 case "DESCRIPTION":
                     return (ushort)Book_FieldIndex.Description;
+                case "DATADATATYPESTATE":
+                    return (ushort)Book_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -1595,9 +1823,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Book_FieldIndex.Destructible:
                 case Book_FieldIndex.PickUpSound:
                 case Book_FieldIndex.PutDownSound:
-                case Book_FieldIndex.Data:
+                case Book_FieldIndex.Flags:
+                case Book_FieldIndex.Type:
+                case Book_FieldIndex.Unused:
+                case Book_FieldIndex.Teaches:
+                case Book_FieldIndex.Value:
+                case Book_FieldIndex.Weight:
                 case Book_FieldIndex.InventoryArt:
                 case Book_FieldIndex.Description:
+                case Book_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1614,15 +1848,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Book_FieldIndex.Model:
                 case Book_FieldIndex.Icons:
                 case Book_FieldIndex.Destructible:
-                case Book_FieldIndex.Data:
+                case Book_FieldIndex.Teaches:
                     return true;
                 case Book_FieldIndex.Name:
                 case Book_FieldIndex.BookText:
                 case Book_FieldIndex.PickUpSound:
                 case Book_FieldIndex.PutDownSound:
                 case Book_FieldIndex.Keywords:
+                case Book_FieldIndex.Flags:
+                case Book_FieldIndex.Type:
+                case Book_FieldIndex.Unused:
+                case Book_FieldIndex.Value:
+                case Book_FieldIndex.Weight:
                 case Book_FieldIndex.InventoryArt:
                 case Book_FieldIndex.Description:
+                case Book_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1644,9 +1884,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Book_FieldIndex.PickUpSound:
                 case Book_FieldIndex.PutDownSound:
                 case Book_FieldIndex.Keywords:
-                case Book_FieldIndex.Data:
+                case Book_FieldIndex.Flags:
+                case Book_FieldIndex.Type:
+                case Book_FieldIndex.Unused:
+                case Book_FieldIndex.Teaches:
+                case Book_FieldIndex.Value:
+                case Book_FieldIndex.Weight:
                 case Book_FieldIndex.InventoryArt:
                 case Book_FieldIndex.Description:
+                case Book_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1678,12 +1924,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "PutDownSound";
                 case Book_FieldIndex.Keywords:
                     return "Keywords";
-                case Book_FieldIndex.Data:
-                    return "Data";
+                case Book_FieldIndex.Flags:
+                    return "Flags";
+                case Book_FieldIndex.Type:
+                    return "Type";
+                case Book_FieldIndex.Unused:
+                    return "Unused";
+                case Book_FieldIndex.Teaches:
+                    return "Teaches";
+                case Book_FieldIndex.Value:
+                    return "Value";
+                case Book_FieldIndex.Weight:
+                    return "Weight";
                 case Book_FieldIndex.InventoryArt:
                     return "InventoryArt";
                 case Book_FieldIndex.Description:
                     return "Description";
+                case Book_FieldIndex.DATADataTypeState:
+                    return "DATADataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -1704,9 +1962,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Book_FieldIndex.PickUpSound:
                 case Book_FieldIndex.PutDownSound:
                 case Book_FieldIndex.Keywords:
-                case Book_FieldIndex.Data:
+                case Book_FieldIndex.Flags:
+                case Book_FieldIndex.Type:
+                case Book_FieldIndex.Unused:
+                case Book_FieldIndex.Teaches:
+                case Book_FieldIndex.Value:
+                case Book_FieldIndex.Weight:
                 case Book_FieldIndex.InventoryArt:
                 case Book_FieldIndex.Description:
+                case Book_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
@@ -1728,9 +1992,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Book_FieldIndex.PickUpSound:
                 case Book_FieldIndex.PutDownSound:
                 case Book_FieldIndex.Keywords:
-                case Book_FieldIndex.Data:
+                case Book_FieldIndex.Flags:
+                case Book_FieldIndex.Type:
+                case Book_FieldIndex.Unused:
+                case Book_FieldIndex.Teaches:
+                case Book_FieldIndex.Value:
+                case Book_FieldIndex.Weight:
                 case Book_FieldIndex.InventoryArt:
                 case Book_FieldIndex.Description:
+                case Book_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
@@ -1762,12 +2032,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(FormLinkNullable<SoundDescriptor>);
                 case Book_FieldIndex.Keywords:
                     return typeof(ExtendedList<IFormLink<Keyword>>);
-                case Book_FieldIndex.Data:
-                    return typeof(BookData);
+                case Book_FieldIndex.Flags:
+                    return typeof(Book.Flag);
+                case Book_FieldIndex.Type:
+                    return typeof(Book.BookType);
+                case Book_FieldIndex.Unused:
+                    return typeof(UInt16);
+                case Book_FieldIndex.Teaches:
+                    return typeof(BookTeachTarget);
+                case Book_FieldIndex.Value:
+                    return typeof(UInt32);
+                case Book_FieldIndex.Weight:
+                    return typeof(Single);
                 case Book_FieldIndex.InventoryArt:
                     return typeof(FormLinkNullable<Static>);
                 case Book_FieldIndex.Description:
                     return typeof(String);
+                case Book_FieldIndex.DATADataTypeState:
+                    return typeof(Book.DATADataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1793,7 +2075,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
         public static readonly RecordType TriggeringRecordType = BOOK_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 13;
+        public const int NumTypedFields = 12;
         public static readonly Type BinaryWriteTranslation = typeof(BookBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1846,9 +2128,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.PickUpSound = null;
             item.PutDownSound = null;
             item.Keywords = null;
-            item.Data.Clear();
+            item.Flags = default;
+            item.Type = default;
+            item.Unused = default;
+            item.Teaches = null;
+            item.Value = default;
+            item.Weight = default;
             item.InventoryArt = null;
             item.Description = default;
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -2043,8 +2331,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    item.Data = Mutagen.Bethesda.Skyrim.BookData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Data);
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    BookBinaryCreateTranslation.FillBinaryFlagsCustomPublic(
+                        frame: dataFrame,
+                        item: item);
+                    item.Type = EnumBinaryTranslation<Book.BookType>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
+                    item.Unused = dataFrame.ReadUInt16();
+                    BookBinaryCreateTranslation.FillBinaryTeachesCustomPublic(
+                        frame: dataFrame,
+                        item: item);
+                    item.Value = dataFrame.ReadUInt32();
+                    item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Weight);
                 }
                 case 0x4D414E49: // INAM
                 {
@@ -2165,9 +2464,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.Data = MaskItemExt.Factory(item.Data.GetEqualsMask(rhs.Data, include), include);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Type = item.Type == rhs.Type;
+            ret.Unused = item.Unused == rhs.Unused;
+            ret.Teaches = EqualsMaskHelper.EqualsHelper(
+                item.Teaches,
+                rhs.Teaches,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Value = item.Value == rhs.Value;
+            ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.InventoryArt = object.Equals(item.InventoryArt, rhs.InventoryArt);
             ret.Description = string.Equals(item.Description, rhs.Description);
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2281,9 +2590,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.Data?.Overall ?? true)
+            if (printMask?.Flags ?? true)
             {
-                item.Data?.ToString(fg, "Data");
+                fg.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.Type ?? true)
+            {
+                fg.AppendItem(item.Type, "Type");
+            }
+            if (printMask?.Unused ?? true)
+            {
+                fg.AppendItem(item.Unused, "Unused");
+            }
+            if ((printMask?.Teaches?.Overall ?? true)
+                && item.Teaches.TryGet(out var TeachesItem))
+            {
+                TeachesItem?.ToString(fg, "Teaches");
+            }
+            if (printMask?.Value ?? true)
+            {
+                fg.AppendItem(item.Value, "Value");
+            }
+            if (printMask?.Weight ?? true)
+            {
+                fg.AppendItem(item.Weight, "Weight");
             }
             if ((printMask?.InventoryArt ?? true)
                 && item.InventoryArt.TryGet(out var InventoryArtItem))
@@ -2294,6 +2624,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 && item.Description.TryGet(out var DescriptionItem))
             {
                 fg.AppendItem(DescriptionItem, "Description");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -2313,6 +2647,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.PickUpSound.HasValue && checkMask.PickUpSound.Value != (item.PickUpSound.FormKey != null)) return false;
             if (checkMask.PutDownSound.HasValue && checkMask.PutDownSound.Value != (item.PutDownSound.FormKey != null)) return false;
             if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
+            if (checkMask.Teaches?.Overall.HasValue ?? false && checkMask.Teaches.Overall.Value != (item.Teaches != null)) return false;
+            if (checkMask.Teaches?.Specific != null && (item.Teaches == null || !item.Teaches.HasBeenSet(checkMask.Teaches.Specific))) return false;
             if (checkMask.InventoryArt.HasValue && checkMask.InventoryArt.Value != (item.InventoryArt.FormKey != null)) return false;
             if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
             return base.HasBeenSet(
@@ -2338,9 +2674,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.PickUpSound = (item.PickUpSound.FormKey != null);
             mask.PutDownSound = (item.PutDownSound.FormKey != null);
             mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
-            mask.Data = new MaskItem<bool, BookData.Mask<bool>?>(true, item.Data?.GetHasBeenSetMask());
+            mask.Flags = true;
+            mask.Type = true;
+            mask.Unused = true;
+            var itemTeaches = item.Teaches;
+            mask.Teaches = new MaskItem<bool, BookTeachTarget.Mask<bool>?>(itemTeaches != null, itemTeaches?.GetHasBeenSetMask());
+            mask.Value = true;
+            mask.Weight = true;
             mask.InventoryArt = (item.InventoryArt.FormKey != null);
             mask.Description = (item.Description != null);
+            mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -2402,9 +2745,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
             if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
             if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.Type != rhs.Type) return false;
+            if (lhs.Unused != rhs.Unused) return false;
+            if (!object.Equals(lhs.Teaches, rhs.Teaches)) return false;
+            if (lhs.Value != rhs.Value) return false;
+            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             if (!lhs.InventoryArt.Equals(rhs.InventoryArt)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
         
@@ -2460,7 +2809,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 hash.Add(PutDownSounditem);
             }
             hash.Add(item.Keywords);
-            hash.Add(item.Data);
+            hash.Add(item.Flags);
+            hash.Add(item.Type);
+            hash.Add(item.Unused);
+            if (item.Teaches.TryGet(out var Teachesitem))
+            {
+                hash.Add(Teachesitem);
+            }
+            hash.Add(item.Value);
+            hash.Add(item.Weight);
             if (item.InventoryArt.TryGet(out var InventoryArtitem))
             {
                 hash.Add(InventoryArtitem);
@@ -2469,6 +2826,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Descriptionitem);
             }
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2534,9 +2892,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Data is ILinkedFormKeyContainer DatalinkCont)
+            if (obj.Teaches is ILinkedFormKeyContainer TeacheslinkCont)
             {
-                foreach (var item in DatalinkCont.LinkFormKeys)
+                foreach (var item in TeacheslinkCont.LinkFormKeys)
                 {
                     yield return item;
                 }
@@ -2761,16 +3119,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Data) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Flags) ?? true))
             {
-                errorMask?.PushIndex((int)Book_FieldIndex.Data);
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Type) ?? true))
+            {
+                item.Type = rhs.Type;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Unused) ?? true))
+            {
+                item.Unused = rhs.Unused;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Teaches) ?? true))
+            {
+                errorMask?.PushIndex((int)Book_FieldIndex.Teaches);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Data) ?? true))
+                    if(rhs.Teaches.TryGet(out var rhsTeaches))
                     {
-                        item.Data = rhs.Data.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)Book_FieldIndex.Data),
-                            errorMask: errorMask);
+                        item.Teaches = rhsTeaches.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Book_FieldIndex.Teaches));
+                    }
+                    else
+                    {
+                        item.Teaches = default;
                     }
                 }
                 catch (Exception ex)
@@ -2783,6 +3157,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Value) ?? true))
+            {
+                item.Value = rhs.Value;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Weight) ?? true))
+            {
+                item.Weight = rhs.Weight;
+            }
             if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.InventoryArt) ?? true))
             {
                 item.InventoryArt = rhs.InventoryArt.FormKey;
@@ -2790,6 +3172,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Description) ?? true))
             {
                 item.Description = rhs.Description;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
             }
         }
         
@@ -3058,16 +3444,64 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: listSubMask);
                     });
             }
-            if ((translationMask?.GetShouldTranslate((int)Book_FieldIndex.Data) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Book_FieldIndex.Flags) ?? true))
             {
-                var DataItem = item.Data;
-                ((BookDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
-                    item: DataItem,
+                EnumXmlTranslation<Book.Flag>.Instance.Write(
                     node: node,
-                    name: nameof(item.Data),
-                    fieldIndex: (int)Book_FieldIndex.Data,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Book_FieldIndex.Data));
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)Book_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Book_FieldIndex.Type) ?? true))
+            {
+                EnumXmlTranslation<Book.BookType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Type),
+                    item: item.Type,
+                    fieldIndex: (int)Book_FieldIndex.Type,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Book_FieldIndex.Unused) ?? true))
+            {
+                UInt16XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unused),
+                    item: item.Unused,
+                    fieldIndex: (int)Book_FieldIndex.Unused,
+                    errorMask: errorMask);
+            }
+            if ((item.Teaches != null)
+                && (translationMask?.GetShouldTranslate((int)Book_FieldIndex.Teaches) ?? true))
+            {
+                if (item.Teaches.TryGet(out var TeachesItem))
+                {
+                    ((BookTeachTargetXmlWriteTranslation)((IXmlItem)TeachesItem).XmlWriteTranslator).Write(
+                        item: TeachesItem,
+                        node: node,
+                        name: nameof(item.Teaches),
+                        fieldIndex: (int)Book_FieldIndex.Teaches,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Book_FieldIndex.Teaches));
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)Book_FieldIndex.Value) ?? true))
+            {
+                UInt32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Value),
+                    item: item.Value,
+                    fieldIndex: (int)Book_FieldIndex.Value,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Book_FieldIndex.Weight) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Weight),
+                    item: item.Weight,
+                    fieldIndex: (int)Book_FieldIndex.Weight,
+                    errorMask: errorMask);
             }
             if ((item.InventoryArt.FormKey != null)
                 && (translationMask?.GetShouldTranslate((int)Book_FieldIndex.InventoryArt) ?? true))
@@ -3087,6 +3521,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     name: nameof(item.Description),
                     item: item.Description,
                     fieldIndex: (int)Book_FieldIndex.Description,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Book_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<Book.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)Book_FieldIndex.DATADataTypeState,
                     errorMask: errorMask);
             }
         }
@@ -3391,14 +3834,104 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Data":
-                    errorMask?.PushIndex((int)Book_FieldIndex.Data);
+                case "Flags":
+                    errorMask?.PushIndex((int)Book_FieldIndex.Flags);
                     try
                     {
-                        item.Data = LoquiXmlTranslation<BookData>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<Book.Flag>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Type":
+                    errorMask?.PushIndex((int)Book_FieldIndex.Type);
+                    try
+                    {
+                        item.Type = EnumXmlTranslation<Book.BookType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unused":
+                    errorMask?.PushIndex((int)Book_FieldIndex.Unused);
+                    try
+                    {
+                        item.Unused = UInt16XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Teaches":
+                    errorMask?.PushIndex((int)Book_FieldIndex.Teaches);
+                    try
+                    {
+                        item.Teaches = LoquiXmlTranslation<BookTeachTarget>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Book_FieldIndex.Data));
+                            translationMask: translationMask?.GetSubCrystal((int)Book_FieldIndex.Teaches));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Value":
+                    errorMask?.PushIndex((int)Book_FieldIndex.Value);
+                    try
+                    {
+                        item.Value = UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Weight":
+                    errorMask?.PushIndex((int)Book_FieldIndex.Weight);
+                    try
+                    {
+                        item.Weight = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -3433,6 +3966,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         item.Description = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DATADataTypeState":
+                    errorMask?.PushIndex((int)Book_FieldIndex.DATADataTypeState);
+                    try
+                    {
+                        item.DATADataTypeState = EnumXmlTranslation<Book.DATADataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -3532,6 +4083,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static BookBinaryWriteTranslation Instance = new BookBinaryWriteTranslation();
 
+        static partial void WriteBinaryFlagsCustom(
+            MutagenWriter writer,
+            IBookGetter item);
+
+        public static void WriteBinaryFlags(
+            MutagenWriter writer,
+            IBookGetter item)
+        {
+            WriteBinaryFlagsCustom(
+                writer: writer,
+                item: item);
+        }
+
+        static partial void WriteBinaryTeachesCustom(
+            MutagenWriter writer,
+            IBookGetter item);
+
+        public static void WriteBinaryTeaches(
+            MutagenWriter writer,
+            IBookGetter item)
+        {
+            WriteBinaryTeachesCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static void WriteEmbedded(
+            IBookGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
         public static void WriteRecordTypes(
             IBookGetter item,
             MutagenWriter writer,
@@ -3604,11 +4190,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         item: subItem);
                 });
-            var DataItem = item.Data;
-            ((BookDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
-                item: DataItem,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
+            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Book_Registration.DATA_HEADER)))
+            {
+                BookBinaryWriteTranslation.WriteBinaryFlags(
+                    writer: writer,
+                    item: item);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Book.BookType>.Instance.Write(
+                    writer,
+                    item.Type,
+                    length: 1);
+                writer.Write(item.Unused);
+                BookBinaryWriteTranslation.WriteBinaryTeaches(
+                    writer: writer,
+                    item: item);
+                writer.Write(item.Value);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Weight);
+            }
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.InventoryArt,
@@ -3630,7 +4229,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(Book_Registration.BOOK_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -3678,6 +4277,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public partial class BookBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
         public new readonly static BookBinaryCreateTranslation Instance = new BookBinaryCreateTranslation();
+
+        static partial void FillBinaryFlagsCustom(
+            MutagenFrame frame,
+            IBookInternal item);
+
+        public static void FillBinaryFlagsCustomPublic(
+            MutagenFrame frame,
+            IBookInternal item)
+        {
+            FillBinaryFlagsCustom(
+                frame: frame,
+                item: item);
+        }
+
+        static partial void FillBinaryTeachesCustom(
+            MutagenFrame frame,
+            IBookInternal item);
+
+        public static void FillBinaryTeachesCustomPublic(
+            MutagenFrame frame,
+            IBookInternal item)
+        {
+            FillBinaryTeachesCustom(
+                frame: frame,
+                item: item);
+        }
 
     }
 
@@ -3778,10 +4403,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PutDownSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
-        #region Data
-        private RangeInt32? _DataLocation;
-        private IBookDataGetter? _Data => _DataLocation.HasValue ? BookDataBinaryOverlay.BookDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
-        public IBookDataGetter Data => _Data ?? new BookData();
+        private int? _DATALocation;
+        public Book.DATADataType DATADataTypeState { get; private set; }
+        #region Flags
+        private int _FlagsLocation => _DATALocation!.Value + 0x0;
+        public Book.Flag Flags => GetFlagsCustom();
+        #endregion
+        #region Type
+        private int _TypeLocation => _DATALocation!.Value + 0x1;
+        private bool _Type_IsSet => _DATALocation.HasValue;
+        public Book.BookType Type => _Type_IsSet ? (Book.BookType)_data.Span.Slice(_TypeLocation, 0x1)[0] : default;
+        #endregion
+        #region Unused
+        private int _UnusedLocation => _DATALocation!.Value + 0x2;
+        private bool _Unused_IsSet => _DATALocation.HasValue;
+        public UInt16 Unused => _Unused_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_UnusedLocation, 2)) : default;
+        #endregion
+        #region Teaches
+        private int _TeachesLocation => _DATALocation!.Value + 0x4;
+        public IBookTeachTargetGetter? Teaches => GetTeachesCustom();
+        #endregion
+        #region Value
+        private int _ValueLocation => _DATALocation!.Value + 0x8;
+        private bool _Value_IsSet => _DATALocation.HasValue;
+        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ValueLocation, 4)) : default;
+        #endregion
+        #region Weight
+        private int _WeightLocation => _DATALocation!.Value + 0xC;
+        private bool _Weight_IsSet => _DATALocation.HasValue;
+        public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Slice(_WeightLocation, 4)) : default;
         #endregion
         #region InventoryArt
         private int? _InventoryArtLocation;
@@ -3925,8 +4575,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Data);
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Weight);
                 }
                 case 0x4D414E49: // INAM
                 {

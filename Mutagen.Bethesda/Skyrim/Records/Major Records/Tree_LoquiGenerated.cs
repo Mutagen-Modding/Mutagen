@@ -107,16 +107,31 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ITreeGetter.Name => this.Name;
         #endregion
-        #region Data
+        #region TrunkFlexibility
+        public Single TrunkFlexibility { get; set; } = default;
+        #endregion
+        #region BranchFlexibility
+        public Single BranchFlexibility { get; set; } = default;
+        #endregion
+        #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private TreeData? _Data;
-        public TreeData? Data
+        private Byte[] _Unknown = new byte[32];
+        public Byte[] Unknown
         {
-            get => _Data;
-            set => _Data = value;
+            get => _Unknown;
+            set => this._Unknown = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITreeDataGetter? ITreeGetter.Data => this.Data;
+        ReadOnlyMemorySlice<Byte> ITreeGetter.Unknown => this.Unknown;
+        #endregion
+        #region LeafAmplitude
+        public Single LeafAmplitude { get; set; } = default;
+        #endregion
+        #region LeafFrequency
+        public Single LeafFrequency { get; set; } = default;
+        #endregion
+        #region CNAMDataTypeState
+        public Tree.CNAMDataType CNAMDataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -295,7 +310,12 @@ namespace Mutagen.Bethesda.Skyrim
                 this.HarvestSound = initialValue;
                 this.Production = new MaskItem<TItem, SeasonalIngredientProduction.Mask<TItem>?>(initialValue, new SeasonalIngredientProduction.Mask<TItem>(initialValue));
                 this.Name = initialValue;
-                this.Data = new MaskItem<TItem, TreeData.Mask<TItem>?>(initialValue, new TreeData.Mask<TItem>(initialValue));
+                this.TrunkFlexibility = initialValue;
+                this.BranchFlexibility = initialValue;
+                this.Unknown = initialValue;
+                this.LeafAmplitude = initialValue;
+                this.LeafFrequency = initialValue;
+                this.CNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -312,7 +332,12 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem HarvestSound,
                 TItem Production,
                 TItem Name,
-                TItem Data)
+                TItem TrunkFlexibility,
+                TItem BranchFlexibility,
+                TItem Unknown,
+                TItem LeafAmplitude,
+                TItem LeafFrequency,
+                TItem CNAMDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -328,7 +353,12 @@ namespace Mutagen.Bethesda.Skyrim
                 this.HarvestSound = HarvestSound;
                 this.Production = new MaskItem<TItem, SeasonalIngredientProduction.Mask<TItem>?>(Production, new SeasonalIngredientProduction.Mask<TItem>(Production));
                 this.Name = Name;
-                this.Data = new MaskItem<TItem, TreeData.Mask<TItem>?>(Data, new TreeData.Mask<TItem>(Data));
+                this.TrunkFlexibility = TrunkFlexibility;
+                this.BranchFlexibility = BranchFlexibility;
+                this.Unknown = Unknown;
+                this.LeafAmplitude = LeafAmplitude;
+                this.LeafFrequency = LeafFrequency;
+                this.CNAMDataTypeState = CNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -347,7 +377,12 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem HarvestSound;
             public MaskItem<TItem, SeasonalIngredientProduction.Mask<TItem>?>? Production { get; set; }
             public TItem Name;
-            public MaskItem<TItem, TreeData.Mask<TItem>?>? Data { get; set; }
+            public TItem TrunkFlexibility;
+            public TItem BranchFlexibility;
+            public TItem Unknown;
+            public TItem LeafAmplitude;
+            public TItem LeafFrequency;
+            public TItem CNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -368,7 +403,12 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.HarvestSound, rhs.HarvestSound)) return false;
                 if (!object.Equals(this.Production, rhs.Production)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
-                if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.TrunkFlexibility, rhs.TrunkFlexibility)) return false;
+                if (!object.Equals(this.BranchFlexibility, rhs.BranchFlexibility)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.LeafAmplitude, rhs.LeafAmplitude)) return false;
+                if (!object.Equals(this.LeafFrequency, rhs.LeafFrequency)) return false;
+                if (!object.Equals(this.CNAMDataTypeState, rhs.CNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -381,7 +421,12 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.HarvestSound);
                 hash.Add(this.Production);
                 hash.Add(this.Name);
-                hash.Add(this.Data);
+                hash.Add(this.TrunkFlexibility);
+                hash.Add(this.BranchFlexibility);
+                hash.Add(this.Unknown);
+                hash.Add(this.LeafAmplitude);
+                hash.Add(this.LeafFrequency);
+                hash.Add(this.CNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -415,11 +460,12 @@ namespace Mutagen.Bethesda.Skyrim
                     if (this.Production.Specific != null && !this.Production.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Name)) return false;
-                if (Data != null)
-                {
-                    if (!eval(this.Data.Overall)) return false;
-                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
-                }
+                if (!eval(this.TrunkFlexibility)) return false;
+                if (!eval(this.BranchFlexibility)) return false;
+                if (!eval(this.Unknown)) return false;
+                if (!eval(this.LeafAmplitude)) return false;
+                if (!eval(this.LeafFrequency)) return false;
+                if (!eval(this.CNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -451,11 +497,12 @@ namespace Mutagen.Bethesda.Skyrim
                     if (this.Production.Specific != null && this.Production.Specific.Any(eval)) return true;
                 }
                 if (eval(this.Name)) return true;
-                if (Data != null)
-                {
-                    if (eval(this.Data.Overall)) return true;
-                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
-                }
+                if (eval(this.TrunkFlexibility)) return true;
+                if (eval(this.BranchFlexibility)) return true;
+                if (eval(this.Unknown)) return true;
+                if (eval(this.LeafAmplitude)) return true;
+                if (eval(this.LeafFrequency)) return true;
+                if (eval(this.CNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -478,7 +525,12 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.HarvestSound = eval(this.HarvestSound);
                 obj.Production = this.Production == null ? null : new MaskItem<R, SeasonalIngredientProduction.Mask<R>?>(eval(this.Production.Overall), this.Production.Specific?.Translate(eval));
                 obj.Name = eval(this.Name);
-                obj.Data = this.Data == null ? null : new MaskItem<R, TreeData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
+                obj.TrunkFlexibility = eval(this.TrunkFlexibility);
+                obj.BranchFlexibility = eval(this.BranchFlexibility);
+                obj.Unknown = eval(this.Unknown);
+                obj.LeafAmplitude = eval(this.LeafAmplitude);
+                obj.LeafFrequency = eval(this.LeafFrequency);
+                obj.CNAMDataTypeState = eval(this.CNAMDataTypeState);
             }
             #endregion
 
@@ -529,9 +581,29 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(Name, "Name");
                     }
-                    if (printMask?.Data?.Overall ?? true)
+                    if (printMask?.TrunkFlexibility ?? true)
                     {
-                        Data?.ToString(fg);
+                        fg.AppendItem(TrunkFlexibility, "TrunkFlexibility");
+                    }
+                    if (printMask?.BranchFlexibility ?? true)
+                    {
+                        fg.AppendItem(BranchFlexibility, "BranchFlexibility");
+                    }
+                    if (printMask?.Unknown ?? true)
+                    {
+                        fg.AppendItem(Unknown, "Unknown");
+                    }
+                    if (printMask?.LeafAmplitude ?? true)
+                    {
+                        fg.AppendItem(LeafAmplitude, "LeafAmplitude");
+                    }
+                    if (printMask?.LeafFrequency ?? true)
+                    {
+                        fg.AppendItem(LeafFrequency, "LeafFrequency");
+                    }
+                    if (printMask?.CNAMDataTypeState ?? true)
+                    {
+                        fg.AppendItem(CNAMDataTypeState, "CNAMDataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -552,7 +624,12 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? HarvestSound;
             public MaskItem<Exception?, SeasonalIngredientProduction.ErrorMask?>? Production;
             public Exception? Name;
-            public MaskItem<Exception?, TreeData.ErrorMask?>? Data;
+            public Exception? TrunkFlexibility;
+            public Exception? BranchFlexibility;
+            public Exception? Unknown;
+            public Exception? LeafAmplitude;
+            public Exception? LeafFrequency;
+            public Exception? CNAMDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -575,8 +652,18 @@ namespace Mutagen.Bethesda.Skyrim
                         return Production;
                     case Tree_FieldIndex.Name:
                         return Name;
-                    case Tree_FieldIndex.Data:
-                        return Data;
+                    case Tree_FieldIndex.TrunkFlexibility:
+                        return TrunkFlexibility;
+                    case Tree_FieldIndex.BranchFlexibility:
+                        return BranchFlexibility;
+                    case Tree_FieldIndex.Unknown:
+                        return Unknown;
+                    case Tree_FieldIndex.LeafAmplitude:
+                        return LeafAmplitude;
+                    case Tree_FieldIndex.LeafFrequency:
+                        return LeafFrequency;
+                    case Tree_FieldIndex.CNAMDataTypeState:
+                        return CNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -608,8 +695,23 @@ namespace Mutagen.Bethesda.Skyrim
                     case Tree_FieldIndex.Name:
                         this.Name = ex;
                         break;
-                    case Tree_FieldIndex.Data:
-                        this.Data = new MaskItem<Exception?, TreeData.ErrorMask?>(ex, null);
+                    case Tree_FieldIndex.TrunkFlexibility:
+                        this.TrunkFlexibility = ex;
+                        break;
+                    case Tree_FieldIndex.BranchFlexibility:
+                        this.BranchFlexibility = ex;
+                        break;
+                    case Tree_FieldIndex.Unknown:
+                        this.Unknown = ex;
+                        break;
+                    case Tree_FieldIndex.LeafAmplitude:
+                        this.LeafAmplitude = ex;
+                        break;
+                    case Tree_FieldIndex.LeafFrequency:
+                        this.LeafFrequency = ex;
+                        break;
+                    case Tree_FieldIndex.CNAMDataTypeState:
+                        this.CNAMDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -643,8 +745,23 @@ namespace Mutagen.Bethesda.Skyrim
                     case Tree_FieldIndex.Name:
                         this.Name = (Exception?)obj;
                         break;
-                    case Tree_FieldIndex.Data:
-                        this.Data = (MaskItem<Exception?, TreeData.ErrorMask?>?)obj;
+                    case Tree_FieldIndex.TrunkFlexibility:
+                        this.TrunkFlexibility = (Exception?)obj;
+                        break;
+                    case Tree_FieldIndex.BranchFlexibility:
+                        this.BranchFlexibility = (Exception?)obj;
+                        break;
+                    case Tree_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
+                        break;
+                    case Tree_FieldIndex.LeafAmplitude:
+                        this.LeafAmplitude = (Exception?)obj;
+                        break;
+                    case Tree_FieldIndex.LeafFrequency:
+                        this.LeafFrequency = (Exception?)obj;
+                        break;
+                    case Tree_FieldIndex.CNAMDataTypeState:
+                        this.CNAMDataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -662,7 +779,12 @@ namespace Mutagen.Bethesda.Skyrim
                 if (HarvestSound != null) return true;
                 if (Production != null) return true;
                 if (Name != null) return true;
-                if (Data != null) return true;
+                if (TrunkFlexibility != null) return true;
+                if (BranchFlexibility != null) return true;
+                if (Unknown != null) return true;
+                if (LeafAmplitude != null) return true;
+                if (LeafFrequency != null) return true;
+                if (CNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -705,7 +827,12 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(HarvestSound, "HarvestSound");
                 Production?.ToString(fg);
                 fg.AppendItem(Name, "Name");
-                Data?.ToString(fg);
+                fg.AppendItem(TrunkFlexibility, "TrunkFlexibility");
+                fg.AppendItem(BranchFlexibility, "BranchFlexibility");
+                fg.AppendItem(Unknown, "Unknown");
+                fg.AppendItem(LeafAmplitude, "LeafAmplitude");
+                fg.AppendItem(LeafFrequency, "LeafFrequency");
+                fg.AppendItem(CNAMDataTypeState, "CNAMDataTypeState");
             }
             #endregion
 
@@ -721,7 +848,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.HarvestSound = this.HarvestSound.Combine(rhs.HarvestSound);
                 ret.Production = this.Production.Combine(rhs.Production, (l, r) => l.Combine(r));
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
+                ret.TrunkFlexibility = this.TrunkFlexibility.Combine(rhs.TrunkFlexibility);
+                ret.BranchFlexibility = this.BranchFlexibility.Combine(rhs.BranchFlexibility);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.LeafAmplitude = this.LeafAmplitude.Combine(rhs.LeafAmplitude);
+                ret.LeafFrequency = this.LeafFrequency.Combine(rhs.LeafFrequency);
+                ret.CNAMDataTypeState = this.CNAMDataTypeState.Combine(rhs.CNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -751,7 +883,12 @@ namespace Mutagen.Bethesda.Skyrim
             public bool HarvestSound;
             public MaskItem<bool, SeasonalIngredientProduction.TranslationMask?> Production;
             public bool Name;
-            public MaskItem<bool, TreeData.TranslationMask?> Data;
+            public bool TrunkFlexibility;
+            public bool BranchFlexibility;
+            public bool Unknown;
+            public bool LeafAmplitude;
+            public bool LeafFrequency;
+            public bool CNAMDataTypeState;
             #endregion
 
             #region Ctors
@@ -765,7 +902,12 @@ namespace Mutagen.Bethesda.Skyrim
                 this.HarvestSound = defaultOn;
                 this.Production = new MaskItem<bool, SeasonalIngredientProduction.TranslationMask?>(defaultOn, null);
                 this.Name = defaultOn;
-                this.Data = new MaskItem<bool, TreeData.TranslationMask?>(defaultOn, null);
+                this.TrunkFlexibility = defaultOn;
+                this.BranchFlexibility = defaultOn;
+                this.Unknown = defaultOn;
+                this.LeafAmplitude = defaultOn;
+                this.LeafFrequency = defaultOn;
+                this.CNAMDataTypeState = defaultOn;
             }
 
             #endregion
@@ -780,7 +922,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((HarvestSound, null));
                 ret.Add((Production?.Overall ?? true, Production?.Specific?.GetCrystal()));
                 ret.Add((Name, null));
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((TrunkFlexibility, null));
+                ret.Add((BranchFlexibility, null));
+                ret.Add((Unknown, null));
+                ret.Add((LeafAmplitude, null));
+                ret.Add((LeafFrequency, null));
+                ret.Add((CNAMDataTypeState, null));
             }
         }
         #endregion
@@ -814,6 +961,10 @@ namespace Mutagen.Bethesda.Skyrim
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
+        }
+        [Flags]
+        public enum CNAMDataType
+        {
         }
         #endregion
 
@@ -888,7 +1039,12 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<SoundDescriptor> HarvestSound { get; set; }
         new SeasonalIngredientProduction? Production { get; set; }
         new String? Name { get; set; }
-        new TreeData? Data { get; set; }
+        new Single TrunkFlexibility { get; set; }
+        new Single BranchFlexibility { get; set; }
+        new Byte[] Unknown { get; set; }
+        new Single LeafAmplitude { get; set; }
+        new Single LeafFrequency { get; set; }
+        new Tree.CNAMDataType CNAMDataTypeState { get; set; }
         #region Mutagen
         new Tree.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -921,7 +1077,12 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ISoundDescriptorGetter> HarvestSound { get; }
         ISeasonalIngredientProductionGetter? Production { get; }
         String? Name { get; }
-        ITreeDataGetter? Data { get; }
+        Single TrunkFlexibility { get; }
+        Single BranchFlexibility { get; }
+        ReadOnlyMemorySlice<Byte> Unknown { get; }
+        Single LeafAmplitude { get; }
+        Single LeafFrequency { get; }
+        Tree.CNAMDataType CNAMDataTypeState { get; }
 
         #region Mutagen
         Tree.MajorFlag MajorFlags { get; }
@@ -1233,7 +1394,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         HarvestSound = 10,
         Production = 11,
         Name = 12,
-        Data = 13,
+        TrunkFlexibility = 13,
+        BranchFlexibility = 14,
+        Unknown = 15,
+        LeafAmplitude = 16,
+        LeafFrequency = 17,
+        CNAMDataTypeState = 18,
     }
     #endregion
 
@@ -1251,9 +1417,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "5353e43a-3c33-49d9-b5a7-fc971ba96d88";
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(Tree.Mask<>);
 
@@ -1297,8 +1463,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Tree_FieldIndex.Production;
                 case "NAME":
                     return (ushort)Tree_FieldIndex.Name;
-                case "DATA":
-                    return (ushort)Tree_FieldIndex.Data;
+                case "TRUNKFLEXIBILITY":
+                    return (ushort)Tree_FieldIndex.TrunkFlexibility;
+                case "BRANCHFLEXIBILITY":
+                    return (ushort)Tree_FieldIndex.BranchFlexibility;
+                case "UNKNOWN":
+                    return (ushort)Tree_FieldIndex.Unknown;
+                case "LEAFAMPLITUDE":
+                    return (ushort)Tree_FieldIndex.LeafAmplitude;
+                case "LEAFFREQUENCY":
+                    return (ushort)Tree_FieldIndex.LeafFrequency;
+                case "CNAMDATATYPESTATE":
+                    return (ushort)Tree_FieldIndex.CNAMDataTypeState;
                 default:
                     return null;
             }
@@ -1316,7 +1492,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Tree_FieldIndex.HarvestSound:
                 case Tree_FieldIndex.Production:
                 case Tree_FieldIndex.Name:
-                case Tree_FieldIndex.Data:
+                case Tree_FieldIndex.TrunkFlexibility:
+                case Tree_FieldIndex.BranchFlexibility:
+                case Tree_FieldIndex.Unknown:
+                case Tree_FieldIndex.LeafAmplitude:
+                case Tree_FieldIndex.LeafFrequency:
+                case Tree_FieldIndex.CNAMDataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1332,11 +1513,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Tree_FieldIndex.ObjectBounds:
                 case Tree_FieldIndex.Model:
                 case Tree_FieldIndex.Production:
-                case Tree_FieldIndex.Data:
                     return true;
                 case Tree_FieldIndex.Ingredient:
                 case Tree_FieldIndex.HarvestSound:
                 case Tree_FieldIndex.Name:
+                case Tree_FieldIndex.TrunkFlexibility:
+                case Tree_FieldIndex.BranchFlexibility:
+                case Tree_FieldIndex.Unknown:
+                case Tree_FieldIndex.LeafAmplitude:
+                case Tree_FieldIndex.LeafFrequency:
+                case Tree_FieldIndex.CNAMDataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1355,7 +1541,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Tree_FieldIndex.HarvestSound:
                 case Tree_FieldIndex.Production:
                 case Tree_FieldIndex.Name:
-                case Tree_FieldIndex.Data:
+                case Tree_FieldIndex.TrunkFlexibility:
+                case Tree_FieldIndex.BranchFlexibility:
+                case Tree_FieldIndex.Unknown:
+                case Tree_FieldIndex.LeafAmplitude:
+                case Tree_FieldIndex.LeafFrequency:
+                case Tree_FieldIndex.CNAMDataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1381,8 +1572,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Production";
                 case Tree_FieldIndex.Name:
                     return "Name";
-                case Tree_FieldIndex.Data:
-                    return "Data";
+                case Tree_FieldIndex.TrunkFlexibility:
+                    return "TrunkFlexibility";
+                case Tree_FieldIndex.BranchFlexibility:
+                    return "BranchFlexibility";
+                case Tree_FieldIndex.Unknown:
+                    return "Unknown";
+                case Tree_FieldIndex.LeafAmplitude:
+                    return "LeafAmplitude";
+                case Tree_FieldIndex.LeafFrequency:
+                    return "LeafFrequency";
+                case Tree_FieldIndex.CNAMDataTypeState:
+                    return "CNAMDataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -1400,7 +1601,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Tree_FieldIndex.HarvestSound:
                 case Tree_FieldIndex.Production:
                 case Tree_FieldIndex.Name:
-                case Tree_FieldIndex.Data:
+                case Tree_FieldIndex.TrunkFlexibility:
+                case Tree_FieldIndex.BranchFlexibility:
+                case Tree_FieldIndex.Unknown:
+                case Tree_FieldIndex.LeafAmplitude:
+                case Tree_FieldIndex.LeafFrequency:
+                case Tree_FieldIndex.CNAMDataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
@@ -1419,7 +1625,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Tree_FieldIndex.HarvestSound:
                 case Tree_FieldIndex.Production:
                 case Tree_FieldIndex.Name:
-                case Tree_FieldIndex.Data:
+                case Tree_FieldIndex.TrunkFlexibility:
+                case Tree_FieldIndex.BranchFlexibility:
+                case Tree_FieldIndex.Unknown:
+                case Tree_FieldIndex.LeafAmplitude:
+                case Tree_FieldIndex.LeafFrequency:
+                case Tree_FieldIndex.CNAMDataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
@@ -1445,8 +1656,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(SeasonalIngredientProduction);
                 case Tree_FieldIndex.Name:
                     return typeof(String);
-                case Tree_FieldIndex.Data:
-                    return typeof(TreeData);
+                case Tree_FieldIndex.TrunkFlexibility:
+                    return typeof(Single);
+                case Tree_FieldIndex.BranchFlexibility:
+                    return typeof(Single);
+                case Tree_FieldIndex.Unknown:
+                    return typeof(Byte[]);
+                case Tree_FieldIndex.LeafAmplitude:
+                    return typeof(Single);
+                case Tree_FieldIndex.LeafFrequency:
+                    return typeof(Single);
+                case Tree_FieldIndex.CNAMDataTypeState:
+                    return typeof(Tree.CNAMDataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1464,7 +1685,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
         public static readonly RecordType TriggeringRecordType = TREE_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 8;
+        public const int NumTypedFields = 7;
         public static readonly Type BinaryWriteTranslation = typeof(TreeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1514,7 +1735,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.HarvestSound = null;
             item.Production = null;
             item.Name = default;
-            item.Data = null;
+            item.TrunkFlexibility = default;
+            item.BranchFlexibility = default;
+            item.Unknown = new byte[32];
+            item.LeafAmplitude = default;
+            item.LeafFrequency = default;
+            item.CNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1677,8 +1903,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E43: // CNAM
                 {
-                    item.Data = Mutagen.Bethesda.Skyrim.TreeData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Data);
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.TrunkFlexibility = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.BranchFlexibility = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(32));
+                    item.LeafAmplitude = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.LeafFrequency = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.LeafFrequency);
                 }
                 default:
                     return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
@@ -1773,11 +2005,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Name = string.Equals(item.Name, rhs.Name);
-            ret.Data = EqualsMaskHelper.EqualsHelper(
-                item.Data,
-                rhs.Data,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.TrunkFlexibility = item.TrunkFlexibility.EqualsWithin(rhs.TrunkFlexibility);
+            ret.BranchFlexibility = item.BranchFlexibility.EqualsWithin(rhs.BranchFlexibility);
+            ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
+            ret.LeafAmplitude = item.LeafAmplitude.EqualsWithin(rhs.LeafAmplitude);
+            ret.LeafFrequency = item.LeafFrequency.EqualsWithin(rhs.LeafFrequency);
+            ret.CNAMDataTypeState = item.CNAMDataTypeState == rhs.CNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1863,10 +2096,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(NameItem, "Name");
             }
-            if ((printMask?.Data?.Overall ?? true)
-                && item.Data.TryGet(out var DataItem))
+            if (printMask?.TrunkFlexibility ?? true)
             {
-                DataItem?.ToString(fg, "Data");
+                fg.AppendItem(item.TrunkFlexibility, "TrunkFlexibility");
+            }
+            if (printMask?.BranchFlexibility ?? true)
+            {
+                fg.AppendItem(item.BranchFlexibility, "BranchFlexibility");
+            }
+            if (printMask?.Unknown ?? true)
+            {
+                fg.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
+            }
+            if (printMask?.LeafAmplitude ?? true)
+            {
+                fg.AppendItem(item.LeafAmplitude, "LeafAmplitude");
+            }
+            if (printMask?.LeafFrequency ?? true)
+            {
+                fg.AppendItem(item.LeafFrequency, "LeafFrequency");
+            }
+            if (printMask?.CNAMDataTypeState ?? true)
+            {
+                fg.AppendItem(item.CNAMDataTypeState, "CNAMDataTypeState");
             }
         }
         
@@ -1883,8 +2135,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.Production?.Overall.HasValue ?? false && checkMask.Production.Overall.Value != (item.Production != null)) return false;
             if (checkMask.Production?.Specific != null && (item.Production == null || !item.Production.HasBeenSet(checkMask.Production.Specific))) return false;
             if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
-            if (checkMask.Data?.Overall.HasValue ?? false && checkMask.Data.Overall.Value != (item.Data != null)) return false;
-            if (checkMask.Data?.Specific != null && (item.Data == null || !item.Data.HasBeenSet(checkMask.Data.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1904,8 +2154,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var itemProduction = item.Production;
             mask.Production = new MaskItem<bool, SeasonalIngredientProduction.Mask<bool>?>(itemProduction != null, itemProduction?.GetHasBeenSetMask());
             mask.Name = (item.Name != null);
-            var itemData = item.Data;
-            mask.Data = new MaskItem<bool, TreeData.Mask<bool>?>(itemData != null, itemData?.GetHasBeenSetMask());
+            mask.TrunkFlexibility = true;
+            mask.BranchFlexibility = true;
+            mask.Unknown = true;
+            mask.LeafAmplitude = true;
+            mask.LeafFrequency = true;
+            mask.CNAMDataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1964,7 +2218,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.HarvestSound.Equals(rhs.HarvestSound)) return false;
             if (!object.Equals(lhs.Production, rhs.Production)) return false;
             if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            if (!lhs.TrunkFlexibility.EqualsWithin(rhs.TrunkFlexibility)) return false;
+            if (!lhs.BranchFlexibility.EqualsWithin(rhs.BranchFlexibility)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
+            if (!lhs.LeafAmplitude.EqualsWithin(rhs.LeafAmplitude)) return false;
+            if (!lhs.LeafFrequency.EqualsWithin(rhs.LeafFrequency)) return false;
+            if (lhs.CNAMDataTypeState != rhs.CNAMDataTypeState) return false;
             return true;
         }
         
@@ -2014,10 +2273,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Nameitem);
             }
-            if (item.Data.TryGet(out var Dataitem))
-            {
-                hash.Add(Dataitem);
-            }
+            hash.Add(item.TrunkFlexibility);
+            hash.Add(item.BranchFlexibility);
+            hash.Add(item.Unknown);
+            hash.Add(item.LeafAmplitude);
+            hash.Add(item.LeafFrequency);
+            hash.Add(item.CNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2228,31 +2489,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Name = rhs.Name;
             }
-            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.Data) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.TrunkFlexibility) ?? true))
             {
-                errorMask?.PushIndex((int)Tree_FieldIndex.Data);
-                try
-                {
-                    if(rhs.Data.TryGet(out var rhsData))
-                    {
-                        item.Data = rhsData.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Tree_FieldIndex.Data));
-                    }
-                    else
-                    {
-                        item.Data = default;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.TrunkFlexibility = rhs.TrunkFlexibility;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.BranchFlexibility) ?? true))
+            {
+                item.BranchFlexibility = rhs.BranchFlexibility;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.Unknown) ?? true))
+            {
+                item.Unknown = rhs.Unknown.ToArray();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafAmplitude) ?? true))
+            {
+                item.LeafAmplitude = rhs.LeafAmplitude;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafFrequency) ?? true))
+            {
+                item.LeafFrequency = rhs.LeafFrequency;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Tree_FieldIndex.CNAMDataTypeState) ?? true))
+            {
+                item.CNAMDataTypeState = rhs.CNAMDataTypeState;
             }
         }
         
@@ -2479,19 +2738,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Tree_FieldIndex.Name,
                     errorMask: errorMask);
             }
-            if ((item.Data != null)
-                && (translationMask?.GetShouldTranslate((int)Tree_FieldIndex.Data) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.TrunkFlexibility) ?? true))
             {
-                if (item.Data.TryGet(out var DataItem))
-                {
-                    ((TreeDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
-                        item: DataItem,
-                        node: node,
-                        name: nameof(item.Data),
-                        fieldIndex: (int)Tree_FieldIndex.Data,
-                        errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)Tree_FieldIndex.Data));
-                }
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.TrunkFlexibility),
+                    item: item.TrunkFlexibility,
+                    fieldIndex: (int)Tree_FieldIndex.TrunkFlexibility,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.BranchFlexibility) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.BranchFlexibility),
+                    item: item.BranchFlexibility,
+                    fieldIndex: (int)Tree_FieldIndex.BranchFlexibility,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.Unknown) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown),
+                    item: item.Unknown,
+                    fieldIndex: (int)Tree_FieldIndex.Unknown,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafAmplitude) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.LeafAmplitude),
+                    item: item.LeafAmplitude,
+                    fieldIndex: (int)Tree_FieldIndex.LeafAmplitude,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.LeafFrequency) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.LeafFrequency),
+                    item: item.LeafFrequency,
+                    fieldIndex: (int)Tree_FieldIndex.LeafFrequency,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Tree_FieldIndex.CNAMDataTypeState) ?? true))
+            {
+                EnumXmlTranslation<Tree.CNAMDataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.CNAMDataTypeState),
+                    item: item.CNAMDataTypeState,
+                    fieldIndex: (int)Tree_FieldIndex.CNAMDataTypeState,
+                    errorMask: errorMask);
             }
         }
 
@@ -2730,14 +3029,104 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Data":
-                    errorMask?.PushIndex((int)Tree_FieldIndex.Data);
+                case "TrunkFlexibility":
+                    errorMask?.PushIndex((int)Tree_FieldIndex.TrunkFlexibility);
                     try
                     {
-                        item.Data = LoquiXmlTranslation<TreeData>.Instance.Parse(
+                        item.TrunkFlexibility = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Tree_FieldIndex.Data));
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BranchFlexibility":
+                    errorMask?.PushIndex((int)Tree_FieldIndex.BranchFlexibility);
+                    try
+                    {
+                        item.BranchFlexibility = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown":
+                    errorMask?.PushIndex((int)Tree_FieldIndex.Unknown);
+                    try
+                    {
+                        item.Unknown = ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            fallbackLength: 32,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LeafAmplitude":
+                    errorMask?.PushIndex((int)Tree_FieldIndex.LeafAmplitude);
+                    try
+                    {
+                        item.LeafAmplitude = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LeafFrequency":
+                    errorMask?.PushIndex((int)Tree_FieldIndex.LeafFrequency);
+                    try
+                    {
+                        item.LeafFrequency = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CNAMDataTypeState":
+                    errorMask?.PushIndex((int)Tree_FieldIndex.CNAMDataTypeState);
+                    try
+                    {
+                        item.CNAMDataTypeState = EnumXmlTranslation<Tree.CNAMDataType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2835,6 +3224,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static TreeBinaryWriteTranslation Instance = new TreeBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            ITreeGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
         public static void WriteRecordTypes(
             ITreeGetter item,
             MutagenWriter writer,
@@ -2883,12 +3281,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(Tree_Registration.FULL_HEADER),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.Data.TryGet(out var DataItem))
+            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Tree_Registration.CNAM_HEADER)))
             {
-                ((TreeDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
-                    item: DataItem,
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter);
+                    item: item.TrunkFlexibility);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.BranchFlexibility);
+                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Unknown);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.LeafAmplitude);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.LeafFrequency);
             }
         }
 
@@ -2902,7 +3311,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(Tree_Registration.TREE_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -3049,10 +3458,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _NameLocation;
         public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
         #endregion
-        #region Data
-        private RangeInt32? _DataLocation;
-        public ITreeDataGetter? Data => _DataLocation.HasValue ? TreeDataBinaryOverlay.TreeDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
-        public bool Data_IsSet => _DataLocation.HasValue;
+        private int? _CNAMLocation;
+        public Tree.CNAMDataType CNAMDataTypeState { get; private set; }
+        #region TrunkFlexibility
+        private int _TrunkFlexibilityLocation => _CNAMLocation!.Value + 0x0;
+        private bool _TrunkFlexibility_IsSet => _CNAMLocation.HasValue;
+        public Single TrunkFlexibility => _TrunkFlexibility_IsSet ? SpanExt.GetFloat(_data.Slice(_TrunkFlexibilityLocation, 4)) : default;
+        #endregion
+        #region BranchFlexibility
+        private int _BranchFlexibilityLocation => _CNAMLocation!.Value + 0x4;
+        private bool _BranchFlexibility_IsSet => _CNAMLocation.HasValue;
+        public Single BranchFlexibility => _BranchFlexibility_IsSet ? SpanExt.GetFloat(_data.Slice(_BranchFlexibilityLocation, 4)) : default;
+        #endregion
+        #region Unknown
+        private int _UnknownLocation => _CNAMLocation!.Value + 0x8;
+        private bool _Unknown_IsSet => _CNAMLocation.HasValue;
+        public ReadOnlyMemorySlice<Byte> Unknown => _Unknown_IsSet ? _data.Span.Slice(_UnknownLocation, 32).ToArray() : default(ReadOnlyMemorySlice<byte>);
+        #endregion
+        #region LeafAmplitude
+        private int _LeafAmplitudeLocation => _CNAMLocation!.Value + 0x28;
+        private bool _LeafAmplitude_IsSet => _CNAMLocation.HasValue;
+        public Single LeafAmplitude => _LeafAmplitude_IsSet ? SpanExt.GetFloat(_data.Slice(_LeafAmplitudeLocation, 4)) : default;
+        #endregion
+        #region LeafFrequency
+        private int _LeafFrequencyLocation => _CNAMLocation!.Value + 0x2C;
+        private bool _LeafFrequency_IsSet => _CNAMLocation.HasValue;
+        public Single LeafFrequency => _LeafFrequency_IsSet ? SpanExt.GetFloat(_data.Slice(_LeafFrequencyLocation, 4)) : default;
         #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
@@ -3155,8 +3586,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x4D414E43: // CNAM
                 {
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Data);
+                    _CNAMLocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.LeafFrequency);
                 }
                 default:
                     return base.FillRecordType(

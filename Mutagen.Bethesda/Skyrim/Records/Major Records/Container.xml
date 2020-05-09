@@ -12,15 +12,14 @@
       <RefDirect name="Model" refName="Model" />
       <RefList name="Items" counterRecType="COCT" refName="ContainerEntry" />
       <RefDirect name="Destructible" refName="Destructible" />
-      <RefDirect name="Data" refName="ContainerData" hasBeenSet="False" />
+      <Data>
+        <Fields>
+          <Enum name="Flags" enumName="Container.Flag" byteLength="1" />
+          <Float name="Weight" />
+        </Fields>
+      </Data>
       <FormLink name="OpenSound" refName="SoundDescriptor" recordType="SNAM" />
       <FormLink name="CloseSound" refName="SoundDescriptor" recordType="QNAM" />
-    </Fields>
-  </Object>
-  <Object name="ContainerData" objType="Subrecord" recordType="DATA" GUID="e7182024-0607-4ed3-92df-0af4c66e6091" ID="170">
-    <Fields>
-      <Enum name="Flags" enumName="ContainerData.Flag" byteLength="1" />
-      <Float name="Weight" />
     </Fields>
   </Object>
   <Object name="ContainerEntry" objType="Subrecord" GUID="012b2a3c-ad31-4b45-a5ca-f54760049575" ID="171">

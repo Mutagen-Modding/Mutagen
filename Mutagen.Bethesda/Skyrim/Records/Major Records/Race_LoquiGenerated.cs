@@ -106,10 +106,129 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
-        #region Data
-        public RaceData Data { get; set; } = new RaceData();
+        #region SkillBoost0
+        public SkillBoost SkillBoost0 { get; set; } = new SkillBoost();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IRaceDataGetter IRaceGetter.Data => Data;
+        ISkillBoostGetter IRaceGetter.SkillBoost0 => SkillBoost0;
+        #endregion
+        #region SkillBoost1
+        public SkillBoost SkillBoost1 { get; set; } = new SkillBoost();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISkillBoostGetter IRaceGetter.SkillBoost1 => SkillBoost1;
+        #endregion
+        #region SkillBoost2
+        public SkillBoost SkillBoost2 { get; set; } = new SkillBoost();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISkillBoostGetter IRaceGetter.SkillBoost2 => SkillBoost2;
+        #endregion
+        #region SkillBoost3
+        public SkillBoost SkillBoost3 { get; set; } = new SkillBoost();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISkillBoostGetter IRaceGetter.SkillBoost3 => SkillBoost3;
+        #endregion
+        #region SkillBoost4
+        public SkillBoost SkillBoost4 { get; set; } = new SkillBoost();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISkillBoostGetter IRaceGetter.SkillBoost4 => SkillBoost4;
+        #endregion
+        #region SkillBoost5
+        public SkillBoost SkillBoost5 { get; set; } = new SkillBoost();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISkillBoostGetter IRaceGetter.SkillBoost5 => SkillBoost5;
+        #endregion
+        #region SkillBoost6
+        public SkillBoost SkillBoost6 { get; set; } = new SkillBoost();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISkillBoostGetter IRaceGetter.SkillBoost6 => SkillBoost6;
+        #endregion
+        #region Unknown
+        public Int16 Unknown { get; set; } = default;
+        #endregion
+        #region Height
+        public GenderedItem<Single> Height { get; set; } = new GenderedItem<Single>(default, default);
+        IGenderedItemGetter<Single> IRaceGetter.Height => this.Height;
+        #endregion
+        #region Weight
+        public GenderedItem<Single> Weight { get; set; } = new GenderedItem<Single>(default, default);
+        IGenderedItemGetter<Single> IRaceGetter.Weight => this.Weight;
+        #endregion
+        #region Flags
+        public Race.Flag Flags { get; set; } = default;
+        #endregion
+        #region Starting
+        private readonly Dictionary<BasicStat, Single> _Starting = new Dictionary<BasicStat, Single>();
+        public IDictionary<BasicStat, Single> Starting => _Starting;
+        #region Interface Members
+        IDictionary<BasicStat, Single> IRace.Starting => _Starting;
+        IReadOnlyDictionary<BasicStat, Single> IRaceGetter.Starting => _Starting;
+        #endregion
+
+        #endregion
+        #region BaseCarryWeight
+        public Single BaseCarryWeight { get; set; } = default;
+        #endregion
+        #region BaseMass
+        public Single BaseMass { get; set; } = default;
+        #endregion
+        #region AccelerationRate
+        public Single AccelerationRate { get; set; } = default;
+        #endregion
+        #region DecelerationRate
+        public Single DecelerationRate { get; set; } = default;
+        #endregion
+        #region Size
+        public Size Size { get; set; } = default;
+        #endregion
+        #region HeadBipedObject
+        public readonly static BipedObject _HeadBipedObject_Default = BipedObject.None;
+        public BipedObject HeadBipedObject { get; set; } = default;
+        #endregion
+        #region HairBipedObject
+        public readonly static BipedObject _HairBipedObject_Default = BipedObject.None;
+        public BipedObject HairBipedObject { get; set; } = default;
+        #endregion
+        #region InjuredHealthPercent
+        public Single InjuredHealthPercent { get; set; } = default;
+        #endregion
+        #region ShieldBipedObject
+        public readonly static BipedObject _ShieldBipedObject_Default = BipedObject.None;
+        public BipedObject ShieldBipedObject { get; set; } = default;
+        #endregion
+        #region Regen
+        private readonly Dictionary<BasicStat, Single> _Regen = new Dictionary<BasicStat, Single>();
+        public IDictionary<BasicStat, Single> Regen => _Regen;
+        #region Interface Members
+        IDictionary<BasicStat, Single> IRace.Regen => _Regen;
+        IReadOnlyDictionary<BasicStat, Single> IRaceGetter.Regen => _Regen;
+        #endregion
+
+        #endregion
+        #region UnarmedDamage
+        public Single UnarmedDamage { get; set; } = default;
+        #endregion
+        #region UnarmedReach
+        public Single UnarmedReach { get; set; } = default;
+        #endregion
+        #region BodyBipedObject
+        public readonly static BipedObject _BodyBipedObject_Default = BipedObject.None;
+        public BipedObject BodyBipedObject { get; set; } = default;
+        #endregion
+        #region AimAngleTolerance
+        public Single AimAngleTolerance { get; set; } = default;
+        #endregion
+        #region FlightRadius
+        public Single FlightRadius { get; set; } = default;
+        #endregion
+        #region AngularAccelerationRate
+        public Single AngularAccelerationRate { get; set; } = default;
+        #endregion
+        #region AngularTolerance
+        public Single AngularTolerance { get; set; } = default;
+        #endregion
+        #region MountData
+        public MountData MountData { get; set; } = new MountData();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IMountDataGetter IRaceGetter.MountData => MountData;
         #endregion
         #region SkeletalModel
         public GenderedItem<SimpleModel?>? SkeletalModel { get; set; }
@@ -335,6 +454,9 @@ namespace Mutagen.Bethesda.Skyrim
         public GenderedItem<HeadData?>? HeadData { get; set; }
         IGenderedItemGetter<IHeadDataGetter?>? IRaceGetter.HeadData => this.HeadData;
         #endregion
+        #region DATADataTypeState
+        public Race.DATADataType DATADataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -511,7 +633,36 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Skin = initialValue;
                 this.BodyTemplate = new MaskItem<TItem, BodyTemplate.Mask<TItem>?>(initialValue, new BodyTemplate.Mask<TItem>(initialValue));
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Data = new MaskItem<TItem, RaceData.Mask<TItem>?>(initialValue, new RaceData.Mask<TItem>(initialValue));
+                this.SkillBoost0 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
+                this.SkillBoost1 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
+                this.SkillBoost2 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
+                this.SkillBoost3 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
+                this.SkillBoost4 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
+                this.SkillBoost5 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
+                this.SkillBoost6 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(initialValue, new SkillBoost.Mask<TItem>(initialValue));
+                this.Unknown = initialValue;
+                this.Height = new GenderedItem<TItem>(initialValue, initialValue);
+                this.Weight = new GenderedItem<TItem>(initialValue, initialValue);
+                this.Flags = initialValue;
+                this.Starting = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(initialValue, null);
+                this.BaseCarryWeight = initialValue;
+                this.BaseMass = initialValue;
+                this.AccelerationRate = initialValue;
+                this.DecelerationRate = initialValue;
+                this.Size = initialValue;
+                this.HeadBipedObject = initialValue;
+                this.HairBipedObject = initialValue;
+                this.InjuredHealthPercent = initialValue;
+                this.ShieldBipedObject = initialValue;
+                this.Regen = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(initialValue, null);
+                this.UnarmedDamage = initialValue;
+                this.UnarmedReach = initialValue;
+                this.BodyBipedObject = initialValue;
+                this.AimAngleTolerance = initialValue;
+                this.FlightRadius = initialValue;
+                this.AngularAccelerationRate = initialValue;
+                this.AngularTolerance = initialValue;
+                this.MountData = new MaskItem<TItem, MountData.Mask<TItem>?>(initialValue, new MountData.Mask<TItem>(initialValue));
                 this.SkeletalModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, SimpleModel.Mask<TItem>?>?>?>(initialValue, default);
                 this.MovementTypeNames = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Voices = new GenderedItem<TItem>(initialValue, initialValue);
@@ -545,6 +696,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.BaseMovementDefaultSneak = initialValue;
                 this.BaseMovementDefaultSprint = initialValue;
                 this.HeadData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, HeadData.Mask<TItem>?>?>?>(initialValue, default);
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -560,7 +712,36 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Skin,
                 TItem BodyTemplate,
                 TItem Keywords,
-                TItem Data,
+                TItem SkillBoost0,
+                TItem SkillBoost1,
+                TItem SkillBoost2,
+                TItem SkillBoost3,
+                TItem SkillBoost4,
+                TItem SkillBoost5,
+                TItem SkillBoost6,
+                TItem Unknown,
+                TItem Height,
+                TItem Weight,
+                TItem Flags,
+                TItem Starting,
+                TItem BaseCarryWeight,
+                TItem BaseMass,
+                TItem AccelerationRate,
+                TItem DecelerationRate,
+                TItem Size,
+                TItem HeadBipedObject,
+                TItem HairBipedObject,
+                TItem InjuredHealthPercent,
+                TItem ShieldBipedObject,
+                TItem Regen,
+                TItem UnarmedDamage,
+                TItem UnarmedReach,
+                TItem BodyBipedObject,
+                TItem AimAngleTolerance,
+                TItem FlightRadius,
+                TItem AngularAccelerationRate,
+                TItem AngularTolerance,
+                TItem MountData,
                 TItem SkeletalModel,
                 TItem MovementTypeNames,
                 TItem Voices,
@@ -593,7 +774,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem BaseMovementDefaultFly,
                 TItem BaseMovementDefaultSneak,
                 TItem BaseMovementDefaultSprint,
-                TItem HeadData)
+                TItem HeadData,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -608,7 +790,36 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Skin = Skin;
                 this.BodyTemplate = new MaskItem<TItem, BodyTemplate.Mask<TItem>?>(BodyTemplate, new BodyTemplate.Mask<TItem>(BodyTemplate));
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Data = new MaskItem<TItem, RaceData.Mask<TItem>?>(Data, new RaceData.Mask<TItem>(Data));
+                this.SkillBoost0 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost0, new SkillBoost.Mask<TItem>(SkillBoost0));
+                this.SkillBoost1 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost1, new SkillBoost.Mask<TItem>(SkillBoost1));
+                this.SkillBoost2 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost2, new SkillBoost.Mask<TItem>(SkillBoost2));
+                this.SkillBoost3 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost3, new SkillBoost.Mask<TItem>(SkillBoost3));
+                this.SkillBoost4 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost4, new SkillBoost.Mask<TItem>(SkillBoost4));
+                this.SkillBoost5 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost5, new SkillBoost.Mask<TItem>(SkillBoost5));
+                this.SkillBoost6 = new MaskItem<TItem, SkillBoost.Mask<TItem>?>(SkillBoost6, new SkillBoost.Mask<TItem>(SkillBoost6));
+                this.Unknown = Unknown;
+                this.Height = new GenderedItem<TItem>(Height, Height);
+                this.Weight = new GenderedItem<TItem>(Weight, Weight);
+                this.Flags = Flags;
+                this.Starting = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(Starting, null);
+                this.BaseCarryWeight = BaseCarryWeight;
+                this.BaseMass = BaseMass;
+                this.AccelerationRate = AccelerationRate;
+                this.DecelerationRate = DecelerationRate;
+                this.Size = Size;
+                this.HeadBipedObject = HeadBipedObject;
+                this.HairBipedObject = HairBipedObject;
+                this.InjuredHealthPercent = InjuredHealthPercent;
+                this.ShieldBipedObject = ShieldBipedObject;
+                this.Regen = new MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>(Regen, null);
+                this.UnarmedDamage = UnarmedDamage;
+                this.UnarmedReach = UnarmedReach;
+                this.BodyBipedObject = BodyBipedObject;
+                this.AimAngleTolerance = AimAngleTolerance;
+                this.FlightRadius = FlightRadius;
+                this.AngularAccelerationRate = AngularAccelerationRate;
+                this.AngularTolerance = AngularTolerance;
+                this.MountData = new MaskItem<TItem, MountData.Mask<TItem>?>(MountData, new MountData.Mask<TItem>(MountData));
                 this.SkeletalModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, SimpleModel.Mask<TItem>?>?>?>(SkeletalModel, default);
                 this.MovementTypeNames = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(MovementTypeNames, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Voices = new GenderedItem<TItem>(Voices, Voices);
@@ -642,6 +853,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.BaseMovementDefaultSneak = BaseMovementDefaultSneak;
                 this.BaseMovementDefaultSprint = BaseMovementDefaultSprint;
                 this.HeadData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, HeadData.Mask<TItem>?>?>?>(HeadData, default);
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -659,7 +871,36 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Skin;
             public MaskItem<TItem, BodyTemplate.Mask<TItem>?>? BodyTemplate { get; set; }
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
-            public MaskItem<TItem, RaceData.Mask<TItem>?>? Data { get; set; }
+            public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost0 { get; set; }
+            public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost1 { get; set; }
+            public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost2 { get; set; }
+            public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost3 { get; set; }
+            public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost4 { get; set; }
+            public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost5 { get; set; }
+            public MaskItem<TItem, SkillBoost.Mask<TItem>?>? SkillBoost6 { get; set; }
+            public TItem Unknown;
+            public GenderedItem<TItem> Height;
+            public GenderedItem<TItem> Weight;
+            public TItem Flags;
+            public MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>? Starting;
+            public TItem BaseCarryWeight;
+            public TItem BaseMass;
+            public TItem AccelerationRate;
+            public TItem DecelerationRate;
+            public TItem Size;
+            public TItem HeadBipedObject;
+            public TItem HairBipedObject;
+            public TItem InjuredHealthPercent;
+            public TItem ShieldBipedObject;
+            public MaskItem<TItem, IEnumerable<KeyValuePair<TItem, TItem>>?>? Regen;
+            public TItem UnarmedDamage;
+            public TItem UnarmedReach;
+            public TItem BodyBipedObject;
+            public TItem AimAngleTolerance;
+            public TItem FlightRadius;
+            public TItem AngularAccelerationRate;
+            public TItem AngularTolerance;
+            public MaskItem<TItem, MountData.Mask<TItem>?>? MountData { get; set; }
             public MaskItem<TItem, GenderedItem<MaskItem<TItem, SimpleModel.Mask<TItem>?>?>?>? SkeletalModel;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? MovementTypeNames;
             public GenderedItem<TItem> Voices;
@@ -693,6 +934,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem BaseMovementDefaultSneak;
             public TItem BaseMovementDefaultSprint;
             public MaskItem<TItem, GenderedItem<MaskItem<TItem, HeadData.Mask<TItem>?>?>?>? HeadData;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -712,7 +954,36 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Skin, rhs.Skin)) return false;
                 if (!object.Equals(this.BodyTemplate, rhs.BodyTemplate)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
-                if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.SkillBoost0, rhs.SkillBoost0)) return false;
+                if (!object.Equals(this.SkillBoost1, rhs.SkillBoost1)) return false;
+                if (!object.Equals(this.SkillBoost2, rhs.SkillBoost2)) return false;
+                if (!object.Equals(this.SkillBoost3, rhs.SkillBoost3)) return false;
+                if (!object.Equals(this.SkillBoost4, rhs.SkillBoost4)) return false;
+                if (!object.Equals(this.SkillBoost5, rhs.SkillBoost5)) return false;
+                if (!object.Equals(this.SkillBoost6, rhs.SkillBoost6)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.Height, rhs.Height)) return false;
+                if (!object.Equals(this.Weight, rhs.Weight)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Starting, rhs.Starting)) return false;
+                if (!object.Equals(this.BaseCarryWeight, rhs.BaseCarryWeight)) return false;
+                if (!object.Equals(this.BaseMass, rhs.BaseMass)) return false;
+                if (!object.Equals(this.AccelerationRate, rhs.AccelerationRate)) return false;
+                if (!object.Equals(this.DecelerationRate, rhs.DecelerationRate)) return false;
+                if (!object.Equals(this.Size, rhs.Size)) return false;
+                if (!object.Equals(this.HeadBipedObject, rhs.HeadBipedObject)) return false;
+                if (!object.Equals(this.HairBipedObject, rhs.HairBipedObject)) return false;
+                if (!object.Equals(this.InjuredHealthPercent, rhs.InjuredHealthPercent)) return false;
+                if (!object.Equals(this.ShieldBipedObject, rhs.ShieldBipedObject)) return false;
+                if (!object.Equals(this.Regen, rhs.Regen)) return false;
+                if (!object.Equals(this.UnarmedDamage, rhs.UnarmedDamage)) return false;
+                if (!object.Equals(this.UnarmedReach, rhs.UnarmedReach)) return false;
+                if (!object.Equals(this.BodyBipedObject, rhs.BodyBipedObject)) return false;
+                if (!object.Equals(this.AimAngleTolerance, rhs.AimAngleTolerance)) return false;
+                if (!object.Equals(this.FlightRadius, rhs.FlightRadius)) return false;
+                if (!object.Equals(this.AngularAccelerationRate, rhs.AngularAccelerationRate)) return false;
+                if (!object.Equals(this.AngularTolerance, rhs.AngularTolerance)) return false;
+                if (!object.Equals(this.MountData, rhs.MountData)) return false;
                 if (!object.Equals(this.SkeletalModel, rhs.SkeletalModel)) return false;
                 if (!object.Equals(this.MovementTypeNames, rhs.MovementTypeNames)) return false;
                 if (!object.Equals(this.Voices, rhs.Voices)) return false;
@@ -746,6 +1017,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.BaseMovementDefaultSneak, rhs.BaseMovementDefaultSneak)) return false;
                 if (!object.Equals(this.BaseMovementDefaultSprint, rhs.BaseMovementDefaultSprint)) return false;
                 if (!object.Equals(this.HeadData, rhs.HeadData)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -757,7 +1029,36 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Skin);
                 hash.Add(this.BodyTemplate);
                 hash.Add(this.Keywords);
-                hash.Add(this.Data);
+                hash.Add(this.SkillBoost0);
+                hash.Add(this.SkillBoost1);
+                hash.Add(this.SkillBoost2);
+                hash.Add(this.SkillBoost3);
+                hash.Add(this.SkillBoost4);
+                hash.Add(this.SkillBoost5);
+                hash.Add(this.SkillBoost6);
+                hash.Add(this.Unknown);
+                hash.Add(this.Height);
+                hash.Add(this.Weight);
+                hash.Add(this.Flags);
+                hash.Add(this.Starting);
+                hash.Add(this.BaseCarryWeight);
+                hash.Add(this.BaseMass);
+                hash.Add(this.AccelerationRate);
+                hash.Add(this.DecelerationRate);
+                hash.Add(this.Size);
+                hash.Add(this.HeadBipedObject);
+                hash.Add(this.HairBipedObject);
+                hash.Add(this.InjuredHealthPercent);
+                hash.Add(this.ShieldBipedObject);
+                hash.Add(this.Regen);
+                hash.Add(this.UnarmedDamage);
+                hash.Add(this.UnarmedReach);
+                hash.Add(this.BodyBipedObject);
+                hash.Add(this.AimAngleTolerance);
+                hash.Add(this.FlightRadius);
+                hash.Add(this.AngularAccelerationRate);
+                hash.Add(this.AngularTolerance);
+                hash.Add(this.MountData);
                 hash.Add(this.SkeletalModel);
                 hash.Add(this.MovementTypeNames);
                 hash.Add(this.Voices);
@@ -791,6 +1092,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.BaseMovementDefaultSneak);
                 hash.Add(this.BaseMovementDefaultSprint);
                 hash.Add(this.HeadData);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -831,10 +1133,89 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (Data != null)
+                if (SkillBoost0 != null)
                 {
-                    if (!eval(this.Data.Overall)) return false;
-                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                    if (!eval(this.SkillBoost0.Overall)) return false;
+                    if (this.SkillBoost0.Specific != null && !this.SkillBoost0.Specific.All(eval)) return false;
+                }
+                if (SkillBoost1 != null)
+                {
+                    if (!eval(this.SkillBoost1.Overall)) return false;
+                    if (this.SkillBoost1.Specific != null && !this.SkillBoost1.Specific.All(eval)) return false;
+                }
+                if (SkillBoost2 != null)
+                {
+                    if (!eval(this.SkillBoost2.Overall)) return false;
+                    if (this.SkillBoost2.Specific != null && !this.SkillBoost2.Specific.All(eval)) return false;
+                }
+                if (SkillBoost3 != null)
+                {
+                    if (!eval(this.SkillBoost3.Overall)) return false;
+                    if (this.SkillBoost3.Specific != null && !this.SkillBoost3.Specific.All(eval)) return false;
+                }
+                if (SkillBoost4 != null)
+                {
+                    if (!eval(this.SkillBoost4.Overall)) return false;
+                    if (this.SkillBoost4.Specific != null && !this.SkillBoost4.Specific.All(eval)) return false;
+                }
+                if (SkillBoost5 != null)
+                {
+                    if (!eval(this.SkillBoost5.Overall)) return false;
+                    if (this.SkillBoost5.Specific != null && !this.SkillBoost5.Specific.All(eval)) return false;
+                }
+                if (SkillBoost6 != null)
+                {
+                    if (!eval(this.SkillBoost6.Overall)) return false;
+                    if (this.SkillBoost6.Specific != null && !this.SkillBoost6.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Unknown)) return false;
+                if (!eval(this.Height.Male) || !eval(this.Height.Female)) return false;
+                if (!eval(this.Weight.Male) || !eval(this.Weight.Female)) return false;
+                if (!eval(this.Flags)) return false;
+                if (this.Starting != null)
+                {
+                    if (!eval(this.Starting.Overall)) return false;
+                    if (this.Starting.Specific != null)
+                    {
+                        foreach (var item in this.Starting.Specific)
+                        {
+                            if (!eval(item.Key)) return false;
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.BaseCarryWeight)) return false;
+                if (!eval(this.BaseMass)) return false;
+                if (!eval(this.AccelerationRate)) return false;
+                if (!eval(this.DecelerationRate)) return false;
+                if (!eval(this.Size)) return false;
+                if (!eval(this.HeadBipedObject)) return false;
+                if (!eval(this.HairBipedObject)) return false;
+                if (!eval(this.InjuredHealthPercent)) return false;
+                if (!eval(this.ShieldBipedObject)) return false;
+                if (this.Regen != null)
+                {
+                    if (!eval(this.Regen.Overall)) return false;
+                    if (this.Regen.Specific != null)
+                    {
+                        foreach (var item in this.Regen.Specific)
+                        {
+                            if (!eval(item.Key)) return false;
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.UnarmedDamage)) return false;
+                if (!eval(this.UnarmedReach)) return false;
+                if (!eval(this.BodyBipedObject)) return false;
+                if (!eval(this.AimAngleTolerance)) return false;
+                if (!eval(this.FlightRadius)) return false;
+                if (!eval(this.AngularAccelerationRate)) return false;
+                if (!eval(this.AngularTolerance)) return false;
+                if (MountData != null)
+                {
+                    if (!eval(this.MountData.Overall)) return false;
+                    if (this.MountData.Specific != null && !this.MountData.Specific.All(eval)) return false;
                 }
                 if (!GenderedItem.AllMask(
                     this.SkeletalModel,
@@ -958,6 +1339,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!GenderedItem.AllMask(
                     this.HeadData,
                     eval: eval)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -996,10 +1378,89 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (Data != null)
+                if (SkillBoost0 != null)
                 {
-                    if (eval(this.Data.Overall)) return true;
-                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                    if (eval(this.SkillBoost0.Overall)) return true;
+                    if (this.SkillBoost0.Specific != null && this.SkillBoost0.Specific.Any(eval)) return true;
+                }
+                if (SkillBoost1 != null)
+                {
+                    if (eval(this.SkillBoost1.Overall)) return true;
+                    if (this.SkillBoost1.Specific != null && this.SkillBoost1.Specific.Any(eval)) return true;
+                }
+                if (SkillBoost2 != null)
+                {
+                    if (eval(this.SkillBoost2.Overall)) return true;
+                    if (this.SkillBoost2.Specific != null && this.SkillBoost2.Specific.Any(eval)) return true;
+                }
+                if (SkillBoost3 != null)
+                {
+                    if (eval(this.SkillBoost3.Overall)) return true;
+                    if (this.SkillBoost3.Specific != null && this.SkillBoost3.Specific.Any(eval)) return true;
+                }
+                if (SkillBoost4 != null)
+                {
+                    if (eval(this.SkillBoost4.Overall)) return true;
+                    if (this.SkillBoost4.Specific != null && this.SkillBoost4.Specific.Any(eval)) return true;
+                }
+                if (SkillBoost5 != null)
+                {
+                    if (eval(this.SkillBoost5.Overall)) return true;
+                    if (this.SkillBoost5.Specific != null && this.SkillBoost5.Specific.Any(eval)) return true;
+                }
+                if (SkillBoost6 != null)
+                {
+                    if (eval(this.SkillBoost6.Overall)) return true;
+                    if (this.SkillBoost6.Specific != null && this.SkillBoost6.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Unknown)) return true;
+                if (eval(this.Height.Male) || eval(this.Height.Female)) return true;
+                if (eval(this.Weight.Male) || eval(this.Weight.Female)) return true;
+                if (eval(this.Flags)) return true;
+                if (this.Starting != null)
+                {
+                    if (eval(this.Starting.Overall)) return true;
+                    if (this.Starting.Specific != null)
+                    {
+                        foreach (var item in this.Starting.Specific)
+                        {
+                            if (!eval(item.Key)) return false;
+                            if (eval(item.Value)) return true;
+                        }
+                    }
+                }
+                if (eval(this.BaseCarryWeight)) return true;
+                if (eval(this.BaseMass)) return true;
+                if (eval(this.AccelerationRate)) return true;
+                if (eval(this.DecelerationRate)) return true;
+                if (eval(this.Size)) return true;
+                if (eval(this.HeadBipedObject)) return true;
+                if (eval(this.HairBipedObject)) return true;
+                if (eval(this.InjuredHealthPercent)) return true;
+                if (eval(this.ShieldBipedObject)) return true;
+                if (this.Regen != null)
+                {
+                    if (eval(this.Regen.Overall)) return true;
+                    if (this.Regen.Specific != null)
+                    {
+                        foreach (var item in this.Regen.Specific)
+                        {
+                            if (!eval(item.Key)) return false;
+                            if (eval(item.Value)) return true;
+                        }
+                    }
+                }
+                if (eval(this.UnarmedDamage)) return true;
+                if (eval(this.UnarmedReach)) return true;
+                if (eval(this.BodyBipedObject)) return true;
+                if (eval(this.AimAngleTolerance)) return true;
+                if (eval(this.FlightRadius)) return true;
+                if (eval(this.AngularAccelerationRate)) return true;
+                if (eval(this.AngularTolerance)) return true;
+                if (MountData != null)
+                {
+                    if (eval(this.MountData.Overall)) return true;
+                    if (this.MountData.Specific != null && this.MountData.Specific.Any(eval)) return true;
                 }
                 if (GenderedItem.AnyMask(
                     this.SkeletalModel,
@@ -1123,6 +1584,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (GenderedItem.AnyMask(
                     this.HeadData,
                     eval: eval)) return true;
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -1170,7 +1632,68 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                obj.Data = this.Data == null ? null : new MaskItem<R, RaceData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
+                obj.SkillBoost0 = this.SkillBoost0 == null ? null : new MaskItem<R, SkillBoost.Mask<R>?>(eval(this.SkillBoost0.Overall), this.SkillBoost0.Specific?.Translate(eval));
+                obj.SkillBoost1 = this.SkillBoost1 == null ? null : new MaskItem<R, SkillBoost.Mask<R>?>(eval(this.SkillBoost1.Overall), this.SkillBoost1.Specific?.Translate(eval));
+                obj.SkillBoost2 = this.SkillBoost2 == null ? null : new MaskItem<R, SkillBoost.Mask<R>?>(eval(this.SkillBoost2.Overall), this.SkillBoost2.Specific?.Translate(eval));
+                obj.SkillBoost3 = this.SkillBoost3 == null ? null : new MaskItem<R, SkillBoost.Mask<R>?>(eval(this.SkillBoost3.Overall), this.SkillBoost3.Specific?.Translate(eval));
+                obj.SkillBoost4 = this.SkillBoost4 == null ? null : new MaskItem<R, SkillBoost.Mask<R>?>(eval(this.SkillBoost4.Overall), this.SkillBoost4.Specific?.Translate(eval));
+                obj.SkillBoost5 = this.SkillBoost5 == null ? null : new MaskItem<R, SkillBoost.Mask<R>?>(eval(this.SkillBoost5.Overall), this.SkillBoost5.Specific?.Translate(eval));
+                obj.SkillBoost6 = this.SkillBoost6 == null ? null : new MaskItem<R, SkillBoost.Mask<R>?>(eval(this.SkillBoost6.Overall), this.SkillBoost6.Specific?.Translate(eval));
+                obj.Unknown = eval(this.Unknown);
+                obj.Height = new GenderedItem<R>(
+                    eval(this.Height.Male),
+                    eval(this.Height.Female));
+                obj.Weight = new GenderedItem<R>(
+                    eval(this.Weight.Male),
+                    eval(this.Weight.Female));
+                obj.Flags = eval(this.Flags);
+                if (Starting != null)
+                {
+                    obj.Starting = new MaskItem<R, IEnumerable<KeyValuePair<R, R>>?>(eval(this.Starting.Overall), default);
+                    if (Starting.Specific != null)
+                    {
+                        List<KeyValuePair<R, R>> l = new List<KeyValuePair<R, R>>();
+                        obj.Starting.Specific = l;
+                        foreach (var item in Starting.Specific)
+                        {
+                            R keyVal = eval(item.Key);
+                            R valVal = eval(item.Value);
+                            l.Add(new KeyValuePair<R, R>(keyVal, valVal));
+                        }
+                    }
+                }
+                obj.BaseCarryWeight = eval(this.BaseCarryWeight);
+                obj.BaseMass = eval(this.BaseMass);
+                obj.AccelerationRate = eval(this.AccelerationRate);
+                obj.DecelerationRate = eval(this.DecelerationRate);
+                obj.Size = eval(this.Size);
+                obj.HeadBipedObject = eval(this.HeadBipedObject);
+                obj.HairBipedObject = eval(this.HairBipedObject);
+                obj.InjuredHealthPercent = eval(this.InjuredHealthPercent);
+                obj.ShieldBipedObject = eval(this.ShieldBipedObject);
+                if (Regen != null)
+                {
+                    obj.Regen = new MaskItem<R, IEnumerable<KeyValuePair<R, R>>?>(eval(this.Regen.Overall), default);
+                    if (Regen.Specific != null)
+                    {
+                        List<KeyValuePair<R, R>> l = new List<KeyValuePair<R, R>>();
+                        obj.Regen.Specific = l;
+                        foreach (var item in Regen.Specific)
+                        {
+                            R keyVal = eval(item.Key);
+                            R valVal = eval(item.Value);
+                            l.Add(new KeyValuePair<R, R>(keyVal, valVal));
+                        }
+                    }
+                }
+                obj.UnarmedDamage = eval(this.UnarmedDamage);
+                obj.UnarmedReach = eval(this.UnarmedReach);
+                obj.BodyBipedObject = eval(this.BodyBipedObject);
+                obj.AimAngleTolerance = eval(this.AimAngleTolerance);
+                obj.FlightRadius = eval(this.FlightRadius);
+                obj.AngularAccelerationRate = eval(this.AngularAccelerationRate);
+                obj.AngularTolerance = eval(this.AngularTolerance);
+                obj.MountData = this.MountData == null ? null : new MaskItem<R, MountData.Mask<R>?>(eval(this.MountData.Overall), this.MountData.Specific?.Translate(eval));
                 obj.SkeletalModel = GenderedItem.TranslateHelper(
                     this.SkeletalModel,
                     eval,
@@ -1316,6 +1839,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.HeadData,
                     eval,
                     (m, e) => m?.Translate(e));
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -1400,9 +1924,195 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.Data?.Overall ?? true)
+                    if (printMask?.SkillBoost0?.Overall ?? true)
                     {
-                        Data?.ToString(fg);
+                        SkillBoost0?.ToString(fg);
+                    }
+                    if (printMask?.SkillBoost1?.Overall ?? true)
+                    {
+                        SkillBoost1?.ToString(fg);
+                    }
+                    if (printMask?.SkillBoost2?.Overall ?? true)
+                    {
+                        SkillBoost2?.ToString(fg);
+                    }
+                    if (printMask?.SkillBoost3?.Overall ?? true)
+                    {
+                        SkillBoost3?.ToString(fg);
+                    }
+                    if (printMask?.SkillBoost4?.Overall ?? true)
+                    {
+                        SkillBoost4?.ToString(fg);
+                    }
+                    if (printMask?.SkillBoost5?.Overall ?? true)
+                    {
+                        SkillBoost5?.ToString(fg);
+                    }
+                    if (printMask?.SkillBoost6?.Overall ?? true)
+                    {
+                        SkillBoost6?.ToString(fg);
+                    }
+                    if (printMask?.Unknown ?? true)
+                    {
+                        fg.AppendItem(Unknown, "Unknown");
+                    }
+                    if ((true))
+                    {
+                        fg.AppendLine($"Height => {Height}");
+                    }
+                    if ((true))
+                    {
+                        fg.AppendLine($"Weight => {Weight}");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.Starting?.Overall ?? true)
+                    {
+                        fg.AppendLine("Starting =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Starting != null)
+                            {
+                                if (Starting.Overall != null)
+                                {
+                                    fg.AppendLine(Starting.Overall.ToString());
+                                }
+                                if (Starting.Specific != null)
+                                {
+                                    foreach (var subItem in Starting.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine("Key => [");
+                                            using (new DepthWrapper(fg))
+                                            {
+                                                fg.AppendItem(subItem.Key);
+                                            }
+                                            fg.AppendLine("]");
+                                            fg.AppendLine("Value => [");
+                                            using (new DepthWrapper(fg))
+                                            {
+                                                fg.AppendItem(subItem.Value);
+                                            }
+                                            fg.AppendLine("]");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.BaseCarryWeight ?? true)
+                    {
+                        fg.AppendItem(BaseCarryWeight, "BaseCarryWeight");
+                    }
+                    if (printMask?.BaseMass ?? true)
+                    {
+                        fg.AppendItem(BaseMass, "BaseMass");
+                    }
+                    if (printMask?.AccelerationRate ?? true)
+                    {
+                        fg.AppendItem(AccelerationRate, "AccelerationRate");
+                    }
+                    if (printMask?.DecelerationRate ?? true)
+                    {
+                        fg.AppendItem(DecelerationRate, "DecelerationRate");
+                    }
+                    if (printMask?.Size ?? true)
+                    {
+                        fg.AppendItem(Size, "Size");
+                    }
+                    if (printMask?.HeadBipedObject ?? true)
+                    {
+                        fg.AppendItem(HeadBipedObject, "HeadBipedObject");
+                    }
+                    if (printMask?.HairBipedObject ?? true)
+                    {
+                        fg.AppendItem(HairBipedObject, "HairBipedObject");
+                    }
+                    if (printMask?.InjuredHealthPercent ?? true)
+                    {
+                        fg.AppendItem(InjuredHealthPercent, "InjuredHealthPercent");
+                    }
+                    if (printMask?.ShieldBipedObject ?? true)
+                    {
+                        fg.AppendItem(ShieldBipedObject, "ShieldBipedObject");
+                    }
+                    if (printMask?.Regen?.Overall ?? true)
+                    {
+                        fg.AppendLine("Regen =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            if (Regen != null)
+                            {
+                                if (Regen.Overall != null)
+                                {
+                                    fg.AppendLine(Regen.Overall.ToString());
+                                }
+                                if (Regen.Specific != null)
+                                {
+                                    foreach (var subItem in Regen.Specific)
+                                    {
+                                        fg.AppendLine("[");
+                                        using (new DepthWrapper(fg))
+                                        {
+                                            fg.AppendLine("Key => [");
+                                            using (new DepthWrapper(fg))
+                                            {
+                                                fg.AppendItem(subItem.Key);
+                                            }
+                                            fg.AppendLine("]");
+                                            fg.AppendLine("Value => [");
+                                            using (new DepthWrapper(fg))
+                                            {
+                                                fg.AppendItem(subItem.Value);
+                                            }
+                                            fg.AppendLine("]");
+                                        }
+                                        fg.AppendLine("]");
+                                    }
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.UnarmedDamage ?? true)
+                    {
+                        fg.AppendItem(UnarmedDamage, "UnarmedDamage");
+                    }
+                    if (printMask?.UnarmedReach ?? true)
+                    {
+                        fg.AppendItem(UnarmedReach, "UnarmedReach");
+                    }
+                    if (printMask?.BodyBipedObject ?? true)
+                    {
+                        fg.AppendItem(BodyBipedObject, "BodyBipedObject");
+                    }
+                    if (printMask?.AimAngleTolerance ?? true)
+                    {
+                        fg.AppendItem(AimAngleTolerance, "AimAngleTolerance");
+                    }
+                    if (printMask?.FlightRadius ?? true)
+                    {
+                        fg.AppendItem(FlightRadius, "FlightRadius");
+                    }
+                    if (printMask?.AngularAccelerationRate ?? true)
+                    {
+                        fg.AppendItem(AngularAccelerationRate, "AngularAccelerationRate");
+                    }
+                    if (printMask?.AngularTolerance ?? true)
+                    {
+                        fg.AppendItem(AngularTolerance, "AngularTolerance");
+                    }
+                    if (printMask?.MountData?.Overall ?? true)
+                    {
+                        MountData?.ToString(fg);
                     }
                     if (SkeletalModel != null
                         && (printMask?.SkeletalModel?.Overall ?? true))
@@ -1689,6 +2399,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendLine($"HeadData => {HeadData}");
                     }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -1707,7 +2421,36 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Skin;
             public MaskItem<Exception?, BodyTemplate.ErrorMask?>? BodyTemplate;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
-            public MaskItem<Exception?, RaceData.ErrorMask?>? Data;
+            public MaskItem<Exception?, SkillBoost.ErrorMask?>? SkillBoost0;
+            public MaskItem<Exception?, SkillBoost.ErrorMask?>? SkillBoost1;
+            public MaskItem<Exception?, SkillBoost.ErrorMask?>? SkillBoost2;
+            public MaskItem<Exception?, SkillBoost.ErrorMask?>? SkillBoost3;
+            public MaskItem<Exception?, SkillBoost.ErrorMask?>? SkillBoost4;
+            public MaskItem<Exception?, SkillBoost.ErrorMask?>? SkillBoost5;
+            public MaskItem<Exception?, SkillBoost.ErrorMask?>? SkillBoost6;
+            public Exception? Unknown;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? Height;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? Weight;
+            public Exception? Flags;
+            public MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>? Starting;
+            public Exception? BaseCarryWeight;
+            public Exception? BaseMass;
+            public Exception? AccelerationRate;
+            public Exception? DecelerationRate;
+            public Exception? Size;
+            public Exception? HeadBipedObject;
+            public Exception? HairBipedObject;
+            public Exception? InjuredHealthPercent;
+            public Exception? ShieldBipedObject;
+            public MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>? Regen;
+            public Exception? UnarmedDamage;
+            public Exception? UnarmedReach;
+            public Exception? BodyBipedObject;
+            public Exception? AimAngleTolerance;
+            public Exception? FlightRadius;
+            public Exception? AngularAccelerationRate;
+            public Exception? AngularTolerance;
+            public MaskItem<Exception?, MountData.ErrorMask?>? MountData;
             public MaskItem<Exception?, GenderedItem<Exception?>?>? SkeletalModel;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? MovementTypeNames;
             public MaskItem<Exception?, GenderedItem<Exception?>?>? Voices;
@@ -1741,6 +2484,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? BaseMovementDefaultSneak;
             public Exception? BaseMovementDefaultSprint;
             public MaskItem<Exception?, GenderedItem<Exception?>?>? HeadData;
+            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -1761,8 +2505,66 @@ namespace Mutagen.Bethesda.Skyrim
                         return BodyTemplate;
                     case Race_FieldIndex.Keywords:
                         return Keywords;
-                    case Race_FieldIndex.Data:
-                        return Data;
+                    case Race_FieldIndex.SkillBoost0:
+                        return SkillBoost0;
+                    case Race_FieldIndex.SkillBoost1:
+                        return SkillBoost1;
+                    case Race_FieldIndex.SkillBoost2:
+                        return SkillBoost2;
+                    case Race_FieldIndex.SkillBoost3:
+                        return SkillBoost3;
+                    case Race_FieldIndex.SkillBoost4:
+                        return SkillBoost4;
+                    case Race_FieldIndex.SkillBoost5:
+                        return SkillBoost5;
+                    case Race_FieldIndex.SkillBoost6:
+                        return SkillBoost6;
+                    case Race_FieldIndex.Unknown:
+                        return Unknown;
+                    case Race_FieldIndex.Height:
+                        return Height;
+                    case Race_FieldIndex.Weight:
+                        return Weight;
+                    case Race_FieldIndex.Flags:
+                        return Flags;
+                    case Race_FieldIndex.Starting:
+                        return Starting;
+                    case Race_FieldIndex.BaseCarryWeight:
+                        return BaseCarryWeight;
+                    case Race_FieldIndex.BaseMass:
+                        return BaseMass;
+                    case Race_FieldIndex.AccelerationRate:
+                        return AccelerationRate;
+                    case Race_FieldIndex.DecelerationRate:
+                        return DecelerationRate;
+                    case Race_FieldIndex.Size:
+                        return Size;
+                    case Race_FieldIndex.HeadBipedObject:
+                        return HeadBipedObject;
+                    case Race_FieldIndex.HairBipedObject:
+                        return HairBipedObject;
+                    case Race_FieldIndex.InjuredHealthPercent:
+                        return InjuredHealthPercent;
+                    case Race_FieldIndex.ShieldBipedObject:
+                        return ShieldBipedObject;
+                    case Race_FieldIndex.Regen:
+                        return Regen;
+                    case Race_FieldIndex.UnarmedDamage:
+                        return UnarmedDamage;
+                    case Race_FieldIndex.UnarmedReach:
+                        return UnarmedReach;
+                    case Race_FieldIndex.BodyBipedObject:
+                        return BodyBipedObject;
+                    case Race_FieldIndex.AimAngleTolerance:
+                        return AimAngleTolerance;
+                    case Race_FieldIndex.FlightRadius:
+                        return FlightRadius;
+                    case Race_FieldIndex.AngularAccelerationRate:
+                        return AngularAccelerationRate;
+                    case Race_FieldIndex.AngularTolerance:
+                        return AngularTolerance;
+                    case Race_FieldIndex.MountData:
+                        return MountData;
                     case Race_FieldIndex.SkeletalModel:
                         return SkeletalModel;
                     case Race_FieldIndex.MovementTypeNames:
@@ -1829,6 +2631,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return BaseMovementDefaultSprint;
                     case Race_FieldIndex.HeadData:
                         return HeadData;
+                    case Race_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1857,8 +2661,95 @@ namespace Mutagen.Bethesda.Skyrim
                     case Race_FieldIndex.Keywords:
                         this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case Race_FieldIndex.Data:
-                        this.Data = new MaskItem<Exception?, RaceData.ErrorMask?>(ex, null);
+                    case Race_FieldIndex.SkillBoost0:
+                        this.SkillBoost0 = new MaskItem<Exception?, SkillBoost.ErrorMask?>(ex, null);
+                        break;
+                    case Race_FieldIndex.SkillBoost1:
+                        this.SkillBoost1 = new MaskItem<Exception?, SkillBoost.ErrorMask?>(ex, null);
+                        break;
+                    case Race_FieldIndex.SkillBoost2:
+                        this.SkillBoost2 = new MaskItem<Exception?, SkillBoost.ErrorMask?>(ex, null);
+                        break;
+                    case Race_FieldIndex.SkillBoost3:
+                        this.SkillBoost3 = new MaskItem<Exception?, SkillBoost.ErrorMask?>(ex, null);
+                        break;
+                    case Race_FieldIndex.SkillBoost4:
+                        this.SkillBoost4 = new MaskItem<Exception?, SkillBoost.ErrorMask?>(ex, null);
+                        break;
+                    case Race_FieldIndex.SkillBoost5:
+                        this.SkillBoost5 = new MaskItem<Exception?, SkillBoost.ErrorMask?>(ex, null);
+                        break;
+                    case Race_FieldIndex.SkillBoost6:
+                        this.SkillBoost6 = new MaskItem<Exception?, SkillBoost.ErrorMask?>(ex, null);
+                        break;
+                    case Race_FieldIndex.Unknown:
+                        this.Unknown = ex;
+                        break;
+                    case Race_FieldIndex.Height:
+                        this.Height = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
+                        break;
+                    case Race_FieldIndex.Weight:
+                        this.Weight = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
+                        break;
+                    case Race_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Race_FieldIndex.Starting:
+                        this.Starting = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ex, null);
+                        break;
+                    case Race_FieldIndex.BaseCarryWeight:
+                        this.BaseCarryWeight = ex;
+                        break;
+                    case Race_FieldIndex.BaseMass:
+                        this.BaseMass = ex;
+                        break;
+                    case Race_FieldIndex.AccelerationRate:
+                        this.AccelerationRate = ex;
+                        break;
+                    case Race_FieldIndex.DecelerationRate:
+                        this.DecelerationRate = ex;
+                        break;
+                    case Race_FieldIndex.Size:
+                        this.Size = ex;
+                        break;
+                    case Race_FieldIndex.HeadBipedObject:
+                        this.HeadBipedObject = ex;
+                        break;
+                    case Race_FieldIndex.HairBipedObject:
+                        this.HairBipedObject = ex;
+                        break;
+                    case Race_FieldIndex.InjuredHealthPercent:
+                        this.InjuredHealthPercent = ex;
+                        break;
+                    case Race_FieldIndex.ShieldBipedObject:
+                        this.ShieldBipedObject = ex;
+                        break;
+                    case Race_FieldIndex.Regen:
+                        this.Regen = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ex, null);
+                        break;
+                    case Race_FieldIndex.UnarmedDamage:
+                        this.UnarmedDamage = ex;
+                        break;
+                    case Race_FieldIndex.UnarmedReach:
+                        this.UnarmedReach = ex;
+                        break;
+                    case Race_FieldIndex.BodyBipedObject:
+                        this.BodyBipedObject = ex;
+                        break;
+                    case Race_FieldIndex.AimAngleTolerance:
+                        this.AimAngleTolerance = ex;
+                        break;
+                    case Race_FieldIndex.FlightRadius:
+                        this.FlightRadius = ex;
+                        break;
+                    case Race_FieldIndex.AngularAccelerationRate:
+                        this.AngularAccelerationRate = ex;
+                        break;
+                    case Race_FieldIndex.AngularTolerance:
+                        this.AngularTolerance = ex;
+                        break;
+                    case Race_FieldIndex.MountData:
+                        this.MountData = new MaskItem<Exception?, MountData.ErrorMask?>(ex, null);
                         break;
                     case Race_FieldIndex.SkeletalModel:
                         this.SkeletalModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
@@ -1959,6 +2850,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case Race_FieldIndex.HeadData:
                         this.HeadData = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
                         break;
+                    case Race_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -1988,8 +2882,95 @@ namespace Mutagen.Bethesda.Skyrim
                     case Race_FieldIndex.Keywords:
                         this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case Race_FieldIndex.Data:
-                        this.Data = (MaskItem<Exception?, RaceData.ErrorMask?>?)obj;
+                    case Race_FieldIndex.SkillBoost0:
+                        this.SkillBoost0 = (MaskItem<Exception?, SkillBoost.ErrorMask?>?)obj;
+                        break;
+                    case Race_FieldIndex.SkillBoost1:
+                        this.SkillBoost1 = (MaskItem<Exception?, SkillBoost.ErrorMask?>?)obj;
+                        break;
+                    case Race_FieldIndex.SkillBoost2:
+                        this.SkillBoost2 = (MaskItem<Exception?, SkillBoost.ErrorMask?>?)obj;
+                        break;
+                    case Race_FieldIndex.SkillBoost3:
+                        this.SkillBoost3 = (MaskItem<Exception?, SkillBoost.ErrorMask?>?)obj;
+                        break;
+                    case Race_FieldIndex.SkillBoost4:
+                        this.SkillBoost4 = (MaskItem<Exception?, SkillBoost.ErrorMask?>?)obj;
+                        break;
+                    case Race_FieldIndex.SkillBoost5:
+                        this.SkillBoost5 = (MaskItem<Exception?, SkillBoost.ErrorMask?>?)obj;
+                        break;
+                    case Race_FieldIndex.SkillBoost6:
+                        this.SkillBoost6 = (MaskItem<Exception?, SkillBoost.ErrorMask?>?)obj;
+                        break;
+                    case Race_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.Height:
+                        this.Height = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
+                        break;
+                    case Race_FieldIndex.Weight:
+                        this.Weight = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
+                        break;
+                    case Race_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.Starting:
+                        this.Starting = (MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>)obj;
+                        break;
+                    case Race_FieldIndex.BaseCarryWeight:
+                        this.BaseCarryWeight = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.BaseMass:
+                        this.BaseMass = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.AccelerationRate:
+                        this.AccelerationRate = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.DecelerationRate:
+                        this.DecelerationRate = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.Size:
+                        this.Size = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.HeadBipedObject:
+                        this.HeadBipedObject = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.HairBipedObject:
+                        this.HairBipedObject = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.InjuredHealthPercent:
+                        this.InjuredHealthPercent = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.ShieldBipedObject:
+                        this.ShieldBipedObject = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.Regen:
+                        this.Regen = (MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>)obj;
+                        break;
+                    case Race_FieldIndex.UnarmedDamage:
+                        this.UnarmedDamage = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.UnarmedReach:
+                        this.UnarmedReach = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.BodyBipedObject:
+                        this.BodyBipedObject = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.AimAngleTolerance:
+                        this.AimAngleTolerance = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.FlightRadius:
+                        this.FlightRadius = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.AngularAccelerationRate:
+                        this.AngularAccelerationRate = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.AngularTolerance:
+                        this.AngularTolerance = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.MountData:
+                        this.MountData = (MaskItem<Exception?, MountData.ErrorMask?>?)obj;
                         break;
                     case Race_FieldIndex.SkeletalModel:
                         this.SkeletalModel = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
@@ -2090,6 +3071,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case Race_FieldIndex.HeadData:
                         this.HeadData = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
                         break;
+                    case Race_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -2105,7 +3089,36 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Skin != null) return true;
                 if (BodyTemplate != null) return true;
                 if (Keywords != null) return true;
-                if (Data != null) return true;
+                if (SkillBoost0 != null) return true;
+                if (SkillBoost1 != null) return true;
+                if (SkillBoost2 != null) return true;
+                if (SkillBoost3 != null) return true;
+                if (SkillBoost4 != null) return true;
+                if (SkillBoost5 != null) return true;
+                if (SkillBoost6 != null) return true;
+                if (Unknown != null) return true;
+                if (Height != null) return true;
+                if (Weight != null) return true;
+                if (Flags != null) return true;
+                if (Starting != null) return true;
+                if (BaseCarryWeight != null) return true;
+                if (BaseMass != null) return true;
+                if (AccelerationRate != null) return true;
+                if (DecelerationRate != null) return true;
+                if (Size != null) return true;
+                if (HeadBipedObject != null) return true;
+                if (HairBipedObject != null) return true;
+                if (InjuredHealthPercent != null) return true;
+                if (ShieldBipedObject != null) return true;
+                if (Regen != null) return true;
+                if (UnarmedDamage != null) return true;
+                if (UnarmedReach != null) return true;
+                if (BodyBipedObject != null) return true;
+                if (AimAngleTolerance != null) return true;
+                if (FlightRadius != null) return true;
+                if (AngularAccelerationRate != null) return true;
+                if (AngularTolerance != null) return true;
+                if (MountData != null) return true;
                 if (SkeletalModel != null) return true;
                 if (MovementTypeNames != null) return true;
                 if (Voices != null) return true;
@@ -2139,6 +3152,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (BaseMovementDefaultSneak != null) return true;
                 if (BaseMovementDefaultSprint != null) return true;
                 if (HeadData != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -2222,7 +3236,106 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     fg.AppendLine("]");
                 }
-                Data?.ToString(fg);
+                SkillBoost0?.ToString(fg);
+                SkillBoost1?.ToString(fg);
+                SkillBoost2?.ToString(fg);
+                SkillBoost3?.ToString(fg);
+                SkillBoost4?.ToString(fg);
+                SkillBoost5?.ToString(fg);
+                SkillBoost6?.ToString(fg);
+                fg.AppendItem(Unknown, "Unknown");
+                fg.AppendLine($"Height => {Height}");
+                fg.AppendLine($"Weight => {Weight}");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendLine("Starting =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Starting != null)
+                    {
+                        if (Starting.Overall != null)
+                        {
+                            fg.AppendLine(Starting.Overall.ToString());
+                        }
+                        if (Starting.Specific != null)
+                        {
+                            foreach (var subItem in Starting.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine("Key => [");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem.Key);
+                                    }
+                                    fg.AppendLine("]");
+                                    fg.AppendLine("Value => [");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem.Value);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendItem(BaseCarryWeight, "BaseCarryWeight");
+                fg.AppendItem(BaseMass, "BaseMass");
+                fg.AppendItem(AccelerationRate, "AccelerationRate");
+                fg.AppendItem(DecelerationRate, "DecelerationRate");
+                fg.AppendItem(Size, "Size");
+                fg.AppendItem(HeadBipedObject, "HeadBipedObject");
+                fg.AppendItem(HairBipedObject, "HairBipedObject");
+                fg.AppendItem(InjuredHealthPercent, "InjuredHealthPercent");
+                fg.AppendItem(ShieldBipedObject, "ShieldBipedObject");
+                fg.AppendLine("Regen =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Regen != null)
+                    {
+                        if (Regen.Overall != null)
+                        {
+                            fg.AppendLine(Regen.Overall.ToString());
+                        }
+                        if (Regen.Specific != null)
+                        {
+                            foreach (var subItem in Regen.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine("Key => [");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem.Key);
+                                    }
+                                    fg.AppendLine("]");
+                                    fg.AppendLine("Value => [");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem.Value);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+                fg.AppendItem(UnarmedDamage, "UnarmedDamage");
+                fg.AppendItem(UnarmedReach, "UnarmedReach");
+                fg.AppendItem(BodyBipedObject, "BodyBipedObject");
+                fg.AppendItem(AimAngleTolerance, "AimAngleTolerance");
+                fg.AppendItem(FlightRadius, "FlightRadius");
+                fg.AppendItem(AngularAccelerationRate, "AngularAccelerationRate");
+                fg.AppendItem(AngularTolerance, "AngularTolerance");
+                MountData?.ToString(fg);
                 if (SkeletalModel != null)
                 {
                     fg.AppendLine($"SkeletalModel => {SkeletalModel}");
@@ -2429,6 +3542,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     fg.AppendLine($"HeadData => {HeadData}");
                 }
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -2443,7 +3557,36 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Skin = this.Skin.Combine(rhs.Skin);
                 ret.BodyTemplate = this.BodyTemplate.Combine(rhs.BodyTemplate, (l, r) => l.Combine(r));
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
-                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
+                ret.SkillBoost0 = this.SkillBoost0.Combine(rhs.SkillBoost0, (l, r) => l.Combine(r));
+                ret.SkillBoost1 = this.SkillBoost1.Combine(rhs.SkillBoost1, (l, r) => l.Combine(r));
+                ret.SkillBoost2 = this.SkillBoost2.Combine(rhs.SkillBoost2, (l, r) => l.Combine(r));
+                ret.SkillBoost3 = this.SkillBoost3.Combine(rhs.SkillBoost3, (l, r) => l.Combine(r));
+                ret.SkillBoost4 = this.SkillBoost4.Combine(rhs.SkillBoost4, (l, r) => l.Combine(r));
+                ret.SkillBoost5 = this.SkillBoost5.Combine(rhs.SkillBoost5, (l, r) => l.Combine(r));
+                ret.SkillBoost6 = this.SkillBoost6.Combine(rhs.SkillBoost6, (l, r) => l.Combine(r));
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.Height = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Height?.Overall, rhs.Height?.Overall), GenderedItem.Combine(this.Height?.Specific, rhs.Height?.Specific));
+                ret.Weight = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Weight?.Overall, rhs.Weight?.Overall), GenderedItem.Combine(this.Weight?.Specific, rhs.Weight?.Specific));
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Starting = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ExceptionExt.Combine(this.Starting?.Overall, rhs.Starting?.Overall), new List<KeyValuePair<Exception?, Exception?>>(ExceptionExt.Combine(this.Starting?.Specific, rhs.Starting?.Specific)));
+                ret.BaseCarryWeight = this.BaseCarryWeight.Combine(rhs.BaseCarryWeight);
+                ret.BaseMass = this.BaseMass.Combine(rhs.BaseMass);
+                ret.AccelerationRate = this.AccelerationRate.Combine(rhs.AccelerationRate);
+                ret.DecelerationRate = this.DecelerationRate.Combine(rhs.DecelerationRate);
+                ret.Size = this.Size.Combine(rhs.Size);
+                ret.HeadBipedObject = this.HeadBipedObject.Combine(rhs.HeadBipedObject);
+                ret.HairBipedObject = this.HairBipedObject.Combine(rhs.HairBipedObject);
+                ret.InjuredHealthPercent = this.InjuredHealthPercent.Combine(rhs.InjuredHealthPercent);
+                ret.ShieldBipedObject = this.ShieldBipedObject.Combine(rhs.ShieldBipedObject);
+                ret.Regen = new MaskItem<Exception?, IEnumerable<KeyValuePair<Exception?, Exception?>>?>(ExceptionExt.Combine(this.Regen?.Overall, rhs.Regen?.Overall), new List<KeyValuePair<Exception?, Exception?>>(ExceptionExt.Combine(this.Regen?.Specific, rhs.Regen?.Specific)));
+                ret.UnarmedDamage = this.UnarmedDamage.Combine(rhs.UnarmedDamage);
+                ret.UnarmedReach = this.UnarmedReach.Combine(rhs.UnarmedReach);
+                ret.BodyBipedObject = this.BodyBipedObject.Combine(rhs.BodyBipedObject);
+                ret.AimAngleTolerance = this.AimAngleTolerance.Combine(rhs.AimAngleTolerance);
+                ret.FlightRadius = this.FlightRadius.Combine(rhs.FlightRadius);
+                ret.AngularAccelerationRate = this.AngularAccelerationRate.Combine(rhs.AngularAccelerationRate);
+                ret.AngularTolerance = this.AngularTolerance.Combine(rhs.AngularTolerance);
+                ret.MountData = this.MountData.Combine(rhs.MountData, (l, r) => l.Combine(r));
                 ret.SkeletalModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.SkeletalModel?.Overall, rhs.SkeletalModel?.Overall), GenderedItem.Combine(this.SkeletalModel?.Specific, rhs.SkeletalModel?.Specific));
                 ret.MovementTypeNames = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.MovementTypeNames?.Overall, rhs.MovementTypeNames?.Overall), ExceptionExt.Combine(this.MovementTypeNames?.Specific, rhs.MovementTypeNames?.Specific));
                 ret.Voices = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Voices?.Overall, rhs.Voices?.Overall), GenderedItem.Combine(this.Voices?.Specific, rhs.Voices?.Specific));
@@ -2477,6 +3620,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.BaseMovementDefaultSneak = this.BaseMovementDefaultSneak.Combine(rhs.BaseMovementDefaultSneak);
                 ret.BaseMovementDefaultSprint = this.BaseMovementDefaultSprint.Combine(rhs.BaseMovementDefaultSprint);
                 ret.HeadData = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.HeadData?.Overall, rhs.HeadData?.Overall), GenderedItem.Combine(this.HeadData?.Specific, rhs.HeadData?.Specific));
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2505,7 +3649,36 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Skin;
             public MaskItem<bool, BodyTemplate.TranslationMask?> BodyTemplate;
             public bool Keywords;
-            public MaskItem<bool, RaceData.TranslationMask?> Data;
+            public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost0;
+            public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost1;
+            public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost2;
+            public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost3;
+            public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost4;
+            public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost5;
+            public MaskItem<bool, SkillBoost.TranslationMask?> SkillBoost6;
+            public bool Unknown;
+            public MaskItem<bool, GenderedItem<bool>?> Height;
+            public MaskItem<bool, GenderedItem<bool>?> Weight;
+            public bool Flags;
+            public bool Starting;
+            public bool BaseCarryWeight;
+            public bool BaseMass;
+            public bool AccelerationRate;
+            public bool DecelerationRate;
+            public bool Size;
+            public bool HeadBipedObject;
+            public bool HairBipedObject;
+            public bool InjuredHealthPercent;
+            public bool ShieldBipedObject;
+            public bool Regen;
+            public bool UnarmedDamage;
+            public bool UnarmedReach;
+            public bool BodyBipedObject;
+            public bool AimAngleTolerance;
+            public bool FlightRadius;
+            public bool AngularAccelerationRate;
+            public bool AngularTolerance;
+            public MaskItem<bool, MountData.TranslationMask?> MountData;
             public MaskItem<bool, GenderedItem<SimpleModel.TranslationMask?>?> SkeletalModel;
             public bool MovementTypeNames;
             public MaskItem<bool, GenderedItem<bool>?> Voices;
@@ -2539,6 +3712,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool BaseMovementDefaultSneak;
             public bool BaseMovementDefaultSprint;
             public MaskItem<bool, GenderedItem<HeadData.TranslationMask?>?> HeadData;
+            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -2551,7 +3725,36 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Skin = defaultOn;
                 this.BodyTemplate = new MaskItem<bool, BodyTemplate.TranslationMask?>(defaultOn, null);
                 this.Keywords = defaultOn;
-                this.Data = new MaskItem<bool, RaceData.TranslationMask?>(defaultOn, null);
+                this.SkillBoost0 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
+                this.SkillBoost1 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
+                this.SkillBoost2 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
+                this.SkillBoost3 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
+                this.SkillBoost4 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
+                this.SkillBoost5 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
+                this.SkillBoost6 = new MaskItem<bool, SkillBoost.TranslationMask?>(defaultOn, null);
+                this.Unknown = defaultOn;
+                this.Height = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
+                this.Weight = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
+                this.Flags = defaultOn;
+                this.Starting = defaultOn;
+                this.BaseCarryWeight = defaultOn;
+                this.BaseMass = defaultOn;
+                this.AccelerationRate = defaultOn;
+                this.DecelerationRate = defaultOn;
+                this.Size = defaultOn;
+                this.HeadBipedObject = defaultOn;
+                this.HairBipedObject = defaultOn;
+                this.InjuredHealthPercent = defaultOn;
+                this.ShieldBipedObject = defaultOn;
+                this.Regen = defaultOn;
+                this.UnarmedDamage = defaultOn;
+                this.UnarmedReach = defaultOn;
+                this.BodyBipedObject = defaultOn;
+                this.AimAngleTolerance = defaultOn;
+                this.FlightRadius = defaultOn;
+                this.AngularAccelerationRate = defaultOn;
+                this.AngularTolerance = defaultOn;
+                this.MountData = new MaskItem<bool, MountData.TranslationMask?>(defaultOn, null);
                 this.SkeletalModel = new MaskItem<bool, GenderedItem<SimpleModel.TranslationMask?>?>(defaultOn, default);
                 this.MovementTypeNames = defaultOn;
                 this.Voices = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
@@ -2585,6 +3788,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.BaseMovementDefaultSneak = defaultOn;
                 this.BaseMovementDefaultSprint = defaultOn;
                 this.HeadData = new MaskItem<bool, GenderedItem<HeadData.TranslationMask?>?>(defaultOn, default);
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -2598,7 +3802,36 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Skin, null));
                 ret.Add((BodyTemplate?.Overall ?? true, BodyTemplate?.Specific?.GetCrystal()));
                 ret.Add((Keywords, null));
-                ret.Add((Data?.Overall ?? true, Data?.Specific?.GetCrystal()));
+                ret.Add((SkillBoost0?.Overall ?? true, SkillBoost0?.Specific?.GetCrystal()));
+                ret.Add((SkillBoost1?.Overall ?? true, SkillBoost1?.Specific?.GetCrystal()));
+                ret.Add((SkillBoost2?.Overall ?? true, SkillBoost2?.Specific?.GetCrystal()));
+                ret.Add((SkillBoost3?.Overall ?? true, SkillBoost3?.Specific?.GetCrystal()));
+                ret.Add((SkillBoost4?.Overall ?? true, SkillBoost4?.Specific?.GetCrystal()));
+                ret.Add((SkillBoost5?.Overall ?? true, SkillBoost5?.Specific?.GetCrystal()));
+                ret.Add((SkillBoost6?.Overall ?? true, SkillBoost6?.Specific?.GetCrystal()));
+                ret.Add((Unknown, null));
+                ret.Add((Height?.Overall ?? true, null));
+                ret.Add((Weight?.Overall ?? true, null));
+                ret.Add((Flags, null));
+                ret.Add((Starting, null));
+                ret.Add((BaseCarryWeight, null));
+                ret.Add((BaseMass, null));
+                ret.Add((AccelerationRate, null));
+                ret.Add((DecelerationRate, null));
+                ret.Add((Size, null));
+                ret.Add((HeadBipedObject, null));
+                ret.Add((HairBipedObject, null));
+                ret.Add((InjuredHealthPercent, null));
+                ret.Add((ShieldBipedObject, null));
+                ret.Add((Regen, null));
+                ret.Add((UnarmedDamage, null));
+                ret.Add((UnarmedReach, null));
+                ret.Add((BodyBipedObject, null));
+                ret.Add((AimAngleTolerance, null));
+                ret.Add((FlightRadius, null));
+                ret.Add((AngularAccelerationRate, null));
+                ret.Add((AngularTolerance, null));
+                ret.Add((MountData?.Overall ?? true, MountData?.Specific?.GetCrystal()));
                 ret.Add((SkeletalModel?.Overall ?? true, null));
                 ret.Add((MovementTypeNames, null));
                 ret.Add((Voices?.Overall ?? true, null));
@@ -2632,6 +3865,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((BaseMovementDefaultSneak, null));
                 ret.Add((BaseMovementDefaultSprint, null));
                 ret.Add((HeadData?.Overall ?? true, null));
+                ret.Add((DATADataTypeState, null));
             }
         }
         #endregion
@@ -2665,6 +3899,11 @@ namespace Mutagen.Bethesda.Skyrim
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
+        }
+        [Flags]
+        public enum DATADataType
+        {
+            Break0 = 1
         }
         #endregion
 
@@ -2736,7 +3975,36 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<Armor> Skin { get; set; }
         new BodyTemplate? BodyTemplate { get; set; }
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
-        new RaceData Data { get; set; }
+        new SkillBoost SkillBoost0 { get; set; }
+        new SkillBoost SkillBoost1 { get; set; }
+        new SkillBoost SkillBoost2 { get; set; }
+        new SkillBoost SkillBoost3 { get; set; }
+        new SkillBoost SkillBoost4 { get; set; }
+        new SkillBoost SkillBoost5 { get; set; }
+        new SkillBoost SkillBoost6 { get; set; }
+        new Int16 Unknown { get; set; }
+        new GenderedItem<Single> Height { get; set; }
+        new GenderedItem<Single> Weight { get; set; }
+        new Race.Flag Flags { get; set; }
+        new IDictionary<BasicStat, Single> Starting { get; }
+        new Single BaseCarryWeight { get; set; }
+        new Single BaseMass { get; set; }
+        new Single AccelerationRate { get; set; }
+        new Single DecelerationRate { get; set; }
+        new Size Size { get; set; }
+        new BipedObject HeadBipedObject { get; set; }
+        new BipedObject HairBipedObject { get; set; }
+        new Single InjuredHealthPercent { get; set; }
+        new BipedObject ShieldBipedObject { get; set; }
+        new IDictionary<BasicStat, Single> Regen { get; }
+        new Single UnarmedDamage { get; set; }
+        new Single UnarmedReach { get; set; }
+        new BipedObject BodyBipedObject { get; set; }
+        new Single AimAngleTolerance { get; set; }
+        new Single FlightRadius { get; set; }
+        new Single AngularAccelerationRate { get; set; }
+        new Single AngularTolerance { get; set; }
+        new MountData MountData { get; set; }
         new GenderedItem<SimpleModel?>? SkeletalModel { get; set; }
         new ExtendedList<String>? MovementTypeNames { get; set; }
         new GenderedItem<IFormLink<VoiceType>> Voices { get; set; }
@@ -2770,6 +4038,7 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<MovementType> BaseMovementDefaultSneak { get; set; }
         new FormLinkNullable<MovementType> BaseMovementDefaultSprint { get; set; }
         new GenderedItem<HeadData?>? HeadData { get; set; }
+        new Race.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Race.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -2781,6 +4050,10 @@ namespace Mutagen.Bethesda.Skyrim
         IRace,
         IRaceGetter
     {
+        new GenderedItem<Single> Height { get; set; }
+        new GenderedItem<Single> Weight { get; set; }
+        new IDictionary<BasicStat, Single> Starting { get; }
+        new IDictionary<BasicStat, Single> Regen { get; }
         new GenderedItem<SimpleModel?>? SkeletalModel { get; set; }
         new GenderedItem<IFormLink<VoiceType>> Voices { get; set; }
         new GenderedItem<IFormLink<Armor>>? DecapitateArmors { get; set; }
@@ -2807,7 +4080,36 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IArmorGetter> Skin { get; }
         IBodyTemplateGetter? BodyTemplate { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
-        IRaceDataGetter Data { get; }
+        ISkillBoostGetter SkillBoost0 { get; }
+        ISkillBoostGetter SkillBoost1 { get; }
+        ISkillBoostGetter SkillBoost2 { get; }
+        ISkillBoostGetter SkillBoost3 { get; }
+        ISkillBoostGetter SkillBoost4 { get; }
+        ISkillBoostGetter SkillBoost5 { get; }
+        ISkillBoostGetter SkillBoost6 { get; }
+        Int16 Unknown { get; }
+        IGenderedItemGetter<Single> Height { get; }
+        IGenderedItemGetter<Single> Weight { get; }
+        Race.Flag Flags { get; }
+        IReadOnlyDictionary<BasicStat, Single> Starting { get; }
+        Single BaseCarryWeight { get; }
+        Single BaseMass { get; }
+        Single AccelerationRate { get; }
+        Single DecelerationRate { get; }
+        Size Size { get; }
+        BipedObject HeadBipedObject { get; }
+        BipedObject HairBipedObject { get; }
+        Single InjuredHealthPercent { get; }
+        BipedObject ShieldBipedObject { get; }
+        IReadOnlyDictionary<BasicStat, Single> Regen { get; }
+        Single UnarmedDamage { get; }
+        Single UnarmedReach { get; }
+        BipedObject BodyBipedObject { get; }
+        Single AimAngleTolerance { get; }
+        Single FlightRadius { get; }
+        Single AngularAccelerationRate { get; }
+        Single AngularTolerance { get; }
+        IMountDataGetter MountData { get; }
         IGenderedItemGetter<ISimpleModelGetter?>? SkeletalModel { get; }
         IReadOnlyList<String>? MovementTypeNames { get; }
         IGenderedItemGetter<IFormLinkGetter<IVoiceTypeGetter>> Voices { get; }
@@ -2841,6 +4143,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSneak { get; }
         IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefaultSprint { get; }
         IGenderedItemGetter<IHeadDataGetter?>? HeadData { get; }
+        Race.DATADataType DATADataTypeState { get; }
 
         #region Mutagen
         Race.MajorFlag MajorFlags { get; }
@@ -3151,40 +4454,70 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Skin = 9,
         BodyTemplate = 10,
         Keywords = 11,
-        Data = 12,
-        SkeletalModel = 13,
-        MovementTypeNames = 14,
-        Voices = 15,
-        DecapitateArmors = 16,
-        DefaultHairColors = 17,
-        NumberOfTintsInList = 18,
-        FacegenMainClamp = 19,
-        FacegenFaceClamp = 20,
-        AttackRace = 21,
-        Attacks = 22,
-        BodyData = 23,
-        Hairs = 24,
-        Eyes = 25,
-        BodyPartData = 26,
-        BehaviorGraph = 27,
-        MaterialType = 28,
-        ImpactDataSet = 29,
-        DecapitationFX = 30,
-        OpenLootSound = 31,
-        CloseLootSound = 32,
-        BipedObjectNames = 33,
-        MovementTypes = 34,
-        EquipmentFlags = 35,
-        EquipmentSlots = 36,
-        UnarmedEquipSlot = 37,
-        FaceFxPhonemes = 38,
-        BaseMovementDefaultWalk = 39,
-        BaseMovementDefaultRun = 40,
-        BaseMovementDefaultSwim = 41,
-        BaseMovementDefaultFly = 42,
-        BaseMovementDefaultSneak = 43,
-        BaseMovementDefaultSprint = 44,
-        HeadData = 45,
+        SkillBoost0 = 12,
+        SkillBoost1 = 13,
+        SkillBoost2 = 14,
+        SkillBoost3 = 15,
+        SkillBoost4 = 16,
+        SkillBoost5 = 17,
+        SkillBoost6 = 18,
+        Unknown = 19,
+        Height = 20,
+        Weight = 21,
+        Flags = 22,
+        Starting = 23,
+        BaseCarryWeight = 24,
+        BaseMass = 25,
+        AccelerationRate = 26,
+        DecelerationRate = 27,
+        Size = 28,
+        HeadBipedObject = 29,
+        HairBipedObject = 30,
+        InjuredHealthPercent = 31,
+        ShieldBipedObject = 32,
+        Regen = 33,
+        UnarmedDamage = 34,
+        UnarmedReach = 35,
+        BodyBipedObject = 36,
+        AimAngleTolerance = 37,
+        FlightRadius = 38,
+        AngularAccelerationRate = 39,
+        AngularTolerance = 40,
+        MountData = 41,
+        SkeletalModel = 42,
+        MovementTypeNames = 43,
+        Voices = 44,
+        DecapitateArmors = 45,
+        DefaultHairColors = 46,
+        NumberOfTintsInList = 47,
+        FacegenMainClamp = 48,
+        FacegenFaceClamp = 49,
+        AttackRace = 50,
+        Attacks = 51,
+        BodyData = 52,
+        Hairs = 53,
+        Eyes = 54,
+        BodyPartData = 55,
+        BehaviorGraph = 56,
+        MaterialType = 57,
+        ImpactDataSet = 58,
+        DecapitationFX = 59,
+        OpenLootSound = 60,
+        CloseLootSound = 61,
+        BipedObjectNames = 62,
+        MovementTypes = 63,
+        EquipmentFlags = 64,
+        EquipmentSlots = 65,
+        UnarmedEquipSlot = 66,
+        FaceFxPhonemes = 67,
+        BaseMovementDefaultWalk = 68,
+        BaseMovementDefaultRun = 69,
+        BaseMovementDefaultSwim = 70,
+        BaseMovementDefaultFly = 71,
+        BaseMovementDefaultSneak = 72,
+        BaseMovementDefaultSprint = 73,
+        HeadData = 74,
+        DATADataTypeState = 75,
     }
     #endregion
 
@@ -3202,9 +4535,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "54b1dfac-1494-41b6-b6d3-653bc47987eb";
 
-        public const ushort AdditionalFieldCount = 40;
+        public const ushort AdditionalFieldCount = 70;
 
-        public const ushort FieldCount = 46;
+        public const ushort FieldCount = 76;
 
         public static readonly Type MaskType = typeof(Race.Mask<>);
 
@@ -3246,8 +4579,66 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Race_FieldIndex.BodyTemplate;
                 case "KEYWORDS":
                     return (ushort)Race_FieldIndex.Keywords;
-                case "DATA":
-                    return (ushort)Race_FieldIndex.Data;
+                case "SKILLBOOST0":
+                    return (ushort)Race_FieldIndex.SkillBoost0;
+                case "SKILLBOOST1":
+                    return (ushort)Race_FieldIndex.SkillBoost1;
+                case "SKILLBOOST2":
+                    return (ushort)Race_FieldIndex.SkillBoost2;
+                case "SKILLBOOST3":
+                    return (ushort)Race_FieldIndex.SkillBoost3;
+                case "SKILLBOOST4":
+                    return (ushort)Race_FieldIndex.SkillBoost4;
+                case "SKILLBOOST5":
+                    return (ushort)Race_FieldIndex.SkillBoost5;
+                case "SKILLBOOST6":
+                    return (ushort)Race_FieldIndex.SkillBoost6;
+                case "UNKNOWN":
+                    return (ushort)Race_FieldIndex.Unknown;
+                case "HEIGHT":
+                    return (ushort)Race_FieldIndex.Height;
+                case "WEIGHT":
+                    return (ushort)Race_FieldIndex.Weight;
+                case "FLAGS":
+                    return (ushort)Race_FieldIndex.Flags;
+                case "STARTING":
+                    return (ushort)Race_FieldIndex.Starting;
+                case "BASECARRYWEIGHT":
+                    return (ushort)Race_FieldIndex.BaseCarryWeight;
+                case "BASEMASS":
+                    return (ushort)Race_FieldIndex.BaseMass;
+                case "ACCELERATIONRATE":
+                    return (ushort)Race_FieldIndex.AccelerationRate;
+                case "DECELERATIONRATE":
+                    return (ushort)Race_FieldIndex.DecelerationRate;
+                case "SIZE":
+                    return (ushort)Race_FieldIndex.Size;
+                case "HEADBIPEDOBJECT":
+                    return (ushort)Race_FieldIndex.HeadBipedObject;
+                case "HAIRBIPEDOBJECT":
+                    return (ushort)Race_FieldIndex.HairBipedObject;
+                case "INJUREDHEALTHPERCENT":
+                    return (ushort)Race_FieldIndex.InjuredHealthPercent;
+                case "SHIELDBIPEDOBJECT":
+                    return (ushort)Race_FieldIndex.ShieldBipedObject;
+                case "REGEN":
+                    return (ushort)Race_FieldIndex.Regen;
+                case "UNARMEDDAMAGE":
+                    return (ushort)Race_FieldIndex.UnarmedDamage;
+                case "UNARMEDREACH":
+                    return (ushort)Race_FieldIndex.UnarmedReach;
+                case "BODYBIPEDOBJECT":
+                    return (ushort)Race_FieldIndex.BodyBipedObject;
+                case "AIMANGLETOLERANCE":
+                    return (ushort)Race_FieldIndex.AimAngleTolerance;
+                case "FLIGHTRADIUS":
+                    return (ushort)Race_FieldIndex.FlightRadius;
+                case "ANGULARACCELERATIONRATE":
+                    return (ushort)Race_FieldIndex.AngularAccelerationRate;
+                case "ANGULARTOLERANCE":
+                    return (ushort)Race_FieldIndex.AngularTolerance;
+                case "MOUNTDATA":
+                    return (ushort)Race_FieldIndex.MountData;
                 case "SKELETALMODEL":
                     return (ushort)Race_FieldIndex.SkeletalModel;
                 case "MOVEMENTTYPENAMES":
@@ -3314,6 +4705,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Race_FieldIndex.BaseMovementDefaultSprint;
                 case "HEADDATA":
                     return (ushort)Race_FieldIndex.HeadData;
+                case "DATADATATYPESTATE":
+                    return (ushort)Race_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -3337,7 +4730,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.Description:
                 case Race_FieldIndex.Skin:
                 case Race_FieldIndex.BodyTemplate:
-                case Race_FieldIndex.Data:
+                case Race_FieldIndex.SkillBoost0:
+                case Race_FieldIndex.SkillBoost1:
+                case Race_FieldIndex.SkillBoost2:
+                case Race_FieldIndex.SkillBoost3:
+                case Race_FieldIndex.SkillBoost4:
+                case Race_FieldIndex.SkillBoost5:
+                case Race_FieldIndex.SkillBoost6:
+                case Race_FieldIndex.Unknown:
+                case Race_FieldIndex.Height:
+                case Race_FieldIndex.Weight:
+                case Race_FieldIndex.Flags:
+                case Race_FieldIndex.Starting:
+                case Race_FieldIndex.BaseCarryWeight:
+                case Race_FieldIndex.BaseMass:
+                case Race_FieldIndex.AccelerationRate:
+                case Race_FieldIndex.DecelerationRate:
+                case Race_FieldIndex.Size:
+                case Race_FieldIndex.HeadBipedObject:
+                case Race_FieldIndex.HairBipedObject:
+                case Race_FieldIndex.InjuredHealthPercent:
+                case Race_FieldIndex.ShieldBipedObject:
+                case Race_FieldIndex.Regen:
+                case Race_FieldIndex.UnarmedDamage:
+                case Race_FieldIndex.UnarmedReach:
+                case Race_FieldIndex.BodyBipedObject:
+                case Race_FieldIndex.AimAngleTolerance:
+                case Race_FieldIndex.FlightRadius:
+                case Race_FieldIndex.AngularAccelerationRate:
+                case Race_FieldIndex.AngularTolerance:
+                case Race_FieldIndex.MountData:
                 case Race_FieldIndex.SkeletalModel:
                 case Race_FieldIndex.Voices:
                 case Race_FieldIndex.DecapitateArmors:
@@ -3365,6 +4787,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.BaseMovementDefaultSneak:
                 case Race_FieldIndex.BaseMovementDefaultSprint:
                 case Race_FieldIndex.HeadData:
+                case Race_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -3377,7 +4800,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case Race_FieldIndex.BodyTemplate:
-                case Race_FieldIndex.Data:
+                case Race_FieldIndex.SkillBoost0:
+                case Race_FieldIndex.SkillBoost1:
+                case Race_FieldIndex.SkillBoost2:
+                case Race_FieldIndex.SkillBoost3:
+                case Race_FieldIndex.SkillBoost4:
+                case Race_FieldIndex.SkillBoost5:
+                case Race_FieldIndex.SkillBoost6:
+                case Race_FieldIndex.MountData:
                 case Race_FieldIndex.SkeletalModel:
                 case Race_FieldIndex.Attacks:
                 case Race_FieldIndex.BodyData:
@@ -3391,6 +4821,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.ActorEffect:
                 case Race_FieldIndex.Skin:
                 case Race_FieldIndex.Keywords:
+                case Race_FieldIndex.Unknown:
+                case Race_FieldIndex.Height:
+                case Race_FieldIndex.Weight:
+                case Race_FieldIndex.Flags:
+                case Race_FieldIndex.Starting:
+                case Race_FieldIndex.BaseCarryWeight:
+                case Race_FieldIndex.BaseMass:
+                case Race_FieldIndex.AccelerationRate:
+                case Race_FieldIndex.DecelerationRate:
+                case Race_FieldIndex.Size:
+                case Race_FieldIndex.HeadBipedObject:
+                case Race_FieldIndex.HairBipedObject:
+                case Race_FieldIndex.InjuredHealthPercent:
+                case Race_FieldIndex.ShieldBipedObject:
+                case Race_FieldIndex.Regen:
+                case Race_FieldIndex.UnarmedDamage:
+                case Race_FieldIndex.UnarmedReach:
+                case Race_FieldIndex.BodyBipedObject:
+                case Race_FieldIndex.AimAngleTolerance:
+                case Race_FieldIndex.FlightRadius:
+                case Race_FieldIndex.AngularAccelerationRate:
+                case Race_FieldIndex.AngularTolerance:
                 case Race_FieldIndex.MovementTypeNames:
                 case Race_FieldIndex.Voices:
                 case Race_FieldIndex.DecapitateArmors:
@@ -3417,6 +4869,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.BaseMovementDefaultFly:
                 case Race_FieldIndex.BaseMovementDefaultSneak:
                 case Race_FieldIndex.BaseMovementDefaultSprint:
+                case Race_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
@@ -3434,7 +4887,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.Skin:
                 case Race_FieldIndex.BodyTemplate:
                 case Race_FieldIndex.Keywords:
-                case Race_FieldIndex.Data:
+                case Race_FieldIndex.SkillBoost0:
+                case Race_FieldIndex.SkillBoost1:
+                case Race_FieldIndex.SkillBoost2:
+                case Race_FieldIndex.SkillBoost3:
+                case Race_FieldIndex.SkillBoost4:
+                case Race_FieldIndex.SkillBoost5:
+                case Race_FieldIndex.SkillBoost6:
+                case Race_FieldIndex.Unknown:
+                case Race_FieldIndex.Height:
+                case Race_FieldIndex.Weight:
+                case Race_FieldIndex.Flags:
+                case Race_FieldIndex.Starting:
+                case Race_FieldIndex.BaseCarryWeight:
+                case Race_FieldIndex.BaseMass:
+                case Race_FieldIndex.AccelerationRate:
+                case Race_FieldIndex.DecelerationRate:
+                case Race_FieldIndex.Size:
+                case Race_FieldIndex.HeadBipedObject:
+                case Race_FieldIndex.HairBipedObject:
+                case Race_FieldIndex.InjuredHealthPercent:
+                case Race_FieldIndex.ShieldBipedObject:
+                case Race_FieldIndex.Regen:
+                case Race_FieldIndex.UnarmedDamage:
+                case Race_FieldIndex.UnarmedReach:
+                case Race_FieldIndex.BodyBipedObject:
+                case Race_FieldIndex.AimAngleTolerance:
+                case Race_FieldIndex.FlightRadius:
+                case Race_FieldIndex.AngularAccelerationRate:
+                case Race_FieldIndex.AngularTolerance:
+                case Race_FieldIndex.MountData:
                 case Race_FieldIndex.SkeletalModel:
                 case Race_FieldIndex.MovementTypeNames:
                 case Race_FieldIndex.Voices:
@@ -3468,6 +4950,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.BaseMovementDefaultSneak:
                 case Race_FieldIndex.BaseMovementDefaultSprint:
                 case Race_FieldIndex.HeadData:
+                case Race_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
@@ -3491,8 +4974,66 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "BodyTemplate";
                 case Race_FieldIndex.Keywords:
                     return "Keywords";
-                case Race_FieldIndex.Data:
-                    return "Data";
+                case Race_FieldIndex.SkillBoost0:
+                    return "SkillBoost0";
+                case Race_FieldIndex.SkillBoost1:
+                    return "SkillBoost1";
+                case Race_FieldIndex.SkillBoost2:
+                    return "SkillBoost2";
+                case Race_FieldIndex.SkillBoost3:
+                    return "SkillBoost3";
+                case Race_FieldIndex.SkillBoost4:
+                    return "SkillBoost4";
+                case Race_FieldIndex.SkillBoost5:
+                    return "SkillBoost5";
+                case Race_FieldIndex.SkillBoost6:
+                    return "SkillBoost6";
+                case Race_FieldIndex.Unknown:
+                    return "Unknown";
+                case Race_FieldIndex.Height:
+                    return "Height";
+                case Race_FieldIndex.Weight:
+                    return "Weight";
+                case Race_FieldIndex.Flags:
+                    return "Flags";
+                case Race_FieldIndex.Starting:
+                    return "Starting";
+                case Race_FieldIndex.BaseCarryWeight:
+                    return "BaseCarryWeight";
+                case Race_FieldIndex.BaseMass:
+                    return "BaseMass";
+                case Race_FieldIndex.AccelerationRate:
+                    return "AccelerationRate";
+                case Race_FieldIndex.DecelerationRate:
+                    return "DecelerationRate";
+                case Race_FieldIndex.Size:
+                    return "Size";
+                case Race_FieldIndex.HeadBipedObject:
+                    return "HeadBipedObject";
+                case Race_FieldIndex.HairBipedObject:
+                    return "HairBipedObject";
+                case Race_FieldIndex.InjuredHealthPercent:
+                    return "InjuredHealthPercent";
+                case Race_FieldIndex.ShieldBipedObject:
+                    return "ShieldBipedObject";
+                case Race_FieldIndex.Regen:
+                    return "Regen";
+                case Race_FieldIndex.UnarmedDamage:
+                    return "UnarmedDamage";
+                case Race_FieldIndex.UnarmedReach:
+                    return "UnarmedReach";
+                case Race_FieldIndex.BodyBipedObject:
+                    return "BodyBipedObject";
+                case Race_FieldIndex.AimAngleTolerance:
+                    return "AimAngleTolerance";
+                case Race_FieldIndex.FlightRadius:
+                    return "FlightRadius";
+                case Race_FieldIndex.AngularAccelerationRate:
+                    return "AngularAccelerationRate";
+                case Race_FieldIndex.AngularTolerance:
+                    return "AngularTolerance";
+                case Race_FieldIndex.MountData:
+                    return "MountData";
                 case Race_FieldIndex.SkeletalModel:
                     return "SkeletalModel";
                 case Race_FieldIndex.MovementTypeNames:
@@ -3559,6 +5100,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "BaseMovementDefaultSprint";
                 case Race_FieldIndex.HeadData:
                     return "HeadData";
+                case Race_FieldIndex.DATADataTypeState:
+                    return "DATADataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -3575,7 +5118,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.Skin:
                 case Race_FieldIndex.BodyTemplate:
                 case Race_FieldIndex.Keywords:
-                case Race_FieldIndex.Data:
+                case Race_FieldIndex.SkillBoost0:
+                case Race_FieldIndex.SkillBoost1:
+                case Race_FieldIndex.SkillBoost2:
+                case Race_FieldIndex.SkillBoost3:
+                case Race_FieldIndex.SkillBoost4:
+                case Race_FieldIndex.SkillBoost5:
+                case Race_FieldIndex.SkillBoost6:
+                case Race_FieldIndex.Unknown:
+                case Race_FieldIndex.Height:
+                case Race_FieldIndex.Weight:
+                case Race_FieldIndex.Flags:
+                case Race_FieldIndex.Starting:
+                case Race_FieldIndex.BaseCarryWeight:
+                case Race_FieldIndex.BaseMass:
+                case Race_FieldIndex.AccelerationRate:
+                case Race_FieldIndex.DecelerationRate:
+                case Race_FieldIndex.Size:
+                case Race_FieldIndex.HeadBipedObject:
+                case Race_FieldIndex.HairBipedObject:
+                case Race_FieldIndex.InjuredHealthPercent:
+                case Race_FieldIndex.ShieldBipedObject:
+                case Race_FieldIndex.Regen:
+                case Race_FieldIndex.UnarmedDamage:
+                case Race_FieldIndex.UnarmedReach:
+                case Race_FieldIndex.BodyBipedObject:
+                case Race_FieldIndex.AimAngleTolerance:
+                case Race_FieldIndex.FlightRadius:
+                case Race_FieldIndex.AngularAccelerationRate:
+                case Race_FieldIndex.AngularTolerance:
+                case Race_FieldIndex.MountData:
                 case Race_FieldIndex.SkeletalModel:
                 case Race_FieldIndex.MovementTypeNames:
                 case Race_FieldIndex.Voices:
@@ -3609,6 +5181,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.BaseMovementDefaultSneak:
                 case Race_FieldIndex.BaseMovementDefaultSprint:
                 case Race_FieldIndex.HeadData:
+                case Race_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
@@ -3626,7 +5199,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.Skin:
                 case Race_FieldIndex.BodyTemplate:
                 case Race_FieldIndex.Keywords:
-                case Race_FieldIndex.Data:
+                case Race_FieldIndex.SkillBoost0:
+                case Race_FieldIndex.SkillBoost1:
+                case Race_FieldIndex.SkillBoost2:
+                case Race_FieldIndex.SkillBoost3:
+                case Race_FieldIndex.SkillBoost4:
+                case Race_FieldIndex.SkillBoost5:
+                case Race_FieldIndex.SkillBoost6:
+                case Race_FieldIndex.Unknown:
+                case Race_FieldIndex.Height:
+                case Race_FieldIndex.Weight:
+                case Race_FieldIndex.Flags:
+                case Race_FieldIndex.Starting:
+                case Race_FieldIndex.BaseCarryWeight:
+                case Race_FieldIndex.BaseMass:
+                case Race_FieldIndex.AccelerationRate:
+                case Race_FieldIndex.DecelerationRate:
+                case Race_FieldIndex.Size:
+                case Race_FieldIndex.HeadBipedObject:
+                case Race_FieldIndex.HairBipedObject:
+                case Race_FieldIndex.InjuredHealthPercent:
+                case Race_FieldIndex.ShieldBipedObject:
+                case Race_FieldIndex.Regen:
+                case Race_FieldIndex.UnarmedDamage:
+                case Race_FieldIndex.UnarmedReach:
+                case Race_FieldIndex.BodyBipedObject:
+                case Race_FieldIndex.AimAngleTolerance:
+                case Race_FieldIndex.FlightRadius:
+                case Race_FieldIndex.AngularAccelerationRate:
+                case Race_FieldIndex.AngularTolerance:
+                case Race_FieldIndex.MountData:
                 case Race_FieldIndex.SkeletalModel:
                 case Race_FieldIndex.MovementTypeNames:
                 case Race_FieldIndex.Voices:
@@ -3660,6 +5262,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.BaseMovementDefaultSneak:
                 case Race_FieldIndex.BaseMovementDefaultSprint:
                 case Race_FieldIndex.HeadData:
+                case Race_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
@@ -3683,8 +5286,66 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(BodyTemplate);
                 case Race_FieldIndex.Keywords:
                     return typeof(ExtendedList<IFormLink<Keyword>>);
-                case Race_FieldIndex.Data:
-                    return typeof(RaceData);
+                case Race_FieldIndex.SkillBoost0:
+                    return typeof(SkillBoost);
+                case Race_FieldIndex.SkillBoost1:
+                    return typeof(SkillBoost);
+                case Race_FieldIndex.SkillBoost2:
+                    return typeof(SkillBoost);
+                case Race_FieldIndex.SkillBoost3:
+                    return typeof(SkillBoost);
+                case Race_FieldIndex.SkillBoost4:
+                    return typeof(SkillBoost);
+                case Race_FieldIndex.SkillBoost5:
+                    return typeof(SkillBoost);
+                case Race_FieldIndex.SkillBoost6:
+                    return typeof(SkillBoost);
+                case Race_FieldIndex.Unknown:
+                    return typeof(Int16);
+                case Race_FieldIndex.Height:
+                    return typeof(GenderedItem<Single>);
+                case Race_FieldIndex.Weight:
+                    return typeof(GenderedItem<Single>);
+                case Race_FieldIndex.Flags:
+                    return typeof(Race.Flag);
+                case Race_FieldIndex.Starting:
+                    return typeof(Dictionary<BasicStat, Single>);
+                case Race_FieldIndex.BaseCarryWeight:
+                    return typeof(Single);
+                case Race_FieldIndex.BaseMass:
+                    return typeof(Single);
+                case Race_FieldIndex.AccelerationRate:
+                    return typeof(Single);
+                case Race_FieldIndex.DecelerationRate:
+                    return typeof(Single);
+                case Race_FieldIndex.Size:
+                    return typeof(Size);
+                case Race_FieldIndex.HeadBipedObject:
+                    return typeof(BipedObject);
+                case Race_FieldIndex.HairBipedObject:
+                    return typeof(BipedObject);
+                case Race_FieldIndex.InjuredHealthPercent:
+                    return typeof(Single);
+                case Race_FieldIndex.ShieldBipedObject:
+                    return typeof(BipedObject);
+                case Race_FieldIndex.Regen:
+                    return typeof(Dictionary<BasicStat, Single>);
+                case Race_FieldIndex.UnarmedDamage:
+                    return typeof(Single);
+                case Race_FieldIndex.UnarmedReach:
+                    return typeof(Single);
+                case Race_FieldIndex.BodyBipedObject:
+                    return typeof(BipedObject);
+                case Race_FieldIndex.AimAngleTolerance:
+                    return typeof(Single);
+                case Race_FieldIndex.FlightRadius:
+                    return typeof(Single);
+                case Race_FieldIndex.AngularAccelerationRate:
+                    return typeof(Single);
+                case Race_FieldIndex.AngularTolerance:
+                    return typeof(Single);
+                case Race_FieldIndex.MountData:
+                    return typeof(MountData);
                 case Race_FieldIndex.SkeletalModel:
                     return typeof(GenderedItem<SimpleModel?>);
                 case Race_FieldIndex.MovementTypeNames:
@@ -3751,6 +5412,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(FormLinkNullable<MovementType>);
                 case Race_FieldIndex.HeadData:
                     return typeof(GenderedItem<HeadData?>);
+                case Race_FieldIndex.DATADataTypeState:
+                    return typeof(Race.DATADataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -3812,7 +5475,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 new RecordType("MODL"),
                 new RecordType("ANAM")));
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 39;
+        public const int NumTypedFields = 38;
         public static readonly Type BinaryWriteTranslation = typeof(RaceBinaryWriteTranslation);
         public static RecordTypeConverter HeadDataFemaleConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
@@ -3874,7 +5537,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Skin = null;
             item.BodyTemplate = null;
             item.Keywords = null;
-            item.Data.Clear();
+            item.SkillBoost0.Clear();
+            item.SkillBoost1.Clear();
+            item.SkillBoost2.Clear();
+            item.SkillBoost3.Clear();
+            item.SkillBoost4.Clear();
+            item.SkillBoost5.Clear();
+            item.SkillBoost6.Clear();
+            item.Unknown = default;
+            item.Height.Male = default;
+            item.Height.Female = default;
+            item.Weight.Male = default;
+            item.Weight.Female = default;
+            item.Flags = default;
+            item.Starting.Clear();
+            item.BaseCarryWeight = default;
+            item.BaseMass = default;
+            item.AccelerationRate = default;
+            item.DecelerationRate = default;
+            item.Size = default;
+            item.HeadBipedObject = Race._HeadBipedObject_Default;
+            item.HairBipedObject = Race._HairBipedObject_Default;
+            item.InjuredHealthPercent = default;
+            item.ShieldBipedObject = Race._ShieldBipedObject_Default;
+            item.Regen.Clear();
+            item.UnarmedDamage = default;
+            item.UnarmedReach = default;
+            item.BodyBipedObject = Race._BodyBipedObject_Default;
+            item.AimAngleTolerance = default;
+            item.FlightRadius = default;
+            item.AngularAccelerationRate = default;
+            item.AngularTolerance = default;
+            item.MountData.Clear();
             item.SkeletalModel = null;
             item.MovementTypeNames = null;
             item.Voices.Male = new FormLink<VoiceType>(FormKey.Null);
@@ -3911,6 +5605,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.BaseMovementDefaultSneak = null;
             item.BaseMovementDefaultSprint = null;
             item.HeadData = null;
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -3953,6 +5648,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             try
             {
+                item.DATADataTypeState |= Race.DATADataType.Break0;
                 foreach (var elem in node.Elements())
                 {
                     FillPrivateElementXml(
@@ -4085,8 +5781,57 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    item.Data = Mutagen.Bethesda.Skyrim.RaceData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Data);
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.SkillBoost0 = Mutagen.Bethesda.Skyrim.SkillBoost.CreateFromBinary(frame: dataFrame);
+                    item.SkillBoost1 = Mutagen.Bethesda.Skyrim.SkillBoost.CreateFromBinary(frame: dataFrame);
+                    item.SkillBoost2 = Mutagen.Bethesda.Skyrim.SkillBoost.CreateFromBinary(frame: dataFrame);
+                    item.SkillBoost3 = Mutagen.Bethesda.Skyrim.SkillBoost.CreateFromBinary(frame: dataFrame);
+                    item.SkillBoost4 = Mutagen.Bethesda.Skyrim.SkillBoost.CreateFromBinary(frame: dataFrame);
+                    item.SkillBoost5 = Mutagen.Bethesda.Skyrim.SkillBoost.CreateFromBinary(frame: dataFrame);
+                    item.SkillBoost6 = Mutagen.Bethesda.Skyrim.SkillBoost.CreateFromBinary(frame: dataFrame);
+                    item.Unknown = dataFrame.ReadInt16();
+                    item.Height = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<Single>(
+                        frame: frame,
+                        transl: FloatBinaryTranslation.Instance.Parse);
+                    item.Weight = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<Single>(
+                        frame: frame,
+                        transl: FloatBinaryTranslation.Instance.Parse);
+                    item.Flags = EnumBinaryTranslation<Race.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    Mutagen.Bethesda.Binary.DictBinaryTranslation<Single>.Instance.Parse<BasicStat>(
+                        frame: frame,
+                        item: item.Starting,
+                        transl: FloatBinaryTranslation.Instance.Parse);
+                    item.BaseCarryWeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.BaseMass = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.AccelerationRate = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.DecelerationRate = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.Size = EnumBinaryTranslation<Size>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.HeadBipedObject = EnumBinaryTranslation<BipedObject>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.HairBipedObject = EnumBinaryTranslation<BipedObject>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.InjuredHealthPercent = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.ShieldBipedObject = EnumBinaryTranslation<BipedObject>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    Mutagen.Bethesda.Binary.DictBinaryTranslation<Single>.Instance.Parse<BasicStat>(
+                        frame: frame,
+                        item: item.Regen,
+                        transl: FloatBinaryTranslation.Instance.Parse);
+                    item.UnarmedDamage = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.UnarmedReach = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.BodyBipedObject = EnumBinaryTranslation<BipedObject>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.AimAngleTolerance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.FlightRadius = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.AngularAccelerationRate = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.AngularTolerance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    RaceBinaryCreateTranslation.FillBinaryFlags2CustomPublic(
+                        frame: dataFrame,
+                        item: item);
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= Race.DATADataType.Break0;
+                        return TryGet<int?>.Succeed((int)Race_FieldIndex.AngularTolerance);
+                    }
+                    item.MountData = Mutagen.Bethesda.Skyrim.MountData.CreateFromBinary(frame: dataFrame);
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.MountData);
                 }
                 case 0x4D414E4D: // MNAM
                 case 0x4D414E46: // FNAM
@@ -4484,7 +6229,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.Data = MaskItemExt.Factory(item.Data.GetEqualsMask(rhs.Data, include), include);
+            ret.SkillBoost0 = MaskItemExt.Factory(item.SkillBoost0.GetEqualsMask(rhs.SkillBoost0, include), include);
+            ret.SkillBoost1 = MaskItemExt.Factory(item.SkillBoost1.GetEqualsMask(rhs.SkillBoost1, include), include);
+            ret.SkillBoost2 = MaskItemExt.Factory(item.SkillBoost2.GetEqualsMask(rhs.SkillBoost2, include), include);
+            ret.SkillBoost3 = MaskItemExt.Factory(item.SkillBoost3.GetEqualsMask(rhs.SkillBoost3, include), include);
+            ret.SkillBoost4 = MaskItemExt.Factory(item.SkillBoost4.GetEqualsMask(rhs.SkillBoost4, include), include);
+            ret.SkillBoost5 = MaskItemExt.Factory(item.SkillBoost5.GetEqualsMask(rhs.SkillBoost5, include), include);
+            ret.SkillBoost6 = MaskItemExt.Factory(item.SkillBoost6.GetEqualsMask(rhs.SkillBoost6, include), include);
+            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.Height = new GenderedItem<bool>(
+                male: item.Height.Male.EqualsWithin(rhs.Height.Male),
+                female: item.Height.Female.EqualsWithin(rhs.Height.Female));
+            ret.Weight = new GenderedItem<bool>(
+                male: item.Weight.Male.EqualsWithin(rhs.Weight.Male),
+                female: item.Weight.Female.EqualsWithin(rhs.Weight.Female));
+            ret.Flags = item.Flags == rhs.Flags;
+            {
+                var specific = item.Starting.SelectAgainst<KeyValuePair<BasicStat, Single>, KeyValuePair<bool, bool>>(rhs.Starting, ((l, r) => new KeyValuePair<bool, bool>(object.Equals(l.Key, r.Key), object.Equals(l.Value, r.Value))), out var countEqual);
+                ret.Starting = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(countEqual && specific.All((b) => b.Key && b.Value), specific);
+            }
+            ret.BaseCarryWeight = item.BaseCarryWeight.EqualsWithin(rhs.BaseCarryWeight);
+            ret.BaseMass = item.BaseMass.EqualsWithin(rhs.BaseMass);
+            ret.AccelerationRate = item.AccelerationRate.EqualsWithin(rhs.AccelerationRate);
+            ret.DecelerationRate = item.DecelerationRate.EqualsWithin(rhs.DecelerationRate);
+            ret.Size = item.Size == rhs.Size;
+            ret.HeadBipedObject = item.HeadBipedObject == rhs.HeadBipedObject;
+            ret.HairBipedObject = item.HairBipedObject == rhs.HairBipedObject;
+            ret.InjuredHealthPercent = item.InjuredHealthPercent.EqualsWithin(rhs.InjuredHealthPercent);
+            ret.ShieldBipedObject = item.ShieldBipedObject == rhs.ShieldBipedObject;
+            {
+                var specific = item.Regen.SelectAgainst<KeyValuePair<BasicStat, Single>, KeyValuePair<bool, bool>>(rhs.Regen, ((l, r) => new KeyValuePair<bool, bool>(object.Equals(l.Key, r.Key), object.Equals(l.Value, r.Value))), out var countEqual);
+                ret.Regen = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(countEqual && specific.All((b) => b.Key && b.Value), specific);
+            }
+            ret.UnarmedDamage = item.UnarmedDamage.EqualsWithin(rhs.UnarmedDamage);
+            ret.UnarmedReach = item.UnarmedReach.EqualsWithin(rhs.UnarmedReach);
+            ret.BodyBipedObject = item.BodyBipedObject == rhs.BodyBipedObject;
+            ret.AimAngleTolerance = item.AimAngleTolerance.EqualsWithin(rhs.AimAngleTolerance);
+            ret.FlightRadius = item.FlightRadius.EqualsWithin(rhs.FlightRadius);
+            ret.AngularAccelerationRate = item.AngularAccelerationRate.EqualsWithin(rhs.AngularAccelerationRate);
+            ret.AngularTolerance = item.AngularTolerance.EqualsWithin(rhs.AngularTolerance);
+            ret.MountData = MaskItemExt.Factory(item.MountData.GetEqualsMask(rhs.MountData, include), include);
             ret.SkeletalModel = GenderedItem.EqualityMaskHelper(
                 lhs: item.SkeletalModel,
                 rhs: rhs.SkeletalModel,
@@ -4565,6 +6349,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs: rhs.HeadData,
                 maskGetter: (l, r, i) => EqualsMaskHelper.EqualsHelper(l, r, (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl), i),
                 include: include);
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -4673,9 +6458,155 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.Data?.Overall ?? true)
+            if (printMask?.SkillBoost0?.Overall ?? true)
             {
-                item.Data?.ToString(fg, "Data");
+                item.SkillBoost0?.ToString(fg, "SkillBoost0");
+            }
+            if (printMask?.SkillBoost1?.Overall ?? true)
+            {
+                item.SkillBoost1?.ToString(fg, "SkillBoost1");
+            }
+            if (printMask?.SkillBoost2?.Overall ?? true)
+            {
+                item.SkillBoost2?.ToString(fg, "SkillBoost2");
+            }
+            if (printMask?.SkillBoost3?.Overall ?? true)
+            {
+                item.SkillBoost3?.ToString(fg, "SkillBoost3");
+            }
+            if (printMask?.SkillBoost4?.Overall ?? true)
+            {
+                item.SkillBoost4?.ToString(fg, "SkillBoost4");
+            }
+            if (printMask?.SkillBoost5?.Overall ?? true)
+            {
+                item.SkillBoost5?.ToString(fg, "SkillBoost5");
+            }
+            if (printMask?.SkillBoost6?.Overall ?? true)
+            {
+                item.SkillBoost6?.ToString(fg, "SkillBoost6");
+            }
+            if (printMask?.Unknown ?? true)
+            {
+                fg.AppendItem(item.Unknown, "Unknown");
+            }
+            if (true)
+            {
+                item.Height.ToString(fg, "Height");
+            }
+            if (true)
+            {
+                item.Weight.ToString(fg, "Weight");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.Starting?.Overall ?? true)
+            {
+                fg.AppendLine("Starting =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Starting)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem.Key);
+                            fg.AppendItem(subItem.Value);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.BaseCarryWeight ?? true)
+            {
+                fg.AppendItem(item.BaseCarryWeight, "BaseCarryWeight");
+            }
+            if (printMask?.BaseMass ?? true)
+            {
+                fg.AppendItem(item.BaseMass, "BaseMass");
+            }
+            if (printMask?.AccelerationRate ?? true)
+            {
+                fg.AppendItem(item.AccelerationRate, "AccelerationRate");
+            }
+            if (printMask?.DecelerationRate ?? true)
+            {
+                fg.AppendItem(item.DecelerationRate, "DecelerationRate");
+            }
+            if (printMask?.Size ?? true)
+            {
+                fg.AppendItem(item.Size, "Size");
+            }
+            if (printMask?.HeadBipedObject ?? true)
+            {
+                fg.AppendItem(item.HeadBipedObject, "HeadBipedObject");
+            }
+            if (printMask?.HairBipedObject ?? true)
+            {
+                fg.AppendItem(item.HairBipedObject, "HairBipedObject");
+            }
+            if (printMask?.InjuredHealthPercent ?? true)
+            {
+                fg.AppendItem(item.InjuredHealthPercent, "InjuredHealthPercent");
+            }
+            if (printMask?.ShieldBipedObject ?? true)
+            {
+                fg.AppendItem(item.ShieldBipedObject, "ShieldBipedObject");
+            }
+            if (printMask?.Regen?.Overall ?? true)
+            {
+                fg.AppendLine("Regen =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.Regen)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem.Key);
+                            fg.AppendItem(subItem.Value);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.UnarmedDamage ?? true)
+            {
+                fg.AppendItem(item.UnarmedDamage, "UnarmedDamage");
+            }
+            if (printMask?.UnarmedReach ?? true)
+            {
+                fg.AppendItem(item.UnarmedReach, "UnarmedReach");
+            }
+            if (printMask?.BodyBipedObject ?? true)
+            {
+                fg.AppendItem(item.BodyBipedObject, "BodyBipedObject");
+            }
+            if (printMask?.AimAngleTolerance ?? true)
+            {
+                fg.AppendItem(item.AimAngleTolerance, "AimAngleTolerance");
+            }
+            if (printMask?.FlightRadius ?? true)
+            {
+                fg.AppendItem(item.FlightRadius, "FlightRadius");
+            }
+            if (printMask?.AngularAccelerationRate ?? true)
+            {
+                fg.AppendItem(item.AngularAccelerationRate, "AngularAccelerationRate");
+            }
+            if (printMask?.AngularTolerance ?? true)
+            {
+                fg.AppendItem(item.AngularTolerance, "AngularTolerance");
+            }
+            if (printMask?.MountData?.Overall ?? true)
+            {
+                item.MountData?.ToString(fg, "MountData");
             }
             if ((printMask?.SkeletalModel?.Overall ?? true)
                 && item.SkeletalModel.TryGet(out var SkeletalModelItem))
@@ -4933,6 +6864,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 HeadDataItem?.ToString(fg, "HeadData");
             }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+            }
         }
         
         public bool HasBeenSet(
@@ -4945,6 +6880,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.BodyTemplate?.Overall.HasValue ?? false && checkMask.BodyTemplate.Overall.Value != (item.BodyTemplate != null)) return false;
             if (checkMask.BodyTemplate?.Specific != null && (item.BodyTemplate == null || !item.BodyTemplate.HasBeenSet(checkMask.BodyTemplate.Specific))) return false;
             if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
+            if (checkMask.Starting?.Overall.HasValue ?? false) return false;
+            if (checkMask.Regen?.Overall.HasValue ?? false) return false;
             if (checkMask.SkeletalModel?.Overall ?? false) return false;
             if (checkMask.MovementTypeNames?.Overall.HasValue ?? false && checkMask.MovementTypeNames!.Overall.Value != (item.MovementTypeNames != null)) return false;
             if (checkMask.DecapitateArmors?.Overall ?? false) return false;
@@ -4988,7 +6925,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var itemBodyTemplate = item.BodyTemplate;
             mask.BodyTemplate = new MaskItem<bool, BodyTemplate.Mask<bool>?>(itemBodyTemplate != null, itemBodyTemplate?.GetHasBeenSetMask());
             mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
-            mask.Data = new MaskItem<bool, RaceData.Mask<bool>?>(true, item.Data?.GetHasBeenSetMask());
+            mask.SkillBoost0 = new MaskItem<bool, SkillBoost.Mask<bool>?>(true, item.SkillBoost0?.GetHasBeenSetMask());
+            mask.SkillBoost1 = new MaskItem<bool, SkillBoost.Mask<bool>?>(true, item.SkillBoost1?.GetHasBeenSetMask());
+            mask.SkillBoost2 = new MaskItem<bool, SkillBoost.Mask<bool>?>(true, item.SkillBoost2?.GetHasBeenSetMask());
+            mask.SkillBoost3 = new MaskItem<bool, SkillBoost.Mask<bool>?>(true, item.SkillBoost3?.GetHasBeenSetMask());
+            mask.SkillBoost4 = new MaskItem<bool, SkillBoost.Mask<bool>?>(true, item.SkillBoost4?.GetHasBeenSetMask());
+            mask.SkillBoost5 = new MaskItem<bool, SkillBoost.Mask<bool>?>(true, item.SkillBoost5?.GetHasBeenSetMask());
+            mask.SkillBoost6 = new MaskItem<bool, SkillBoost.Mask<bool>?>(true, item.SkillBoost6?.GetHasBeenSetMask());
+            mask.Unknown = true;
+            mask.Height = new GenderedItem<bool>(true, true);
+            mask.Weight = new GenderedItem<bool>(true, true);
+            mask.Flags = true;
+            mask.Starting = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(item.Starting != null, null);
+            mask.BaseCarryWeight = true;
+            mask.BaseMass = true;
+            mask.AccelerationRate = true;
+            mask.DecelerationRate = true;
+            mask.Size = true;
+            mask.HeadBipedObject = true;
+            mask.HairBipedObject = true;
+            mask.InjuredHealthPercent = true;
+            mask.ShieldBipedObject = true;
+            mask.Regen = new MaskItem<bool, IEnumerable<KeyValuePair<bool, bool>>?>(item.Regen != null, null);
+            mask.UnarmedDamage = true;
+            mask.UnarmedReach = true;
+            mask.BodyBipedObject = true;
+            mask.AimAngleTolerance = true;
+            mask.FlightRadius = true;
+            mask.AngularAccelerationRate = true;
+            mask.AngularTolerance = true;
+            mask.MountData = new MaskItem<bool, MountData.Mask<bool>?>(true, item.MountData?.GetHasBeenSetMask());
             mask.SkeletalModel = GenderedItem.HasBeenSetMaskHelper(
                 item.SkeletalModel,
                 (i) => i?.GetHasBeenSetMask());
@@ -5032,6 +6998,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.HeadData = GenderedItem.HasBeenSetMaskHelper(
                 item.HeadData,
                 (i) => i?.GetHasBeenSetMask());
+            mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -5089,7 +7056,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.Skin.Equals(rhs.Skin)) return false;
             if (!object.Equals(lhs.BodyTemplate, rhs.BodyTemplate)) return false;
             if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            if (!object.Equals(lhs.SkillBoost0, rhs.SkillBoost0)) return false;
+            if (!object.Equals(lhs.SkillBoost1, rhs.SkillBoost1)) return false;
+            if (!object.Equals(lhs.SkillBoost2, rhs.SkillBoost2)) return false;
+            if (!object.Equals(lhs.SkillBoost3, rhs.SkillBoost3)) return false;
+            if (!object.Equals(lhs.SkillBoost4, rhs.SkillBoost4)) return false;
+            if (!object.Equals(lhs.SkillBoost5, rhs.SkillBoost5)) return false;
+            if (!object.Equals(lhs.SkillBoost6, rhs.SkillBoost6)) return false;
+            if (lhs.Unknown != rhs.Unknown) return false;
+            if (!Equals(lhs.Height, rhs.Height)) return false;
+            if (!Equals(lhs.Weight, rhs.Weight)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (!lhs.Starting.SequenceEqual(rhs.Starting)) return false;
+            if (!lhs.BaseCarryWeight.EqualsWithin(rhs.BaseCarryWeight)) return false;
+            if (!lhs.BaseMass.EqualsWithin(rhs.BaseMass)) return false;
+            if (!lhs.AccelerationRate.EqualsWithin(rhs.AccelerationRate)) return false;
+            if (!lhs.DecelerationRate.EqualsWithin(rhs.DecelerationRate)) return false;
+            if (lhs.Size != rhs.Size) return false;
+            if (lhs.HeadBipedObject != rhs.HeadBipedObject) return false;
+            if (lhs.HairBipedObject != rhs.HairBipedObject) return false;
+            if (!lhs.InjuredHealthPercent.EqualsWithin(rhs.InjuredHealthPercent)) return false;
+            if (lhs.ShieldBipedObject != rhs.ShieldBipedObject) return false;
+            if (!lhs.Regen.SequenceEqual(rhs.Regen)) return false;
+            if (!lhs.UnarmedDamage.EqualsWithin(rhs.UnarmedDamage)) return false;
+            if (!lhs.UnarmedReach.EqualsWithin(rhs.UnarmedReach)) return false;
+            if (lhs.BodyBipedObject != rhs.BodyBipedObject) return false;
+            if (!lhs.AimAngleTolerance.EqualsWithin(rhs.AimAngleTolerance)) return false;
+            if (!lhs.FlightRadius.EqualsWithin(rhs.FlightRadius)) return false;
+            if (!lhs.AngularAccelerationRate.EqualsWithin(rhs.AngularAccelerationRate)) return false;
+            if (!lhs.AngularTolerance.EqualsWithin(rhs.AngularTolerance)) return false;
+            if (!object.Equals(lhs.MountData, rhs.MountData)) return false;
             if (!Equals(lhs.SkeletalModel, rhs.SkeletalModel)) return false;
             if (!lhs.MovementTypeNames.SequenceEqual(rhs.MovementTypeNames)) return false;
             if (!Equals(lhs.Voices, rhs.Voices)) return false;
@@ -5123,6 +7119,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.BaseMovementDefaultSneak.Equals(rhs.BaseMovementDefaultSneak)) return false;
             if (!lhs.BaseMovementDefaultSprint.Equals(rhs.BaseMovementDefaultSprint)) return false;
             if (!Equals(lhs.HeadData, rhs.HeadData)) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
         
@@ -5162,7 +7159,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 hash.Add(BodyTemplateitem);
             }
             hash.Add(item.Keywords);
-            hash.Add(item.Data);
+            hash.Add(item.SkillBoost0);
+            hash.Add(item.SkillBoost1);
+            hash.Add(item.SkillBoost2);
+            hash.Add(item.SkillBoost3);
+            hash.Add(item.SkillBoost4);
+            hash.Add(item.SkillBoost5);
+            hash.Add(item.SkillBoost6);
+            hash.Add(item.Unknown);
+            hash.Add(HashCode.Combine(item.Height.Male, item.Height.Female));
+            hash.Add(HashCode.Combine(item.Weight.Male, item.Weight.Female));
+            hash.Add(item.Flags);
+            hash.Add(item.Starting);
+            hash.Add(item.BaseCarryWeight);
+            hash.Add(item.BaseMass);
+            hash.Add(item.AccelerationRate);
+            hash.Add(item.DecelerationRate);
+            hash.Add(item.Size);
+            hash.Add(item.HeadBipedObject);
+            hash.Add(item.HairBipedObject);
+            hash.Add(item.InjuredHealthPercent);
+            hash.Add(item.ShieldBipedObject);
+            hash.Add(item.Regen);
+            hash.Add(item.UnarmedDamage);
+            hash.Add(item.UnarmedReach);
+            hash.Add(item.BodyBipedObject);
+            hash.Add(item.AimAngleTolerance);
+            hash.Add(item.FlightRadius);
+            hash.Add(item.AngularAccelerationRate);
+            hash.Add(item.AngularTolerance);
+            hash.Add(item.MountData);
             if (item.SkeletalModel.TryGet(out var SkeletalModelitem))
             {
                 hash.Add(HashCode.Combine(SkeletalModelitem.Male, SkeletalModelitem.Female));
@@ -5256,6 +7282,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(HashCode.Combine(HeadDataitem.Male, HeadDataitem.Female));
             }
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -5527,15 +7554,281 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Data) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost0) ?? true))
             {
-                errorMask?.PushIndex((int)Race_FieldIndex.Data);
+                errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost0);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Data) ?? true))
+                    if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost0) ?? true))
                     {
-                        item.Data = rhs.Data.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)Race_FieldIndex.Data),
+                        item.SkillBoost0 = rhs.SkillBoost0.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost0),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost1) ?? true))
+            {
+                errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost1);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost1) ?? true))
+                    {
+                        item.SkillBoost1 = rhs.SkillBoost1.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost1),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost2) ?? true))
+            {
+                errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost2);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost2) ?? true))
+                    {
+                        item.SkillBoost2 = rhs.SkillBoost2.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost2),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost3) ?? true))
+            {
+                errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost3);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost3) ?? true))
+                    {
+                        item.SkillBoost3 = rhs.SkillBoost3.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost3),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost4) ?? true))
+            {
+                errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost4);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost4) ?? true))
+                    {
+                        item.SkillBoost4 = rhs.SkillBoost4.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost4),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost5) ?? true))
+            {
+                errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost5);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost5) ?? true))
+                    {
+                        item.SkillBoost5 = rhs.SkillBoost5.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost5),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost6) ?? true))
+            {
+                errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost6);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost6) ?? true))
+                    {
+                        item.SkillBoost6 = rhs.SkillBoost6.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost6),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Unknown) ?? true))
+            {
+                item.Unknown = rhs.Unknown;
+            }
+            item.Height = new GenderedItem<Single>(
+                male: rhs.Height.Male,
+                female: rhs.Height.Female);
+            item.Weight = new GenderedItem<Single>(
+                male: rhs.Weight.Male,
+                female: rhs.Weight.Female);
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Starting) ?? true))
+            {
+                errorMask?.PushIndex((int)Race_FieldIndex.Starting);
+                try
+                {
+                    item.Starting.SetTo(rhs.Starting);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BaseCarryWeight) ?? true))
+            {
+                item.BaseCarryWeight = rhs.BaseCarryWeight;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMass) ?? true))
+            {
+                item.BaseMass = rhs.BaseMass;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.AccelerationRate) ?? true))
+            {
+                item.AccelerationRate = rhs.AccelerationRate;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.DecelerationRate) ?? true))
+            {
+                item.DecelerationRate = rhs.DecelerationRate;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Size) ?? true))
+            {
+                item.Size = rhs.Size;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.HeadBipedObject) ?? true))
+            {
+                item.HeadBipedObject = rhs.HeadBipedObject;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.HairBipedObject) ?? true))
+            {
+                item.HairBipedObject = rhs.HairBipedObject;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.InjuredHealthPercent) ?? true))
+            {
+                item.InjuredHealthPercent = rhs.InjuredHealthPercent;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.ShieldBipedObject) ?? true))
+            {
+                item.ShieldBipedObject = rhs.ShieldBipedObject;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Regen) ?? true))
+            {
+                errorMask?.PushIndex((int)Race_FieldIndex.Regen);
+                try
+                {
+                    item.Regen.SetTo(rhs.Regen);
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.UnarmedDamage) ?? true))
+            {
+                item.UnarmedDamage = rhs.UnarmedDamage;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.UnarmedReach) ?? true))
+            {
+                item.UnarmedReach = rhs.UnarmedReach;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BodyBipedObject) ?? true))
+            {
+                item.BodyBipedObject = rhs.BodyBipedObject;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.AimAngleTolerance) ?? true))
+            {
+                item.AimAngleTolerance = rhs.AimAngleTolerance;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.FlightRadius) ?? true))
+            {
+                item.FlightRadius = rhs.FlightRadius;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.AngularAccelerationRate) ?? true))
+            {
+                item.AngularAccelerationRate = rhs.AngularAccelerationRate;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.AngularTolerance) ?? true))
+            {
+                item.AngularTolerance = rhs.AngularTolerance;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.MountData) ?? true))
+            {
+                errorMask?.PushIndex((int)Race_FieldIndex.MountData);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.MountData) ?? true))
+                    {
+                        item.MountData = rhs.MountData.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Race_FieldIndex.MountData),
                             errorMask: errorMask);
                     }
                 }
@@ -5880,6 +8173,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask: errorMask,
                         default(TranslationCrystal)));
             }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -6103,16 +8400,348 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: listSubMask);
                     });
             }
-            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Data) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost0) ?? true))
             {
-                var DataItem = item.Data;
-                ((RaceDataXmlWriteTranslation)((IXmlItem)DataItem).XmlWriteTranslator).Write(
-                    item: DataItem,
+                var SkillBoost0Item = item.SkillBoost0;
+                ((SkillBoostXmlWriteTranslation)((IXmlItem)SkillBoost0Item).XmlWriteTranslator).Write(
+                    item: SkillBoost0Item,
                     node: node,
-                    name: nameof(item.Data),
-                    fieldIndex: (int)Race_FieldIndex.Data,
+                    name: nameof(item.SkillBoost0),
+                    fieldIndex: (int)Race_FieldIndex.SkillBoost0,
                     errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Data));
+                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost0));
+            }
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost1) ?? true))
+            {
+                var SkillBoost1Item = item.SkillBoost1;
+                ((SkillBoostXmlWriteTranslation)((IXmlItem)SkillBoost1Item).XmlWriteTranslator).Write(
+                    item: SkillBoost1Item,
+                    node: node,
+                    name: nameof(item.SkillBoost1),
+                    fieldIndex: (int)Race_FieldIndex.SkillBoost1,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost1));
+            }
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost2) ?? true))
+            {
+                var SkillBoost2Item = item.SkillBoost2;
+                ((SkillBoostXmlWriteTranslation)((IXmlItem)SkillBoost2Item).XmlWriteTranslator).Write(
+                    item: SkillBoost2Item,
+                    node: node,
+                    name: nameof(item.SkillBoost2),
+                    fieldIndex: (int)Race_FieldIndex.SkillBoost2,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost2));
+            }
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost3) ?? true))
+            {
+                var SkillBoost3Item = item.SkillBoost3;
+                ((SkillBoostXmlWriteTranslation)((IXmlItem)SkillBoost3Item).XmlWriteTranslator).Write(
+                    item: SkillBoost3Item,
+                    node: node,
+                    name: nameof(item.SkillBoost3),
+                    fieldIndex: (int)Race_FieldIndex.SkillBoost3,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost3));
+            }
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost4) ?? true))
+            {
+                var SkillBoost4Item = item.SkillBoost4;
+                ((SkillBoostXmlWriteTranslation)((IXmlItem)SkillBoost4Item).XmlWriteTranslator).Write(
+                    item: SkillBoost4Item,
+                    node: node,
+                    name: nameof(item.SkillBoost4),
+                    fieldIndex: (int)Race_FieldIndex.SkillBoost4,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost4));
+            }
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost5) ?? true))
+            {
+                var SkillBoost5Item = item.SkillBoost5;
+                ((SkillBoostXmlWriteTranslation)((IXmlItem)SkillBoost5Item).XmlWriteTranslator).Write(
+                    item: SkillBoost5Item,
+                    node: node,
+                    name: nameof(item.SkillBoost5),
+                    fieldIndex: (int)Race_FieldIndex.SkillBoost5,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost5));
+            }
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost6) ?? true))
+            {
+                var SkillBoost6Item = item.SkillBoost6;
+                ((SkillBoostXmlWriteTranslation)((IXmlItem)SkillBoost6Item).XmlWriteTranslator).Write(
+                    item: SkillBoost6Item,
+                    node: node,
+                    name: nameof(item.SkillBoost6),
+                    fieldIndex: (int)Race_FieldIndex.SkillBoost6,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost6));
+            }
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Unknown) ?? true))
+            {
+                Int16XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown),
+                    item: item.Unknown,
+                    fieldIndex: (int)Race_FieldIndex.Unknown,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Height) ?? true))
+            {
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Height),
+                        item: item.Height.Male,
+                        errorMask: errorMask);
+                }
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Height),
+                        item: item.Height.Female,
+                        errorMask: errorMask);
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Weight) ?? true))
+            {
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Weight),
+                        item: item.Weight.Male,
+                        errorMask: errorMask);
+                }
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Weight),
+                        item: item.Weight.Female,
+                        errorMask: errorMask);
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Flags) ?? true))
+            {
+                EnumXmlTranslation<Race.Flag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)Race_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Starting) ?? true))
+            {
+                DictXmlTranslation<BasicStat, Single>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Starting),
+                    items: item.Starting,
+                    fieldIndex: (int)Race_FieldIndex.Starting,
+                    errorMask: errorMask,
+                    translationMask: translationMask,
+                    keyTransl: (XElement subNode, BasicStat subItem, ErrorMaskBuilder? dictSubMask, TranslationCrystal? dictSubTranslMask) =>
+                    {
+                        EnumXmlTranslation<BasicStat>.Instance.Write(
+                            node: subNode,
+                            name: "Key",
+                            item: subItem,
+                            errorMask: dictSubMask);
+                    },
+                    valTransl: (XElement subNode, Single subItem, ErrorMaskBuilder? dictSubMask, TranslationCrystal? dictSubTranslMask) =>
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: "Value",
+                            item: subItem,
+                            errorMask: dictSubMask);
+                    });
+            }
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.BaseCarryWeight) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.BaseCarryWeight),
+                    item: item.BaseCarryWeight,
+                    fieldIndex: (int)Race_FieldIndex.BaseCarryWeight,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.BaseMass) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.BaseMass),
+                    item: item.BaseMass,
+                    fieldIndex: (int)Race_FieldIndex.BaseMass,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.AccelerationRate) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.AccelerationRate),
+                    item: item.AccelerationRate,
+                    fieldIndex: (int)Race_FieldIndex.AccelerationRate,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.DecelerationRate) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DecelerationRate),
+                    item: item.DecelerationRate,
+                    fieldIndex: (int)Race_FieldIndex.DecelerationRate,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Size) ?? true))
+            {
+                EnumXmlTranslation<Size>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Size),
+                    item: item.Size,
+                    fieldIndex: (int)Race_FieldIndex.Size,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.HeadBipedObject) ?? true))
+            {
+                EnumXmlTranslation<BipedObject>.Instance.Write(
+                    node: node,
+                    name: nameof(item.HeadBipedObject),
+                    item: item.HeadBipedObject,
+                    fieldIndex: (int)Race_FieldIndex.HeadBipedObject,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.HairBipedObject) ?? true))
+            {
+                EnumXmlTranslation<BipedObject>.Instance.Write(
+                    node: node,
+                    name: nameof(item.HairBipedObject),
+                    item: item.HairBipedObject,
+                    fieldIndex: (int)Race_FieldIndex.HairBipedObject,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.InjuredHealthPercent) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.InjuredHealthPercent),
+                    item: item.InjuredHealthPercent,
+                    fieldIndex: (int)Race_FieldIndex.InjuredHealthPercent,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.ShieldBipedObject) ?? true))
+            {
+                EnumXmlTranslation<BipedObject>.Instance.Write(
+                    node: node,
+                    name: nameof(item.ShieldBipedObject),
+                    item: item.ShieldBipedObject,
+                    fieldIndex: (int)Race_FieldIndex.ShieldBipedObject,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.Regen) ?? true))
+            {
+                DictXmlTranslation<BasicStat, Single>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Regen),
+                    items: item.Regen,
+                    fieldIndex: (int)Race_FieldIndex.Regen,
+                    errorMask: errorMask,
+                    translationMask: translationMask,
+                    keyTransl: (XElement subNode, BasicStat subItem, ErrorMaskBuilder? dictSubMask, TranslationCrystal? dictSubTranslMask) =>
+                    {
+                        EnumXmlTranslation<BasicStat>.Instance.Write(
+                            node: subNode,
+                            name: "Key",
+                            item: subItem,
+                            errorMask: dictSubMask);
+                    },
+                    valTransl: (XElement subNode, Single subItem, ErrorMaskBuilder? dictSubMask, TranslationCrystal? dictSubTranslMask) =>
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: "Value",
+                            item: subItem,
+                            errorMask: dictSubMask);
+                    });
+            }
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.UnarmedDamage) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.UnarmedDamage),
+                    item: item.UnarmedDamage,
+                    fieldIndex: (int)Race_FieldIndex.UnarmedDamage,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.UnarmedReach) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.UnarmedReach),
+                    item: item.UnarmedReach,
+                    fieldIndex: (int)Race_FieldIndex.UnarmedReach,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.BodyBipedObject) ?? true))
+            {
+                EnumXmlTranslation<BipedObject>.Instance.Write(
+                    node: node,
+                    name: nameof(item.BodyBipedObject),
+                    item: item.BodyBipedObject,
+                    fieldIndex: (int)Race_FieldIndex.BodyBipedObject,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.AimAngleTolerance) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.AimAngleTolerance),
+                    item: item.AimAngleTolerance,
+                    fieldIndex: (int)Race_FieldIndex.AimAngleTolerance,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.FlightRadius) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FlightRadius),
+                    item: item.FlightRadius,
+                    fieldIndex: (int)Race_FieldIndex.FlightRadius,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.AngularAccelerationRate) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.AngularAccelerationRate),
+                    item: item.AngularAccelerationRate,
+                    fieldIndex: (int)Race_FieldIndex.AngularAccelerationRate,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.AngularTolerance) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.AngularTolerance),
+                    item: item.AngularTolerance,
+                    fieldIndex: (int)Race_FieldIndex.AngularTolerance,
+                    errorMask: errorMask);
+            }
+            if (!item.DATADataTypeState.HasFlag(Race.DATADataType.Break0))
+            {
+                if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.MountData) ?? true))
+                {
+                    var MountDataItem = item.MountData;
+                    ((MountDataXmlWriteTranslation)((IXmlItem)MountDataItem).XmlWriteTranslator).Write(
+                        item: MountDataItem,
+                        node: node,
+                        name: nameof(item.MountData),
+                        fieldIndex: (int)Race_FieldIndex.MountData,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.MountData));
+                }
+            }
+            else
+            {
+                node.Add(new XElement("HasDATADataType"));
             }
             if ((item.SkeletalModel != null)
                 && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.SkeletalModel) ?? true))
@@ -6605,6 +9234,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                 }
             }
+            if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<Race.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)Race_FieldIndex.DATADataTypeState,
+                    errorMask: errorMask);
+            }
         }
 
         public void Write(
@@ -6841,14 +9479,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Data":
-                    errorMask?.PushIndex((int)Race_FieldIndex.Data);
+                case "SkillBoost0":
+                    errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost0);
                     try
                     {
-                        item.Data = LoquiXmlTranslation<RaceData>.Instance.Parse(
+                        item.SkillBoost0 = LoquiXmlTranslation<SkillBoost>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Data));
+                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost0));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -6859,6 +9497,528 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         errorMask?.PopIndex();
                     }
+                    break;
+                case "SkillBoost1":
+                    errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost1);
+                    try
+                    {
+                        item.SkillBoost1 = LoquiXmlTranslation<SkillBoost>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost1));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SkillBoost2":
+                    errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost2);
+                    try
+                    {
+                        item.SkillBoost2 = LoquiXmlTranslation<SkillBoost>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost2));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SkillBoost3":
+                    errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost3);
+                    try
+                    {
+                        item.SkillBoost3 = LoquiXmlTranslation<SkillBoost>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost3));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SkillBoost4":
+                    errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost4);
+                    try
+                    {
+                        item.SkillBoost4 = LoquiXmlTranslation<SkillBoost>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost4));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SkillBoost5":
+                    errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost5);
+                    try
+                    {
+                        item.SkillBoost5 = LoquiXmlTranslation<SkillBoost>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost5));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SkillBoost6":
+                    errorMask?.PushIndex((int)Race_FieldIndex.SkillBoost6);
+                    try
+                    {
+                        item.SkillBoost6 = LoquiXmlTranslation<SkillBoost>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.SkillBoost6));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown":
+                    errorMask?.PushIndex((int)Race_FieldIndex.Unknown);
+                    try
+                    {
+                        item.Unknown = Int16XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Height":
+                    errorMask?.PushIndex((int)Race_FieldIndex.Height);
+                    try
+                    {
+                        item.Height = new GenderedItem<Single>(
+                            male: FloatXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask),
+                            female: FloatXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Weight":
+                    errorMask?.PushIndex((int)Race_FieldIndex.Weight);
+                    try
+                    {
+                        item.Weight = new GenderedItem<Single>(
+                            male: FloatXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask),
+                            female: FloatXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    errorMask?.PushIndex((int)Race_FieldIndex.Flags);
+                    try
+                    {
+                        item.Flags = EnumXmlTranslation<Race.Flag>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Starting":
+                    DictXmlTranslation<BasicStat, Single>.Instance.ParseInto(
+                        node: node,
+                        item: item.Starting,
+                        fieldIndex: (int)Race_FieldIndex.Starting,
+                        errorMask: errorMask,
+                        translationMask: translationMask,
+                        keyTransl: EnumXmlTranslation<BasicStat>.Instance.Parse,
+                        valTransl: FloatXmlTranslation.Instance.Parse);
+                    break;
+                case "BaseCarryWeight":
+                    errorMask?.PushIndex((int)Race_FieldIndex.BaseCarryWeight);
+                    try
+                    {
+                        item.BaseCarryWeight = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BaseMass":
+                    errorMask?.PushIndex((int)Race_FieldIndex.BaseMass);
+                    try
+                    {
+                        item.BaseMass = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AccelerationRate":
+                    errorMask?.PushIndex((int)Race_FieldIndex.AccelerationRate);
+                    try
+                    {
+                        item.AccelerationRate = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DecelerationRate":
+                    errorMask?.PushIndex((int)Race_FieldIndex.DecelerationRate);
+                    try
+                    {
+                        item.DecelerationRate = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Size":
+                    errorMask?.PushIndex((int)Race_FieldIndex.Size);
+                    try
+                    {
+                        item.Size = EnumXmlTranslation<Size>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HeadBipedObject":
+                    errorMask?.PushIndex((int)Race_FieldIndex.HeadBipedObject);
+                    try
+                    {
+                        item.HeadBipedObject = EnumXmlTranslation<BipedObject>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HairBipedObject":
+                    errorMask?.PushIndex((int)Race_FieldIndex.HairBipedObject);
+                    try
+                    {
+                        item.HairBipedObject = EnumXmlTranslation<BipedObject>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "InjuredHealthPercent":
+                    errorMask?.PushIndex((int)Race_FieldIndex.InjuredHealthPercent);
+                    try
+                    {
+                        item.InjuredHealthPercent = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ShieldBipedObject":
+                    errorMask?.PushIndex((int)Race_FieldIndex.ShieldBipedObject);
+                    try
+                    {
+                        item.ShieldBipedObject = EnumXmlTranslation<BipedObject>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Regen":
+                    DictXmlTranslation<BasicStat, Single>.Instance.ParseInto(
+                        node: node,
+                        item: item.Regen,
+                        fieldIndex: (int)Race_FieldIndex.Regen,
+                        errorMask: errorMask,
+                        translationMask: translationMask,
+                        keyTransl: EnumXmlTranslation<BasicStat>.Instance.Parse,
+                        valTransl: FloatXmlTranslation.Instance.Parse);
+                    break;
+                case "UnarmedDamage":
+                    errorMask?.PushIndex((int)Race_FieldIndex.UnarmedDamage);
+                    try
+                    {
+                        item.UnarmedDamage = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "UnarmedReach":
+                    errorMask?.PushIndex((int)Race_FieldIndex.UnarmedReach);
+                    try
+                    {
+                        item.UnarmedReach = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BodyBipedObject":
+                    errorMask?.PushIndex((int)Race_FieldIndex.BodyBipedObject);
+                    try
+                    {
+                        item.BodyBipedObject = EnumXmlTranslation<BipedObject>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AimAngleTolerance":
+                    errorMask?.PushIndex((int)Race_FieldIndex.AimAngleTolerance);
+                    try
+                    {
+                        item.AimAngleTolerance = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FlightRadius":
+                    errorMask?.PushIndex((int)Race_FieldIndex.FlightRadius);
+                    try
+                    {
+                        item.FlightRadius = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AngularAccelerationRate":
+                    errorMask?.PushIndex((int)Race_FieldIndex.AngularAccelerationRate);
+                    try
+                    {
+                        item.AngularAccelerationRate = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AngularTolerance":
+                    errorMask?.PushIndex((int)Race_FieldIndex.AngularTolerance);
+                    try
+                    {
+                        item.AngularTolerance = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MountData":
+                    errorMask?.PushIndex((int)Race_FieldIndex.MountData);
+                    try
+                    {
+                        item.MountData = LoquiXmlTranslation<MountData>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.MountData));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    item.DATADataTypeState &= ~Race.DATADataType.Break0;
                     break;
                 case "SkeletalModel":
                     errorMask?.PushIndex((int)Race_FieldIndex.SkeletalModel);
@@ -7543,6 +10703,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "DATADataTypeState":
+                    errorMask?.PushIndex((int)Race_FieldIndex.DATADataTypeState);
+                    try
+                    {
+                        item.DATADataTypeState = EnumXmlTranslation<Race.DATADataType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -7628,6 +10806,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IBinaryWriteTranslator
     {
         public new readonly static RaceBinaryWriteTranslation Instance = new RaceBinaryWriteTranslation();
+
+        static partial void WriteBinaryFlags2Custom(
+            MutagenWriter writer,
+            IRaceGetter item);
+
+        public static void WriteBinaryFlags2(
+            MutagenWriter writer,
+            IRaceGetter item)
+        {
+            WriteBinaryFlags2Custom(
+                writer: writer,
+                item: item);
+        }
 
         static partial void WriteBinaryExtraNAM2Custom(
             MutagenWriter writer,
@@ -7748,11 +10939,129 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         item: subItem);
                 });
-            var DataItem = item.Data;
-            ((RaceDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
-                item: DataItem,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
+            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Race_Registration.DATA_HEADER)))
+            {
+                var SkillBoost0Item = item.SkillBoost0;
+                ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost0Item).BinaryWriteTranslator).Write(
+                    item: SkillBoost0Item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+                var SkillBoost1Item = item.SkillBoost1;
+                ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost1Item).BinaryWriteTranslator).Write(
+                    item: SkillBoost1Item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+                var SkillBoost2Item = item.SkillBoost2;
+                ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost2Item).BinaryWriteTranslator).Write(
+                    item: SkillBoost2Item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+                var SkillBoost3Item = item.SkillBoost3;
+                ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost3Item).BinaryWriteTranslator).Write(
+                    item: SkillBoost3Item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+                var SkillBoost4Item = item.SkillBoost4;
+                ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost4Item).BinaryWriteTranslator).Write(
+                    item: SkillBoost4Item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+                var SkillBoost5Item = item.SkillBoost5;
+                ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost5Item).BinaryWriteTranslator).Write(
+                    item: SkillBoost5Item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+                var SkillBoost6Item = item.SkillBoost6;
+                ((SkillBoostBinaryWriteTranslation)((IBinaryItem)SkillBoost6Item).BinaryWriteTranslator).Write(
+                    item: SkillBoost6Item,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+                writer.Write(item.Unknown);
+                GenderedItemBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.Height,
+                    transl: FloatBinaryTranslation.Instance.Write);
+                GenderedItemBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.Weight,
+                    transl: FloatBinaryTranslation.Instance.Write);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.Flag>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 4);
+                Mutagen.Bethesda.Binary.DictBinaryTranslation<Single>.Instance.Write(
+                    writer: writer,
+                    items: item.Starting,
+                    transl: FloatBinaryTranslation.Instance.Write);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.BaseCarryWeight);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.BaseMass);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.AccelerationRate);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.DecelerationRate);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Size>.Instance.Write(
+                    writer,
+                    item.Size,
+                    length: 4);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<BipedObject>.Instance.Write(
+                    writer,
+                    item.HeadBipedObject,
+                    length: 4);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<BipedObject>.Instance.Write(
+                    writer,
+                    item.HairBipedObject,
+                    length: 4);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.InjuredHealthPercent);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<BipedObject>.Instance.Write(
+                    writer,
+                    item.ShieldBipedObject,
+                    length: 4);
+                Mutagen.Bethesda.Binary.DictBinaryTranslation<Single>.Instance.Write(
+                    writer: writer,
+                    items: item.Regen,
+                    transl: FloatBinaryTranslation.Instance.Write);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.UnarmedDamage);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.UnarmedReach);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<BipedObject>.Instance.Write(
+                    writer,
+                    item.BodyBipedObject,
+                    length: 4);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.AimAngleTolerance);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FlightRadius);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.AngularAccelerationRate);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.AngularTolerance);
+                RaceBinaryWriteTranslation.WriteBinaryFlags2(
+                    writer: writer,
+                    item: item);
+                if (!item.DATADataTypeState.HasFlag(Race.DATADataType.Break0))
+                {
+                    var MountDataItem = item.MountData;
+                    ((MountDataBinaryWriteTranslation)((IBinaryItem)MountDataItem).BinaryWriteTranslator).Write(
+                        item: MountDataItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
             GenderedItemBinaryTranslation.Write(
                 writer: writer,
                 item: item.SkeletalModel,
@@ -8061,6 +11370,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static RaceBinaryCreateTranslation Instance = new RaceBinaryCreateTranslation();
 
+        static partial void FillBinaryFlags2Custom(
+            MutagenFrame frame,
+            IRaceInternal item);
+
+        public static void FillBinaryFlags2CustomPublic(
+            MutagenFrame frame,
+            IRaceInternal item)
+        {
+            FillBinaryFlags2Custom(
+                frame: frame,
+                item: item);
+        }
+
         static partial void FillBinaryExtraNAM2Custom(
             MutagenFrame frame,
             IRaceInternal item);
@@ -8201,10 +11523,190 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool BodyTemplate_IsSet => _BodyTemplateLocation.HasValue;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
-        #region Data
-        private RangeInt32? _DataLocation;
-        private IRaceDataGetter? _Data => _DataLocation.HasValue ? RaceDataBinaryOverlay.RaceDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
-        public IRaceDataGetter Data => _Data ?? new RaceData();
+        private int? _DATALocation;
+        public Race.DATADataType DATADataTypeState { get; private set; }
+        #region SkillBoost0
+        private int _SkillBoost0Location => _DATALocation!.Value + 0x0;
+        private bool _SkillBoost0_IsSet => _DATALocation.HasValue;
+        private ISkillBoostGetter? _SkillBoost0 => _SkillBoost0_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(_SkillBoost0Location)), _package) : default;
+        public ISkillBoostGetter SkillBoost0 => _SkillBoost0 ?? new SkillBoost();
+        #endregion
+        #region SkillBoost1
+        private int _SkillBoost1Location => _DATALocation!.Value + 0x2;
+        private bool _SkillBoost1_IsSet => _DATALocation.HasValue;
+        private ISkillBoostGetter? _SkillBoost1 => _SkillBoost1_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(_SkillBoost1Location)), _package) : default;
+        public ISkillBoostGetter SkillBoost1 => _SkillBoost1 ?? new SkillBoost();
+        #endregion
+        #region SkillBoost2
+        private int _SkillBoost2Location => _DATALocation!.Value + 0x4;
+        private bool _SkillBoost2_IsSet => _DATALocation.HasValue;
+        private ISkillBoostGetter? _SkillBoost2 => _SkillBoost2_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(_SkillBoost2Location)), _package) : default;
+        public ISkillBoostGetter SkillBoost2 => _SkillBoost2 ?? new SkillBoost();
+        #endregion
+        #region SkillBoost3
+        private int _SkillBoost3Location => _DATALocation!.Value + 0x6;
+        private bool _SkillBoost3_IsSet => _DATALocation.HasValue;
+        private ISkillBoostGetter? _SkillBoost3 => _SkillBoost3_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(_SkillBoost3Location)), _package) : default;
+        public ISkillBoostGetter SkillBoost3 => _SkillBoost3 ?? new SkillBoost();
+        #endregion
+        #region SkillBoost4
+        private int _SkillBoost4Location => _DATALocation!.Value + 0x8;
+        private bool _SkillBoost4_IsSet => _DATALocation.HasValue;
+        private ISkillBoostGetter? _SkillBoost4 => _SkillBoost4_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(_SkillBoost4Location)), _package) : default;
+        public ISkillBoostGetter SkillBoost4 => _SkillBoost4 ?? new SkillBoost();
+        #endregion
+        #region SkillBoost5
+        private int _SkillBoost5Location => _DATALocation!.Value + 0xA;
+        private bool _SkillBoost5_IsSet => _DATALocation.HasValue;
+        private ISkillBoostGetter? _SkillBoost5 => _SkillBoost5_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(_SkillBoost5Location)), _package) : default;
+        public ISkillBoostGetter SkillBoost5 => _SkillBoost5 ?? new SkillBoost();
+        #endregion
+        #region SkillBoost6
+        private int _SkillBoost6Location => _DATALocation!.Value + 0xC;
+        private bool _SkillBoost6_IsSet => _DATALocation.HasValue;
+        private ISkillBoostGetter? _SkillBoost6 => _SkillBoost6_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(_SkillBoost6Location)), _package) : default;
+        public ISkillBoostGetter SkillBoost6 => _SkillBoost6 ?? new SkillBoost();
+        #endregion
+        #region Unknown
+        private int _UnknownLocation => _DATALocation!.Value + 0xE;
+        private bool _Unknown_IsSet => _DATALocation.HasValue;
+        public Int16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(_UnknownLocation, 2)) : default;
+        #endregion
+        #region Height
+        private int _HeightLocation => _DATALocation!.Value + 0x10;
+        private bool _Height_IsSet => _DATALocation.HasValue;
+        public IGenderedItemGetter<Single> Height
+        {
+            get
+            {
+                if (!_Height_IsSet) return new GenderedItem<Single>(default, default);
+                var data = _data.Span.Slice(_HeightLocation);
+                return new GenderedItem<Single>(
+                    SpanExt.GetFloat(data),
+                    SpanExt.GetFloat(data.Slice(4)));
+            }
+        }
+        #endregion
+        #region Weight
+        private int _WeightLocation => _DATALocation!.Value + 0x18;
+        private bool _Weight_IsSet => _DATALocation.HasValue;
+        public IGenderedItemGetter<Single> Weight
+        {
+            get
+            {
+                if (!_Weight_IsSet) return new GenderedItem<Single>(default, default);
+                var data = _data.Span.Slice(_WeightLocation);
+                return new GenderedItem<Single>(
+                    SpanExt.GetFloat(data),
+                    SpanExt.GetFloat(data.Slice(4)));
+            }
+        }
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _DATALocation!.Value + 0x20;
+        public Race.Flag Flags => GetFlagsCustom();
+        #endregion
+        #region Starting
+        private int _StartingLocation => _DATALocation!.Value + 36;
+        private bool _Starting_IsSet => _DATALocation.HasValue;
+        public IReadOnlyDictionary<BasicStat, Single> Starting => DictBinaryTranslation<Single>.Instance.Parse<BasicStat>(
+            new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(_StartingLocation), _package.Meta, _package.MasterReferences)),
+            new Dictionary<BasicStat, Single>(),
+            FloatBinaryTranslation.Instance.Parse);
+        #endregion
+        #region BaseCarryWeight
+        private int _BaseCarryWeightLocation => _DATALocation!.Value + 0x30;
+        private bool _BaseCarryWeight_IsSet => _DATALocation.HasValue;
+        public Single BaseCarryWeight => _BaseCarryWeight_IsSet ? SpanExt.GetFloat(_data.Slice(_BaseCarryWeightLocation, 4)) : default;
+        #endregion
+        #region BaseMass
+        private int _BaseMassLocation => _DATALocation!.Value + 0x34;
+        private bool _BaseMass_IsSet => _DATALocation.HasValue;
+        public Single BaseMass => _BaseMass_IsSet ? SpanExt.GetFloat(_data.Slice(_BaseMassLocation, 4)) : default;
+        #endregion
+        #region AccelerationRate
+        private int _AccelerationRateLocation => _DATALocation!.Value + 0x38;
+        private bool _AccelerationRate_IsSet => _DATALocation.HasValue;
+        public Single AccelerationRate => _AccelerationRate_IsSet ? SpanExt.GetFloat(_data.Slice(_AccelerationRateLocation, 4)) : default;
+        #endregion
+        #region DecelerationRate
+        private int _DecelerationRateLocation => _DATALocation!.Value + 0x3C;
+        private bool _DecelerationRate_IsSet => _DATALocation.HasValue;
+        public Single DecelerationRate => _DecelerationRate_IsSet ? SpanExt.GetFloat(_data.Slice(_DecelerationRateLocation, 4)) : default;
+        #endregion
+        #region Size
+        private int _SizeLocation => _DATALocation!.Value + 0x40;
+        private bool _Size_IsSet => _DATALocation.HasValue;
+        public Size Size => _Size_IsSet ? (Size)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_SizeLocation, 0x4)) : default;
+        #endregion
+        #region HeadBipedObject
+        private int _HeadBipedObjectLocation => _DATALocation!.Value + 0x44;
+        private bool _HeadBipedObject_IsSet => _DATALocation.HasValue;
+        public BipedObject HeadBipedObject => _HeadBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_HeadBipedObjectLocation, 0x4)) : default;
+        #endregion
+        #region HairBipedObject
+        private int _HairBipedObjectLocation => _DATALocation!.Value + 0x48;
+        private bool _HairBipedObject_IsSet => _DATALocation.HasValue;
+        public BipedObject HairBipedObject => _HairBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_HairBipedObjectLocation, 0x4)) : default;
+        #endregion
+        #region InjuredHealthPercent
+        private int _InjuredHealthPercentLocation => _DATALocation!.Value + 0x4C;
+        private bool _InjuredHealthPercent_IsSet => _DATALocation.HasValue;
+        public Single InjuredHealthPercent => _InjuredHealthPercent_IsSet ? SpanExt.GetFloat(_data.Slice(_InjuredHealthPercentLocation, 4)) : default;
+        #endregion
+        #region ShieldBipedObject
+        private int _ShieldBipedObjectLocation => _DATALocation!.Value + 0x50;
+        private bool _ShieldBipedObject_IsSet => _DATALocation.HasValue;
+        public BipedObject ShieldBipedObject => _ShieldBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_ShieldBipedObjectLocation, 0x4)) : default;
+        #endregion
+        #region Regen
+        private int _RegenLocation => _DATALocation!.Value + 84;
+        private bool _Regen_IsSet => _DATALocation.HasValue;
+        public IReadOnlyDictionary<BasicStat, Single> Regen => DictBinaryTranslation<Single>.Instance.Parse<BasicStat>(
+            new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(_RegenLocation), _package.Meta, _package.MasterReferences)),
+            new Dictionary<BasicStat, Single>(),
+            FloatBinaryTranslation.Instance.Parse);
+        #endregion
+        #region UnarmedDamage
+        private int _UnarmedDamageLocation => _DATALocation!.Value + 0x60;
+        private bool _UnarmedDamage_IsSet => _DATALocation.HasValue;
+        public Single UnarmedDamage => _UnarmedDamage_IsSet ? SpanExt.GetFloat(_data.Slice(_UnarmedDamageLocation, 4)) : default;
+        #endregion
+        #region UnarmedReach
+        private int _UnarmedReachLocation => _DATALocation!.Value + 0x64;
+        private bool _UnarmedReach_IsSet => _DATALocation.HasValue;
+        public Single UnarmedReach => _UnarmedReach_IsSet ? SpanExt.GetFloat(_data.Slice(_UnarmedReachLocation, 4)) : default;
+        #endregion
+        #region BodyBipedObject
+        private int _BodyBipedObjectLocation => _DATALocation!.Value + 0x68;
+        private bool _BodyBipedObject_IsSet => _DATALocation.HasValue;
+        public BipedObject BodyBipedObject => _BodyBipedObject_IsSet ? (BipedObject)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_BodyBipedObjectLocation, 0x4)) : default;
+        #endregion
+        #region AimAngleTolerance
+        private int _AimAngleToleranceLocation => _DATALocation!.Value + 0x6C;
+        private bool _AimAngleTolerance_IsSet => _DATALocation.HasValue;
+        public Single AimAngleTolerance => _AimAngleTolerance_IsSet ? SpanExt.GetFloat(_data.Slice(_AimAngleToleranceLocation, 4)) : default;
+        #endregion
+        #region FlightRadius
+        private int _FlightRadiusLocation => _DATALocation!.Value + 0x70;
+        private bool _FlightRadius_IsSet => _DATALocation.HasValue;
+        public Single FlightRadius => _FlightRadius_IsSet ? SpanExt.GetFloat(_data.Slice(_FlightRadiusLocation, 4)) : default;
+        #endregion
+        #region AngularAccelerationRate
+        private int _AngularAccelerationRateLocation => _DATALocation!.Value + 0x74;
+        private bool _AngularAccelerationRate_IsSet => _DATALocation.HasValue;
+        public Single AngularAccelerationRate => _AngularAccelerationRate_IsSet ? SpanExt.GetFloat(_data.Slice(_AngularAccelerationRateLocation, 4)) : default;
+        #endregion
+        #region AngularTolerance
+        private int _AngularToleranceLocation => _DATALocation!.Value + 0x78;
+        private bool _AngularTolerance_IsSet => _DATALocation.HasValue;
+        public Single AngularTolerance => _AngularTolerance_IsSet ? SpanExt.GetFloat(_data.Slice(_AngularToleranceLocation, 4)) : default;
+        #endregion
+        #region MountData
+        private int _MountDataLocation => _DATALocation!.Value + 0x80;
+        private bool _MountData_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Race.DATADataType.Break0);
+        private IMountDataGetter? _MountData => _MountData_IsSet ? MountDataBinaryOverlay.MountDataFactory(new BinaryMemoryReadStream(_data.Slice(_MountDataLocation)), _package) : default;
+        public IMountDataGetter MountData => _MountData ?? new MountData();
         #endregion
         #region SkeletalModel
         private IGenderedItemGetter<ISimpleModelGetter?>? _SkeletalModelOverlay;
@@ -8482,8 +11984,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case 0x41544144: // DATA
                 {
-                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Race_FieldIndex.Data);
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    var subLen = _package.Meta.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    if (subLen <= 0x80)
+                    {
+                        this.DATADataTypeState |= Race.DATADataType.Break0;
+                    }
+                    return TryGet<int?>.Succeed((int)Race_FieldIndex.MountData);
                 }
                 case 0x4D414E4D: // MNAM
                 case 0x4D414E46: // FNAM

@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Value
-        public Int32 Value { get; set; } = default;
+        public UInt32 Value { get; set; } = default;
         #endregion
         #region Weight
         public Single Weight { get; set; } = default;
@@ -605,7 +605,7 @@ namespace Mutagen.Bethesda.Skyrim
         IWeightValue,
         ILoquiObjectSetter<IWeaponBasicStats>
     {
-        new Int32 Value { get; set; }
+        new UInt32 Value { get; set; }
         new Single Weight { get; set; }
         new UInt16 Damage { get; set; }
     }
@@ -624,7 +624,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => WeaponBasicStats_Registration.Instance;
-        Int32 Value { get; }
+        UInt32 Value { get; }
         Single Weight { get; }
         UInt16 Damage { get; }
 
@@ -1099,7 +1099,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case WeaponBasicStats_FieldIndex.Value:
-                    return typeof(Int32);
+                    return typeof(UInt32);
                 case WeaponBasicStats_FieldIndex.Weight:
                     return typeof(Single);
                 case WeaponBasicStats_FieldIndex.Damage:
@@ -1194,7 +1194,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeaponBasicStats item,
             MutagenFrame frame)
         {
-            item.Value = frame.ReadInt32();
+            item.Value = frame.ReadUInt32();
             item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.Damage = frame.ReadUInt16();
         }
@@ -1454,13 +1454,6 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         object IWeaponBasicStatsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
-        [DebuggerStepThrough]
-        object IWeightValueGetter.CommonInstance() => WeightValueCommon.Instance;
-        [DebuggerStepThrough]
-        object IWeightValueGetter.CommonSetterInstance() => WeightValueSetterCommon.Instance;
-        [DebuggerStepThrough]
-        object IWeightValueGetter.CommonSetterTranslationInstance() => WeightValueSetterTranslationCommon.Instance;
-
         #endregion
 
     }
@@ -1482,7 +1475,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((translationMask?.GetShouldTranslate((int)WeaponBasicStats_FieldIndex.Value) ?? true))
             {
-                Int32XmlTranslation.Instance.Write(
+                UInt32XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Value),
                     item: item.Value,
@@ -1617,7 +1610,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)WeaponBasicStats_FieldIndex.Value);
                     try
                     {
-                        item.Value = Int32XmlTranslation.Instance.Parse(
+                        item.Value = UInt32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1926,13 +1919,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         [DebuggerStepThrough]
         object IWeaponBasicStatsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
-        [DebuggerStepThrough]
-        object IWeightValueGetter.CommonInstance() => WeightValueCommon.Instance;
-        [DebuggerStepThrough]
-        object? IWeightValueGetter.CommonSetterInstance() => null;
-        [DebuggerStepThrough]
-        object IWeightValueGetter.CommonSetterTranslationInstance() => WeightValueSetterTranslationCommon.Instance;
-
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
@@ -1970,7 +1956,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Int32 Value => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
+        public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x0, 0x4));
         public Single Weight => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
         public UInt16 Damage => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x8, 0x2));
         partial void CustomCtor(

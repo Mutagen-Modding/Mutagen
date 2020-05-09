@@ -32,6 +32,14 @@ namespace Mutagen.Bethesda.Skyrim
             NavMeshGenerationBoundingBox = 0x0800_0000,
             NavMeshGenerationGround = 0x4000_0000
         }
+
+        [Flags]
+        public enum Flag
+        {
+            AllowSoundsWhenAnimation = 0x01,
+            Respawns = 0x02,
+            ShowOwner = 0x04
+        }
     }
 
     namespace Internals

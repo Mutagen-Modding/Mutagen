@@ -9,7 +9,49 @@
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
         <FormLink refName="Keyword" />
       </List>
-      <RefDirect name="Data" refName="MagicEffectData" hasBeenSet="False" />
+      <Data>
+        <Fields>
+          <Enum name="Flags" enumName="MagicEffect.Flag" byteLength="4" />
+          <Float name="BaseCost" />
+          <CustomLogic name="AssociatedItem" byteLength="4" />
+          <Enum name="MagicSkill" enumName="ActorValueExtended" byteLength="4" default="ActorValueExtended.None" />
+          <Enum name="ResistValue" enumName="ActorValueExtended" byteLength="4" default="ActorValueExtended.None" />
+          <UInt16 name="CounterEffectCount" />
+          <UInt16 name="Unknown1" />
+          <FormLink name="CastingLight" refName="Light" />
+          <Float name="TaperWeight" />
+          <FormLink name="HitShader" refName="EffectShader" />
+          <FormLink name="EnchantShader" refName="EffectShader" />
+          <UInt32 name="MinimumSkillLevel" />
+          <UInt32 name="SpellmakingArea" />
+          <Float name="SpellmakingCastingTime" />
+          <Float name="TaperCurve" />
+          <Float name="TaperDuration" />
+          <Float name="SecondActorValueWeight" />
+          <RefDirect name="Archetype" binary="Custom" refName="MagicEffectArchetype" byteLength="8" />
+          <!-- Actor Value parsed by above custom logic -->
+          <FormLink name="Projectile" refName="Projectile" />
+          <FormLink name="Explosion" refName="Explosion" />
+          <Enum name="CastType" enumName="CastType" byteLength="4" />
+          <Enum name="TargetType" enumName="TargetType" byteLength="4" />
+          <Enum name="SecondActorValue" enumName="ActorValueExtended" byteLength="4" default="ActorValueExtended.None" />
+          <FormLink name="CastingArt" refName="ArtObject" />
+          <FormLink name="HitEffectArt" refName="ArtObject" />
+          <FormLink name="ImpactData" refName="ImpactDataSet" />
+          <Float name="SkillUsageMultiplier" />
+          <FormLink name="DualCastArt" refName="DualCastData" />
+          <Float name="DualCastScale" />
+          <FormLink name="EnchantArt" refName="ArtObject" />
+          <FormLink name="Unknown2" refName="SkyrimMajorRecord" />
+          <FormLink name="Unknown3" refName="SkyrimMajorRecord" />
+          <FormLink name="EquipAbility" refName="Spell" />
+          <FormLink name="ImageSpaceModifier" refName="ImageSpaceAdapter" />
+          <FormLink name="PerkToApply" refName="Perk" />
+          <Enum name="CastingSoundLevel" enumName="SoundLevel" byteLength="4" />
+          <Float name="ScriptEffectAIScore" />
+          <Float name="ScriptEffectAIDelayTime" />
+        </Fields>
+      </Data>
       <List name="CounterEffects">
         <FormLink refName="MagicEffect" recordType="ESCE" />
       </List>
@@ -22,49 +64,6 @@
     <Fields>
       <Enum name="Type" enumName="MagicEffect.SoundType" byteLength="4" />
       <FormLink name="Sound" refName="SoundDescriptor" />
-    </Fields>
-  </Object>
-  <Object name="MagicEffectData" objType="Subrecord" recordType="DATA" GUID="004a4e09-a57e-46fe-aa90-43fe97d703ae" ID="104">
-    <Fields>
-      <Enum name="Flags" enumName="MagicEffect.Flag" byteLength="4" />
-      <Float name="BaseCost" />
-      <CustomLogic name="AssociatedItem" byteLength="4" />
-      <Enum name="MagicSkill" enumName="ActorValueExtended" byteLength="4" default="ActorValueExtended.None" />
-      <Enum name="ResistValue" enumName="ActorValueExtended" byteLength="4" default="ActorValueExtended.None" />
-      <UInt16 name="CounterEffectCount" />
-      <UInt16 name="Unknown1" />
-      <FormLink name="CastingLight" refName="Light" />
-      <Float name="TaperWeight" />
-      <FormLink name="HitShader" refName="EffectShader" />
-      <FormLink name="EnchantShader" refName="EffectShader" />
-      <UInt32 name="MinimumSkillLevel" />
-      <UInt32 name="SpellmakingArea" />
-      <Float name="SpellmakingCastingTime" />
-      <Float name="TaperCurve" />
-      <Float name="TaperDuration" />
-      <Float name="SecondActorValueWeight" />
-      <RefDirect name="Archetype" binary="Custom" refName="MagicEffectArchetype" byteLength="8" />
-      <!-- Actor Value parsed by above custom logic -->
-      <FormLink name="Projectile" refName="Projectile" />
-      <FormLink name="Explosion" refName="Explosion" />
-      <Enum name="CastType" enumName="CastType" byteLength="4" />
-      <Enum name="TargetType" enumName="TargetType" byteLength="4" />
-      <Enum name="SecondActorValue" enumName="ActorValueExtended" byteLength="4" default="ActorValueExtended.None" />
-      <FormLink name="CastingArt" refName="ArtObject" />
-      <FormLink name="HitEffectArt" refName="ArtObject" />
-      <FormLink name="ImpactData" refName="ImpactDataSet" />
-      <Float name="SkillUsageMultiplier" />
-      <FormLink name="DualCastArt" refName="DualCastData" />
-      <Float name="DualCastScale" />
-      <FormLink name="EnchantArt" refName="ArtObject" />
-      <FormLink name="Unknown2" refName="SkyrimMajorRecord" />
-      <FormLink name="Unknown3" refName="SkyrimMajorRecord" />
-      <FormLink name="EquipAbility" refName="Spell" />
-      <FormLink name="ImageSpaceModifier" refName="ImageSpaceAdapter" />
-      <FormLink name="PerkToApply" refName="Perk" />
-      <Enum name="CastingSoundLevel" enumName="SoundLevel" byteLength="4" />
-      <Float name="ScriptEffectAIScore" />
-      <Float name="ScriptEffectAIDelayTime" />
     </Fields>
   </Object>
   <Object name="MagicEffectArchetype" objType="Subrecord" GUID="4a9ea74b-5a0a-4630-96f8-cb34dc5b1207" ID="108" ctorPermission="noGeneration">

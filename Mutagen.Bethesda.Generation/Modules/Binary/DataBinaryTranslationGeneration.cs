@@ -65,7 +65,6 @@ namespace Mutagen.Bethesda.Generation
             string passedLengthAccesor,
             DataType _)
         {
-
             DataType dataType = typeGen as DataType;
 
             fg.AppendLine($"private int? _{dataType.GetFieldData().RecordType}Location;");
@@ -88,6 +87,16 @@ namespace Mutagen.Bethesda.Generation
             int? dataPassedLength = 0;
             foreach (var field in dataType.IterateFieldsWithMeta())
             {
+                if (!field.Field.Enabled) continue;
+                if (!field.Field.IntegrateField)
+                {
+                    var fieldData = field.Field.GetFieldData();
+                    if (fieldData.Length.HasValue)
+                    {
+                        dataPassedLength += fieldData.Length.Value;
+                        continue;
+                    }
+                }
                 if (!this.Module.TryGetTypeGeneration(field.Field.GetType(), out var subTypeGen)) continue;
                 using (new RegionWrapper(fg, field.Field.Name)
                 {
@@ -137,7 +146,10 @@ namespace Mutagen.Bethesda.Generation
                     break;
             }
             fg.AppendLine($"_{dataType.GetFieldData().RecordType}Location = (ushort){locationAccessor} + _package.Meta.SubConstants.TypeAndLengthLength;");
-            fg.AppendLine($"this.{dataType.StateName} = {objGen.ObjectName}.{dataType.EnumName}.Has;");
+            if (dataType.HasBeenSet)
+            {
+                fg.AppendLine($"this.{dataType.StateName} = {objGen.ObjectName}.{dataType.EnumName}.Has;");
+            }
             bool generatedStart = false;
             int? passedLen = 0;
             foreach (var item in dataType.IterateFieldsWithMeta())
@@ -181,7 +193,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen) => null;
 
-        public static void GenerateWrapperExtraMembers(FileGeneration fg, DataType dataType, ObjectGeneration objGen, TypeGeneration typeGen, int? pos)
+        public static void GenerateWrapperExtraMembers(FileGeneration fg, DataType dataType, ObjectGeneration objGen, TypeGeneration typeGen, string posAccessor)
         {
             var dataMeta = dataType.IterateFieldsWithMeta().First(item => item.Field == typeGen);
             StringBuilder extraChecks = new StringBuilder();
@@ -194,14 +206,13 @@ namespace Mutagen.Bethesda.Generation
             {
                 extraChecks.Append($"{dataType.StateName}.HasFlag({objGen.Name}.{dataType.EnumName}.Range{dataMeta.RangeIndex})");
             }
-            fg.AppendLine($"private int _{typeGen.Name}Location => _{dataType.GetFieldData().RecordType}Location!.Value + 0x{pos.Value.ToString("X")};");
+            fg.AppendLine($"private int _{typeGen.Name}Location => _{dataType.GetFieldData().RecordType}Location!.Value + {posAccessor};");
             switch (typeGen.GetFieldData().BinaryOverlayFallback)
             {
                 case BinaryGenerationType.Normal:
                     fg.AppendLine($"private bool _{typeGen.Name}_IsSet => _{dataType.GetFieldData().RecordType}Location.HasValue{(extraChecks.Length > 0 ? $" && {extraChecks}" : null)};");
                     break;
                 case BinaryGenerationType.Custom:
-                    fg.AppendLine($"private bool _{typeGen.Name}_IsSet => Get{typeGen.Name}IsSetCustom();");
                     break;
                 default:
                     throw new NotImplementedException();

@@ -2750,7 +2750,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public NpcConfiguration.TemplateFlag TemplateFlags => (NpcConfiguration.TemplateFlag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x12, 0x2));
         public Int16 HealthOffset => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x14, 0x2));
         public Int16 BleedoutOverride => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x16, 0x2));
-        private int LevelEndingPos;
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -2775,7 +2774,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package);
             var finalPos = checked((int)(stream.Position + package.Meta.Subrecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.Meta.SubConstants.TypeAndLengthLength;
-            stream.Position += 0xE + package.Meta.SubConstants.HeaderLength;
+            stream.Position += 0x18 + package.Meta.SubConstants.HeaderLength;
             ret.CustomCtor(
                 stream: stream,
                 finalPos: stream.Length,

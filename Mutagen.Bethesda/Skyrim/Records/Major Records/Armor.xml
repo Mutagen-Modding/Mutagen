@@ -5,6 +5,7 @@
     <Interface>IItem</Interface>
     <Interface>IObjectBounded</Interface>
     <Interface>IObjectId</Interface>
+    <Interface>IWeightValue</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
@@ -46,7 +47,12 @@
       <List name="Armature">
         <FormLink recordType="MODL" refName="ArmorAddon" />
       </List>
-      <RefDirect name="WeightValue" refName="WeightValue" recordType="DATA" hasBeenSet="False" />
+      <Data>
+        <Fields>
+          <UInt32 name="Value" />
+          <Float name="Weight" />
+        </Fields>
+      </Data>
       <Float name="ArmorRating" recordType="DNAM" binaryType="Integer" integerType="UInt" integerDivisor="100" hasBeenSet="False" />
       <FormLink name="TemplateArmor" recordType="TNAM" refName="Armor" />
     </Fields>
