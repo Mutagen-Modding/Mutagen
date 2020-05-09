@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] Unused
         {
             get => _Unused;
-            set => this._Unused = value ?? new byte[3];
+            set => this._Unused = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte> ILockInformationGetter.Unused => this.Unused;

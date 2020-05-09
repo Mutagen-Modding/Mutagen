@@ -51,7 +51,7 @@
       <Int32 name="EmotionValue" />
       <Int32 name="Unknown" />
       <UInt8 name="ResponseNumber" />
-      <ByteArray name="Unknown2" byteLength="3" nullable="NotNull" />
+      <ByteArray name="Unknown2" byteLength="3" hasBeenSet="False" />
     </Fields>
   </Object>
 </Loqui>

@@ -7,7 +7,7 @@
     <Interface>IObjectId</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
-      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
       <String name="Name" recordType="FULL" />
       <FormLink name="ObjectEffect" recordType="EITM" objType="Record" >
         <Interface>IEffectRecord</Interface>

@@ -60,15 +60,9 @@ namespace Mutagen.Bethesda.Skyrim
         IVirtualMachineAdapterGetter? IAlchemicalApparatusGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region ObjectBounds
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ObjectBounds _ObjectBounds = new ObjectBounds();
-        public ObjectBounds ObjectBounds
-        {
-            get => _ObjectBounds;
-            set => _ObjectBounds = value ?? new ObjectBounds();
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter IAlchemicalApparatusGetter.ObjectBounds => _ObjectBounds;
+        IObjectBoundsGetter IAlchemicalApparatusGetter.ObjectBounds => ObjectBounds;
         #endregion
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1675,7 +1669,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.VirtualMachineAdapter = null;
-            item.ObjectBounds = new ObjectBounds();
+            item.ObjectBounds.Clear();
             item.Name = default;
             item.Model = null;
             item.Icons = null;
@@ -3411,7 +3405,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package) : default;
         public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
         #endregion
         #region ObjectBounds

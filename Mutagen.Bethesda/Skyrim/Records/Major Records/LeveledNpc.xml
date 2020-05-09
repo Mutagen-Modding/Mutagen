@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="LeveledNpc" recordType="LVLN" baseClass="ANpcSpawn" objType="Record" GUID="4197e9ea-0f51-44d8-867e-f33c9b48f4c4" ID="200">
     <Fields>
-      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
       <UInt8 name="ChanceNone" recordType="LVLD" hasBeenSet="False" />
       <UInt8 name="Flags" recordType="LVLF" hasBeenSet="False" />
       <FormLink name="Global" recordType="LVLG" refName="Global" />

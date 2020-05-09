@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] NumConnectionsFluffBytes
         {
             get => _NumConnectionsFluffBytes;
-            set => this._NumConnectionsFluffBytes = value ?? new byte[3];
+            set => this._NumConnectionsFluffBytes = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte> IRoadPointGetter.NumConnectionsFluffBytes => this.NumConnectionsFluffBytes;

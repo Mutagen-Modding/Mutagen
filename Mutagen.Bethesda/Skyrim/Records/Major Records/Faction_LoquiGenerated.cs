@@ -4345,7 +4345,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region CrimeValues
         private RangeInt32? _CrimeValuesLocation;
-        public ICrimeValuesGetter? CrimeValues => _CrimeValuesLocation.HasValue ? CrimeValuesBinaryOverlay.CrimeValuesFactory(new BinaryMemoryReadStream(_data.Slice(_CrimeValuesLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ICrimeValuesGetter? CrimeValues => _CrimeValuesLocation.HasValue ? CrimeValuesBinaryOverlay.CrimeValuesFactory(new BinaryMemoryReadStream(_data.Slice(_CrimeValuesLocation!.Value.Min)), _package) : default;
         public bool CrimeValues_IsSet => _CrimeValuesLocation.HasValue;
         #endregion
         public IReadOnlyList<IRankGetter> Ranks { get; private set; } = ListExt.Empty<RankBinaryOverlay>();
@@ -4361,7 +4361,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region VendorValues
         private RangeInt32? _VendorValuesLocation;
-        public IVendorValuesGetter? VendorValues => _VendorValuesLocation.HasValue ? VendorValuesBinaryOverlay.VendorValuesFactory(new BinaryMemoryReadStream(_data.Slice(_VendorValuesLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IVendorValuesGetter? VendorValues => _VendorValuesLocation.HasValue ? VendorValuesBinaryOverlay.VendorValuesFactory(new BinaryMemoryReadStream(_data.Slice(_VendorValuesLocation!.Value.Min)), _package) : default;
         public bool VendorValues_IsSet => _VendorValuesLocation.HasValue;
         #endregion
         public ILocationGetter? VendorLocation { get; private set; }

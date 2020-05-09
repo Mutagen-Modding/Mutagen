@@ -2477,12 +2477,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Data.TryGet(out var DataItems))
+            foreach (var item in obj.Data.LinkFormKeys)
             {
-                foreach (var item in DataItems.LinkFormKeys)
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             if (obj.CounterEffects.TryGet(out var CounterEffectsItem))
             {
@@ -3623,7 +3620,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package) : default;
         public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
         #endregion
         #region Name
@@ -3638,7 +3635,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         #region Data
         private RangeInt32? _DataLocation;
-        public IMagicEffectDataGetter? _Data => _DataLocation.HasValue ? MagicEffectDataBinaryOverlay.MagicEffectDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        private IMagicEffectDataGetter? _Data => _DataLocation.HasValue ? MagicEffectDataBinaryOverlay.MagicEffectDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
         public IMagicEffectDataGetter Data => _Data ?? new MagicEffectData();
         #endregion
         public IReadOnlyList<IFormLinkGetter<IMagicEffectGetter>>? CounterEffects { get; private set; }

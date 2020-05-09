@@ -49,15 +49,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ObjectBounds
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ObjectBounds _ObjectBounds = new ObjectBounds();
-        public ObjectBounds ObjectBounds
-        {
-            get => _ObjectBounds;
-            set => _ObjectBounds = value ?? new ObjectBounds();
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter ITextureSetGetter.ObjectBounds => _ObjectBounds;
+        IObjectBoundsGetter ITextureSetGetter.ObjectBounds => ObjectBounds;
         #endregion
         #region Diffuse
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1637,7 +1631,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ITextureSetInternal item)
         {
             ClearPartial();
-            item.ObjectBounds = new ObjectBounds();
+            item.ObjectBounds.Clear();
             item.Diffuse = default;
             item.NormalOrGloss = default;
             item.EnvironmentMaskOrSubsurfaceTint = default;
@@ -3238,7 +3232,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Decal
         private RangeInt32? _DecalLocation;
-        public IDecalGetter? Decal => _DecalLocation.HasValue ? DecalBinaryOverlay.DecalFactory(new BinaryMemoryReadStream(_data.Slice(_DecalLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IDecalGetter? Decal => _DecalLocation.HasValue ? DecalBinaryOverlay.DecalFactory(new BinaryMemoryReadStream(_data.Slice(_DecalLocation!.Value.Min)), _package) : default;
         public bool Decal_IsSet => _DecalLocation.HasValue;
         #endregion
         #region Flags

@@ -2561,7 +2561,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Data
         private RangeInt32? _DataLocation;
-        public ISpellDataGetter? Data => _DataLocation.HasValue ? SpellDataBinaryOverlay.SpellDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ISpellDataGetter? Data => _DataLocation.HasValue ? SpellDataBinaryOverlay.SpellDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = ListExt.Empty<EffectBinaryOverlay>();

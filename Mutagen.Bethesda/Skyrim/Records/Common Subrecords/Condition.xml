@@ -4,7 +4,7 @@
     <Fields>
       <Enum name="CompareOperator" enumName="CompareOperator" binary="DoNothing" />
       <Enum name="Flags" enumName="Condition.Flag" binary="Custom" byteLength="1" />
-      <ByteArray name="Unknown1" byteLength="3" nullable="NotNull" />
+      <ByteArray name="Unknown1" byteLength="3" hasBeenSet="False" />
     </Fields>
   </Object>
   <Object name="ConditionGlobal" objType="Subrecord" baseClass="Condition" recordType="CTDA" GUID="cafedc3d-b9cf-4eb9-92fc-dd38838b19ce" ID="37" customBinaryEnd="Normal">

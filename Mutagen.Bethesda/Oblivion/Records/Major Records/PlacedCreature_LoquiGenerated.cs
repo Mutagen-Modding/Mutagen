@@ -2911,7 +2911,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region EnableParent
         private RangeInt32? _EnableParentLocation;
-        public IEnableParentGetter? EnableParent => _EnableParentLocation.HasValue ? EnableParentBinaryOverlay.EnableParentFactory(new BinaryMemoryReadStream(_data.Slice(_EnableParentLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IEnableParentGetter? EnableParent => _EnableParentLocation.HasValue ? EnableParentBinaryOverlay.EnableParentFactory(new BinaryMemoryReadStream(_data.Slice(_EnableParentLocation!.Value.Min)), _package) : default;
         public bool EnableParent_IsSet => _EnableParentLocation.HasValue;
         #endregion
         #region RagdollData

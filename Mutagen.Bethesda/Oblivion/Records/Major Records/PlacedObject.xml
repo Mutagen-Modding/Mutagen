@@ -45,7 +45,7 @@
   <Object name="LockInformation" recordType="XLOC" objType="Subrecord" GUID="46a1b7ce-4f49-4017-8beb-bef9481e5fd2" ID="123">
     <Fields>
       <UInt8 name="LockLevel" />
-      <ByteArray name="Unused" byteLength="3" nullable="NotNull" />
+      <ByteArray name="Unused" byteLength="3" hasBeenSet="False" />
       <FormLink name="Key" refName="Key" />
       <Enum name="Flags" enumName="LockInformation.Flag" byteLength="4" />
     </Fields>

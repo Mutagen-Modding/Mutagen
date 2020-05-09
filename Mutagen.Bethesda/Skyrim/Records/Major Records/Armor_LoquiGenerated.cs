@@ -60,15 +60,9 @@ namespace Mutagen.Bethesda.Skyrim
         IVirtualMachineAdapterGetter? IArmorGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region ObjectBounds
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ObjectBounds _ObjectBounds = new ObjectBounds();
-        public ObjectBounds ObjectBounds
-        {
-            get => _ObjectBounds;
-            set => _ObjectBounds = value ?? new ObjectBounds();
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter IArmorGetter.ObjectBounds => _ObjectBounds;
+        IObjectBoundsGetter IArmorGetter.ObjectBounds => ObjectBounds;
         #endregion
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2356,7 +2350,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.VirtualMachineAdapter = null;
-            item.ObjectBounds = new ObjectBounds();
+            item.ObjectBounds.Clear();
             item.Name = default;
             item.ObjectEffect = null;
             item.EnchantmentAmount = default;
@@ -4831,7 +4825,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package) : default;
         public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
         #endregion
         #region ObjectBounds
@@ -4858,7 +4852,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region BodyTemplate
         private RangeInt32? _BodyTemplateLocation;
-        public IBodyTemplateGetter? BodyTemplate => _BodyTemplateLocation.HasValue ? BodyTemplateBinaryOverlay.BodyTemplateFactory(new BinaryMemoryReadStream(_data.Slice(_BodyTemplateLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IBodyTemplateGetter? BodyTemplate => _BodyTemplateLocation.HasValue ? BodyTemplateBinaryOverlay.BodyTemplateFactory(new BinaryMemoryReadStream(_data.Slice(_BodyTemplateLocation!.Value.Min)), _package) : default;
         public bool BodyTemplate_IsSet => _BodyTemplateLocation.HasValue;
         #endregion
         public IDestructibleGetter? Destructible { get; private set; }

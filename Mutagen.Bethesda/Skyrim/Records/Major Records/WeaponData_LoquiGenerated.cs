@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Byte[] Unused
         {
             get => _Unused;
-            set => this._Unused = value ?? new byte[3];
+            set => this._Unused = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte> IWeaponDataGetter.Unused => this.Unused;
@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Byte[] Unknown3
         {
             get => _Unknown3;
-            set => this._Unknown3 = value ?? new byte[12];
+            set => this._Unknown3 = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte> IWeaponDataGetter.Unknown3 => this.Unknown3;

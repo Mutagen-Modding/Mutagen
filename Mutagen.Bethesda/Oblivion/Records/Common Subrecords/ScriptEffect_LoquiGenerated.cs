@@ -2004,7 +2004,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Data
         private RangeInt32? _DataLocation;
-        public IScriptEffectDataGetter? Data => _DataLocation.HasValue ? ScriptEffectDataBinaryOverlay.ScriptEffectDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IScriptEffectDataGetter? Data => _DataLocation.HasValue ? ScriptEffectDataBinaryOverlay.ScriptEffectDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region Name

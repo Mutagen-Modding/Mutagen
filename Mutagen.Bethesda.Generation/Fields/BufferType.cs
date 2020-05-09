@@ -17,12 +17,11 @@ namespace Mutagen.Bethesda.Generation
 
         public override async Task Load(XElement node, bool requireName = true)
         {
-            this.Singleton = SingletonLevel.NotNull;
+            this.HasBeenSetProperty.OnNext((false, true));
             await base.Load(node, requireName);
             this.IntegrateField = false;
             this.Static = node.GetAttribute<bool>("static");
             this.NotifyingProperty.OnNext((Loqui.NotifyingType.None, true));
-            this.HasBeenSetProperty.OnNext((false, true));
         }
     }
 }

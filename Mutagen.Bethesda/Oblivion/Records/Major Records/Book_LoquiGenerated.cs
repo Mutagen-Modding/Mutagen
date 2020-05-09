@@ -3026,7 +3026,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        public IBookDataGetter? Data => _DataLocation.HasValue ? BookDataBinaryOverlay.BookDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IBookDataGetter? Data => _DataLocation.HasValue ? BookDataBinaryOverlay.BookDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         partial void CustomCtor(

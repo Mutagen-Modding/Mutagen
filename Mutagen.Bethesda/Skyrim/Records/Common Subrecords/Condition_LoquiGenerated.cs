@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Byte[] Unknown1
         {
             get => _Unknown1;
-            set => this._Unknown1 = value ?? new byte[3];
+            set => this._Unknown1 = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte> IConditionGetter.Unknown1 => this.Unknown1;

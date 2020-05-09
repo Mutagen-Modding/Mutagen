@@ -2730,7 +2730,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IModelGetter? Model { get; private set; }
         #region Data
         private RangeInt32? _DataLocation;
-        public IClimateDataGetter? Data => _DataLocation.HasValue ? ClimateDataBinaryOverlay.ClimateDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IClimateDataGetter? Data => _DataLocation.HasValue ? ClimateDataBinaryOverlay.ClimateDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         partial void CustomCtor(

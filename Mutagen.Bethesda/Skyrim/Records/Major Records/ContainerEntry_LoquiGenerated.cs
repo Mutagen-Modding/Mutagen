@@ -47,15 +47,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Item
+        public ContainerItem Item { get; set; } = new ContainerItem();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ContainerItem _Item = new ContainerItem();
-        public ContainerItem Item
-        {
-            get => _Item;
-            set => _Item = value ?? new ContainerItem();
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IContainerItemGetter IContainerEntryGetter.Item => _Item;
+        IContainerItemGetter IContainerEntryGetter.Item => Item;
         #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1150,7 +1144,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IContainerEntry item)
         {
             ClearPartial();
-            item.Item = new ContainerItem();
+            item.Item.Clear();
             item.Data = null;
         }
         
@@ -2019,7 +2013,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        public IExtraDataGetter? Data => _DataLocation.HasValue ? ExtraDataBinaryOverlay.ExtraDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IExtraDataGetter? Data => _DataLocation.HasValue ? ExtraDataBinaryOverlay.ExtraDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         partial void CustomCtor(

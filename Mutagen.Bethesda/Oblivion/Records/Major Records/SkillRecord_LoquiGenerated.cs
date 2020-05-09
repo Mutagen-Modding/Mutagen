@@ -2847,7 +2847,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        public ISkillDataGetter? Data => _DataLocation.HasValue ? SkillDataBinaryOverlay.SkillDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ISkillDataGetter? Data => _DataLocation.HasValue ? SkillDataBinaryOverlay.SkillDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region ApprenticeText

@@ -7,7 +7,7 @@
       <Int32 name="Version" />
       <UInt16 name="FormVersion" />
       <UInt16 name="Version2" />
-      <RefDirect name="Stats" refName="ModStats" nullable="NotNull" hasBeenSet="False" />
+      <RefDirect name="Stats" refName="ModStats" hasBeenSet="False" />
       <ByteArray name="TypeOffsets" recordType="OFST" />
       <ByteArray name="Deleted" recordType="DELE" />
       <String name="Author" recordType="CNAM" maxLength="512" />

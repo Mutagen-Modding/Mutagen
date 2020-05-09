@@ -8197,13 +8197,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region BodyTemplate
         private RangeInt32? _BodyTemplateLocation;
-        public IBodyTemplateGetter? BodyTemplate => _BodyTemplateLocation.HasValue ? BodyTemplateBinaryOverlay.BodyTemplateFactory(new BinaryMemoryReadStream(_data.Slice(_BodyTemplateLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IBodyTemplateGetter? BodyTemplate => _BodyTemplateLocation.HasValue ? BodyTemplateBinaryOverlay.BodyTemplateFactory(new BinaryMemoryReadStream(_data.Slice(_BodyTemplateLocation!.Value.Min)), _package) : default;
         public bool BodyTemplate_IsSet => _BodyTemplateLocation.HasValue;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         #region Data
         private RangeInt32? _DataLocation;
-        public IRaceDataGetter? _Data => _DataLocation.HasValue ? RaceDataBinaryOverlay.RaceDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        private IRaceDataGetter? _Data => _DataLocation.HasValue ? RaceDataBinaryOverlay.RaceDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
         public IRaceDataGetter Data => _Data ?? new RaceData();
         #endregion
         #region SkeletalModel

@@ -2938,7 +2938,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlyList<IContainerItemGetter> Items { get; private set; } = ListExt.Empty<ContainerItemBinaryOverlay>();
         #region Data
         private RangeInt32? _DataLocation;
-        public IContainerDataGetter? Data => _DataLocation.HasValue ? ContainerDataBinaryOverlay.ContainerDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IContainerDataGetter? Data => _DataLocation.HasValue ? ContainerDataBinaryOverlay.ContainerDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region OpenSound

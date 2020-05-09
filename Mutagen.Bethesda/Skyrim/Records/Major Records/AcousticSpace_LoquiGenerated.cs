@@ -49,15 +49,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ObjectBounds
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ObjectBounds _ObjectBounds = new ObjectBounds();
-        public ObjectBounds ObjectBounds
-        {
-            get => _ObjectBounds;
-            set => _ObjectBounds = value ?? new ObjectBounds();
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter IAcousticSpaceGetter.ObjectBounds => _ObjectBounds;
+        IObjectBoundsGetter IAcousticSpaceGetter.ObjectBounds => ObjectBounds;
         #endregion
         #region AmbientSound
         public FormLinkNullable<SoundDescriptor> AmbientSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
@@ -1240,7 +1234,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IAcousticSpaceInternal item)
         {
             ClearPartial();
-            item.ObjectBounds = new ObjectBounds();
+            item.ObjectBounds.Clear();
             item.AmbientSound = null;
             item.UseSoundFromRegion = null;
             item.EnvironmentType = null;

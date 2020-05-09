@@ -47,15 +47,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Data
+        public EffectData Data { get; set; } = new EffectData();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private EffectData _Data = new EffectData();
-        public EffectData Data
-        {
-            get => _Data;
-            set => _Data = value ?? new EffectData();
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEffectDataGetter IEffectGetter.Data => _Data;
+        IEffectDataGetter IEffectGetter.Data => Data;
         #endregion
         #region ScriptEffect
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1162,7 +1156,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IEffect item)
         {
             ClearPartial();
-            item.Data = new EffectData();
+            item.Data.Clear();
             item.ScriptEffect = null;
         }
         

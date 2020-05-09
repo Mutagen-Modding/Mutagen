@@ -49,15 +49,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ObjectBounds
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ObjectBounds _ObjectBounds = new ObjectBounds();
-        public ObjectBounds ObjectBounds
-        {
-            get => _ObjectBounds;
-            set => _ObjectBounds = value ?? new ObjectBounds();
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter IScrollGetter.ObjectBounds => _ObjectBounds;
+        IObjectBoundsGetter IScrollGetter.ObjectBounds => ObjectBounds;
         #endregion
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1909,7 +1903,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IScrollInternal item)
         {
             ClearPartial();
-            item.ObjectBounds = new ObjectBounds();
+            item.ObjectBounds.Clear();
             item.Name = default;
             item.Keywords = null;
             item.MenuDisplayObject = null;
@@ -2620,12 +2614,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return PutDownSoundKey;
             }
-            if (obj.SpellData.TryGet(out var SpellDataItems))
+            foreach (var item in obj.SpellData.LinkFormKeys)
             {
-                foreach (var item in SpellDataItems.LinkFormKeys)
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             foreach (var item in obj.Effects.SelectMany(f => f.LinkFormKeys))
             {
@@ -3878,12 +3869,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        public IScrollDataGetter? _Data => _DataLocation.HasValue ? ScrollDataBinaryOverlay.ScrollDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        private IScrollDataGetter? _Data => _DataLocation.HasValue ? ScrollDataBinaryOverlay.ScrollDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
         public IScrollDataGetter Data => _Data ?? new ScrollData();
         #endregion
         #region SpellData
         private RangeInt32? _SpellDataLocation;
-        public ISpellDataGetter? _SpellData => _SpellDataLocation.HasValue ? SpellDataBinaryOverlay.SpellDataFactory(new BinaryMemoryReadStream(_data.Slice(_SpellDataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        private ISpellDataGetter? _SpellData => _SpellDataLocation.HasValue ? SpellDataBinaryOverlay.SpellDataFactory(new BinaryMemoryReadStream(_data.Slice(_SpellDataLocation!.Value.Min)), _package) : default;
         public ISpellDataGetter SpellData => _SpellData ?? new SpellData();
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = ListExt.Empty<EffectBinaryOverlay>();

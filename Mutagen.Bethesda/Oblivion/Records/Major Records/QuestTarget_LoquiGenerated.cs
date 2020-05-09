@@ -47,15 +47,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Data
+        public QuestTargetData Data { get; set; } = new QuestTargetData();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private QuestTargetData _Data = new QuestTargetData();
-        public QuestTargetData Data
-        {
-            get => _Data;
-            set => _Data = value ?? new QuestTargetData();
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IQuestTargetDataGetter IQuestTargetGetter.Data => _Data;
+        IQuestTargetDataGetter IQuestTargetGetter.Data => Data;
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1223,7 +1217,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IQuestTarget item)
         {
             ClearPartial();
-            item.Data = new QuestTargetData();
+            item.Data.Clear();
             item.Conditions.Clear();
         }
         

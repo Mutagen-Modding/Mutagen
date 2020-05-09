@@ -2448,7 +2448,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        public IEnchantmentDataGetter? Data => _DataLocation.HasValue ? EnchantmentDataBinaryOverlay.EnchantmentDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IEnchantmentDataGetter? Data => _DataLocation.HasValue ? EnchantmentDataBinaryOverlay.EnchantmentDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = ListExt.Empty<EffectBinaryOverlay>();

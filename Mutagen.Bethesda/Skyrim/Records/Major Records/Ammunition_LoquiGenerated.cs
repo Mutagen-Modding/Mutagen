@@ -49,15 +49,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ObjectBounds
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ObjectBounds _ObjectBounds = new ObjectBounds();
-        public ObjectBounds ObjectBounds
-        {
-            get => _ObjectBounds;
-            set => _ObjectBounds = value ?? new ObjectBounds();
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter IAmmunitionGetter.ObjectBounds => _ObjectBounds;
+        IObjectBoundsGetter IAmmunitionGetter.ObjectBounds => ObjectBounds;
         #endregion
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1753,7 +1747,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IAmmunitionInternal item)
         {
             ClearPartial();
-            item.ObjectBounds = new ObjectBounds();
+            item.ObjectBounds.Clear();
             item.Name = default;
             item.Model = null;
             item.Icons = null;
@@ -2402,12 +2396,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.Data.TryGet(out var DataItems))
+            foreach (var item in obj.Data.LinkFormKeys)
             {
-                foreach (var item in DataItems.LinkFormKeys)
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             yield break;
         }
@@ -3539,7 +3530,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         #region Data
         private RangeInt32? _DataLocation;
-        public IAmmunitionDataGetter? _Data => _DataLocation.HasValue ? AmmunitionDataBinaryOverlay.AmmunitionDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        private IAmmunitionDataGetter? _Data => _DataLocation.HasValue ? AmmunitionDataBinaryOverlay.AmmunitionDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
         public IAmmunitionDataGetter Data => _Data ?? new AmmunitionData();
         #endregion
         #region ShortName

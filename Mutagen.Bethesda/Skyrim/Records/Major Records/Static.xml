@@ -5,7 +5,7 @@
     <Interface>IObjectBounded</Interface>
     <Interface>IObjectId</Interface>
     <Fields>
-      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
       <RefDirect name="Model" refName="Model" />
       <RefDirect name="DirectionMaterial" refName="DirectionMaterial" hasBeenSet="False" />
       <RefDirect name="Lod" refName="Lod" />
@@ -28,7 +28,7 @@
       <Float name="MaxAngle" min="30" max="120" default="30" />
       <FormLink name="Material" refName="MaterialObject" />
       <Enum name="Flags" enumName="DirectionMaterial.Flag" byteLength="1" isSE="true" />
-      <ByteArray name="Unused" byteLength="3" nullable="NotNull" isSE="true" />
+      <ByteArray name="Unused" byteLength="3" hasBeenSet="False" isSE="true" />
     </Fields>
   </Object>
 </Loqui>

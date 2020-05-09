@@ -2616,7 +2616,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region HavokData
         private RangeInt32? _HavokDataLocation;
-        public IHavokDataGetter? _HavokData => _HavokDataLocation.HasValue ? HavokDataBinaryOverlay.HavokDataFactory(new BinaryMemoryReadStream(_data.Slice(_HavokDataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        private IHavokDataGetter? _HavokData => _HavokDataLocation.HasValue ? HavokDataBinaryOverlay.HavokDataFactory(new BinaryMemoryReadStream(_data.Slice(_HavokDataLocation!.Value.Min)), _package) : default;
         public IHavokDataGetter HavokData => _HavokData ?? new HavokData();
         #endregion
         #region TextureSpecularExponent

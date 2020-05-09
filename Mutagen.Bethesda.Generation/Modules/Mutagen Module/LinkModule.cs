@@ -167,7 +167,7 @@ namespace Mutagen.Bethesda.Generation
                             fg.AppendLine($"if (obj.{field.Name} is {nameof(ILinkedFormKeyContainer)} {field.Name}linkCont)");
                             access = $"{field.Name}linkCont";
                         }
-                        else if (loqui.SingletonType == SingletonLevel.None)
+                        else if (loqui.HasBeenSet)
                         {
                             fg.AppendLine($"if (obj.{field.Name}.TryGet(out var {field.Name}Items))");
                             access = $"{field.Name}Items";

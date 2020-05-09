@@ -2547,7 +2547,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Havok
         private RangeInt32? _HavokLocation;
-        public IHavokDataGetter? Havok => _HavokLocation.HasValue ? HavokDataBinaryOverlay.HavokDataFactory(new BinaryMemoryReadStream(_data.Slice(_HavokLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IHavokDataGetter? Havok => _HavokLocation.HasValue ? HavokDataBinaryOverlay.HavokDataFactory(new BinaryMemoryReadStream(_data.Slice(_HavokLocation!.Value.Min)), _package) : default;
         public bool Havok_IsSet => _HavokLocation.HasValue;
         #endregion
         #region TextureSpecularExponent

@@ -338,7 +338,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"private {GetLocationObjectString(objGen)}? _{typeGen.Name}Location;");
                     using (new LineWrapper(fg))
                     {
-                        if (loqui.SingletonType == SingletonLevel.None)
+                        if (loqui.IsNullable)
                         {
                             fg.Append($"public ");
                         }
@@ -347,7 +347,7 @@ namespace Mutagen.Bethesda.Generation
                             fg.Append($"private ");
                         }
                         fg.Append($"{loqui.Interface(getter: true, internalInterface: true)}{(typeGen.CanBeNullable(getter: true) ? "?" : null)} ");
-                        if (loqui.SingletonType != SingletonLevel.None
+                        if (!loqui.IsNullable
                             || isRequiredRecord)
                         {
                             fg.Append("_");
@@ -357,7 +357,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             fg.Append($" => _{typeGen.Name}Location.HasValue ? ");
                             fg.Append($"{this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}({DataAccessor(dataAccessor, $"_{typeGen.Name}Location!.Value.Min", $"_{typeGen.Name}Location!.Value.Max")}), _package");
-                            if (loqui.SingletonType == SingletonLevel.None)
+                            if (!recConverter.StartsWith("default("))
                             {
                                 fg.Append($", {recConverter}");
                             }
@@ -521,7 +521,6 @@ namespace Mutagen.Bethesda.Generation
                         accessor = $"_{typeGen.Name}";
                     }
                     break;
-                case SingletonLevel.NotNull:
                 case SingletonLevel.Singleton:
                     accessor = $"_{typeGen.Name}";
                     break;

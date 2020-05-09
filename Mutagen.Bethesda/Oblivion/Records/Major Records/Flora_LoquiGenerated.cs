@@ -2564,7 +2564,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region SeasonalIngredientProduction
         private RangeInt32? _SeasonalIngredientProductionLocation;
-        public ISeasonalIngredientProductionGetter? SeasonalIngredientProduction => _SeasonalIngredientProductionLocation.HasValue ? SeasonalIngredientProductionBinaryOverlay.SeasonalIngredientProductionFactory(new BinaryMemoryReadStream(_data.Slice(_SeasonalIngredientProductionLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ISeasonalIngredientProductionGetter? SeasonalIngredientProduction => _SeasonalIngredientProductionLocation.HasValue ? SeasonalIngredientProductionBinaryOverlay.SeasonalIngredientProductionFactory(new BinaryMemoryReadStream(_data.Slice(_SeasonalIngredientProductionLocation!.Value.Min)), _package) : default;
         public bool SeasonalIngredientProduction_IsSet => _SeasonalIngredientProductionLocation.HasValue;
         #endregion
         partial void CustomCtor(

@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Byte[] Fluff
         {
             get => _Fluff;
-            set => this._Fluff = value ?? new byte[3];
+            set => this._Fluff = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte> IPerkPlacementGetter.Fluff => this.Fluff;

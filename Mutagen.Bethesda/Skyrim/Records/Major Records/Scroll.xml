@@ -7,7 +7,7 @@
     <Interface>IObjectBounded</Interface>
     <Interface>IObjectId</Interface>
     <Fields>
-      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
       <String name="Name" recordType="FULL" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
         <FormLink refName="Keyword" />
@@ -21,7 +21,7 @@
       <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
       <RefDirect name="Data" refName="ScrollData" hasBeenSet="False" />
       <RefDirect name="SpellData" refName="SpellData" hasBeenSet="False" />
-      <RefList name="Effects" refName="Effect" nullable="NotNull" />
+      <RefList name="Effects" refName="Effect" hasBeenSet="False" />
     </Fields>
   </Object>
   <Object name="ScrollData" objType="Subrecord" recordType="DATA" GUID="9c306ccf-686c-49fc-998b-b56e3987538d" ID="143">

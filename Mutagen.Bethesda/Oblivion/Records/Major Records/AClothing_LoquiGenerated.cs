@@ -3488,7 +3488,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region ClothingFlags
         private RangeInt32? _ClothingFlagsLocation;
-        public IClothingFlagsGetter? ClothingFlags => _ClothingFlagsLocation.HasValue ? ClothingFlagsBinaryOverlay.ClothingFlagsFactory(new BinaryMemoryReadStream(_data.Slice(_ClothingFlagsLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IClothingFlagsGetter? ClothingFlags => _ClothingFlagsLocation.HasValue ? ClothingFlagsBinaryOverlay.ClothingFlagsFactory(new BinaryMemoryReadStream(_data.Slice(_ClothingFlagsLocation!.Value.Min)), _package) : default;
         public bool ClothingFlags_IsSet => _ClothingFlagsLocation.HasValue;
         #endregion
         public IModelGetter? MaleBipedModel { get; private set; }

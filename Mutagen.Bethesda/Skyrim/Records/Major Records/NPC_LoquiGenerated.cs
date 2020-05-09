@@ -61,15 +61,9 @@ namespace Mutagen.Bethesda.Skyrim
         IVirtualMachineAdapterGetter? INpcGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region ObjectBounds
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ObjectBounds _ObjectBounds = new ObjectBounds();
-        public ObjectBounds ObjectBounds
-        {
-            get => _ObjectBounds;
-            set => _ObjectBounds = value ?? new ObjectBounds();
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter INpcGetter.ObjectBounds => _ObjectBounds;
+        IObjectBoundsGetter INpcGetter.ObjectBounds => ObjectBounds;
         #endregion
         #region Configuration
         public NpcConfiguration Configuration { get; set; } = new NpcConfiguration();
@@ -4106,7 +4100,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.VirtualMachineAdapter = null;
-            item.ObjectBounds = new ObjectBounds();
+            item.ObjectBounds.Clear();
             item.Configuration.Clear();
             item.Factions.Clear();
             item.DeathItem = null;
@@ -8772,7 +8766,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package) : default;
         public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
         #endregion
         #region ObjectBounds
@@ -8782,7 +8776,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Configuration
         private RangeInt32? _ConfigurationLocation;
-        public INpcConfigurationGetter? _Configuration => _ConfigurationLocation.HasValue ? NpcConfigurationBinaryOverlay.NpcConfigurationFactory(new BinaryMemoryReadStream(_data.Slice(_ConfigurationLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        private INpcConfigurationGetter? _Configuration => _ConfigurationLocation.HasValue ? NpcConfigurationBinaryOverlay.NpcConfigurationFactory(new BinaryMemoryReadStream(_data.Slice(_ConfigurationLocation!.Value.Min)), _package) : default;
         public INpcConfigurationGetter Configuration => _Configuration ?? new NpcConfiguration();
         #endregion
         public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = ListExt.Empty<RankPlacementBinaryOverlay>();
@@ -8848,7 +8842,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IContainerEntryGetter>? Items { get; private set; }
         #region AIData
         private RangeInt32? _AIDataLocation;
-        public IAIDataGetter? _AIData => _AIDataLocation.HasValue ? AIDataBinaryOverlay.AIDataFactory(new BinaryMemoryReadStream(_data.Slice(_AIDataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        private IAIDataGetter? _AIData => _AIDataLocation.HasValue ? AIDataBinaryOverlay.AIDataFactory(new BinaryMemoryReadStream(_data.Slice(_AIDataLocation!.Value.Min)), _package) : default;
         public IAIDataGetter AIData => _AIData ?? new AIData();
         #endregion
         public IReadOnlyList<IFormLinkGetter<IPackageGetter>>? Packages { get; private set; }
@@ -8873,7 +8867,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region PlayerSkills
         private RangeInt32? _PlayerSkillsLocation;
-        public IPlayerSkillsGetter? PlayerSkills => _PlayerSkillsLocation.HasValue ? PlayerSkillsBinaryOverlay.PlayerSkillsFactory(new BinaryMemoryReadStream(_data.Slice(_PlayerSkillsLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IPlayerSkillsGetter? PlayerSkills => _PlayerSkillsLocation.HasValue ? PlayerSkillsBinaryOverlay.PlayerSkillsFactory(new BinaryMemoryReadStream(_data.Slice(_PlayerSkillsLocation!.Value.Min)), _package) : default;
         public bool PlayerSkills_IsSet => _PlayerSkillsLocation.HasValue;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IHeadPartGetter>>? HeadParts { get; private set; }
@@ -8940,12 +8934,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region FaceMorph
         private RangeInt32? _FaceMorphLocation;
-        public INpcFaceMorphGetter? FaceMorph => _FaceMorphLocation.HasValue ? NpcFaceMorphBinaryOverlay.NpcFaceMorphFactory(new BinaryMemoryReadStream(_data.Slice(_FaceMorphLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public INpcFaceMorphGetter? FaceMorph => _FaceMorphLocation.HasValue ? NpcFaceMorphBinaryOverlay.NpcFaceMorphFactory(new BinaryMemoryReadStream(_data.Slice(_FaceMorphLocation!.Value.Min)), _package) : default;
         public bool FaceMorph_IsSet => _FaceMorphLocation.HasValue;
         #endregion
         #region FaceParts
         private RangeInt32? _FacePartsLocation;
-        public INpcFacePartsGetter? FaceParts => _FacePartsLocation.HasValue ? NpcFacePartsBinaryOverlay.NpcFacePartsFactory(new BinaryMemoryReadStream(_data.Slice(_FacePartsLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public INpcFacePartsGetter? FaceParts => _FacePartsLocation.HasValue ? NpcFacePartsBinaryOverlay.NpcFacePartsFactory(new BinaryMemoryReadStream(_data.Slice(_FacePartsLocation!.Value.Min)), _package) : default;
         public bool FaceParts_IsSet => _FacePartsLocation.HasValue;
         #endregion
         public IReadOnlyList<ITintLayerGetter> TintLayers { get; private set; } = ListExt.Empty<TintLayerBinaryOverlay>();

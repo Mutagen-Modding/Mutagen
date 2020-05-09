@@ -5928,7 +5928,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Configuration
         private RangeInt32? _ConfigurationLocation;
-        public ICreatureConfigurationGetter? Configuration => _ConfigurationLocation.HasValue ? CreatureConfigurationBinaryOverlay.CreatureConfigurationFactory(new BinaryMemoryReadStream(_data.Slice(_ConfigurationLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ICreatureConfigurationGetter? Configuration => _ConfigurationLocation.HasValue ? CreatureConfigurationBinaryOverlay.CreatureConfigurationFactory(new BinaryMemoryReadStream(_data.Slice(_ConfigurationLocation!.Value.Min)), _package) : default;
         public bool Configuration_IsSet => _ConfigurationLocation.HasValue;
         #endregion
         public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = ListExt.Empty<RankPlacementBinaryOverlay>();
@@ -5944,14 +5944,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region AIData
         private RangeInt32? _AIDataLocation;
-        public ICreatureAIDataGetter? AIData => _AIDataLocation.HasValue ? CreatureAIDataBinaryOverlay.CreatureAIDataFactory(new BinaryMemoryReadStream(_data.Slice(_AIDataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ICreatureAIDataGetter? AIData => _AIDataLocation.HasValue ? CreatureAIDataBinaryOverlay.CreatureAIDataFactory(new BinaryMemoryReadStream(_data.Slice(_AIDataLocation!.Value.Min)), _package) : default;
         public bool AIData_IsSet => _AIDataLocation.HasValue;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IAIPackageGetter>>? AIPackages { get; private set; }
         public IReadOnlyList<String>? Animations { get; private set; }
         #region Data
         private RangeInt32? _DataLocation;
-        public ICreatureDataGetter? Data => _DataLocation.HasValue ? CreatureDataBinaryOverlay.CreatureDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ICreatureDataGetter? Data => _DataLocation.HasValue ? CreatureDataBinaryOverlay.CreatureDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region AttackReach

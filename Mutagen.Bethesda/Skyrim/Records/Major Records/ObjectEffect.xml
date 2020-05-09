@@ -5,10 +5,10 @@
     <Interface>IEffectRecord</Interface>
     <Interface>IObjectBounded</Interface>
     <Fields>
-      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
       <String name="Name" recordType="FULL" />
       <RefDirect name="Data" refName="ObjectEffectData" hasBeenSet="False" />
-      <RefList name="Effects" refName="Effect" nullable="NotNull" />
+      <RefList name="Effects" refName="Effect" hasBeenSet="False" />
     </Fields>
   </Object>
   <Object name="ObjectEffectData" objType="Subrecord" recordType="ENIT" GUID="edc0fcfa-9555-4856-a0c4-1a12c1a35802" ID="136">

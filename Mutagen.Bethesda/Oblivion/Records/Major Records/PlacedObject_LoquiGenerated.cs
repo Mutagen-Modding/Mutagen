@@ -4882,12 +4882,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region TeleportDestination
         private RangeInt32? _TeleportDestinationLocation;
-        public ITeleportDestinationGetter? TeleportDestination => _TeleportDestinationLocation.HasValue ? TeleportDestinationBinaryOverlay.TeleportDestinationFactory(new BinaryMemoryReadStream(_data.Slice(_TeleportDestinationLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ITeleportDestinationGetter? TeleportDestination => _TeleportDestinationLocation.HasValue ? TeleportDestinationBinaryOverlay.TeleportDestinationFactory(new BinaryMemoryReadStream(_data.Slice(_TeleportDestinationLocation!.Value.Min)), _package) : default;
         public bool TeleportDestination_IsSet => _TeleportDestinationLocation.HasValue;
         #endregion
         #region Lock
         private RangeInt32? _LockLocation;
-        public ILockInformationGetter? Lock => _LockLocation.HasValue ? LockInformationBinaryOverlay.LockInformationFactory(new BinaryMemoryReadStream(_data.Slice(_LockLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ILockInformationGetter? Lock => _LockLocation.HasValue ? LockInformationBinaryOverlay.LockInformationFactory(new BinaryMemoryReadStream(_data.Slice(_LockLocation!.Value.Min)), _package) : default;
         public bool Lock_IsSet => _LockLocation.HasValue;
         #endregion
         #region Owner
@@ -4906,7 +4906,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region EnableParent
         private RangeInt32? _EnableParentLocation;
-        public IEnableParentGetter? EnableParent => _EnableParentLocation.HasValue ? EnableParentBinaryOverlay.EnableParentFactory(new BinaryMemoryReadStream(_data.Slice(_EnableParentLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IEnableParentGetter? EnableParent => _EnableParentLocation.HasValue ? EnableParentBinaryOverlay.EnableParentFactory(new BinaryMemoryReadStream(_data.Slice(_EnableParentLocation!.Value.Min)), _package) : default;
         public bool EnableParent_IsSet => _EnableParentLocation.HasValue;
         #endregion
         #region Target
@@ -4920,7 +4920,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region DistantLODData
         private RangeInt32? _DistantLODDataLocation;
-        public IDistantLODDataGetter? DistantLODData => _DistantLODDataLocation.HasValue ? DistantLODDataBinaryOverlay.DistantLODDataFactory(new BinaryMemoryReadStream(_data.Slice(_DistantLODDataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IDistantLODDataGetter? DistantLODData => _DistantLODDataLocation.HasValue ? DistantLODDataBinaryOverlay.DistantLODDataFactory(new BinaryMemoryReadStream(_data.Slice(_DistantLODDataLocation!.Value.Min)), _package) : default;
         public bool DistantLODData_IsSet => _DistantLODDataLocation.HasValue;
         #endregion
         #region Charge

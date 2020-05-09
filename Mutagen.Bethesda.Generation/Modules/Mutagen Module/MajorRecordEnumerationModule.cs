@@ -321,7 +321,6 @@ namespace Mutagen.Bethesda.Generation
                                                 fg.AppendLines(subFg);
                                             }
                                             break;
-                                        case SingletonLevel.NotNull:
                                         case SingletonLevel.Singleton:
                                             fg.AppendLines(subFg);
                                             break;
@@ -528,7 +527,6 @@ namespace Mutagen.Bethesda.Generation
                                             fieldGen.AppendLines(subFg);
                                         }
                                         break;
-                                    case SingletonLevel.NotNull:
                                     case SingletonLevel.Singleton:
                                         fieldGen.AppendLines(subFg);
                                         break;

@@ -5786,7 +5786,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IModelGetter? Model { get; private set; }
         #region Configuration
         private RangeInt32? _ConfigurationLocation;
-        public INpcConfigurationGetter? Configuration => _ConfigurationLocation.HasValue ? NpcConfigurationBinaryOverlay.NpcConfigurationFactory(new BinaryMemoryReadStream(_data.Slice(_ConfigurationLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public INpcConfigurationGetter? Configuration => _ConfigurationLocation.HasValue ? NpcConfigurationBinaryOverlay.NpcConfigurationFactory(new BinaryMemoryReadStream(_data.Slice(_ConfigurationLocation!.Value.Min)), _package) : default;
         public bool Configuration_IsSet => _ConfigurationLocation.HasValue;
         #endregion
         public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = ListExt.Empty<RankPlacementBinaryOverlay>();
@@ -5809,7 +5809,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlyList<IItemEntryGetter> Items { get; private set; } = ListExt.Empty<ItemEntryBinaryOverlay>();
         #region AIData
         private RangeInt32? _AIDataLocation;
-        public IAIDataGetter? AIData => _AIDataLocation.HasValue ? AIDataBinaryOverlay.AIDataFactory(new BinaryMemoryReadStream(_data.Slice(_AIDataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IAIDataGetter? AIData => _AIDataLocation.HasValue ? AIDataBinaryOverlay.AIDataFactory(new BinaryMemoryReadStream(_data.Slice(_AIDataLocation!.Value.Min)), _package) : default;
         public bool AIData_IsSet => _AIDataLocation.HasValue;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IAIPackageGetter>>? AIPackages { get; private set; }
@@ -5821,7 +5821,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Stats
         private RangeInt32? _StatsLocation;
-        public INpcDataGetter? Stats => _StatsLocation.HasValue ? NpcDataBinaryOverlay.NpcDataFactory(new BinaryMemoryReadStream(_data.Slice(_StatsLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public INpcDataGetter? Stats => _StatsLocation.HasValue ? NpcDataBinaryOverlay.NpcDataFactory(new BinaryMemoryReadStream(_data.Slice(_StatsLocation!.Value.Min)), _package) : default;
         public bool Stats_IsSet => _StatsLocation.HasValue;
         #endregion
         #region Hair

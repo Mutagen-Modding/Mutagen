@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] Unknown2
         {
             get => _Unknown2;
-            set => this._Unknown2 = value ?? new byte[3];
+            set => this._Unknown2 = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte> IDialogResponseDataGetter.Unknown2 => this.Unknown2;

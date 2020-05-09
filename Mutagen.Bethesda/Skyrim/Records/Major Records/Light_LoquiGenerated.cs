@@ -60,15 +60,9 @@ namespace Mutagen.Bethesda.Skyrim
         IVirtualMachineAdapterGetter? ILightGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region ObjectBounds
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ObjectBounds _ObjectBounds = new ObjectBounds();
-        public ObjectBounds ObjectBounds
-        {
-            get => _ObjectBounds;
-            set => _ObjectBounds = value ?? new ObjectBounds();
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter ILightGetter.ObjectBounds => _ObjectBounds;
+        IObjectBoundsGetter ILightGetter.ObjectBounds => ObjectBounds;
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1574,7 +1568,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.VirtualMachineAdapter = null;
-            item.ObjectBounds = new ObjectBounds();
+            item.ObjectBounds.Clear();
             item.Model = null;
             item.Destructible = null;
             item.Name = default;
@@ -3159,7 +3153,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package) : default;
         public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
         #endregion
         #region ObjectBounds
@@ -3176,7 +3170,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IIconsGetter? Icons { get; private set; }
         #region Data
         private RangeInt32? _DataLocation;
-        public ILightDataGetter? _Data => _DataLocation.HasValue ? LightDataBinaryOverlay.LightDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        private ILightDataGetter? _Data => _DataLocation.HasValue ? LightDataBinaryOverlay.LightDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
         public ILightDataGetter Data => _Data ?? new LightData();
         #endregion
         #region FadeValue

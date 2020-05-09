@@ -2069,7 +2069,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Data
         private RangeInt32? _DataLocation;
-        public IDestructionStageDataGetter? Data => _DataLocation.HasValue ? DestructionStageDataBinaryOverlay.DestructionStageDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IDestructionStageDataGetter? Data => _DataLocation.HasValue ? DestructionStageDataBinaryOverlay.DestructionStageDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         public IModelGetter? Model { get; private set; }

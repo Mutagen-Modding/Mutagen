@@ -3296,17 +3296,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlyList<IWeatherTypeGetter>? WeatherTypes { get; private set; }
         #region FogDistance
         private RangeInt32? _FogDistanceLocation;
-        public IFogDistanceGetter? FogDistance => _FogDistanceLocation.HasValue ? FogDistanceBinaryOverlay.FogDistanceFactory(new BinaryMemoryReadStream(_data.Slice(_FogDistanceLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IFogDistanceGetter? FogDistance => _FogDistanceLocation.HasValue ? FogDistanceBinaryOverlay.FogDistanceFactory(new BinaryMemoryReadStream(_data.Slice(_FogDistanceLocation!.Value.Min)), _package) : default;
         public bool FogDistance_IsSet => _FogDistanceLocation.HasValue;
         #endregion
         #region HDRData
         private RangeInt32? _HDRDataLocation;
-        public IHDRDataGetter? HDRData => _HDRDataLocation.HasValue ? HDRDataBinaryOverlay.HDRDataFactory(new BinaryMemoryReadStream(_data.Slice(_HDRDataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IHDRDataGetter? HDRData => _HDRDataLocation.HasValue ? HDRDataBinaryOverlay.HDRDataFactory(new BinaryMemoryReadStream(_data.Slice(_HDRDataLocation!.Value.Min)), _package) : default;
         public bool HDRData_IsSet => _HDRDataLocation.HasValue;
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        public IWeatherDataGetter? Data => _DataLocation.HasValue ? WeatherDataBinaryOverlay.WeatherDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IWeatherDataGetter? Data => _DataLocation.HasValue ? WeatherDataBinaryOverlay.WeatherDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         public IReadOnlyList<IWeatherSoundGetter> Sounds { get; private set; } = ListExt.Empty<WeatherSoundBinaryOverlay>();

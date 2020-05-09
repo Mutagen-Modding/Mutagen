@@ -2828,7 +2828,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region RelatedWaters
         private RangeInt32? _RelatedWatersLocation;
-        public IRelatedWatersGetter? RelatedWaters => _RelatedWatersLocation.HasValue ? RelatedWatersBinaryOverlay.RelatedWatersFactory(new BinaryMemoryReadStream(_data.Slice(_RelatedWatersLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IRelatedWatersGetter? RelatedWaters => _RelatedWatersLocation.HasValue ? RelatedWatersBinaryOverlay.RelatedWatersFactory(new BinaryMemoryReadStream(_data.Slice(_RelatedWatersLocation!.Value.Min)), _package) : default;
         public bool RelatedWaters_IsSet => _RelatedWatersLocation.HasValue;
         #endregion
         partial void CustomCtor(

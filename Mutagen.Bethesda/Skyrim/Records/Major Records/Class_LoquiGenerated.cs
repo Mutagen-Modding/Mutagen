@@ -2350,7 +2350,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        public IClassDataGetter? _Data => _DataLocation.HasValue ? ClassDataBinaryOverlay.ClassDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        private IClassDataGetter? _Data => _DataLocation.HasValue ? ClassDataBinaryOverlay.ClassDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
         public IClassDataGetter Data => _Data ?? new ClassData();
         #endregion
         partial void CustomCtor(

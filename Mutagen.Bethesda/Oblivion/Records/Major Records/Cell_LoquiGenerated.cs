@@ -5115,7 +5115,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Lighting
         private RangeInt32? _LightingLocation;
-        public ICellLightingGetter? Lighting => _LightingLocation.HasValue ? CellLightingBinaryOverlay.CellLightingFactory(new BinaryMemoryReadStream(_data.Slice(_LightingLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ICellLightingGetter? Lighting => _LightingLocation.HasValue ? CellLightingBinaryOverlay.CellLightingFactory(new BinaryMemoryReadStream(_data.Slice(_LightingLocation!.Value.Min)), _package) : default;
         public bool Lighting_IsSet => _LightingLocation.HasValue;
         #endregion
         public IReadOnlyList<IFormLinkGetter<IRegionGetter>>? Regions { get; private set; }

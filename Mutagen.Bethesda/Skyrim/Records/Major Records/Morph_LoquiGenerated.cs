@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Byte[] Data
         {
             get => _Data;
-            set => this._Data = value ?? new byte[32];
+            set => this._Data = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte> IMorphGetter.Data => this.Data;

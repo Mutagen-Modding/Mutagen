@@ -4831,7 +4831,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlyList<IRaceRelationGetter> Relations { get; private set; } = ListExt.Empty<RaceRelationBinaryOverlay>();
         #region Data
         private RangeInt32? _DataLocation;
-        public IRaceDataGetter? Data => _DataLocation.HasValue ? RaceDataBinaryOverlay.RaceDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IRaceDataGetter? Data => _DataLocation.HasValue ? RaceDataBinaryOverlay.RaceDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region Voices

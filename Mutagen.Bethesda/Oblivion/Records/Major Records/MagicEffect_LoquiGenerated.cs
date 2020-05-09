@@ -2829,7 +2829,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IModelGetter? Model { get; private set; }
         #region Data
         private RangeInt32? _DataLocation;
-        public IMagicEffectDataGetter? Data => _DataLocation.HasValue ? MagicEffectDataBinaryOverlay.MagicEffectDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IMagicEffectDataGetter? Data => _DataLocation.HasValue ? MagicEffectDataBinaryOverlay.MagicEffectDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         public IReadOnlyList<IEDIDLinkGetter<IMagicEffectGetter>>? CounterEffects { get; private set; }

@@ -4274,7 +4274,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region MapData
         private RangeInt32? _MapDataLocation;
-        public IMapDataGetter? MapData => _MapDataLocation.HasValue ? MapDataBinaryOverlay.MapDataFactory(new BinaryMemoryReadStream(_data.Slice(_MapDataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IMapDataGetter? MapData => _MapDataLocation.HasValue ? MapDataBinaryOverlay.MapDataFactory(new BinaryMemoryReadStream(_data.Slice(_MapDataLocation!.Value.Min)), _package) : default;
         public bool MapData_IsSet => _MapDataLocation.HasValue;
         #endregion
         #region Flags

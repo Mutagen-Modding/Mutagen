@@ -2152,7 +2152,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Data
         private RangeInt32? _DataLocation;
-        public IDestructableDataGetter? Data => _DataLocation.HasValue ? DestructableDataBinaryOverlay.DestructableDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IDestructableDataGetter? Data => _DataLocation.HasValue ? DestructableDataBinaryOverlay.DestructableDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         public IReadOnlyList<IDestructionStageGetter> Stages { get; private set; } = ListExt.Empty<DestructionStageBinaryOverlay>();

@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Byte[] Unused2
         {
             get => _Unused2;
-            set => this._Unused2 = value ?? new byte[3];
+            set => this._Unused2 = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte> IPlayerSkillsGetter.Unused2 => this.Unused2;

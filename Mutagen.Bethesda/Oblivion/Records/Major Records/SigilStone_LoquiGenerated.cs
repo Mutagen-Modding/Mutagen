@@ -2951,7 +2951,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = ListExt.Empty<EffectBinaryOverlay>();
         #region Data
         private RangeInt32? _DataLocation;
-        public ISigilStoneDataGetter? Data => _DataLocation.HasValue ? SigilStoneDataBinaryOverlay.SigilStoneDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ISigilStoneDataGetter? Data => _DataLocation.HasValue ? SigilStoneDataBinaryOverlay.SigilStoneDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         partial void CustomCtor(

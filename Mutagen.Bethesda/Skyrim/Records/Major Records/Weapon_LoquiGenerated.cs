@@ -60,15 +60,9 @@ namespace Mutagen.Bethesda.Skyrim
         IVirtualMachineAdapterGetter? IWeaponGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region ObjectBounds
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ObjectBounds _ObjectBounds = new ObjectBounds();
-        public ObjectBounds ObjectBounds
-        {
-            get => _ObjectBounds;
-            set => _ObjectBounds = value ?? new ObjectBounds();
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter IWeaponGetter.ObjectBounds => _ObjectBounds;
+        IObjectBoundsGetter IWeaponGetter.ObjectBounds => ObjectBounds;
         #endregion
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2798,7 +2792,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.VirtualMachineAdapter = null;
-            item.ObjectBounds = new ObjectBounds();
+            item.ObjectBounds.Clear();
             item.Name = default;
             item.Model = null;
             item.Icons = null;
@@ -5941,7 +5935,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package) : default;
         public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
         #endregion
         #region ObjectBounds
@@ -6047,17 +6041,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region BasicStats
         private RangeInt32? _BasicStatsLocation;
-        public IWeaponBasicStatsGetter? BasicStats => _BasicStatsLocation.HasValue ? WeaponBasicStatsBinaryOverlay.WeaponBasicStatsFactory(new BinaryMemoryReadStream(_data.Slice(_BasicStatsLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IWeaponBasicStatsGetter? BasicStats => _BasicStatsLocation.HasValue ? WeaponBasicStatsBinaryOverlay.WeaponBasicStatsFactory(new BinaryMemoryReadStream(_data.Slice(_BasicStatsLocation!.Value.Min)), _package) : default;
         public bool BasicStats_IsSet => _BasicStatsLocation.HasValue;
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        public IWeaponDataGetter? Data => _DataLocation.HasValue ? WeaponDataBinaryOverlay.WeaponDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IWeaponDataGetter? Data => _DataLocation.HasValue ? WeaponDataBinaryOverlay.WeaponDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region Critical
         private RangeInt32? _CriticalLocation;
-        public ICriticalDataGetter? Critical => _CriticalLocation.HasValue ? CriticalDataBinaryOverlay.CriticalDataFactory(new BinaryMemoryReadStream(_data.Slice(_CriticalLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ICriticalDataGetter? Critical => _CriticalLocation.HasValue ? CriticalDataBinaryOverlay.CriticalDataFactory(new BinaryMemoryReadStream(_data.Slice(_CriticalLocation!.Value.Min)), _package) : default;
         public bool Critical_IsSet => _CriticalLocation.HasValue;
         #endregion
         #region DetectionSoundLevel

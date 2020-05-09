@@ -33,7 +33,7 @@
   <Object name="LocalVariableData" objType="Subrecord" recordType="SLSD" GUID="02fb12f0-9bb2-4675-9624-502859e58bd6" ID="207">
     <Fields>
       <Int32 name="Index" />
-      <ByteArray name="Unknown" byteLength="12" nullable="NotNull" />
+      <ByteArray name="Unknown" byteLength="12" hasBeenSet="False" />
       <Enum name="Flags" enumName="Script.LocalVariableFlag" byteLength="4" />
       <Int32 name="Unknown2" />
     </Fields>

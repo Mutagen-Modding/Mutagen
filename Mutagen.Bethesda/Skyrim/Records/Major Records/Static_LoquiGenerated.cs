@@ -49,15 +49,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ObjectBounds
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ObjectBounds _ObjectBounds = new ObjectBounds();
-        public ObjectBounds ObjectBounds
-        {
-            get => _ObjectBounds;
-            set => _ObjectBounds = value ?? new ObjectBounds();
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter IStaticGetter.ObjectBounds => _ObjectBounds;
+        IObjectBoundsGetter IStaticGetter.ObjectBounds => ObjectBounds;
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1292,7 +1286,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IStaticInternal item)
         {
             ClearPartial();
-            item.ObjectBounds = new ObjectBounds();
+            item.ObjectBounds.Clear();
             item.Model = null;
             item.DirectionMaterial.Clear();
             item.Lod = null;
@@ -1737,12 +1731,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
-            if (obj.DirectionMaterial.TryGet(out var DirectionMaterialItems))
+            foreach (var item in obj.DirectionMaterial.LinkFormKeys)
             {
-                foreach (var item in DirectionMaterialItems.LinkFormKeys)
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             yield break;
         }
@@ -2518,12 +2509,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IModelGetter? Model { get; private set; }
         #region DirectionMaterial
         private RangeInt32? _DirectionMaterialLocation;
-        public IDirectionMaterialGetter? _DirectionMaterial => _DirectionMaterialLocation.HasValue ? DirectionMaterialBinaryOverlay.DirectionMaterialFactory(new BinaryMemoryReadStream(_data.Slice(_DirectionMaterialLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        private IDirectionMaterialGetter? _DirectionMaterial => _DirectionMaterialLocation.HasValue ? DirectionMaterialBinaryOverlay.DirectionMaterialFactory(new BinaryMemoryReadStream(_data.Slice(_DirectionMaterialLocation!.Value.Min)), _package) : default;
         public IDirectionMaterialGetter DirectionMaterial => _DirectionMaterial ?? new DirectionMaterial();
         #endregion
         #region Lod
         private RangeInt32? _LodLocation;
-        public ILodGetter? Lod => _LodLocation.HasValue ? LodBinaryOverlay.LodFactory(new BinaryMemoryReadStream(_data.Slice(_LodLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ILodGetter? Lod => _LodLocation.HasValue ? LodBinaryOverlay.LodFactory(new BinaryMemoryReadStream(_data.Slice(_LodLocation!.Value.Min)), _package) : default;
         public bool Lod_IsSet => _LodLocation.HasValue;
         #endregion
         partial void CustomCtor(

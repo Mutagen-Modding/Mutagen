@@ -3182,12 +3182,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region DistantLODData
         private RangeInt32? _DistantLODDataLocation;
-        public IDistantLODDataGetter? DistantLODData => _DistantLODDataLocation.HasValue ? DistantLODDataBinaryOverlay.DistantLODDataFactory(new BinaryMemoryReadStream(_data.Slice(_DistantLODDataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IDistantLODDataGetter? DistantLODData => _DistantLODDataLocation.HasValue ? DistantLODDataBinaryOverlay.DistantLODDataFactory(new BinaryMemoryReadStream(_data.Slice(_DistantLODDataLocation!.Value.Min)), _package) : default;
         public bool DistantLODData_IsSet => _DistantLODDataLocation.HasValue;
         #endregion
         #region EnableParent
         private RangeInt32? _EnableParentLocation;
-        public IEnableParentGetter? EnableParent => _EnableParentLocation.HasValue ? EnableParentBinaryOverlay.EnableParentFactory(new BinaryMemoryReadStream(_data.Slice(_EnableParentLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IEnableParentGetter? EnableParent => _EnableParentLocation.HasValue ? EnableParentBinaryOverlay.EnableParentFactory(new BinaryMemoryReadStream(_data.Slice(_EnableParentLocation!.Value.Min)), _package) : default;
         public bool EnableParent_IsSet => _EnableParentLocation.HasValue;
         #endregion
         #region MerchantContainer

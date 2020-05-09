@@ -3064,7 +3064,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        public IPotionDataGetter? Data => _DataLocation.HasValue ? PotionDataBinaryOverlay.PotionDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IPotionDataGetter? Data => _DataLocation.HasValue ? PotionDataBinaryOverlay.PotionDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = ListExt.Empty<EffectBinaryOverlay>();

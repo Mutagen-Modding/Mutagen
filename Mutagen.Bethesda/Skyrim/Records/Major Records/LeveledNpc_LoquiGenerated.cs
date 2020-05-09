@@ -49,15 +49,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ObjectBounds
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ObjectBounds _ObjectBounds = new ObjectBounds();
-        public ObjectBounds ObjectBounds
-        {
-            get => _ObjectBounds;
-            set => _ObjectBounds = value ?? new ObjectBounds();
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter ILeveledNpcGetter.ObjectBounds => _ObjectBounds;
+        IObjectBoundsGetter ILeveledNpcGetter.ObjectBounds => ObjectBounds;
         #endregion
         #region ChanceNone
         public Byte ChanceNone { get; set; } = default;
@@ -1432,7 +1426,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ILeveledNpcInternal item)
         {
             ClearPartial();
-            item.ObjectBounds = new ObjectBounds();
+            item.ObjectBounds.Clear();
             item.ChanceNone = default;
             item.Flags = default;
             item.Global = null;

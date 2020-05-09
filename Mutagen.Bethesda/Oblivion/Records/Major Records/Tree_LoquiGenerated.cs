@@ -2720,12 +2720,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlyList<UInt32>? SpeedTreeSeeds { get; private set; }
         #region Data
         private RangeInt32? _DataLocation;
-        public ITreeDataGetter? Data => _DataLocation.HasValue ? TreeDataBinaryOverlay.TreeDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public ITreeDataGetter? Data => _DataLocation.HasValue ? TreeDataBinaryOverlay.TreeDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region BillboardDimensions
         private RangeInt32? _BillboardDimensionsLocation;
-        public IDimensionsGetter? BillboardDimensions => _BillboardDimensionsLocation.HasValue ? DimensionsBinaryOverlay.DimensionsFactory(new BinaryMemoryReadStream(_data.Slice(_BillboardDimensionsLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IDimensionsGetter? BillboardDimensions => _BillboardDimensionsLocation.HasValue ? DimensionsBinaryOverlay.DimensionsFactory(new BinaryMemoryReadStream(_data.Slice(_BillboardDimensionsLocation!.Value.Min)), _package) : default;
         public bool BillboardDimensions_IsSet => _BillboardDimensionsLocation.HasValue;
         #endregion
         partial void CustomCtor(

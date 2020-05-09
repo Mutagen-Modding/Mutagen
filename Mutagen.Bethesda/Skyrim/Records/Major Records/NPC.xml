@@ -6,7 +6,7 @@
     <Interface>IObjectId</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
-      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="NotNull" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
       <RefDirect name="Configuration" refName="NpcConfiguration" hasBeenSet="False" />
       <RefList name="Factions" refName="RankPlacement" />
       <FormLink name="DeathItem" refName="LeveledItem" recordType="INAM" />
@@ -91,14 +91,14 @@
     <Fields>
       <FormLink name="Faction" refName="Faction" />
       <UInt8 name="Rank" />
-      <ByteArray name="Fluff" byteLength="3" nullable="NotNull" />
+      <ByteArray name="Fluff" byteLength="3" hasBeenSet="False" />
     </Fields>
   </Object>
   <Object name="PerkPlacement" objType="Subrecord" recordType="PRKR" GUID="d315cc71-0b9e-4617-86b0-c344d66854ae" ID="206">
     <Fields>
       <FormLink name="Perk" refName="Perk" />
       <UInt8 name="Rank" />
-      <ByteArray name="Fluff" byteLength="3" nullable="NotNull" />
+      <ByteArray name="Fluff" byteLength="3" hasBeenSet="False" />
     </Fields>
   </Object>
   <Object name="AIData" objType="Subrecord" recordType="AIDT" GUID="10ac7ce5-4e83-4006-92a0-9976062da7be" ID="207">
@@ -140,7 +140,7 @@
       <UInt16 name="Unused" />
       <Float name="FarAwayModelDistance" />
       <UInt8 name="GearedUpWeapons" />
-      <ByteArray name="Unused2" byteLength="3" nullable="NotNull" />
+      <ByteArray name="Unused2" byteLength="3" hasBeenSet="False" />
     </Fields>
   </Object>
   <Object name="ANpcSoundDefinition" objType="Subrecord" abstract="true" GUID="fcefa9b8-781d-44ea-b623-abd75e419f5a" ID="210" />

@@ -49,15 +49,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ObjectBounds
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ObjectBounds _ObjectBounds = new ObjectBounds();
-        public ObjectBounds ObjectBounds
-        {
-            get => _ObjectBounds;
-            set => _ObjectBounds = value ?? new ObjectBounds();
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter ISoundMarkerGetter.ObjectBounds => _ObjectBounds;
+        IObjectBoundsGetter ISoundMarkerGetter.ObjectBounds => ObjectBounds;
         #endregion
         #region FNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1252,7 +1246,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ISoundMarkerInternal item)
         {
             ClearPartial();
-            item.ObjectBounds = new ObjectBounds();
+            item.ObjectBounds.Clear();
             item.FNAM = default;
             item.SNDD = default;
             item.SoundDescriptor = null;

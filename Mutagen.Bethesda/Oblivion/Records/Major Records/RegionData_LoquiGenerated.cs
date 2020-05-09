@@ -1837,7 +1837,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Header
         private RangeInt32? _HeaderLocation;
-        public IRegionDataHeaderGetter? Header => _HeaderLocation.HasValue ? RegionDataHeaderBinaryOverlay.RegionDataHeaderFactory(new BinaryMemoryReadStream(_data.Slice(_HeaderLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IRegionDataHeaderGetter? Header => _HeaderLocation.HasValue ? RegionDataHeaderBinaryOverlay.RegionDataHeaderFactory(new BinaryMemoryReadStream(_data.Slice(_HeaderLocation!.Value.Min)), _package) : default;
         public bool Header_IsSet => _HeaderLocation.HasValue;
         #endregion
         partial void CustomCtor(

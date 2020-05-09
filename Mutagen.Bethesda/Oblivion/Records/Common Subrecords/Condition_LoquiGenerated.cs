@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
         public Byte[] Fluff
         {
             get => _Fluff;
-            set => this._Fluff = value ?? new byte[3];
+            set => this._Fluff = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte> IConditionGetter.Fluff => this.Fluff;

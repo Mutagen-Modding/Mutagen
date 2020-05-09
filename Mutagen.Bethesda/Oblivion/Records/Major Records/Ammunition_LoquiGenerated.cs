@@ -2794,7 +2794,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        public IAmmunitionDataGetter? Data => _DataLocation.HasValue ? AmmunitionDataBinaryOverlay.AmmunitionDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IAmmunitionDataGetter? Data => _DataLocation.HasValue ? AmmunitionDataBinaryOverlay.AmmunitionDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         partial void CustomCtor(

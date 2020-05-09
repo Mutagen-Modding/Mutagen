@@ -63,15 +63,9 @@ namespace Mutagen.Bethesda.Skyrim
         public UInt16 Version2 { get; set; } = default;
         #endregion
         #region Stats
+        public ModStats Stats { get; set; } = new ModStats();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ModStats _Stats = new ModStats();
-        public ModStats Stats
-        {
-            get => _Stats;
-            set => _Stats = value ?? new ModStats();
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModStatsGetter IModHeaderGetter.Stats => _Stats;
+        IModStatsGetter IModHeaderGetter.Stats => Stats;
         #endregion
         #region TypeOffsets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1909,7 +1903,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Version = default;
             item.FormVersion = default;
             item.Version2 = default;
-            item.Stats = new ModStats();
+            item.Stats.Clear();
             item.TypeOffsets = default;
             item.Deleted = default;
             item.Author = default;

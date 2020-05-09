@@ -306,7 +306,7 @@
   </Object>
   <Object name="Morph" objType="Subrecord" GUID="db314c60-7ba5-4df9-8229-527af27db99a" ID="84">
     <Fields>
-      <ByteArray name="Data" byteLength="32" nullable="NotNull" />
+      <ByteArray name="Data" byteLength="32" hasBeenSet="False" />
     </Fields>
   </Object>
   <Object name="TintAssets" objType="Subrecord" GUID="2a4a72e5-c74d-4afd-9783-e4947dc83f79" ID="76">

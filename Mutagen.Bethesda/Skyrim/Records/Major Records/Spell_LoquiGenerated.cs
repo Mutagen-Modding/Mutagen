@@ -49,15 +49,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ObjectBounds
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ObjectBounds _ObjectBounds = new ObjectBounds();
-        public ObjectBounds ObjectBounds
-        {
-            get => _ObjectBounds;
-            set => _ObjectBounds = value ?? new ObjectBounds();
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter ISpellGetter.ObjectBounds => _ObjectBounds;
+        IObjectBoundsGetter ISpellGetter.ObjectBounds => ObjectBounds;
         #endregion
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1621,7 +1615,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ISpellInternal item)
         {
             ClearPartial();
-            item.ObjectBounds = new ObjectBounds();
+            item.ObjectBounds.Clear();
             item.Name = default;
             item.Keywords = null;
             item.MenuDisplayObject = null;
@@ -2255,12 +2249,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return EquipmentTypeKey;
             }
-            if (obj.Data.TryGet(out var DataItems))
+            foreach (var item in obj.Data.LinkFormKeys)
             {
-                foreach (var item in DataItems.LinkFormKeys)
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             foreach (var item in obj.Effects.SelectMany(f => f.LinkFormKeys))
             {
@@ -3291,7 +3282,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        public ISpellDataGetter? _Data => _DataLocation.HasValue ? SpellDataBinaryOverlay.SpellDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        private ISpellDataGetter? _Data => _DataLocation.HasValue ? SpellDataBinaryOverlay.SpellDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
         public ISpellDataGetter Data => _Data ?? new SpellData();
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = ListExt.Empty<EffectBinaryOverlay>();

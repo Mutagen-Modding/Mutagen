@@ -28,7 +28,7 @@
   </Object>
   <Object name="QuestTarget" objType="Subrecord" GUID="f3941d6e-a418-41e7-8bfd-dcb8b5520b6a" ID="154">
     <Fields>
-      <RefDirect name="Data" refName="QuestTargetData" nullable="NotNull" />
+      <RefDirect name="Data" refName="QuestTargetData" hasBeenSet="False" />
       <RefList name="Conditions" refName="Condition" />
     </Fields>
   </Object>

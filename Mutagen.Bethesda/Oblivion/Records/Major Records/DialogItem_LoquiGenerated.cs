@@ -3732,7 +3732,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Data
         private RangeInt32? _DataLocation;
-        public IDialogItemDataGetter? Data => _DataLocation.HasValue ? DialogItemDataBinaryOverlay.DialogItemDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package, default(RecordTypeConverter)) : default;
+        public IDialogItemDataGetter? Data => _DataLocation.HasValue ? DialogItemDataBinaryOverlay.DialogItemDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region Quest
