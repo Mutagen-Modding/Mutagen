@@ -1,4 +1,4 @@
-﻿using Loqui;
+using Loqui;
 using Mutagen.Bethesda.Internals;
 using System;
 using System.Collections;

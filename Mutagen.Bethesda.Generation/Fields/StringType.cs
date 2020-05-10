@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Noggog;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,4 +1,4 @@
-﻿using Loqui.Internal;
+using Loqui.Internal;
 using Loqui.Xml;
 using System;
 using System.Collections.Generic;

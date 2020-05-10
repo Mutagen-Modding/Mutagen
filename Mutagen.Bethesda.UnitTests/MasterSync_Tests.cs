@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Oblivion;
+using Mutagen.Bethesda.Oblivion;
 using Noggog.Utility;
 using System;
 using System.Collections.Generic;

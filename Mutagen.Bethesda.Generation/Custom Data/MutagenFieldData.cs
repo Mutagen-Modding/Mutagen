@@ -1,4 +1,4 @@
-﻿using Loqui.Generation;
+using Loqui.Generation;
 using Mutagen.Bethesda.Binary;
 using System;
 using System.Collections.Generic;

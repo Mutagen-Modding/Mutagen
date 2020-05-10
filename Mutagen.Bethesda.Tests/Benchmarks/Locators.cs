@@ -1,4 +1,4 @@
-﻿using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Attributes;
 using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;

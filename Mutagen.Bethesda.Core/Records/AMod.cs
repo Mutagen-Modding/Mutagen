@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Persistance;
+using Mutagen.Bethesda.Persistance;
 using System;
 using Noggog;
 using System.Collections.Generic;

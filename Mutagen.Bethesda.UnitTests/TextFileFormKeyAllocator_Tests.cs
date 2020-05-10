@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Core.Persistance;
+using Mutagen.Bethesda.Core.Persistance;
 using Mutagen.Bethesda.Oblivion;
 using Noggog.Utility;
 using System;

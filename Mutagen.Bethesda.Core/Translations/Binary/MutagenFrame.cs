@@ -1,4 +1,4 @@
-﻿using Ionic.Zlib;
+using Ionic.Zlib;
 using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;

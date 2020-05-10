@@ -1,4 +1,4 @@
-﻿using Loqui;
+using Loqui;
 using Noggog;
 using System;
 using System.Collections;

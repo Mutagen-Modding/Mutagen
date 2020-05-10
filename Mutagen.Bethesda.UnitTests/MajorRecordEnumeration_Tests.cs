@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Oblivion;
+using Mutagen.Bethesda.Oblivion;
 using System;
 using System.Collections.Generic;
 using System.Linq;

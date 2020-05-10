@@ -1,4 +1,4 @@
-﻿using Loqui.Generation;
+using Loqui.Generation;
 using System;
 using System.Collections.Generic;
 using System.Text;

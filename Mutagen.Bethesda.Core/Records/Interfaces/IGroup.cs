@@ -1,4 +1,4 @@
-﻿using Loqui;
+using Loqui;
 using Loqui.Xml;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;

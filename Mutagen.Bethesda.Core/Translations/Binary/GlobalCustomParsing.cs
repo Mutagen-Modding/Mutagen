@@ -1,4 +1,4 @@
-﻿using Loqui.Internal;
+using Loqui.Internal;
 using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;

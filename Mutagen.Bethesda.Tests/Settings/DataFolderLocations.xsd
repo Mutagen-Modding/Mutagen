@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="utf-8"?>
 <xs:schema id="DataFolderLocations" targetNamespace="Tests" elementFormDefault="qualified" xmlns="Tests" xmlns:xs="http://www.w3.org/2001/XMLSchema">
    <xs:include schemaLocation="Common.xsd" />
    <xs:element name="DataFolderLocations" type="DataFolderLocationsType" />

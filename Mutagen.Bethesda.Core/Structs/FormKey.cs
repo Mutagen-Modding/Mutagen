@@ -1,4 +1,4 @@
-﻿using DynamicData.Annotations;
+using DynamicData.Annotations;
 using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -14,8 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Loqui" Version="1.1.8" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.0.13" />
+    <PackageReference Include="Loqui" Version="1.1.10" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.0.14" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
       <PrivateAssets>all</PrivateAssets>
