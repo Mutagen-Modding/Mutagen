@@ -188,6 +188,9 @@
     <Compile Include="Skyrim\Records\Major Records\Scroll.cs">
       <DependentUpon>Scroll.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\SoulGem.cs">
+      <DependentUpon>SoulGem.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\SoundMarker.cs">
       <DependentUpon>SoundMarker.xml</DependentUpon>
     </Compile>

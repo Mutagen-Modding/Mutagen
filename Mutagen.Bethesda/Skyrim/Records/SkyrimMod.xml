@@ -48,6 +48,7 @@
       <Group name="ConstructibleObjects" refName="ConstructibleObject" />
       <Group name="Projectiles" refName="Projectile" />
       <Group name="Hazards" refName="Hazard" />
+      <Group name="SoulGems" refName="SoulGem" />
     </Fields>
   </Object>
 </Loqui>

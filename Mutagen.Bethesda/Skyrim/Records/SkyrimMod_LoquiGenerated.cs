@@ -88,6 +88,7 @@ namespace Mutagen.Bethesda.Skyrim
             _ConstructibleObjects_Object = new Group<ConstructibleObject>(this);
             _Projectiles_Object = new Group<Projectile>(this);
             _Hazards_Object = new Group<Hazard>(this);
+            _SoulGems_Object = new Group<SoulGem>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -415,6 +416,13 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IHazardGetter> ISkyrimModGetter.Hazards => _Hazards_Object;
         #endregion
+        #region SoulGems
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<SoulGem> _SoulGems_Object;
+        public Group<SoulGem> SoulGems => _SoulGems_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<ISoulGemGetter> ISkyrimModGetter.SoulGems => _SoulGems_Object;
+        #endregion
 
         #region To String
 
@@ -631,6 +639,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ConstructibleObjects = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Projectiles = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Hazards = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.SoulGems = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -679,7 +688,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem IdleMarkers,
                 TItem ConstructibleObjects,
                 TItem Projectiles,
-                TItem Hazards)
+                TItem Hazards,
+                TItem SoulGems)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -727,6 +737,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ConstructibleObjects = new MaskItem<TItem, Group.Mask<TItem>?>(ConstructibleObjects, new Group.Mask<TItem>(ConstructibleObjects));
                 this.Projectiles = new MaskItem<TItem, Group.Mask<TItem>?>(Projectiles, new Group.Mask<TItem>(Projectiles));
                 this.Hazards = new MaskItem<TItem, Group.Mask<TItem>?>(Hazards, new Group.Mask<TItem>(Hazards));
+                this.SoulGems = new MaskItem<TItem, Group.Mask<TItem>?>(SoulGems, new Group.Mask<TItem>(SoulGems));
             }
 
             #pragma warning disable CS8618
@@ -784,6 +795,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? ConstructibleObjects { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Projectiles { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Hazards { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? SoulGems { get; set; }
             #endregion
 
             #region Equals
@@ -842,6 +854,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.ConstructibleObjects, rhs.ConstructibleObjects)) return false;
                 if (!object.Equals(this.Projectiles, rhs.Projectiles)) return false;
                 if (!object.Equals(this.Hazards, rhs.Hazards)) return false;
+                if (!object.Equals(this.SoulGems, rhs.SoulGems)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -893,6 +906,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.ConstructibleObjects);
                 hash.Add(this.Projectiles);
                 hash.Add(this.Hazards);
+                hash.Add(this.SoulGems);
                 return hash.ToHashCode();
             }
 
@@ -1131,6 +1145,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Hazards.Overall)) return false;
                     if (this.Hazards.Specific != null && !this.Hazards.Specific.All(eval)) return false;
                 }
+                if (SoulGems != null)
+                {
+                    if (!eval(this.SoulGems.Overall)) return false;
+                    if (this.SoulGems.Specific != null && !this.SoulGems.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1368,6 +1387,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Hazards.Overall)) return true;
                     if (this.Hazards.Specific != null && this.Hazards.Specific.Any(eval)) return true;
                 }
+                if (SoulGems != null)
+                {
+                    if (eval(this.SoulGems.Overall)) return true;
+                    if (this.SoulGems.Specific != null && this.SoulGems.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1428,6 +1452,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.ConstructibleObjects = this.ConstructibleObjects == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ConstructibleObjects.Overall), this.ConstructibleObjects.Specific?.Translate(eval));
                 obj.Projectiles = this.Projectiles == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Projectiles.Overall), this.Projectiles.Specific?.Translate(eval));
                 obj.Hazards = this.Hazards == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Hazards.Overall), this.Hazards.Specific?.Translate(eval));
+                obj.SoulGems = this.SoulGems == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.SoulGems.Overall), this.SoulGems.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1634,6 +1659,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Hazards?.ToString(fg);
                     }
+                    if (printMask?.SoulGems?.Overall ?? true)
+                    {
+                        SoulGems?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -1705,6 +1734,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<ConstructibleObject.ErrorMask>?>? ConstructibleObjects;
             public MaskItem<Exception?, Group.ErrorMask<Projectile.ErrorMask>?>? Projectiles;
             public MaskItem<Exception?, Group.ErrorMask<Hazard.ErrorMask>?>? Hazards;
+            public MaskItem<Exception?, Group.ErrorMask<SoulGem.ErrorMask>?>? SoulGems;
             #endregion
 
             #region IErrorMask
@@ -1805,6 +1835,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Projectiles;
                     case SkyrimMod_FieldIndex.Hazards:
                         return Hazards;
+                    case SkyrimMod_FieldIndex.SoulGems:
+                        return SoulGems;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1952,6 +1984,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.Hazards:
                         this.Hazards = new MaskItem<Exception?, Group.ErrorMask<Hazard.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.SoulGems:
+                        this.SoulGems = new MaskItem<Exception?, Group.ErrorMask<SoulGem.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2101,6 +2136,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.Hazards:
                         this.Hazards = (MaskItem<Exception?, Group.ErrorMask<Hazard.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.SoulGems:
+                        this.SoulGems = (MaskItem<Exception?, Group.ErrorMask<SoulGem.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2155,6 +2193,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (ConstructibleObjects != null) return true;
                 if (Projectiles != null) return true;
                 if (Hazards != null) return true;
+                if (SoulGems != null) return true;
                 return false;
             }
             #endregion
@@ -2235,6 +2274,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ConstructibleObjects?.ToString(fg);
                 Projectiles?.ToString(fg);
                 Hazards?.ToString(fg);
+                SoulGems?.ToString(fg);
             }
             #endregion
 
@@ -2289,6 +2329,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.ConstructibleObjects = this.ConstructibleObjects.Combine(rhs.ConstructibleObjects, (l, r) => l.Combine(r));
                 ret.Projectiles = this.Projectiles.Combine(rhs.Projectiles, (l, r) => l.Combine(r));
                 ret.Hazards = this.Hazards.Combine(rhs.Hazards, (l, r) => l.Combine(r));
+                ret.SoulGems = this.SoulGems.Combine(rhs.SoulGems, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2356,6 +2397,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<ConstructibleObject.TranslationMask>?> ConstructibleObjects;
             public MaskItem<bool, Group.TranslationMask<Projectile.TranslationMask>?> Projectiles;
             public MaskItem<bool, Group.TranslationMask<Hazard.TranslationMask>?> Hazards;
+            public MaskItem<bool, Group.TranslationMask<SoulGem.TranslationMask>?> SoulGems;
             #endregion
 
             #region Ctors
@@ -2407,6 +2449,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ConstructibleObjects = new MaskItem<bool, Group.TranslationMask<ConstructibleObject.TranslationMask>?>(defaultOn, null);
                 this.Projectiles = new MaskItem<bool, Group.TranslationMask<Projectile.TranslationMask>?>(defaultOn, null);
                 this.Hazards = new MaskItem<bool, Group.TranslationMask<Hazard.TranslationMask>?>(defaultOn, null);
+                this.SoulGems = new MaskItem<bool, Group.TranslationMask<SoulGem.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -2468,6 +2511,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ConstructibleObjects?.Overall ?? true, ConstructibleObjects?.Specific?.GetCrystal()));
                 ret.Add((Projectiles?.Overall ?? true, Projectiles?.Specific?.GetCrystal()));
                 ret.Add((Hazards?.Overall ?? true, Hazards?.Specific?.GetCrystal()));
+                ret.Add((SoulGems?.Overall ?? true, SoulGems?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -2527,6 +2571,7 @@ namespace Mutagen.Bethesda.Skyrim
             _ConstructibleObjects_Object = new Group<ConstructibleObject>(this);
             _Projectiles_Object = new Group<Projectile>(this);
             _Hazards_Object = new Group<Hazard>(this);
+            _SoulGems_Object = new Group<SoulGem>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -2711,6 +2756,10 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.Hazards ?? true)
             {
                 this.Hazards.RecordCache.Set(rhsMod.Hazards.RecordCache.Items);
+            }
+            if (mask?.SoulGems ?? true)
+            {
+                this.SoulGems.RecordCache.Set(rhsMod.SoulGems.RecordCache.Items);
             }
         }
 
@@ -3034,6 +3083,13 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Hazard>());
             }
+            if (mask?.SoulGems ?? true)
+            {
+                this.SoulGems.RecordCache.Set(
+                    rhs.SoulGems.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<SoulGem>());
+            }
             var router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var mapping = new Dictionary<FormKey, FormKey>();
@@ -3098,6 +3154,7 @@ namespace Mutagen.Bethesda.Skyrim
             count += ConstructibleObjects.RecordCache.Count > 0 ? 1 : 0;
             count += Projectiles.RecordCache.Count > 0 ? 1 : 0;
             count += Hazards.RecordCache.Count > 0 ? 1 : 0;
+            count += SoulGems.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -3341,6 +3398,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<ConstructibleObject> ConstructibleObjects { get; }
         new Group<Projectile> Projectiles { get; }
         new Group<Hazard> Hazards { get; }
+        new Group<SoulGem> SoulGems { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -3404,6 +3462,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IConstructibleObjectGetter> ConstructibleObjects { get; }
         IGroupGetter<IProjectileGetter> Projectiles { get; }
         IGroupGetter<IHazardGetter> Hazards { get; }
+        IGroupGetter<ISoulGemGetter> SoulGems { get; }
 
     }
 
@@ -3889,6 +3948,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         ConstructibleObjects = 43,
         Projectiles = 44,
         Hazards = 45,
+        SoulGems = 46,
     }
     #endregion
 
@@ -3906,9 +3966,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 46;
+        public const ushort AdditionalFieldCount = 47;
 
-        public const ushort FieldCount = 46;
+        public const ushort FieldCount = 47;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -4030,6 +4090,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.Projectiles;
                 case "HAZARDS":
                     return (ushort)SkyrimMod_FieldIndex.Hazards;
+                case "SOULGEMS":
+                    return (ushort)SkyrimMod_FieldIndex.SoulGems;
                 default:
                     return null;
             }
@@ -4086,6 +4148,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.ConstructibleObjects:
                 case SkyrimMod_FieldIndex.Projectiles:
                 case SkyrimMod_FieldIndex.Hazards:
+                case SkyrimMod_FieldIndex.SoulGems:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4143,6 +4206,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.ConstructibleObjects:
                 case SkyrimMod_FieldIndex.Projectiles:
                 case SkyrimMod_FieldIndex.Hazards:
+                case SkyrimMod_FieldIndex.SoulGems:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4200,6 +4264,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.ConstructibleObjects:
                 case SkyrimMod_FieldIndex.Projectiles:
                 case SkyrimMod_FieldIndex.Hazards:
+                case SkyrimMod_FieldIndex.SoulGems:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4303,6 +4368,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Projectiles";
                 case SkyrimMod_FieldIndex.Hazards:
                     return "Hazards";
+                case SkyrimMod_FieldIndex.SoulGems:
+                    return "SoulGems";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -4359,6 +4426,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.ConstructibleObjects:
                 case SkyrimMod_FieldIndex.Projectiles:
                 case SkyrimMod_FieldIndex.Hazards:
+                case SkyrimMod_FieldIndex.SoulGems:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4417,6 +4485,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.ConstructibleObjects:
                 case SkyrimMod_FieldIndex.Projectiles:
                 case SkyrimMod_FieldIndex.Hazards:
+                case SkyrimMod_FieldIndex.SoulGems:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4520,6 +4589,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<Projectile>);
                 case SkyrimMod_FieldIndex.Hazards:
                     return typeof(Group<Hazard>);
+                case SkyrimMod_FieldIndex.SoulGems:
+                    return typeof(Group<SoulGem>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -4572,9 +4643,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType COBJ_HEADER = new RecordType("COBJ");
         public static readonly RecordType PROJ_HEADER = new RecordType("PROJ");
         public static readonly RecordType HAZD_HEADER = new RecordType("HAZD");
+        public static readonly RecordType SLGM_HEADER = new RecordType("SLGM");
         public static readonly RecordType TriggeringRecordType = TES4_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 46;
+        public const int NumTypedFields = 47;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -4662,6 +4734,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ConstructibleObjects.Clear();
             item.Projectiles.Clear();
             item.Hazards.Clear();
+            item.SoulGems.Clear();
         }
         
         #region Xml Translation
@@ -5407,6 +5480,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Hazards);
                 }
+                case 0x4D474C53: // SLGM
+                {
+                    if (importMask?.SoulGems ?? true)
+                    {
+                        item.SoulGems.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.SoulGems);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -5504,6 +5591,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.ConstructibleObjects = MaskItemExt.Factory(item.ConstructibleObjects.GetEqualsMask(rhs.ConstructibleObjects, include), include);
             ret.Projectiles = MaskItemExt.Factory(item.Projectiles.GetEqualsMask(rhs.Projectiles, include), include);
             ret.Hazards = MaskItemExt.Factory(item.Hazards.GetEqualsMask(rhs.Hazards, include), include);
+            ret.SoulGems = MaskItemExt.Factory(item.SoulGems.GetEqualsMask(rhs.SoulGems, include), include);
         }
         
         public string ToString(
@@ -5734,6 +5822,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Hazards?.ToString(fg, "Hazards");
             }
+            if (printMask?.SoulGems?.Overall ?? true)
+            {
+                item.SoulGems?.ToString(fg, "SoulGems");
+            }
         }
         
         public bool HasBeenSet(
@@ -5793,6 +5885,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.ConstructibleObjects = new MaskItem<bool, Group.Mask<bool>?>(true, item.ConstructibleObjects?.GetHasBeenSetMask());
             mask.Projectiles = new MaskItem<bool, Group.Mask<bool>?>(true, item.Projectiles?.GetHasBeenSetMask());
             mask.Hazards = new MaskItem<bool, Group.Mask<bool>?>(true, item.Hazards?.GetHasBeenSetMask());
+            mask.SoulGems = new MaskItem<bool, Group.Mask<bool>?>(true, item.SoulGems?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -5848,6 +5941,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.ConstructibleObjects, rhs.ConstructibleObjects)) return false;
             if (!object.Equals(lhs.Projectiles, rhs.Projectiles)) return false;
             if (!object.Equals(lhs.Hazards, rhs.Hazards)) return false;
+            if (!object.Equals(lhs.SoulGems, rhs.SoulGems)) return false;
             return true;
         }
         
@@ -5900,6 +5994,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.ConstructibleObjects);
             hash.Add(item.Projectiles);
             hash.Add(item.Hazards);
+            hash.Add(item.SoulGems);
             return hash.ToHashCode();
         }
         
@@ -6142,6 +6237,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IHazard":
                 case "IHazardInternal":
                     return obj.Hazards.RecordCache;
+                case "SoulGem":
+                case "ISoulGemGetter":
+                case "ISoulGem":
+                case "ISoulGemInternal":
+                    return obj.SoulGems.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown group type: {typeof(T)}");
             }
@@ -6158,7 +6258,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var modHeader = item.ModHeader.DeepCopy() as ModHeader;
             modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
             modHeader.WriteToBinary(new MutagenWriter(stream, GameConstants.Skyrim, masterRefs));
-            Stream[] outputStreams = new Stream[45];
+            Stream[] outputStreams = new Stream[46];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams));
@@ -6205,6 +6305,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, masterRefs, 42, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Projectiles, masterRefs, 43, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Hazards, masterRefs, 44, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.SoulGems, masterRefs, 45, outputStreams));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -6567,6 +6668,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.SoulGems is ILinkedFormKeyContainer SoulGemslinkCont)
+            {
+                foreach (var item in SoulGemslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -6750,6 +6858,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.Hazards.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.SoulGems.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -7172,6 +7284,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IHazard":
                 case "IHazardInternal":
                     foreach (var item in obj.Hazards.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "SoulGem":
+                case "ISoulGemGetter":
+                case "ISoulGem":
+                case "ISoulGemInternal":
+                    foreach (var item in obj.SoulGems.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -8115,6 +8236,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.SoulGems) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.SoulGems);
+                try
+                {
+                    item.SoulGems.DeepCopyIn(
+                        rhs: rhs.SoulGems,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.SoulGems));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -8709,6 +8850,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.Hazards,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Hazards));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.SoulGems) ?? true))
+            {
+                var SoulGemsItem = item.SoulGems;
+                ((GroupXmlWriteTranslation)((IXmlItem)SoulGemsItem).XmlWriteTranslator).Write<ISoulGemGetter>(
+                    item: SoulGemsItem,
+                    node: node,
+                    name: nameof(item.SoulGems),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.SoulGems,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.SoulGems));
             }
         }
 
@@ -9671,6 +9823,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "SoulGems":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.SoulGems);
+                    try
+                    {
+                        item.SoulGems.CopyInFromXml<SoulGem>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -9885,6 +10056,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool ConstructibleObjects;
         public bool Projectiles;
         public bool Hazards;
+        public bool SoulGems;
         public GroupMask()
         {
         }
@@ -9935,6 +10107,7 @@ namespace Mutagen.Bethesda.Skyrim
             ConstructibleObjects = defaultValue;
             Projectiles = defaultValue;
             Hazards = defaultValue;
+            SoulGems = defaultValue;
         }
     }
 
@@ -10459,6 +10632,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                 }
             }
+            if (importMask?.SoulGems ?? true)
+            {
+                var SoulGemsItem = item.SoulGems;
+                if (SoulGemsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)SoulGemsItem).BinaryWriteTranslator).Write<ISoulGemGetter>(
+                        item: SoulGemsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
         }
 
         public void Write(
@@ -10878,6 +11062,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IHazardGetter>? _Hazards => _HazardsLocation.HasValue ? GroupBinaryOverlay<IHazardGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _HazardsLocation!.Value.Min, _HazardsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IHazardGetter> Hazards => _Hazards ?? new Group<Hazard>(this);
         #endregion
+        #region SoulGems
+        private RangeInt64? _SoulGemsLocation;
+        private IGroupGetter<ISoulGemGetter>? _SoulGems => _SoulGemsLocation.HasValue ? GroupBinaryOverlay<ISoulGemGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _SoulGemsLocation!.Value.Min, _SoulGemsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<ISoulGemGetter> SoulGems => _SoulGems ?? new Group<SoulGem>(this);
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             long finalPos,
@@ -11191,6 +11380,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _HazardsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Hazards);
+                }
+                case 0x4D474C53: // SLGM
+                {
+                    _SoulGemsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.SoulGems);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

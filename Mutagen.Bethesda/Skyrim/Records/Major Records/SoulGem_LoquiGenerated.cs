@@ -48,6 +48,105 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region ObjectBounds
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ObjectBounds? _ObjectBounds;
+        public ObjectBounds? ObjectBounds
+        {
+            get => _ObjectBounds;
+            set => _ObjectBounds = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter? ISoulGemGetter.ObjectBounds => this.ObjectBounds;
+        #endregion
+        #region Name
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String? _Name;
+        public String? Name
+        {
+            get => this._Name;
+            set => this._Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? ISoulGemGetter.Name => this.Name;
+        #endregion
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? ISoulGemGetter.Model => this.Model;
+        #endregion
+        #region Icons
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Icons? _Icons;
+        public Icons? Icons
+        {
+            get => _Icons;
+            set => _Icons = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IIconsGetter? ISoulGemGetter.Icons => this.Icons;
+        #endregion
+        #region Destructible
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Destructible? _Destructible;
+        public Destructible? Destructible
+        {
+            get => _Destructible;
+            set => _Destructible = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? ISoulGemGetter.Destructible => this.Destructible;
+        #endregion
+        #region PickUpSound
+        public FormLinkNullable<SoundDescriptor> PickUpSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> ISoulGemGetter.PickUpSound => this.PickUpSound;
+        #endregion
+        #region PutDownSound
+        public FormLinkNullable<SoundDescriptor> PutDownSound { get; set; } = new FormLinkNullable<SoundDescriptor>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> ISoulGemGetter.PutDownSound => this.PutDownSound;
+        #endregion
+        #region Keywords
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLink<Keyword>>? _Keywords;
+        public ExtendedList<IFormLink<Keyword>>? Keywords
+        {
+            get => this._Keywords;
+            set => this._Keywords = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? ISoulGemGetter.Keywords => _Keywords;
+        #endregion
+
+        #endregion
+        #region Value
+        public UInt32 Value { get; set; } = default;
+        #endregion
+        #region Weight
+        public Single Weight { get; set; } = default;
+        #endregion
+        #region ContainedSoul
+        public SoulGem.Level ContainedSoul { get; set; } = default;
+        #endregion
+        #region MaximumCapacity
+        public SoulGem.Level MaximumCapacity { get; set; } = default;
+        #endregion
+        #region LinkedTo
+        public FormLinkNullable<SoulGem> LinkedTo { get; set; } = new FormLinkNullable<SoulGem>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoulGemGetter> ISoulGemGetter.LinkedTo => this.LinkedTo;
+        #endregion
+        #region DATADataTypeState
+        public SoulGem.DATADataType DATADataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -218,6 +317,20 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.Name = initialValue;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(initialValue, new Icons.Mask<TItem>(initialValue));
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
+                this.PickUpSound = initialValue;
+                this.PutDownSound = initialValue;
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Value = initialValue;
+                this.Weight = initialValue;
+                this.ContainedSoul = initialValue;
+                this.MaximumCapacity = initialValue;
+                this.LinkedTo = initialValue;
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -226,7 +339,21 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem ObjectBounds,
+                TItem Name,
+                TItem Model,
+                TItem Icons,
+                TItem Destructible,
+                TItem PickUpSound,
+                TItem PutDownSound,
+                TItem Keywords,
+                TItem Value,
+                TItem Weight,
+                TItem ContainedSoul,
+                TItem MaximumCapacity,
+                TItem LinkedTo,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -235,6 +362,20 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.Name = Name;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(Icons, new Icons.Mask<TItem>(Icons));
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
+                this.PickUpSound = PickUpSound;
+                this.PutDownSound = PutDownSound;
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Value = Value;
+                this.Weight = Weight;
+                this.ContainedSoul = ContainedSoul;
+                this.MaximumCapacity = MaximumCapacity;
+                this.LinkedTo = LinkedTo;
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -243,6 +384,23 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem Name;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public MaskItem<TItem, Icons.Mask<TItem>?>? Icons { get; set; }
+            public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
+            public TItem PickUpSound;
+            public TItem PutDownSound;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
+            public TItem Value;
+            public TItem Weight;
+            public TItem ContainedSoul;
+            public TItem MaximumCapacity;
+            public TItem LinkedTo;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -256,11 +414,39 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Icons, rhs.Icons)) return false;
+                if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
+                if (!object.Equals(this.PickUpSound, rhs.PickUpSound)) return false;
+                if (!object.Equals(this.PutDownSound, rhs.PutDownSound)) return false;
+                if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+                if (!object.Equals(this.Value, rhs.Value)) return false;
+                if (!object.Equals(this.Weight, rhs.Weight)) return false;
+                if (!object.Equals(this.ContainedSoul, rhs.ContainedSoul)) return false;
+                if (!object.Equals(this.MaximumCapacity, rhs.MaximumCapacity)) return false;
+                if (!object.Equals(this.LinkedTo, rhs.LinkedTo)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.Name);
+                hash.Add(this.Model);
+                hash.Add(this.Icons);
+                hash.Add(this.Destructible);
+                hash.Add(this.PickUpSound);
+                hash.Add(this.PutDownSound);
+                hash.Add(this.Keywords);
+                hash.Add(this.Value);
+                hash.Add(this.Weight);
+                hash.Add(this.ContainedSoul);
+                hash.Add(this.MaximumCapacity);
+                hash.Add(this.LinkedTo);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -271,6 +457,46 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Name)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (Icons != null)
+                {
+                    if (!eval(this.Icons.Overall)) return false;
+                    if (this.Icons.Specific != null && !this.Icons.Specific.All(eval)) return false;
+                }
+                if (Destructible != null)
+                {
+                    if (!eval(this.Destructible.Overall)) return false;
+                    if (this.Destructible.Specific != null && !this.Destructible.Specific.All(eval)) return false;
+                }
+                if (!eval(this.PickUpSound)) return false;
+                if (!eval(this.PutDownSound)) return false;
+                if (this.Keywords != null)
+                {
+                    if (!eval(this.Keywords.Overall)) return false;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Value)) return false;
+                if (!eval(this.Weight)) return false;
+                if (!eval(this.ContainedSoul)) return false;
+                if (!eval(this.MaximumCapacity)) return false;
+                if (!eval(this.LinkedTo)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -279,6 +505,46 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Name)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (Icons != null)
+                {
+                    if (eval(this.Icons.Overall)) return true;
+                    if (this.Icons.Specific != null && this.Icons.Specific.Any(eval)) return true;
+                }
+                if (Destructible != null)
+                {
+                    if (eval(this.Destructible.Overall)) return true;
+                    if (this.Destructible.Specific != null && this.Destructible.Specific.Any(eval)) return true;
+                }
+                if (eval(this.PickUpSound)) return true;
+                if (eval(this.PutDownSound)) return true;
+                if (this.Keywords != null)
+                {
+                    if (eval(this.Keywords.Overall)) return true;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Value)) return true;
+                if (eval(this.Weight)) return true;
+                if (eval(this.ContainedSoul)) return true;
+                if (eval(this.MaximumCapacity)) return true;
+                if (eval(this.LinkedTo)) return true;
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -294,6 +560,33 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.Name = eval(this.Name);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Icons = this.Icons == null ? null : new MaskItem<R, Icons.Mask<R>?>(eval(this.Icons.Overall), this.Icons.Specific?.Translate(eval));
+                obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
+                obj.PickUpSound = eval(this.PickUpSound);
+                obj.PutDownSound = eval(this.PutDownSound);
+                if (Keywords != null)
+                {
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Keywords.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Keywords.Specific = l;
+                        foreach (var item in Keywords.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.Value = eval(this.Value);
+                obj.Weight = eval(this.Weight);
+                obj.ContainedSoul = eval(this.ContainedSoul);
+                obj.MaximumCapacity = eval(this.MaximumCapacity);
+                obj.LinkedTo = eval(this.LinkedTo);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -316,6 +609,81 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.ToString(fg);
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.Icons?.Overall ?? true)
+                    {
+                        Icons?.ToString(fg);
+                    }
+                    if (printMask?.Destructible?.Overall ?? true)
+                    {
+                        Destructible?.ToString(fg);
+                    }
+                    if (printMask?.PickUpSound ?? true)
+                    {
+                        fg.AppendItem(PickUpSound, "PickUpSound");
+                    }
+                    if (printMask?.PutDownSound ?? true)
+                    {
+                        fg.AppendItem(PutDownSound, "PutDownSound");
+                    }
+                    if ((printMask?.Keywords?.Overall ?? true)
+                        && Keywords.TryGet(out var KeywordsItem))
+                    {
+                        fg.AppendLine("Keywords =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(KeywordsItem.Overall);
+                            if (KeywordsItem.Specific != null)
+                            {
+                                foreach (var subItem in KeywordsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Value ?? true)
+                    {
+                        fg.AppendItem(Value, "Value");
+                    }
+                    if (printMask?.Weight ?? true)
+                    {
+                        fg.AppendItem(Weight, "Weight");
+                    }
+                    if (printMask?.ContainedSoul ?? true)
+                    {
+                        fg.AppendItem(ContainedSoul, "ContainedSoul");
+                    }
+                    if (printMask?.MaximumCapacity ?? true)
+                    {
+                        fg.AppendItem(MaximumCapacity, "MaximumCapacity");
+                    }
+                    if (printMask?.LinkedTo ?? true)
+                    {
+                        fg.AppendItem(LinkedTo, "LinkedTo");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -327,12 +695,57 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? Name;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public MaskItem<Exception?, Icons.ErrorMask?>? Icons;
+            public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
+            public Exception? PickUpSound;
+            public Exception? PutDownSound;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
+            public Exception? Value;
+            public Exception? Weight;
+            public Exception? ContainedSoul;
+            public Exception? MaximumCapacity;
+            public Exception? LinkedTo;
+            public Exception? DATADataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
                 switch (enu)
                 {
+                    case SoulGem_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case SoulGem_FieldIndex.Name:
+                        return Name;
+                    case SoulGem_FieldIndex.Model:
+                        return Model;
+                    case SoulGem_FieldIndex.Icons:
+                        return Icons;
+                    case SoulGem_FieldIndex.Destructible:
+                        return Destructible;
+                    case SoulGem_FieldIndex.PickUpSound:
+                        return PickUpSound;
+                    case SoulGem_FieldIndex.PutDownSound:
+                        return PutDownSound;
+                    case SoulGem_FieldIndex.Keywords:
+                        return Keywords;
+                    case SoulGem_FieldIndex.Value:
+                        return Value;
+                    case SoulGem_FieldIndex.Weight:
+                        return Weight;
+                    case SoulGem_FieldIndex.ContainedSoul:
+                        return ContainedSoul;
+                    case SoulGem_FieldIndex.MaximumCapacity:
+                        return MaximumCapacity;
+                    case SoulGem_FieldIndex.LinkedTo:
+                        return LinkedTo;
+                    case SoulGem_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -343,6 +756,48 @@ namespace Mutagen.Bethesda.Skyrim
                 SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
                 switch (enu)
                 {
+                    case SoulGem_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case SoulGem_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case SoulGem_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case SoulGem_FieldIndex.Icons:
+                        this.Icons = new MaskItem<Exception?, Icons.ErrorMask?>(ex, null);
+                        break;
+                    case SoulGem_FieldIndex.Destructible:
+                        this.Destructible = new MaskItem<Exception?, Destructible.ErrorMask?>(ex, null);
+                        break;
+                    case SoulGem_FieldIndex.PickUpSound:
+                        this.PickUpSound = ex;
+                        break;
+                    case SoulGem_FieldIndex.PutDownSound:
+                        this.PutDownSound = ex;
+                        break;
+                    case SoulGem_FieldIndex.Keywords:
+                        this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case SoulGem_FieldIndex.Value:
+                        this.Value = ex;
+                        break;
+                    case SoulGem_FieldIndex.Weight:
+                        this.Weight = ex;
+                        break;
+                    case SoulGem_FieldIndex.ContainedSoul:
+                        this.ContainedSoul = ex;
+                        break;
+                    case SoulGem_FieldIndex.MaximumCapacity:
+                        this.MaximumCapacity = ex;
+                        break;
+                    case SoulGem_FieldIndex.LinkedTo:
+                        this.LinkedTo = ex;
+                        break;
+                    case SoulGem_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -354,6 +809,48 @@ namespace Mutagen.Bethesda.Skyrim
                 SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
                 switch (enu)
                 {
+                    case SoulGem_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case SoulGem_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case SoulGem_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case SoulGem_FieldIndex.Icons:
+                        this.Icons = (MaskItem<Exception?, Icons.ErrorMask?>?)obj;
+                        break;
+                    case SoulGem_FieldIndex.Destructible:
+                        this.Destructible = (MaskItem<Exception?, Destructible.ErrorMask?>?)obj;
+                        break;
+                    case SoulGem_FieldIndex.PickUpSound:
+                        this.PickUpSound = (Exception?)obj;
+                        break;
+                    case SoulGem_FieldIndex.PutDownSound:
+                        this.PutDownSound = (Exception?)obj;
+                        break;
+                    case SoulGem_FieldIndex.Keywords:
+                        this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case SoulGem_FieldIndex.Value:
+                        this.Value = (Exception?)obj;
+                        break;
+                    case SoulGem_FieldIndex.Weight:
+                        this.Weight = (Exception?)obj;
+                        break;
+                    case SoulGem_FieldIndex.ContainedSoul:
+                        this.ContainedSoul = (Exception?)obj;
+                        break;
+                    case SoulGem_FieldIndex.MaximumCapacity:
+                        this.MaximumCapacity = (Exception?)obj;
+                        break;
+                    case SoulGem_FieldIndex.LinkedTo:
+                        this.LinkedTo = (Exception?)obj;
+                        break;
+                    case SoulGem_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -363,6 +860,20 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ObjectBounds != null) return true;
+                if (Name != null) return true;
+                if (Model != null) return true;
+                if (Icons != null) return true;
+                if (Destructible != null) return true;
+                if (PickUpSound != null) return true;
+                if (PutDownSound != null) return true;
+                if (Keywords != null) return true;
+                if (Value != null) return true;
+                if (Weight != null) return true;
+                if (ContainedSoul != null) return true;
+                if (MaximumCapacity != null) return true;
+                if (LinkedTo != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -398,6 +909,41 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                ObjectBounds?.ToString(fg);
+                fg.AppendItem(Name, "Name");
+                Model?.ToString(fg);
+                Icons?.ToString(fg);
+                Destructible?.ToString(fg);
+                fg.AppendItem(PickUpSound, "PickUpSound");
+                fg.AppendItem(PutDownSound, "PutDownSound");
+                if (Keywords.TryGet(out var KeywordsItem))
+                {
+                    fg.AppendLine("Keywords =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(KeywordsItem.Overall);
+                        if (KeywordsItem.Specific != null)
+                        {
+                            foreach (var subItem in KeywordsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(Value, "Value");
+                fg.AppendItem(Weight, "Weight");
+                fg.AppendItem(ContainedSoul, "ContainedSoul");
+                fg.AppendItem(MaximumCapacity, "MaximumCapacity");
+                fg.AppendItem(LinkedTo, "LinkedTo");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -406,6 +952,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.Icons = this.Icons.Combine(rhs.Icons, (l, r) => l.Combine(r));
+                ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
+                ret.PickUpSound = this.PickUpSound.Combine(rhs.PickUpSound);
+                ret.PutDownSound = this.PutDownSound.Combine(rhs.PutDownSound);
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.Value = this.Value.Combine(rhs.Value);
+                ret.Weight = this.Weight.Combine(rhs.Weight);
+                ret.ContainedSoul = this.ContainedSoul.Combine(rhs.ContainedSoul);
+                ret.MaximumCapacity = this.MaximumCapacity.Combine(rhs.MaximumCapacity);
+                ret.LinkedTo = this.LinkedTo.Combine(rhs.LinkedTo);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -427,19 +987,74 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
+            public bool Name;
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public MaskItem<bool, Icons.TranslationMask?> Icons;
+            public MaskItem<bool, Destructible.TranslationMask?> Destructible;
+            public bool PickUpSound;
+            public bool PutDownSound;
+            public bool Keywords;
+            public bool Value;
+            public bool Weight;
+            public bool ContainedSoul;
+            public bool MaximumCapacity;
+            public bool LinkedTo;
+            public bool DATADataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
+                this.Name = defaultOn;
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.Icons = new MaskItem<bool, Icons.TranslationMask?>(defaultOn, null);
+                this.Destructible = new MaskItem<bool, Destructible.TranslationMask?>(defaultOn, null);
+                this.PickUpSound = defaultOn;
+                this.PutDownSound = defaultOn;
+                this.Keywords = defaultOn;
+                this.Value = defaultOn;
+                this.Weight = defaultOn;
+                this.ContainedSoul = defaultOn;
+                this.MaximumCapacity = defaultOn;
+                this.LinkedTo = defaultOn;
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
+                ret.Add((Name, null));
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((Icons?.Overall ?? true, Icons?.Specific?.GetCrystal()));
+                ret.Add((Destructible?.Overall ?? true, Destructible?.Specific?.GetCrystal()));
+                ret.Add((PickUpSound, null));
+                ret.Add((PutDownSound, null));
+                ret.Add((Keywords, null));
+                ret.Add((Value, null));
+                ret.Add((Weight, null));
+                ret.Add((ContainedSoul, null));
+                ret.Add((MaximumCapacity, null));
+                ret.Add((LinkedTo, null));
+                ret.Add((DATADataTypeState, null));
+            }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = SoulGem_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => SoulGemCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => SoulGemCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoulGemCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoulGemCommon.Instance.RemapLinks(this, mapping);
         public SoulGem(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -457,6 +1072,15 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
+        [Flags]
+        public enum DATADataType
+        {
+        }
         #endregion
 
         #region Binary Translation
@@ -518,8 +1142,28 @@ namespace Mutagen.Bethesda.Skyrim
         ISoulGemGetter,
         ISkyrimMajorRecord,
         IItem,
+        IObjectBoundedOptional,
+        IWeightValue,
         ILoquiObjectSetter<ISoulGemInternal>
     {
+        new ObjectBounds? ObjectBounds { get; set; }
+        new String? Name { get; set; }
+        new Model? Model { get; set; }
+        new Icons? Icons { get; set; }
+        new Destructible? Destructible { get; set; }
+        new FormLinkNullable<SoundDescriptor> PickUpSound { get; set; }
+        new FormLinkNullable<SoundDescriptor> PutDownSound { get; set; }
+        new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new UInt32 Value { get; set; }
+        new Single Weight { get; set; }
+        new SoulGem.Level ContainedSoul { get; set; }
+        new SoulGem.Level MaximumCapacity { get; set; }
+        new FormLinkNullable<SoulGem> LinkedTo { get; set; }
+        new SoulGem.DATADataType DATADataTypeState { get; set; }
+        #region Mutagen
+        new SoulGem.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface ISoulGemInternal :
@@ -532,11 +1176,32 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ISoulGemGetter :
         ISkyrimMajorRecordGetter,
         IItemGetter,
+        IObjectBoundedOptionalGetter,
+        IWeightValueGetter,
         ILoquiObject<ISoulGemGetter>,
         IXmlItem,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => SoulGem_Registration.Instance;
+        IObjectBoundsGetter? ObjectBounds { get; }
+        String? Name { get; }
+        IModelGetter? Model { get; }
+        IIconsGetter? Icons { get; }
+        IDestructibleGetter? Destructible { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound { get; }
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
+        UInt32 Value { get; }
+        Single Weight { get; }
+        SoulGem.Level ContainedSoul { get; }
+        SoulGem.Level MaximumCapacity { get; }
+        IFormLinkNullableGetter<ISoulGemGetter> LinkedTo { get; }
+        SoulGem.DATADataType DATADataTypeState { get; }
+
+        #region Mutagen
+        SoulGem.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -837,6 +1502,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        ObjectBounds = 6,
+        Name = 7,
+        Model = 8,
+        Icons = 9,
+        Destructible = 10,
+        PickUpSound = 11,
+        PutDownSound = 12,
+        Keywords = 13,
+        Value = 14,
+        Weight = 15,
+        ContainedSoul = 16,
+        MaximumCapacity = 17,
+        LinkedTo = 18,
+        DATADataTypeState = 19,
     }
     #endregion
 
@@ -854,9 +1533,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "1d5e8cdd-e010-45ed-aca9-7d332b1eb235";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 14;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 20;
 
         public static readonly Type MaskType = typeof(SoulGem.Mask<>);
 
@@ -886,6 +1565,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "OBJECTBOUNDS":
+                    return (ushort)SoulGem_FieldIndex.ObjectBounds;
+                case "NAME":
+                    return (ushort)SoulGem_FieldIndex.Name;
+                case "MODEL":
+                    return (ushort)SoulGem_FieldIndex.Model;
+                case "ICONS":
+                    return (ushort)SoulGem_FieldIndex.Icons;
+                case "DESTRUCTIBLE":
+                    return (ushort)SoulGem_FieldIndex.Destructible;
+                case "PICKUPSOUND":
+                    return (ushort)SoulGem_FieldIndex.PickUpSound;
+                case "PUTDOWNSOUND":
+                    return (ushort)SoulGem_FieldIndex.PutDownSound;
+                case "KEYWORDS":
+                    return (ushort)SoulGem_FieldIndex.Keywords;
+                case "VALUE":
+                    return (ushort)SoulGem_FieldIndex.Value;
+                case "WEIGHT":
+                    return (ushort)SoulGem_FieldIndex.Weight;
+                case "CONTAINEDSOUL":
+                    return (ushort)SoulGem_FieldIndex.ContainedSoul;
+                case "MAXIMUMCAPACITY":
+                    return (ushort)SoulGem_FieldIndex.MaximumCapacity;
+                case "LINKEDTO":
+                    return (ushort)SoulGem_FieldIndex.LinkedTo;
+                case "DATADATATYPESTATE":
+                    return (ushort)SoulGem_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -896,6 +1603,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
             switch (enu)
             {
+                case SoulGem_FieldIndex.Keywords:
+                    return true;
+                case SoulGem_FieldIndex.ObjectBounds:
+                case SoulGem_FieldIndex.Name:
+                case SoulGem_FieldIndex.Model:
+                case SoulGem_FieldIndex.Icons:
+                case SoulGem_FieldIndex.Destructible:
+                case SoulGem_FieldIndex.PickUpSound:
+                case SoulGem_FieldIndex.PutDownSound:
+                case SoulGem_FieldIndex.Value:
+                case SoulGem_FieldIndex.Weight:
+                case SoulGem_FieldIndex.ContainedSoul:
+                case SoulGem_FieldIndex.MaximumCapacity:
+                case SoulGem_FieldIndex.LinkedTo:
+                case SoulGem_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -906,6 +1629,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
             switch (enu)
             {
+                case SoulGem_FieldIndex.ObjectBounds:
+                case SoulGem_FieldIndex.Model:
+                case SoulGem_FieldIndex.Icons:
+                case SoulGem_FieldIndex.Destructible:
+                    return true;
+                case SoulGem_FieldIndex.Name:
+                case SoulGem_FieldIndex.PickUpSound:
+                case SoulGem_FieldIndex.PutDownSound:
+                case SoulGem_FieldIndex.Keywords:
+                case SoulGem_FieldIndex.Value:
+                case SoulGem_FieldIndex.Weight:
+                case SoulGem_FieldIndex.ContainedSoul:
+                case SoulGem_FieldIndex.MaximumCapacity:
+                case SoulGem_FieldIndex.LinkedTo:
+                case SoulGem_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -916,6 +1655,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
             switch (enu)
             {
+                case SoulGem_FieldIndex.ObjectBounds:
+                case SoulGem_FieldIndex.Name:
+                case SoulGem_FieldIndex.Model:
+                case SoulGem_FieldIndex.Icons:
+                case SoulGem_FieldIndex.Destructible:
+                case SoulGem_FieldIndex.PickUpSound:
+                case SoulGem_FieldIndex.PutDownSound:
+                case SoulGem_FieldIndex.Keywords:
+                case SoulGem_FieldIndex.Value:
+                case SoulGem_FieldIndex.Weight:
+                case SoulGem_FieldIndex.ContainedSoul:
+                case SoulGem_FieldIndex.MaximumCapacity:
+                case SoulGem_FieldIndex.LinkedTo:
+                case SoulGem_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -926,6 +1680,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
             switch (enu)
             {
+                case SoulGem_FieldIndex.ObjectBounds:
+                    return "ObjectBounds";
+                case SoulGem_FieldIndex.Name:
+                    return "Name";
+                case SoulGem_FieldIndex.Model:
+                    return "Model";
+                case SoulGem_FieldIndex.Icons:
+                    return "Icons";
+                case SoulGem_FieldIndex.Destructible:
+                    return "Destructible";
+                case SoulGem_FieldIndex.PickUpSound:
+                    return "PickUpSound";
+                case SoulGem_FieldIndex.PutDownSound:
+                    return "PutDownSound";
+                case SoulGem_FieldIndex.Keywords:
+                    return "Keywords";
+                case SoulGem_FieldIndex.Value:
+                    return "Value";
+                case SoulGem_FieldIndex.Weight:
+                    return "Weight";
+                case SoulGem_FieldIndex.ContainedSoul:
+                    return "ContainedSoul";
+                case SoulGem_FieldIndex.MaximumCapacity:
+                    return "MaximumCapacity";
+                case SoulGem_FieldIndex.LinkedTo:
+                    return "LinkedTo";
+                case SoulGem_FieldIndex.DATADataTypeState:
+                    return "DATADataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -936,6 +1718,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
             switch (enu)
             {
+                case SoulGem_FieldIndex.ObjectBounds:
+                case SoulGem_FieldIndex.Name:
+                case SoulGem_FieldIndex.Model:
+                case SoulGem_FieldIndex.Icons:
+                case SoulGem_FieldIndex.Destructible:
+                case SoulGem_FieldIndex.PickUpSound:
+                case SoulGem_FieldIndex.PutDownSound:
+                case SoulGem_FieldIndex.Keywords:
+                case SoulGem_FieldIndex.Value:
+                case SoulGem_FieldIndex.Weight:
+                case SoulGem_FieldIndex.ContainedSoul:
+                case SoulGem_FieldIndex.MaximumCapacity:
+                case SoulGem_FieldIndex.LinkedTo:
+                case SoulGem_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -946,6 +1743,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
             switch (enu)
             {
+                case SoulGem_FieldIndex.ObjectBounds:
+                case SoulGem_FieldIndex.Name:
+                case SoulGem_FieldIndex.Model:
+                case SoulGem_FieldIndex.Icons:
+                case SoulGem_FieldIndex.Destructible:
+                case SoulGem_FieldIndex.PickUpSound:
+                case SoulGem_FieldIndex.PutDownSound:
+                case SoulGem_FieldIndex.Keywords:
+                case SoulGem_FieldIndex.Value:
+                case SoulGem_FieldIndex.Weight:
+                case SoulGem_FieldIndex.ContainedSoul:
+                case SoulGem_FieldIndex.MaximumCapacity:
+                case SoulGem_FieldIndex.LinkedTo:
+                case SoulGem_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -956,6 +1768,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SoulGem_FieldIndex enu = (SoulGem_FieldIndex)index;
             switch (enu)
             {
+                case SoulGem_FieldIndex.ObjectBounds:
+                    return typeof(ObjectBounds);
+                case SoulGem_FieldIndex.Name:
+                    return typeof(String);
+                case SoulGem_FieldIndex.Model:
+                    return typeof(Model);
+                case SoulGem_FieldIndex.Icons:
+                    return typeof(Icons);
+                case SoulGem_FieldIndex.Destructible:
+                    return typeof(Destructible);
+                case SoulGem_FieldIndex.PickUpSound:
+                    return typeof(FormLinkNullable<SoundDescriptor>);
+                case SoulGem_FieldIndex.PutDownSound:
+                    return typeof(FormLinkNullable<SoundDescriptor>);
+                case SoulGem_FieldIndex.Keywords:
+                    return typeof(ExtendedList<IFormLink<Keyword>>);
+                case SoulGem_FieldIndex.Value:
+                    return typeof(UInt32);
+                case SoulGem_FieldIndex.Weight:
+                    return typeof(Single);
+                case SoulGem_FieldIndex.ContainedSoul:
+                    return typeof(SoulGem.Level);
+                case SoulGem_FieldIndex.MaximumCapacity:
+                    return typeof(SoulGem.Level);
+                case SoulGem_FieldIndex.LinkedTo:
+                    return typeof(FormLinkNullable<SoulGem>);
+                case SoulGem_FieldIndex.DATADataTypeState:
+                    return typeof(SoulGem.DATADataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -963,9 +1803,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(SoulGemXmlWriteTranslation);
         public static readonly RecordType SLGM_HEADER = new RecordType("SLGM");
+        public static readonly RecordType OBND_HEADER = new RecordType("OBND");
+        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
+        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
+        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
+        public static readonly RecordType DEST_HEADER = new RecordType("DEST");
+        public static readonly RecordType DSTD_HEADER = new RecordType("DSTD");
+        public static readonly RecordType DMDL_HEADER = new RecordType("DMDL");
+        public static readonly RecordType YNAM_HEADER = new RecordType("YNAM");
+        public static readonly RecordType ZNAM_HEADER = new RecordType("ZNAM");
+        public static readonly RecordType KWDA_HEADER = new RecordType("KWDA");
+        public static readonly RecordType KSIZ_HEADER = new RecordType("KSIZ");
+        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
+        public static readonly RecordType SOUL_HEADER = new RecordType("SOUL");
+        public static readonly RecordType SLCP_HEADER = new RecordType("SLCP");
+        public static readonly RecordType NAM0_HEADER = new RecordType("NAM0");
         public static readonly RecordType TriggeringRecordType = SLGM_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
+        public const int NumTypedFields = 11;
         public static readonly Type BinaryWriteTranslation = typeof(SoulGemBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1008,6 +1863,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ISoulGemInternal item)
         {
             ClearPartial();
+            item.ObjectBounds = null;
+            item.Name = default;
+            item.Model = null;
+            item.Icons = null;
+            item.Destructible = null;
+            item.PickUpSound = null;
+            item.PutDownSound = null;
+            item.Keywords = null;
+            item.Value = default;
+            item.Weight = default;
+            item.ContainedSoul = default;
+            item.MaximumCapacity = default;
+            item.LinkedTo = null;
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1112,6 +1981,119 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
         
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            ISoulGemInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x444E424F: // OBND
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.ObjectBounds);
+                }
+                case 0x4C4C5546: // FULL
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Name);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Model);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Icons);
+                }
+                case 0x54534544: // DEST
+                case 0x44545344: // DSTD
+                case 0x4C444D44: // DMDL
+                {
+                    item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Destructible);
+                }
+                case 0x4D414E59: // YNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.PickUpSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.PickUpSound);
+                }
+                case 0x4D414E5A: // ZNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.PutDownSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.PutDownSound);
+                }
+                case 0x5A49534B: // KSIZ
+                {
+                    var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.ReadSubrecordFrame().Content);
+                    item.Keywords = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
+                            frame: frame,
+                            amount: amount,
+                            triggeringRecord: SoulGem_Registration.KWDA_HEADER,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<IFormLink<Keyword>>();
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Keywords);
+                }
+                case 0x41544144: // DATA
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.Value = dataFrame.ReadUInt32();
+                    item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Weight);
+                }
+                case 0x4C554F53: // SOUL
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.ContainedSoul = EnumBinaryTranslation<SoulGem.Level>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.ContainedSoul);
+                }
+                case 0x50434C53: // SLCP
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.MaximumCapacity = EnumBinaryTranslation<SoulGem.Level>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.MaximumCapacity);
+                }
+                case 0x304D414E: // NAM0
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.LinkedTo = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.LinkedTo);
+                }
+                default:
+                    return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
+        
         public virtual void CopyInFromBinary(
             ISoulGemInternal item,
             MutagenFrame frame,
@@ -1176,6 +2158,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.ObjectBounds = EqualsMaskHelper.EqualsHelper(
+                item.ObjectBounds,
+                rhs.ObjectBounds,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Icons = EqualsMaskHelper.EqualsHelper(
+                item.Icons,
+                rhs.Icons,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Destructible = EqualsMaskHelper.EqualsHelper(
+                item.Destructible,
+                rhs.Destructible,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.PickUpSound = object.Equals(item.PickUpSound, rhs.PickUpSound);
+            ret.PutDownSound = object.Equals(item.PutDownSound, rhs.PutDownSound);
+            ret.Keywords = item.Keywords.CollectionEqualsHelper(
+                rhs.Keywords,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Value = item.Value == rhs.Value;
+            ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
+            ret.ContainedSoul = item.ContainedSoul == rhs.ContainedSoul;
+            ret.MaximumCapacity = item.MaximumCapacity == rhs.MaximumCapacity;
+            ret.LinkedTo = object.Equals(item.LinkedTo, rhs.LinkedTo);
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1227,12 +2242,104 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if ((printMask?.ObjectBounds?.Overall ?? true)
+                && item.ObjectBounds.TryGet(out var ObjectBoundsItem))
+            {
+                ObjectBoundsItem?.ToString(fg, "ObjectBounds");
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
+            {
+                fg.AppendItem(NameItem, "Name");
+            }
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
+            {
+                ModelItem?.ToString(fg, "Model");
+            }
+            if ((printMask?.Icons?.Overall ?? true)
+                && item.Icons.TryGet(out var IconsItem))
+            {
+                IconsItem?.ToString(fg, "Icons");
+            }
+            if ((printMask?.Destructible?.Overall ?? true)
+                && item.Destructible.TryGet(out var DestructibleItem))
+            {
+                DestructibleItem?.ToString(fg, "Destructible");
+            }
+            if ((printMask?.PickUpSound ?? true)
+                && item.PickUpSound.TryGet(out var PickUpSoundItem))
+            {
+                fg.AppendItem(PickUpSoundItem, "PickUpSound");
+            }
+            if ((printMask?.PutDownSound ?? true)
+                && item.PutDownSound.TryGet(out var PutDownSoundItem))
+            {
+                fg.AppendItem(PutDownSoundItem, "PutDownSound");
+            }
+            if ((printMask?.Keywords?.Overall ?? true)
+                && item.Keywords.TryGet(out var KeywordsItem))
+            {
+                fg.AppendLine("Keywords =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in KeywordsItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.Value ?? true)
+            {
+                fg.AppendItem(item.Value, "Value");
+            }
+            if (printMask?.Weight ?? true)
+            {
+                fg.AppendItem(item.Weight, "Weight");
+            }
+            if (printMask?.ContainedSoul ?? true)
+            {
+                fg.AppendItem(item.ContainedSoul, "ContainedSoul");
+            }
+            if (printMask?.MaximumCapacity ?? true)
+            {
+                fg.AppendItem(item.MaximumCapacity, "MaximumCapacity");
+            }
+            if ((printMask?.LinkedTo ?? true)
+                && item.LinkedTo.TryGet(out var LinkedToItem))
+            {
+                fg.AppendItem(LinkedToItem, "LinkedTo");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+            }
         }
         
         public bool HasBeenSet(
             ISoulGemGetter item,
             SoulGem.Mask<bool?> checkMask)
         {
+            if (checkMask.ObjectBounds?.Overall.HasValue ?? false && checkMask.ObjectBounds.Overall.Value != (item.ObjectBounds != null)) return false;
+            if (checkMask.ObjectBounds?.Specific != null && (item.ObjectBounds == null || !item.ObjectBounds.HasBeenSet(checkMask.ObjectBounds.Specific))) return false;
+            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
+            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
+            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.Icons?.Overall.HasValue ?? false && checkMask.Icons.Overall.Value != (item.Icons != null)) return false;
+            if (checkMask.Icons?.Specific != null && (item.Icons == null || !item.Icons.HasBeenSet(checkMask.Icons.Specific))) return false;
+            if (checkMask.Destructible?.Overall.HasValue ?? false && checkMask.Destructible.Overall.Value != (item.Destructible != null)) return false;
+            if (checkMask.Destructible?.Specific != null && (item.Destructible == null || !item.Destructible.HasBeenSet(checkMask.Destructible.Specific))) return false;
+            if (checkMask.PickUpSound.HasValue && checkMask.PickUpSound.Value != (item.PickUpSound.FormKey != null)) return false;
+            if (checkMask.PutDownSound.HasValue && checkMask.PutDownSound.Value != (item.PutDownSound.FormKey != null)) return false;
+            if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
+            if (checkMask.LinkedTo.HasValue && checkMask.LinkedTo.Value != (item.LinkedTo.FormKey != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1242,6 +2349,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISoulGemGetter item,
             SoulGem.Mask<bool> mask)
         {
+            var itemObjectBounds = item.ObjectBounds;
+            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(itemObjectBounds != null, itemObjectBounds?.GetHasBeenSetMask());
+            mask.Name = (item.Name != null);
+            var itemModel = item.Model;
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            var itemIcons = item.Icons;
+            mask.Icons = new MaskItem<bool, Icons.Mask<bool>?>(itemIcons != null, itemIcons?.GetHasBeenSetMask());
+            var itemDestructible = item.Destructible;
+            mask.Destructible = new MaskItem<bool, Destructible.Mask<bool>?>(itemDestructible != null, itemDestructible?.GetHasBeenSetMask());
+            mask.PickUpSound = (item.PickUpSound.FormKey != null);
+            mask.PutDownSound = (item.PutDownSound.FormKey != null);
+            mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
+            mask.Value = true;
+            mask.Weight = true;
+            mask.ContainedSoul = true;
+            mask.MaximumCapacity = true;
+            mask.LinkedTo = (item.LinkedTo.FormKey != null);
+            mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1293,6 +2418,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
+            if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
+            if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
+            if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
+            if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
+            if (lhs.Value != rhs.Value) return false;
+            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            if (lhs.ContainedSoul != rhs.ContainedSoul) return false;
+            if (lhs.MaximumCapacity != rhs.MaximumCapacity) return false;
+            if (!lhs.LinkedTo.Equals(rhs.LinkedTo)) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
         
@@ -1317,6 +2456,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ISoulGemGetter item)
         {
             var hash = new HashCode();
+            if (item.ObjectBounds.TryGet(out var ObjectBoundsitem))
+            {
+                hash.Add(ObjectBoundsitem);
+            }
+            if (item.Name.TryGet(out var Nameitem))
+            {
+                hash.Add(Nameitem);
+            }
+            if (item.Model.TryGet(out var Modelitem))
+            {
+                hash.Add(Modelitem);
+            }
+            if (item.Icons.TryGet(out var Iconsitem))
+            {
+                hash.Add(Iconsitem);
+            }
+            if (item.Destructible.TryGet(out var Destructibleitem))
+            {
+                hash.Add(Destructibleitem);
+            }
+            if (item.PickUpSound.TryGet(out var PickUpSounditem))
+            {
+                hash.Add(PickUpSounditem);
+            }
+            if (item.PutDownSound.TryGet(out var PutDownSounditem))
+            {
+                hash.Add(PutDownSounditem);
+            }
+            hash.Add(item.Keywords);
+            hash.Add(item.Value);
+            hash.Add(item.Weight);
+            hash.Add(item.ContainedSoul);
+            hash.Add(item.MaximumCapacity);
+            if (item.LinkedTo.TryGet(out var LinkedToitem))
+            {
+                hash.Add(LinkedToitem);
+            }
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1345,6 +2522,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
+            }
+            if (obj.Model.TryGet(out var ModelItems))
+            {
+                foreach (var item in ModelItems.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible.TryGet(out var DestructibleItems))
+            {
+                foreach (var item in DestructibleItems.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.PickUpSound.FormKey.TryGet(out var PickUpSoundKey))
+            {
+                yield return PickUpSoundKey;
+            }
+            if (obj.PutDownSound.FormKey.TryGet(out var PutDownSoundKey))
+            {
+                yield return PutDownSoundKey;
+            }
+            if (obj.Keywords.TryGet(out var KeywordsItem))
+            {
+                foreach (var item in KeywordsItem.Select(f => f.FormKey))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.LinkedTo.FormKey.TryGet(out var LinkedToKey))
+            {
+                yield return LinkedToKey;
             }
             yield break;
         }
@@ -1393,6 +2603,173 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)SoulGem_FieldIndex.ObjectBounds);
+                try
+                {
+                    if(rhs.ObjectBounds.TryGet(out var rhsObjectBounds))
+                    {
+                        item.ObjectBounds = rhsObjectBounds.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)SoulGem_FieldIndex.ObjectBounds));
+                    }
+                    else
+                    {
+                        item.ObjectBounds = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)SoulGem_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model.TryGet(out var rhsModel))
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)SoulGem_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Icons) ?? true))
+            {
+                errorMask?.PushIndex((int)SoulGem_FieldIndex.Icons);
+                try
+                {
+                    if(rhs.Icons.TryGet(out var rhsIcons))
+                    {
+                        item.Icons = rhsIcons.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)SoulGem_FieldIndex.Icons));
+                    }
+                    else
+                    {
+                        item.Icons = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Destructible) ?? true))
+            {
+                errorMask?.PushIndex((int)SoulGem_FieldIndex.Destructible);
+                try
+                {
+                    if(rhs.Destructible.TryGet(out var rhsDestructible))
+                    {
+                        item.Destructible = rhsDestructible.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)SoulGem_FieldIndex.Destructible));
+                    }
+                    else
+                    {
+                        item.Destructible = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.PickUpSound) ?? true))
+            {
+                item.PickUpSound = rhs.PickUpSound.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.PutDownSound) ?? true))
+            {
+                item.PutDownSound = rhs.PutDownSound.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Keywords) ?? true))
+            {
+                errorMask?.PushIndex((int)SoulGem_FieldIndex.Keywords);
+                try
+                {
+                    if ((rhs.Keywords != null))
+                    {
+                        item.Keywords = 
+                            rhs.Keywords
+                            .Select(r => (IFormLink<Keyword>)new FormLink<Keyword>(r.FormKey))
+                            .ToExtendedList<IFormLink<Keyword>>();
+                    }
+                    else
+                    {
+                        item.Keywords = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Value) ?? true))
+            {
+                item.Value = rhs.Value;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Weight) ?? true))
+            {
+                item.Weight = rhs.Weight;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.ContainedSoul) ?? true))
+            {
+                item.ContainedSoul = rhs.ContainedSoul;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.MaximumCapacity) ?? true))
+            {
+                item.MaximumCapacity = rhs.MaximumCapacity;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.LinkedTo) ?? true))
+            {
+                item.LinkedTo = rhs.LinkedTo.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoulGem_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1535,6 +2912,166 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((item.ObjectBounds != null)
+                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (item.ObjectBounds.TryGet(out var ObjectBoundsItem))
+                {
+                    ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
+                        item: ObjectBoundsItem,
+                        node: node,
+                        name: nameof(item.ObjectBounds),
+                        fieldIndex: (int)SoulGem_FieldIndex.ObjectBounds,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)SoulGem_FieldIndex.ObjectBounds));
+                }
+            }
+            if ((item.Name != null)
+                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Name) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)SoulGem_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if ((item.Model != null)
+                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Model) ?? true))
+            {
+                if (item.Model.TryGet(out var ModelItem))
+                {
+                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                        item: ModelItem,
+                        node: node,
+                        name: nameof(item.Model),
+                        fieldIndex: (int)SoulGem_FieldIndex.Model,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)SoulGem_FieldIndex.Model));
+                }
+            }
+            if ((item.Icons != null)
+                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Icons) ?? true))
+            {
+                if (item.Icons.TryGet(out var IconsItem))
+                {
+                    ((IconsXmlWriteTranslation)((IXmlItem)IconsItem).XmlWriteTranslator).Write(
+                        item: IconsItem,
+                        node: node,
+                        name: nameof(item.Icons),
+                        fieldIndex: (int)SoulGem_FieldIndex.Icons,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)SoulGem_FieldIndex.Icons));
+                }
+            }
+            if ((item.Destructible != null)
+                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Destructible) ?? true))
+            {
+                if (item.Destructible.TryGet(out var DestructibleItem))
+                {
+                    ((DestructibleXmlWriteTranslation)((IXmlItem)DestructibleItem).XmlWriteTranslator).Write(
+                        item: DestructibleItem,
+                        node: node,
+                        name: nameof(item.Destructible),
+                        fieldIndex: (int)SoulGem_FieldIndex.Destructible,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)SoulGem_FieldIndex.Destructible));
+                }
+            }
+            if ((item.PickUpSound.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.PickUpSound) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.PickUpSound),
+                    item: item.PickUpSound.FormKey.Value,
+                    fieldIndex: (int)SoulGem_FieldIndex.PickUpSound,
+                    errorMask: errorMask);
+            }
+            if ((item.PutDownSound.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.PutDownSound) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.PutDownSound),
+                    item: item.PutDownSound.FormKey.Value,
+                    fieldIndex: (int)SoulGem_FieldIndex.PutDownSound,
+                    errorMask: errorMask);
+            }
+            if ((item.Keywords != null)
+                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Keywords) ?? true))
+            {
+                ListXmlTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Keywords),
+                    item: item.Keywords,
+                    fieldIndex: (int)SoulGem_FieldIndex.Keywords,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SoulGem_FieldIndex.Keywords),
+                    transl: (XElement subNode, IFormLinkGetter<IKeywordGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem.FormKey,
+                            errorMask: listSubMask);
+                    });
+            }
+            if ((translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Value) ?? true))
+            {
+                UInt32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Value),
+                    item: item.Value,
+                    fieldIndex: (int)SoulGem_FieldIndex.Value,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.Weight) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Weight),
+                    item: item.Weight,
+                    fieldIndex: (int)SoulGem_FieldIndex.Weight,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.ContainedSoul) ?? true))
+            {
+                EnumXmlTranslation<SoulGem.Level>.Instance.Write(
+                    node: node,
+                    name: nameof(item.ContainedSoul),
+                    item: item.ContainedSoul,
+                    fieldIndex: (int)SoulGem_FieldIndex.ContainedSoul,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.MaximumCapacity) ?? true))
+            {
+                EnumXmlTranslation<SoulGem.Level>.Instance.Write(
+                    node: node,
+                    name: nameof(item.MaximumCapacity),
+                    item: item.MaximumCapacity,
+                    fieldIndex: (int)SoulGem_FieldIndex.MaximumCapacity,
+                    errorMask: errorMask);
+            }
+            if ((item.LinkedTo.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.LinkedTo) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.LinkedTo),
+                    item: item.LinkedTo.FormKey.Value,
+                    fieldIndex: (int)SoulGem_FieldIndex.LinkedTo,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)SoulGem_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<SoulGem.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)SoulGem_FieldIndex.DATADataTypeState,
+                    errorMask: errorMask);
+            }
         }
 
         public void Write(
@@ -1642,6 +3179,272 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "ObjectBounds":
+                    errorMask?.PushIndex((int)SoulGem_FieldIndex.ObjectBounds);
+                    try
+                    {
+                        item.ObjectBounds = LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)SoulGem_FieldIndex.ObjectBounds));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Name":
+                    errorMask?.PushIndex((int)SoulGem_FieldIndex.Name);
+                    try
+                    {
+                        item.Name = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Model":
+                    errorMask?.PushIndex((int)SoulGem_FieldIndex.Model);
+                    try
+                    {
+                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)SoulGem_FieldIndex.Model));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Icons":
+                    errorMask?.PushIndex((int)SoulGem_FieldIndex.Icons);
+                    try
+                    {
+                        item.Icons = LoquiXmlTranslation<Icons>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)SoulGem_FieldIndex.Icons));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Destructible":
+                    errorMask?.PushIndex((int)SoulGem_FieldIndex.Destructible);
+                    try
+                    {
+                        item.Destructible = LoquiXmlTranslation<Destructible>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)SoulGem_FieldIndex.Destructible));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "PickUpSound":
+                    errorMask?.PushIndex((int)SoulGem_FieldIndex.PickUpSound);
+                    try
+                    {
+                        item.PickUpSound = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "PutDownSound":
+                    errorMask?.PushIndex((int)SoulGem_FieldIndex.PutDownSound);
+                    try
+                    {
+                        item.PutDownSound = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Keywords":
+                    errorMask?.PushIndex((int)SoulGem_FieldIndex.Keywords);
+                    try
+                    {
+                        if (ListXmlTranslation<IFormLink<Keyword>>.Instance.Parse(
+                            node: node,
+                            enumer: out var KeywordsItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Keywords = KeywordsItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Keywords = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Value":
+                    errorMask?.PushIndex((int)SoulGem_FieldIndex.Value);
+                    try
+                    {
+                        item.Value = UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Weight":
+                    errorMask?.PushIndex((int)SoulGem_FieldIndex.Weight);
+                    try
+                    {
+                        item.Weight = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ContainedSoul":
+                    errorMask?.PushIndex((int)SoulGem_FieldIndex.ContainedSoul);
+                    try
+                    {
+                        item.ContainedSoul = EnumXmlTranslation<SoulGem.Level>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MaximumCapacity":
+                    errorMask?.PushIndex((int)SoulGem_FieldIndex.MaximumCapacity);
+                    try
+                    {
+                        item.MaximumCapacity = EnumXmlTranslation<SoulGem.Level>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LinkedTo":
+                    errorMask?.PushIndex((int)SoulGem_FieldIndex.LinkedTo);
+                    try
+                    {
+                        item.LinkedTo = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DATADataTypeState":
+                    errorMask?.PushIndex((int)SoulGem_FieldIndex.DATADataTypeState);
+                    try
+                    {
+                        item.DATADataTypeState = EnumXmlTranslation<SoulGem.DATADataType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1728,6 +3531,100 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static SoulGemBinaryWriteTranslation Instance = new SoulGemBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            ISoulGemGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            ISoulGemGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            if (item.ObjectBounds.TryGet(out var ObjectBoundsItem))
+            {
+                ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                    item: ObjectBoundsItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: recordTypeConverter.ConvertToCustom(SoulGem_Registration.FULL_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            if (item.Model.TryGet(out var ModelItem))
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            if (item.Icons.TryGet(out var IconsItem))
+            {
+                ((IconsBinaryWriteTranslation)((IBinaryItem)IconsItem).BinaryWriteTranslator).Write(
+                    item: IconsItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            if (item.Destructible.TryGet(out var DestructibleItem))
+            {
+                ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
+                    item: DestructibleItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.PickUpSound,
+                header: recordTypeConverter.ConvertToCustom(SoulGem_Registration.YNAM_HEADER));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.PutDownSound,
+                header: recordTypeConverter.ConvertToCustom(SoulGem_Registration.ZNAM_HEADER));
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Keywords,
+                counterType: SoulGem_Registration.KSIZ_HEADER,
+                counterLength: 4,
+                recordType: recordTypeConverter.ConvertToCustom(SoulGem_Registration.KWDA_HEADER),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
+                {
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(SoulGem_Registration.DATA_HEADER)))
+            {
+                writer.Write(item.Value);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Weight);
+            }
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoulGem.Level>.Instance.Write(
+                writer,
+                item.ContainedSoul,
+                length: 1,
+                header: recordTypeConverter.ConvertToCustom(SoulGem_Registration.SOUL_HEADER));
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoulGem.Level>.Instance.Write(
+                writer,
+                item.MaximumCapacity,
+                length: 1,
+                header: recordTypeConverter.ConvertToCustom(SoulGem_Registration.SLCP_HEADER));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.LinkedTo,
+                header: recordTypeConverter.ConvertToCustom(SoulGem_Registration.NAM0_HEADER));
+        }
+
         public void Write(
             MutagenWriter writer,
             ISoulGemGetter item,
@@ -1738,10 +3635,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(SoulGem_Registration.SLGM_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1822,6 +3719,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoulGemGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => SoulGemCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => SoulGemCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoulGemCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoulGemCommon.Instance.RemapLinks(this, mapping);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => SoulGemXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -1847,7 +3750,56 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
+        public SoulGem.MajorFlag MajorFlags => (SoulGem.MajorFlag)this.MajorRecordFlagsRaw;
 
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        public IObjectBoundsGetter? ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation!.Value.Min)), _package) : default;
+        public bool ObjectBounds_IsSet => _ObjectBoundsLocation.HasValue;
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
+        #endregion
+        public IModelGetter? Model { get; private set; }
+        public IIconsGetter? Icons { get; private set; }
+        public IDestructibleGetter? Destructible { get; private set; }
+        #region PickUpSound
+        private int? _PickUpSoundLocation;
+        public bool PickUpSound_IsSet => _PickUpSoundLocation.HasValue;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PickUpSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        #endregion
+        #region PutDownSound
+        private int? _PutDownSoundLocation;
+        public bool PutDownSound_IsSet => _PutDownSoundLocation.HasValue;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PutDownSoundLocation.Value, _package.Meta)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        private int? _DATALocation;
+        public SoulGem.DATADataType DATADataTypeState { get; private set; }
+        #region Value
+        private int _ValueLocation => _DATALocation!.Value + 0x0;
+        private bool _Value_IsSet => _DATALocation.HasValue;
+        public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ValueLocation, 4)) : default;
+        #endregion
+        #region Weight
+        private int _WeightLocation => _DATALocation!.Value + 0x4;
+        private bool _Weight_IsSet => _DATALocation.HasValue;
+        public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Slice(_WeightLocation, 4)) : default;
+        #endregion
+        #region ContainedSoul
+        private int? _ContainedSoulLocation;
+        public SoulGem.Level ContainedSoul => _ContainedSoulLocation.HasValue ? (SoulGem.Level)HeaderTranslation.ExtractSubrecordSpan(_data, _ContainedSoulLocation!.Value, _package.Meta)[0] : default(SoulGem.Level);
+        #endregion
+        #region MaximumCapacity
+        private int? _MaximumCapacityLocation;
+        public SoulGem.Level MaximumCapacity => _MaximumCapacityLocation.HasValue ? (SoulGem.Level)HeaderTranslation.ExtractSubrecordSpan(_data, _MaximumCapacityLocation!.Value, _package.Meta)[0] : default(SoulGem.Level);
+        #endregion
+        #region LinkedTo
+        private int? _LinkedToLocation;
+        public bool LinkedTo_IsSet => _LinkedToLocation.HasValue;
+        public IFormLinkNullableGetter<ISoulGemGetter> LinkedTo => _LinkedToLocation.HasValue ? new FormLinkNullable<ISoulGemGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LinkedToLocation.Value, _package.Meta)))) : FormLinkNullable<ISoulGemGetter>.Null;
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -1898,6 +3850,107 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case 0x444E424F: // OBND
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.ObjectBounds);
+                }
+                case 0x4C4C5546: // FULL
+                {
+                    _NameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Name);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Model);
+                }
+                case 0x4E4F4349: // ICON
+                {
+                    this.Icons = IconsBinaryOverlay.IconsFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Icons);
+                }
+                case 0x54534544: // DEST
+                case 0x44545344: // DSTD
+                case 0x4C444D44: // DMDL
+                {
+                    this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Destructible);
+                }
+                case 0x4D414E59: // YNAM
+                {
+                    _PickUpSoundLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.PickUpSound);
+                }
+                case 0x4D414E5A: // ZNAM
+                {
+                    _PutDownSoundLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.PutDownSound);
+                }
+                case 0x5A49534B: // KSIZ
+                {
+                    var count = BinaryPrimitives.ReadUInt32LittleEndian(_package.Meta.ReadSubrecordFrame(stream).Content);
+                    var subMeta = _package.Meta.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.Keywords = BinaryOverlaySetList<IFormLinkGetter<IKeywordGetter>>.FactoryByCount(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 0x4,
+                        count: count,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Keywords);
+                }
+                case 0x41544144: // DATA
+                {
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.Weight);
+                }
+                case 0x4C554F53: // SOUL
+                {
+                    _ContainedSoulLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.ContainedSoul);
+                }
+                case 0x50434C53: // SLCP
+                {
+                    _MaximumCapacityLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.MaximumCapacity);
+                }
+                case 0x304D414E: // NAM0
+                {
+                    _LinkedToLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)SoulGem_FieldIndex.LinkedTo);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
         #region To String
 
         public override void ToString(

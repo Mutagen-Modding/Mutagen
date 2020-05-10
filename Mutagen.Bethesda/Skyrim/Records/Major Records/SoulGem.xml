@@ -1,6 +1,29 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="SoulGem" recordType="SLGM" baseClass="SkyrimMajorRecord" objType="Record" GUID="1d5e8cdd-e010-45ed-aca9-7d332b1eb235" ID="168">
+  <Object name="SoulGem" recordType="SLGM" baseClass="SkyrimMajorRecord" objType="Record" majorFlag="true" GUID="1d5e8cdd-e010-45ed-aca9-7d332b1eb235" ID="168">
     <Interface>IItem</Interface>
+    <Interface>IObjectBoundedOptional</Interface>
+    <Interface>IWeightValue</Interface>
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" />
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Icons" refName="Icons" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
+      <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
+        <FormLink refName="Keyword" />
+      </List>
+      <Data>
+        <Fields>
+          <UInt32 name="Value" />
+          <Float name="Weight" />
+        </Fields>
+      </Data>
+      <Enum name="ContainedSoul" enumName="SoulGem.Level" hasBeenSet="False" recordType="SOUL" byteLength="1" />
+      <Enum name="MaximumCapacity" enumName="SoulGem.Level" hasBeenSet="False" recordType="SLCP" byteLength="1" />
+      <FormLink name="LinkedTo" refName="SoulGem" recordType="NAM0" />
+    </Fields>
   </Object>
 </Loqui>
