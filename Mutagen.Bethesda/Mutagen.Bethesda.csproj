@@ -72,6 +72,7 @@
     <Compile Include="Skyrim\Interfaces\IModeled.cs" />
     <Compile Include="Skyrim\Interfaces\IItem.cs" />
     <Compile Include="Skyrim\Interfaces\IEffectRecord.cs" />
+    <Compile Include="Skyrim\Interfaces\INpcSpawn.cs" />
     <Compile Include="Skyrim\Interfaces\IObjectBounded.cs" />
     <Compile Include="Skyrim\Interfaces\IHarvestTarget.cs" />
     <Compile Include="Skyrim\Interfaces\IObjectId.cs" />
@@ -151,6 +152,9 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Key.cs">
       <DependentUpon>Key.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\LeveledItem.cs">
+      <DependentUpon>LeveledItem.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\LeveledNpc.cs">
       <DependentUpon>LeveledNpc.xml</DependentUpon>
@@ -1752,15 +1756,6 @@
     <Compile Include="Oblivion\Records\Major Records\ANpcSpawn_LoquiGenerated.cs">
       <DependentUpon>ANpcSpawn.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Common Subrecords\LeveledEntry_LoquiGenerated.cs">
-      <DependentUpon>LeveledEntry.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Common Subrecords\LeveledEntryData_LoquiGenerated.cs">
-      <DependentUpon>LeveledEntry.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Major Records\ANpcSpawn_LoquiGenerated.cs">
-      <DependentUpon>ANpcSpawn.xml</DependentUpon>
-    </Compile>
     <Compile Include="Skyrim\Records\Major Records\PlacedNpc_LoquiGenerated.cs">
       <DependentUpon>PlacedNpc.xml</DependentUpon>
     </Compile>
@@ -1823,6 +1818,18 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\CollisionLayer_LoquiGenerated.cs">
       <DependentUpon>CollisionLayer.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\LeveledItemEntry_LoquiGenerated.cs">
+      <DependentUpon>LeveledItem.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\LeveledItemEntryData_LoquiGenerated.cs">
+      <DependentUpon>LeveledItem.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\LeveledNpcEntry_LoquiGenerated.cs">
+      <DependentUpon>LeveledNpc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\LeveledNpcEntryData_LoquiGenerated.cs">
+      <DependentUpon>LeveledNpc.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

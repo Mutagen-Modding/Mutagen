@@ -1307,6 +1307,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType IMAD_HEADER = new RecordType("IMAD");
         public static readonly RecordType IPDS_HEADER = new RecordType("IPDS");
         public static readonly RecordType KYWD_HEADER = new RecordType("KYWD");
+        public static readonly RecordType LVLN_HEADER = new RecordType("LVLN");
         public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
         public static readonly RecordType MATO_HEADER = new RecordType("MATO");
         public static readonly RecordType MATT_HEADER = new RecordType("MATT");
@@ -1321,7 +1322,6 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType TACT_HEADER = new RecordType("TACT");
         public static readonly RecordType TXST_HEADER = new RecordType("TXST");
         public static readonly RecordType VTYP_HEADER = new RecordType("VTYP");
-        public static readonly RecordType LVLN_HEADER = new RecordType("LVLN");
         public static readonly RecordType SHOU_HEADER = new RecordType("SHOU");
         public static readonly RecordType EDID_HEADER = new RecordType("EDID");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
@@ -1424,6 +1424,7 @@ namespace Mutagen.Bethesda.Internals
                         IMAD_HEADER,
                         IPDS_HEADER,
                         KYWD_HEADER,
+                        LVLN_HEADER,
                         LCRT_HEADER,
                         MATO_HEADER,
                         MATT_HEADER,
@@ -1438,7 +1439,6 @@ namespace Mutagen.Bethesda.Internals
                         TACT_HEADER,
                         TXST_HEADER,
                         VTYP_HEADER,
-                        LVLN_HEADER,
                         SHOU_HEADER
                     })
             );

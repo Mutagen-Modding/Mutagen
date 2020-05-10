@@ -49,6 +49,7 @@
       <Group name="Projectiles" refName="Projectile" />
       <Group name="Hazards" refName="Hazard" />
       <Group name="SoulGems" refName="SoulGem" />
+      <Group name="LeveledItems" refName="LeveledItem" />
     </Fields>
   </Object>
 </Loqui>

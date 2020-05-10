@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Npc" recordType="NPC_" objType="Record" majorFlag="true" baseClass="ANpcSpawn" GUID="63c41e9b-1707-48b0-906a-573f3c678370" ID="75">
+  <Object name="Npc" recordType="NPC_" objType="Record" majorFlag="true" baseClass="SkyrimMajorRecord" GUID="63c41e9b-1707-48b0-906a-573f3c678370" ID="75">
     <Interface>IObjectBounded</Interface>
     <Interface>INamed</Interface>
     <Interface>IObjectId</Interface>
+    <Interface>INpcSpawn</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" recordType="VMAD" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
@@ -11,7 +12,9 @@
       <RefList name="Factions" refName="RankPlacement" />
       <FormLink name="DeathItem" refName="LeveledItem" recordType="INAM" />
       <FormLink name="Voice" refName="VoiceType" recordType="VTCK" />
-      <FormLink name="Template" recordType="TPLT" refName="ANpcSpawn" />
+      <FormLink name="Template" recordType="TPLT" objType="Record" >
+        <Interface>INpcSpawn</Interface>
+      </FormLink>
       <FormLink name="Race" refName="Race" recordType="RNAM" hasBeenSet="False" />
       <List name="ActorEffect" counterRecType="SPCT" >
         <FormLink refName="ASpell" recordType="SPLO" />
