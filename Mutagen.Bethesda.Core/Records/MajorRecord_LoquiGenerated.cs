@@ -1293,7 +1293,9 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType ARMA_HEADER = new RecordType("ARMA");
         public static readonly RecordType ARTO_HEADER = new RecordType("ARTO");
         public static readonly RecordType BPTD_HEADER = new RecordType("BPTD");
+        public static readonly RecordType COLL_HEADER = new RecordType("COLL");
         public static readonly RecordType CLFM_HEADER = new RecordType("CLFM");
+        public static readonly RecordType COBJ_HEADER = new RecordType("COBJ");
         public static readonly RecordType DEBR_HEADER = new RecordType("DEBR");
         public static readonly RecordType DUAL_HEADER = new RecordType("DUAL");
         public static readonly RecordType EQUP_HEADER = new RecordType("EQUP");
@@ -1408,7 +1410,9 @@ namespace Mutagen.Bethesda.Internals
                         ARMA_HEADER,
                         ARTO_HEADER,
                         BPTD_HEADER,
+                        COLL_HEADER,
                         CLFM_HEADER,
+                        COBJ_HEADER,
                         DEBR_HEADER,
                         DUAL_HEADER,
                         EQUP_HEADER,

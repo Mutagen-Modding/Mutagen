@@ -113,6 +113,9 @@
     <Compile Include="Skyrim\Records\Major Records\Book.cs">
       <DependentUpon>Book.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ConstructibleObject.cs">
+      <DependentUpon>ConstructibleObject.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\CriticalData.cs">
       <DependentUpon>Weapon.xml</DependentUpon>
     </Compile>
@@ -131,11 +134,23 @@
     <Compile Include="Skyrim\Records\Major Records\Grass.cs">
       <DependentUpon>Grass.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Hazard.cs">
+      <DependentUpon>Hazard.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\HeadData.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\IdleMarker.cs">
+      <DependentUpon>IdleMarker.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Ingestible.cs">
+      <DependentUpon>Ingestible.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\Ingredient.cs">
       <DependentUpon>Ingredient.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Key.cs">
+      <DependentUpon>Key.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\LeveledNpc.cs">
       <DependentUpon>LeveledNpc.xml</DependentUpon>
@@ -166,6 +181,9 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\PcLevelMult.cs">
       <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Projectile.cs">
+      <DependentUpon>Projectile.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Scroll.cs">
       <DependentUpon>Scroll.xml</DependentUpon>
@@ -1728,12 +1746,6 @@
     <Compile Include="Skyrim\Records\Common Subrecords\NoOwner_LoquiGenerated.cs">
       <DependentUpon>ExtraData.xml</DependentUpon>
     </Compile>
-    <Compile Include="Skyrim\Records\Major Records\ContainerEntry_LoquiGenerated.cs">
-      <DependentUpon>Container.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Skyrim\Records\Major Records\ContainerItem_LoquiGenerated.cs">
-      <DependentUpon>Container.xml</DependentUpon>
-    </Compile>
     <Compile Include="Oblivion\Records\Major Records\ANpcSpawn_LoquiGenerated.cs">
       <DependentUpon>ANpcSpawn.xml</DependentUpon>
     </Compile>
@@ -1793,6 +1805,21 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\NpcConfiguration_LoquiGenerated.cs">
       <DependentUpon>NPC.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\IdleAnimation_LoquiGenerated.cs">
+      <DependentUpon>IdleAnimation.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ContainerEntry_LoquiGenerated.cs">
+      <DependentUpon>ContainerEntry.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\ContainerItem_LoquiGenerated.cs">
+      <DependentUpon>ContainerEntry.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ConstructibleObject_LoquiGenerated.cs">
+      <DependentUpon>ConstructibleObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\CollisionLayer_LoquiGenerated.cs">
+      <DependentUpon>CollisionLayer.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

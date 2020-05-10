@@ -48,6 +48,79 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region ObjectBounds
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IHazardGetter.ObjectBounds => ObjectBounds;
+        #endregion
+        #region Name
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private String? _Name;
+        public String? Name
+        {
+            get => this._Name;
+            set => this._Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IHazardGetter.Name => this.Name;
+        #endregion
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IHazardGetter.Model => this.Model;
+        #endregion
+        #region ImageSpaceModifier
+        public FormLinkNullable<ImageSpaceAdapter> ImageSpaceModifier { get; set; } = new FormLinkNullable<ImageSpaceAdapter>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IImageSpaceAdapterGetter> IHazardGetter.ImageSpaceModifier => this.ImageSpaceModifier;
+        #endregion
+        #region Limit
+        public UInt32 Limit { get; set; } = default;
+        #endregion
+        #region Radius
+        public Single Radius { get; set; } = default;
+        #endregion
+        #region Lifetime
+        public Single Lifetime { get; set; } = default;
+        #endregion
+        #region ImageSpaceRadius
+        public Single ImageSpaceRadius { get; set; } = default;
+        #endregion
+        #region TargetInterval
+        public Single TargetInterval { get; set; } = default;
+        #endregion
+        #region Flags
+        public Hazard.Flag Flags { get; set; } = default;
+        #endregion
+        #region Spell
+        public FormLink<IEffectRecord> Spell { get; set; } = new FormLink<IEffectRecord>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IEffectRecordGetter> IHazardGetter.Spell => this.Spell;
+        #endregion
+        #region Light
+        public FormLink<Light> Light { get; set; } = new FormLink<Light>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ILightGetter> IHazardGetter.Light => this.Light;
+        #endregion
+        #region ImpactDataSet
+        public FormLink<ImpactDataSet> ImpactDataSet { get; set; } = new FormLink<ImpactDataSet>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImpactDataSetGetter> IHazardGetter.ImpactDataSet => this.ImpactDataSet;
+        #endregion
+        #region Sound
+        public FormLink<SoundDescriptor> Sound { get; set; } = new FormLink<SoundDescriptor>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISoundDescriptorGetter> IHazardGetter.Sound => this.Sound;
+        #endregion
+        #region DATADataTypeState
+        public Hazard.DATADataType DATADataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -218,6 +291,21 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.Name = initialValue;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.ImageSpaceModifier = initialValue;
+                this.Limit = initialValue;
+                this.Radius = initialValue;
+                this.Lifetime = initialValue;
+                this.ImageSpaceRadius = initialValue;
+                this.TargetInterval = initialValue;
+                this.Flags = initialValue;
+                this.Spell = initialValue;
+                this.Light = initialValue;
+                this.ImpactDataSet = initialValue;
+                this.Sound = initialValue;
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -226,7 +314,22 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem ObjectBounds,
+                TItem Name,
+                TItem Model,
+                TItem ImageSpaceModifier,
+                TItem Limit,
+                TItem Radius,
+                TItem Lifetime,
+                TItem ImageSpaceRadius,
+                TItem TargetInterval,
+                TItem Flags,
+                TItem Spell,
+                TItem Light,
+                TItem ImpactDataSet,
+                TItem Sound,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -235,6 +338,21 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.Name = Name;
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.ImageSpaceModifier = ImageSpaceModifier;
+                this.Limit = Limit;
+                this.Radius = Radius;
+                this.Lifetime = Lifetime;
+                this.ImageSpaceRadius = ImageSpaceRadius;
+                this.TargetInterval = TargetInterval;
+                this.Flags = Flags;
+                this.Spell = Spell;
+                this.Light = Light;
+                this.ImpactDataSet = ImpactDataSet;
+                this.Sound = Sound;
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -243,6 +361,24 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem Name;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public TItem ImageSpaceModifier;
+            public TItem Limit;
+            public TItem Radius;
+            public TItem Lifetime;
+            public TItem ImageSpaceRadius;
+            public TItem TargetInterval;
+            public TItem Flags;
+            public TItem Spell;
+            public TItem Light;
+            public TItem ImpactDataSet;
+            public TItem Sound;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -256,11 +392,41 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.ImageSpaceModifier, rhs.ImageSpaceModifier)) return false;
+                if (!object.Equals(this.Limit, rhs.Limit)) return false;
+                if (!object.Equals(this.Radius, rhs.Radius)) return false;
+                if (!object.Equals(this.Lifetime, rhs.Lifetime)) return false;
+                if (!object.Equals(this.ImageSpaceRadius, rhs.ImageSpaceRadius)) return false;
+                if (!object.Equals(this.TargetInterval, rhs.TargetInterval)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Spell, rhs.Spell)) return false;
+                if (!object.Equals(this.Light, rhs.Light)) return false;
+                if (!object.Equals(this.ImpactDataSet, rhs.ImpactDataSet)) return false;
+                if (!object.Equals(this.Sound, rhs.Sound)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.Name);
+                hash.Add(this.Model);
+                hash.Add(this.ImageSpaceModifier);
+                hash.Add(this.Limit);
+                hash.Add(this.Radius);
+                hash.Add(this.Lifetime);
+                hash.Add(this.ImageSpaceRadius);
+                hash.Add(this.TargetInterval);
+                hash.Add(this.Flags);
+                hash.Add(this.Spell);
+                hash.Add(this.Light);
+                hash.Add(this.ImpactDataSet);
+                hash.Add(this.Sound);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -271,6 +437,29 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Name)) return false;
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (!eval(this.ImageSpaceModifier)) return false;
+                if (!eval(this.Limit)) return false;
+                if (!eval(this.Radius)) return false;
+                if (!eval(this.Lifetime)) return false;
+                if (!eval(this.ImageSpaceRadius)) return false;
+                if (!eval(this.TargetInterval)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Spell)) return false;
+                if (!eval(this.Light)) return false;
+                if (!eval(this.ImpactDataSet)) return false;
+                if (!eval(this.Sound)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -279,6 +468,29 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Name)) return true;
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
+                if (eval(this.ImageSpaceModifier)) return true;
+                if (eval(this.Limit)) return true;
+                if (eval(this.Radius)) return true;
+                if (eval(this.Lifetime)) return true;
+                if (eval(this.ImageSpaceRadius)) return true;
+                if (eval(this.TargetInterval)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.Spell)) return true;
+                if (eval(this.Light)) return true;
+                if (eval(this.ImpactDataSet)) return true;
+                if (eval(this.Sound)) return true;
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -294,6 +506,21 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.Name = eval(this.Name);
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.ImageSpaceModifier = eval(this.ImageSpaceModifier);
+                obj.Limit = eval(this.Limit);
+                obj.Radius = eval(this.Radius);
+                obj.Lifetime = eval(this.Lifetime);
+                obj.ImageSpaceRadius = eval(this.ImageSpaceRadius);
+                obj.TargetInterval = eval(this.TargetInterval);
+                obj.Flags = eval(this.Flags);
+                obj.Spell = eval(this.Spell);
+                obj.Light = eval(this.Light);
+                obj.ImpactDataSet = eval(this.ImpactDataSet);
+                obj.Sound = eval(this.Sound);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -316,6 +543,66 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.ToString(fg);
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
+                    if (printMask?.ImageSpaceModifier ?? true)
+                    {
+                        fg.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
+                    }
+                    if (printMask?.Limit ?? true)
+                    {
+                        fg.AppendItem(Limit, "Limit");
+                    }
+                    if (printMask?.Radius ?? true)
+                    {
+                        fg.AppendItem(Radius, "Radius");
+                    }
+                    if (printMask?.Lifetime ?? true)
+                    {
+                        fg.AppendItem(Lifetime, "Lifetime");
+                    }
+                    if (printMask?.ImageSpaceRadius ?? true)
+                    {
+                        fg.AppendItem(ImageSpaceRadius, "ImageSpaceRadius");
+                    }
+                    if (printMask?.TargetInterval ?? true)
+                    {
+                        fg.AppendItem(TargetInterval, "TargetInterval");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.Spell ?? true)
+                    {
+                        fg.AppendItem(Spell, "Spell");
+                    }
+                    if (printMask?.Light ?? true)
+                    {
+                        fg.AppendItem(Light, "Light");
+                    }
+                    if (printMask?.ImpactDataSet ?? true)
+                    {
+                        fg.AppendItem(ImpactDataSet, "ImpactDataSet");
+                    }
+                    if (printMask?.Sound ?? true)
+                    {
+                        fg.AppendItem(Sound, "Sound");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -327,12 +614,60 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? Name;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? ImageSpaceModifier;
+            public Exception? Limit;
+            public Exception? Radius;
+            public Exception? Lifetime;
+            public Exception? ImageSpaceRadius;
+            public Exception? TargetInterval;
+            public Exception? Flags;
+            public Exception? Spell;
+            public Exception? Light;
+            public Exception? ImpactDataSet;
+            public Exception? Sound;
+            public Exception? DATADataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Hazard_FieldIndex enu = (Hazard_FieldIndex)index;
                 switch (enu)
                 {
+                    case Hazard_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case Hazard_FieldIndex.Name:
+                        return Name;
+                    case Hazard_FieldIndex.Model:
+                        return Model;
+                    case Hazard_FieldIndex.ImageSpaceModifier:
+                        return ImageSpaceModifier;
+                    case Hazard_FieldIndex.Limit:
+                        return Limit;
+                    case Hazard_FieldIndex.Radius:
+                        return Radius;
+                    case Hazard_FieldIndex.Lifetime:
+                        return Lifetime;
+                    case Hazard_FieldIndex.ImageSpaceRadius:
+                        return ImageSpaceRadius;
+                    case Hazard_FieldIndex.TargetInterval:
+                        return TargetInterval;
+                    case Hazard_FieldIndex.Flags:
+                        return Flags;
+                    case Hazard_FieldIndex.Spell:
+                        return Spell;
+                    case Hazard_FieldIndex.Light:
+                        return Light;
+                    case Hazard_FieldIndex.ImpactDataSet:
+                        return ImpactDataSet;
+                    case Hazard_FieldIndex.Sound:
+                        return Sound;
+                    case Hazard_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -343,6 +678,51 @@ namespace Mutagen.Bethesda.Skyrim
                 Hazard_FieldIndex enu = (Hazard_FieldIndex)index;
                 switch (enu)
                 {
+                    case Hazard_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case Hazard_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Hazard_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Hazard_FieldIndex.ImageSpaceModifier:
+                        this.ImageSpaceModifier = ex;
+                        break;
+                    case Hazard_FieldIndex.Limit:
+                        this.Limit = ex;
+                        break;
+                    case Hazard_FieldIndex.Radius:
+                        this.Radius = ex;
+                        break;
+                    case Hazard_FieldIndex.Lifetime:
+                        this.Lifetime = ex;
+                        break;
+                    case Hazard_FieldIndex.ImageSpaceRadius:
+                        this.ImageSpaceRadius = ex;
+                        break;
+                    case Hazard_FieldIndex.TargetInterval:
+                        this.TargetInterval = ex;
+                        break;
+                    case Hazard_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Hazard_FieldIndex.Spell:
+                        this.Spell = ex;
+                        break;
+                    case Hazard_FieldIndex.Light:
+                        this.Light = ex;
+                        break;
+                    case Hazard_FieldIndex.ImpactDataSet:
+                        this.ImpactDataSet = ex;
+                        break;
+                    case Hazard_FieldIndex.Sound:
+                        this.Sound = ex;
+                        break;
+                    case Hazard_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -354,6 +734,51 @@ namespace Mutagen.Bethesda.Skyrim
                 Hazard_FieldIndex enu = (Hazard_FieldIndex)index;
                 switch (enu)
                 {
+                    case Hazard_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case Hazard_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Hazard_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Hazard_FieldIndex.ImageSpaceModifier:
+                        this.ImageSpaceModifier = (Exception?)obj;
+                        break;
+                    case Hazard_FieldIndex.Limit:
+                        this.Limit = (Exception?)obj;
+                        break;
+                    case Hazard_FieldIndex.Radius:
+                        this.Radius = (Exception?)obj;
+                        break;
+                    case Hazard_FieldIndex.Lifetime:
+                        this.Lifetime = (Exception?)obj;
+                        break;
+                    case Hazard_FieldIndex.ImageSpaceRadius:
+                        this.ImageSpaceRadius = (Exception?)obj;
+                        break;
+                    case Hazard_FieldIndex.TargetInterval:
+                        this.TargetInterval = (Exception?)obj;
+                        break;
+                    case Hazard_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case Hazard_FieldIndex.Spell:
+                        this.Spell = (Exception?)obj;
+                        break;
+                    case Hazard_FieldIndex.Light:
+                        this.Light = (Exception?)obj;
+                        break;
+                    case Hazard_FieldIndex.ImpactDataSet:
+                        this.ImpactDataSet = (Exception?)obj;
+                        break;
+                    case Hazard_FieldIndex.Sound:
+                        this.Sound = (Exception?)obj;
+                        break;
+                    case Hazard_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -363,6 +788,21 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ObjectBounds != null) return true;
+                if (Name != null) return true;
+                if (Model != null) return true;
+                if (ImageSpaceModifier != null) return true;
+                if (Limit != null) return true;
+                if (Radius != null) return true;
+                if (Lifetime != null) return true;
+                if (ImageSpaceRadius != null) return true;
+                if (TargetInterval != null) return true;
+                if (Flags != null) return true;
+                if (Spell != null) return true;
+                if (Light != null) return true;
+                if (ImpactDataSet != null) return true;
+                if (Sound != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -398,6 +838,21 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                ObjectBounds?.ToString(fg);
+                fg.AppendItem(Name, "Name");
+                Model?.ToString(fg);
+                fg.AppendItem(ImageSpaceModifier, "ImageSpaceModifier");
+                fg.AppendItem(Limit, "Limit");
+                fg.AppendItem(Radius, "Radius");
+                fg.AppendItem(Lifetime, "Lifetime");
+                fg.AppendItem(ImageSpaceRadius, "ImageSpaceRadius");
+                fg.AppendItem(TargetInterval, "TargetInterval");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(Spell, "Spell");
+                fg.AppendItem(Light, "Light");
+                fg.AppendItem(ImpactDataSet, "ImpactDataSet");
+                fg.AppendItem(Sound, "Sound");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -406,6 +861,21 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.ImageSpaceModifier = this.ImageSpaceModifier.Combine(rhs.ImageSpaceModifier);
+                ret.Limit = this.Limit.Combine(rhs.Limit);
+                ret.Radius = this.Radius.Combine(rhs.Radius);
+                ret.Lifetime = this.Lifetime.Combine(rhs.Lifetime);
+                ret.ImageSpaceRadius = this.ImageSpaceRadius.Combine(rhs.ImageSpaceRadius);
+                ret.TargetInterval = this.TargetInterval.Combine(rhs.TargetInterval);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Spell = this.Spell.Combine(rhs.Spell);
+                ret.Light = this.Light.Combine(rhs.Light);
+                ret.ImpactDataSet = this.ImpactDataSet.Combine(rhs.ImpactDataSet);
+                ret.Sound = this.Sound.Combine(rhs.Sound);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -427,19 +897,77 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
+            public bool Name;
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            public bool ImageSpaceModifier;
+            public bool Limit;
+            public bool Radius;
+            public bool Lifetime;
+            public bool ImageSpaceRadius;
+            public bool TargetInterval;
+            public bool Flags;
+            public bool Spell;
+            public bool Light;
+            public bool ImpactDataSet;
+            public bool Sound;
+            public bool DATADataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
+                this.Name = defaultOn;
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.ImageSpaceModifier = defaultOn;
+                this.Limit = defaultOn;
+                this.Radius = defaultOn;
+                this.Lifetime = defaultOn;
+                this.ImageSpaceRadius = defaultOn;
+                this.TargetInterval = defaultOn;
+                this.Flags = defaultOn;
+                this.Spell = defaultOn;
+                this.Light = defaultOn;
+                this.ImpactDataSet = defaultOn;
+                this.Sound = defaultOn;
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
+                ret.Add((Name, null));
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+                ret.Add((ImageSpaceModifier, null));
+                ret.Add((Limit, null));
+                ret.Add((Radius, null));
+                ret.Add((Lifetime, null));
+                ret.Add((ImageSpaceRadius, null));
+                ret.Add((TargetInterval, null));
+                ret.Add((Flags, null));
+                ret.Add((Spell, null));
+                ret.Add((Light, null));
+                ret.Add((ImpactDataSet, null));
+                ret.Add((Sound, null));
+                ret.Add((DATADataTypeState, null));
+            }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Hazard_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => HazardCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => HazardCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HazardCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HazardCommon.Instance.RemapLinks(this, mapping);
         public Hazard(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -457,6 +985,10 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        [Flags]
+        public enum DATADataType
+        {
+        }
         #endregion
 
         #region Binary Translation
@@ -517,8 +1049,24 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IHazard :
         IHazardGetter,
         ISkyrimMajorRecord,
+        IObjectBounded,
         ILoquiObjectSetter<IHazardInternal>
     {
+        new ObjectBounds ObjectBounds { get; set; }
+        new String? Name { get; set; }
+        new Model? Model { get; set; }
+        new FormLinkNullable<ImageSpaceAdapter> ImageSpaceModifier { get; set; }
+        new UInt32 Limit { get; set; }
+        new Single Radius { get; set; }
+        new Single Lifetime { get; set; }
+        new Single ImageSpaceRadius { get; set; }
+        new Single TargetInterval { get; set; }
+        new Hazard.Flag Flags { get; set; }
+        new FormLink<IEffectRecord> Spell { get; set; }
+        new FormLink<Light> Light { get; set; }
+        new FormLink<ImpactDataSet> ImpactDataSet { get; set; }
+        new FormLink<SoundDescriptor> Sound { get; set; }
+        new Hazard.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IHazardInternal :
@@ -530,11 +1078,28 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IHazardGetter :
         ISkyrimMajorRecordGetter,
+        IObjectBoundedGetter,
         ILoquiObject<IHazardGetter>,
         IXmlItem,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => Hazard_Registration.Instance;
+        IObjectBoundsGetter ObjectBounds { get; }
+        String? Name { get; }
+        IModelGetter? Model { get; }
+        IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
+        UInt32 Limit { get; }
+        Single Radius { get; }
+        Single Lifetime { get; }
+        Single ImageSpaceRadius { get; }
+        Single TargetInterval { get; }
+        Hazard.Flag Flags { get; }
+        IFormLinkGetter<IEffectRecordGetter> Spell { get; }
+        IFormLinkGetter<ILightGetter> Light { get; }
+        IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet { get; }
+        IFormLinkGetter<ISoundDescriptorGetter> Sound { get; }
+        Hazard.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -835,6 +1400,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        ObjectBounds = 6,
+        Name = 7,
+        Model = 8,
+        ImageSpaceModifier = 9,
+        Limit = 10,
+        Radius = 11,
+        Lifetime = 12,
+        ImageSpaceRadius = 13,
+        TargetInterval = 14,
+        Flags = 15,
+        Spell = 16,
+        Light = 17,
+        ImpactDataSet = 18,
+        Sound = 19,
+        DATADataTypeState = 20,
     }
     #endregion
 
@@ -852,9 +1432,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "bfe597ce-f696-454d-bb7c-bd5de7c9d585";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 15;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 21;
 
         public static readonly Type MaskType = typeof(Hazard.Mask<>);
 
@@ -884,6 +1464,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "OBJECTBOUNDS":
+                    return (ushort)Hazard_FieldIndex.ObjectBounds;
+                case "NAME":
+                    return (ushort)Hazard_FieldIndex.Name;
+                case "MODEL":
+                    return (ushort)Hazard_FieldIndex.Model;
+                case "IMAGESPACEMODIFIER":
+                    return (ushort)Hazard_FieldIndex.ImageSpaceModifier;
+                case "LIMIT":
+                    return (ushort)Hazard_FieldIndex.Limit;
+                case "RADIUS":
+                    return (ushort)Hazard_FieldIndex.Radius;
+                case "LIFETIME":
+                    return (ushort)Hazard_FieldIndex.Lifetime;
+                case "IMAGESPACERADIUS":
+                    return (ushort)Hazard_FieldIndex.ImageSpaceRadius;
+                case "TARGETINTERVAL":
+                    return (ushort)Hazard_FieldIndex.TargetInterval;
+                case "FLAGS":
+                    return (ushort)Hazard_FieldIndex.Flags;
+                case "SPELL":
+                    return (ushort)Hazard_FieldIndex.Spell;
+                case "LIGHT":
+                    return (ushort)Hazard_FieldIndex.Light;
+                case "IMPACTDATASET":
+                    return (ushort)Hazard_FieldIndex.ImpactDataSet;
+                case "SOUND":
+                    return (ushort)Hazard_FieldIndex.Sound;
+                case "DATADATATYPESTATE":
+                    return (ushort)Hazard_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -894,6 +1504,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Hazard_FieldIndex enu = (Hazard_FieldIndex)index;
             switch (enu)
             {
+                case Hazard_FieldIndex.ObjectBounds:
+                case Hazard_FieldIndex.Name:
+                case Hazard_FieldIndex.Model:
+                case Hazard_FieldIndex.ImageSpaceModifier:
+                case Hazard_FieldIndex.Limit:
+                case Hazard_FieldIndex.Radius:
+                case Hazard_FieldIndex.Lifetime:
+                case Hazard_FieldIndex.ImageSpaceRadius:
+                case Hazard_FieldIndex.TargetInterval:
+                case Hazard_FieldIndex.Flags:
+                case Hazard_FieldIndex.Spell:
+                case Hazard_FieldIndex.Light:
+                case Hazard_FieldIndex.ImpactDataSet:
+                case Hazard_FieldIndex.Sound:
+                case Hazard_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -904,6 +1530,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Hazard_FieldIndex enu = (Hazard_FieldIndex)index;
             switch (enu)
             {
+                case Hazard_FieldIndex.ObjectBounds:
+                case Hazard_FieldIndex.Model:
+                    return true;
+                case Hazard_FieldIndex.Name:
+                case Hazard_FieldIndex.ImageSpaceModifier:
+                case Hazard_FieldIndex.Limit:
+                case Hazard_FieldIndex.Radius:
+                case Hazard_FieldIndex.Lifetime:
+                case Hazard_FieldIndex.ImageSpaceRadius:
+                case Hazard_FieldIndex.TargetInterval:
+                case Hazard_FieldIndex.Flags:
+                case Hazard_FieldIndex.Spell:
+                case Hazard_FieldIndex.Light:
+                case Hazard_FieldIndex.ImpactDataSet:
+                case Hazard_FieldIndex.Sound:
+                case Hazard_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -914,6 +1557,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Hazard_FieldIndex enu = (Hazard_FieldIndex)index;
             switch (enu)
             {
+                case Hazard_FieldIndex.ObjectBounds:
+                case Hazard_FieldIndex.Name:
+                case Hazard_FieldIndex.Model:
+                case Hazard_FieldIndex.ImageSpaceModifier:
+                case Hazard_FieldIndex.Limit:
+                case Hazard_FieldIndex.Radius:
+                case Hazard_FieldIndex.Lifetime:
+                case Hazard_FieldIndex.ImageSpaceRadius:
+                case Hazard_FieldIndex.TargetInterval:
+                case Hazard_FieldIndex.Flags:
+                case Hazard_FieldIndex.Spell:
+                case Hazard_FieldIndex.Light:
+                case Hazard_FieldIndex.ImpactDataSet:
+                case Hazard_FieldIndex.Sound:
+                case Hazard_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -924,6 +1583,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Hazard_FieldIndex enu = (Hazard_FieldIndex)index;
             switch (enu)
             {
+                case Hazard_FieldIndex.ObjectBounds:
+                    return "ObjectBounds";
+                case Hazard_FieldIndex.Name:
+                    return "Name";
+                case Hazard_FieldIndex.Model:
+                    return "Model";
+                case Hazard_FieldIndex.ImageSpaceModifier:
+                    return "ImageSpaceModifier";
+                case Hazard_FieldIndex.Limit:
+                    return "Limit";
+                case Hazard_FieldIndex.Radius:
+                    return "Radius";
+                case Hazard_FieldIndex.Lifetime:
+                    return "Lifetime";
+                case Hazard_FieldIndex.ImageSpaceRadius:
+                    return "ImageSpaceRadius";
+                case Hazard_FieldIndex.TargetInterval:
+                    return "TargetInterval";
+                case Hazard_FieldIndex.Flags:
+                    return "Flags";
+                case Hazard_FieldIndex.Spell:
+                    return "Spell";
+                case Hazard_FieldIndex.Light:
+                    return "Light";
+                case Hazard_FieldIndex.ImpactDataSet:
+                    return "ImpactDataSet";
+                case Hazard_FieldIndex.Sound:
+                    return "Sound";
+                case Hazard_FieldIndex.DATADataTypeState:
+                    return "DATADataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -934,6 +1623,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Hazard_FieldIndex enu = (Hazard_FieldIndex)index;
             switch (enu)
             {
+                case Hazard_FieldIndex.ObjectBounds:
+                case Hazard_FieldIndex.Name:
+                case Hazard_FieldIndex.Model:
+                case Hazard_FieldIndex.ImageSpaceModifier:
+                case Hazard_FieldIndex.Limit:
+                case Hazard_FieldIndex.Radius:
+                case Hazard_FieldIndex.Lifetime:
+                case Hazard_FieldIndex.ImageSpaceRadius:
+                case Hazard_FieldIndex.TargetInterval:
+                case Hazard_FieldIndex.Flags:
+                case Hazard_FieldIndex.Spell:
+                case Hazard_FieldIndex.Light:
+                case Hazard_FieldIndex.ImpactDataSet:
+                case Hazard_FieldIndex.Sound:
+                case Hazard_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -944,6 +1649,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Hazard_FieldIndex enu = (Hazard_FieldIndex)index;
             switch (enu)
             {
+                case Hazard_FieldIndex.ObjectBounds:
+                case Hazard_FieldIndex.Name:
+                case Hazard_FieldIndex.Model:
+                case Hazard_FieldIndex.ImageSpaceModifier:
+                case Hazard_FieldIndex.Limit:
+                case Hazard_FieldIndex.Radius:
+                case Hazard_FieldIndex.Lifetime:
+                case Hazard_FieldIndex.ImageSpaceRadius:
+                case Hazard_FieldIndex.TargetInterval:
+                case Hazard_FieldIndex.Flags:
+                case Hazard_FieldIndex.Spell:
+                case Hazard_FieldIndex.Light:
+                case Hazard_FieldIndex.ImpactDataSet:
+                case Hazard_FieldIndex.Sound:
+                case Hazard_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -954,6 +1675,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Hazard_FieldIndex enu = (Hazard_FieldIndex)index;
             switch (enu)
             {
+                case Hazard_FieldIndex.ObjectBounds:
+                    return typeof(ObjectBounds);
+                case Hazard_FieldIndex.Name:
+                    return typeof(String);
+                case Hazard_FieldIndex.Model:
+                    return typeof(Model);
+                case Hazard_FieldIndex.ImageSpaceModifier:
+                    return typeof(FormLinkNullable<ImageSpaceAdapter>);
+                case Hazard_FieldIndex.Limit:
+                    return typeof(UInt32);
+                case Hazard_FieldIndex.Radius:
+                    return typeof(Single);
+                case Hazard_FieldIndex.Lifetime:
+                    return typeof(Single);
+                case Hazard_FieldIndex.ImageSpaceRadius:
+                    return typeof(Single);
+                case Hazard_FieldIndex.TargetInterval:
+                    return typeof(Single);
+                case Hazard_FieldIndex.Flags:
+                    return typeof(Hazard.Flag);
+                case Hazard_FieldIndex.Spell:
+                    return typeof(FormLink<IEffectRecord>);
+                case Hazard_FieldIndex.Light:
+                    return typeof(FormLink<Light>);
+                case Hazard_FieldIndex.ImpactDataSet:
+                    return typeof(FormLink<ImpactDataSet>);
+                case Hazard_FieldIndex.Sound:
+                    return typeof(FormLink<SoundDescriptor>);
+                case Hazard_FieldIndex.DATADataTypeState:
+                    return typeof(Hazard.DATADataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -961,9 +1712,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(HazardXmlWriteTranslation);
         public static readonly RecordType HAZD_HEADER = new RecordType("HAZD");
+        public static readonly RecordType OBND_HEADER = new RecordType("OBND");
+        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
+        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
+        public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
+        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TriggeringRecordType = HAZD_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
+        public const int NumTypedFields = 4;
         public static readonly Type BinaryWriteTranslation = typeof(HazardBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1006,6 +1762,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IHazardInternal item)
         {
             ClearPartial();
+            item.ObjectBounds.Clear();
+            item.Name = default;
+            item.Model = null;
+            item.ImageSpaceModifier = null;
+            item.Limit = default;
+            item.Radius = default;
+            item.Lifetime = default;
+            item.ImageSpaceRadius = default;
+            item.TargetInterval = default;
+            item.Flags = default;
+            item.Spell = new FormLink<IEffectRecord>(FormKey.Null);
+            item.Light = new FormLink<Light>(FormKey.Null);
+            item.ImpactDataSet = new FormLink<ImpactDataSet>(FormKey.Null);
+            item.Sound = new FormLink<SoundDescriptor>(FormKey.Null);
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1110,6 +1881,78 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
         
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            IHazardInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x444E424F: // OBND
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)Hazard_FieldIndex.ObjectBounds);
+                }
+                case 0x4C4C5546: // FULL
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Hazard_FieldIndex.Name);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)Hazard_FieldIndex.Model);
+                }
+                case 0x4D414E4D: // MNAM
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.ImageSpaceModifier = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Hazard_FieldIndex.ImageSpaceModifier);
+                }
+                case 0x41544144: // DATA
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.Limit = dataFrame.ReadUInt32();
+                    item.Radius = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.Lifetime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.ImageSpaceRadius = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.TargetInterval = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.Flags = EnumBinaryTranslation<Hazard.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.Spell = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    item.Light = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    item.ImpactDataSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    item.Sound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Hazard_FieldIndex.Sound);
+                }
+                default:
+                    return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
+        
         public virtual void CopyInFromBinary(
             IHazardInternal item,
             MutagenFrame frame,
@@ -1174,6 +2017,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.ImageSpaceModifier = object.Equals(item.ImageSpaceModifier, rhs.ImageSpaceModifier);
+            ret.Limit = item.Limit == rhs.Limit;
+            ret.Radius = item.Radius.EqualsWithin(rhs.Radius);
+            ret.Lifetime = item.Lifetime.EqualsWithin(rhs.Lifetime);
+            ret.ImageSpaceRadius = item.ImageSpaceRadius.EqualsWithin(rhs.ImageSpaceRadius);
+            ret.TargetInterval = item.TargetInterval.EqualsWithin(rhs.TargetInterval);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Spell = object.Equals(item.Spell, rhs.Spell);
+            ret.Light = object.Equals(item.Light, rhs.Light);
+            ret.ImpactDataSet = object.Equals(item.ImpactDataSet, rhs.ImpactDataSet);
+            ret.Sound = object.Equals(item.Sound, rhs.Sound);
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1225,12 +2087,79 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
+            {
+                fg.AppendItem(NameItem, "Name");
+            }
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
+            {
+                ModelItem?.ToString(fg, "Model");
+            }
+            if ((printMask?.ImageSpaceModifier ?? true)
+                && item.ImageSpaceModifier.TryGet(out var ImageSpaceModifierItem))
+            {
+                fg.AppendItem(ImageSpaceModifierItem, "ImageSpaceModifier");
+            }
+            if (printMask?.Limit ?? true)
+            {
+                fg.AppendItem(item.Limit, "Limit");
+            }
+            if (printMask?.Radius ?? true)
+            {
+                fg.AppendItem(item.Radius, "Radius");
+            }
+            if (printMask?.Lifetime ?? true)
+            {
+                fg.AppendItem(item.Lifetime, "Lifetime");
+            }
+            if (printMask?.ImageSpaceRadius ?? true)
+            {
+                fg.AppendItem(item.ImageSpaceRadius, "ImageSpaceRadius");
+            }
+            if (printMask?.TargetInterval ?? true)
+            {
+                fg.AppendItem(item.TargetInterval, "TargetInterval");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.Spell ?? true)
+            {
+                fg.AppendItem(item.Spell, "Spell");
+            }
+            if (printMask?.Light ?? true)
+            {
+                fg.AppendItem(item.Light, "Light");
+            }
+            if (printMask?.ImpactDataSet ?? true)
+            {
+                fg.AppendItem(item.ImpactDataSet, "ImpactDataSet");
+            }
+            if (printMask?.Sound ?? true)
+            {
+                fg.AppendItem(item.Sound, "Sound");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+            }
         }
         
         public bool HasBeenSet(
             IHazardGetter item,
             Hazard.Mask<bool?> checkMask)
         {
+            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
+            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
+            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.ImageSpaceModifier.HasValue && checkMask.ImageSpaceModifier.Value != (item.ImageSpaceModifier.FormKey != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1240,6 +2169,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IHazardGetter item,
             Hazard.Mask<bool> mask)
         {
+            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
+            mask.Name = (item.Name != null);
+            var itemModel = item.Model;
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
+            mask.ImageSpaceModifier = (item.ImageSpaceModifier.FormKey != null);
+            mask.Limit = true;
+            mask.Radius = true;
+            mask.Lifetime = true;
+            mask.ImageSpaceRadius = true;
+            mask.TargetInterval = true;
+            mask.Flags = true;
+            mask.Spell = true;
+            mask.Light = true;
+            mask.ImpactDataSet = true;
+            mask.Sound = true;
+            mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1291,6 +2236,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            if (!lhs.ImageSpaceModifier.Equals(rhs.ImageSpaceModifier)) return false;
+            if (lhs.Limit != rhs.Limit) return false;
+            if (!lhs.Radius.EqualsWithin(rhs.Radius)) return false;
+            if (!lhs.Lifetime.EqualsWithin(rhs.Lifetime)) return false;
+            if (!lhs.ImageSpaceRadius.EqualsWithin(rhs.ImageSpaceRadius)) return false;
+            if (!lhs.TargetInterval.EqualsWithin(rhs.TargetInterval)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (!lhs.Spell.Equals(rhs.Spell)) return false;
+            if (!lhs.Light.Equals(rhs.Light)) return false;
+            if (!lhs.ImpactDataSet.Equals(rhs.ImpactDataSet)) return false;
+            if (!lhs.Sound.Equals(rhs.Sound)) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
         
@@ -1315,6 +2275,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IHazardGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.ObjectBounds);
+            if (item.Name.TryGet(out var Nameitem))
+            {
+                hash.Add(Nameitem);
+            }
+            if (item.Model.TryGet(out var Modelitem))
+            {
+                hash.Add(Modelitem);
+            }
+            if (item.ImageSpaceModifier.TryGet(out var ImageSpaceModifieritem))
+            {
+                hash.Add(ImageSpaceModifieritem);
+            }
+            hash.Add(item.Limit);
+            hash.Add(item.Radius);
+            hash.Add(item.Lifetime);
+            hash.Add(item.ImageSpaceRadius);
+            hash.Add(item.TargetInterval);
+            hash.Add(item.Flags);
+            hash.Add(item.Spell);
+            hash.Add(item.Light);
+            hash.Add(item.ImpactDataSet);
+            hash.Add(item.Sound);
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1344,6 +2328,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
+            if (obj.Model.TryGet(out var ModelItems))
+            {
+                foreach (var item in ModelItems.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ImageSpaceModifier.FormKey.TryGet(out var ImageSpaceModifierKey))
+            {
+                yield return ImageSpaceModifierKey;
+            }
+            yield return obj.Spell.FormKey;
+            yield return obj.Light.FormKey;
+            yield return obj.ImpactDataSet.FormKey;
+            yield return obj.Sound.FormKey;
             yield break;
         }
         
@@ -1391,6 +2390,106 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)Hazard_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Hazard_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)Hazard_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model.TryGet(out var rhsModel))
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Hazard_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.ImageSpaceModifier) ?? true))
+            {
+                item.ImageSpaceModifier = rhs.ImageSpaceModifier.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Limit) ?? true))
+            {
+                item.Limit = rhs.Limit;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Radius) ?? true))
+            {
+                item.Radius = rhs.Radius;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Lifetime) ?? true))
+            {
+                item.Lifetime = rhs.Lifetime;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.ImageSpaceRadius) ?? true))
+            {
+                item.ImageSpaceRadius = rhs.ImageSpaceRadius;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.TargetInterval) ?? true))
+            {
+                item.TargetInterval = rhs.TargetInterval;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Spell) ?? true))
+            {
+                item.Spell = rhs.Spell.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Light) ?? true))
+            {
+                item.Light = rhs.Light.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.ImpactDataSet) ?? true))
+            {
+                item.ImpactDataSet = rhs.ImpactDataSet.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.Sound) ?? true))
+            {
+                item.Sound = rhs.Sound.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Hazard_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1533,6 +2632,150 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((translationMask?.GetShouldTranslate((int)Hazard_FieldIndex.ObjectBounds) ?? true))
+            {
+                var ObjectBoundsItem = item.ObjectBounds;
+                ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
+                    item: ObjectBoundsItem,
+                    node: node,
+                    name: nameof(item.ObjectBounds),
+                    fieldIndex: (int)Hazard_FieldIndex.ObjectBounds,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Hazard_FieldIndex.ObjectBounds));
+            }
+            if ((item.Name != null)
+                && (translationMask?.GetShouldTranslate((int)Hazard_FieldIndex.Name) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)Hazard_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if ((item.Model != null)
+                && (translationMask?.GetShouldTranslate((int)Hazard_FieldIndex.Model) ?? true))
+            {
+                if (item.Model.TryGet(out var ModelItem))
+                {
+                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                        item: ModelItem,
+                        node: node,
+                        name: nameof(item.Model),
+                        fieldIndex: (int)Hazard_FieldIndex.Model,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Hazard_FieldIndex.Model));
+                }
+            }
+            if ((item.ImageSpaceModifier.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Hazard_FieldIndex.ImageSpaceModifier) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ImageSpaceModifier),
+                    item: item.ImageSpaceModifier.FormKey.Value,
+                    fieldIndex: (int)Hazard_FieldIndex.ImageSpaceModifier,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Hazard_FieldIndex.Limit) ?? true))
+            {
+                UInt32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Limit),
+                    item: item.Limit,
+                    fieldIndex: (int)Hazard_FieldIndex.Limit,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Hazard_FieldIndex.Radius) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Radius),
+                    item: item.Radius,
+                    fieldIndex: (int)Hazard_FieldIndex.Radius,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Hazard_FieldIndex.Lifetime) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Lifetime),
+                    item: item.Lifetime,
+                    fieldIndex: (int)Hazard_FieldIndex.Lifetime,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Hazard_FieldIndex.ImageSpaceRadius) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ImageSpaceRadius),
+                    item: item.ImageSpaceRadius,
+                    fieldIndex: (int)Hazard_FieldIndex.ImageSpaceRadius,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Hazard_FieldIndex.TargetInterval) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.TargetInterval),
+                    item: item.TargetInterval,
+                    fieldIndex: (int)Hazard_FieldIndex.TargetInterval,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Hazard_FieldIndex.Flags) ?? true))
+            {
+                EnumXmlTranslation<Hazard.Flag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)Hazard_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Hazard_FieldIndex.Spell) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Spell),
+                    item: item.Spell.FormKey,
+                    fieldIndex: (int)Hazard_FieldIndex.Spell,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Hazard_FieldIndex.Light) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Light),
+                    item: item.Light.FormKey,
+                    fieldIndex: (int)Hazard_FieldIndex.Light,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Hazard_FieldIndex.ImpactDataSet) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ImpactDataSet),
+                    item: item.ImpactDataSet.FormKey,
+                    fieldIndex: (int)Hazard_FieldIndex.ImpactDataSet,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Hazard_FieldIndex.Sound) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Sound),
+                    item: item.Sound.FormKey,
+                    fieldIndex: (int)Hazard_FieldIndex.Sound,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Hazard_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<Hazard.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)Hazard_FieldIndex.DATADataTypeState,
+                    errorMask: errorMask);
+            }
         }
 
         public void Write(
@@ -1640,6 +2883,278 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "ObjectBounds":
+                    errorMask?.PushIndex((int)Hazard_FieldIndex.ObjectBounds);
+                    try
+                    {
+                        item.ObjectBounds = LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Hazard_FieldIndex.ObjectBounds));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Name":
+                    errorMask?.PushIndex((int)Hazard_FieldIndex.Name);
+                    try
+                    {
+                        item.Name = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Model":
+                    errorMask?.PushIndex((int)Hazard_FieldIndex.Model);
+                    try
+                    {
+                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Hazard_FieldIndex.Model));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ImageSpaceModifier":
+                    errorMask?.PushIndex((int)Hazard_FieldIndex.ImageSpaceModifier);
+                    try
+                    {
+                        item.ImageSpaceModifier = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Limit":
+                    errorMask?.PushIndex((int)Hazard_FieldIndex.Limit);
+                    try
+                    {
+                        item.Limit = UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Radius":
+                    errorMask?.PushIndex((int)Hazard_FieldIndex.Radius);
+                    try
+                    {
+                        item.Radius = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Lifetime":
+                    errorMask?.PushIndex((int)Hazard_FieldIndex.Lifetime);
+                    try
+                    {
+                        item.Lifetime = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ImageSpaceRadius":
+                    errorMask?.PushIndex((int)Hazard_FieldIndex.ImageSpaceRadius);
+                    try
+                    {
+                        item.ImageSpaceRadius = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "TargetInterval":
+                    errorMask?.PushIndex((int)Hazard_FieldIndex.TargetInterval);
+                    try
+                    {
+                        item.TargetInterval = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    errorMask?.PushIndex((int)Hazard_FieldIndex.Flags);
+                    try
+                    {
+                        item.Flags = EnumXmlTranslation<Hazard.Flag>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Spell":
+                    errorMask?.PushIndex((int)Hazard_FieldIndex.Spell);
+                    try
+                    {
+                        item.Spell = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Light":
+                    errorMask?.PushIndex((int)Hazard_FieldIndex.Light);
+                    try
+                    {
+                        item.Light = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ImpactDataSet":
+                    errorMask?.PushIndex((int)Hazard_FieldIndex.ImpactDataSet);
+                    try
+                    {
+                        item.ImpactDataSet = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Sound":
+                    errorMask?.PushIndex((int)Hazard_FieldIndex.Sound);
+                    try
+                    {
+                        item.Sound = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DATADataTypeState":
+                    errorMask?.PushIndex((int)Hazard_FieldIndex.DATADataTypeState);
+                    try
+                    {
+                        item.DATADataTypeState = EnumXmlTranslation<Hazard.DATADataType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1726,6 +3241,79 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static HazardBinaryWriteTranslation Instance = new HazardBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IHazardGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IHazardGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: recordTypeConverter.ConvertToCustom(Hazard_Registration.FULL_HEADER),
+                binaryType: StringBinaryType.NullTerminate);
+            if (item.Model.TryGet(out var ModelItem))
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ImageSpaceModifier,
+                header: recordTypeConverter.ConvertToCustom(Hazard_Registration.MNAM_HEADER));
+            using (HeaderExport.ExportSubrecordHeader(writer, recordTypeConverter.ConvertToCustom(Hazard_Registration.DATA_HEADER)))
+            {
+                writer.Write(item.Limit);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Radius);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Lifetime);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ImageSpaceRadius);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.TargetInterval);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Hazard.Flag>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 4);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Spell);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Light);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ImpactDataSet);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Sound);
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             IHazardGetter item,
@@ -1736,10 +3324,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(Hazard_Registration.HAZD_HEADER),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1820,6 +3408,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IHazardGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => HazardCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => HazardCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HazardCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HazardCommon.Instance.RemapLinks(this, mapping);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => HazardXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -1846,6 +3440,73 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation!.Value.Min)), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.Meta)) : default(string?);
+        #endregion
+        public IModelGetter? Model { get; private set; }
+        #region ImageSpaceModifier
+        private int? _ImageSpaceModifierLocation;
+        public bool ImageSpaceModifier_IsSet => _ImageSpaceModifierLocation.HasValue;
+        public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifierLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ImageSpaceModifierLocation.Value, _package.Meta)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+        #endregion
+        private int? _DATALocation;
+        public Hazard.DATADataType DATADataTypeState { get; private set; }
+        #region Limit
+        private int _LimitLocation => _DATALocation!.Value + 0x0;
+        private bool _Limit_IsSet => _DATALocation.HasValue;
+        public UInt32 Limit => _Limit_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_LimitLocation, 4)) : default;
+        #endregion
+        #region Radius
+        private int _RadiusLocation => _DATALocation!.Value + 0x4;
+        private bool _Radius_IsSet => _DATALocation.HasValue;
+        public Single Radius => _Radius_IsSet ? SpanExt.GetFloat(_data.Slice(_RadiusLocation, 4)) : default;
+        #endregion
+        #region Lifetime
+        private int _LifetimeLocation => _DATALocation!.Value + 0x8;
+        private bool _Lifetime_IsSet => _DATALocation.HasValue;
+        public Single Lifetime => _Lifetime_IsSet ? SpanExt.GetFloat(_data.Slice(_LifetimeLocation, 4)) : default;
+        #endregion
+        #region ImageSpaceRadius
+        private int _ImageSpaceRadiusLocation => _DATALocation!.Value + 0xC;
+        private bool _ImageSpaceRadius_IsSet => _DATALocation.HasValue;
+        public Single ImageSpaceRadius => _ImageSpaceRadius_IsSet ? SpanExt.GetFloat(_data.Slice(_ImageSpaceRadiusLocation, 4)) : default;
+        #endregion
+        #region TargetInterval
+        private int _TargetIntervalLocation => _DATALocation!.Value + 0x10;
+        private bool _TargetInterval_IsSet => _DATALocation.HasValue;
+        public Single TargetInterval => _TargetInterval_IsSet ? SpanExt.GetFloat(_data.Slice(_TargetIntervalLocation, 4)) : default;
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _DATALocation!.Value + 0x14;
+        private bool _Flags_IsSet => _DATALocation.HasValue;
+        public Hazard.Flag Flags => _Flags_IsSet ? (Hazard.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
+        #endregion
+        #region Spell
+        private int _SpellLocation => _DATALocation!.Value + 0x18;
+        private bool _Spell_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IEffectRecordGetter> Spell => _Spell_IsSet ? new FormLink<IEffectRecordGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SpellLocation, 0x4)))) : FormLink<IEffectRecordGetter>.Null;
+        #endregion
+        #region Light
+        private int _LightLocation => _DATALocation!.Value + 0x1C;
+        private bool _Light_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<ILightGetter> Light => _Light_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_LightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
+        #endregion
+        #region ImpactDataSet
+        private int _ImpactDataSetLocation => _DATALocation!.Value + 0x20;
+        private bool _ImpactDataSet_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        #endregion
+        #region Sound
+        private int _SoundLocation => _DATALocation!.Value + 0x24;
+        private bool _Sound_IsSet => _DATALocation.HasValue;
+        public IFormLinkGetter<ISoundDescriptorGetter> Sound => _Sound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -1896,6 +3557,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case 0x444E424F: // OBND
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)Hazard_FieldIndex.ObjectBounds);
+                }
+                case 0x4C4C5546: // FULL
+                {
+                    _NameLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Hazard_FieldIndex.Name);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)Hazard_FieldIndex.Model);
+                }
+                case 0x4D414E4D: // MNAM
+                {
+                    _ImageSpaceModifierLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Hazard_FieldIndex.ImageSpaceModifier);
+                }
+                case 0x41544144: // DATA
+                {
+                    _DATALocation = (ushort)(stream.Position - offset) + _package.Meta.SubConstants.TypeAndLengthLength;
+                    return TryGet<int?>.Succeed((int)Hazard_FieldIndex.Sound);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
         #region To String
 
         public override void ToString(

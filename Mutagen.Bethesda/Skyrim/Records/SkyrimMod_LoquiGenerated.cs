@@ -82,6 +82,12 @@ namespace Mutagen.Bethesda.Skyrim
             _Ammunitions_Object = new Group<Ammunition>(this);
             _Npcs_Object = new Group<Npc>(this);
             _LeveledNpcs_Object = new Group<LeveledNpc>(this);
+            _Keys_Object = new Group<Key>(this);
+            _Ingestibles_Object = new Group<Ingestible>(this);
+            _IdleMarkers_Object = new Group<IdleMarker>(this);
+            _ConstructibleObjects_Object = new Group<ConstructibleObject>(this);
+            _Projectiles_Object = new Group<Projectile>(this);
+            _Hazards_Object = new Group<Hazard>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -367,6 +373,48 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<ILeveledNpcGetter> ISkyrimModGetter.LeveledNpcs => _LeveledNpcs_Object;
         #endregion
+        #region Keys
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Key> _Keys_Object;
+        public Group<Key> Keys => _Keys_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IKeyGetter> ISkyrimModGetter.Keys => _Keys_Object;
+        #endregion
+        #region Ingestibles
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Ingestible> _Ingestibles_Object;
+        public Group<Ingestible> Ingestibles => _Ingestibles_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IIngestibleGetter> ISkyrimModGetter.Ingestibles => _Ingestibles_Object;
+        #endregion
+        #region IdleMarkers
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<IdleMarker> _IdleMarkers_Object;
+        public Group<IdleMarker> IdleMarkers => _IdleMarkers_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IIdleMarkerGetter> ISkyrimModGetter.IdleMarkers => _IdleMarkers_Object;
+        #endregion
+        #region ConstructibleObjects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<ConstructibleObject> _ConstructibleObjects_Object;
+        public Group<ConstructibleObject> ConstructibleObjects => _ConstructibleObjects_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IConstructibleObjectGetter> ISkyrimModGetter.ConstructibleObjects => _ConstructibleObjects_Object;
+        #endregion
+        #region Projectiles
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Projectile> _Projectiles_Object;
+        public Group<Projectile> Projectiles => _Projectiles_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IProjectileGetter> ISkyrimModGetter.Projectiles => _Projectiles_Object;
+        #endregion
+        #region Hazards
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Hazard> _Hazards_Object;
+        public Group<Hazard> Hazards => _Hazards_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IHazardGetter> ISkyrimModGetter.Hazards => _Hazards_Object;
+        #endregion
 
         #region To String
 
@@ -577,6 +625,12 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Ammunitions = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Npcs = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.LeveledNpcs = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Keys = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Ingestibles = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.IdleMarkers = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.ConstructibleObjects = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Projectiles = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Hazards = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -619,7 +673,13 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Weapons,
                 TItem Ammunitions,
                 TItem Npcs,
-                TItem LeveledNpcs)
+                TItem LeveledNpcs,
+                TItem Keys,
+                TItem Ingestibles,
+                TItem IdleMarkers,
+                TItem ConstructibleObjects,
+                TItem Projectiles,
+                TItem Hazards)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -661,6 +721,12 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Ammunitions = new MaskItem<TItem, Group.Mask<TItem>?>(Ammunitions, new Group.Mask<TItem>(Ammunitions));
                 this.Npcs = new MaskItem<TItem, Group.Mask<TItem>?>(Npcs, new Group.Mask<TItem>(Npcs));
                 this.LeveledNpcs = new MaskItem<TItem, Group.Mask<TItem>?>(LeveledNpcs, new Group.Mask<TItem>(LeveledNpcs));
+                this.Keys = new MaskItem<TItem, Group.Mask<TItem>?>(Keys, new Group.Mask<TItem>(Keys));
+                this.Ingestibles = new MaskItem<TItem, Group.Mask<TItem>?>(Ingestibles, new Group.Mask<TItem>(Ingestibles));
+                this.IdleMarkers = new MaskItem<TItem, Group.Mask<TItem>?>(IdleMarkers, new Group.Mask<TItem>(IdleMarkers));
+                this.ConstructibleObjects = new MaskItem<TItem, Group.Mask<TItem>?>(ConstructibleObjects, new Group.Mask<TItem>(ConstructibleObjects));
+                this.Projectiles = new MaskItem<TItem, Group.Mask<TItem>?>(Projectiles, new Group.Mask<TItem>(Projectiles));
+                this.Hazards = new MaskItem<TItem, Group.Mask<TItem>?>(Hazards, new Group.Mask<TItem>(Hazards));
             }
 
             #pragma warning disable CS8618
@@ -712,6 +778,12 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? Ammunitions { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Npcs { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? LeveledNpcs { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Keys { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Ingestibles { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? IdleMarkers { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? ConstructibleObjects { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Projectiles { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Hazards { get; set; }
             #endregion
 
             #region Equals
@@ -764,6 +836,12 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Ammunitions, rhs.Ammunitions)) return false;
                 if (!object.Equals(this.Npcs, rhs.Npcs)) return false;
                 if (!object.Equals(this.LeveledNpcs, rhs.LeveledNpcs)) return false;
+                if (!object.Equals(this.Keys, rhs.Keys)) return false;
+                if (!object.Equals(this.Ingestibles, rhs.Ingestibles)) return false;
+                if (!object.Equals(this.IdleMarkers, rhs.IdleMarkers)) return false;
+                if (!object.Equals(this.ConstructibleObjects, rhs.ConstructibleObjects)) return false;
+                if (!object.Equals(this.Projectiles, rhs.Projectiles)) return false;
+                if (!object.Equals(this.Hazards, rhs.Hazards)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -809,6 +887,12 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Ammunitions);
                 hash.Add(this.Npcs);
                 hash.Add(this.LeveledNpcs);
+                hash.Add(this.Keys);
+                hash.Add(this.Ingestibles);
+                hash.Add(this.IdleMarkers);
+                hash.Add(this.ConstructibleObjects);
+                hash.Add(this.Projectiles);
+                hash.Add(this.Hazards);
                 return hash.ToHashCode();
             }
 
@@ -1017,6 +1101,36 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.LeveledNpcs.Overall)) return false;
                     if (this.LeveledNpcs.Specific != null && !this.LeveledNpcs.Specific.All(eval)) return false;
                 }
+                if (Keys != null)
+                {
+                    if (!eval(this.Keys.Overall)) return false;
+                    if (this.Keys.Specific != null && !this.Keys.Specific.All(eval)) return false;
+                }
+                if (Ingestibles != null)
+                {
+                    if (!eval(this.Ingestibles.Overall)) return false;
+                    if (this.Ingestibles.Specific != null && !this.Ingestibles.Specific.All(eval)) return false;
+                }
+                if (IdleMarkers != null)
+                {
+                    if (!eval(this.IdleMarkers.Overall)) return false;
+                    if (this.IdleMarkers.Specific != null && !this.IdleMarkers.Specific.All(eval)) return false;
+                }
+                if (ConstructibleObjects != null)
+                {
+                    if (!eval(this.ConstructibleObjects.Overall)) return false;
+                    if (this.ConstructibleObjects.Specific != null && !this.ConstructibleObjects.Specific.All(eval)) return false;
+                }
+                if (Projectiles != null)
+                {
+                    if (!eval(this.Projectiles.Overall)) return false;
+                    if (this.Projectiles.Specific != null && !this.Projectiles.Specific.All(eval)) return false;
+                }
+                if (Hazards != null)
+                {
+                    if (!eval(this.Hazards.Overall)) return false;
+                    if (this.Hazards.Specific != null && !this.Hazards.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1224,6 +1338,36 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.LeveledNpcs.Overall)) return true;
                     if (this.LeveledNpcs.Specific != null && this.LeveledNpcs.Specific.Any(eval)) return true;
                 }
+                if (Keys != null)
+                {
+                    if (eval(this.Keys.Overall)) return true;
+                    if (this.Keys.Specific != null && this.Keys.Specific.Any(eval)) return true;
+                }
+                if (Ingestibles != null)
+                {
+                    if (eval(this.Ingestibles.Overall)) return true;
+                    if (this.Ingestibles.Specific != null && this.Ingestibles.Specific.Any(eval)) return true;
+                }
+                if (IdleMarkers != null)
+                {
+                    if (eval(this.IdleMarkers.Overall)) return true;
+                    if (this.IdleMarkers.Specific != null && this.IdleMarkers.Specific.Any(eval)) return true;
+                }
+                if (ConstructibleObjects != null)
+                {
+                    if (eval(this.ConstructibleObjects.Overall)) return true;
+                    if (this.ConstructibleObjects.Specific != null && this.ConstructibleObjects.Specific.Any(eval)) return true;
+                }
+                if (Projectiles != null)
+                {
+                    if (eval(this.Projectiles.Overall)) return true;
+                    if (this.Projectiles.Specific != null && this.Projectiles.Specific.Any(eval)) return true;
+                }
+                if (Hazards != null)
+                {
+                    if (eval(this.Hazards.Overall)) return true;
+                    if (this.Hazards.Specific != null && this.Hazards.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1278,6 +1422,12 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Ammunitions = this.Ammunitions == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Ammunitions.Overall), this.Ammunitions.Specific?.Translate(eval));
                 obj.Npcs = this.Npcs == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Npcs.Overall), this.Npcs.Specific?.Translate(eval));
                 obj.LeveledNpcs = this.LeveledNpcs == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LeveledNpcs.Overall), this.LeveledNpcs.Specific?.Translate(eval));
+                obj.Keys = this.Keys == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Keys.Overall), this.Keys.Specific?.Translate(eval));
+                obj.Ingestibles = this.Ingestibles == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Ingestibles.Overall), this.Ingestibles.Specific?.Translate(eval));
+                obj.IdleMarkers = this.IdleMarkers == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.IdleMarkers.Overall), this.IdleMarkers.Specific?.Translate(eval));
+                obj.ConstructibleObjects = this.ConstructibleObjects == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ConstructibleObjects.Overall), this.ConstructibleObjects.Specific?.Translate(eval));
+                obj.Projectiles = this.Projectiles == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Projectiles.Overall), this.Projectiles.Specific?.Translate(eval));
+                obj.Hazards = this.Hazards == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Hazards.Overall), this.Hazards.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1460,6 +1610,30 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         LeveledNpcs?.ToString(fg);
                     }
+                    if (printMask?.Keys?.Overall ?? true)
+                    {
+                        Keys?.ToString(fg);
+                    }
+                    if (printMask?.Ingestibles?.Overall ?? true)
+                    {
+                        Ingestibles?.ToString(fg);
+                    }
+                    if (printMask?.IdleMarkers?.Overall ?? true)
+                    {
+                        IdleMarkers?.ToString(fg);
+                    }
+                    if (printMask?.ConstructibleObjects?.Overall ?? true)
+                    {
+                        ConstructibleObjects?.ToString(fg);
+                    }
+                    if (printMask?.Projectiles?.Overall ?? true)
+                    {
+                        Projectiles?.ToString(fg);
+                    }
+                    if (printMask?.Hazards?.Overall ?? true)
+                    {
+                        Hazards?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -1525,6 +1699,12 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<Ammunition.ErrorMask>?>? Ammunitions;
             public MaskItem<Exception?, Group.ErrorMask<Npc.ErrorMask>?>? Npcs;
             public MaskItem<Exception?, Group.ErrorMask<LeveledNpc.ErrorMask>?>? LeveledNpcs;
+            public MaskItem<Exception?, Group.ErrorMask<Key.ErrorMask>?>? Keys;
+            public MaskItem<Exception?, Group.ErrorMask<Ingestible.ErrorMask>?>? Ingestibles;
+            public MaskItem<Exception?, Group.ErrorMask<IdleMarker.ErrorMask>?>? IdleMarkers;
+            public MaskItem<Exception?, Group.ErrorMask<ConstructibleObject.ErrorMask>?>? ConstructibleObjects;
+            public MaskItem<Exception?, Group.ErrorMask<Projectile.ErrorMask>?>? Projectiles;
+            public MaskItem<Exception?, Group.ErrorMask<Hazard.ErrorMask>?>? Hazards;
             #endregion
 
             #region IErrorMask
@@ -1613,6 +1793,18 @@ namespace Mutagen.Bethesda.Skyrim
                         return Npcs;
                     case SkyrimMod_FieldIndex.LeveledNpcs:
                         return LeveledNpcs;
+                    case SkyrimMod_FieldIndex.Keys:
+                        return Keys;
+                    case SkyrimMod_FieldIndex.Ingestibles:
+                        return Ingestibles;
+                    case SkyrimMod_FieldIndex.IdleMarkers:
+                        return IdleMarkers;
+                    case SkyrimMod_FieldIndex.ConstructibleObjects:
+                        return ConstructibleObjects;
+                    case SkyrimMod_FieldIndex.Projectiles:
+                        return Projectiles;
+                    case SkyrimMod_FieldIndex.Hazards:
+                        return Hazards;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1742,6 +1934,24 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.LeveledNpcs:
                         this.LeveledNpcs = new MaskItem<Exception?, Group.ErrorMask<LeveledNpc.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Keys:
+                        this.Keys = new MaskItem<Exception?, Group.ErrorMask<Key.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Ingestibles:
+                        this.Ingestibles = new MaskItem<Exception?, Group.ErrorMask<Ingestible.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.IdleMarkers:
+                        this.IdleMarkers = new MaskItem<Exception?, Group.ErrorMask<IdleMarker.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.ConstructibleObjects:
+                        this.ConstructibleObjects = new MaskItem<Exception?, Group.ErrorMask<ConstructibleObject.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Projectiles:
+                        this.Projectiles = new MaskItem<Exception?, Group.ErrorMask<Projectile.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Hazards:
+                        this.Hazards = new MaskItem<Exception?, Group.ErrorMask<Hazard.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -1873,6 +2083,24 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.LeveledNpcs:
                         this.LeveledNpcs = (MaskItem<Exception?, Group.ErrorMask<LeveledNpc.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.Keys:
+                        this.Keys = (MaskItem<Exception?, Group.ErrorMask<Key.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.Ingestibles:
+                        this.Ingestibles = (MaskItem<Exception?, Group.ErrorMask<Ingestible.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.IdleMarkers:
+                        this.IdleMarkers = (MaskItem<Exception?, Group.ErrorMask<IdleMarker.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.ConstructibleObjects:
+                        this.ConstructibleObjects = (MaskItem<Exception?, Group.ErrorMask<ConstructibleObject.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.Projectiles:
+                        this.Projectiles = (MaskItem<Exception?, Group.ErrorMask<Projectile.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.Hazards:
+                        this.Hazards = (MaskItem<Exception?, Group.ErrorMask<Hazard.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -1921,6 +2149,12 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Ammunitions != null) return true;
                 if (Npcs != null) return true;
                 if (LeveledNpcs != null) return true;
+                if (Keys != null) return true;
+                if (Ingestibles != null) return true;
+                if (IdleMarkers != null) return true;
+                if (ConstructibleObjects != null) return true;
+                if (Projectiles != null) return true;
+                if (Hazards != null) return true;
                 return false;
             }
             #endregion
@@ -1995,6 +2229,12 @@ namespace Mutagen.Bethesda.Skyrim
                 Ammunitions?.ToString(fg);
                 Npcs?.ToString(fg);
                 LeveledNpcs?.ToString(fg);
+                Keys?.ToString(fg);
+                Ingestibles?.ToString(fg);
+                IdleMarkers?.ToString(fg);
+                ConstructibleObjects?.ToString(fg);
+                Projectiles?.ToString(fg);
+                Hazards?.ToString(fg);
             }
             #endregion
 
@@ -2043,6 +2283,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Ammunitions = this.Ammunitions.Combine(rhs.Ammunitions, (l, r) => l.Combine(r));
                 ret.Npcs = this.Npcs.Combine(rhs.Npcs, (l, r) => l.Combine(r));
                 ret.LeveledNpcs = this.LeveledNpcs.Combine(rhs.LeveledNpcs, (l, r) => l.Combine(r));
+                ret.Keys = this.Keys.Combine(rhs.Keys, (l, r) => l.Combine(r));
+                ret.Ingestibles = this.Ingestibles.Combine(rhs.Ingestibles, (l, r) => l.Combine(r));
+                ret.IdleMarkers = this.IdleMarkers.Combine(rhs.IdleMarkers, (l, r) => l.Combine(r));
+                ret.ConstructibleObjects = this.ConstructibleObjects.Combine(rhs.ConstructibleObjects, (l, r) => l.Combine(r));
+                ret.Projectiles = this.Projectiles.Combine(rhs.Projectiles, (l, r) => l.Combine(r));
+                ret.Hazards = this.Hazards.Combine(rhs.Hazards, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2104,6 +2350,12 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<Ammunition.TranslationMask>?> Ammunitions;
             public MaskItem<bool, Group.TranslationMask<Npc.TranslationMask>?> Npcs;
             public MaskItem<bool, Group.TranslationMask<LeveledNpc.TranslationMask>?> LeveledNpcs;
+            public MaskItem<bool, Group.TranslationMask<Key.TranslationMask>?> Keys;
+            public MaskItem<bool, Group.TranslationMask<Ingestible.TranslationMask>?> Ingestibles;
+            public MaskItem<bool, Group.TranslationMask<IdleMarker.TranslationMask>?> IdleMarkers;
+            public MaskItem<bool, Group.TranslationMask<ConstructibleObject.TranslationMask>?> ConstructibleObjects;
+            public MaskItem<bool, Group.TranslationMask<Projectile.TranslationMask>?> Projectiles;
+            public MaskItem<bool, Group.TranslationMask<Hazard.TranslationMask>?> Hazards;
             #endregion
 
             #region Ctors
@@ -2149,6 +2401,12 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Ammunitions = new MaskItem<bool, Group.TranslationMask<Ammunition.TranslationMask>?>(defaultOn, null);
                 this.Npcs = new MaskItem<bool, Group.TranslationMask<Npc.TranslationMask>?>(defaultOn, null);
                 this.LeveledNpcs = new MaskItem<bool, Group.TranslationMask<LeveledNpc.TranslationMask>?>(defaultOn, null);
+                this.Keys = new MaskItem<bool, Group.TranslationMask<Key.TranslationMask>?>(defaultOn, null);
+                this.Ingestibles = new MaskItem<bool, Group.TranslationMask<Ingestible.TranslationMask>?>(defaultOn, null);
+                this.IdleMarkers = new MaskItem<bool, Group.TranslationMask<IdleMarker.TranslationMask>?>(defaultOn, null);
+                this.ConstructibleObjects = new MaskItem<bool, Group.TranslationMask<ConstructibleObject.TranslationMask>?>(defaultOn, null);
+                this.Projectiles = new MaskItem<bool, Group.TranslationMask<Projectile.TranslationMask>?>(defaultOn, null);
+                this.Hazards = new MaskItem<bool, Group.TranslationMask<Hazard.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -2204,6 +2462,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Ammunitions?.Overall ?? true, Ammunitions?.Specific?.GetCrystal()));
                 ret.Add((Npcs?.Overall ?? true, Npcs?.Specific?.GetCrystal()));
                 ret.Add((LeveledNpcs?.Overall ?? true, LeveledNpcs?.Specific?.GetCrystal()));
+                ret.Add((Keys?.Overall ?? true, Keys?.Specific?.GetCrystal()));
+                ret.Add((Ingestibles?.Overall ?? true, Ingestibles?.Specific?.GetCrystal()));
+                ret.Add((IdleMarkers?.Overall ?? true, IdleMarkers?.Specific?.GetCrystal()));
+                ret.Add((ConstructibleObjects?.Overall ?? true, ConstructibleObjects?.Specific?.GetCrystal()));
+                ret.Add((Projectiles?.Overall ?? true, Projectiles?.Specific?.GetCrystal()));
+                ret.Add((Hazards?.Overall ?? true, Hazards?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -2257,6 +2521,12 @@ namespace Mutagen.Bethesda.Skyrim
             _Ammunitions_Object = new Group<Ammunition>(this);
             _Npcs_Object = new Group<Npc>(this);
             _LeveledNpcs_Object = new Group<LeveledNpc>(this);
+            _Keys_Object = new Group<Key>(this);
+            _Ingestibles_Object = new Group<Ingestible>(this);
+            _IdleMarkers_Object = new Group<IdleMarker>(this);
+            _ConstructibleObjects_Object = new Group<ConstructibleObject>(this);
+            _Projectiles_Object = new Group<Projectile>(this);
+            _Hazards_Object = new Group<Hazard>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -2417,6 +2687,30 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.LeveledNpcs ?? true)
             {
                 this.LeveledNpcs.RecordCache.Set(rhsMod.LeveledNpcs.RecordCache.Items);
+            }
+            if (mask?.Keys ?? true)
+            {
+                this.Keys.RecordCache.Set(rhsMod.Keys.RecordCache.Items);
+            }
+            if (mask?.Ingestibles ?? true)
+            {
+                this.Ingestibles.RecordCache.Set(rhsMod.Ingestibles.RecordCache.Items);
+            }
+            if (mask?.IdleMarkers ?? true)
+            {
+                this.IdleMarkers.RecordCache.Set(rhsMod.IdleMarkers.RecordCache.Items);
+            }
+            if (mask?.ConstructibleObjects ?? true)
+            {
+                this.ConstructibleObjects.RecordCache.Set(rhsMod.ConstructibleObjects.RecordCache.Items);
+            }
+            if (mask?.Projectiles ?? true)
+            {
+                this.Projectiles.RecordCache.Set(rhsMod.Projectiles.RecordCache.Items);
+            }
+            if (mask?.Hazards ?? true)
+            {
+                this.Hazards.RecordCache.Set(rhsMod.Hazards.RecordCache.Items);
             }
         }
 
@@ -2698,6 +2992,48 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<LeveledNpc>());
             }
+            if (mask?.Keys ?? true)
+            {
+                this.Keys.RecordCache.Set(
+                    rhs.Keys.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Key>());
+            }
+            if (mask?.Ingestibles ?? true)
+            {
+                this.Ingestibles.RecordCache.Set(
+                    rhs.Ingestibles.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Ingestible>());
+            }
+            if (mask?.IdleMarkers ?? true)
+            {
+                this.IdleMarkers.RecordCache.Set(
+                    rhs.IdleMarkers.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<IdleMarker>());
+            }
+            if (mask?.ConstructibleObjects ?? true)
+            {
+                this.ConstructibleObjects.RecordCache.Set(
+                    rhs.ConstructibleObjects.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<ConstructibleObject>());
+            }
+            if (mask?.Projectiles ?? true)
+            {
+                this.Projectiles.RecordCache.Set(
+                    rhs.Projectiles.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Projectile>());
+            }
+            if (mask?.Hazards ?? true)
+            {
+                this.Hazards.RecordCache.Set(
+                    rhs.Hazards.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Hazard>());
+            }
             var router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var mapping = new Dictionary<FormKey, FormKey>();
@@ -2756,6 +3092,12 @@ namespace Mutagen.Bethesda.Skyrim
             count += Ammunitions.RecordCache.Count > 0 ? 1 : 0;
             count += Npcs.RecordCache.Count > 0 ? 1 : 0;
             count += LeveledNpcs.RecordCache.Count > 0 ? 1 : 0;
+            count += Keys.RecordCache.Count > 0 ? 1 : 0;
+            count += Ingestibles.RecordCache.Count > 0 ? 1 : 0;
+            count += IdleMarkers.RecordCache.Count > 0 ? 1 : 0;
+            count += ConstructibleObjects.RecordCache.Count > 0 ? 1 : 0;
+            count += Projectiles.RecordCache.Count > 0 ? 1 : 0;
+            count += Hazards.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -2993,6 +3335,12 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<Ammunition> Ammunitions { get; }
         new Group<Npc> Npcs { get; }
         new Group<LeveledNpc> LeveledNpcs { get; }
+        new Group<Key> Keys { get; }
+        new Group<Ingestible> Ingestibles { get; }
+        new Group<IdleMarker> IdleMarkers { get; }
+        new Group<ConstructibleObject> ConstructibleObjects { get; }
+        new Group<Projectile> Projectiles { get; }
+        new Group<Hazard> Hazards { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -3050,6 +3398,12 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IAmmunitionGetter> Ammunitions { get; }
         IGroupGetter<INpcGetter> Npcs { get; }
         IGroupGetter<ILeveledNpcGetter> LeveledNpcs { get; }
+        IGroupGetter<IKeyGetter> Keys { get; }
+        IGroupGetter<IIngestibleGetter> Ingestibles { get; }
+        IGroupGetter<IIdleMarkerGetter> IdleMarkers { get; }
+        IGroupGetter<IConstructibleObjectGetter> ConstructibleObjects { get; }
+        IGroupGetter<IProjectileGetter> Projectiles { get; }
+        IGroupGetter<IHazardGetter> Hazards { get; }
 
     }
 
@@ -3529,6 +3883,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Ammunitions = 37,
         Npcs = 38,
         LeveledNpcs = 39,
+        Keys = 40,
+        Ingestibles = 41,
+        IdleMarkers = 42,
+        ConstructibleObjects = 43,
+        Projectiles = 44,
+        Hazards = 45,
     }
     #endregion
 
@@ -3546,9 +3906,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 40;
+        public const ushort AdditionalFieldCount = 46;
 
-        public const ushort FieldCount = 40;
+        public const ushort FieldCount = 46;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -3658,6 +4018,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.Npcs;
                 case "LEVELEDNPCS":
                     return (ushort)SkyrimMod_FieldIndex.LeveledNpcs;
+                case "KEYS":
+                    return (ushort)SkyrimMod_FieldIndex.Keys;
+                case "INGESTIBLES":
+                    return (ushort)SkyrimMod_FieldIndex.Ingestibles;
+                case "IDLEMARKERS":
+                    return (ushort)SkyrimMod_FieldIndex.IdleMarkers;
+                case "CONSTRUCTIBLEOBJECTS":
+                    return (ushort)SkyrimMod_FieldIndex.ConstructibleObjects;
+                case "PROJECTILES":
+                    return (ushort)SkyrimMod_FieldIndex.Projectiles;
+                case "HAZARDS":
+                    return (ushort)SkyrimMod_FieldIndex.Hazards;
                 default:
                     return null;
             }
@@ -3708,6 +4080,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Ammunitions:
                 case SkyrimMod_FieldIndex.Npcs:
                 case SkyrimMod_FieldIndex.LeveledNpcs:
+                case SkyrimMod_FieldIndex.Keys:
+                case SkyrimMod_FieldIndex.Ingestibles:
+                case SkyrimMod_FieldIndex.IdleMarkers:
+                case SkyrimMod_FieldIndex.ConstructibleObjects:
+                case SkyrimMod_FieldIndex.Projectiles:
+                case SkyrimMod_FieldIndex.Hazards:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3759,6 +4137,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Ammunitions:
                 case SkyrimMod_FieldIndex.Npcs:
                 case SkyrimMod_FieldIndex.LeveledNpcs:
+                case SkyrimMod_FieldIndex.Keys:
+                case SkyrimMod_FieldIndex.Ingestibles:
+                case SkyrimMod_FieldIndex.IdleMarkers:
+                case SkyrimMod_FieldIndex.ConstructibleObjects:
+                case SkyrimMod_FieldIndex.Projectiles:
+                case SkyrimMod_FieldIndex.Hazards:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3810,6 +4194,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Ammunitions:
                 case SkyrimMod_FieldIndex.Npcs:
                 case SkyrimMod_FieldIndex.LeveledNpcs:
+                case SkyrimMod_FieldIndex.Keys:
+                case SkyrimMod_FieldIndex.Ingestibles:
+                case SkyrimMod_FieldIndex.IdleMarkers:
+                case SkyrimMod_FieldIndex.ConstructibleObjects:
+                case SkyrimMod_FieldIndex.Projectiles:
+                case SkyrimMod_FieldIndex.Hazards:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3901,6 +4291,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Npcs";
                 case SkyrimMod_FieldIndex.LeveledNpcs:
                     return "LeveledNpcs";
+                case SkyrimMod_FieldIndex.Keys:
+                    return "Keys";
+                case SkyrimMod_FieldIndex.Ingestibles:
+                    return "Ingestibles";
+                case SkyrimMod_FieldIndex.IdleMarkers:
+                    return "IdleMarkers";
+                case SkyrimMod_FieldIndex.ConstructibleObjects:
+                    return "ConstructibleObjects";
+                case SkyrimMod_FieldIndex.Projectiles:
+                    return "Projectiles";
+                case SkyrimMod_FieldIndex.Hazards:
+                    return "Hazards";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3951,6 +4353,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Ammunitions:
                 case SkyrimMod_FieldIndex.Npcs:
                 case SkyrimMod_FieldIndex.LeveledNpcs:
+                case SkyrimMod_FieldIndex.Keys:
+                case SkyrimMod_FieldIndex.Ingestibles:
+                case SkyrimMod_FieldIndex.IdleMarkers:
+                case SkyrimMod_FieldIndex.ConstructibleObjects:
+                case SkyrimMod_FieldIndex.Projectiles:
+                case SkyrimMod_FieldIndex.Hazards:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4003,6 +4411,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Ammunitions:
                 case SkyrimMod_FieldIndex.Npcs:
                 case SkyrimMod_FieldIndex.LeveledNpcs:
+                case SkyrimMod_FieldIndex.Keys:
+                case SkyrimMod_FieldIndex.Ingestibles:
+                case SkyrimMod_FieldIndex.IdleMarkers:
+                case SkyrimMod_FieldIndex.ConstructibleObjects:
+                case SkyrimMod_FieldIndex.Projectiles:
+                case SkyrimMod_FieldIndex.Hazards:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4094,6 +4508,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<Npc>);
                 case SkyrimMod_FieldIndex.LeveledNpcs:
                     return typeof(Group<LeveledNpc>);
+                case SkyrimMod_FieldIndex.Keys:
+                    return typeof(Group<Key>);
+                case SkyrimMod_FieldIndex.Ingestibles:
+                    return typeof(Group<Ingestible>);
+                case SkyrimMod_FieldIndex.IdleMarkers:
+                    return typeof(Group<IdleMarker>);
+                case SkyrimMod_FieldIndex.ConstructibleObjects:
+                    return typeof(Group<ConstructibleObject>);
+                case SkyrimMod_FieldIndex.Projectiles:
+                    return typeof(Group<Projectile>);
+                case SkyrimMod_FieldIndex.Hazards:
+                    return typeof(Group<Hazard>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -4140,9 +4566,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType AMMO_HEADER = new RecordType("AMMO");
         public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
         public static readonly RecordType LVLN_HEADER = new RecordType("LVLN");
+        public static readonly RecordType KEYM_HEADER = new RecordType("KEYM");
+        public static readonly RecordType ALCH_HEADER = new RecordType("ALCH");
+        public static readonly RecordType IDLM_HEADER = new RecordType("IDLM");
+        public static readonly RecordType COBJ_HEADER = new RecordType("COBJ");
+        public static readonly RecordType PROJ_HEADER = new RecordType("PROJ");
+        public static readonly RecordType HAZD_HEADER = new RecordType("HAZD");
         public static readonly RecordType TriggeringRecordType = TES4_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 40;
+        public const int NumTypedFields = 46;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -4224,6 +4656,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Ammunitions.Clear();
             item.Npcs.Clear();
             item.LeveledNpcs.Clear();
+            item.Keys.Clear();
+            item.Ingestibles.Clear();
+            item.IdleMarkers.Clear();
+            item.ConstructibleObjects.Clear();
+            item.Projectiles.Clear();
+            item.Hazards.Clear();
         }
         
         #region Xml Translation
@@ -4885,6 +5323,90 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LeveledNpcs);
                 }
+                case 0x4D59454B: // KEYM
+                {
+                    if (importMask?.Keys ?? true)
+                    {
+                        item.Keys.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Keys);
+                }
+                case 0x48434C41: // ALCH
+                {
+                    if (importMask?.Ingestibles ?? true)
+                    {
+                        item.Ingestibles.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Ingestibles);
+                }
+                case 0x4D4C4449: // IDLM
+                {
+                    if (importMask?.IdleMarkers ?? true)
+                    {
+                        item.IdleMarkers.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.IdleMarkers);
+                }
+                case 0x4A424F43: // COBJ
+                {
+                    if (importMask?.ConstructibleObjects ?? true)
+                    {
+                        item.ConstructibleObjects.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ConstructibleObjects);
+                }
+                case 0x4A4F5250: // PROJ
+                {
+                    if (importMask?.Projectiles ?? true)
+                    {
+                        item.Projectiles.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Projectiles);
+                }
+                case 0x445A4148: // HAZD
+                {
+                    if (importMask?.Hazards ?? true)
+                    {
+                        item.Hazards.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Hazards);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -4976,6 +5498,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Ammunitions = MaskItemExt.Factory(item.Ammunitions.GetEqualsMask(rhs.Ammunitions, include), include);
             ret.Npcs = MaskItemExt.Factory(item.Npcs.GetEqualsMask(rhs.Npcs, include), include);
             ret.LeveledNpcs = MaskItemExt.Factory(item.LeveledNpcs.GetEqualsMask(rhs.LeveledNpcs, include), include);
+            ret.Keys = MaskItemExt.Factory(item.Keys.GetEqualsMask(rhs.Keys, include), include);
+            ret.Ingestibles = MaskItemExt.Factory(item.Ingestibles.GetEqualsMask(rhs.Ingestibles, include), include);
+            ret.IdleMarkers = MaskItemExt.Factory(item.IdleMarkers.GetEqualsMask(rhs.IdleMarkers, include), include);
+            ret.ConstructibleObjects = MaskItemExt.Factory(item.ConstructibleObjects.GetEqualsMask(rhs.ConstructibleObjects, include), include);
+            ret.Projectiles = MaskItemExt.Factory(item.Projectiles.GetEqualsMask(rhs.Projectiles, include), include);
+            ret.Hazards = MaskItemExt.Factory(item.Hazards.GetEqualsMask(rhs.Hazards, include), include);
         }
         
         public string ToString(
@@ -5182,6 +5710,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.LeveledNpcs?.ToString(fg, "LeveledNpcs");
             }
+            if (printMask?.Keys?.Overall ?? true)
+            {
+                item.Keys?.ToString(fg, "Keys");
+            }
+            if (printMask?.Ingestibles?.Overall ?? true)
+            {
+                item.Ingestibles?.ToString(fg, "Ingestibles");
+            }
+            if (printMask?.IdleMarkers?.Overall ?? true)
+            {
+                item.IdleMarkers?.ToString(fg, "IdleMarkers");
+            }
+            if (printMask?.ConstructibleObjects?.Overall ?? true)
+            {
+                item.ConstructibleObjects?.ToString(fg, "ConstructibleObjects");
+            }
+            if (printMask?.Projectiles?.Overall ?? true)
+            {
+                item.Projectiles?.ToString(fg, "Projectiles");
+            }
+            if (printMask?.Hazards?.Overall ?? true)
+            {
+                item.Hazards?.ToString(fg, "Hazards");
+            }
         }
         
         public bool HasBeenSet(
@@ -5235,6 +5787,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Ammunitions = new MaskItem<bool, Group.Mask<bool>?>(true, item.Ammunitions?.GetHasBeenSetMask());
             mask.Npcs = new MaskItem<bool, Group.Mask<bool>?>(true, item.Npcs?.GetHasBeenSetMask());
             mask.LeveledNpcs = new MaskItem<bool, Group.Mask<bool>?>(true, item.LeveledNpcs?.GetHasBeenSetMask());
+            mask.Keys = new MaskItem<bool, Group.Mask<bool>?>(true, item.Keys?.GetHasBeenSetMask());
+            mask.Ingestibles = new MaskItem<bool, Group.Mask<bool>?>(true, item.Ingestibles?.GetHasBeenSetMask());
+            mask.IdleMarkers = new MaskItem<bool, Group.Mask<bool>?>(true, item.IdleMarkers?.GetHasBeenSetMask());
+            mask.ConstructibleObjects = new MaskItem<bool, Group.Mask<bool>?>(true, item.ConstructibleObjects?.GetHasBeenSetMask());
+            mask.Projectiles = new MaskItem<bool, Group.Mask<bool>?>(true, item.Projectiles?.GetHasBeenSetMask());
+            mask.Hazards = new MaskItem<bool, Group.Mask<bool>?>(true, item.Hazards?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -5284,6 +5842,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Ammunitions, rhs.Ammunitions)) return false;
             if (!object.Equals(lhs.Npcs, rhs.Npcs)) return false;
             if (!object.Equals(lhs.LeveledNpcs, rhs.LeveledNpcs)) return false;
+            if (!object.Equals(lhs.Keys, rhs.Keys)) return false;
+            if (!object.Equals(lhs.Ingestibles, rhs.Ingestibles)) return false;
+            if (!object.Equals(lhs.IdleMarkers, rhs.IdleMarkers)) return false;
+            if (!object.Equals(lhs.ConstructibleObjects, rhs.ConstructibleObjects)) return false;
+            if (!object.Equals(lhs.Projectiles, rhs.Projectiles)) return false;
+            if (!object.Equals(lhs.Hazards, rhs.Hazards)) return false;
             return true;
         }
         
@@ -5330,6 +5894,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Ammunitions);
             hash.Add(item.Npcs);
             hash.Add(item.LeveledNpcs);
+            hash.Add(item.Keys);
+            hash.Add(item.Ingestibles);
+            hash.Add(item.IdleMarkers);
+            hash.Add(item.ConstructibleObjects);
+            hash.Add(item.Projectiles);
+            hash.Add(item.Hazards);
             return hash.ToHashCode();
         }
         
@@ -5542,6 +6112,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILeveledNpc":
                 case "ILeveledNpcInternal":
                     return obj.LeveledNpcs.RecordCache;
+                case "Key":
+                case "IKeyGetter":
+                case "IKey":
+                case "IKeyInternal":
+                    return obj.Keys.RecordCache;
+                case "Ingestible":
+                case "IIngestibleGetter":
+                case "IIngestible":
+                case "IIngestibleInternal":
+                    return obj.Ingestibles.RecordCache;
+                case "IdleMarker":
+                case "IIdleMarkerGetter":
+                case "IIdleMarker":
+                case "IIdleMarkerInternal":
+                    return obj.IdleMarkers.RecordCache;
+                case "ConstructibleObject":
+                case "IConstructibleObjectGetter":
+                case "IConstructibleObject":
+                case "IConstructibleObjectInternal":
+                    return obj.ConstructibleObjects.RecordCache;
+                case "Projectile":
+                case "IProjectileGetter":
+                case "IProjectile":
+                case "IProjectileInternal":
+                    return obj.Projectiles.RecordCache;
+                case "Hazard":
+                case "IHazardGetter":
+                case "IHazard":
+                case "IHazardInternal":
+                    return obj.Hazards.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown group type: {typeof(T)}");
             }
@@ -5558,7 +6158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var modHeader = item.ModHeader.DeepCopy() as ModHeader;
             modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
             modHeader.WriteToBinary(new MutagenWriter(stream, GameConstants.Skyrim, masterRefs));
-            Stream[] outputStreams = new Stream[39];
+            Stream[] outputStreams = new Stream[45];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams));
@@ -5599,6 +6199,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.Ammunitions, masterRefs, 36, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Npcs, masterRefs, 37, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.LeveledNpcs, masterRefs, 38, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Keys, masterRefs, 39, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Ingestibles, masterRefs, 40, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.IdleMarkers, masterRefs, 41, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, masterRefs, 42, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Projectiles, masterRefs, 43, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Hazards, masterRefs, 44, outputStreams));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -5919,6 +6525,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.Keys is ILinkedFormKeyContainer KeyslinkCont)
+            {
+                foreach (var item in KeyslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Ingestibles is ILinkedFormKeyContainer IngestibleslinkCont)
+            {
+                foreach (var item in IngestibleslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.IdleMarkers is ILinkedFormKeyContainer IdleMarkerslinkCont)
+            {
+                foreach (var item in IdleMarkerslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ConstructibleObjects is ILinkedFormKeyContainer ConstructibleObjectslinkCont)
+            {
+                foreach (var item in ConstructibleObjectslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Projectiles is ILinkedFormKeyContainer ProjectileslinkCont)
+            {
+                foreach (var item in ProjectileslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Hazards is ILinkedFormKeyContainer HazardslinkCont)
+            {
+                foreach (var item in HazardslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -6078,6 +6726,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.LeveledNpcs.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Keys.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Ingestibles.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.IdleMarkers.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ConstructibleObjects.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Projectiles.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Hazards.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -6446,6 +7118,60 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILeveledNpc":
                 case "ILeveledNpcInternal":
                     foreach (var item in obj.LeveledNpcs.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Key":
+                case "IKeyGetter":
+                case "IKey":
+                case "IKeyInternal":
+                    foreach (var item in obj.Keys.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Ingestible":
+                case "IIngestibleGetter":
+                case "IIngestible":
+                case "IIngestibleInternal":
+                    foreach (var item in obj.Ingestibles.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IdleMarker":
+                case "IIdleMarkerGetter":
+                case "IIdleMarker":
+                case "IIdleMarkerInternal":
+                    foreach (var item in obj.IdleMarkers.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ConstructibleObject":
+                case "IConstructibleObjectGetter":
+                case "IConstructibleObject":
+                case "IConstructibleObjectInternal":
+                    foreach (var item in obj.ConstructibleObjects.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Projectile":
+                case "IProjectileGetter":
+                case "IProjectile":
+                case "IProjectileInternal":
+                    foreach (var item in obj.Projectiles.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Hazard":
+                case "IHazardGetter":
+                case "IHazard":
+                case "IHazardInternal":
+                    foreach (var item in obj.Hazards.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -7269,6 +7995,126 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Keys) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Keys);
+                try
+                {
+                    item.Keys.DeepCopyIn(
+                        rhs: rhs.Keys,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Keys));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Ingestibles) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Ingestibles);
+                try
+                {
+                    item.Ingestibles.DeepCopyIn(
+                        rhs: rhs.Ingestibles,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Ingestibles));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.IdleMarkers) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.IdleMarkers);
+                try
+                {
+                    item.IdleMarkers.DeepCopyIn(
+                        rhs: rhs.IdleMarkers,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.IdleMarkers));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ConstructibleObjects) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ConstructibleObjects);
+                try
+                {
+                    item.ConstructibleObjects.DeepCopyIn(
+                        rhs: rhs.ConstructibleObjects,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.ConstructibleObjects));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Projectiles) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Projectiles);
+                try
+                {
+                    item.Projectiles.DeepCopyIn(
+                        rhs: rhs.Projectiles,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Projectiles));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Hazards) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Hazards);
+                try
+                {
+                    item.Hazards.DeepCopyIn(
+                        rhs: rhs.Hazards,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Hazards));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -7797,6 +8643,72 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.LeveledNpcs,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.LeveledNpcs));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Keys) ?? true))
+            {
+                var KeysItem = item.Keys;
+                ((GroupXmlWriteTranslation)((IXmlItem)KeysItem).XmlWriteTranslator).Write<IKeyGetter>(
+                    item: KeysItem,
+                    node: node,
+                    name: nameof(item.Keys),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Keys,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Keys));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Ingestibles) ?? true))
+            {
+                var IngestiblesItem = item.Ingestibles;
+                ((GroupXmlWriteTranslation)((IXmlItem)IngestiblesItem).XmlWriteTranslator).Write<IIngestibleGetter>(
+                    item: IngestiblesItem,
+                    node: node,
+                    name: nameof(item.Ingestibles),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Ingestibles,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Ingestibles));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.IdleMarkers) ?? true))
+            {
+                var IdleMarkersItem = item.IdleMarkers;
+                ((GroupXmlWriteTranslation)((IXmlItem)IdleMarkersItem).XmlWriteTranslator).Write<IIdleMarkerGetter>(
+                    item: IdleMarkersItem,
+                    node: node,
+                    name: nameof(item.IdleMarkers),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.IdleMarkers,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.IdleMarkers));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ConstructibleObjects) ?? true))
+            {
+                var ConstructibleObjectsItem = item.ConstructibleObjects;
+                ((GroupXmlWriteTranslation)((IXmlItem)ConstructibleObjectsItem).XmlWriteTranslator).Write<IConstructibleObjectGetter>(
+                    item: ConstructibleObjectsItem,
+                    node: node,
+                    name: nameof(item.ConstructibleObjects),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.ConstructibleObjects,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.ConstructibleObjects));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Projectiles) ?? true))
+            {
+                var ProjectilesItem = item.Projectiles;
+                ((GroupXmlWriteTranslation)((IXmlItem)ProjectilesItem).XmlWriteTranslator).Write<IProjectileGetter>(
+                    item: ProjectilesItem,
+                    node: node,
+                    name: nameof(item.Projectiles),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Projectiles,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Projectiles));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Hazards) ?? true))
+            {
+                var HazardsItem = item.Hazards;
+                ((GroupXmlWriteTranslation)((IXmlItem)HazardsItem).XmlWriteTranslator).Write<IHazardGetter>(
+                    item: HazardsItem,
+                    node: node,
+                    name: nameof(item.Hazards),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Hazards,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Hazards));
             }
         }
 
@@ -8645,6 +9557,120 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "Keys":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Keys);
+                    try
+                    {
+                        item.Keys.CopyInFromXml<Key>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Ingestibles":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Ingestibles);
+                    try
+                    {
+                        item.Ingestibles.CopyInFromXml<Ingestible>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "IdleMarkers":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.IdleMarkers);
+                    try
+                    {
+                        item.IdleMarkers.CopyInFromXml<IdleMarker>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ConstructibleObjects":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ConstructibleObjects);
+                    try
+                    {
+                        item.ConstructibleObjects.CopyInFromXml<ConstructibleObject>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Projectiles":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Projectiles);
+                    try
+                    {
+                        item.Projectiles.CopyInFromXml<Projectile>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Hazards":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Hazards);
+                    try
+                    {
+                        item.Hazards.CopyInFromXml<Hazard>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -8853,6 +9879,12 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Ammunitions;
         public bool Npcs;
         public bool LeveledNpcs;
+        public bool Keys;
+        public bool Ingestibles;
+        public bool IdleMarkers;
+        public bool ConstructibleObjects;
+        public bool Projectiles;
+        public bool Hazards;
         public GroupMask()
         {
         }
@@ -8897,6 +9929,12 @@ namespace Mutagen.Bethesda.Skyrim
             Ammunitions = defaultValue;
             Npcs = defaultValue;
             LeveledNpcs = defaultValue;
+            Keys = defaultValue;
+            Ingestibles = defaultValue;
+            IdleMarkers = defaultValue;
+            ConstructibleObjects = defaultValue;
+            Projectiles = defaultValue;
+            Hazards = defaultValue;
         }
     }
 
@@ -9355,6 +10393,72 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                 }
             }
+            if (importMask?.Keys ?? true)
+            {
+                var KeysItem = item.Keys;
+                if (KeysItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)KeysItem).BinaryWriteTranslator).Write<IKeyGetter>(
+                        item: KeysItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Ingestibles ?? true)
+            {
+                var IngestiblesItem = item.Ingestibles;
+                if (IngestiblesItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)IngestiblesItem).BinaryWriteTranslator).Write<IIngestibleGetter>(
+                        item: IngestiblesItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.IdleMarkers ?? true)
+            {
+                var IdleMarkersItem = item.IdleMarkers;
+                if (IdleMarkersItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)IdleMarkersItem).BinaryWriteTranslator).Write<IIdleMarkerGetter>(
+                        item: IdleMarkersItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.ConstructibleObjects ?? true)
+            {
+                var ConstructibleObjectsItem = item.ConstructibleObjects;
+                if (ConstructibleObjectsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)ConstructibleObjectsItem).BinaryWriteTranslator).Write<IConstructibleObjectGetter>(
+                        item: ConstructibleObjectsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Projectiles ?? true)
+            {
+                var ProjectilesItem = item.Projectiles;
+                if (ProjectilesItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)ProjectilesItem).BinaryWriteTranslator).Write<IProjectileGetter>(
+                        item: ProjectilesItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Hazards ?? true)
+            {
+                var HazardsItem = item.Hazards;
+                if (HazardsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)HazardsItem).BinaryWriteTranslator).Write<IHazardGetter>(
+                        item: HazardsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
         }
 
         public void Write(
@@ -9744,6 +10848,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<ILeveledNpcGetter>? _LeveledNpcs => _LeveledNpcsLocation.HasValue ? GroupBinaryOverlay<ILeveledNpcGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _LeveledNpcsLocation!.Value.Min, _LeveledNpcsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<ILeveledNpcGetter> LeveledNpcs => _LeveledNpcs ?? new Group<LeveledNpc>(this);
         #endregion
+        #region Keys
+        private RangeInt64? _KeysLocation;
+        private IGroupGetter<IKeyGetter>? _Keys => _KeysLocation.HasValue ? GroupBinaryOverlay<IKeyGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _KeysLocation!.Value.Min, _KeysLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IKeyGetter> Keys => _Keys ?? new Group<Key>(this);
+        #endregion
+        #region Ingestibles
+        private RangeInt64? _IngestiblesLocation;
+        private IGroupGetter<IIngestibleGetter>? _Ingestibles => _IngestiblesLocation.HasValue ? GroupBinaryOverlay<IIngestibleGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _IngestiblesLocation!.Value.Min, _IngestiblesLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IIngestibleGetter> Ingestibles => _Ingestibles ?? new Group<Ingestible>(this);
+        #endregion
+        #region IdleMarkers
+        private RangeInt64? _IdleMarkersLocation;
+        private IGroupGetter<IIdleMarkerGetter>? _IdleMarkers => _IdleMarkersLocation.HasValue ? GroupBinaryOverlay<IIdleMarkerGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _IdleMarkersLocation!.Value.Min, _IdleMarkersLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IIdleMarkerGetter> IdleMarkers => _IdleMarkers ?? new Group<IdleMarker>(this);
+        #endregion
+        #region ConstructibleObjects
+        private RangeInt64? _ConstructibleObjectsLocation;
+        private IGroupGetter<IConstructibleObjectGetter>? _ConstructibleObjects => _ConstructibleObjectsLocation.HasValue ? GroupBinaryOverlay<IConstructibleObjectGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ConstructibleObjectsLocation!.Value.Min, _ConstructibleObjectsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IConstructibleObjectGetter> ConstructibleObjects => _ConstructibleObjects ?? new Group<ConstructibleObject>(this);
+        #endregion
+        #region Projectiles
+        private RangeInt64? _ProjectilesLocation;
+        private IGroupGetter<IProjectileGetter>? _Projectiles => _ProjectilesLocation.HasValue ? GroupBinaryOverlay<IProjectileGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ProjectilesLocation!.Value.Min, _ProjectilesLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IProjectileGetter> Projectiles => _Projectiles ?? new Group<Projectile>(this);
+        #endregion
+        #region Hazards
+        private RangeInt64? _HazardsLocation;
+        private IGroupGetter<IHazardGetter>? _Hazards => _HazardsLocation.HasValue ? GroupBinaryOverlay<IHazardGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _HazardsLocation!.Value.Min, _HazardsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IHazardGetter> Hazards => _Hazards ?? new Group<Hazard>(this);
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             long finalPos,
@@ -10027,6 +11161,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _LeveledNpcsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LeveledNpcs);
+                }
+                case 0x4D59454B: // KEYM
+                {
+                    _KeysLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Keys);
+                }
+                case 0x48434C41: // ALCH
+                {
+                    _IngestiblesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Ingestibles);
+                }
+                case 0x4D4C4449: // IDLM
+                {
+                    _IdleMarkersLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.IdleMarkers);
+                }
+                case 0x4A424F43: // COBJ
+                {
+                    _ConstructibleObjectsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ConstructibleObjects);
+                }
+                case 0x4A4F5250: // PROJ
+                {
+                    _ProjectilesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Projectiles);
+                }
+                case 0x445A4148: // HAZD
+                {
+                    _HazardsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Hazards);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

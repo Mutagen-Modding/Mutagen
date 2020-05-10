@@ -48,6 +48,58 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region ObjectBounds
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IIdleMarkerGetter.ObjectBounds => ObjectBounds;
+        #endregion
+        #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private IdleMarker.Flag? _Flags;
+        public IdleMarker.Flag? Flags
+        {
+            get => this._Flags;
+            set => this._Flags = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IdleMarker.Flag? IIdleMarkerGetter.Flags => this.Flags;
+        #endregion
+        #region IdleTimer
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single? _IdleTimer;
+        public Single? IdleTimer
+        {
+            get => this._IdleTimer;
+            set => this._IdleTimer = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IIdleMarkerGetter.IdleTimer => this.IdleTimer;
+        #endregion
+        #region Animations
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLink<IdleAnimation>>? _Animations;
+        public ExtendedList<IFormLink<IdleAnimation>>? Animations
+        {
+            get => this._Animations;
+            set => this._Animations = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>>? IIdleMarkerGetter.Animations => _Animations;
+        #endregion
+
+        #endregion
+        #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _Model;
+        public Model? Model
+        {
+            get => _Model;
+            set => _Model = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IIdleMarkerGetter.Model => this.Model;
+        #endregion
 
         #region To String
 
@@ -218,6 +270,11 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.Flags = initialValue;
+                this.IdleTimer = initialValue;
+                this.Animations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -226,7 +283,12 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem ObjectBounds,
+                TItem Flags,
+                TItem IdleTimer,
+                TItem Animations,
+                TItem Model)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -235,6 +297,11 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.Flags = Flags;
+                this.IdleTimer = IdleTimer;
+                this.Animations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Animations, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
             }
 
             #pragma warning disable CS8618
@@ -243,6 +310,14 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem Flags;
+            public TItem IdleTimer;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Animations;
+            public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             #endregion
 
             #region Equals
@@ -256,11 +331,21 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.IdleTimer, rhs.IdleTimer)) return false;
+                if (!object.Equals(this.Animations, rhs.Animations)) return false;
+                if (!object.Equals(this.Model, rhs.Model)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.Flags);
+                hash.Add(this.IdleTimer);
+                hash.Add(this.Animations);
+                hash.Add(this.Model);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -271,6 +356,29 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.IdleTimer)) return false;
+                if (this.Animations != null)
+                {
+                    if (!eval(this.Animations.Overall)) return false;
+                    if (this.Animations.Specific != null)
+                    {
+                        foreach (var item in this.Animations.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (Model != null)
+                {
+                    if (!eval(this.Model.Overall)) return false;
+                    if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -279,6 +387,29 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Flags)) return true;
+                if (eval(this.IdleTimer)) return true;
+                if (this.Animations != null)
+                {
+                    if (eval(this.Animations.Overall)) return true;
+                    if (this.Animations.Specific != null)
+                    {
+                        foreach (var item in this.Animations.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (Model != null)
+                {
+                    if (eval(this.Model.Overall)) return true;
+                    if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -294,6 +425,24 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.Flags = eval(this.Flags);
+                obj.IdleTimer = eval(this.IdleTimer);
+                if (Animations != null)
+                {
+                    obj.Animations = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Animations.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Animations.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Animations.Specific = l;
+                        foreach (var item in Animations.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
             }
             #endregion
 
@@ -316,6 +465,45 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.ToString(fg);
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.IdleTimer ?? true)
+                    {
+                        fg.AppendItem(IdleTimer, "IdleTimer");
+                    }
+                    if ((printMask?.Animations?.Overall ?? true)
+                        && Animations.TryGet(out var AnimationsItem))
+                    {
+                        fg.AppendLine("Animations =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(AnimationsItem.Overall);
+                            if (AnimationsItem.Specific != null)
+                            {
+                                foreach (var subItem in AnimationsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Model?.Overall ?? true)
+                    {
+                        Model?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -327,12 +515,30 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? Flags;
+            public Exception? IdleTimer;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Animations;
+            public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 IdleMarker_FieldIndex enu = (IdleMarker_FieldIndex)index;
                 switch (enu)
                 {
+                    case IdleMarker_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case IdleMarker_FieldIndex.Flags:
+                        return Flags;
+                    case IdleMarker_FieldIndex.IdleTimer:
+                        return IdleTimer;
+                    case IdleMarker_FieldIndex.Animations:
+                        return Animations;
+                    case IdleMarker_FieldIndex.Model:
+                        return Model;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -343,6 +549,21 @@ namespace Mutagen.Bethesda.Skyrim
                 IdleMarker_FieldIndex enu = (IdleMarker_FieldIndex)index;
                 switch (enu)
                 {
+                    case IdleMarker_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case IdleMarker_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case IdleMarker_FieldIndex.IdleTimer:
+                        this.IdleTimer = ex;
+                        break;
+                    case IdleMarker_FieldIndex.Animations:
+                        this.Animations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case IdleMarker_FieldIndex.Model:
+                        this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -354,6 +575,21 @@ namespace Mutagen.Bethesda.Skyrim
                 IdleMarker_FieldIndex enu = (IdleMarker_FieldIndex)index;
                 switch (enu)
                 {
+                    case IdleMarker_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case IdleMarker_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case IdleMarker_FieldIndex.IdleTimer:
+                        this.IdleTimer = (Exception?)obj;
+                        break;
+                    case IdleMarker_FieldIndex.Animations:
+                        this.Animations = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case IdleMarker_FieldIndex.Model:
+                        this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -363,6 +599,11 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ObjectBounds != null) return true;
+                if (Flags != null) return true;
+                if (IdleTimer != null) return true;
+                if (Animations != null) return true;
+                if (Model != null) return true;
                 return false;
             }
             #endregion
@@ -398,6 +639,32 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                ObjectBounds?.ToString(fg);
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(IdleTimer, "IdleTimer");
+                if (Animations.TryGet(out var AnimationsItem))
+                {
+                    fg.AppendLine("Animations =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(AnimationsItem.Overall);
+                        if (AnimationsItem.Specific != null)
+                        {
+                            foreach (var subItem in AnimationsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                Model?.ToString(fg);
             }
             #endregion
 
@@ -406,6 +673,11 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.IdleTimer = this.IdleTimer.Combine(rhs.IdleTimer);
+                ret.Animations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Animations?.Overall, rhs.Animations?.Overall), ExceptionExt.Combine(this.Animations?.Specific, rhs.Animations?.Specific));
+                ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -427,19 +699,47 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
+            public bool Flags;
+            public bool IdleTimer;
+            public bool Animations;
+            public MaskItem<bool, Model.TranslationMask?> Model;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
+                this.Flags = defaultOn;
+                this.IdleTimer = defaultOn;
+                this.Animations = defaultOn;
+                this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
+                ret.Add((Flags, null));
+                ret.Add((IdleTimer, null));
+                ret.Add((Animations, null));
+                ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
+            }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = IdleMarker_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => IdleMarkerCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => IdleMarkerCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleMarkerCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleMarkerCommon.Instance.RemapLinks(this, mapping);
         public IdleMarker(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -457,6 +757,11 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         #endregion
 
         #region Binary Translation
@@ -518,8 +823,18 @@ namespace Mutagen.Bethesda.Skyrim
         IIdleMarkerGetter,
         ISkyrimMajorRecord,
         IObjectId,
+        IObjectBounded,
         ILoquiObjectSetter<IIdleMarkerInternal>
     {
+        new ObjectBounds ObjectBounds { get; set; }
+        new IdleMarker.Flag? Flags { get; set; }
+        new Single? IdleTimer { get; set; }
+        new ExtendedList<IFormLink<IdleAnimation>>? Animations { get; set; }
+        new Model? Model { get; set; }
+        #region Mutagen
+        new IdleMarker.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IIdleMarkerInternal :
@@ -532,11 +847,22 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IIdleMarkerGetter :
         ISkyrimMajorRecordGetter,
         IObjectIdGetter,
+        IObjectBoundedGetter,
         ILoquiObject<IIdleMarkerGetter>,
         IXmlItem,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => IdleMarker_Registration.Instance;
+        IObjectBoundsGetter ObjectBounds { get; }
+        IdleMarker.Flag? Flags { get; }
+        Single? IdleTimer { get; }
+        IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>>? Animations { get; }
+        IModelGetter? Model { get; }
+
+        #region Mutagen
+        IdleMarker.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -837,6 +1163,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        ObjectBounds = 6,
+        Flags = 7,
+        IdleTimer = 8,
+        Animations = 9,
+        Model = 10,
     }
     #endregion
 
@@ -854,9 +1185,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "fe40d14c-1bec-4308-8f53-fb83f48d4708";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(IdleMarker.Mask<>);
 
@@ -886,6 +1217,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "OBJECTBOUNDS":
+                    return (ushort)IdleMarker_FieldIndex.ObjectBounds;
+                case "FLAGS":
+                    return (ushort)IdleMarker_FieldIndex.Flags;
+                case "IDLETIMER":
+                    return (ushort)IdleMarker_FieldIndex.IdleTimer;
+                case "ANIMATIONS":
+                    return (ushort)IdleMarker_FieldIndex.Animations;
+                case "MODEL":
+                    return (ushort)IdleMarker_FieldIndex.Model;
                 default:
                     return null;
             }
@@ -896,6 +1237,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IdleMarker_FieldIndex enu = (IdleMarker_FieldIndex)index;
             switch (enu)
             {
+                case IdleMarker_FieldIndex.Animations:
+                    return true;
+                case IdleMarker_FieldIndex.ObjectBounds:
+                case IdleMarker_FieldIndex.Flags:
+                case IdleMarker_FieldIndex.IdleTimer:
+                case IdleMarker_FieldIndex.Model:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -906,6 +1254,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IdleMarker_FieldIndex enu = (IdleMarker_FieldIndex)index;
             switch (enu)
             {
+                case IdleMarker_FieldIndex.ObjectBounds:
+                case IdleMarker_FieldIndex.Model:
+                    return true;
+                case IdleMarker_FieldIndex.Flags:
+                case IdleMarker_FieldIndex.IdleTimer:
+                case IdleMarker_FieldIndex.Animations:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -916,6 +1271,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IdleMarker_FieldIndex enu = (IdleMarker_FieldIndex)index;
             switch (enu)
             {
+                case IdleMarker_FieldIndex.ObjectBounds:
+                case IdleMarker_FieldIndex.Flags:
+                case IdleMarker_FieldIndex.IdleTimer:
+                case IdleMarker_FieldIndex.Animations:
+                case IdleMarker_FieldIndex.Model:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -926,6 +1287,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IdleMarker_FieldIndex enu = (IdleMarker_FieldIndex)index;
             switch (enu)
             {
+                case IdleMarker_FieldIndex.ObjectBounds:
+                    return "ObjectBounds";
+                case IdleMarker_FieldIndex.Flags:
+                    return "Flags";
+                case IdleMarker_FieldIndex.IdleTimer:
+                    return "IdleTimer";
+                case IdleMarker_FieldIndex.Animations:
+                    return "Animations";
+                case IdleMarker_FieldIndex.Model:
+                    return "Model";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -936,6 +1307,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IdleMarker_FieldIndex enu = (IdleMarker_FieldIndex)index;
             switch (enu)
             {
+                case IdleMarker_FieldIndex.ObjectBounds:
+                case IdleMarker_FieldIndex.Flags:
+                case IdleMarker_FieldIndex.IdleTimer:
+                case IdleMarker_FieldIndex.Animations:
+                case IdleMarker_FieldIndex.Model:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -946,6 +1323,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IdleMarker_FieldIndex enu = (IdleMarker_FieldIndex)index;
             switch (enu)
             {
+                case IdleMarker_FieldIndex.ObjectBounds:
+                case IdleMarker_FieldIndex.Flags:
+                case IdleMarker_FieldIndex.IdleTimer:
+                case IdleMarker_FieldIndex.Animations:
+                case IdleMarker_FieldIndex.Model:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -956,6 +1339,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IdleMarker_FieldIndex enu = (IdleMarker_FieldIndex)index;
             switch (enu)
             {
+                case IdleMarker_FieldIndex.ObjectBounds:
+                    return typeof(ObjectBounds);
+                case IdleMarker_FieldIndex.Flags:
+                    return typeof(IdleMarker.Flag);
+                case IdleMarker_FieldIndex.IdleTimer:
+                    return typeof(Single);
+                case IdleMarker_FieldIndex.Animations:
+                    return typeof(ExtendedList<IFormLink<IdleAnimation>>);
+                case IdleMarker_FieldIndex.Model:
+                    return typeof(Model);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -963,9 +1356,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type XmlWriteTranslation = typeof(IdleMarkerXmlWriteTranslation);
         public static readonly RecordType IDLM_HEADER = new RecordType("IDLM");
+        public static readonly RecordType OBND_HEADER = new RecordType("OBND");
+        public static readonly RecordType IDLF_HEADER = new RecordType("IDLF");
+        public static readonly RecordType IDLC_HEADER = new RecordType("IDLC");
+        public static readonly RecordType IDLT_HEADER = new RecordType("IDLT");
+        public static readonly RecordType IDLA_HEADER = new RecordType("IDLA");
+        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType TriggeringRecordType = IDLM_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
+        public const int NumTypedFields = 5;
         public static readonly Type BinaryWriteTranslation = typeof(IdleMarkerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1008,6 +1407,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IIdleMarkerInternal item)
         {
             ClearPartial();
+            item.ObjectBounds.Clear();
+            item.Flags = default;
+            item.IdleTimer = default;
+            item.Animations = null;
+            item.Model = null;
             base.Clear(item);
         }
         
@@ -1112,6 +1516,64 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
         
+        protected static TryGet<int?> FillBinaryRecordTypes(
+            IIdleMarkerInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case 0x444E424F: // OBND
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)IdleMarker_FieldIndex.ObjectBounds);
+                }
+                case 0x464C4449: // IDLF
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<IdleMarker.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)IdleMarker_FieldIndex.Flags);
+                }
+                case 0x434C4449: // IDLC
+                {
+                    IdleMarkerBinaryCreateTranslation.FillBinaryAnimationCountCustomPublic(
+                        frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return TryGet<int?>.Succeed(null);
+                }
+                case 0x544C4449: // IDLT
+                {
+                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    item.IdleTimer = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)IdleMarker_FieldIndex.IdleTimer);
+                }
+                case 0x414C4449: // IDLA
+                {
+                    IdleMarkerBinaryCreateTranslation.FillBinaryAnimationsCustomPublic(
+                        frame: frame.SpawnWithLength(frame.MetaData.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return TryGet<int?>.Succeed((int)IdleMarker_FieldIndex.Animations);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)IdleMarker_FieldIndex.Model);
+                }
+                default:
+                    return SkyrimMajorRecordSetterCommon.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
+        
         public virtual void CopyInFromBinary(
             IIdleMarkerInternal item,
             MutagenFrame frame,
@@ -1176,6 +1638,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.IdleTimer = item.IdleTimer.EqualsWithin(rhs.IdleTimer);
+            ret.Animations = item.Animations.CollectionEqualsHelper(
+                rhs.Animations,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.Model = EqualsMaskHelper.EqualsHelper(
+                item.Model,
+                rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1227,12 +1701,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+            }
+            if ((printMask?.Flags ?? true)
+                && item.Flags.TryGet(out var FlagsItem))
+            {
+                fg.AppendItem(FlagsItem, "Flags");
+            }
+            if ((printMask?.IdleTimer ?? true)
+                && item.IdleTimer.TryGet(out var IdleTimerItem))
+            {
+                fg.AppendItem(IdleTimerItem, "IdleTimer");
+            }
+            if ((printMask?.Animations?.Overall ?? true)
+                && item.Animations.TryGet(out var AnimationsItem))
+            {
+                fg.AppendLine("Animations =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in AnimationsItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Model?.Overall ?? true)
+                && item.Model.TryGet(out var ModelItem))
+            {
+                ModelItem?.ToString(fg, "Model");
+            }
         }
         
         public bool HasBeenSet(
             IIdleMarkerGetter item,
             IdleMarker.Mask<bool?> checkMask)
         {
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
+            if (checkMask.IdleTimer.HasValue && checkMask.IdleTimer.Value != (item.IdleTimer != null)) return false;
+            if (checkMask.Animations?.Overall.HasValue ?? false && checkMask.Animations!.Overall.Value != (item.Animations != null)) return false;
+            if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
+            if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1242,6 +1759,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IIdleMarkerGetter item,
             IdleMarker.Mask<bool> mask)
         {
+            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
+            mask.Flags = (item.Flags != null);
+            mask.IdleTimer = (item.IdleTimer != null);
+            mask.Animations = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Animations != null), default);
+            var itemModel = item.Model;
+            mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1293,6 +1816,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (!lhs.IdleTimer.EqualsWithin(rhs.IdleTimer)) return false;
+            if (!lhs.Animations.SequenceEqual(rhs.Animations)) return false;
+            if (!object.Equals(lhs.Model, rhs.Model)) return false;
             return true;
         }
         
@@ -1317,6 +1845,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IIdleMarkerGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.ObjectBounds);
+            if (item.Flags.TryGet(out var Flagsitem))
+            {
+                hash.Add(Flagsitem);
+            }
+            if (item.IdleTimer.TryGet(out var IdleTimeritem))
+            {
+                hash.Add(IdleTimeritem);
+            }
+            hash.Add(item.Animations);
+            if (item.Model.TryGet(out var Modelitem))
+            {
+                hash.Add(Modelitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1345,6 +1887,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
+            }
+            if (obj.Animations.TryGet(out var AnimationsItem))
+            {
+                foreach (var item in AnimationsItem.Select(f => f.FormKey))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Model.TryGet(out var ModelItems))
+            {
+                foreach (var item in ModelItems.LinkFormKeys)
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1393,6 +1949,89 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)IdleMarker_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)IdleMarker_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.IdleTimer) ?? true))
+            {
+                item.IdleTimer = rhs.IdleTimer;
+            }
+            if ((copyMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.Animations) ?? true))
+            {
+                errorMask?.PushIndex((int)IdleMarker_FieldIndex.Animations);
+                try
+                {
+                    if ((rhs.Animations != null))
+                    {
+                        item.Animations = 
+                            rhs.Animations
+                            .Select(r => (IFormLink<IdleAnimation>)new FormLink<IdleAnimation>(r.FormKey))
+                            .ToExtendedList<IFormLink<IdleAnimation>>();
+                    }
+                    else
+                    {
+                        item.Animations = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.Model) ?? true))
+            {
+                errorMask?.PushIndex((int)IdleMarker_FieldIndex.Model);
+                try
+                {
+                    if(rhs.Model.TryGet(out var rhsModel))
+                    {
+                        item.Model = rhsModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)IdleMarker_FieldIndex.Model));
+                    }
+                    else
+                    {
+                        item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1535,6 +2174,70 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((translationMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.ObjectBounds) ?? true))
+            {
+                var ObjectBoundsItem = item.ObjectBounds;
+                ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
+                    item: ObjectBoundsItem,
+                    node: node,
+                    name: nameof(item.ObjectBounds),
+                    fieldIndex: (int)IdleMarker_FieldIndex.ObjectBounds,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)IdleMarker_FieldIndex.ObjectBounds));
+            }
+            if ((item.Flags != null)
+                && (translationMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.Flags) ?? true))
+            {
+                EnumXmlTranslation<IdleMarker.Flag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)IdleMarker_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
+            if ((item.IdleTimer != null)
+                && (translationMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.IdleTimer) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.IdleTimer),
+                    item: item.IdleTimer.Value,
+                    fieldIndex: (int)IdleMarker_FieldIndex.IdleTimer,
+                    errorMask: errorMask);
+            }
+            if ((item.Animations != null)
+                && (translationMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.Animations) ?? true))
+            {
+                ListXmlTranslation<IFormLinkGetter<IIdleAnimationGetter>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Animations),
+                    item: item.Animations,
+                    fieldIndex: (int)IdleMarker_FieldIndex.Animations,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)IdleMarker_FieldIndex.Animations),
+                    transl: (XElement subNode, IFormLinkGetter<IIdleAnimationGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem.FormKey,
+                            errorMask: listSubMask);
+                    });
+            }
+            if ((item.Model != null)
+                && (translationMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.Model) ?? true))
+            {
+                if (item.Model.TryGet(out var ModelItem))
+                {
+                    ((ModelXmlWriteTranslation)((IXmlItem)ModelItem).XmlWriteTranslator).Write(
+                        item: ModelItem,
+                        node: node,
+                        name: nameof(item.Model),
+                        fieldIndex: (int)IdleMarker_FieldIndex.Model,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)IdleMarker_FieldIndex.Model));
+                }
+            }
         }
 
         public void Write(
@@ -1642,6 +2345,108 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "ObjectBounds":
+                    errorMask?.PushIndex((int)IdleMarker_FieldIndex.ObjectBounds);
+                    try
+                    {
+                        item.ObjectBounds = LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)IdleMarker_FieldIndex.ObjectBounds));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    errorMask?.PushIndex((int)IdleMarker_FieldIndex.Flags);
+                    try
+                    {
+                        item.Flags = EnumXmlTranslation<IdleMarker.Flag>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "IdleTimer":
+                    errorMask?.PushIndex((int)IdleMarker_FieldIndex.IdleTimer);
+                    try
+                    {
+                        item.IdleTimer = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Animations":
+                    errorMask?.PushIndex((int)IdleMarker_FieldIndex.Animations);
+                    try
+                    {
+                        if (ListXmlTranslation<IFormLink<IdleAnimation>>.Instance.Parse(
+                            node: node,
+                            enumer: out var AnimationsItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Animations = AnimationsItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Animations = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Model":
+                    errorMask?.PushIndex((int)IdleMarker_FieldIndex.Model);
+                    try
+                    {
+                        item.Model = LoquiXmlTranslation<Model>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)IdleMarker_FieldIndex.Model));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1728,6 +2533,70 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static IdleMarkerBinaryWriteTranslation Instance = new IdleMarkerBinaryWriteTranslation();
 
+        static partial void WriteBinaryAnimationCountCustom(
+            MutagenWriter writer,
+            IIdleMarkerGetter item);
+
+        public static void WriteBinaryAnimationCount(
+            MutagenWriter writer,
+            IIdleMarkerGetter item)
+        {
+            WriteBinaryAnimationCountCustom(
+                writer: writer,
+                item: item);
+        }
+
+        static partial void WriteBinaryAnimationsCustom(
+            MutagenWriter writer,
+            IIdleMarkerGetter item);
+
+        public static void WriteBinaryAnimations(
+            MutagenWriter writer,
+            IIdleMarkerGetter item)
+        {
+            WriteBinaryAnimationsCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static void WriteRecordTypes(
+            IIdleMarkerGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<IdleMarker.Flag>.Instance.WriteNullable(
+                writer,
+                item.Flags,
+                length: 1,
+                header: recordTypeConverter.ConvertToCustom(IdleMarker_Registration.IDLF_HEADER));
+            IdleMarkerBinaryWriteTranslation.WriteBinaryAnimationCount(
+                writer: writer,
+                item: item);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.IdleTimer,
+                header: recordTypeConverter.ConvertToCustom(IdleMarker_Registration.IDLT_HEADER));
+            IdleMarkerBinaryWriteTranslation.WriteBinaryAnimations(
+                writer: writer,
+                item: item);
+            if (item.Model.TryGet(out var ModelItem))
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
+                    item: ModelItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             IIdleMarkerGetter item,
@@ -1741,7 +2610,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1787,6 +2656,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static IdleMarkerBinaryCreateTranslation Instance = new IdleMarkerBinaryCreateTranslation();
 
+        static partial void FillBinaryAnimationCountCustom(
+            MutagenFrame frame,
+            IIdleMarkerInternal item);
+
+        public static void FillBinaryAnimationCountCustomPublic(
+            MutagenFrame frame,
+            IIdleMarkerInternal item)
+        {
+            FillBinaryAnimationCountCustom(
+                frame: frame,
+                item: item);
+        }
+
+        static partial void FillBinaryAnimationsCustom(
+            MutagenFrame frame,
+            IIdleMarkerInternal item);
+
+        public static void FillBinaryAnimationsCustomPublic(
+            MutagenFrame frame,
+            IIdleMarkerInternal item)
+        {
+            FillBinaryAnimationsCustom(
+                frame: frame,
+                item: item);
+        }
+
     }
 
 }
@@ -1822,6 +2717,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IIdleMarkerGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => IdleMarkerCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => IdleMarkerCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleMarkerCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleMarkerCommon.Instance.RemapLinks(this, mapping);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => IdleMarkerXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -1847,7 +2748,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
+        public IdleMarker.MajorFlag MajorFlags => (IdleMarker.MajorFlag)this.MajorRecordFlagsRaw;
 
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation!.Value.Min)), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public IdleMarker.Flag? Flags => _FlagsLocation.HasValue ? (IdleMarker.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.Meta)[0] : default(IdleMarker.Flag?);
+        #endregion
+        #region AnimationCount
+        partial void AnimationCountCustomParse(
+            BinaryMemoryReadStream stream,
+            int offset);
+        #endregion
+        #region IdleTimer
+        private int? _IdleTimerLocation;
+        public Single? IdleTimer => _IdleTimerLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _IdleTimerLocation.Value, _package.Meta)) : default(Single?);
+        #endregion
+        #region Animations
+        partial void AnimationsCustomParse(
+            BinaryMemoryReadStream stream,
+            long finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed);
+        #endregion
+        public IModelGetter? Model { get; private set; }
         partial void CustomCtor(
             IBinaryReadStream stream,
             int finalPos,
@@ -1898,6 +2827,67 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case 0x444E424F: // OBND
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)IdleMarker_FieldIndex.ObjectBounds);
+                }
+                case 0x464C4449: // IDLF
+                {
+                    _FlagsLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)IdleMarker_FieldIndex.Flags);
+                }
+                case 0x434C4449: // IDLC
+                {
+                    AnimationCountCustomParse(
+                        stream,
+                        offset);
+                    return TryGet<int?>.Succeed(null);
+                }
+                case 0x544C4449: // IDLT
+                {
+                    _IdleTimerLocation = (ushort)(stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)IdleMarker_FieldIndex.IdleTimer);
+                }
+                case 0x414C4449: // IDLA
+                {
+                    AnimationsCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+                    return TryGet<int?>.Succeed((int)IdleMarker_FieldIndex.Animations);
+                }
+                case 0x4C444F4D: // MODL
+                {
+                    this.Model = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)IdleMarker_FieldIndex.Model);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordTypeConverter: recordTypeConverter);
+            }
+        }
         #region To String
 
         public override void ToString(

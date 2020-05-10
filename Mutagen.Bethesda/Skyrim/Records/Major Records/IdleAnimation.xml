@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="IdleAnimation" recordType="IDLE" baseClass="SkyrimMajorRecord" objType="Record" GUID="bf69327e-265b-487b-8e17-3a2a13dd3f74" ID="236">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

@@ -1,8 +1,35 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Ingestible" recordType="ALCH" baseClass="SkyrimMajorRecord" objType="Record" GUID="f04a4e71-fb0c-4416-8623-5a6ac42fefb4" ID="163">
+  <Object name="Ingestible" recordType="ALCH" baseClass="SkyrimMajorRecord" majorFlag="true" objType="Record" GUID="f04a4e71-fb0c-4416-8623-5a6ac42fefb4" ID="163">
     <Interface>IItem</Interface>
     <Interface>IHarvestTarget</Interface>
     <Interface>IObjectId</Interface>
+    <Interface>IObjectBounded</Interface>
+    <Interface>IWeightValue</Interface>
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
+      <String name="Name" recordType="FULL" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
+        <FormLink refName="Keyword" />
+      </List>
+      <String name="Description" recordType="DESC" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <RefDirect name="Icons" refName="Icons" />
+      <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
+      <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />
+      <FormLink name="EquipmentType" refName="EquipType" recordType="ETYP" />
+      <Float name="Weight" recordType="DATA" hasBeenSet="False" />
+      <Data recordType="ENIT" >
+        <Fields>
+          <UInt32 name="Value" />
+          <Enum name="Flags" enumName="Ingestible.Flag" byteLength="4" />
+          <FormLink name="Addiction" refName="SkyrimMajorRecord" />
+          <Float name="AddictionChance" />
+          <FormLink name="ConsumeSound" refName="SoundDescriptor" />
+        </Fields>
+      </Data>
+      <RefList name="Effects" refName="Effect" hasBeenSet="False" />
+    </Fields>
   </Object>
 </Loqui>

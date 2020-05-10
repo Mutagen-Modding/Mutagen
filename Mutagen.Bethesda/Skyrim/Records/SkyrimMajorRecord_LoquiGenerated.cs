@@ -1059,8 +1059,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
         public static readonly RecordType CELL_HEADER = new RecordType("CELL");
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
+        public static readonly RecordType COLL_HEADER = new RecordType("COLL");
         public static readonly RecordType CLFM_HEADER = new RecordType("CLFM");
         public static readonly RecordType CSTY_HEADER = new RecordType("CSTY");
+        public static readonly RecordType COBJ_HEADER = new RecordType("COBJ");
         public static readonly RecordType CONT_HEADER = new RecordType("CONT");
         public static readonly RecordType DEBR_HEADER = new RecordType("DEBR");
         public static readonly RecordType DOOR_HEADER = new RecordType("DOOR");
@@ -1079,6 +1081,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
         public static readonly RecordType HAZD_HEADER = new RecordType("HAZD");
         public static readonly RecordType HDPT_HEADER = new RecordType("HDPT");
+        public static readonly RecordType IDLE_HEADER = new RecordType("IDLE");
         public static readonly RecordType IDLM_HEADER = new RecordType("IDLM");
         public static readonly RecordType IMAD_HEADER = new RecordType("IMAD");
         public static readonly RecordType IPDS_HEADER = new RecordType("IPDS");
@@ -1140,8 +1143,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         BOOK_HEADER,
                         CELL_HEADER,
                         CLAS_HEADER,
+                        COLL_HEADER,
                         CLFM_HEADER,
                         CSTY_HEADER,
+                        COBJ_HEADER,
                         CONT_HEADER,
                         DEBR_HEADER,
                         DOOR_HEADER,
@@ -1160,6 +1165,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         HAIR_HEADER,
                         HAZD_HEADER,
                         HDPT_HEADER,
+                        IDLE_HEADER,
                         IDLM_HEADER,
                         IMAD_HEADER,
                         IPDS_HEADER,

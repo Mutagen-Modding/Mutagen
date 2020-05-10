@@ -243,21 +243,34 @@ namespace Mutagen.Bethesda
             RecordStructFill<M> fillStructs,
             ModRecordTypeFill<M, G> fillTyped)
         {
-            fillStructs?.Invoke(
+            var modHeader = frame.Reader.GetMod();
+            fillTyped(
                 record: record,
-                frame: frame);
+                frame: frame,
+                importMask: importMask,
+                nextRecordType: modHeader.RecordType,
+                contentLength: checked((int)modHeader.ContentLength),
+                recordTypeConverter: recordTypeConverter);
             while (!frame.Complete)
             {
-                var nextRecordType = HeaderTranslation.GetNextType(
-                    reader: frame.Reader,
-                    finalPos: out var finalPos,
-                    contentLength: out var contentLength);
+                var groupHeader = frame.GetGroup();
+                if (!groupHeader.IsGroup)
+                {
+                    throw new ArgumentException("Did not see GRUP header as expected.");
+                }
+                var len = checked((int)groupHeader.ContentLength);
+                var finalPos = frame.Position + groupHeader.TotalLength;
+                if (len == 0)
+                {
+                    frame.Position = finalPos;
+                    continue;
+                }
                 var parsed = fillTyped(
                     record: record,
                     frame: frame,
                     importMask: importMask,
-                    nextRecordType: nextRecordType,
-                    contentLength: contentLength,
+                    nextRecordType: groupHeader.ContainedRecordType,
+                    contentLength: len,
                     recordTypeConverter: recordTypeConverter);
                 if (parsed.Failed) break;
                 if (frame.Position < finalPos)

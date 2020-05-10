@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="SkyrimMod" objType="Mod" failOnUnknownType="false" ctorPermission="protected" GUID="9dcb1a8f-db0a-44bd-9a30-9427a9350e7a" ID="66">
     <Fields>
@@ -42,6 +42,12 @@
       <Group name="Ammunitions" refName="Ammunition" />
       <Group name="Npcs" refName="Npc" />
       <Group name="LeveledNpcs" refName="LeveledNpc" />
+      <Group name="Keys" refName="Key" />
+      <Group name="Ingestibles" refName="Ingestible" />
+      <Group name="IdleMarkers" refName="IdleMarker" />
+      <Group name="ConstructibleObjects" refName="ConstructibleObject" />
+      <Group name="Projectiles" refName="Projectile" />
+      <Group name="Hazards" refName="Hazard" />
     </Fields>
   </Object>
 </Loqui>
