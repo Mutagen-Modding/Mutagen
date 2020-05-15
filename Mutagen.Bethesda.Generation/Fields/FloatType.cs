@@ -12,31 +12,27 @@ namespace Mutagen.Bethesda.Generation
     {
         public FloatBinaryType StorageType;
         public FloatIntegerType IntegerType;
-        public ushort IntegerDivisor;
+        public double Multiplier;
 
         public override async Task Load(XElement node, bool requireName = true)
         {
             await base.Load(node, requireName);
             var data = this.TryCreateFieldData();
             this.StorageType = node.GetAttribute("binaryType", FloatBinaryType.Normal);
-            this.IntegerDivisor = node.GetAttribute("integerDivisor", (ushort)0);
+            this.Multiplier = node.GetAttribute("multiplier", 1d);
             this.IntegerType = node.GetAttribute("integerType", FloatIntegerType.UInt);
             if (this.StorageType == FloatBinaryType.Integer)
             {
-                if (this.IntegerDivisor <= 0)
-                {
-                    throw new ArgumentException("Need to specify integer divisor with Integer binary type.");
-                }
                 switch (this.IntegerType)
                 {
                     case FloatIntegerType.UInt:
                         this.Min = "0";
-                        this.Max = $"{uint.MaxValue / IntegerDivisor * 1f}";
+                        this.Max = $"{uint.MaxValue * Multiplier}";
                         data.Length = 4;
                         break;
                     case FloatIntegerType.UShort:
                         this.Min = "0";
-                        this.Max = $"{ushort.MaxValue / IntegerDivisor * 1f}";
+                        this.Max = $"{ushort.MaxValue * Multiplier}";
                         data.Length = 2;
                         break;
                     default:

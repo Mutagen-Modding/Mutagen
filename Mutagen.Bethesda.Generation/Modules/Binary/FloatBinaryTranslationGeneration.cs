@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Generation
                 case Binary.FloatBinaryType.Normal:
                     return $"SpanExt.GetFloat({dataAccessor})";
                 case Binary.FloatBinaryType.Integer:
-                    return $"{nameof(FloatBinaryTranslation)}.GetFloat({dataAccessor}, {nameof(FloatIntegerType)}.{floatType.IntegerType}, {floatType.IntegerDivisor})";
+                    return $"{nameof(FloatBinaryTranslation)}.GetFloat({dataAccessor}, {nameof(FloatIntegerType)}.{floatType.IntegerType}, {floatType.Multiplier})";
                 default:
                     throw new NotImplementedException();
             }
@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add($"frame: {reader}");
                         args.Add($"integerType: {nameof(FloatIntegerType)}.{floatType.IntegerType}");
-                        args.Add($"divisor: {floatType.IntegerDivisor}");
+                        args.Add($"multiplier: {floatType.Multiplier}");
                     }
                     return true;
                 default:
@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Generation
                         args.Add($"writer: {writer}");
                         args.Add($"item: {item}");
                         args.Add($"integerType: {nameof(FloatIntegerType)}.{floatType.IntegerType}");
-                        args.Add($"divisor: {floatType.IntegerDivisor}");
+                        args.Add($"multiplier: {floatType.Multiplier}");
                         if (data.RecordType.HasValue
                             && data.HandleTrigger)
                         {
