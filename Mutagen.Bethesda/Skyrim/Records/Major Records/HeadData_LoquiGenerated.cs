@@ -2865,15 +2865,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     translationMask: translationMask?.GetSubCrystal((int)HeadData_FieldIndex.HeadParts),
                     transl: (XElement subNode, IHeadPartReferenceGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        if (subItem.TryGet(out var Item))
-                        {
-                            ((HeadPartReferenceXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                                item: Item,
-                                node: subNode,
-                                name: null,
-                                errorMask: listSubMask,
-                                translationMask: listTranslMask);
-                        }
+                        var Item = subItem;
+                        ((HeadPartReferenceXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
                     });
             }
             if ((item.AvailableMorphs != null)
@@ -2968,15 +2966,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     translationMask: translationMask?.GetSubCrystal((int)HeadData_FieldIndex.TintMasks),
                     transl: (XElement subNode, ITintAssetsGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        if (subItem.TryGet(out var Item))
-                        {
-                            ((TintAssetsXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                                item: Item,
-                                node: subNode,
-                                name: null,
-                                errorMask: listSubMask,
-                                translationMask: listTranslMask);
-                        }
+                        var Item = subItem;
+                        ((TintAssetsXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
                     });
             }
             if ((item.Model != null)
@@ -3532,13 +3528,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.HeadParts,
                 transl: (MutagenWriter subWriter, IHeadPartReferenceGetter subItem, RecordTypeConverter? conv) =>
                 {
-                    if (subItem.TryGet(out var Item))
-                    {
-                        ((HeadPartReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                            item: Item,
-                            writer: subWriter,
-                            recordTypeConverter: conv);
-                    }
+                    var Item = subItem;
+                    ((HeadPartReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
                 });
             if (item.AvailableMorphs.TryGet(out var AvailableMorphsItem))
             {
@@ -3586,13 +3580,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.TintMasks,
                 transl: (MutagenWriter subWriter, ITintAssetsGetter subItem, RecordTypeConverter? conv) =>
                 {
-                    if (subItem.TryGet(out var Item))
-                    {
-                        ((TintAssetsBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                            item: Item,
-                            writer: subWriter,
-                            recordTypeConverter: conv);
-                    }
+                    var Item = subItem;
+                    ((TintAssetsBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
                 });
             if (item.Model.TryGet(out var ModelItem))
             {

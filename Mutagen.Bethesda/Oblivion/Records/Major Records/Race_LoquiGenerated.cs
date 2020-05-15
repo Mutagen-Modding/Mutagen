@@ -3742,15 +3742,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Relations),
                     transl: (XElement subNode, IRaceRelationGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        if (subItem.TryGet(out var Item))
-                        {
-                            ((RaceRelationXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                                item: Item,
-                                node: subNode,
-                                name: null,
-                                errorMask: listSubMask,
-                                translationMask: listTranslMask);
-                        }
+                        var Item = subItem;
+                        ((RaceRelationXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
                     });
             }
             if ((item.Data != null)
@@ -3866,15 +3864,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.FaceData),
                     transl: (XElement subNode, IFacePartGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        if (subItem.TryGet(out var Item))
-                        {
-                            ((FacePartXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                                item: Item,
-                                node: subNode,
-                                name: null,
-                                errorMask: listSubMask,
-                                translationMask: listTranslMask);
-                        }
+                        var Item = subItem;
+                        ((FacePartXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
                     });
             }
             if ((item.BodyData != null)
@@ -4570,13 +4566,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.Relations,
                 transl: (MutagenWriter subWriter, IRaceRelationGetter subItem, RecordTypeConverter? conv) =>
                 {
-                    if (subItem.TryGet(out var Item))
-                    {
-                        ((RaceRelationBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                            item: Item,
-                            writer: subWriter,
-                            recordTypeConverter: conv);
-                    }
+                    var Item = subItem;
+                    ((RaceRelationBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
                 });
             if (item.Data.TryGet(out var DataItem))
             {
@@ -4635,13 +4629,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.FaceData,
                 transl: (MutagenWriter subWriter, IFacePartGetter subItem, RecordTypeConverter? conv) =>
                 {
-                    if (subItem.TryGet(out var Item))
-                    {
-                        ((FacePartBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                            item: Item,
-                            writer: subWriter,
-                            recordTypeConverter: conv);
-                    }
+                    var Item = subItem;
+                    ((FacePartBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
                 });
             GenderedItemBinaryTranslation.Write(
                 writer: writer,

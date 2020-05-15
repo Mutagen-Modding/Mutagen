@@ -2079,15 +2079,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     translationMask: translationMask?.GetSubCrystal((int)LeveledItem_FieldIndex.Entries),
                     transl: (XElement subNode, ILeveledEntryGetter<IAItemGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        if (subItem.TryGet(out var Item))
-                        {
-                            ((LeveledEntryXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write<IAItemGetter>(
-                                item: Item,
-                                node: subNode,
-                                name: null,
-                                errorMask: listSubMask,
-                                translationMask: listTranslMask);
-                        }
+                        var Item = subItem;
+                        ((LeveledEntryXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write<IAItemGetter>(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
                     });
             }
         }
@@ -2385,13 +2383,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.Entries,
                 transl: (MutagenWriter subWriter, ILeveledEntryGetter<IAItemGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    if (subItem.TryGet(out var Item))
-                    {
-                        ((LeveledEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write<IAItemGetter>(
-                            item: Item,
-                            writer: subWriter,
-                            recordTypeConverter: conv);
-                    }
+                    var Item = subItem;
+                    ((LeveledEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write<IAItemGetter>(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
                 });
             LeveledItemSetterCommon.SpecialWrite_Vestigial_Internal(
                 item: item,

@@ -2246,15 +2246,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     translationMask: translationMask?.GetSubCrystal((int)ConstructibleObject_FieldIndex.Items),
                     transl: (XElement subNode, IContainerEntryGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        if (subItem.TryGet(out var Item))
-                        {
-                            ((ContainerEntryXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                                item: Item,
-                                node: subNode,
-                                name: null,
-                                errorMask: listSubMask,
-                                translationMask: listTranslMask);
-                        }
+                        var Item = subItem;
+                        ((ContainerEntryXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
                     });
             }
             if ((translationMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Conditions) ?? true))
@@ -2268,15 +2266,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     translationMask: translationMask?.GetSubCrystal((int)ConstructibleObject_FieldIndex.Conditions),
                     transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        if (subItem.TryGet(out var Item))
-                        {
-                            ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                                item: Item,
-                                node: subNode,
-                                name: null,
-                                errorMask: listSubMask,
-                                translationMask: listTranslMask);
-                        }
+                        var Item = subItem;
+                        ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
                     });
             }
             if ((item.CreatedObject.FormKey != null)
@@ -2641,13 +2637,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 counterLength: 4,
                 transl: (MutagenWriter subWriter, IContainerEntryGetter subItem, RecordTypeConverter? conv) =>
                 {
-                    if (subItem.TryGet(out var Item))
-                    {
-                        ((ContainerEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                            item: Item,
-                            writer: subWriter,
-                            recordTypeConverter: conv);
-                    }
+                    var Item = subItem;
+                    ((ContainerEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
                 });
             ConstructibleObjectBinaryWriteTranslation.WriteBinaryConditions(
                 writer: writer,

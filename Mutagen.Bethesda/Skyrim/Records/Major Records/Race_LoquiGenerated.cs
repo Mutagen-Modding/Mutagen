@@ -8890,15 +8890,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.Attacks),
                     transl: (XElement subNode, IAttackGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        if (subItem.TryGet(out var Item))
-                        {
-                            ((AttackXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                                item: Item,
-                                node: subNode,
-                                name: null,
-                                errorMask: listSubMask,
-                                translationMask: listTranslMask);
-                        }
+                        var Item = subItem;
+                        ((AttackXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
                     });
             }
             if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.BodyData) ?? true))
@@ -9087,15 +9085,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     translationMask: translationMask?.GetSubCrystal((int)Race_FieldIndex.MovementTypes),
                     transl: (XElement subNode, IRaceMovementTypeGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
-                        if (subItem.TryGet(out var Item))
-                        {
-                            ((RaceMovementTypeXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                                item: Item,
-                                node: subNode,
-                                name: null,
-                                errorMask: listSubMask,
-                                translationMask: listTranslMask);
-                        }
+                        var Item = subItem;
+                        ((RaceMovementTypeXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
                     });
             }
             if ((item.EquipmentFlags != null)
@@ -11140,13 +11136,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.Attacks,
                 transl: (MutagenWriter subWriter, IAttackGetter subItem, RecordTypeConverter? conv) =>
                 {
-                    if (subItem.TryGet(out var Item))
-                    {
-                        ((AttackBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                            item: Item,
-                            writer: subWriter,
-                            recordTypeConverter: conv);
-                    }
+                    var Item = subItem;
+                    ((AttackBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
                 });
             GenderedItemBinaryTranslation.Write(
                 writer: writer,
@@ -11234,13 +11228,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.MovementTypes,
                 transl: (MutagenWriter subWriter, IRaceMovementTypeGetter subItem, RecordTypeConverter? conv) =>
                 {
-                    if (subItem.TryGet(out var Item))
-                    {
-                        ((RaceMovementTypeBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                            item: Item,
-                            writer: subWriter,
-                            recordTypeConverter: conv);
-                    }
+                    var Item = subItem;
+                    ((RaceMovementTypeBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
                 });
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<EquipTypeFlag>.Instance.WriteNullable(
                 writer,

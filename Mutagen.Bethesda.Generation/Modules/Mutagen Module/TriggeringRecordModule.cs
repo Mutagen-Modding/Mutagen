@@ -239,6 +239,7 @@ namespace Mutagen.Bethesda.Generation
             if (field is ContainerType contType
                 && contType.SubTypeGeneration is LoquiType contLoqui)
             {
+                var hasBeenSet = contType.SubTypeGeneration.HasBeenSet;
                 var subData = contLoqui.CustomData.TryCreateValue(Constants.DataKey, () => new MutagenFieldData(contLoqui)) as MutagenFieldData;
                 await SetRecordTrigger(
                     obj,
@@ -250,6 +251,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     subData.TriggeringRecordTypes.Add(new RecordType(counterType));
                 }
+                contType.SubTypeGeneration.HasBeenSetProperty.OnNext((hasBeenSet, true));
             }
             else if (field is DictType dictType)
             {
