@@ -941,14 +941,22 @@ namespace Mutagen.Bethesda.Generation
             }
 
             var data = field.GetFieldData();
-            if (data.Binary == BinaryGenerationType.Custom)
+            switch (data.Binary)
             {
-                CustomLogic.GenerateFill(
-                    fg,
-                    field,
-                    frameAccessor,
-                    isAsync: false);
-                return;
+                case BinaryGenerationType.Normal:
+                    break;
+                case BinaryGenerationType.DoNothing:
+                case BinaryGenerationType.NoGeneration:
+                    return;
+                case BinaryGenerationType.Custom:
+                    CustomLogic.GenerateFill(
+                        fg,
+                        field,
+                        frameAccessor,
+                        isAsync: false);
+                    return;
+                default:
+                    throw new NotImplementedException();
             }
 
             if (data.MarkerType != null && data.RecordType != null)
@@ -1462,14 +1470,22 @@ namespace Mutagen.Bethesda.Generation
                             }
                         }
                         if (field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
-                        if (fieldData.Binary == BinaryGenerationType.Custom)
+                        switch (fieldData.Binary)
                         {
-                            CustomLogic.GenerateWrite(
-                                fg: fg,
-                                obj: obj,
-                                field: field,
-                                writerAccessor: "writer");
-                            continue;
+                            case BinaryGenerationType.Normal:
+                                break;
+                            case BinaryGenerationType.DoNothing:
+                            case BinaryGenerationType.NoGeneration:
+                                continue;
+                            case BinaryGenerationType.Custom:
+                                CustomLogic.GenerateWrite(
+                                    fg: fg,
+                                    obj: obj,
+                                    field: field,
+                                    writerAccessor: "writer");
+                                continue;
+                            default:
+                                throw new NotImplementedException();
                         }
                         if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
                         {
@@ -1498,15 +1514,23 @@ namespace Mutagen.Bethesda.Generation
 
                                         var subData = subField.Field.GetFieldData();
                                         if (!subGenerator.ShouldGenerateCopyIn(subField.Field)) continue;
-                                        if (subData.Binary == BinaryGenerationType.Custom)
+                                        switch (subData.Binary)
                                         {
-                                            using (var args = new ArgsWrapper(fg,
-                                                $"{TranslationWriteClass(obj)}.WriteBinary{subField.Field.Name}"))
-                                            {
-                                                args.Add("writer: writer");
-                                                args.Add("item: item");
-                                            }
-                                            continue;
+                                            case BinaryGenerationType.Normal:
+                                                break;
+                                            case BinaryGenerationType.DoNothing:
+                                            case BinaryGenerationType.NoGeneration:
+                                                continue;
+                                            case BinaryGenerationType.Custom:
+                                                using (var args = new ArgsWrapper(fg,
+                                                    $"{TranslationWriteClass(obj)}.WriteBinary{subField.Field.Name}"))
+                                                {
+                                                    args.Add("writer: writer");
+                                                    args.Add("item: item");
+                                                }
+                                                continue;
+                                            default:
+                                                throw new NotImplementedException();
                                         }
                                         if (subField.BreakIndex != -1)
                                         {

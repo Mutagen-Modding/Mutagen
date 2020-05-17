@@ -1059,6 +1059,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
         public static readonly RecordType CELL_HEADER = new RecordType("CELL");
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
+        public static readonly RecordType CLMT_HEADER = new RecordType("CLMT");
         public static readonly RecordType COLL_HEADER = new RecordType("COLL");
         public static readonly RecordType CLFM_HEADER = new RecordType("CLFM");
         public static readonly RecordType CSTY_HEADER = new RecordType("CSTY");
@@ -1148,6 +1149,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         BOOK_HEADER,
                         CELL_HEADER,
                         CLAS_HEADER,
+                        CLMT_HEADER,
                         COLL_HEADER,
                         CLFM_HEADER,
                         CSTY_HEADER,

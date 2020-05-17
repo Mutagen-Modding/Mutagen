@@ -115,6 +115,9 @@
     <Compile Include="Skyrim\Records\Major Records\Book.cs">
       <DependentUpon>Book.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Climate.cs">
+      <DependentUpon>Climate.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\CloudLayer.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
@@ -1882,6 +1885,12 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\WeatherAmbientColors_LoquiGenerated.cs">
       <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Climate_LoquiGenerated.cs">
+      <DependentUpon>Climate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WeatherType_LoquiGenerated.cs">
+      <DependentUpon>Climate.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

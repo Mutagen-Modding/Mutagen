@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
     {
         static void AttachDebugInspector()
         {
-            string testString = "WeatherBinaryCreateTranslation.FillBinaryCloudTexturesParseCustomPub";
+            string testString = "Mutagen.Bethesda.Binary.EnumBinaryTranslation<Climate.Moon>.Instance.Write(";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>
