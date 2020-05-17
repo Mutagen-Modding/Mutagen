@@ -81,5 +81,11 @@ namespace Mutagen.Bethesda.Generation
             loqui.HasBeenSetProperty.OnNext((false, true));
             loqui.NotifyingProperty.OnNext((NotifyingType.None, true));
         }
+
+        public override async Task PostLoad(ObjectGeneration obj)
+        {
+            await base.PostLoad(obj);
+            obj.GetObjectData().CustomRecordFallback = obj.Node.GetAttribute(Constants.CustomFallback, false);
+        }
     }
 }

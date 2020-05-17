@@ -90,6 +90,7 @@ namespace Mutagen.Bethesda.Skyrim
             _Hazards_Object = new Group<Hazard>(this);
             _SoulGems_Object = new Group<SoulGem>(this);
             _LeveledItems_Object = new Group<LeveledItem>(this);
+            _Weathers_Object = new Group<Weather>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -431,6 +432,13 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<ILeveledItemGetter> ISkyrimModGetter.LeveledItems => _LeveledItems_Object;
         #endregion
+        #region Weathers
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Weather> _Weathers_Object;
+        public Group<Weather> Weathers => _Weathers_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IWeatherGetter> ISkyrimModGetter.Weathers => _Weathers_Object;
+        #endregion
 
         #region To String
 
@@ -649,6 +657,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Hazards = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.SoulGems = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.LeveledItems = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Weathers = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -699,7 +708,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Projectiles,
                 TItem Hazards,
                 TItem SoulGems,
-                TItem LeveledItems)
+                TItem LeveledItems,
+                TItem Weathers)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -749,6 +759,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Hazards = new MaskItem<TItem, Group.Mask<TItem>?>(Hazards, new Group.Mask<TItem>(Hazards));
                 this.SoulGems = new MaskItem<TItem, Group.Mask<TItem>?>(SoulGems, new Group.Mask<TItem>(SoulGems));
                 this.LeveledItems = new MaskItem<TItem, Group.Mask<TItem>?>(LeveledItems, new Group.Mask<TItem>(LeveledItems));
+                this.Weathers = new MaskItem<TItem, Group.Mask<TItem>?>(Weathers, new Group.Mask<TItem>(Weathers));
             }
 
             #pragma warning disable CS8618
@@ -808,6 +819,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? Hazards { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? SoulGems { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? LeveledItems { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Weathers { get; set; }
             #endregion
 
             #region Equals
@@ -868,6 +880,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Hazards, rhs.Hazards)) return false;
                 if (!object.Equals(this.SoulGems, rhs.SoulGems)) return false;
                 if (!object.Equals(this.LeveledItems, rhs.LeveledItems)) return false;
+                if (!object.Equals(this.Weathers, rhs.Weathers)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -921,6 +934,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Hazards);
                 hash.Add(this.SoulGems);
                 hash.Add(this.LeveledItems);
+                hash.Add(this.Weathers);
                 return hash.ToHashCode();
             }
 
@@ -1169,6 +1183,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.LeveledItems.Overall)) return false;
                     if (this.LeveledItems.Specific != null && !this.LeveledItems.Specific.All(eval)) return false;
                 }
+                if (Weathers != null)
+                {
+                    if (!eval(this.Weathers.Overall)) return false;
+                    if (this.Weathers.Specific != null && !this.Weathers.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1416,6 +1435,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.LeveledItems.Overall)) return true;
                     if (this.LeveledItems.Specific != null && this.LeveledItems.Specific.Any(eval)) return true;
                 }
+                if (Weathers != null)
+                {
+                    if (eval(this.Weathers.Overall)) return true;
+                    if (this.Weathers.Specific != null && this.Weathers.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1478,6 +1502,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Hazards = this.Hazards == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Hazards.Overall), this.Hazards.Specific?.Translate(eval));
                 obj.SoulGems = this.SoulGems == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.SoulGems.Overall), this.SoulGems.Specific?.Translate(eval));
                 obj.LeveledItems = this.LeveledItems == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LeveledItems.Overall), this.LeveledItems.Specific?.Translate(eval));
+                obj.Weathers = this.Weathers == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Weathers.Overall), this.Weathers.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1692,6 +1717,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         LeveledItems?.ToString(fg);
                     }
+                    if (printMask?.Weathers?.Overall ?? true)
+                    {
+                        Weathers?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -1765,6 +1794,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<Hazard.ErrorMask>?>? Hazards;
             public MaskItem<Exception?, Group.ErrorMask<SoulGem.ErrorMask>?>? SoulGems;
             public MaskItem<Exception?, Group.ErrorMask<LeveledItem.ErrorMask>?>? LeveledItems;
+            public MaskItem<Exception?, Group.ErrorMask<Weather.ErrorMask>?>? Weathers;
             #endregion
 
             #region IErrorMask
@@ -1869,6 +1899,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return SoulGems;
                     case SkyrimMod_FieldIndex.LeveledItems:
                         return LeveledItems;
+                    case SkyrimMod_FieldIndex.Weathers:
+                        return Weathers;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2022,6 +2054,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.LeveledItems:
                         this.LeveledItems = new MaskItem<Exception?, Group.ErrorMask<LeveledItem.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Weathers:
+                        this.Weathers = new MaskItem<Exception?, Group.ErrorMask<Weather.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -2177,6 +2212,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.LeveledItems:
                         this.LeveledItems = (MaskItem<Exception?, Group.ErrorMask<LeveledItem.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.Weathers:
+                        this.Weathers = (MaskItem<Exception?, Group.ErrorMask<Weather.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -2233,6 +2271,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Hazards != null) return true;
                 if (SoulGems != null) return true;
                 if (LeveledItems != null) return true;
+                if (Weathers != null) return true;
                 return false;
             }
             #endregion
@@ -2315,6 +2354,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Hazards?.ToString(fg);
                 SoulGems?.ToString(fg);
                 LeveledItems?.ToString(fg);
+                Weathers?.ToString(fg);
             }
             #endregion
 
@@ -2371,6 +2411,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Hazards = this.Hazards.Combine(rhs.Hazards, (l, r) => l.Combine(r));
                 ret.SoulGems = this.SoulGems.Combine(rhs.SoulGems, (l, r) => l.Combine(r));
                 ret.LeveledItems = this.LeveledItems.Combine(rhs.LeveledItems, (l, r) => l.Combine(r));
+                ret.Weathers = this.Weathers.Combine(rhs.Weathers, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2440,6 +2481,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<Hazard.TranslationMask>?> Hazards;
             public MaskItem<bool, Group.TranslationMask<SoulGem.TranslationMask>?> SoulGems;
             public MaskItem<bool, Group.TranslationMask<LeveledItem.TranslationMask>?> LeveledItems;
+            public MaskItem<bool, Group.TranslationMask<Weather.TranslationMask>?> Weathers;
             #endregion
 
             #region Ctors
@@ -2493,6 +2535,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Hazards = new MaskItem<bool, Group.TranslationMask<Hazard.TranslationMask>?>(defaultOn, null);
                 this.SoulGems = new MaskItem<bool, Group.TranslationMask<SoulGem.TranslationMask>?>(defaultOn, null);
                 this.LeveledItems = new MaskItem<bool, Group.TranslationMask<LeveledItem.TranslationMask>?>(defaultOn, null);
+                this.Weathers = new MaskItem<bool, Group.TranslationMask<Weather.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -2556,6 +2599,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Hazards?.Overall ?? true, Hazards?.Specific?.GetCrystal()));
                 ret.Add((SoulGems?.Overall ?? true, SoulGems?.Specific?.GetCrystal()));
                 ret.Add((LeveledItems?.Overall ?? true, LeveledItems?.Specific?.GetCrystal()));
+                ret.Add((Weathers?.Overall ?? true, Weathers?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -2617,6 +2661,7 @@ namespace Mutagen.Bethesda.Skyrim
             _Hazards_Object = new Group<Hazard>(this);
             _SoulGems_Object = new Group<SoulGem>(this);
             _LeveledItems_Object = new Group<LeveledItem>(this);
+            _Weathers_Object = new Group<Weather>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -2809,6 +2854,10 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.LeveledItems ?? true)
             {
                 this.LeveledItems.RecordCache.Set(rhsMod.LeveledItems.RecordCache.Items);
+            }
+            if (mask?.Weathers ?? true)
+            {
+                this.Weathers.RecordCache.Set(rhsMod.Weathers.RecordCache.Items);
             }
         }
 
@@ -3146,6 +3195,13 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<LeveledItem>());
             }
+            if (mask?.Weathers ?? true)
+            {
+                this.Weathers.RecordCache.Set(
+                    rhs.Weathers.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Weather>());
+            }
             var router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var mapping = new Dictionary<FormKey, FormKey>();
@@ -3212,6 +3268,7 @@ namespace Mutagen.Bethesda.Skyrim
             count += Hazards.RecordCache.Count > 0 ? 1 : 0;
             count += SoulGems.RecordCache.Count > 0 ? 1 : 0;
             count += LeveledItems.RecordCache.Count > 0 ? 1 : 0;
+            count += Weathers.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -3457,6 +3514,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<Hazard> Hazards { get; }
         new Group<SoulGem> SoulGems { get; }
         new Group<LeveledItem> LeveledItems { get; }
+        new Group<Weather> Weathers { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -3522,6 +3580,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IHazardGetter> Hazards { get; }
         IGroupGetter<ISoulGemGetter> SoulGems { get; }
         IGroupGetter<ILeveledItemGetter> LeveledItems { get; }
+        IGroupGetter<IWeatherGetter> Weathers { get; }
 
     }
 
@@ -4009,6 +4068,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Hazards = 45,
         SoulGems = 46,
         LeveledItems = 47,
+        Weathers = 48,
     }
     #endregion
 
@@ -4026,9 +4086,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 48;
+        public const ushort AdditionalFieldCount = 49;
 
-        public const ushort FieldCount = 48;
+        public const ushort FieldCount = 49;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -4154,6 +4214,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.SoulGems;
                 case "LEVELEDITEMS":
                     return (ushort)SkyrimMod_FieldIndex.LeveledItems;
+                case "WEATHERS":
+                    return (ushort)SkyrimMod_FieldIndex.Weathers;
                 default:
                     return null;
             }
@@ -4212,6 +4274,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Hazards:
                 case SkyrimMod_FieldIndex.SoulGems:
                 case SkyrimMod_FieldIndex.LeveledItems:
+                case SkyrimMod_FieldIndex.Weathers:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4271,6 +4334,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Hazards:
                 case SkyrimMod_FieldIndex.SoulGems:
                 case SkyrimMod_FieldIndex.LeveledItems:
+                case SkyrimMod_FieldIndex.Weathers:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4330,6 +4394,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Hazards:
                 case SkyrimMod_FieldIndex.SoulGems:
                 case SkyrimMod_FieldIndex.LeveledItems:
+                case SkyrimMod_FieldIndex.Weathers:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4437,6 +4502,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "SoulGems";
                 case SkyrimMod_FieldIndex.LeveledItems:
                     return "LeveledItems";
+                case SkyrimMod_FieldIndex.Weathers:
+                    return "Weathers";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -4495,6 +4562,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Hazards:
                 case SkyrimMod_FieldIndex.SoulGems:
                 case SkyrimMod_FieldIndex.LeveledItems:
+                case SkyrimMod_FieldIndex.Weathers:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4555,6 +4623,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Hazards:
                 case SkyrimMod_FieldIndex.SoulGems:
                 case SkyrimMod_FieldIndex.LeveledItems:
+                case SkyrimMod_FieldIndex.Weathers:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4662,6 +4731,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<SoulGem>);
                 case SkyrimMod_FieldIndex.LeveledItems:
                     return typeof(Group<LeveledItem>);
+                case SkyrimMod_FieldIndex.Weathers:
+                    return typeof(Group<Weather>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -4716,9 +4787,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType HAZD_HEADER = new RecordType("HAZD");
         public static readonly RecordType SLGM_HEADER = new RecordType("SLGM");
         public static readonly RecordType LVLI_HEADER = new RecordType("LVLI");
+        public static readonly RecordType WTHR_HEADER = new RecordType("WTHR");
         public static readonly RecordType TriggeringRecordType = TES4_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 48;
+        public const int NumTypedFields = 49;
         public static readonly Type BinaryWriteTranslation = typeof(SkyrimModBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -4808,6 +4880,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Hazards.Clear();
             item.SoulGems.Clear();
             item.LeveledItems.Clear();
+            item.Weathers.Clear();
         }
         
         #region Xml Translation
@@ -5581,6 +5654,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LeveledItems);
                 }
+                case 0x52485457: // WTHR
+                {
+                    if (importMask?.Weathers ?? true)
+                    {
+                        item.Weathers.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Weathers);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -5680,6 +5767,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Hazards = MaskItemExt.Factory(item.Hazards.GetEqualsMask(rhs.Hazards, include), include);
             ret.SoulGems = MaskItemExt.Factory(item.SoulGems.GetEqualsMask(rhs.SoulGems, include), include);
             ret.LeveledItems = MaskItemExt.Factory(item.LeveledItems.GetEqualsMask(rhs.LeveledItems, include), include);
+            ret.Weathers = MaskItemExt.Factory(item.Weathers.GetEqualsMask(rhs.Weathers, include), include);
         }
         
         public string ToString(
@@ -5918,6 +6006,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.LeveledItems?.ToString(fg, "LeveledItems");
             }
+            if (printMask?.Weathers?.Overall ?? true)
+            {
+                item.Weathers?.ToString(fg, "Weathers");
+            }
         }
         
         public bool HasBeenSet(
@@ -5979,6 +6071,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Hazards = new MaskItem<bool, Group.Mask<bool>?>(true, item.Hazards?.GetHasBeenSetMask());
             mask.SoulGems = new MaskItem<bool, Group.Mask<bool>?>(true, item.SoulGems?.GetHasBeenSetMask());
             mask.LeveledItems = new MaskItem<bool, Group.Mask<bool>?>(true, item.LeveledItems?.GetHasBeenSetMask());
+            mask.Weathers = new MaskItem<bool, Group.Mask<bool>?>(true, item.Weathers?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -6036,6 +6129,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Hazards, rhs.Hazards)) return false;
             if (!object.Equals(lhs.SoulGems, rhs.SoulGems)) return false;
             if (!object.Equals(lhs.LeveledItems, rhs.LeveledItems)) return false;
+            if (!object.Equals(lhs.Weathers, rhs.Weathers)) return false;
             return true;
         }
         
@@ -6090,6 +6184,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Hazards);
             hash.Add(item.SoulGems);
             hash.Add(item.LeveledItems);
+            hash.Add(item.Weathers);
             return hash.ToHashCode();
         }
         
@@ -6342,6 +6437,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILeveledItem":
                 case "ILeveledItemInternal":
                     return obj.LeveledItems.RecordCache;
+                case "Weather":
+                case "IWeatherGetter":
+                case "IWeather":
+                case "IWeatherInternal":
+                    return obj.Weathers.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown group type: {typeof(T)}");
             }
@@ -6358,7 +6458,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var modHeader = item.ModHeader.DeepCopy() as ModHeader;
             modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
             modHeader.WriteToBinary(new MutagenWriter(stream, GameConstants.Skyrim, masterRefs));
-            Stream[] outputStreams = new Stream[47];
+            Stream[] outputStreams = new Stream[48];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams));
@@ -6407,6 +6507,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.Hazards, masterRefs, 44, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.SoulGems, masterRefs, 45, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.LeveledItems, masterRefs, 46, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Weathers, masterRefs, 47, outputStreams));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -6783,6 +6884,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.Weathers is ILinkedFormKeyContainer WeatherslinkCont)
+            {
+                foreach (var item in WeatherslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -6974,6 +7082,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.LeveledItems.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Weathers.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -7414,6 +7526,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILeveledItem":
                 case "ILeveledItemInternal":
                     foreach (var item in obj.LeveledItems.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Weather":
+                case "IWeatherGetter":
+                case "IWeather":
+                case "IWeatherInternal":
+                    foreach (var item in obj.Weathers.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -8397,6 +8518,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Weathers) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Weathers);
+                try
+                {
+                    item.Weathers.DeepCopyIn(
+                        rhs: rhs.Weathers,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Weathers));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -9013,6 +9154,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.LeveledItems,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.LeveledItems));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Weathers) ?? true))
+            {
+                var WeathersItem = item.Weathers;
+                ((GroupXmlWriteTranslation)((IXmlItem)WeathersItem).XmlWriteTranslator).Write<IWeatherGetter>(
+                    item: WeathersItem,
+                    node: node,
+                    name: nameof(item.Weathers),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Weathers,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Weathers));
             }
         }
 
@@ -10013,6 +10165,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "Weathers":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Weathers);
+                    try
+                    {
+                        item.Weathers.CopyInFromXml<Weather>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -10229,6 +10400,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Hazards;
         public bool SoulGems;
         public bool LeveledItems;
+        public bool Weathers;
         public GroupMask()
         {
         }
@@ -10281,6 +10453,7 @@ namespace Mutagen.Bethesda.Skyrim
             Hazards = defaultValue;
             SoulGems = defaultValue;
             LeveledItems = defaultValue;
+            Weathers = defaultValue;
         }
     }
 
@@ -10827,6 +11000,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                 }
             }
+            if (importMask?.Weathers ?? true)
+            {
+                var WeathersItem = item.Weathers;
+                if (WeathersItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)WeathersItem).BinaryWriteTranslator).Write<IWeatherGetter>(
+                        item: WeathersItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
         }
 
         public void Write(
@@ -11256,6 +11440,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<ILeveledItemGetter>? _LeveledItems => _LeveledItemsLocation.HasValue ? GroupBinaryOverlay<ILeveledItemGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _LeveledItemsLocation!.Value.Min, _LeveledItemsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<ILeveledItemGetter> LeveledItems => _LeveledItems ?? new Group<LeveledItem>(this);
         #endregion
+        #region Weathers
+        private RangeInt64? _WeathersLocation;
+        private IGroupGetter<IWeatherGetter>? _Weathers => _WeathersLocation.HasValue ? GroupBinaryOverlay<IWeatherGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _WeathersLocation!.Value.Min, _WeathersLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IWeatherGetter> Weathers => _Weathers ?? new Group<Weather>(this);
+        #endregion
         partial void CustomCtor(
             IBinaryReadStream stream,
             long finalPos,
@@ -11579,6 +11768,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _LeveledItemsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LeveledItems);
+                }
+                case 0x52485457: // WTHR
+                {
+                    _WeathersLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Weathers);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

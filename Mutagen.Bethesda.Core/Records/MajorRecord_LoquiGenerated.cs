@@ -1307,6 +1307,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType IMAD_HEADER = new RecordType("IMAD");
         public static readonly RecordType IPDS_HEADER = new RecordType("IPDS");
         public static readonly RecordType KYWD_HEADER = new RecordType("KYWD");
+        public static readonly RecordType LENS_HEADER = new RecordType("LENS");
         public static readonly RecordType LVLN_HEADER = new RecordType("LVLN");
         public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
         public static readonly RecordType MATO_HEADER = new RecordType("MATO");
@@ -1318,10 +1319,13 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType PROJ_HEADER = new RecordType("PROJ");
         public static readonly RecordType REVB_HEADER = new RecordType("REVB");
         public static readonly RecordType SCRL_HEADER = new RecordType("SCRL");
+        public static readonly RecordType SPGD_HEADER = new RecordType("SPGD");
         public static readonly RecordType SNDR_HEADER = new RecordType("SNDR");
         public static readonly RecordType TACT_HEADER = new RecordType("TACT");
         public static readonly RecordType TXST_HEADER = new RecordType("TXST");
+        public static readonly RecordType RFCT_HEADER = new RecordType("RFCT");
         public static readonly RecordType VTYP_HEADER = new RecordType("VTYP");
+        public static readonly RecordType VOLI_HEADER = new RecordType("VOLI");
         public static readonly RecordType SHOU_HEADER = new RecordType("SHOU");
         public static readonly RecordType EDID_HEADER = new RecordType("EDID");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
@@ -1424,6 +1428,7 @@ namespace Mutagen.Bethesda.Internals
                         IMAD_HEADER,
                         IPDS_HEADER,
                         KYWD_HEADER,
+                        LENS_HEADER,
                         LVLN_HEADER,
                         LCRT_HEADER,
                         MATO_HEADER,
@@ -1435,10 +1440,13 @@ namespace Mutagen.Bethesda.Internals
                         PROJ_HEADER,
                         REVB_HEADER,
                         SCRL_HEADER,
+                        SPGD_HEADER,
                         SNDR_HEADER,
                         TACT_HEADER,
                         TXST_HEADER,
+                        RFCT_HEADER,
                         VTYP_HEADER,
+                        VOLI_HEADER,
                         SHOU_HEADER
                     })
             );

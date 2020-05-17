@@ -1,6 +1,7 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="SoundDescriptor" objType="Record" recordType="SNDR" baseClass="SkyrimMajorRecord" GUID="8ef28a33-b4e1-488e-bd9a-9231e58a3aad" ID="82">
+    <Interface>ISound</Interface>
     <Fields>
     </Fields>
   </Object>

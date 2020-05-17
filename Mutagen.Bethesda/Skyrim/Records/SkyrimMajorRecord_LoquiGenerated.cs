@@ -1090,6 +1090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType KEYM_HEADER = new RecordType("KEYM");
         public static readonly RecordType KYWD_HEADER = new RecordType("KYWD");
         public static readonly RecordType LTEX_HEADER = new RecordType("LTEX");
+        public static readonly RecordType LENS_HEADER = new RecordType("LENS");
         public static readonly RecordType LVLI_HEADER = new RecordType("LVLI");
         public static readonly RecordType LVLN_HEADER = new RecordType("LVLN");
         public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
@@ -1112,6 +1113,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType REGN_HEADER = new RecordType("REGN");
         public static readonly RecordType REVB_HEADER = new RecordType("REVB");
         public static readonly RecordType SCRL_HEADER = new RecordType("SCRL");
+        public static readonly RecordType SPGD_HEADER = new RecordType("SPGD");
         public static readonly RecordType SLGM_HEADER = new RecordType("SLGM");
         public static readonly RecordType SNDR_HEADER = new RecordType("SNDR");
         public static readonly RecordType SOUN_HEADER = new RecordType("SOUN");
@@ -1119,8 +1121,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType TACT_HEADER = new RecordType("TACT");
         public static readonly RecordType TXST_HEADER = new RecordType("TXST");
         public static readonly RecordType TREE_HEADER = new RecordType("TREE");
+        public static readonly RecordType RFCT_HEADER = new RecordType("RFCT");
         public static readonly RecordType VTYP_HEADER = new RecordType("VTYP");
+        public static readonly RecordType VOLI_HEADER = new RecordType("VOLI");
         public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
+        public static readonly RecordType WTHR_HEADER = new RecordType("WTHR");
         public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
         public static readonly RecordType SHOU_HEADER = new RecordType("SHOU");
         public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
@@ -1174,6 +1179,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         KEYM_HEADER,
                         KYWD_HEADER,
                         LTEX_HEADER,
+                        LENS_HEADER,
                         LVLI_HEADER,
                         LVLN_HEADER,
                         LIGH_HEADER,
@@ -1196,6 +1202,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         REGN_HEADER,
                         REVB_HEADER,
                         SCRL_HEADER,
+                        SPGD_HEADER,
                         SLGM_HEADER,
                         SNDR_HEADER,
                         SOUN_HEADER,
@@ -1203,8 +1210,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         TACT_HEADER,
                         TXST_HEADER,
                         TREE_HEADER,
+                        RFCT_HEADER,
                         VTYP_HEADER,
+                        VOLI_HEADER,
                         WEAP_HEADER,
+                        WTHR_HEADER,
                         LVSP_HEADER,
                         SHOU_HEADER,
                         SPEL_HEADER

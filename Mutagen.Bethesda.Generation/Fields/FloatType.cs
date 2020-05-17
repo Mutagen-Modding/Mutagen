@@ -35,6 +35,11 @@ namespace Mutagen.Bethesda.Generation
                         this.Max = $"{ushort.MaxValue * Multiplier}";
                         data.Length = 2;
                         break;
+                    case FloatIntegerType.Byte:
+                        this.Min = "0";
+                        this.Max = $"{byte.MaxValue * Multiplier}";
+                        data.Length = 1;
+                        break;
                     default:
                         throw new NotImplementedException();
                 }

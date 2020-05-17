@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AmbientColors" objType="Subrecord" GUID="8c4df544-5141-4ea2-8dba-94c10e0d2bf6" ID="243">
+    <Fields>
+      <Color name="DirectionalXPlus" binaryType="Alpha" />
+      <Color name="DirectionalXMinus" binaryType="Alpha" />
+      <Color name="DirectionalYPlus" binaryType="Alpha" />
+      <Color name="DirectionalYMinus" binaryType="Alpha" />
+      <Color name="DirectionalZPlus" binaryType="Alpha" />
+      <Color name="DirectionalZMinus" binaryType="Alpha" />
+      <Break />
+      <Color name="Specular" binaryType="Alpha" />
+      <Float name="Scale" />
+    </Fields>
+  </Object>
+</Loqui>

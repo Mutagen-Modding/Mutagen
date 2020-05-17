@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LensFlare" recordType="LENS" baseClass="SkyrimMajorRecord" objType="Record" GUID="a27b0490-aff4-4af1-8660-42103f100040" ID="244">
+  </Object>
+</Loqui>

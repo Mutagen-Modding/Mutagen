@@ -34,6 +34,8 @@ namespace Mutagen.Bethesda.Generation
                             return 4;
                         case FloatIntegerType.UShort:
                             return 2;
+                        case FloatIntegerType.Byte:
+                            return 1;
                         default:
                             throw new NotImplementedException();
                     }

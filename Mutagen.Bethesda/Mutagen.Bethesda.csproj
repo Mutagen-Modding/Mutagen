@@ -77,6 +77,7 @@
     <Compile Include="Skyrim\Interfaces\IHarvestTarget.cs" />
     <Compile Include="Skyrim\Interfaces\IObjectId.cs" />
     <Compile Include="Skyrim\Interfaces\IRelatable.cs" />
+    <Compile Include="Skyrim\Interfaces\ISound.cs" />
     <Compile Include="Skyrim\Interfaces\IWeightValue.cs" />
     <Compile Include="Skyrim\Records\Common Subrecords\DestructionStageData.cs">
       <DependentUpon>Destructible.xml</DependentUpon>
@@ -113,6 +114,9 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\Book.cs">
       <DependentUpon>Book.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\CloudLayer.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\ConstructibleObject.cs">
       <DependentUpon>ConstructibleObject.xml</DependentUpon>
@@ -195,6 +199,9 @@
     <Compile Include="Skyrim\Records\Major Records\SoulGem.cs">
       <DependentUpon>SoulGem.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Major Records\SoundDescriptor.cs">
+      <DependentUpon>SoundDescriptor.xml</DependentUpon>
+    </Compile>
     <Compile Include="Skyrim\Records\Major Records\SoundMarker.cs">
       <DependentUpon>SoundMarker.xml</DependentUpon>
     </Compile>
@@ -215,6 +222,12 @@
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\WeaponData.cs">
       <DependentUpon>Weapon.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Weather.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WeatherSound.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
     <Compile Include="Skyrim\Records\Major Records\WorkbenchData.cs">
       <DependentUpon>Furniture.xml</DependentUpon>
@@ -1831,11 +1844,50 @@
     <Compile Include="Skyrim\Records\Major Records\LeveledNpcEntryData_LoquiGenerated.cs">
       <DependentUpon>LeveledNpc.xml</DependentUpon>
     </Compile>
+    <Compile Include="Skyrim\Records\Common Subrecords\AmbientColors_LoquiGenerated.cs">
+      <DependentUpon>AmbientColors.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\LensFlare_LoquiGenerated.cs">
+      <DependentUpon>LensFlare.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\ShaderParticleGeometry_LoquiGenerated.cs">
+      <DependentUpon>ShaderParticleGeometry.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\VisualEffect_LoquiGenerated.cs">
+      <DependentUpon>VisualEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\VolumetricLighting_LoquiGenerated.cs">
+      <DependentUpon>VolumetricLighting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\Weather_LoquiGenerated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\CloudLayer_LoquiGenerated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WeatherColor_LoquiGenerated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WeatherAlpha_LoquiGenerated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WeatherSound_LoquiGenerated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WeatherImageSpaces_LoquiGenerated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WeatherVolumetricLighting_LoquiGenerated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Skyrim\Records\Major Records\WeatherAmbientColors_LoquiGenerated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.13.7" />
-    <PackageReference Include="Loqui" Version="1.1.10" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.0.14" />
+    <PackageReference Include="Loqui" Version="1.1.12" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.0.15" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />

@@ -61,6 +61,7 @@ namespace Mutagen.Bethesda.Generation
             this._typeGenerations[typeof(DoubleType)] = new PrimitiveBinaryTranslationGeneration<double>(expectedLen: 8);
             this._typeGenerations[typeof(EnumType)] = new EnumBinaryTranslationGeneration();
             this._typeGenerations[typeof(FloatType)] = new FloatBinaryTranslationGeneration();
+            this._typeGenerations[typeof(PercentType)] = new PercentBinaryTranslationGeneration();
             this._typeGenerations[typeof(Int8Type)] = new SByteBinaryTranslationGeneration();
             this._typeGenerations[typeof(Int16Type)] = new PrimitiveBinaryTranslationGeneration<short>(expectedLen: 2);
             this._typeGenerations[typeof(Int32Type)] = new PrimitiveBinaryTranslationGeneration<int>(expectedLen: 4);
@@ -432,6 +433,7 @@ namespace Mutagen.Bethesda.Generation
                         expandSets: SetMarkerType.ExpandSets.False))
                     {
                         if (field is SetMarkerType) continue;
+                        if (field is CustomLogic logic && logic.IsRecordType) continue;
                         if (field.TryGetFieldData(out var fieldData)
                             && fieldData.HasTrigger) continue;
                         if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
@@ -590,7 +592,23 @@ namespace Mutagen.Bethesda.Generation
                             }
 
                             // Default case
-                            if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any((b) => HasRecordTypeFields(b)))
+                            if (obj.GetObjectData().CustomRecordFallback)
+                            {
+                                using (var args = new ArgsWrapper(fg,
+                                    $"return CustomRecordFallback"))
+                                {
+                                    args.AddPassArg($"item");
+                                    args.AddPassArg("frame");
+                                    if (obj.GetObjectType() == ObjectType.Subrecord)
+                                    {
+                                        args.AddPassArg($"lastParsed");
+                                    }
+                                    args.AddPassArg("nextRecordType");
+                                    args.AddPassArg("contentLength");
+                                    args.AddPassArg($"recordTypeConverter");
+                                }
+                            }
+                            else if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any((b) => HasRecordTypeFields(b)))
                             {
                                 using (var args = new ArgsWrapper(fg,
                                     $"return {Loqui.Generation.Utility.Await(HasAsyncRecords(obj, self: false))}{obj.BaseClass.CommonClass(LoquiInterfaceType.ISetter, CommonGenerics.Class, MaskType.Normal)}.Fill{ModuleNickname}RecordTypes"))
@@ -1331,6 +1349,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         if (field.TryGetFieldData(out var fieldData)
                             && fieldData.HasTrigger) continue;
+                        if (field is CustomLogic logic && logic.IsRecordType) continue;
                         if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
                         if (fieldData.Binary == BinaryGenerationType.DoNothing) continue;
                         if (field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
@@ -1431,7 +1450,17 @@ namespace Mutagen.Bethesda.Generation
                     foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
                     {
                         if (!field.TryGetFieldData(out var fieldData)
-                            || !fieldData.HasTrigger) continue;
+                            || !fieldData.HasTrigger)
+                        {
+                            if (!(field is CustomLogic custom))
+                            {
+                                continue;
+                            }
+                            if (!custom.IsRecordType)
+                            {
+                                continue;
+                            }
+                        }
                         if (field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
                         if (fieldData.Binary == BinaryGenerationType.Custom)
                         {
@@ -2452,7 +2481,27 @@ namespace Mutagen.Bethesda.Generation
                             fg.AppendLine("default:");
                             using (new DepthWrapper(fg))
                             {
-                                if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(b => HasRecordTypeFields(b)))
+                                if (obj.GetObjectData().CustomRecordFallback)
+                                {
+                                    using (var args = new ArgsWrapper(fg,
+                                        $"return CustomRecordFallback"))
+                                    {
+                                        args.AddPassArg("stream");
+                                        args.AddPassArg("finalPos");
+                                        args.AddPassArg("offset");
+                                        args.AddPassArg("type");
+                                        args.AddPassArg("lastParsed");
+                                        if (obj.GetObjectData().BaseRecordTypeConverter?.FromConversions.Count > 0)
+                                        {
+                                            args.Add($"recordTypeConverter: recordTypeConverter.Combine({obj.RegistrationName}.BaseConverter)");
+                                        }
+                                        else
+                                        {
+                                            args.AddPassArg("recordTypeConverter");
+                                        }
+                                    }
+                                }
+                                else if (obj.HasLoquiBaseObject && obj.BaseClassTrail().Any(b => HasRecordTypeFields(b)))
                                 {
                                     using (var args = new ArgsWrapper(fg,
                                         "return base.FillRecordType"))
@@ -2511,6 +2560,10 @@ namespace Mutagen.Bethesda.Generation
         {
             if (obj.GetObjectType() != ObjectType.Mod) return;
             fg.AppendLine("var modKey = item.ModKey;");
+        }
+
+        public override void ReplaceTypeAssociation<Target, Replacement>()
+        {
         }
     }
 }

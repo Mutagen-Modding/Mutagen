@@ -268,10 +268,6 @@ namespace Mutagen.Bethesda.Generation
                         }
                         break;
                     case DictMode.KeyValue:
-                        if (dictType.KeyTypeGen is LoquiType || dictType.ValueTypeGen is LoquiType)
-                        {
-                            throw new NotImplementedException();
-                        }
                         break;
                     default:
                         throw new NotImplementedException();

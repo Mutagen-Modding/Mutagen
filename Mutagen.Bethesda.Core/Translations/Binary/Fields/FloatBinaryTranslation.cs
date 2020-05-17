@@ -20,46 +20,60 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public static float Parse(MutagenFrame frame, FloatIntegerType integerType, float multiplier)
+        public static float Parse(MutagenFrame frame, FloatIntegerType integerType, double multiplier)
         {
             switch (integerType)
             {
                 case FloatIntegerType.UInt:
                     {
                         var raw = frame.ReadUInt32();
-                        float f = raw;
-                        f *= multiplier;
-                        return f;
+                        double d = raw;
+                        d *= multiplier;
+                        return (float)d;
                     }
                 case FloatIntegerType.UShort:
                     {
                         var raw = frame.ReadUInt16();
-                        float f = raw;
-                        f *= multiplier;
-                        return f;
+                        double d = raw;
+                        d *= multiplier;
+                        return (float)d;
+                    }
+                case FloatIntegerType.Byte:
+                    {
+                        var raw = frame.ReadUInt8();
+                        double d = raw;
+                        d *= multiplier;
+                        return (float)d;
                     }
                 default:
                     throw new NotImplementedException();
             }
         }
 
-        public static float GetFloat(ReadOnlySpan<byte> bytes, FloatIntegerType integerType, float multiplier)
+        public static float GetFloat(ReadOnlySpan<byte> bytes, FloatIntegerType integerType, double multiplier)
         {
             switch (integerType)
             {
                 case FloatIntegerType.UInt:
                     {
                         var raw = BinaryPrimitives.ReadUInt32LittleEndian(bytes);
-                        float f = raw;
-                        f *= multiplier;
-                        return f;
+                        double d = raw;
+                        d *= multiplier;
+                        return (float)d;
                     }
                 case FloatIntegerType.UShort:
                     {
                         var raw = BinaryPrimitives.ReadUInt16LittleEndian(bytes);
-                        float f = raw;
-                        f *= multiplier;
-                        return f;
+                        double d = raw;
+                        d *= multiplier;
+                        return (float)d;
+                    }
+                case FloatIntegerType.Byte:
+                    {
+                        var raw = bytes[0];
+                        double d = raw;
+                        d *= multiplier;
+                        return (float)d;
                     }
                 default:
                     throw new NotImplementedException();
@@ -82,7 +96,7 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        public static void Write(MutagenWriter writer, float? item, FloatIntegerType integerType, float multiplier)
+        public static void Write(MutagenWriter writer, float? item, FloatIntegerType integerType, double multiplier)
         {
             if (item == null) return;
             switch (integerType)
@@ -93,12 +107,15 @@ namespace Mutagen.Bethesda.Binary
                 case FloatIntegerType.UShort:
                     writer.Write((ushort)Math.Round(item.Value / multiplier));
                     break;
+                case FloatIntegerType.Byte:
+                    writer.Write((byte)Math.Round(item.Value / multiplier));
+                    break;
                 default:
                     throw new NotImplementedException();
             }
         }
 
-        public static void Write(MutagenWriter writer, float? item, RecordType header, FloatIntegerType integerType, float multiplier)
+        public static void Write(MutagenWriter writer, float? item, RecordType header, FloatIntegerType integerType, double multiplier)
         {
             if (item == null) return;
             using (HeaderExport.ExportSubrecordHeader(writer, header))

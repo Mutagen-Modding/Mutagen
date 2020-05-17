@@ -69,6 +69,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="customRecordFallback" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                whether to define a custom function for when an unrecognized record is encountered
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
@@ -259,6 +266,14 @@
       </xs:complexContent>
     </xs:complexType>
 
+    <xs:complexType name="Percent">
+      <xs:complexContent>
+        <xs:extension base="Percent">
+          <xs:attribute name="integerType" type="FloatIntegerType" />
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+
     <xs:complexType name="Dict">
       <xs:complexContent>
         <xs:extension base="Dict">
@@ -439,6 +454,7 @@
 
   <xs:simpleType name="FloatIntegerType" final="restriction" >
     <xs:restriction base="xs:string">
+      <xs:enumeration value="Byte" />
       <xs:enumeration value="UInt" />
       <xs:enumeration value="UShort" />
     </xs:restriction>
@@ -472,6 +488,13 @@
       <xs:annotation>
         <xs:documentation>
           Typical four letter ASCII tag used for the record type.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="isUntypedRecordType" type="xs:boolean" >
+      <xs:annotation>
+        <xs:documentation>
+          Whether to consider special logic a part of record type parsing even if it's missing
         </xs:documentation>
       </xs:annotation>
     </xs:attribute>

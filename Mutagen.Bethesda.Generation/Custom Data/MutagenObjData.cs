@@ -39,6 +39,7 @@ namespace Mutagen.Bethesda.Generation
                 return null;
             }
         }
+        public bool CustomRecordFallback;
 
         public MutagenObjData(ObjectGeneration objGen)
         {

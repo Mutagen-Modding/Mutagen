@@ -517,6 +517,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ISoundDescriptor :
         ISoundDescriptorGetter,
         ISkyrimMajorRecord,
+        ISound,
         ILoquiObjectSetter<ISoundDescriptorInternal>
     {
     }
@@ -530,6 +531,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ISoundDescriptorGetter :
         ISkyrimMajorRecordGetter,
+        ISoundGetter,
         ILoquiObject<ISoundDescriptorGetter>,
         IXmlItem,
         IBinaryItem

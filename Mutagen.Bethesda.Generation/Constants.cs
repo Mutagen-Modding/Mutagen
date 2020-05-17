@@ -13,5 +13,6 @@ namespace Mutagen.Bethesda.Generation
         public readonly static string Binary = "binary";
         public readonly static string BinaryOverlay = "binaryOverlay";
         public readonly static string ByteLength = "byteLength";
+        public readonly static string CustomFallback = "customRecordFallback";
     }
 }

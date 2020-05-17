@@ -8,5 +8,6 @@ namespace Mutagen.Bethesda.Binary
     {
         UInt,
         UShort,
+        Byte
     }
 }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="VisualEffect" baseClass="SkyrimMajorRecord" objType="Record" recordType="RFCT" GUID="3f255cad-cf84-4fdc-ae26-0285f00ea645" ID="246">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

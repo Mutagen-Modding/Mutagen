@@ -50,6 +50,7 @@
       <Group name="Hazards" refName="Hazard" />
       <Group name="SoulGems" refName="SoulGem" />
       <Group name="LeveledItems" refName="LeveledItem" />
+      <Group name="Weathers" refName="Weather" />
     </Fields>
   </Object>
 </Loqui>

@@ -29,15 +29,19 @@ namespace Mutagen.Bethesda.Generation
                         switch (dict.Mode)
                         {
                             case DictMode.KeyedValue:
-                                if (!(dict.ValueTypeGen is LoquiType keyLoqui)) continue;
-                                loquiType = keyLoqui;
+                                if (!(dict.ValueTypeGen is LoquiType loqui)) continue;
+                                loquiType = loqui;
                                 break;
                             case DictMode.KeyValue:
-                                if (dict.KeyTypeGen is LoquiType || dict.ValueTypeGen is LoquiType)
+                                var keyLoqui = dict.KeyTypeGen as LoquiType;
+                                var valLoqui = dict.ValueTypeGen as LoquiType;
+                                if (keyLoqui != null)
                                 {
                                     throw new NotImplementedException();
                                 }
-                                continue;
+                                if (valLoqui == null) continue;
+                                loquiType = valLoqui;
+                                break;
                             default:
                                 throw new NotImplementedException();
                         }
